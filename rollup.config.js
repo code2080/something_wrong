@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel'
+import json from 'rollup-plugin-json'
 import commonjs from 'rollup-plugin-commonjs'
 import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
@@ -22,6 +23,9 @@ export default {
       sourcemap: true
     }
   ],
+  external: [
+    ...Object.keys(pkg.peerDependencies)
+  ],
   plugins: [
     external(),
     postcss({
@@ -29,6 +33,7 @@ export default {
     }),
     url(),
     svgr(),
+    json(),
     babel({
       exclude: 'node_modules/**',
       plugins: [ 'external-helpers' ]
