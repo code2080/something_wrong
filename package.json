@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ICT",
@@ -45,6 +45,7 @@
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-standard": "^3.1.0",
     "gh-pages": "^1.2.0",
+    "postcss-prefixwrap": "1.9.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "^1.1.4",
@@ -61,6 +62,7 @@
   ],
   "dependencies": {
     "antd": "^3.25.0",
-    "rollup-plugin-json": "^4.0.0"
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-less": "^1.1.2"
   }
 }
