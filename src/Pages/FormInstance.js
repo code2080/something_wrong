@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -39,15 +39,9 @@ const FormInstancePage = ({ formInstance, formName, sections, setBreadcrumbs }) 
 
   const [selectedSection, setSelectedSection] = useState('ALL_SECTIONS');
 
-  const onSectionChangeCallback = useCallback(
-    selectedSection => setSelectedSection(selectedSection)
-    ,
-    [setSelectedSection]
-  );
-
   return (
     <div className="form-instance--wrapper">
-      <SectionSelector selectedSection={selectedSection} onSectionChange={onSectionChangeCallback} />
+      <SectionSelector selectedSection={selectedSection} onSectionChange={selSection => setSelectedSection(selSection)} />
       {(sections || [])
         .filter(section => {
           if (selectedSection === 'ALL_SECTIONS') return true;

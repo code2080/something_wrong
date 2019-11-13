@@ -9,7 +9,7 @@ const fetchFormsFlow = {
   request: () => ({ type: FETCH_FORMS_REQUEST }),
   success: response => ({ type: FETCH_FORMS_SUCCESS, payload: { ...response } }),
   failure: err => ({ type: FETCH_FORMS_FAILURE, payload: { ...err } }),
-}
+};
 
 export const fetchForms = () =>
   asyncAction.GET({

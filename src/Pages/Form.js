@@ -44,10 +44,6 @@ const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcru
     ]);
   }, []);
 
-  /**
-   * @todo
-   * 1) Add scoped object to static columns
-   */
   const _cols = getSubmissionColumns(form);
   const _elementTableData = getSubmissionData(submissions, _cols);
   const _dataSource = submissions.map(submission => {
