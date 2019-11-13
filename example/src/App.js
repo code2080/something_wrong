@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import ExampleComponent from 'te-prefs-lib'
 
+// STYLES
+import 'te-prefs-lib/dist/te-prefs-lib.css';
+
 export default class App extends Component {
   render () {
     return (

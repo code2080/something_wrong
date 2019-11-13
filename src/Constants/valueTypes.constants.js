@@ -1,0 +1,5 @@
+export const valueTypes = {
+  SINGLE: 'VALUE_TYPE_SINGLE',
+  ARRAY: 'VALUE_TYPE_ARRAY',
+  OBJECT: 'VALUE_TYPE_OBJECT',
+};
