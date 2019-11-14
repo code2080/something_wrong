@@ -36,7 +36,6 @@ const SubmissionActionButton = ({
 }) => {
   const setFormInstanceAcceptanceStatusCallback = useCallback(acceptanceStatus => {
     setFormInstanceAcceptanceStatus({
-      formId: formInstance.formId,
       formInstanceId: formInstance._id,
       acceptanceStatus,
     });
@@ -44,7 +43,6 @@ const SubmissionActionButton = ({
 
   const setFormInstanceSchedulingProgressCallback = useCallback(schedulingProgress => {
     setFormInstanceSchedulingProgress({
-      formId: formInstance.formId,
       formInstanceId: formInstance._id,
       schedulingProgress,
     });

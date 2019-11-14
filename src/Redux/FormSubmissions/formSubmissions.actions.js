@@ -29,10 +29,10 @@ const setFormInstanceAcceptanceStatusFlow = {
   failure: err => ({ type: SET_FORM_INSTANCE_ACCEPTANCE_STATUS_FAILURE, payload: { ...err } }),
 };
 
-export const setFormInstanceAcceptanceStatus = ({ formId, formInstanceId, acceptanceStatus }) =>
-  asyncAction.POST({
+export const setFormInstanceAcceptanceStatus = ({ formInstanceId, acceptanceStatus }) =>
+  asyncAction.PUT({
     flow: setFormInstanceAcceptanceStatusFlow,
-    endpoint: `forms/${formId}/submissions/${formInstanceId}/te-core/acceptance-status`,
+    endpoint: `form-instances/${formInstanceId}/te-core/acceptance-status`,
     params: { acceptanceStatus }
   });
 
@@ -42,9 +42,9 @@ const setFormInstanceSchedulingProgressFlow = {
   failure: err => ({ type: SET_SCHEDULING_PROGRESS_FAILURE, payload: { ...err } }),
 };
 
-export const setFormInstanceSchedulingProgress = ({ formId, formInstanceId, schedulingProgress }) =>
-  asyncAction.POST({
+export const setFormInstanceSchedulingProgress = ({ formInstanceId, schedulingProgress }) =>
+  asyncAction.PUT({
     flow: setFormInstanceSchedulingProgressFlow,
-    endpoint: `forms/${formId}/submissions/${formInstanceId}/te-core/scheduling-progress`,
+    endpoint: `form-instances/${formInstanceId}/te-core/scheduling-progress`,
     params: { schedulingProgress }
   });
