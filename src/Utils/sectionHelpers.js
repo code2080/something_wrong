@@ -87,7 +87,12 @@ const extractConnectedSectionDataFromValues = (values, columns) => {
   });
   return _data;
 };
-const extractTableSectionDataFromValues = (values, columns) => [];
+
+const extractTableSectionDataFromValues = (values, columns) => {
+  if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
+  console.log(values, columns);
+  return [];
+};
 
 /**
  * @function extractColumnDataFromValues
