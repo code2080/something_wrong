@@ -30,5 +30,19 @@ export const staticCols = {
     key: 'actions',
     dataIndex: null,
     render: (_, formInstance) => <SubmissionActionButton formInstance={formInstance} />,
+  },
+  SCHEDULING_PROGRESS: {
+    title: 'Scheduling progress',
+    key: 'schedulingProgress',
+    dataIndex: 'teCoreProps.schedulingProgress',
+    render: val => val || 'Not set',
+    sorter: (a, b) => a.localeCompare(b),
+  },
+  ACCEPTANCE_STATUS: {
+    title: 'Acceptance status',
+    key: 'acceptanceStatus',
+    dataIndex: 'teCoreProps.acceptanceStatus',
+    render: val => val || 'Not set',
+    sorter: (a, b) => a.localeCompare(b),
   }
 };
