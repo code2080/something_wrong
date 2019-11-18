@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../configs';
-import { getToken } from './tokenHelpers';
+import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
 
 // Singleton to hold API status
@@ -76,10 +76,12 @@ const getAPIUrl = endpoint => {
  * @description Return a refreshed access token
  * @returns {void}
  */
-const refreshToken = () => {
+const refreshToken = async () => {
   // @todo: build refresh token flow
   window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
-  return axios.get();
+  await deleteToken();
+  window.location = '/login';
+  //return axios.get();
 }
 
 function createThunkAction({
