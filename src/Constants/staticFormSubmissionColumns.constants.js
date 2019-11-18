@@ -1,32 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-import { teCoreAcceptanceStatus, teCoreSchedulingProgress } from './teCoreProps.constants';
+import { toProgressLabel, toAcceptanceLabel } from './teCoreProps.constants';
 
 // COMPONENTS
 import SubmissionActionButton from '../Components/DynamicTable/SubmissionActionButton';
-
-const toAcceptanceLabel = status => {
-  if (status === teCoreAcceptanceStatus.ACCEPTED) {
-    return "Accepted";
-  }
-  if (status === teCoreAcceptanceStatus.REJECTED) {
-    return "Rejected";
-  }
-  return "Not set";
-}
-
-const toProgressLabel = progress => {
-  if (progress === teCoreSchedulingProgress.NOT_SCHEDULED) {
-    return "Not scheduled";
-  }
-  if (progress === teCoreSchedulingProgress.IN_PROGRESS) {
-    return "In progress";
-  }
-  if (progress === teCoreSchedulingProgress.SCHEDULING_FINISHED) {
-    return "Finished";
-  }
-  return "Not set";
-}
 
 export const staticCols = {
   NAME: {
