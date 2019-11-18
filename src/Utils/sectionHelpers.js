@@ -38,7 +38,11 @@ export const extractColumnsFromSection = (section, sectionType) => {
     title: el.label,
     key: el._id,
     dataIndex: el._id,
-    render: val => val || 'N/A',
+    render: val => {
+      if (val instanceof Object && val.value) {
+        return val.value;
+      }
+      return val || 'N/A'},
   }));
 
   switch (sectionType) {
@@ -91,7 +95,19 @@ const extractConnectedSectionDataFromValues = (values, columns) => {
 const extractTableSectionDataFromValues = (values, columns) => {
   if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
   console.log(values, columns);
-  return [];
+    const _data = (Object.keys(values) || []).map(eventId => {
+    const _eventValues = columns.reduce((eventValues, col) => {
+      // Find the element index
+      const elementIdx = values[eventId].findIndex(el => el.elementId === col.dataIndex);
+      if (elementIdx === -1) return eventValues;
+      return { ...eventValues, [col.dataIndex]: values[eventId][elementIdx].value };
+    }, {});
+    return {
+      ..._eventValues,
+      rowKey: eventId,
+    };
+  });
+  return _data;
 };
 
 /**
