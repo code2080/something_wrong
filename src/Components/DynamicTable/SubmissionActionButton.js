@@ -81,7 +81,7 @@ const SubmissionActionButton = ({
   }, [setFormInstanceAcceptanceStatusCallback]);
 
   const actionMenu = useMemo(() => (
-    <Menu onClick={onClick}>
+    <Menu getPopupContainer={() => document.getElementById("te-prefs-lib")} onClick={onClick}>
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
       <Menu.SubMenu title="Set acceptance status...">
         <Menu.Item key={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Menu.Item>
@@ -96,7 +96,7 @@ const SubmissionActionButton = ({
   ), []);
 
   return (
-    <Dropdown overlay={actionMenu} trigger={['click']}>
+    <Dropdown getPopupContainer={() => document.getElementById("te-prefs-lib")} overlay={actionMenu} trigger={['click']}>
       <Button size="small">
         Actions <Icon type="down" />
       </Button>
