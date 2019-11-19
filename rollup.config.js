@@ -37,7 +37,7 @@ export default {
         ['less', { javascriptEnabled: true }],
         ['sass']
       ],
-      // plugins: [ PrefixWrap('.te-prefs-lib') ],
+      plugins: [ PrefixWrap('.te-prefs-lib') ],
       sourceMap: true
     }),
     url(),
