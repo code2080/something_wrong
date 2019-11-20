@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Dropdown, Icon, Button } from 'antd';
+import { Menu, Dropdown, Icon, Button, Modal, Form, Input, Select } from 'antd';
 
 // ACTIONS
 import {
@@ -22,6 +22,7 @@ const ACCEPTANCE_STATUS_REJECT = 'ACCEPTANCE_STATUS_REJECT';
 const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
 const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
+const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
 
 const mapActionsToProps = {
   setFormInstanceAcceptanceStatus,
@@ -34,6 +35,26 @@ const SubmissionActionButton = ({
   setFormInstanceSchedulingProgress,
   history,
 }) => {
+  const setFormInstanceAcceptanceCallback = () => {
+    console.log('Display modal dialog');
+    Modal.info({
+      title: 'Set acceptance status',
+      getContainer: () => document.getElementById("te-prefs-lib"),
+      content: [
+        <Form key="acceptanceForm">
+          <Form.Item>
+            <Input placeholder="Comment" />
+          </Form.Item>
+          <Form.Item>
+            <Select getPopupContainer={() => document.getElementById("te-prefs-lib")}>
+              <Select.Option key={ACCEPTANCE_STATUS_ACCEPT} value={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Select.Option>
+              <Select.Option key={ACCEPTANCE_STATUS_REJECT} value={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      ],
+    });
+  };
   const setFormInstanceAcceptanceStatusCallback = useCallback(acceptanceStatus => {
     setFormInstanceAcceptanceStatus({
       formInstanceId: formInstance._id,
@@ -50,6 +71,9 @@ const SubmissionActionButton = ({
 
   const onClick = useCallback(({ key }) => {
     switch (key) {
+      case SET_ACCEPTANCE_STATUS:
+        setFormInstanceAcceptanceCallback();
+        break;
       case EDIT_FORM_INSTANCE:
         history.push(`/forms/${formInstance.formId}/${formInstance._id}`);
         break;
@@ -84,6 +108,7 @@ const SubmissionActionButton = ({
     <Menu getPopupContainer={() => document.getElementById("te-prefs-lib")} onClick={onClick}>
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
       <Menu.SubMenu title="Set acceptance status...">
+        <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status</Menu.Item>
         <Menu.Item key={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Menu.Item>
         <Menu.Item key={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Menu.Item>
       </Menu.SubMenu>
