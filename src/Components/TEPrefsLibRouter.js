@@ -24,7 +24,7 @@ const TEPrefsLibRouter = ({ authenticated }) => {
     async () => {
       window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
       await deleteToken();
-      window.location = '/login';
+      window.location = './login';
     }}>
     Log out
   </Button>) : null;

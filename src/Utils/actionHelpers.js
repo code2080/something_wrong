@@ -80,7 +80,7 @@ const refreshToken = async () => {
   // @todo: build refresh token flow
   window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
   await deleteToken();
-  window.location = '/login';
+  window.location = './login';
   //return axios.get();
 }
 
