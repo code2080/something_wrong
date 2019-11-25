@@ -7,9 +7,7 @@ const BaseSectionTableView = ({ columns, dataSource }) => (
     columns={columns}
     dataSource={dataSource}
     rowKey="rowKey"
-    pagination={{
-      size: 'small',
-    }}
+    pagination={false}
   />
 );
 
