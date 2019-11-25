@@ -60,7 +60,8 @@ const FormList = ({ forms, fetchForms, setBreadcrumbs, history }) => {
           onClick: () => history.push(`/forms/${form._id}`)
         })}
         pagination={{
-          size: 'small'
+          size: 'small',
+          pageSize: 50
         }}
       />
     </div>
