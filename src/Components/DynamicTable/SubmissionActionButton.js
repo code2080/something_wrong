@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -35,32 +35,34 @@ const SubmissionActionButton = ({
   setFormInstanceSchedulingProgress,
   history,
 }) => {
-  const setFormInstanceAcceptanceCallback = () => {
-    console.log('Display modal dialog');
-    Modal.info({
-      title: 'Set acceptance status',
-      getContainer: () => document.getElementById("te-prefs-lib"),
-      content: [
-        <Form key="acceptanceForm">
-          <Form.Item>
-            <Input placeholder="Comment" />
-          </Form.Item>
-          <Form.Item>
-            <Select getPopupContainer={() => document.getElementById("te-prefs-lib")}>
-              <Select.Option key={ACCEPTANCE_STATUS_ACCEPT} value={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Select.Option>
-              <Select.Option key={ACCEPTANCE_STATUS_REJECT} value={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Select.Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      ],
-    });
-  };
+
+  const [_acceptanceStatusComment, _setAcceptanceStatusComment] = useState('');
+  const [_acceptanceStatus, _setAcceptanceStatus] = useState('');
+  useEffect(() => {
+    // Could check here to make sure the new values aren't same as old if we want to be really diligent...
+    _setAcceptanceStatusComment(formInstance.teCoreProps.acceptanceStatusComment);
+    _setAcceptanceStatus(formInstance.teCoreProps.acceptanceStatus);
+  }, []);
+
+  console.log("A1:", _acceptanceStatus, "C1:", _acceptanceStatusComment);
+
   const setFormInstanceAcceptanceStatusCallback = useCallback(acceptanceStatus => {
     setFormInstanceAcceptanceStatus({
       formInstanceId: formInstance._id,
       acceptanceStatus,
+      comment: ""
     });
   }, [setFormInstanceAcceptanceStatus]);
+
+  const setFormInstanceAcceptanceStatusWithCommentCallback = (acceptanceStatus, acceptanceComment) => {
+    console.log("A:", acceptanceStatus, "C:", acceptanceComment);
+    setFormInstanceAcceptanceStatus({
+      formInstanceId: formInstance._id,
+      acceptanceStatus,
+      acceptanceComment
+    });
+  };
+
 
   const setFormInstanceSchedulingProgressCallback = useCallback(schedulingProgress => {
     setFormInstanceSchedulingProgress({
@@ -69,10 +71,46 @@ const SubmissionActionButton = ({
     });
   }, [setFormInstanceSchedulingProgress]);
 
+  const callbackToOpenModal = () => {
+    Modal.info({
+      title: 'Set acceptance status',
+      getContainer: () => document.getElementById("te-prefs-lib"),
+      content: [
+        <Form key="acceptanceForm">
+          <Form.Item>
+            <Input placeholder="Comment" value={_acceptanceStatusComment} onChange={e => {
+              console.log(e.target.value);
+              _setAcceptanceStatusComment(e.target.value);
+            }} />
+          </Form.Item>
+          <Form.Item>
+            <Select
+              value={_acceptanceStatus}
+              onChange={value => {
+                console.log(value);
+                _setAcceptanceStatus(value);
+              }}
+              getPopupContainer={() => document.getElementById("te-prefs-lib")}
+            >
+              <Select.Option key={ACCEPTANCE_STATUS_ACCEPT} value={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Select.Option>
+              <Select.Option key={ACCEPTANCE_STATUS_REJECT} value={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      ],
+      onOk: () => setFormInstanceAcceptanceStatusWithCommentCallback(_acceptanceStatus, _acceptanceStatusComment),
+      onCancel: () => {
+        // Reset changes
+        _setAcceptanceStatusComment(formInstance.teCoreProps.acceptanceStatusComment || '');
+        _setAcceptanceStatus(formInstance.teCoreProps.acceptanceStatus || 'DEFAULT_VALUE');
+      },
+    });
+  };
+
   const onClick = useCallback(({ key }) => {
     switch (key) {
       case SET_ACCEPTANCE_STATUS:
-        setFormInstanceAcceptanceCallback();
+        return callbackToOpenModal();
         break;
       case EDIT_FORM_INSTANCE:
         history.push(`/forms/${formInstance.formId}/${formInstance._id}`);

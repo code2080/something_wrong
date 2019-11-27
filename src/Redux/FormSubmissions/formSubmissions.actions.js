@@ -29,11 +29,11 @@ const setFormInstanceAcceptanceStatusFlow = {
   failure: err => ({ type: SET_FORM_INSTANCE_ACCEPTANCE_STATUS_FAILURE, payload: { ...err } }),
 };
 
-export const setFormInstanceAcceptanceStatus = ({ formInstanceId, acceptanceStatus }) =>
+export const setFormInstanceAcceptanceStatus = ({ formInstanceId, acceptanceStatus, acceptanceComment }) =>
   asyncAction.PUT({
     flow: setFormInstanceAcceptanceStatusFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/acceptance-status`,
-    params: { acceptanceStatus }
+    params: { acceptanceStatus, acceptanceComment }
   });
 
 const setFormInstanceSchedulingProgressFlow = {
