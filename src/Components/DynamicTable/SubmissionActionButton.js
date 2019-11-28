@@ -2,7 +2,9 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Dropdown, Icon, Button, Modal, Form, Input, Select } from 'antd';
+import { Menu, Dropdown, Icon, Button, Modal} from 'antd';
+
+import AcceptanceForm from './AcceptanceForm';
 
 // ACTIONS
 import {
@@ -36,16 +38,6 @@ const SubmissionActionButton = ({
   history,
 }) => {
 
-  const [_acceptanceStatusComment, _setAcceptanceStatusComment] = useState('');
-  const [_acceptanceStatus, _setAcceptanceStatus] = useState('');
-  useEffect(() => {
-    // Could check here to make sure the new values aren't same as old if we want to be really diligent...
-    _setAcceptanceStatusComment(formInstance.teCoreProps.acceptanceStatusComment);
-    _setAcceptanceStatus(formInstance.teCoreProps.acceptanceStatus);
-  }, []);
-
-  console.log("A1:", _acceptanceStatus, "C1:", _acceptanceStatusComment);
-
   const setFormInstanceAcceptanceStatusCallback = useCallback(acceptanceStatus => {
     setFormInstanceAcceptanceStatus({
       formInstanceId: formInstance._id,
@@ -55,14 +47,13 @@ const SubmissionActionButton = ({
   }, [setFormInstanceAcceptanceStatus]);
 
   const setFormInstanceAcceptanceStatusWithCommentCallback = (acceptanceStatus, acceptanceComment) => {
-    console.log("A:", acceptanceStatus, "C:", acceptanceComment);
+    Modal.destroyAll();
     setFormInstanceAcceptanceStatus({
       formInstanceId: formInstance._id,
       acceptanceStatus,
       acceptanceComment
     });
   };
-
 
   const setFormInstanceSchedulingProgressCallback = useCallback(schedulingProgress => {
     setFormInstanceSchedulingProgress({
@@ -74,36 +65,11 @@ const SubmissionActionButton = ({
   const callbackToOpenModal = () => {
     Modal.info({
       title: 'Set acceptance status',
+      footer: null,
       getContainer: () => document.getElementById("te-prefs-lib"),
       content: [
-        <Form key="acceptanceForm">
-          <Form.Item>
-            <Input placeholder="Comment" value={_acceptanceStatusComment} onChange={e => {
-              console.log(e.target.value);
-              _setAcceptanceStatusComment(e.target.value);
-            }} />
-          </Form.Item>
-          <Form.Item>
-            <Select
-              value={_acceptanceStatus}
-              onChange={value => {
-                console.log(value);
-                _setAcceptanceStatus(value);
-              }}
-              getPopupContainer={() => document.getElementById("te-prefs-lib")}
-            >
-              <Select.Option key={ACCEPTANCE_STATUS_ACCEPT} value={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Select.Option>
-              <Select.Option key={ACCEPTANCE_STATUS_REJECT} value={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Select.Option>
-            </Select>
-          </Form.Item>
-        </Form>
+        <AcceptanceForm key="acceptanceFormDialog" defaultStatus={formInstance.teCoreProps.acceptanceStatus} defaultComment={formInstance.teCoreProps.acceptanceComment} onSubmit={setFormInstanceAcceptanceStatusWithCommentCallback}/>
       ],
-      onOk: () => setFormInstanceAcceptanceStatusWithCommentCallback(_acceptanceStatus, _acceptanceStatusComment),
-      onCancel: () => {
-        // Reset changes
-        _setAcceptanceStatusComment(formInstance.teCoreProps.acceptanceStatusComment || '');
-        _setAcceptanceStatus(formInstance.teCoreProps.acceptanceStatus || 'DEFAULT_VALUE');
-      },
     });
   };
 
@@ -145,12 +111,8 @@ const SubmissionActionButton = ({
   const actionMenu = useMemo(() => (
     <Menu getPopupContainer={() => document.getElementById("te-prefs-lib")} onClick={onClick}>
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
-      <Menu.SubMenu title="Set acceptance status...">
-        <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status</Menu.Item>
-        <Menu.Item key={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Menu.Item>
-        <Menu.Item key={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu title="Set scheduling progress...">
+      <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
+      <Menu.SubMenu title="Set scheduling progress">
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>Mark submission as not scheduled</Menu.Item>
         <Menu.Item key={SET_PROGRESS_IN_PROGRESS}>Mark submission as in progress</Menu.Item>
         <Menu.Item key={SET_PROGRESS_SCHEDULED}>Mark submission as scheduled</Menu.Item>
