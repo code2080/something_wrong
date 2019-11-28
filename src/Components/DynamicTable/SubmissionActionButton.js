@@ -66,6 +66,7 @@ const SubmissionActionButton = ({
     Modal.info({
       title: 'Set acceptance status',
       footer: null,
+      className: "footerless-info-modal", // TODO Setting style to hide footer buttons. There HAS to be a better way of turning them off
       getContainer: () => document.getElementById("te-prefs-lib"),
       content: [
         <AcceptanceForm key="acceptanceFormDialog" defaultStatus={formInstance.teCoreProps.acceptanceStatus} defaultComment={formInstance.teCoreProps.acceptanceComment} onSubmit={setFormInstanceAcceptanceStatusWithCommentCallback}/>
