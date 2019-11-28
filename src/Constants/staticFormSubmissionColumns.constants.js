@@ -45,5 +45,12 @@ export const staticCols = {
     dataIndex: 'teCoreProps.acceptanceStatus',
     render: val => toAcceptanceLabel(val),
     sorter: (a, b) => a.localeCompare(b),
+  },
+  ACCEPTANCE_COMMENT: {
+    title: 'Acceptance comment',
+    key: 'acceptanceComment',
+    dataIndex: 'teCoreProps.acceptanceComment',
+    render: val => val || '',
+    sorter: (a, b) => a.localeCompare(b),
   }
 };
