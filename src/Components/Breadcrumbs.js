@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 
+// COMPONENTS
+import LogoutButton from './LogoutButton';
+
 // STYLES
 import './Breadcrumbs.scss';
 
@@ -22,6 +25,7 @@ const BreadcrumbsWrapper = ({ fragments }) => (
         </Breadcrumb.Item>
       ))}
     </Breadcrumb>
+    <LogoutButton />
   </div>
 );
 
