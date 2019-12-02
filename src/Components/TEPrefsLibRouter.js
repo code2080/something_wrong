@@ -11,6 +11,7 @@ import FormInstancePage from '../Pages/FormInstance';
 
 // COMPONENTS
 import BreadcrumbsWrapper from './Breadcrumbs';
+import LogoutButton from './LogoutButton';
 
 // CONSTANTS
 const mapStateToProps = state => ({
@@ -27,6 +28,7 @@ const TEPrefsLibRouter = ({ authenticated }) => {
         <Route exact path="/forms/:formId" component={FormPage} />
         <Route exact path="/forms/:formId/:formInstanceId" component={FormInstancePage} />
       </Switch>
+      <LogoutButton authenticated={authenticated}/>
     </Router>
   );
 };

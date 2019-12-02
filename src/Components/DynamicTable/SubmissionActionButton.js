@@ -1,8 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Dropdown, Icon, Button } from 'antd';
+import { Menu, Dropdown, Icon, Button, Modal} from 'antd';
+
+import AcceptanceForm from './AcceptanceForm';
 
 // ACTIONS
 import {
@@ -22,6 +24,7 @@ const ACCEPTANCE_STATUS_REJECT = 'ACCEPTANCE_STATUS_REJECT';
 const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
 const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
+const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
 
 const mapActionsToProps = {
   setFormInstanceAcceptanceStatus,
@@ -34,12 +37,23 @@ const SubmissionActionButton = ({
   setFormInstanceSchedulingProgress,
   history,
 }) => {
+
   const setFormInstanceAcceptanceStatusCallback = useCallback(acceptanceStatus => {
     setFormInstanceAcceptanceStatus({
       formInstanceId: formInstance._id,
       acceptanceStatus,
+      comment: ""
     });
   }, [setFormInstanceAcceptanceStatus]);
+
+  const setFormInstanceAcceptanceStatusWithCommentCallback = (acceptanceStatus, acceptanceComment) => {
+    Modal.destroyAll();
+    setFormInstanceAcceptanceStatus({
+      formInstanceId: formInstance._id,
+      acceptanceStatus,
+      acceptanceComment
+    });
+  };
 
   const setFormInstanceSchedulingProgressCallback = useCallback(schedulingProgress => {
     setFormInstanceSchedulingProgress({
@@ -48,8 +62,23 @@ const SubmissionActionButton = ({
     });
   }, [setFormInstanceSchedulingProgress]);
 
+  const callbackToOpenModal = () => {
+    Modal.info({
+      title: 'Set acceptance status',
+      footer: null,
+      className: "footerless-info-modal", // TODO Setting style to hide footer buttons. There HAS to be a better way of turning them off
+      getContainer: () => document.getElementById("te-prefs-lib"),
+      content: [
+        <AcceptanceForm key="acceptanceFormDialog" defaultStatus={formInstance.teCoreProps.acceptanceStatus} defaultComment={formInstance.teCoreProps.acceptanceComment} onSubmit={setFormInstanceAcceptanceStatusWithCommentCallback}/>
+      ],
+    });
+  };
+
   const onClick = useCallback(({ key }) => {
     switch (key) {
+      case SET_ACCEPTANCE_STATUS:
+        return callbackToOpenModal();
+        break;
       case EDIT_FORM_INSTANCE:
         history.push(`/forms/${formInstance.formId}/${formInstance._id}`);
         break;
@@ -81,13 +110,10 @@ const SubmissionActionButton = ({
   }, [setFormInstanceAcceptanceStatusCallback]);
 
   const actionMenu = useMemo(() => (
-    <Menu onClick={onClick}>
+    <Menu getPopupContainer={() => document.getElementById("te-prefs-lib")} onClick={onClick}>
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
-      <Menu.SubMenu title="Set acceptance status...">
-        <Menu.Item key={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Menu.Item>
-        <Menu.Item key={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu title="Set scheduling progress...">
+      <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
+      <Menu.SubMenu title="Set scheduling progress">
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>Mark submission as not scheduled</Menu.Item>
         <Menu.Item key={SET_PROGRESS_IN_PROGRESS}>Mark submission as in progress</Menu.Item>
         <Menu.Item key={SET_PROGRESS_SCHEDULED}>Mark submission as scheduled</Menu.Item>
@@ -96,7 +122,7 @@ const SubmissionActionButton = ({
   ), []);
 
   return (
-    <Dropdown overlay={actionMenu} trigger={['click']}>
+    <Dropdown getPopupContainer={() => document.getElementById("te-prefs-lib")} overlay={actionMenu} trigger={['click']}>
       <Button size="small">
         Actions <Icon type="down" />
       </Button>

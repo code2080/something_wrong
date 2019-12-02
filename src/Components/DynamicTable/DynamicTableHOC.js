@@ -56,7 +56,8 @@ const DynamicTableHOC = ({ columns, dataSource, rowKey, history }) => {
             dataSource={_dataSource}
             rowKey={rowKey}
             pagination={{
-              size: 'small'
+              size: 'small',
+              pageSize: 50
             }}
           />
         </React.Fragment>

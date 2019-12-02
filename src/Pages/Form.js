@@ -56,7 +56,7 @@ const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcru
   return (
     <div className="form--wrapper">
       <DynamicTable
-        columns={[staticCols.NAME, staticCols.SUBMISSION_DATE, staticCols.SCOPED_OBJECT, staticCols.ACCEPTANCE_STATUS, staticCols.SCHEDULING_PROGRESS, ..._cols, staticCols.ACTION_BUTTON]}
+        columns={[staticCols.NAME, staticCols.SUBMISSION_DATE, staticCols.SCOPED_OBJECT, staticCols.ACCEPTANCE_STATUS, staticCols.ACCEPTANCE_COMMENT, staticCols.SCHEDULING_PROGRESS, ..._cols, staticCols.ACTION_BUTTON]}
         dataSource={_dataSource}
         rowKey="_id"
       />

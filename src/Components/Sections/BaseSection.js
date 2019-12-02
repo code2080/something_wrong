@@ -22,7 +22,7 @@ import { sectionViews } from '../../Constants/sectionViews.constants';
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } }, section } = ownProps;
   return {
-    values: state.submissions[formId][formInstanceId].values[section._id],
+    values: state.submissions[formId][formInstanceId].values[section._id] || [],
   };
 };
 

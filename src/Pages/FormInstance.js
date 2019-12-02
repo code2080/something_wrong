@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toProgressLabel, toAcceptanceLabel } from '../Constants/teCoreProps.constants';
 
 // ACTIONS
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
@@ -42,6 +43,8 @@ const FormInstancePage = ({ formInstance, formName, sections, setBreadcrumbs }) 
   return (
     <div className="form-instance--wrapper">
       <SectionSelector selectedSection={selectedSection} onSectionChange={selSection => setSelectedSection(selSection)} />
+      <p><span style={{ color: 'rgb(128, 128, 128)' }}>Acceptance status:</span> {formInstance.teCoreProps ? toAcceptanceLabel(formInstance.teCoreProps.acceptanceStatus) : ''}</p>
+      <p><span style={{ color: 'rgb(128, 128, 128)' }}>Scheduling progress:</span> {formInstance.teCoreProps ? toProgressLabel(formInstance.teCoreProps.schedulingProgress) : ''}</p>
       {(sections || [])
         .filter(section => {
           if (selectedSection === 'ALL_SECTIONS') return true;

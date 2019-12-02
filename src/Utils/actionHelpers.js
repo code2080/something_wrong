@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { API_URL } from '../configs';
-import { getToken } from './tokenHelpers';
+import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status
 const allApis = {};
@@ -76,10 +77,15 @@ const getAPIUrl = endpoint => {
  * @description Return a refreshed access token
  * @returns {void}
  */
-const refreshToken = () => {
+const refreshToken = async () => {
   // @todo: build refresh token flow
   window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
-  return axios.get();
+  await deleteToken();
+  console.log('Token refreshing');
+  // @todo Is history the right thing to use? If so, how to get it in here?
+  //let history = useHistory();
+  //history.push('/');
+  //return axios.get();
 }
 
 function createThunkAction({

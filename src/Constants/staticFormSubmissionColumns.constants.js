@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { toProgressLabel, toAcceptanceLabel } from './teCoreProps.constants';
 
 // COMPONENTS
 import SubmissionActionButton from '../Components/DynamicTable/SubmissionActionButton';
@@ -35,14 +36,21 @@ export const staticCols = {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
     dataIndex: 'teCoreProps.schedulingProgress',
-    render: val => val || 'Not set',
+    render: val => toProgressLabel(val),
     sorter: (a, b) => a.localeCompare(b),
   },
   ACCEPTANCE_STATUS: {
     title: 'Acceptance status',
     key: 'acceptanceStatus',
     dataIndex: 'teCoreProps.acceptanceStatus',
-    render: val => val || 'Not set',
+    render: val => toAcceptanceLabel(val),
+    sorter: (a, b) => a.localeCompare(b),
+  },
+  ACCEPTANCE_COMMENT: {
+    title: 'Acceptance comment',
+    key: 'acceptanceComment',
+    dataIndex: 'teCoreProps.acceptanceComment',
+    render: val => val || '',
     sorter: (a, b) => a.localeCompare(b),
   }
 };
