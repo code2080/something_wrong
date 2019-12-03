@@ -1,10 +1,7 @@
 import {
   SECTION_VERTICAL,
 } from '../Constants/sectionTypes.constants';
-import {
-  // elementTypes,
-  elementTypeMapping
-} from '../Constants/elementTypes.constants';
+import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { valueTypes } from '../Constants/valueTypes.constants';
 import { determineSectionType } from './determineSectionType';
 
