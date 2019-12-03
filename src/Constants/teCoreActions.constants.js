@@ -14,4 +14,7 @@ export const teCoreActions = {
     label: 'Filter objects',
     compatibleWith: ['5dbadccf1c9d4400002c7884', '5dbadde11c9d4400002c7886'],
   },
+  GET_EXTID_PROPS: {
+    callname: 'getExtIdProps',
+  }
 };
