@@ -4,6 +4,7 @@ import {
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { valueTypes } from '../Constants/valueTypes.constants';
 import { determineSectionType } from './determineSectionType';
+import { renderElementValue } from './sectionHelpers';
 
 /**
  * @function getSubmissionColumns
@@ -33,7 +34,8 @@ export const getSubmissionColumns = form => {
           dataIndex: el._id,
           key: el.label,
           sectionId: section._id,
-          sorter: (a, b) => a[el._id] - b[el._id]
+          sorter: (a, b) => a[el._id] - b[el._id],
+          render: value => renderElementValue(value, el),
         }))
     ],
   []);

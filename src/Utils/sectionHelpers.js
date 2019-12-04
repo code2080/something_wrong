@@ -9,6 +9,11 @@ import {
 } from '../Constants/sectionTypes.constants';
 
 import Datasource from '../Components/Elements/Datasource';
+import TimePicker from '../Components/Elements/TimePicker';
+import DatePicker from '../Components/Elements/DatePicker';
+import DateRangePicker from '../Components/Elements/DateRangePicker';
+import Checkbox from '../Components/Elements/Checkbox';
+import OptionSelection from '../Components/Elements/OptionSelection';
 
 const connectedSectionColumns = [
   {
@@ -38,47 +43,26 @@ const connectedSectionColumns = [
  * @param {Object} element the element in question
  * @returns {ReactNode} rendered react node
  */
-const renderElementValue = (value, element) => {
-  if (!value) return 'N/A';
+export const renderElementValue = (value, element) => {
+  if (value == null) return 'N/A';
   const elementType = getElementTypeFromId(element.elementId);
   if (!elementType || !elementTypes[elementType]) return value.toString();
 
   switch (elementType) {
     case elementTypes.ELEMENT_TYPE_INPUT_TIME:
-      /**
-       * @todo nice rendering of time inputs based on TEC settings?
-       */
-      return moment.utc(value).format('HH:mm');
+      return <TimePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE:
-      /**
-       * @todo nice rendering of date inputs based on TEC settings?
-       */
-      return moment.utc(value).format('YYYY-MM-DD');
+      return <DatePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE:
-      /**
-       * @todo nice rendering of time inputs based on TEC settings?
-       */
-      return `${moment.utc(value[0]).format('YYYY-MM-DD')} - ${moment.utc(value[1].format('YYYY-MM-DD'))}`;
+      return <DateRangePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_RADIO_GROUP:
-      /**
-       * @todo break into separate component
-       */
-      return value.toString();
+      return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_DROPDOWN:
-      /**
-       * @todo break into separate component (diff to RADIO_GROUP: can contain multiple values)
-       */
-      return value.toString();
+      return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_CHECKBOX:
-      /**
-       * @todo break into separate component (render as <Switch /> component?)
-       */
-      return value.toString();
+      return <Checkbox value={value} />
     case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
-      /**
-       * @todo break into separate component (diff to CHECKBOX: can contain multiple values)
-       */
-      return value.toString();
+      return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_PLAINTEXT:
       /**
        * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
