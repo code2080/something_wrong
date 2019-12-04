@@ -8,6 +8,7 @@ import { Card } from 'antd';
 import ViewSelector from './ViewSelector';
 import BaseSectionTableView from './BaseSectionTableView';
 import BaseSectionListView from './BaseSectionListView';
+import CalendarSettings from './CalendarSettings';
 
 // HELPERS
 import { extractColumnsFromSection, extractColumnDataFromValues } from '../../Utils/sectionHelpers';
@@ -18,6 +19,7 @@ import './BaseSection.scss';
 
 // CONSTANTS
 import { sectionViews } from '../../Constants/sectionViews.constants';
+import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } }, section } = ownProps;
@@ -55,6 +57,9 @@ const BaseSection = ({ section, values }) => {
         title={section.name}
         extra={<ViewSelector view={view} onViewChange={setView} />}
       >
+        {sectionType === SECTION_CONNECTED && (
+          <CalendarSettings calendarSettings={section.calendarSettings} />
+        )}
         {view === sectionViews.TABLE_VIEW && (
           <BaseSectionTableView columns={_columns} dataSource={_data} />
         )}

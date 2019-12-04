@@ -1,0 +1,10 @@
+.calendar-settings--wrapper {
+  .setting--wrapper {
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    .setting--label {
+      width: 15rem;
+    }
+  }
+}
