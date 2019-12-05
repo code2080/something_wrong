@@ -8,8 +8,9 @@ import { Button } from 'antd';
 import { logout } from '../Redux/Auth/auth.actions';
 
 // CONSTANTS
+import { authenticationStatuses } from '../Constants/auth.constants';
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isLoggedIn,
+  isAuthenticated: state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
 });
 
 const mapActionsToProps = {

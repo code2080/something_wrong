@@ -1,46 +1,81 @@
 import * as types from './auth.actionTypes';
 import { setToken } from '../../Utils/tokenHelpers';
+import { authenticationStatuses } from '../../Constants/auth.constants';
+import { actionsToSignOutOnFailure } from './auth.constants';
 
 // INITIAL STATE
 import initialState from './Auth.initialState';
 
 const reducer = (state = initialState, action) => {
+  if (actionsToSignOutOnFailure.indexOf(action.type) > -1) {
+    return initialState;
+  }
+
   switch (action.type) {
     case types.VALIDATE_LOGIN:
       if (!action || !action.payload || !action.payload.token)
-        return state;
+        return initialState;
       return {
         ...state,
-        isLoggedIn: true,
+        authenticationStatus: authenticationStatuses.AUTHENTICATED,
       };
 
     case types.LOGIN_SUCCESS: {
       // If payload doesn't contain token
       if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken)
-        return {
-          ...state,
-          isLoggedIn: false,
-        };
+        return initialState;
 
       const { payload: { token: { accessToken } } } = action;
       setToken(accessToken);
       return {
         ...state,
-        isLoggedIn: true,
+        authenticationStatus: authenticationStatuses.AUTHENTICATED,
       };
     };
 
-    case types.LOGOUT:
+    case types.LOGIN_MULTIPLE_ORGS: {
+      // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken)
+        return initialState;
+
+      const { payload: { token: { accessToken } } } = action;
+      setToken(accessToken);
       return {
         ...state,
-        isLoggedIn: false,
+        authenticationStatus: authenticationStatuses.MULTIPLE_ORGS,
+      }
+    }
+
+    case types.FETCH_ORGS_FOR_USER_SUCCESS: {
+      if (!action || !action.payload || !action.payload.organizations || !action.payload.organizations.length)
+        return initialState;
+      return {
+        ...state,
+        availableOrgs: [...action.payload.organizations],
       };
+    }
+
+    case types.SELECT_ORG_FOR_USER_SUCCESS: {
+      // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.accessToken)
+        return initialState;
+
+      const { payload: { accessToken } } = action;
+      setToken(accessToken);
+      return {
+        ...state,
+        authenticationStatus: authenticationStatuses.AUTHENTICATED,
+      };
+    }
+
+    case types.LOGOUT:
+      return initialState;
 
     case types.LOGIN_FAILURE:
       setToken(null);
       return {
         ...state,
-        isLoggedIn: false,
+        authenticationStatus: authenticationStatuses.NOT_AUTHENTICATED,
       };
 
     default:
