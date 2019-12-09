@@ -18,14 +18,32 @@ export const teCoreAcceptanceStatusProps = {
   [teCoreAcceptanceStatus.REJECTED]: {
     key: teCoreAcceptanceStatus.REJECTED,
     label: 'Rejected',
-    color: 'danger',
+    color: 'attention',
   },
-}
+};
 
 export const teCoreSchedulingProgress = {
   NOT_SCHEDULED: 'NOT_SCHEDULED',
   IN_PROGRESS: 'IN_PROGRESS',
   SCHEDULING_FINISHED: 'SCHEDULING_FINISHED',
+};
+
+export const teCoreSchedulingProgressProps = {
+  [teCoreSchedulingProgress.NOT_SCHEDULED]: {
+    key: teCoreSchedulingProgress.NOT_SCHEDULED,
+    label: 'Not scheduled',
+    color: 'default',
+  },
+  [teCoreSchedulingProgress.IN_PROGRESS]: {
+    key: teCoreSchedulingProgress.IN_PROGRESS,
+    label: 'In progress',
+    color: 'warning',
+  },
+  [teCoreSchedulingProgress.SCHEDULING_FINISHED]: {
+    key: teCoreSchedulingProgress.SCHEDULING_FINISHED,
+    label: 'Finished',
+    color: 'success',
+  },
 };
 
 export const toAcceptanceLabel = status => {

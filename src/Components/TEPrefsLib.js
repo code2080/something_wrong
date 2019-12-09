@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
+import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
 
 // REDUX
 import configureStore from '../Redux/store';
@@ -21,34 +23,25 @@ Promise.resolve();
 // Validate token presence
 store.dispatch(validateLogin());
 
-const configureCoreAPI = (coreAPI) => {
-  return {
-    get: (callName) => {
-      if (coreAPI && coreAPI.hasOwnProperty(callName)) {
-        return coreAPI[callName];
-      }
-      return () => {
-        console.log(`${callName} not implemented in provided Core API.`);
-      }
-    },
-    list: () => {
-      if (!coreAPI) {
-        return [];
-      }
-      return Object.keys(coreAPI);
-    }
-  }
-};
-
-const TEPrefsLib = (props) => {
-  window.coreAPI = configureCoreAPI(props.coreAPI);
+const TEPrefsLib = ({ coreAPI: _teCoreAPI }) => {
+  const teCoreAPI = configureTECoreAPI(_teCoreAPI);
   return (
     <Provider store={store}>
-      <div className='te-prefs-lib' id="te-prefs-lib">
-        <TEPrefsLibRouter />
-      </div>
+      <TECoreAPIProvider api={teCoreAPI}>
+        <div className='te-prefs-lib' id="te-prefs-lib">
+          <TEPrefsLibRouter />
+        </div>
+      </TECoreAPIProvider>
     </Provider>
   );
-}
+};
+
+TEPrefsLib.propTypes = {
+  coreAPI: PropTypes.object,
+};
+
+TEPrefsLib.defaultProps = {
+  coreAPI: {},
+};
 
 export default TEPrefsLib

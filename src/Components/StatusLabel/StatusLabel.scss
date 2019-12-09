@@ -1,0 +1,48 @@
+@import '../../Styles/globals.scss';
+
+.status-label--outer {
+  display: flex;
+  align-items: center;
+  margin-bottom: $outerComponentPadding;
+
+  span.status-label--label {
+    color: rgb(128, 128, 128);
+    margin-right: $outerComponentPadding;
+  }
+}
+
+.status-label--wrapper {
+  height: 1.2rem;
+  font-weight: 500;
+  line-height: 1.2rem;
+  padding: 0 0.4rem;
+  border-radius: 1rem;
+  display: inline-block;
+  margin: 0 0.8rem;
+  text-transform: uppercase;
+  font-size: $defaultFontSize;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &.default {
+    background: $swedishSkies;
+    color: lighten($darkBlack, 30%);
+  }
+
+  &.success {
+    background: rgba($jungleGreen, 0.2);
+    color: $jungleGreen;
+  }
+
+  &.warning {
+    background: rgba($candlelight, 0.2);
+    color: $deepSeaGreen;
+  }
+
+  &.attention {
+    background: $bittersweet;
+    color: #fff;
+  }
+}
