@@ -21,13 +21,13 @@ const connectedSectionColumns = [
     title: 'Start time',
     key: 'startTime',
     dataIndex: 'startTime',
-    render: val => moment(val).format('YYYY-MM-DD'),
+    render: val => moment(val).format('YYYY-MM-DD HH:mm'),
   },
   {
     title: 'End time',
     key: 'endTime',
     dataIndex: 'endTime',
-    render: val => moment(val).format('YYYY-MM-DD'),
+    render: val => moment(val).format('YYYY-MM-DD HH:mm'),
   }
 ];
 

@@ -4,11 +4,16 @@ import PropTypes from 'prop-types';
 
 // ACTIONS
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
+import { setTEDataForValues } from '../Redux/TE/te.actions';
 
 // COMPONENTS
 import SectionSelector from '../Components/SectionSelector';
 import BaseSection from '../Components/Sections/BaseSection';
 import StatusLabel from '../Components/StatusLabel/StatusLabel';
+import { withTECoreAPI } from '../Components/TECoreAPI';
+
+// HELPERS
+import { findTEValuesInSubmission } from '../Redux/TE/te.helpers';
 
 // STYLES
 import './FormInstance.scss';
@@ -30,9 +35,18 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   setBreadcrumbs,
+  setTEDataForValues,
 };
 
-const FormInstancePage = ({ formInstance, formName, sections, setBreadcrumbs }) => {
+const FormInstancePage = ({
+  formInstance,
+  formName,
+  sections,
+  setBreadcrumbs,
+  teCoreAPI,
+  setTEDataForValues
+}) => {
+  // Effect to update breadcrumbs
   useEffect(() => {
     setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
@@ -41,6 +55,17 @@ const FormInstancePage = ({ formInstance, formName, sections, setBreadcrumbs }) 
     ]);
   }, []);
 
+  // Effect to get all TE values
+  useEffect(() => {
+    async function exec() {
+      const teValues = findTEValuesInSubmission(sections, formInstance.values);
+      const extIdProps = await teCoreAPI.getExtIdProps(teValues);
+      setTEDataForValues(extIdProps || {});
+    }
+    exec();
+  }, []);
+
+  // State var to hold section selectionn
   const [selectedSection, setSelectedSection] = useState('ALL_SECTIONS');
 
   return (
@@ -78,10 +103,12 @@ FormInstancePage.propTypes = {
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
+  setTEDataForValues: PropTypes.func.isRequired,
 };
 
 FormInstancePage.defaultProps = {
   sections: [],
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(FormInstancePage);
+export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(FormInstancePage));

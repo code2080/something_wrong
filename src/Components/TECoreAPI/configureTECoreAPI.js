@@ -30,7 +30,9 @@ const configureTECoreAPI = teCoreAPI => {
     listSupportedActions: () => Object.keys(teCoreAPI) || [],
     getCompatibleFunctionsForElement:
       elementId => Object.keys(teCoreActions).filter(
-        actionKey => teCoreActions[actionKey].compatibleWith.indexOf(elementId) > -1
+        actionKey =>
+          teCoreActions[actionKey].compatibleWith &&
+          teCoreActions[actionKey].compatibleWith.indexOf(elementId) > -1
       ),
   };
   return {
