@@ -14,27 +14,44 @@ import DatePicker from '../Components/Elements/DatePicker';
 import DateRangePicker from '../Components/Elements/DateRangePicker';
 import Checkbox from '../Components/Elements/Checkbox';
 import OptionSelection from '../Components/Elements/OptionSelection';
+import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 
-const connectedSectionColumns = [
-  {
-    title: 'Title',
-    key: 'title',
-    dataIndex: 'title',
-    render: val => val || 'N/A',
-  },
-  {
-    title: 'Start time',
-    key: 'startTime',
-    dataIndex: 'startTime',
-    render: val => moment(val).format('YYYY-MM-DD HH:mm'),
-  },
-  {
-    title: 'End time',
-    key: 'endTime',
-    dataIndex: 'endTime',
-    render: val => moment(val).format('YYYY-MM-DD HH:mm'),
-  }
-];
+const connectedSectionColumns = {
+  NO_TIMESLOTS: [
+    {
+      title: 'Title',
+      key: 'title',
+      dataIndex: 'title',
+      render: val => val || 'N/A',
+    },
+    {
+      title: 'Start time',
+      key: 'startTime',
+      dataIndex: 'startTime',
+      render: val => moment(val).format('YYYY-MM-DD HH:mm'),
+    },
+    {
+      title: 'End time',
+      key: 'endTime',
+      dataIndex: 'endTime',
+      render: val => moment(val).format('YYYY-MM-DD HH:mm'),
+    },
+  ],
+  WITH_TIMESLOTS: timeslots => [
+    {
+      title: 'Title',
+      key: 'title',
+      dataIndex: 'title',
+      render: val => val || 'N/A',
+    },
+    {
+      title: 'Timeslot',
+      key: 'timeslot',
+      dataIndex: null,
+      render: (_, event) => <TimeSlotColumn event={event} timeslots={timeslots} />,
+    },
+  ]
+};
 
 /**
  * @function renderElementValue
@@ -109,8 +126,18 @@ export const extractColumnsFromSection = (section, sectionType) => {
   }));
 
   switch (sectionType) {
-    case SECTION_CONNECTED:
-      return [ ...connectedSectionColumns, ..._elementColumns ];
+    case SECTION_CONNECTED: {
+      if (section.calendarSettings && section.calendarSettings.useTimeslots) {
+        return [
+          ...connectedSectionColumns.WITH_TIMESLOTS(section.calendarSettings.timeslots),
+          ..._elementColumns
+        ];
+      }
+      return [
+        ...connectedSectionColumns.NO_TIMESLOTS,
+        ..._elementColumns
+      ];
+    }
 
     default:
       return [ ..._elementColumns ];

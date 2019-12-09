@@ -1,0 +1,19 @@
+@import "../../Styles/globals.scss";
+
+.calendar-timeslot--outer {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.8rem;
+
+  .calendar-timeslot--wrapper {
+    display: flex;
+    .timeslot-setting--wrapper {
+      margin-right: 0.8rem;
+
+      .setting--label {
+        color: $rustyGrey;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
