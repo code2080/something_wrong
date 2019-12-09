@@ -5,20 +5,19 @@ import { Card } from 'antd';
 // STYLES
 import './BaseSectionListView.scss';
 
-const BaseSectionListView = ({ columns, dataSource }) => (
-  <React.Fragment>
-    {(dataSource || []).map(el => (
-      <Card key={el.rowKey}>
-        {(columns || []).map(col => (
+const BaseSectionListView = ({ columns, dataSource }) =>
+  (dataSource || []).map(el => (
+    <Card key={el.rowKey}>
+      {(columns || []).map(col => {
+        return (
           <div className="base-section--list--item" key={col.dataIndex}>
-            <span className="title">{col.title}:</span>
-            <span className="value">{el[col.dataIndex]}</span>
+            <div className="title">{col.title}:</div>
+            <div className="value">{col.render(el[col.dataIndex])}</div>
           </div>
-        ))}
-      </Card>
-    ))}
-  </React.Fragment>
-);
+        );
+      })}
+    </Card>
+  ));
 
 BaseSectionListView.propTypes = {
   columns: PropTypes.array.isRequired,

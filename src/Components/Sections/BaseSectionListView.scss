@@ -1,6 +1,12 @@
 .base-section--list--item {
+  display: flex;
+  margin-bottom: 0.2rem;
   .title {
     font-weight: 700;
     margin-right: 4px;
+    width: 15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -1,0 +1,15 @@
+@import '../../Styles/globals.scss';
+
+.picker--wrapper {
+  display: flex;
+  align-items: center;
+
+  .icon--wrapper {
+    padding: 0 0.2rem;
+    background: $swedishSkies;
+    color: $darkBlack;
+    border-radius: 0.8rem;
+    font-size: 0.7rem;
+    margin-right: 0.1rem;
+  }
+}

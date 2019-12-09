@@ -72,3 +72,16 @@ export const findElementValueInSubmission = (element, sections, values) => {
       return null;
   }
 };
+
+/**
+ * @function extractOptionFromValue
+ * @description returns the element option based on the value
+ * @param {String} value the selected value
+ * @param {Array} options the options
+ * @returns {Object} the options object
+ */
+export const extractOptionFromValue = (value, options) => {
+  const optionIdx = (options || []).findIndex(opt => opt.value === value);
+  if (optionIdx === -1) return { value, label: 'N/A' };
+  return options[optionIdx];
+};
