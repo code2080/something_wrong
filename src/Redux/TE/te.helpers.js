@@ -57,7 +57,7 @@ export const findTEValuesInSubmission = (sections, values) => {
     const _elementValues = elementsInDataType.reduce(
       (allValues, element) => [
         ...allValues,
-        ...findElementValueInSubmission(element, sections, values)
+        ...(findElementValueInSubmission(element, sections, values) || [])
       ],
       []
     );

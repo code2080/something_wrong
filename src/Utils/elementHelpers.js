@@ -21,12 +21,20 @@ export const getElementTypeFromId = elementId => {
 };
 
 const findElementValueInRegularSection = (elementId, section) => {
+  if (!section) {
+    console.log('No section in findElementValueInRegularSection');
+    return null;
+  }
   const elIdx = section.findIndex(el => el.elementId === elementId);
   if (elIdx > -1) return section[elIdx].value;
   return null;
 };
 
 const findElementValueInTableSection = (elementId, section) => {
+  if (!section) {
+    console.log('No section in findElementValueInTableSection');
+    return null;
+  }
   const rowArr = Object.keys(section).map(rowIdx => section[rowIdx]);
   const values = rowArr.reduce((values, row) => {
     const elIdx = row.findIndex(el => el.elementId === elementId);
@@ -38,6 +46,10 @@ const findElementValueInTableSection = (elementId, section) => {
 };
 
 const findElementValueInConnectedSection = (elementId, section) => {
+  if (!section) {
+    console.log('No section in findElementValueInConnectedSection');
+    return null;
+  }
   const eventArr = Object.keys(section).map(eventId => section[eventId]);
   const values = eventArr.reduce((values, event) => {
     const elIdx = event.values.findIndex(el => el.elementId === elementId);

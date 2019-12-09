@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => {
   const {
     acceptanceComment: _acceptanceComment,
     acceptanceStatus: _acceptanceStatus,
-  } = state.submissions[formId][formInstanceId].teCoreProps;
+  } = state.submissions[formId][formInstanceId].teCoreProps || {};
 
   return {
     _acceptanceStatus,
