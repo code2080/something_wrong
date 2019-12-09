@@ -30,6 +30,12 @@ const reducer = (state = initialState, action) => {
       };
     };
 
+    case types.LOGOUT:
+      return {
+        ...state,
+        isLoggedIn: false,
+      };
+
     case types.LOGIN_FAILURE:
       setToken(null);
       return {

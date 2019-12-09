@@ -1,10 +1,12 @@
 import { TOKEN_NAME } from '../../configs';
 import { asyncAction } from '../../Utils/actionHelpers';
+import { deleteToken } from '../../Utils/tokenHelpers';
 import {
   VALIDATE_LOGIN,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
+  LOGOUT
 } from './auth.actionTypes';
 
 export const validateLogin = () => async dispatch => {
@@ -26,3 +28,8 @@ export const login = ({ account, password }) =>
     params: { account, password, },
     requiresAuth: false,
   });
+
+export const logout = () => async dispatch => {
+  await deleteToken();
+  dispatch({ type: LOGOUT });
+};

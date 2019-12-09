@@ -4,6 +4,7 @@
   background: rgb(250, 250, 250);
   padding: $outerComponentPadding;
   display: flex;
+  align-items: center;
 
   .breadcrumbs--label {
     margin-right: 0.8rem;
@@ -16,5 +17,9 @@
         color: $jungleGreen !important;
       }
     }
+  }
+
+  & > button {
+    margin-left: auto;
   }
 }

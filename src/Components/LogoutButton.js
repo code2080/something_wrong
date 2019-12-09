@@ -1,18 +1,47 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
-import { deleteToken } from '../Utils/tokenHelpers';
 
-const LogoutButton = (props) => {
-    let history = useHistory();
-    return props.authenticated ? (<Button size="small" onClick={
-        async () => {
-            window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
-            await deleteToken();
-            history.push('/');
-        }}>
-        Log out
-  </Button>) : null;
-}
+// ACTIONS
+import { logout } from '../Redux/Auth/auth.actions';
 
-export default LogoutButton;
+// CONSTANTS
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isLoggedIn,
+});
+
+const mapActionsToProps = {
+  logout,
+};
+
+const LogoutButton = ({ isAuthenticated, logout, history }) => {
+  const logOutCallback = useCallback(async () => {
+    await logout();
+    history.push('/');
+  }, [logout, history]);
+
+  return (
+    <Button
+      size="small"
+      type="danger"
+      onClick={logOutCallback}
+      disabled={!isAuthenticated}
+    >
+      Log out
+    </Button>
+  );
+};
+
+LogoutButton.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  logout: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+};
+
+LogoutButton.defaultProps = {
+  isAuthenticated: false,
+};
+
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(LogoutButton));

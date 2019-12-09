@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
 
 // PAGES
@@ -11,14 +10,13 @@ import FormInstancePage from '../Pages/FormInstance';
 
 // COMPONENTS
 import BreadcrumbsWrapper from './Breadcrumbs';
-import LogoutButton from './LogoutButton';
 
 // CONSTANTS
 const mapStateToProps = state => ({
   authenticated: state.auth.isLoggedIn,
 });
 
-const TEPrefsLibRouter = ({ authenticated }) => {
+const TEPrefsLibRouter = () => {
   return (
     <Router>
       <BreadcrumbsWrapper />
@@ -28,17 +26,8 @@ const TEPrefsLibRouter = ({ authenticated }) => {
         <Route exact path="/forms/:formId" component={FormPage} />
         <Route exact path="/forms/:formId/:formInstanceId" component={FormInstancePage} />
       </Switch>
-      <LogoutButton authenticated={authenticated}/>
     </Router>
   );
-};
-
-TEPrefsLibRouter.propTypes = {
-  authenticated: PropTypes.bool,
-};
-
-TEPrefsLibRouter.defaultProps = {
-  authenticated: false,
 };
 
 export default connect(mapStateToProps, null)(TEPrefsLibRouter);
