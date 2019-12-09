@@ -1,0 +1,5 @@
+export const authenticationStatuses = {
+  NOT_AUTHENTICATED: 'NOT_AUTHENTICATED',
+  MULTIPLE_ORGS: 'MULTIPLE_ORGS',
+  AUTHENTICATED: 'AUTHENTICATED',
+};
