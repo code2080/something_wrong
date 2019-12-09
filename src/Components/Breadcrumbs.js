@@ -4,19 +4,25 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 
+// STYLES
+import './Breadcrumbs.scss';
+
 // CONSTANTS
 const mapStateToProps = state => ({
   fragments: state.globalUI.breadcrumbs,
 });
 
 const BreadcrumbsWrapper = ({ fragments }) => (
-  <Breadcrumb style={{ marginBottom: '1.2rem' }}>
-    {fragments && fragments.map((el, idx) => (
-      <Breadcrumb.Item key={idx}>
-        <Link to={el.path}>{el.label}</Link>
-      </Breadcrumb.Item>
-    ))}
-  </Breadcrumb>
+  <div className="breadcrumbs--wrapper">
+    <span className="breadcrumbs--label">You are here:</span>
+    <Breadcrumb>
+      {fragments && fragments.map((el, idx) => (
+        <Breadcrumb.Item key={idx}>
+          <Link to={el.path}>{el.label}</Link>
+        </Breadcrumb.Item>
+      ))}
+    </Breadcrumb>
+  </div>
 );
 
 BreadcrumbsWrapper.propTypes = {
