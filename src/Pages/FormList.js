@@ -6,6 +6,7 @@ import { Table } from 'antd';
 
 // ACTIONS
 import { fetchForms } from '../Redux/Forms/forms.actions';
+import { fetchIntegrationSettings } from '../Redux/Integration/integration.actions';
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
 
 // CONSTANTS
@@ -15,12 +16,17 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   fetchForms,
-  setBreadcrumbs
+  setBreadcrumbs,
+  fetchIntegrationSettings,
 };
 
-const FormList = ({ forms, fetchForms, setBreadcrumbs, history }) => {
+const FormList = ({ forms, fetchForms, fetchIntegrationSettings, setBreadcrumbs, history }) => {
   useEffect(() => {
     fetchForms();
+  }, []);
+
+  useEffect(() => {
+    fetchIntegrationSettings();
   }, []);
 
   useEffect(() => {
@@ -71,6 +77,7 @@ const FormList = ({ forms, fetchForms, setBreadcrumbs, history }) => {
 FormList.propTypes = {
   forms: PropTypes.array,
   fetchForms: PropTypes.func.isRequired,
+  fetchIntegrationSettings: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
