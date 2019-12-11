@@ -1,0 +1,6 @@
+export const datasourceValueTypes = {
+  OBJECT_EXTID: 'OBJECT_EXTID',
+  TYPE_EXTID: 'TYPE_EXTID',
+  FIELD_EXTID: 'FIELD_EXTID',
+  FIELD_VALUE: 'FIELD_VALUE',
+};

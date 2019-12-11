@@ -6,6 +6,9 @@ import { Menu, Dropdown, Icon } from 'antd';
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 
+// SELECTORS
+import { getTECoreAPIPayload } from '../../Redux/Integration/integration.selectors';
+
 // STYLES
 import './Datasource.scss';
 
@@ -13,19 +16,22 @@ import './Datasource.scss';
 import { teCoreActions } from '../../Constants/teCoreActions.constants';
 
 const mapStateToProps = (state, ownProps) => {
-  if (!ownProps.value && ownProps.value[0]) return { label: null };
-  const extId = ownProps.value[0];
+  if (!ownProps.value && ownProps.value[0]) return { label: null, payload: null };
+  const { value, element } = ownProps;
+  const extId = value[0];
+  const payload = getTECoreAPIPayload(value[0], element.datasource, state);
   return {
     label: state.te.extIdProps[extId] ? state.te.extIdProps[extId].label : null,
+    payload,
   };
 };
 
-const Datasource = ({ label, value, element, teCoreAPI }) => {
+const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
   // Callback on menu click
   const onClickCallback = useCallback(({ key }) => {
     const { callname } = teCoreActions[key];
-    teCoreAPI[callname](value[0]);
-  }, [teCoreAPI]);
+    teCoreAPI[callname](payload);
+  }, [payload, teCoreAPI]);
   // Memoized list of supported actions
   const supportedActions = useMemo(
     () => teCoreAPI.getCompatibleFunctionsForElement(element.elementId),
@@ -62,6 +68,7 @@ const Datasource = ({ label, value, element, teCoreAPI }) => {
 };
 
 Datasource.propTypes = {
+  payload: PropTypes.array.isRequired,
   label: PropTypes.string,
   value: PropTypes.array,
   element: PropTypes.object,
