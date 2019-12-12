@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
   const extId = value[0];
   const payload = getTECoreAPIPayload(value[0], element.datasource, state);
   return {
-    label: state.te.extIdProps[extId] ? state.te.extIdProps[extId].label : null,
+    label: state.te.extIdProps.objects[extId] ? state.te.extIdProps.objects[extId].label : null,
     payload,
   };
 };

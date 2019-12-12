@@ -1,3 +1,7 @@
 export const initialState = {
-  extIdProps: {},
+  extIdProps: {
+    objects: {},
+    fields: {},
+    types: {},
+  },
 };

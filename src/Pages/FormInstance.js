@@ -12,8 +12,8 @@ import BaseSection from '../Components/Sections/BaseSection';
 import StatusLabel from '../Components/StatusLabel/StatusLabel';
 import { withTECoreAPI } from '../Components/TECoreAPI';
 
-// HELPERS
-import { findTEValuesInSubmission } from '../Redux/TE/te.helpers';
+// SELECTORS
+import { getExtIdPropsPayload } from '../Redux/Integration/integration.selectors';
 
 // STYLES
 import './FormInstance.scss';
@@ -26,10 +26,14 @@ import {
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } } } = ownProps;
+  const sections = state.forms[formId].sections;
+  const values = state.submissions[formId][formInstanceId].values;
+  const teValues = getExtIdPropsPayload(sections, values, state);
   return {
     formName: state.forms[formId].name,
     formInstance: state.submissions[formId][formInstanceId],
-    sections: state.forms[formId].sections,
+    teValues,
+    sections,
   };
 };
 
@@ -42,6 +46,7 @@ const FormInstancePage = ({
   formInstance,
   formName,
   sections,
+  teValues,
   setBreadcrumbs,
   teCoreAPI,
   setTEDataForValues
@@ -58,7 +63,6 @@ const FormInstancePage = ({
   // Effect to get all TE values
   useEffect(() => {
     async function exec() {
-      const teValues = findTEValuesInSubmission(sections, formInstance.values);
       const extIdProps = await teCoreAPI.getExtIdProps(teValues);
       setTEDataForValues(extIdProps || {});
     }
@@ -102,6 +106,7 @@ FormInstancePage.propTypes = {
   formInstance: PropTypes.object.isRequired,
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
+  teValues: PropTypes.object.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
   setTEDataForValues: PropTypes.func.isRequired,

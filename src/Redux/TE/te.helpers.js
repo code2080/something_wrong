@@ -55,11 +55,13 @@ export const findTEValuesInSubmission = (sections, values) => {
   return Object.keys(elements).reduce((elementValues, dataType) => {
     const elementsInDataType = elements[dataType];
     const _elementValues = elementsInDataType.reduce(
-      (allValues, element) => [
-        ...allValues,
-        ...(findElementValueInSubmission(element, sections, values) || [])
-      ],
-      []
+      (allValues, element) => {
+        console.log(element);
+        return [
+          ...allValues,
+          ...(findElementValueInSubmission(element, sections, values) || [])
+        ];
+      }, []
     );
     return {
       ...elementValues,
