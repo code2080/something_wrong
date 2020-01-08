@@ -15,6 +15,7 @@ import DateRangePicker from '../Components/Elements/DateRangePicker';
 import Checkbox from '../Components/Elements/Checkbox';
 import OptionSelection from '../Components/Elements/OptionSelection';
 import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
+import ConnectedSectionSchedulingColumn from '../Components/AutomaticScheduling/ConnectedSectionSchedulingColumn';
 
 const connectedSectionColumns = {
   NO_TIMESLOTS: [
@@ -50,7 +51,22 @@ const connectedSectionColumns = {
       dataIndex: null,
       render: (_, event) => <TimeSlotColumn event={event} timeslots={timeslots} />,
     },
-  ]
+  ],
+  SCHEDULING: (sectionId, formInstanceId, formId) => [
+    {
+      title: 'Scheduling',
+      key: 'scheduling',
+      dataIndex: null,
+      render: (_, event) => (
+        <ConnectedSectionSchedulingColumn
+          event={event}
+          sectionId={sectionId}
+          formInstanceId={formInstanceId}
+          formId={formId}
+        />
+      ),
+    },
+  ],
 };
 
 /**
@@ -117,7 +133,7 @@ export const renderElementValue = (value, element) => {
  * @param {Object} section the form section object to extract the columns from
  * @returns {Array} columns
  */
-export const extractColumnsFromSection = (section, sectionType) => {
+export const extractColumnsFromSection = (section, sectionType, formInstanceId, formId) => {
   const _elementColumns = section.elements.map(el => ({
     title: el.label,
     key: el._id,
@@ -130,12 +146,14 @@ export const extractColumnsFromSection = (section, sectionType) => {
       if (section.calendarSettings && section.calendarSettings.useTimeslots) {
         return [
           ...connectedSectionColumns.WITH_TIMESLOTS(section.calendarSettings.timeslots),
-          ..._elementColumns
+          ..._elementColumns,
+          ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ];
       }
       return [
         ...connectedSectionColumns.NO_TIMESLOTS,
-        ..._elementColumns
+        ..._elementColumns,
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
       ];
     }
 

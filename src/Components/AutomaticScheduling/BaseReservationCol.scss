@@ -1,0 +1,25 @@
+@import '../../Styles/globals.scss';
+
+.base-reservation-col--wrapper {
+  display: flex;
+  align-items: center;
+  
+  .base-reservation-col--icon {
+    color: $rustyGrey;
+  }
+}
+
+.base-reservation-col--quickview {
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.base-reservation-col__quickview--icon {
+  margin: 0 0.4rem;
+  padding: 0 0.2rem;
+  border-radius: 50%;
+  background: rgb(250, 250, 250);
+  border: 1px solid rgb(232, 232, 232);
+}

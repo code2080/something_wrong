@@ -9,8 +9,13 @@ import { fetchForms } from '../Redux/Forms/forms.actions';
 import { fetchIntegrationSettings } from '../Redux/Integration/integration.actions';
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
 
+// SELECTORS
+import { createLoadingSelector } from '../Redux/APIStatus/apiStatus.selectors';
+
 // CONSTANTS
+const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
+  isLoading: loadingSelector(state),
   forms: (Object.keys(state.forms) || []).map(key => state.forms[key]),
 });
 
@@ -20,7 +25,14 @@ const mapActionsToProps = {
   fetchIntegrationSettings,
 };
 
-const FormList = ({ forms, fetchForms, fetchIntegrationSettings, setBreadcrumbs, history }) => {
+const FormList = ({
+  forms,
+  isLoading,
+  fetchForms,
+  fetchIntegrationSettings,
+  setBreadcrumbs,
+  history
+}) => {
   useEffect(() => {
     fetchForms();
   }, []);
@@ -69,12 +81,14 @@ const FormList = ({ forms, fetchForms, fetchIntegrationSettings, setBreadcrumbs,
           size: 'small',
           pageSize: 50
         }}
+        loading={isLoading}
       />
     </div>
   );
 }
 
 FormList.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
   forms: PropTypes.array,
   fetchForms: PropTypes.func.isRequired,
   fetchIntegrationSettings: PropTypes.func.isRequired,

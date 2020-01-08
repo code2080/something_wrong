@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Table } from 'antd';
 
 // COMPONENTS
@@ -8,7 +7,7 @@ import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
 
-const DynamicTableHOC = ({ columns, dataSource, rowKey, history }) => {
+const DynamicTableHOC = ({ columns, dataSource, rowKey, isLoading }) => {
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
   // State variable to hold which columns should be shown
@@ -59,6 +58,7 @@ const DynamicTableHOC = ({ columns, dataSource, rowKey, history }) => {
               size: 'small',
               pageSize: 50
             }}
+            loading={isLoading}
           />
         </React.Fragment>
       )}
@@ -70,13 +70,14 @@ DynamicTableHOC.propTypes = {
   columns: PropTypes.array,
   dataSource: PropTypes.array,
   rowKey: PropTypes.string,
-  history: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 DynamicTableHOC.defaultProps = {
   columns: [],
   dataSource: [],
   rowKey: '_id',
+  isLoading: false,
 };
 
-export default withRouter(DynamicTableHOC);
+export default DynamicTableHOC;

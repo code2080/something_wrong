@@ -20,7 +20,7 @@
   display: inline-block;
   margin: 0 0.8rem;
   text-transform: uppercase;
-  font-size: $defaultFontSize;
+  font-size: $defaultFontSize !important;
 
   &:first-child {
     margin-left: 0;
@@ -44,5 +44,9 @@
   &.attention {
     background: $bittersweet;
     color: #fff;
+  }
+
+  &.no-margin {
+    margin: 0 !important;
   }
 }

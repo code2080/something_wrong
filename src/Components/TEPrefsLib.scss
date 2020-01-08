@@ -10,7 +10,7 @@
   max-width: 100%;
   display: block;
   padding: 0;
-  font-size: $defaultFontSize;
+  font-size: $defaultFontSize !important;
 }
 
 .ant-table {
