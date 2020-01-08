@@ -1,4 +1,4 @@
-import { TOKEN_NAME } from '../../configs';
+import { TOKEN_NAME, AUTH_URL, APP_ID } from '../../configs';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { deleteToken } from '../../Utils/tokenHelpers';
 import {
@@ -38,7 +38,7 @@ const loginFlow = {
 export const login = ({ account, password }) =>
   asyncAction.POST({
     flow: loginFlow,
-    endpoint: 'https://auth.timeedit.io/v1/auth/validate-login',
+    endpoint: `${AUTH_URL}auth/validate-login`,
     params: { account, password, },
     requiresAuth: false,
   });
@@ -52,7 +52,7 @@ const fetchOrgsForUserFlow = {
 export const fetchOrgsForUser = () =>
   asyncAction.GET({
     flow: fetchOrgsForUserFlow,
-    endpoint: 'https://auth.timeedit.io/v1/apps/5ce6501aa34e8a7737977c2a/organizations/',
+    endpoint: `${AUTH_URL}apps/${APP_ID}/organizations/`,
     requiresAuth: true,
   });
 
@@ -65,7 +65,7 @@ const selectOrgForUserFlow = {
 export const selectOrgForUser = ({ organizationId }) =>
   asyncAction.POST({
     flow: selectOrgForUserFlow,
-    endpoint: 'https://auth.timeedit.io/v1/auth/change-organization',
+    endpoint: `${AUTH_URL}auth/change-organization`,
     params: { organizationId },
     requiresAuth: true,
   });
