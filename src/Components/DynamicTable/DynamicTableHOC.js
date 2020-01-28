@@ -8,7 +8,7 @@ import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
 
-const DynamicTableHOC = ({ columns, dataSource, rowKey, history }) => {
+const DynamicTableHOC = ({ columns, dataSource, rowKey, history, onRow }) => {
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
   // State variable to hold which columns should be shown
@@ -55,6 +55,7 @@ const DynamicTableHOC = ({ columns, dataSource, rowKey, history }) => {
             columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
             dataSource={_dataSource}
             rowKey={rowKey}
+            onRow={onRow}
             pagination={{
               size: 'small',
               pageSize: 50
@@ -71,6 +72,7 @@ DynamicTableHOC.propTypes = {
   dataSource: PropTypes.array,
   rowKey: PropTypes.string,
   history: PropTypes.object.isRequired,
+  onRow: PropTypes.func,
 };
 
 DynamicTableHOC.defaultProps = {

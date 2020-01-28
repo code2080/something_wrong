@@ -32,7 +32,7 @@ const mapActionsToProps = {
   setBreadcrumbs,
 };
 
-const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcrumbs }) => {
+const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcrumbs, history }) => {
   useEffect(() => {
     fetchFormSubmissions(formId);
   }, []);
@@ -58,6 +58,9 @@ const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcru
       <DynamicTable
         columns={[staticCols.NAME, staticCols.SUBMISSION_DATE, staticCols.SCOPED_OBJECT, staticCols.ACCEPTANCE_STATUS, staticCols.ACCEPTANCE_COMMENT, staticCols.SCHEDULING_PROGRESS, ..._cols, staticCols.ACTION_BUTTON]}
         dataSource={_dataSource}
+        onRow={formInstance => ({
+          onClick: () => history.push(`/forms/${formInstance.formId}/${formInstance._id}`)
+        })}
         rowKey="_id"
       />
     </div>
@@ -70,6 +73,7 @@ FormPage.propTypes = {
   submissions: PropTypes.array,
   fetchFormSubmissions: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 FormPage.defaultProps = {
