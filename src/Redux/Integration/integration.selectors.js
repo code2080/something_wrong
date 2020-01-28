@@ -92,6 +92,10 @@ export const getExtIdPropsPayload = (sections, values, state) => {
 }
 
 const getPayloadForSection = (element, section, values, state) => {
+  if (!values[section._id] && process.env.NODE_ENV === 'development') {
+    console.log("No values for section ID", section._id, values, section);
+    return [];
+  }
   const sectionType = determineSectionType(section);
   if (sectionType === SECTION_VERTICAL) {
     return getPayloadForVerticalSection(element, values[section._id], state);
