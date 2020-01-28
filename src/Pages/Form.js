@@ -59,7 +59,12 @@ const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcru
         columns={[staticCols.NAME, staticCols.SUBMISSION_DATE, staticCols.SCOPED_OBJECT, staticCols.ACCEPTANCE_STATUS, staticCols.ACCEPTANCE_COMMENT, staticCols.SCHEDULING_PROGRESS, ..._cols, staticCols.ACTION_BUTTON]}
         dataSource={_dataSource}
         onRow={formInstance => ({
-          onClick: () => history.push(`/forms/${formInstance.formId}/${formInstance._id}`)
+          onClick: (event) => {
+            //console.log(event.target.nodeName);
+            if (event.target.type === "button" || event.target.nodeName === "LI") {
+              return;
+            }
+            history.push(`/forms/${formInstance.formId}/${formInstance._id}`)}
         })}
         rowKey="_id"
       />
