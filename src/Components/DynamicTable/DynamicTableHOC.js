@@ -54,7 +54,6 @@ const DynamicTableHOC = ({ columns, dataSource, rowKey, isLoading }) => {
             columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
             dataSource={_dataSource}
             rowKey={rowKey}
-            onRow={onRow}
             pagination={{
               size: 'small',
               pageSize: 50

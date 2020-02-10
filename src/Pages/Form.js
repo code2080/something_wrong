@@ -42,9 +42,6 @@ const mapActionsToProps = {
   setBreadcrumbs,
 };
 
-<<<<<<< HEAD
-const FormPage = ({ formId, form, submissions, fetchFormSubmissions, setBreadcrumbs, history }) => {
-=======
 const FormPage = ({
   formId,
   form,
@@ -56,7 +53,6 @@ const FormPage = ({
   fetchMappings
 }) => {
   // Fetch submissions
->>>>>>> feature/automaticScheduling
   useEffect(() => {
     fetchFormSubmissions(formId);
   }, []);
@@ -114,11 +110,7 @@ FormPage.propTypes = {
   fetchFormSubmissions: PropTypes.func.isRequired,
   fetchReservationsForForm: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
-<<<<<<< HEAD
-  history: PropTypes.object.isRequired,
-=======
   fetchMappings: PropTypes.func.isRequired,
->>>>>>> feature/automaticScheduling
 };
 
 FormPage.defaultProps = {
