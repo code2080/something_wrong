@@ -9,11 +9,14 @@ import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 // SELECTORS
 import { getTECoreAPIPayload } from '../../Redux/Integration/integration.selectors';
 
+// HELPERS
+import { transformPayloadForFiltering } from '../../Utils/teCoreAPIHelpers';
+
 // STYLES
 import './Datasource.scss';
 
 // CONSTANTS
-import { teCoreActions } from '../../Constants/teCoreActions.constants';
+import { teCoreActions, teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value && ownProps.value[0]) return { label: null, payload: null };
@@ -30,7 +33,17 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
   // Callback on menu click
   const onClickCallback = useCallback(({ key }) => {
     const { callname } = teCoreActions[key];
-    teCoreAPI[callname](payload);
+    let _payload;
+    switch (callname) {
+      case teCoreCallnames.FILTER_OBJECTS:
+        _payload = transformPayloadForFiltering(payload);
+        break;
+      default:
+        _payload = payload;
+        break;
+    }
+    console.log(_payload);
+    teCoreAPI[callname](_payload);
   }, [payload, teCoreAPI]);
   // Memoized list of supported actions
   const supportedActions = useMemo(
