@@ -56,7 +56,6 @@ export const findTEValuesInSubmission = (sections, values) => {
     const elementsInDataType = elements[dataType];
     const _elementValues = elementsInDataType.reduce(
       (allValues, element) => {
-        console.log(element);
         return [
           ...allValues,
           ...(findElementValueInSubmission(element, sections, values) || [])

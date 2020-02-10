@@ -1,0 +1,24 @@
+@import '../../Styles/globals.scss';
+
+.object-mapping--wrapper,
+.timing-mapping--wrapper,
+.field-mapping--wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+
+  div.label {
+    width: 15rem;
+
+    span.is-required {
+      margin-left: 0.4rem;
+      font-size: 0.7rem;
+      color: $bittersweet;
+    }
+  }
+
+  .ant-cascader-picker,
+  .ant-select {
+    width: 25rem;
+  }
+}

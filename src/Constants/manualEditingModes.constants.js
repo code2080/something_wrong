@@ -1,0 +1,6 @@
+export const manualEditingModes = {
+  NOT_ALLOWED: 'NOT_ALLOWED',
+  DATETIME_PICKER: 'DATETIME_PICKER',
+  NUMBER_INPUT: 'NUMBER_INPUT',
+  TEXT_INPUT: 'TEXT_INPUT',
+};

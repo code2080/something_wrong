@@ -1,0 +1,24 @@
+@import '../../Styles/globals.scss';
+
+.avatar--wrapper {
+  display: flex;
+  align-items: center;
+
+  .avatar--circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    background: $deepSeaGreen;
+    color: #fff;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 0.4rem;
+    margin-right: 0.4rem;
+
+    &.recipient {
+      background: $candlelight;
+      color: $deepSeaGreen;
+    }
+  }
+}

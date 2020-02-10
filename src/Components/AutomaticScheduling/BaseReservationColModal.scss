@@ -1,0 +1,35 @@
+@import '../../Styles/globals.scss';
+
+$iconDimension: 25px;
+
+.base-reservation-col--modal {
+  .ant-form-text {
+    display: flex;
+    align-items: flex-start;
+  }
+  .ant-form-item-label {
+    text-align: left !important;
+    font-weight: 700;
+    color: $darkBlack;
+  }
+  .base-reservation-col__modal--icon {
+    min-width: $iconDimension;
+    width: $iconDimension;
+    max-width: $iconDimension;
+    min-height: $iconDimension;
+    height: $iconDimension;
+    max-height: $iconDimension;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 7.5px 0.4rem 0 0;
+    border-radius: 50%;
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(232, 232, 232);
+  }
+
+  span.required-prop {
+    color: $bittersweet;
+    font-size: 0.6rem;
+  }
+}

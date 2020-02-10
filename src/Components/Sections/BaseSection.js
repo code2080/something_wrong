@@ -25,6 +25,8 @@ const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } }, section } = ownProps;
   return {
     values: state.submissions[formId][formInstanceId].values[section._id] || [],
+    formId,
+    formInstanceId,
   };
 };
 
@@ -32,13 +34,13 @@ const mapStateToProps = (state, ownProps) => {
  * @todo
  * 3) Add styling to improve section separation
  */
-const BaseSection = ({ section, values }) => {
+const BaseSection = ({ section, values, formId, formInstanceId }) => {
   // State var to hold current view (table or list)
   const [view, setView] = useState(sectionViews.TABLE_VIEW);
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
   // Memoized var holding the columns
-  const _columns = useMemo(() => extractColumnsFromSection(section, sectionType), [section]);
+  const _columns = useMemo(() => extractColumnsFromSection(section, sectionType, formInstanceId, formId), [section]);
 
   // Memoized var holding the transformed section values
   const _data = useMemo(
@@ -74,6 +76,8 @@ const BaseSection = ({ section, values }) => {
 BaseSection.propTypes = {
   section: PropTypes.object.isRequired,
   values: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  formId: PropTypes.string.isRequired,
+  formInstanceId: PropTypes.string.isRequired,
 };
 
 export default withRouter(connect(mapStateToProps, null)(BaseSection));

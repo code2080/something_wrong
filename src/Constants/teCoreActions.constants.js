@@ -1,3 +1,5 @@
+import { reservationTemplates } from '../Mock/ReservationTemplates';
+
 export const teCoreActions = {
   SELECT_OBJECT: {
     callname: 'selectObject',
@@ -16,5 +18,22 @@ export const teCoreActions = {
   },
   GET_EXTID_PROPS: {
     callname: 'getExtIdProps',
-  }
+  },
+  GET_RESERVATION_TEMPLATES: {
+    callname: 'getReservationTemplates',
+    mockFunction: () => reservationTemplates,
+  },
+  GET_SELECTED_RESERVATION_TEMPLATE: {
+    callname: 'getSelectedReservationTemplate',
+    mockFunction: () => 'scheduling',
+  },
+  SELECT_RESERVATION: {
+    callname: 'selectReservation',
+  },
+  DELETE_RESERVATION: {
+    callname: 'deleteReservation',
+  },
+  SCHEDULE_RESERVATION: {
+    callname: 'scheduleReservation',
+  },
 };

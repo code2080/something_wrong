@@ -6,6 +6,8 @@ import LoginPage from '../Pages/Auth/Login';
 import FormListPage from '../Pages/FormList';
 import FormPage from '../Pages/Form';
 import FormInstancePage from '../Pages/FormInstance';
+import FormReservationTemplateMappingPage from '../Pages/FormReservationTemplateMapping';
+import FormInstanceReservationOverviewPage from '../Pages/FormInstanceReservationOverview';
 
 // COMPONENTS
 import BreadcrumbsWrapper from './Breadcrumbs';
@@ -20,7 +22,9 @@ const TEPrefsLibRouter = () => {
         <AuthenticatedRoutes>
           <Route exact path="/forms" component={FormListPage} />
           <Route exact path="/forms/:formId" component={FormPage} />
-          <Route exact path="/forms/:formId/:formInstanceId" component={FormInstancePage} />
+          <Route exact path="/forms/:formId/mapping" component={FormReservationTemplateMappingPage} />
+          <Route exact path="/forms/:formId/form-instances/:formInstanceId" component={FormInstancePage} />
+          <Route exact path="/forms/:formId/form-instances/:formInstanceId/reservations" component={FormInstanceReservationOverviewPage} />
         </AuthenticatedRoutes>
       </Switch>
     </Router>

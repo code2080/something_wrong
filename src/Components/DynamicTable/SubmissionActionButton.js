@@ -44,7 +44,7 @@ const SubmissionActionButton = ({
         setIsAcceptanceStatusModalOpen(true);
         break;
       case EDIT_FORM_INSTANCE:
-        history.push(`/forms/${formInstance.formId}/${formInstance._id}`);
+        history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
         break;
       case SET_PROGRESS_NOT_SCHEDULED:
         setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.NOT_SCHEDULED);
