@@ -51,9 +51,9 @@ export const teCoreActions = {
     callname: teCoreCallnames.SCHEDULE_RESERVATION,
   },
   GET_RESERVATION_TYPES: {
-    callName: teCoreCallnames.GET_RESERVATION_TYPES,
+    callname: teCoreCallnames.GET_RESERVATION_TYPES,
   },
   GET_RESERVATION_FIELDS: {
-    callName: teCoreCallNames.GET_RESERVATION_FIELDS,
+    callname: teCoreCallnames.GET_RESERVATION_FIELDS,
   }
 };
