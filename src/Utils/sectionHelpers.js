@@ -15,6 +15,8 @@ import DateRangePicker from '../Components/Elements/DateRangePicker';
 import Checkbox from '../Components/Elements/Checkbox';
 import OptionSelection from '../Components/Elements/OptionSelection';
 import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
+import FreeTextFilter from '../Components/Elements/FreeTextFilter';
+import NumberFilter from '../Components/Elements/NumberFilter';
 import ConnectedSectionSchedulingColumn from '../Components/AutomaticScheduling/ConnectedSectionSchedulingColumn';
 
 const connectedSectionColumns = {
@@ -109,15 +111,9 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
       return <Datasource value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATASOURCE:
-      /**
-       * @todo break into separate component
-       */
-      return value.toString();
+      return <FreeTextFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
-      /**
-       * @todo break into separate component
-       */
-      return value.toString();
+      return <NumberFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:

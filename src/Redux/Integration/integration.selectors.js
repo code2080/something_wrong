@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType';
 import { SECTION_VERTICAL, SECTION_TABLE, SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
@@ -9,7 +9,7 @@ export const getTECoreAPIPayload = (value, datasource, state) => {
   if (!_datasource.length || _datasource.length < 2) return [{ valueType: undefined, extId: undefined }];
   let _retVal = [{
     valueType: datasourceValueTypes.TYPE_EXTID,
-    extId: _.get(state, `integration.mapping[${_datasource[0]}].mapping`, undefined),
+    extId: _datasource[0], // _.get(state, `integration.mapping[${_datasource[0]}].mapping`, undefined),
   }];
 
   if (_datasource[1] === 'object')
@@ -93,7 +93,7 @@ export const getExtIdPropsPayload = (sections, values, state) => {
 
 const getPayloadForSection = (element, section, values, state) => {
   if (!values[section._id] && process.env.NODE_ENV === 'development') {
-    console.log("No values for section ID", section._id, values, section);
+    console.log('No values for section ID', section._id, values, section);
     return [];
   }
   const sectionType = determineSectionType(section);
@@ -107,11 +107,17 @@ const getPayloadForSection = (element, section, values, state) => {
     return getPayloadForTableSection(element, values[section._id], state);
   }
   return [];
-}
+};
+
+const getValueFromElement = el => {
+  if (Array.isArray(el.value)) return el.value[0];
+  if (el && el.value && el.value.value) return el.value.value;
+  return null;
+};
 
 const getPayloadForVerticalSection = (element, values, state) => values
   .filter(el => el.elementId === element._id)
-  .map(el => getTECoreAPIPayload(el.value[0], element.datasource, state));
+  .map(el => getTECoreAPIPayload(getValueFromElement(el), element.datasource, state));
 
 const getPayloadForTableSection = (element, values, state) => Object.keys(values).reduce((allRows, rowKey) => {
   const rowValues = values[rowKey];

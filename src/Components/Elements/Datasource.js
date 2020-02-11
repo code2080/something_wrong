@@ -10,7 +10,7 @@ import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 import { getTECoreAPIPayload } from '../../Redux/Integration/integration.selectors';
 
 // HELPERS
-import { transformPayloadForFiltering } from '../../Utils/teCoreAPIHelpers';
+import { transformPayloadForDatasourceFiltering } from '../../Utils/teCoreAPIHelpers';
 
 // STYLES
 import './Datasource.scss';
@@ -36,13 +36,12 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
     let _payload;
     switch (callname) {
       case teCoreCallnames.FILTER_OBJECTS:
-        _payload = transformPayloadForFiltering(payload);
+        _payload = transformPayloadForDatasourceFiltering(payload);
         break;
       default:
         _payload = payload;
         break;
     }
-    console.log(_payload);
     teCoreAPI[callname](_payload);
   }, [payload, teCoreAPI]);
   // Memoized list of supported actions
