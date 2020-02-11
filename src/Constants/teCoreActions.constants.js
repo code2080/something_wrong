@@ -10,6 +10,8 @@ export const teCoreCallnames = {
   SELECT_RESERVATION: 'selectReservation',
   DELETE_RESERVATION: 'deleteReservation',
   SCHEDULE_RESERVATION: 'scheduleReservation',
+  GET_RESERVATION_TYPES: 'getReservationTypes',
+  GET_RESERVATION_FIELDS: 'getReservationFields',
 }
 
 export const teCoreActions = {
@@ -48,4 +50,10 @@ export const teCoreActions = {
   SCHEDULE_RESERVATION: {
     callname: teCoreCallnames.SCHEDULE_RESERVATION,
   },
+  GET_RESERVATION_TYPES: {
+    callName: teCoreCallnames.GET_RESERVATION_TYPES,
+  },
+  GET_RESERVATION_FIELDS: {
+    callName: teCoreCallNames.GET_RESERVATION_FIELDS,
+  }
 };
