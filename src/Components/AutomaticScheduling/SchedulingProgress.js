@@ -4,26 +4,26 @@ import { connect } from 'react-redux';
 import { Progress } from 'antd';
 
 // HELPERS
-import { getReservationsForFormInstance } from '../../Redux/Reservations/reservations.helpers';
+import { getActivitiesForFormInstance } from '../../Redux/Activities/activities.helpers';
 
 // CONSTANTS
-import { reservationStatuses } from '../../Constants/reservationStatuses.constants.js';
+import { activityStatuses } from '../../Constants/activityStatuses.constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
-    reservations: getReservationsForFormInstance(state.reservations, formId, formInstanceId),
+    activities: getActivitiesForFormInstance(state.activities, formId, formInstanceId),
   };
 };
 
-const SchedulingProgress = ({ reservations }) => {
+const SchedulingProgress = ({ activities }) => {
   const [percentCompleted, statusText] = useMemo(() => {
-    const completedReservations = reservations.filter(el => el.reservationStatus !== reservationStatuses.NOT_SCHEDULED);
+    const completedReservations = activities.filter(el => el.activityStatus !== activityStatuses.NOT_SCHEDULED);
     return [
-      ((completedReservations || []).length / (reservations || []).length) * 100,
-      `${(completedReservations || []).length}/${(reservations || []).length} reservations scheduled`,
+      ((completedReservations || []).length / (activities || []).length) * 100,
+      `${(completedReservations || []).length}/${(activities || []).length} activities scheduled`,
     ];
-  }, [reservations]);
+  }, [activities]);
 
   return (
     <Progress
@@ -36,11 +36,11 @@ const SchedulingProgress = ({ reservations }) => {
 };
 
 SchedulingProgress.propTypes = {
-  reservations: PropTypes.array,
+  activities: PropTypes.array,
 };
 
 SchedulingProgress.defaultProps = {
-  reservations: [],
+  activities: [],
 };
 
 export default connect(mapStateToProps, null)(SchedulingProgress);

@@ -13,11 +13,11 @@ const ReservationId = ({ reservationId, teCoreAPI }) => {
 
   return (
     <Tooltip
-      title={reservationId ? 'Click to select reservation' : 'This reservation has not been scheduled yet'}
+      title={reservationId ? 'Click to select activity' : 'This activity has not been scheduled yet'}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
       <div
-        className={`reservation-id--wrapper ${!reservationId && 'disabled'}`}
+        className={`activity-id--wrapper ${!reservationId && 'disabled'}`}
         onClick={onSelectReservation}
       >
         <Icon type="select" />

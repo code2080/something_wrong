@@ -1,4 +1,4 @@
-export class ReservationValue {
+export class ActivityValue {
   type;
 
   extId;

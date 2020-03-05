@@ -5,8 +5,8 @@ import { Input, InputNumber } from 'antd';
 // CONSTANTS
 import { manualEditingModes } from '../../Constants/manualEditingModes.constants';
 
-const ManualEditingComponent = ({ reservationValue, manualEditingMode, onFinish, onCancel }) => {
-  const [value, setValue] = useState(reservationValue.value || undefined);
+const ManualEditingComponent = ({ activityValue, manualEditingMode, onFinish, onCancel }) => {
+  const [value, setValue] = useState(activityValue.value || undefined);
 
   const onFinishCallback = useCallback(() => {
     onFinish(value);
@@ -39,7 +39,7 @@ const ManualEditingComponent = ({ reservationValue, manualEditingMode, onFinish,
 };
 
 ManualEditingComponent.propTypes = {
-  reservationValue: PropTypes.object.isRequired,
+  activityValue: PropTypes.object.isRequired,
   manualEditingMode: PropTypes.string.isRequired,
   onFinish: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

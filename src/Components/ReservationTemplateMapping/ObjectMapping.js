@@ -1,51 +1,130 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Cascader } from 'antd';
+import _ from 'lodash';
+import { Select } from 'antd';
+
+// COMPONENTS
+import MappingRow from './MappingRow';
 
 // STYLES
-import './ReservationTemplateMapping.scss';
+import './Mapping.scss';
 
 const ObjectMapping = ({
-  objectType,
-  options,
-  value,
-  onSelectionChange,
+  onChange,
+  mapping,
+  typeOptions,
+  mappingOptions,
   disabled,
-  required,
 }) => {
+  // Callbacks
+  const onChangeObject = useCallback((newTypeMapping, oldType) => {
+    const { objects: { [oldType]: __, ...otherObjs } } = mapping;
+    const { propSettings: { [oldType]: propSettings } } = mapping;
+    const updatedMapping = {
+      ...mapping,
+      objects: {
+        ...otherObjs,
+        ...newTypeMapping,
+      },
+      propSettings: {
+        ...mapping.propSettings,
+        [Object.keys(newTypeMapping)[0]]: propSettings,
+      },
+    };
+    onChange(updatedMapping);
+  }, [mapping, onChange]);
+
+  const onChangeProps = useCallback((newPropSettings, objectType) => {
+    const updatedMapping = {
+      ...mapping,
+      propSettings: {
+        ...mapping.propSettings,
+        [objectType]: newPropSettings,
+      },
+    };
+    onChange(updatedMapping);
+  }, [mapping, onChange]);
+
+  const onAddObject = useCallback(objectType => {
+    const updatedMapping = {
+      ...mapping,
+      objects: {
+        ...mapping.objects,
+        [objectType]: null,
+      },
+      propSettings: {
+        ...mapping.propSettings,
+        [objectType]: { mandatory: false },
+      },
+    };
+    onChange(updatedMapping);
+  }, [mapping, onChange]);
+
+  const onRemoveObject = useCallback(objectType => {
+    const { objects: { [objectType]: __, ...remainingObjects } } = mapping;
+    const { propSettings: { [objectType]: ___, ...remainingPropSettings } } = mapping;
+    const updatedMapping = {
+      ...mapping,
+      objects: {
+        ...remainingObjects,
+      },
+      propSettings: {
+        ...remainingPropSettings,
+      },
+    };
+    onChange(updatedMapping);
+  }, [mapping, onChange]);
+
+  // Memoized values
+  const objects = useMemo(() => _.get(mapping, 'objects', {}), [mapping]);
+  const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [mapping]);
   return (
     <div className="object-mapping--wrapper">
-      <div className="label">
-        {objectType}
-        {required && (
-          <span className="is-required">(required)</span>
-        )}
+      {(Object.keys(objects) || []).map(key => (
+        <MappingRow
+          disabled={disabled}
+          key={key}
+          teProp={key}
+          formMapping={objects[key]}
+          tePropSettings={propSettings[key]}
+          tePropOptions={typeOptions}
+          mappingOptions={mappingOptions}
+          onChangeMapping={newTypeMapping => onChangeObject(newTypeMapping, key)}
+          onChangeProps={newPropSettings => onChangeProps(newPropSettings, key)}
+          onRemoveTEProp={() => onRemoveObject(key)}
+        />
+      ))}
+      <div className="object-mapping--add">
+        <span>Add object:&nbsp;</span>
+        <Select
+          disabled={disabled}
+          placeholder="Add new object"
+          value={undefined}
+          onChange={onAddObject}
+          size="small"
+          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+        >
+          {(typeOptions || []).map(el => (
+            <Select.Option key={el.value} value={el.value}>{el.label}</Select.Option>
+          ))}
+        </Select>
       </div>
-      <Cascader
-        options={options}
-        value={value}
-        onChange={onSelectionChange}
-        placeholder="Select an element"
-        getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        size="small"
-        disabled={disabled}
-      />
     </div>
   );
 };
 
 ObjectMapping.propTypes = {
-  objectType: PropTypes.string.isRequired,
-  options: PropTypes.array,
-  value: PropTypes.array,
-  onSelectionChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  mapping: PropTypes.object,
+  typeOptions: PropTypes.array,
+  mappingOptions: PropTypes.array,
   disabled: PropTypes.bool,
-  required: PropTypes.bool.isRequired,
 };
 
 ObjectMapping.defaultProps = {
-  options: [],
-  value: [],
+  mapping: {},
+  typeOptions: [],
+  mappingOptions: [],
   disabled: false,
 };
 

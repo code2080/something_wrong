@@ -3,12 +3,12 @@ import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
-import { reservationStatuses } from '../Constants/reservationStatuses.constants';
+import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
-import { Reservation } from '../Models/Reservation.model';
-import { ReservationValue } from '../Models/ReservationValue.model';
+import { Activity } from '../Models/Activity.model';
+import { ActivityValue } from '../Models/ActivityValue.model';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
-import { reservationValueModes } from '../Constants/reservationValueModes.constants';
+import { activityValueModes } from '../Constants/activityValueModes.constants';
 
 const getSectionsFromMapping = (sections, mapping) => {
   // Loop through objects, fields and get the sectionIds
@@ -48,12 +48,12 @@ const ensureValueIsArray = value => {
   return [value];
 };
 
-const getReservationValuePayload = (element, rawValue) => {
+const getActivityValuePayload = (element, rawValue) => {
   const _rawValue = ensureValueIsArray(rawValue);
   const _defPayload = {
     submissionValue: _rawValue,
     submissionValueType: submissionValueTypes.FREE_TEXT,
-    valueMode: reservationValueModes.FROM_SUBMISSION,
+    valueMode: activityValueModes.FROM_SUBMISSION,
     value: _rawValue[0],
   };
   // IF no datasource we interpret the value as is
@@ -70,7 +70,7 @@ const getReservationValuePayload = (element, rawValue) => {
   return {
     submissionValue: [{ field: datasource[1], value: rawValue }],
     submissionValueType: submissionValueTypes.FILTER,
-    valueMode: reservationValueModes.FROM_SUBMISSION,
+    valueMode: activityValueModes.FROM_SUBMISSION,
     value: null,
   };
 };
@@ -84,10 +84,10 @@ const determiningSectionInterface = ({
 
 const calculateDeterminingSection = (sections, mapping) => {
   /**
-   * Calculate number of reservations
+   * Calculate number of activities
    * Logic:
-   * 1) If no repeating sections in mapping -> form instance turns into 1 reservation
-   * 2) If we have a repeating section -> form instance turns into values.length reservations from the repeating sectionn
+   * 1) If no repeating sections in mapping -> form instance turns into 1 activity
+   * 2) If we have a repeating section -> form instance turns into values.length activities from the repeating sectionn
    */
   // Get all mapped sections
   const sectionsMapped = getSectionsFromMapping(sections, mapping);
@@ -131,7 +131,7 @@ const getPayloadFromConnectedSection = (formInstance, sectionId, eventId, elemen
   const rawValue = eventValues[elementIdx].value;
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return getReservationValuePayload(element, rawValue);
+  return getActivityValuePayload(element, rawValue);
 };
 
 const getPayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, sections) => {
@@ -145,7 +145,7 @@ const getPayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, 
   const rawValue = rowValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return getReservationValuePayload(element, rawValue);
+  return getActivityValuePayload(element, rawValue);
 };
 
 const getPayloadFromRegularSection = (formInstance, sectionId, elementId, sections) => {
@@ -159,7 +159,7 @@ const getPayloadFromRegularSection = (formInstance, sectionId, elementId, sectio
   const rawValue = sectionValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return getReservationValuePayload(element, rawValue);
+  return getActivityValuePayload(element, rawValue);
 }
 
 const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sections, eventId, rowIdx, type) =>
@@ -176,7 +176,7 @@ const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sect
     if (Object.keys(mappingTimingModes).indexOf(el) > -1) {
       submissionValue = [el];
       value = el;
-      valueMode = reservationValueModes.FROM_SUBMISSION;
+      valueMode = activityValueModes.FROM_SUBMISSION;
       submissionValueType = submissionValueTypes.TIMING;
     }
 
@@ -188,7 +188,7 @@ const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sect
       if (sectionId === 'scopedObject') {
         submissionValue = [getScopedObjectValue(formInstance)];
         submissionValueType = submissionValueTypes.OBJECT;
-        valueMode = reservationValueModes.FROM_SUBMISSION;
+        valueMode = activityValueModes.FROM_SUBMISSION;
         value = submissionValue;
       }
       // Special connected section cases: eventTitle, startTime, endTime
@@ -197,7 +197,7 @@ const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sect
         submissionValueType = elementId === 'title'
           ? submissionValueTypes.FREE_TEXT
           : submissionValueTypes.TIMING;
-        valueMode = reservationValueModes.FROM_SUBMISSION;
+        valueMode = activityValueModes.FROM_SUBMISSION;
         const { mode } = mapping.timing;
         value = mode === mappingTimingModes.EXACT || submissionValueType === submissionValueTypes.FREE_TEXT
           ? submissionValue
@@ -215,7 +215,7 @@ const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sect
         }
       }
     }
-    const reservationValue = new ReservationValue({
+    const activityValue = new ActivityValue({
       type: type,
       extId: key,
       submissionValue, // Should always be the submission value,
@@ -227,11 +227,10 @@ const getSubmissionValuesForKeyedProp = (pathToProp, mapping, formInstance, sect
       eventId: eventId,
       rowIdx: rowIdx,
     });
-    return [...retVal, reservationValue];
+    return [...retVal, activityValue];
   }, []);
 
-const createReservation = (
-  reservationTemplateExtId = null,
+const createActivity = (
   mapping,
   formInstance,
   _sectionId,
@@ -245,33 +244,32 @@ const createReservation = (
   const fieldValues = getSubmissionValuesForKeyedProp('fields', mapping, formInstance, sections, eventId, rowIdx, 'field');
   // Get the timing values
   const timingValues = getSubmissionValuesForKeyedProp('timing', mapping, formInstance, sections, eventId, rowIdx, 'timing');
-  // Create the reservation embry
-  return new Reservation({
+  // Create the activity embry
+  return new Activity({
     formId: formInstance.formId,
     formInstanceId: formInstance._id,
     sectionId: _sectionId,
     eventId: eventId,
     rowIdx: rowIdx,
-    reservationTemplateExtId: reservationTemplateExtId,
-    reservationStatus: reservationStatuses.NOT_SCHEDULED,
+    reservationTemplateExtId: null,
+    activityStatus: activityStatuses.NOT_SCHEDULED,
     timing: timingValues,
     values: [...objectValues, ...fieldValues],
   })
 };
 
-export const createReservations = (formInstance, sections, mapping, reservationTemplateExtId) => {
-  if (!mapping || !sections || !sections.length || !mapping || !reservationTemplateExtId) return [];
+export const createActivities = (formInstance, sections, mapping) => {
+  if (!mapping || !sections || !sections.length || !mapping) return [];
   // Get the determining section
   const mappingInfo = calculateDeterminingSection(sections, mapping);
   // If we DON'T have a determining section -> collect the values for 1 booking
   if (!mappingInfo.determiningSectionId) {
     // Collect all the values from the mapped sections
-    return [createReservation(reservationTemplateExtId, mapping, formInstance, null, null, null, sections)];
+    return [createActivity(mapping, formInstance, null, null, null, sections)];
   } else {
     const repeatingSectionValues = formInstance.values[mappingInfo.determiningSectionId];
     return (Object.keys(repeatingSectionValues) || []).map(
-      key => createReservation(
-        reservationTemplateExtId,
+      key => createActivity(
         mapping,
         formInstance,
         mappingInfo.determiningSectionId,

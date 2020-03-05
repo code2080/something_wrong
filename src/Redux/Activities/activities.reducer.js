@@ -1,77 +1,77 @@
-import * as types from './reservations.actionTypes';
-import { Reservation } from '../../Models/Reservation.model';
+import * as types from './activities.actionTypes';
+import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
-import initialState from './reservations.initialState';
+import initialState from './activities.initialState';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.FETCH_RESERVATIONS_FOR_FORM_SUCCESS: {
+    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
-      const reservations = (action.payload.reservations || [])
-        .map(el => new Reservation(el))
+      const activities = (action.payload.activities || [])
+        .map(el => new Activity(el))
         .reduce(
-          (_reservations, reservation) => ({
+          (_reservations, activity) => ({
             ..._reservations,
-            [reservation.formInstanceId]: [
-              ...(_reservations[reservation.formInstanceId] || []),
-              reservation
+            [activity.formInstanceId]: [
+              ...(_reservations[activity.formInstanceId] || []),
+              activity
             ]
           }),
           {}
         );
       return {
         ...state,
-        [formId]: reservations,
+        [formId]: activities,
       };
     }
 
-    case types.FETCH_RESERVATIONS_FOR_FORM_INSTANCE_SUCCESS: {
-      const reservations = (action.payload.reservations || []).map(el => new Reservation(el));
+    case types.FETCH_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS: {
+      const activities = (action.payload.activities || []).map(el => new Activity(el));
       const { payload: { actionMeta: { formId, formInstanceId } } } = action;
       return {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...reservations ],
+          [formInstanceId]: [ ...activities ],
         }
       };
     }
 
-    case types.SAVE_RESERVATIONS_FOR_FORM_INSTANCE_SUCCESS: {
-      const reservations = (action.payload.reservations || []).map(el => new Reservation(el));
+    case types.SAVE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS: {
+      const activities = (action.payload.activities || []).map(el => new Activity(el));
       const { payload: { actionMeta: { formId, formInstanceId } } } = action;
       return {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...reservations ],
+          [formInstanceId]: [ ...activities ],
         }
       };
     }
 
-    case types.MANUALLY_OVERRIDE_RESERVATION_VALUE_SUCCESS:
+    case types.MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS:
     case types.REVERT_TO_SUBMISSION_VALUE_SUCCESS: {
-      const { formId, formInstanceId, _id } = action.payload.reservation;
+      const { formId, formInstanceId, _id } = action.payload.activity;
       if (!formId || !formInstanceId)
         return state;
       const reservationIdx = state[formId][formInstanceId].findIndex(el => el._id === _id);
       if (reservationIdx === -1) return state;
-      const reservation = new Reservation(action.payload.reservation);
+      const activity = new Activity(action.payload.activity);
       return {
         ...state,
         [formId]: {
           ...state[formId],
           [formInstanceId]: [
             ...state[formId][formInstanceId].slice(0, reservationIdx),
-            reservation,
+            activity,
             ...state[formId][formInstanceId].slice(reservationIdx + 1),
           ],
         },
       };
     }
 
-    case types.DELETE_RESERVATIONS_FOR_FORM_SUCCESS: {
+    case types.DELETE_ACTIVITIES_FOR_FORM_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       return {
         ...state,

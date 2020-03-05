@@ -1,13 +1,9 @@
 import { Timing } from './Timing.model';
 
 export class ReservationTemplateMapping {
-  _id;
-
   name;
 
   formId;
-
-  reservationTemplateExtId;
 
   timing;
 
@@ -18,7 +14,6 @@ export class ReservationTemplateMapping {
   propSettings;
 
   constructor({
-    _id,
     name,
     formId,
     reservationTemplateExtId,
@@ -27,7 +22,6 @@ export class ReservationTemplateMapping {
     fields,
     propSettings,
   }) {
-    this._id = _id;
     this.name = name;
     this.formId = formId;
     this.reservationTemplateExtId = reservationTemplateExtId;

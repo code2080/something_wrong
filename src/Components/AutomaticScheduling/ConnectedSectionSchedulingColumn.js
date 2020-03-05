@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // HELPERS
-import { getReservationForEvent } from '../../Redux/Reservations/reservations.helpers';
+import { getReservationForEvent } from '../../Redux/Activities/activities.helpers';
 
 // COMPONENTS
-import ReservationStatus from './ReservationStatus';
+import ReservationStatus from './ActivityStatus';
 import ReservationId from './ReservationId';
-import ReservationActionsDropdown from './ReservationActionsDropdown';
+import ActivityActionsDropdown from './ActivityActionsDropdown';
 
 // STYLES
 import './ConnectedSectionSchedulingColumn.scss';
@@ -16,31 +16,31 @@ import './ConnectedSectionSchedulingColumn.scss';
 // CONSTANTS
 const mapStateToProps = (state, ownProps) => {
   const { event, sectionId, formInstanceId, formId } = ownProps;
-  const reservation = getReservationForEvent(state.reservations, formId, formInstanceId, sectionId, event.rowKey);
+  const activity = getReservationForEvent(state.activities, formId, formInstanceId, sectionId, event.rowKey);
   return {
-    reservation,
+    activity,
   };
 };
 
 const ConnectedSectionSchedulingColumn = ({
-  reservation,
+  activity,
 }) => {
-  if (!reservation) return 'N/A';
+  if (!activity) return 'N/A';
   return (
     <div className="scheduling-column--wrapper">
-      <ReservationStatus reservationStatus={reservation.reservationStatus} reservationId={reservation.reservationId} />
-      <ReservationId reservationId={reservation.reservationId} />
-      <ReservationActionsDropdown buttonType="link" reservation={reservation} />
+      <ReservationStatus activityStatus={activity.activityStatus} reservationId={activity.reservationId} />
+      <ReservationId reservationId={activity.reservationId} />
+      <ActivityActionsDropdown buttonType="link" activity={activity} />
     </div>
   );
 };
 
 ConnectedSectionSchedulingColumn.propTypes = {
-  reservation: PropTypes.object,
+  activity: PropTypes.object,
 };
 
 ConnectedSectionSchedulingColumn.defaultProps = {
-  reservation: null,
+  activity: null,
 };
 
 export default connect(mapStateToProps, null)(ConnectedSectionSchedulingColumn);

@@ -4,31 +4,31 @@ import { Popover, Tooltip, Icon } from 'antd';
 
 // CONSTANTS
 import { submissionValueTypeProps } from '../../Constants/submissionValueTypes.constants';
-import { reservationValueModeProps } from '../../Constants/reservationValueModes.constants';
+import { activityValueModeProps } from '../../Constants/activityValueModes.constants';
 
-const ReservationPopover = ({ reservationValue, propTitle, children }) => {
+const ActivityPopover = ({ activityValue, propTitle, children }) => {
   const popoverContent = useMemo(
     () => (
-      <div className="reservation-popover--wrapper">
-        <div className="reservation-popover--prop-icon">
+      <div className="activity-popover--wrapper">
+        <div className="activity-popover--prop-icon">
           <Tooltip
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
-            title={submissionValueTypeProps[reservationValue.submissionValueType].label}
+            title={submissionValueTypeProps[activityValue.submissionValueType].label}
           >
-            <Icon type={submissionValueTypeProps[reservationValue.submissionValueType].icon} />
+            <Icon type={submissionValueTypeProps[activityValue.submissionValueType].icon} />
           </Tooltip>
         </div>
-        <div className="reservation-popover--prop-icon">
+        <div className="activity-popover--prop-icon">
           <Tooltip
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
-            title={reservationValueModeProps[reservationValue.valueMode].label}
+            title={activityValueModeProps[activityValue.valueMode].label}
           >
-            <Icon type={reservationValueModeProps[reservationValue.valueMode].icon} />
+            <Icon type={activityValueModeProps[activityValue.valueMode].icon} />
           </Tooltip>
         </div>
       </div>
     ),
-    [reservationValue]
+    [activityValue]
   );
 
   return (
@@ -42,10 +42,10 @@ const ReservationPopover = ({ reservationValue, propTitle, children }) => {
   );
 };
 
-ReservationPopover.propTypes = {
-  reservationValue: PropTypes.object.isRequired,
+ActivityPopover.propTypes = {
+  activityValue: PropTypes.object.isRequired,
   propTitle: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
 
-export default ReservationPopover;
+export default ActivityPopover;

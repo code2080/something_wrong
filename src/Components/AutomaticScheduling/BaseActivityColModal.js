@@ -4,21 +4,21 @@ import { Modal, Form, Icon, Alert } from 'antd';
 
 // HELPERS
 import {
-  getSchedulingPayloadForReservationValue,
-  getSchedulingAlgorithmForReservationValue,
+  getSchedulingPayloadForActivityValue,
+  getSchedulingAlgorithmForActivityValue,
   formatSubmissionValue,
-} from '../../Redux/Reservations/reservations.helpers';
+} from '../../Redux/Activities/activities.helpers';
 
 // STYLES
-import './BaseReservationColModal.scss';
+import './BaseActivityColModal.scss';
 
 // CONSTANTS
 import { mappingTypeProps } from '../../Constants/mappingTypes.constants';
-import { reservationValueStatuses, reservationValueStatusProps } from '../../Constants/reservationStatuses.constants';
+import { activityValueStatuses, activityValueStatusProps } from '../../Constants/activityStatuses.constants';
 
-const BaseReservationColModal = ({
-  reservationValue,
-  reservation,
+const BaseActivityColModal = ({
+  activityValue,
+  activity,
   formatFn,
   prop,
   propTitle,
@@ -28,15 +28,15 @@ const BaseReservationColModal = ({
 }) => {
   const mappingType = useMemo(() => mappingTypeProps[mappingProps.type] || null, [mappingProps]);
   const schedulingPayload = useMemo(
-    () => getSchedulingPayloadForReservationValue(reservationValue, reservation, formatFn, true, mappingProps.type),
-    [reservationValue, reservation, formatFn, mappingProps]);
+    () => getSchedulingPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
+    [activityValue, activity, formatFn, mappingProps]);
   const schedulingAlgorithm = useMemo(
-    () => getSchedulingAlgorithmForReservationValue(reservationValue, mappingProps.type),
-    [reservationValue, mappingProps]
+    () => getSchedulingAlgorithmForActivityValue(activityValue, mappingProps.type),
+    [activityValue, mappingProps]
   );
   const formattedSubmissionValue = useMemo(
-    () => formatSubmissionValue(reservationValue.submissionValue || [], reservationValue.submissionValueType),
-    [reservationValue]
+    () => formatSubmissionValue(activityValue.submissionValue || [], activityValue.submissionValueType),
+    [activityValue]
   );
 
   return (
@@ -50,25 +50,25 @@ const BaseReservationColModal = ({
       onCancel={onClose}
       onOk={onClose}
     >
-      <div className="base-reservation-col--modal">
-        {schedulingPayload.status === reservationValueStatuses.MISSING_DATA && (!mappingProps.settings || mappingProps.settings.mandatory) && (
+      <div className="base-activity-col--modal">
+        {schedulingPayload.status === activityValueStatuses.MISSING_DATA && (!mappingProps.settings || mappingProps.settings.mandatory) && (
           <Alert
             type="error"
-            message={reservationValueStatusProps[reservationValueStatuses.MISSING_DATA].label}
-            description={reservationValueStatusProps[reservationValueStatuses.MISSING_DATA].tooltip}
+            message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
+            description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
           />
         )}
-        {schedulingPayload.status === reservationValueStatuses.MISSING_DATA && (mappingProps.settings && !mappingProps.settings.mandatory) && (
+        {schedulingPayload.status === activityValueStatuses.MISSING_DATA && (mappingProps.settings && !mappingProps.settings.mandatory) && (
           <Alert
             type="warning"
-            message={reservationValueStatusProps[reservationValueStatuses.MISSING_DATA].label}
-            description={reservationValueStatusProps[reservationValueStatuses.MISSING_DATA].tooltip}
+            message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
+            description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
           />
         )}
         <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
           <Form.Item label="Mapped to:">
             <div className="ant-form-text">
-              <div className="base-reservation-col__modal--icon">
+              <div className="base-activity-col__modal--icon">
                 <Icon type={mappingType.icon} />
               </div>
               <span className="prop-name">{prop}</span>
@@ -77,7 +77,7 @@ const BaseReservationColModal = ({
           </Form.Item>
           <Form.Item label="Value used in scheduling:">
             <div className="ant-form-text">
-              <div className="base-reservation-col__modal--icon">
+              <div className="base-activity-col__modal--icon">
                 <Icon type={schedulingPayload.icon} />
               </div>
               {schedulingPayload.formattedValue}
@@ -85,7 +85,7 @@ const BaseReservationColModal = ({
           </Form.Item>
           <Form.Item label="Scheduling algorithm">
             <div className="ant-form-text">
-              <div className="base-reservation-col__modal--icon">
+              <div className="base-activity-col__modal--icon">
                 <Icon type={schedulingAlgorithm.icon} />
               </div>
               {schedulingAlgorithm.label}
@@ -94,7 +94,7 @@ const BaseReservationColModal = ({
           <Form.Item label="Value(s) in submission:">
             <div className="ant-form-text">
               {formattedSubmissionValue.map((el, idx) => (
-                <div key={`el-${idx}`} className="base-reservation-col__modal--submission-value">
+                <div key={`el-${idx}`} className="base-activity-col__modal--submission-value">
                   {el}
                 </div>
               ))}
@@ -106,9 +106,9 @@ const BaseReservationColModal = ({
   );
 };
 
-BaseReservationColModal.propTypes = {
-  reservationValue: PropTypes.object.isRequired,
-  reservation: PropTypes.object.isRequired,
+BaseActivityColModal.propTypes = {
+  activityValue: PropTypes.object.isRequired,
+  activity: PropTypes.object.isRequired,
   formatFn: PropTypes.func,
   mappingProps: PropTypes.object.isRequired,
   prop: PropTypes.string.isRequired,
@@ -117,10 +117,10 @@ BaseReservationColModal.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-BaseReservationColModal.defaultProps = {
+BaseActivityColModal.defaultProps = {
   formatFn: val => val,
   propTitle: null,
   visible: false,
 };
 
-export default BaseReservationColModal;
+export default BaseActivityColModal;

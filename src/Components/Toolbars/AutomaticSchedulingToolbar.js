@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 
 // HELPERS
-import { getMappingStatus } from '../../Redux/Mapping/mappings.helpers';
-import { getReservationsForFormInstance } from '../../Redux/Reservations/reservations.helpers';
+import { validateMapping } from '../../Redux/Mapping/mappings.helpers';
+import { getActivitiesForFormInstance } from '../../Redux/Activities/activities.helpers';
 
 // COMPONENTS
-import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 import SchedulingProgress from '../AutomaticScheduling/SchedulingProgress';
 
 // STYLES
@@ -22,98 +21,84 @@ const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
     formInstance: state.submissions[formId][formInstanceId],
-    mappings: state.mappings[formId],
-    reservations: getReservationsForFormInstance(state.reservations, formId, formInstanceId),
+    mappings: state.mappings,
+    activities: getActivitiesForFormInstance(state.activities, formId, formInstanceId),
   };
 };
 
 const AutomaticSchedulingToolbar = ({
+  formId,
   formInstance,
   mappings,
-  reservations,
-  teCoreAPI,
+  activities,
   history,
 }) => {
-  const [mappingStatus, setMappingStatus] = useState(false);
-
-  useEffect(() => {
-    async function exec() {
-      // Get the selected template name
-      const selectedTemplate = await teCoreAPI.getSelectedReservationTemplate();
-      // Check if we have a mapping for that template
-      const mappingStatus = getMappingStatus(mappings[selectedTemplate]);
-      setMappingStatus(mappingStatus);
-    }
-    exec();
-  }, [mappings, setMappingStatus]);
+  const mappingStatus = useMemo(() => validateMapping(formId, mappings), [formId, mappings]);
 
   const onConfigureMappingCallback = useCallback(() => {
     history.push(`/forms/${formInstance.formId}/mapping`);
   }, [formInstance, history]);
 
   const onConvertToReservations = useCallback(() => {
-    history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}/reservations`);
+    history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}/activities`);
   }, [formInstance, history]);
 
   const onScheduleReservations = useCallback(() => {
-    console.log('Should schedule all outstanding reservations');
+    console.log('Should schedule all outstanding activities');
   }, []);
 
   return (
     <div className="toolbar--wrapper">
-      {[mappingStatuses.NOT_SET, mappingStatuses.PARTIAL].indexOf(mappingStatus) > -1 && (
+      {mappingStatus === mappingStatuses.NOT_SET && (
         <div className="toolbar--section-flex">
           <span className="label">Almost ready for automatic scheduling!</span>
           <Button type="link" size="small" onClick={onConfigureMappingCallback}>
-            Configure the form's mapping to the reservation template to get started
+            Configure the form's mapping to the activity template to get started
           </Button>
         </div>
       )}
-      {[mappingStatuses.COMPLETE, mappingStatuses.ALL_MANDATORY].indexOf(mappingStatus) > -1 &&
-        reservations &&
-        reservations.length &&
-        reservations.length > 0 ? (
-          <React.Fragment>
-            <div className="toolbar--section-flex">
-              <span className="label">Ready for automatic scheduling!</span>
-              <Button type="link" size="small" onClick={onConvertToReservations}>
-                View reservation summary
-              </Button>
-            </div>
-            <div className="toolbar--section-flex">
-              <span className="label">Progress</span>
-              <SchedulingProgress formId={formInstance.formId} formInstanceId={formInstance._id} />
-            </div>
-            <div className="toolbar--section-flex adjust-right">
-              <Button size="small" onClick={onScheduleReservations}>
-                Schedule all reservations
-              </Button>
-            </div>
-          </React.Fragment>
-        ) : (
+      {mappingStatus === mappingStatuses.COMPLETE && activities.length > 0 && (
+        <React.Fragment>
           <div className="toolbar--section-flex">
             <span className="label">Ready for automatic scheduling!</span>
             <Button type="link" size="small" onClick={onConvertToReservations}>
-              Convert submissions to reservations to get started
+              View activity summary
             </Button>
           </div>
-        )
-      }
+          <div className="toolbar--section-flex">
+            <span className="label">Progress</span>
+            <SchedulingProgress formId={formInstance.formId} formInstanceId={formInstance._id} />
+          </div>
+          <div className="toolbar--section-flex adjust-right">
+            <Button size="small" onClick={onScheduleReservations}>
+              Schedule all activities
+            </Button>
+          </div>
+        </React.Fragment>
+      )}
+      {mappingStatus === mappingStatuses.COMPLETE && !activities.length && (
+        <div className="toolbar--section-flex">
+          <span className="label">Ready for automatic scheduling!</span>
+          <Button type="link" size="small" onClick={onConvertToReservations}>
+            Convert submissions to activities to get started
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
 AutomaticSchedulingToolbar.propTypes = {
+  formId: PropTypes.string.isRequired,
   formInstance: PropTypes.object.isRequired,
   mappings: PropTypes.object,
-  reservations: PropTypes.array,
-  teCoreAPI: PropTypes.object.isRequired,
+  activities: PropTypes.array,
   history: PropTypes.object.isRequired,
 };
 
 AutomaticSchedulingToolbar.defaultProps = {
   mappings: null,
-  reservations: [],
+  activities: [],
 };
 
-export default withRouter(connect(mapStateToProps, null)(withTECoreAPI(AutomaticSchedulingToolbar)));
+export default withRouter(connect(mapStateToProps, null)(AutomaticSchedulingToolbar));

@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { Tooltip, Icon } from 'antd';
 
 // CONSTANTS
-import { reservationValueModes, reservationValueModeProps } from '../../Constants/reservationValueModes.constants';
+import { activityValueModes, activityValueModeProps } from '../../Constants/activityValueModes.constants';
 import { submissionValueTypes, submissionValueTypeProps } from '../../Constants/submissionValueTypes.constants';
 
-const BaseReservationColIcon = ({ valueMode, submissionValueType }) => {
+const BaseActivityColIcon = ({ valueMode, submissionValueType }) => {
   const value = useMemo(() => {
-    if (valueMode === reservationValueModes.MANUAL)
-      return { icon: reservationValueModeProps.MANUAL.icon, tooltip: 'Manually entered value' };
+    if (valueMode === activityValueModes.MANUAL)
+      return { icon: activityValueModeProps.MANUAL.icon, tooltip: 'Manually entered value' };
     if (submissionValueType === submissionValueTypes.FILTER)
       return { icon: submissionValueTypeProps.FILTER.icon, tooltip: 'Filter values from submission' };
-    return { icon: reservationValueModeProps.FROM_SUBMISSION.icon, tooltip: 'Value from submission' };
+    return { icon: activityValueModeProps.FROM_SUBMISSION.icon, tooltip: 'Value from submission' };
   }, [valueMode, submissionValueType]);
   return (
-    <div className="base-reservation-col--icon">
+    <div className="base-activity-col--icon">
       <Tooltip
         title={value.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -26,9 +26,9 @@ const BaseReservationColIcon = ({ valueMode, submissionValueType }) => {
   );
 };
 
-BaseReservationColIcon.propTypes = {
+BaseActivityColIcon.propTypes = {
   valueMode: PropTypes.string.isRequired,
   submissionValueType: PropTypes.string.isRequired,
 };
 
-export default BaseReservationColIcon;
+export default BaseActivityColIcon;

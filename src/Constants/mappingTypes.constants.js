@@ -14,16 +14,16 @@ export const mappingTypeProps = {
   [mappingTypes.OBJECT]: {
     label: 'Object',
     icon: 'build',
-    tooltip: 'Mapped to a reservation object',
+    tooltip: 'Mapped to a activity object',
   },
   [mappingTypes.TIMING]: {
     label: 'Timing',
     icon: 'clock-circle',
-    tooltip: "Mapped to the reservation's start and end time",
+    tooltip: "Mapped to the activity's start and end time",
   },
   [mappingTypes.UNDEFINED]: {
     label: 'Undefined',
     icon: 'clock-circle',
-    tooltip: 'Mapped to an undefined reservation property',
+    tooltip: 'Mapped to an undefined activity property',
   },
 };

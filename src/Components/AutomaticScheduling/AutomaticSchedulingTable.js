@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'antd';
 
 // COMPONENTS
-import BaseReservationCol from './BaseReservationCol';
+import BaseActivityCol from './BaseActivityCol';
 
 // CONSTANTS
 import { ASTableStaticCols, ASTableTimingCols } from './ASTableStaticCols';
@@ -17,9 +17,9 @@ const createColumnsFromMapping = mapping => [
       title: objectKey,
       key: objectKey,
       dataIndex: null,
-      render: (_, reservation) => (
-        <BaseReservationCol
-          reservation={reservation}
+      render: (_, activity) => (
+        <BaseActivityCol
+          activity={activity}
           type="VALUE"
           prop={objectKey}
           mapping={mapping}
@@ -33,9 +33,9 @@ const createColumnsFromMapping = mapping => [
       title: fieldKey,
       key: fieldKey,
       dataIndex: null,
-      render: (_, reservation) => (
-        <BaseReservationCol
-          reservation={reservation}
+      render: (_, activity) => (
+        <BaseActivityCol
+          activity={activity}
           type="VALUE"
           prop={fieldKey}
           mapping={mapping}
@@ -46,12 +46,12 @@ const createColumnsFromMapping = mapping => [
   ...ASTableStaticCols,
 ];
 
-const convertReservationsToDatasource = reservations => reservations;
+const convertActivitiesToDatasource = activities => activities;
 
-const AutomaticSchedulingTable = ({ mapping, reservations }) => {
+const AutomaticSchedulingTable = ({ mapping, activities }) => {
   const columns = mapping ? createColumnsFromMapping(mapping) : [];
-  const dataSource = reservations && reservations.length
-    ? convertReservationsToDatasource(reservations)
+  const dataSource = activities && activities.length
+    ? convertActivitiesToDatasource(activities)
     : [];
   return (
     <Table
@@ -64,12 +64,12 @@ const AutomaticSchedulingTable = ({ mapping, reservations }) => {
 
 AutomaticSchedulingTable.propTypes = {
   mapping: PropTypes.object,
-  reservations: PropTypes.array,
+  activities: PropTypes.array,
 };
 
 AutomaticSchedulingTable.defaultProps = {
   mapping: null,
-  reservations: [],
+  activities: [],
 };
 
 export default AutomaticSchedulingTable;

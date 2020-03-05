@@ -4,36 +4,36 @@ import { Tooltip, Icon } from 'antd';
 
 // HELPERS
 import {
-  getSchedulingAlgorithmForReservationValue,
-  getSchedulingPayloadForReservationValue
-} from '../../Redux/Reservations/reservations.helpers';
+  getSchedulingAlgorithmForActivityValue,
+  getSchedulingPayloadForActivityValue
+} from '../../Redux/Activities/activities.helpers';
 
 // CONSTANTS
 import { mappingTypeProps } from '../../Constants/mappingTypes.constants';
 
-const BaseReservationColQuickview = ({
-  reservationValue,
+const BaseActivityColQuickview = ({
+  activityValue,
   mappingProps,
-  reservation,
+  activity,
   formatFn,
 }) => {
   const mappingType = useMemo(() => mappingTypeProps[mappingProps.type] || null, [mappingProps]);
   const schedulingPayload = useMemo(
-    () => getSchedulingPayloadForReservationValue(reservationValue, reservation, formatFn, true, mappingProps.type),
-    [reservationValue, reservation, formatFn, mappingProps]);
+    () => getSchedulingPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
+    [activityValue, activity, formatFn, mappingProps]);
   const schedulingAlgorithm = useMemo(
-    () => getSchedulingAlgorithmForReservationValue(reservationValue, mappingProps.type),
-    [reservationValue, mappingProps]
+    () => getSchedulingAlgorithmForActivityValue(activityValue, mappingProps.type),
+    [activityValue, mappingProps]
   );
 
   return (
-    <div className="base-reservation-col--quickview">
+    <div className="base-activity-col--quickview">
       {mappingType && (
         <Tooltip
           title={mappingType.tooltip}
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
         >
-          <div className="base-reservation-col__quickview--icon">
+          <div className="base-activity-col__quickview--icon">
             <Icon type={mappingType.icon} />
           </div>
         </Tooltip>
@@ -42,7 +42,7 @@ const BaseReservationColQuickview = ({
         title={schedulingPayload.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <div className="base-reservation-col__quickview--icon">
+        <div className="base-activity-col__quickview--icon">
           <Icon type={schedulingPayload.icon} />
         </div>
       </Tooltip>
@@ -50,7 +50,7 @@ const BaseReservationColQuickview = ({
         title={schedulingAlgorithm.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <div className="base-reservation-col__quickview--icon">
+        <div className="base-activity-col__quickview--icon">
           <Icon type={schedulingAlgorithm.icon} />
         </div>
       </Tooltip>
@@ -58,11 +58,11 @@ const BaseReservationColQuickview = ({
   );
 };
 
-BaseReservationColQuickview.propTypes = {
-  reservationValue: PropTypes.object.isRequired,
+BaseActivityColQuickview.propTypes = {
+  activityValue: PropTypes.object.isRequired,
   mappingProps: PropTypes.object.isRequired,
-  reservation: PropTypes.object.isRequired,
+  activity: PropTypes.object.isRequired,
   formatFn: PropTypes.func.isRequired,
 };
 
-export default BaseReservationColQuickview;
+export default BaseActivityColQuickview;

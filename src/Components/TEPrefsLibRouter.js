@@ -24,7 +24,7 @@ const TEPrefsLibRouter = () => {
           <Route exact path="/forms/:formId" component={FormPage} />
           <Route exact path="/forms/:formId/mapping" component={FormReservationTemplateMappingPage} />
           <Route exact path="/forms/:formId/form-instances/:formInstanceId" component={FormInstancePage} />
-          <Route exact path="/forms/:formId/form-instances/:formInstanceId/reservations" component={FormInstanceReservationOverviewPage} />
+          <Route exact path="/forms/:formId/form-instances/:formInstanceId/activities" component={FormInstanceReservationOverviewPage} />
         </AuthenticatedRoutes>
       </Switch>
     </Router>

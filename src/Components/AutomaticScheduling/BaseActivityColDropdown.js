@@ -3,52 +3,52 @@ import PropTypes from 'prop-types';
 import { Button, Menu, Dropdown } from 'antd';
 
 // COMPONENTS
-import BaseReservationColQuickview from './BaseReservationColQuickview';
+import BaseReservationColQuickview from './BaseActivityColQuickview';
 
 // CONSTANTS
-import { reservationActions } from '../../Constants/reservationActions.constants';
+import { activityActions } from '../../Constants/activityActions.constants';
 import { mappingTypes } from '../../Constants/mappingTypes.constants';
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
-import { reservationValueModes } from '../../Constants/reservationValueModes.constants';
+import { activityValueModes } from '../../Constants/activityValueModes.constants';
 
 const BaseReservationColDropdown = ({
-  reservationValue,
-  reservation,
+  activityValue,
+  activity,
   formatFn,
   mappingProps,
   reservationActionFns
 }) => {
   const handleMenuClick = useCallback(({ key }) => {
     if (reservationActionFns[key])
-      reservationActionFns[key](reservationValue);
-  }, [reservationActionFns, reservationValue]);
+      reservationActionFns[key](activityValue);
+  }, [reservationActionFns, activityValue]);
 
   const menuOptions = useMemo(() => {
     return (
       <Menu onClick={handleMenuClick}>
         <BaseReservationColQuickview
-          reservationValue={reservationValue}
+          activityValue={activityValue}
           mappingProps={mappingProps}
-          reservation={reservation}
+          activity={activity}
           formatFn={formatFn}
         />
         <Menu.Divider />
         {mappingProps.type === mappingTypes.OBJECT && (
-          <Menu.Item key={reservationActions.MANUAL_SELECT_OVERRIDE}>Manually select object</Menu.Item>
+          <Menu.Item key={activityActions.MANUAL_SELECT_OVERRIDE}>Manually select object</Menu.Item>
         )}
         {mappingProps.type === mappingTypes.FIELD && (
-          <Menu.Item key={reservationActions.MANUAL_INPUT_OVERRIDE}>Manually input value</Menu.Item>
+          <Menu.Item key={activityActions.MANUAL_INPUT_OVERRIDE}>Manually input value</Menu.Item>
         )}
-        {mappingProps.type === mappingTypes.FIELD && reservationValue.submissionValueType === submissionValueTypes.FILTER && (
-          <Menu.Item key={reservationActions.SELECT_BEST_FIT_VALUE}>Manually select best fit value</Menu.Item>
+        {mappingProps.type === mappingTypes.FIELD && activityValue.submissionValueType === submissionValueTypes.FILTER && (
+          <Menu.Item key={activityActions.SELECT_BEST_FIT_VALUE}>Manually select best fit value</Menu.Item>
         )}
-        {reservationValue.valueMode === reservationValueModes.MANUAL && (
-          <Menu.Item key={reservationActions.REVERT_TO_SUBMISSION_VALUE}>Revert to submission value</Menu.Item>
+        {activityValue.valueMode === activityValueModes.MANUAL && (
+          <Menu.Item key={activityActions.REVERT_TO_SUBMISSION_VALUE}>Revert to submission value</Menu.Item>
         )}
-        <Menu.Item key={reservationActions.SHOW_INFO}>Show details</Menu.Item>
+        <Menu.Item key={activityActions.SHOW_INFO}>Show details</Menu.Item>
       </Menu>
     );
-  }, [reservationValue, mappingProps]);
+  }, [activityValue, mappingProps]);
 
   return (
     <Dropdown
@@ -61,9 +61,9 @@ const BaseReservationColDropdown = ({
 };
 
 BaseReservationColDropdown.propTypes = {
-  reservationValue: PropTypes.object,
+  activityValue: PropTypes.object,
   mappingProps: PropTypes.object.isRequired,
-  reservation: PropTypes.object.isRequired,
+  activity: PropTypes.object.isRequired,
   formatFn: PropTypes.func.isRequired,
   reservationActionFns: PropTypes.object.isRequired,
 };

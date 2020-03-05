@@ -1,0 +1,59 @@
+@import '../../Styles/globals.scss';
+
+.timing-mapping__row--wrapper {
+  display: flex;
+  margin-bottom: 0.4rem;
+
+  .label {
+    width: 15rem;
+    font-size: 14px;
+    .is-required {
+      margin-left: 0.4rem;
+      font-size: 0.8rem;
+      color: $bittersweet;
+      font-style: italic;
+    }
+  }
+
+  .ant-select, .ant-cascader-picker {
+    width: 25rem;
+  }
+}
+
+.object-mapping--wrapper {
+  display: block;
+
+  .object-mapping-row--wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.4rem;
+
+    .object-mapping-row--type {
+      width: 15rem;
+
+      .ant-select {
+        width: 14rem;
+      }
+    }
+
+    .ant-cascader-picker {
+      width: 25rem;
+    }
+
+    .object-mapping-row--props {
+      margin-left: 0.8rem;
+    }
+  }
+
+  .object-mapping-row--delete {
+    .ant-btn {
+      color: $bittersweet !important;
+    }
+  }
+
+  .object-mapping--add {
+    .ant-select {
+      width: 25rem;
+    }
+  }
+}

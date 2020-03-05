@@ -1,9 +1,9 @@
 import React from 'react';
-import { reservationStatusProps } from '../../Constants/reservationStatuses.constants';
+import { activityStatusProps } from '../../Constants/activityStatuses.constants';
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 import StatusTag from '../StatusTag';
-import ReservationActionsDropdown from './ReservationActionsDropdown';
-import BaseReservationCol from './BaseReservationCol';
+import ActivityActionsDropdown from './ActivityActionsDropdown';
+import BaseActivityCol from './BaseActivityCol';
 import moment from 'moment';
 
 const timingCols = ({
@@ -11,9 +11,9 @@ const timingCols = ({
     title: 'Timing mode',
     key: 'mode',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="mode"
         propTitle="Timing mode"
@@ -26,9 +26,9 @@ const timingCols = ({
     title: 'Start time',
     key: 'startTime',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="startTime"
         propTitle="Start time"
@@ -41,9 +41,9 @@ const timingCols = ({
     title: 'End time',
     key: 'endTime',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="endTime"
         propTitle="End time"
@@ -56,9 +56,9 @@ const timingCols = ({
     title: 'Start after or at:',
     key: 'startTime',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="startTime"
         propTitle="Start after or at"
@@ -71,9 +71,9 @@ const timingCols = ({
     title: 'End before or at:',
     key: 'endTime',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="endTime"
         propTitle="End before or at"
@@ -86,9 +86,9 @@ const timingCols = ({
     title: 'Length',
     key: 'length',
     dataIndex: null,
-    render: (_, reservation) => (
-      <BaseReservationCol
-        reservation={reservation}
+    render: (_, activity) => (
+      <BaseActivityCol
+        activity={activity}
         type="TIMING"
         prop="length"
         propTitle="Length"
@@ -115,11 +115,11 @@ export const ASTableTimingCols = ({
 export const ASTableStaticCols = [
   {
     title: 'Status',
-    key: 'reservationStatus',
-    dataIndex: 'reservationStatus',
-    render: reservationStatus => (
-      <StatusTag color={reservationStatusProps[reservationStatus].color}>
-        {reservationStatusProps[reservationStatus].label}
+    key: 'activityStatus',
+    dataIndex: 'activityStatus',
+    render: activityStatus => (
+      <StatusTag color={activityStatusProps[activityStatus].color}>
+        {activityStatusProps[activityStatus].label}
       </StatusTag>
     )
   },
@@ -133,6 +133,6 @@ export const ASTableStaticCols = [
     title: 'Actions',
     key: 'actions',
     dataIndex: null,
-    render: (_, reservation) => <ReservationActionsDropdown buttonType="more" reservation={reservation} />,
+    render: (_, activity) => <ActivityActionsDropdown buttonType="more" activity={activity} />,
   },
 ];

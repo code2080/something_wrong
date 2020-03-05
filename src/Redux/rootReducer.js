@@ -6,7 +6,7 @@ import globalUI from './GlobalUI/globalUI.reducer';
 import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
-import reservations from './Reservations/reservations.reducer';
+import activities from './Activities/activities.reducer';
 import mappings from './Mapping/mappings.reducer';
 import te from './TE/te.reducer';
 import integration from './Integration/integration.reducer';
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   auth,
   forms,
   submissions,
-  reservations,
+  activities,
   mappings,
   users,
   te,

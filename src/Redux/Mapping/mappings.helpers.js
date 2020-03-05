@@ -20,53 +20,6 @@ export const getMappingTypeForProp = (prop, mapping) => {
   return mappingTypes.UNDEFINED;
 };
 
-export const getMappingStatus = mapping => {
-  // If we don't have mapping -> status is NOT_SET
-  if (!mapping) return mappingStatuses.NOT_SET;
-  // Get the object mapping status
-  const objectMappingStatus = Object.keys(mapping.objects).reduce(
-    (status, objectKey) => ({
-      ...status,
-      [objectKey]: {
-        status: mapping.objects[objectKey],
-        mandatory: mapping.propSettings[objectKey] ? mapping.propSettings[objectKey].mandatory : true
-      },
-    }),
-    {}
-  );
-  // Get the field mapping status
-  const fieldMappingStatus = Object.keys(mapping.fields).reduce(
-    (status, fieldKey) => ({
-      ...status,
-      [fieldKey]: {
-        status: mapping.fields[fieldKey],
-        mandatory: mapping.propSettings[fieldKey] ? mapping.propSettings[fieldKey].mandatory : true
-      },
-    }),
-    {}
-  );
-  const isMandatoryObjectMappingComplete = Object.keys(objectMappingStatus).every(
-    key => objectMappingStatus[key].status != null || !objectMappingStatus[key].mandatory
-  );
-  const isMandatoryFieldMappingComplete = Object.keys(fieldMappingStatus).every(
-    key => fieldMappingStatus[key].status != null || !fieldMappingStatus[key].mandatory
-  );
-  if (!isMandatoryObjectMappingComplete || !isMandatoryFieldMappingComplete) return mappingStatuses.PARTIAL;
-  const timingMode = mapping.timing.mode;
-  if (!timingMode) return mappingStatuses.PARTIAL;
-  const mandatoryTimingProps = getMandatoryPropsForTimingMode(timingMode);
-  const timingPropsStatus = mandatoryTimingProps.every(key => mapping.timing[key] != null);
-  if (!timingPropsStatus) return mappingStatuses.PARTIAL;
-  const isObjectMappingComplete = Object.keys(objectMappingStatus).every(
-    key => objectMappingStatus[key].status != null
-  );
-  const isFieldMappingComplete = Object.keys(fieldMappingStatus).every(
-    key => fieldMappingStatus[key].status != null
-  );
-  if (!isObjectMappingComplete || !isFieldMappingComplete) return mappingStatuses.ALL_MANDATORY;
-  return mappingStatuses.COMPLETE;
-};
-
 export const validateTemplateAgainstMapping = (template, mapping) => {
   const objects = Object.keys(mapping.objects);
   const _objectsMatch = template.objects.every(obj => objects.indexOf(obj) > -1);
@@ -91,6 +44,47 @@ export const createNewMappingFromTemplate = (template, extId, formId) =>
       [...template.objects, ...template.fields]
         .reduce((propSettings, prop) => ({ ...propSettings, [prop]: template.propSettings[prop] }), {}),
   });
+
+/**
+ * @function validateAllKeysOnProp
+ * @description validates an object has minLength keys and all keys have a value
+ * @param {*} prop the object to validate
+ * @param {*} minLength min number of keys
+ */
+const validateAllKeysOnProp = (prop, minLength = 1) => {
+  const keys = Object.keys(prop);
+  if (minLength > 0 && (!keys || !keys.length >= minLength)) return false;
+  return !keys.some(key => prop[key] == null);
+};
+
+/**
+ * @function validateMapping
+ * @description validates whether a mapping exists and is valid
+ * @param {*} formId the form for which to validate the mapping
+ * @param {*} mappingState the current mapping state
+ */
+export const validateMapping = (formId, mappingState) => {
+  const mapping = _.get(mappingState, `${formId}`, {});
+  // Validate we have an object for the form
+  if (!mapping || !mapping.formId) return mappingStatuses.NOT_SET;
+  // Validate timing
+  const timingMode = mapping.timing.mode;
+  if (!timingMode) return mappingStatuses.NOT_SET;
+  const mandatoryTimingProps = getMandatoryPropsForTimingMode(timingMode);
+  const timingValid = mandatoryTimingProps.every(key => mapping.timing[key] != null && mapping.timing[key].length > 0);
+  // Validate objects and fields
+  const { objects, fields } = mapping;
+  const objectsValid = validateAllKeysOnProp(objects, 1);
+  const fieldsValid = validateAllKeysOnProp(fields, 0);
+  return timingValid && objectsValid && fieldsValid ? mappingStatuses.COMPLETE : mappingStatuses.NOT_SET;
+};
+
+/**
+ * @function findFirstRepeatingSection
+ * @description determine the first (and only) repeating section (table, connected) already used in the mapping
+ * @param {*} formSections the form's sections
+ * @param {*} mapping the current mapping
+ */
 
 const findFirstRepeatingSection = (formSections, mapping) => [
   ...(Object.keys(mapping.timing) || []).reduce(
@@ -122,6 +116,13 @@ const findFirstRepeatingSection = (formSections, mapping) => [
     if (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE) return true;
     return false;
   });
+
+/**
+ * @function getElementsForMapping
+ * @description get the elements an object or field can be matched against
+ * @param {*} formSections the sections of the form
+ * @param {*} mapping the current mapping
+ */
 
 export const getElementsForMapping = (formSections, mapping) => {
   if (!formSections || !formSections.length || !mapping) return [];
@@ -156,6 +157,12 @@ export const getElementsForMapping = (formSections, mapping) => {
   ];
 };
 
+/**
+ * @function getExactModeElementsForMapping
+ * @description gets the elements in a form that can be used for an exact timing mode mapping
+ * @param {*} formSections sections of the form
+ * @param {*} mapping current mapping
+ */
 const getExactModeElementsForMapping = (formSections, mapping) => {
   if (!formSections || !formSections.length || !mapping) return [];
   // Ensure only one repeating sectionn can be used
@@ -185,7 +192,11 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
   ];
 };
 
-export const timingOptions = ({
+/**
+ * @function getElementsForTimingMapping
+ * @description gets the compatible elements for timing mapping
+ */
+export const getElementsForTimingMapping = ({
   [mappingTimingModes.EXACT]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
   [mappingTimingModes.TIMESLOTS]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
   [mappingTimingModes.SEQUENCE]: () => {},

@@ -6,12 +6,12 @@ $statusColumnLength: 0.8rem;
   display: flex;
   align-items: center;
 
-  .reservation-status--wrapper,
-  .reservation-id--wrapper {
+  .activity-status--wrapper,
+  .activity-id--wrapper {
     margin-right: 0.4rem;
   }
 
-  .reservation-status--wrapper {
+  .activity-status--wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +54,7 @@ $statusColumnLength: 0.8rem;
     }
   }
 
-  .reservation-id--wrapper {
+  .activity-id--wrapper {
     color: $darkBlack;
     cursor: pointer;
 

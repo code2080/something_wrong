@@ -2,7 +2,7 @@
 
 $iconDimension: 25px;
 
-.base-reservation-col--modal {
+.base-activity-col--modal {
   .ant-form-text {
     display: flex;
     align-items: flex-start;
@@ -12,7 +12,7 @@ $iconDimension: 25px;
     font-weight: 700;
     color: $darkBlack;
   }
-  .base-reservation-col__modal--icon {
+  .base-activity-col__modal--icon {
     min-width: $iconDimension;
     width: $iconDimension;
     max-width: $iconDimension;

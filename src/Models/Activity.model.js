@@ -1,7 +1,7 @@
-import { ReservationValue } from './ReservationValue.model';
+import { ActivityValue } from './ActivityValue.model';
 import moment from 'moment';
 
-export class Reservation {
+export class Activity {
   _id;
 
   formId;
@@ -16,7 +16,7 @@ export class Reservation {
 
   reservationTemplateExtId;
 
-  reservationStatus;
+  activityStatus;
 
   reservationId;
 
@@ -34,7 +34,7 @@ export class Reservation {
     eventId,
     rowIdx,
     reservationTemplateExtId,
-    reservationStatus,
+    activityStatus,
     reservationId,
     schedulingDate,
     timing,
@@ -47,10 +47,10 @@ export class Reservation {
     this.eventId = eventId;
     this.rowIdx = rowIdx;
     this.reservationTemplateExtId = reservationTemplateExtId;
-    this.reservationStatus = reservationStatus;
+    this.activityStatus = activityStatus;
     this.reservationId = reservationId;
     this.schedulingDate = schedulingDate ? moment.utc(schedulingDate) : null;
     this.timing = timing;
-    this.values = values.map(el => new ReservationValue(el));
+    this.values = values.map(el => new ActivityValue(el));
   }
 }

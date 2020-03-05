@@ -1,22 +1,22 @@
 @import '../../Styles/globals.scss';
 
-.base-reservation-col--wrapper {
+.base-activity-col--wrapper {
   display: flex;
   align-items: center;
   
-  .base-reservation-col--icon {
+  .base-activity-col--icon {
     color: $rustyGrey;
   }
 }
 
-.base-reservation-col--quickview {
+.base-activity-col--quickview {
   padding: 5px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.base-reservation-col__quickview--icon {
+.base-activity-col__quickview--icon {
   margin: 0 0.4rem;
   padding: 0 0.2rem;
   border-radius: 50%;

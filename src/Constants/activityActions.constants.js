@@ -1,4 +1,4 @@
-export const reservationActions = {
+export const activityActions = {
   MANUAL_INPUT_OVERRIDE: 'MANUAL_INPUT_OVERRIDE',
   MANUAL_SELECT_OVERRIDE: 'MANUAL_SELECT_OVERRIDE',
   SELECT_BEST_FIT_VALUE: 'SELECT_BEST_FIT_VALUE',

@@ -1,34 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { Select, Cascader } from 'antd';
 
 // HELPERS
-import { timingOptions } from '../../Redux/Mapping/mappings.helpers';
+import { getElementsForTimingMapping } from '../../Redux/Mapping/mappings.helpers';
 
 // CONSTANTS
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 
+// STYLES
+import './Mapping.scss';
+
 const TimingMapping = ({
-  mode,
-  startDate,
-  endDate,
-  startTime,
-  endTime,
-  length,
   onChange,
   formSections,
   mapping,
   disabled,
 }) => {
+  const timingMode = useMemo(() => _.get(mapping, 'timing.mode', null), [mapping]);
+
   return (
     <React.Fragment>
-      <div className="timing-mapping--wrapper">
+      <div className="timing-mapping__row--wrapper">
         <div className="label">
           Mode
           <span className="is-required">(required)</span>
         </div>
         <Select
-          value={mode}
+          value={_.get(mapping, 'timing.mode', null)}
           onChange={val => onChange('mode', val)}
           size="small"
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -39,16 +39,16 @@ const TimingMapping = ({
           ))}
         </Select>
       </div>
-      {mode === mappingTimingModes.EXACT && (
+      {timingMode === mappingTimingModes.EXACT && (
         <React.Fragment>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               Start time
               <span className="is-required">(required)</span>
             </div>
             <Cascader
-              options={timingOptions[mode](formSections, mapping)}
-              value={startTime}
+              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              value={_.get(mapping, 'timing.startTime', null)}
               onChange={val => onChange('startTime', val)}
               placeholder="Select an element"
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -56,14 +56,14 @@ const TimingMapping = ({
               disabled={disabled}
             />
           </div>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               End time
               <span className="is-required">(required)</span>
             </div>
             <Cascader
-              options={timingOptions[mode](formSections, mapping)}
-              value={endTime}
+              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              value={_.get(mapping, 'timing.endTime', null)}
               onChange={val => onChange('endTime', val)}
               placeholder="Select an element"
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -73,16 +73,16 @@ const TimingMapping = ({
           </div>
         </React.Fragment>
       )}
-      {mode === mappingTimingModes.TIMESLOTS && (
+      {timingMode === mappingTimingModes.TIMESLOTS && (
         <React.Fragment>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               Start on or after:
               <span className="is-required">(required)</span>
             </div>
             <Cascader
-              options={timingOptions[mode](formSections, mapping)}
-              value={startTime}
+              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              value={_.get(mapping, 'timing.startTime', null)}
               onChange={val => onChange('startTime', val)}
               placeholder="Select an element"
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -90,14 +90,14 @@ const TimingMapping = ({
               disabled={disabled}
             />
           </div>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               End on or before:
               <span className="is-required">(required)</span>
             </div>
             <Cascader
-              options={timingOptions[mode](formSections, mapping)}
-              value={endTime}
+              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              value={_.get(mapping, 'timing.endTime', null)}
               onChange={val => onChange('endTime', val)}
               placeholder="Select an element"
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -105,14 +105,14 @@ const TimingMapping = ({
               disabled={disabled}
             />
           </div>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               Length
               <span className="is-required">(required)</span>
             </div>
             <Cascader
-              options={timingOptions[mode](formSections, mapping)}
-              value={length}
+              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              value={_.get(mapping, 'timing.length', null)}
               onChange={val => onChange('length', val)}
               placeholder="Select an element"
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -122,21 +122,21 @@ const TimingMapping = ({
           </div>
         </React.Fragment>
       )}
-      {mode === mappingTimingModes.SEQUENCE && (
+      {timingMode === mappingTimingModes.SEQUENCE && (
         <React.Fragment>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               Start date
               <span className="is-required">(required)</span>
             </div>
           </div>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               End date
               <span className="is-required">(required)</span>
             </div>
           </div>
-          <div className="timing-mapping--wrapper">
+          <div className="timing-mapping__row--wrapper">
             <div className="label">
               Length
               <span className="is-required">(required)</span>
@@ -149,12 +149,6 @@ const TimingMapping = ({
 };
 
 TimingMapping.propTypes = {
-  mode: PropTypes.string.isRequired,
-  startDate: PropTypes.array,
-  endDate: PropTypes.array,
-  startTime: PropTypes.array,
-  endTime: PropTypes.array,
-  length: PropTypes.array,
   onChange: PropTypes.func.isRequired,
   formSections: PropTypes.array.isRequired,
   mapping: PropTypes.object.isRequired,

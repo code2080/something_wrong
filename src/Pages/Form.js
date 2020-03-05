@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { fetchFormSubmissions } from '../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../Redux/Mapping/mappings.actions';
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
-import { fetchReservationsForForm } from '../Redux/Reservations/reservations.actions';
+import { fetchActivitiesForForm } from '../Redux/Activities/activities.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../Redux/APIStatus/apiStatus.selectors';
@@ -38,7 +38,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapActionsToProps = {
   fetchFormSubmissions,
   fetchMappings,
-  fetchReservationsForForm,
+  fetchActivitiesForForm,
   setBreadcrumbs,
 };
 
@@ -48,7 +48,7 @@ const FormPage = ({
   submissions,
   isLoadingSubmissions,
   fetchFormSubmissions,
-  fetchReservationsForForm,
+  fetchActivitiesForForm,
   setBreadcrumbs,
   fetchMappings
 }) => {
@@ -60,9 +60,9 @@ const FormPage = ({
   useEffect(() => {
     fetchMappings(formId);
   }, []);
-  // Fetch reservations
+  // Fetch activities
   useEffect(() => {
-    fetchReservationsForForm(formId);
+    fetchActivitiesForForm(formId);
   }, []);
   // Set breadcrumbs
   useEffect(() => {
@@ -100,7 +100,7 @@ FormPage.propTypes = {
   submissions: PropTypes.array,
   isLoadingSubmissions: PropTypes.bool,
   fetchFormSubmissions: PropTypes.func.isRequired,
-  fetchReservationsForForm: PropTypes.func.isRequired,
+  fetchActivitiesForForm: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchMappings: PropTypes.func.isRequired,
 };

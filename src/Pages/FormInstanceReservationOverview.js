@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
@@ -6,15 +6,14 @@ import { Empty, Button } from 'antd';
 // ACTIONS
 import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
 import {
-  fetchReservationsForFormInstance,
-  saveReservations,
-} from '../Redux/Reservations/reservations.actions';
+  fetchActivitiesForFormInstance,
+  saveActivities,
+} from '../Redux/Activities/activities.actions';
 
 // HELPERS
-import { createReservations } from '../Utils/automaticSchedulingHelpers';
+import { createActivities } from '../Utils/automaticSchedulingHelpers';
 
 // COMPONENTS
-import { withTECoreAPI } from '../Components/TECoreAPI';
 import AutomaticSchedulingTable from '../Components/AutomaticScheduling/AutomaticSchedulingTable';
 
 // STYLES
@@ -26,26 +25,25 @@ const mapStateToProps = (state, ownProps) => {
   return {
     form: state.forms[formId],
     formInstance: state.submissions[formId][formInstanceId],
-    mappings: state.mappings[formId],
-    reservations: state.reservations[formId] ? (state.reservations[formId][formInstanceId] || []) : [],
+    mapping: state.mappings[formId],
+    activities: state.activities[formId] ? (state.activities[formId][formInstanceId] || []) : [],
   };
 };
 
 const mapActionsToProps = {
   setBreadcrumbs,
-  saveReservations,
-  fetchReservationsForFormInstance,
+  saveActivities,
+  fetchActivitiesForFormInstance,
 };
 
 const FormInstanceReservationOverview = ({
   formInstance,
   form,
-  reservations,
-  mappings,
+  activities,
+  mapping,
   setBreadcrumbs,
-  saveReservations,
-  fetchReservationsForFormInstance,
-  teCoreAPI,
+  saveActivities,
+  fetchActivitiesForFormInstance,
 }) => {
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -53,41 +51,25 @@ const FormInstanceReservationOverview = ({
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formInstance.formId}`, label: form.name },
       { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`, label: `Submission from ${formInstance.submitter}` },
-      { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}/reservations`, label: `Reservation summary` }
+      { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}/activities`, label: `Activities` }
     ]);
   }, []);
 
-  // Effect to fetch reservations
+  // Effect to fetch activities
   useEffect(() => {
-    fetchReservationsForFormInstance(formInstance.formId, formInstance._id);
+    fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
 
-  // Get mapping
-  const [mapping, setMapping] = useState(null);
-  const [selectedTemplate, setSelectedTemplate] = useState('');
-
-  useEffect(() => {
-    async function exec() {
-      // Get the selected template name
-      const selectedTemplate = await teCoreAPI.getSelectedReservationTemplate();
-      setSelectedTemplate(selectedTemplate);
-      // Check if we have a mapping for that template
-      const mapping = mappings[selectedTemplate];
-      setMapping(mapping);
-    }
-    exec();
-  }, [mappings]);
-
-  const onCreateReservations = useCallback(() => {
-    const reservations = createReservations(formInstance, form.sections, mapping, selectedTemplate);
-    saveReservations(formInstance.formId, formInstance._id, reservations);
-  }, [mapping, selectedTemplate, formInstance, form, saveReservations]);
+  const onCreateActivities = useCallback(() => {
+    const activities = createActivities(formInstance, form.sections, mapping);
+    saveActivities(formInstance.formId, formInstance._id, activities);
+  }, [mapping, formInstance, form, saveActivities]);
 
   return (
     <div className="form-instance-automatic-scheduling--wrapper">
 
-      {reservations && reservations.length ? (
-        <AutomaticSchedulingTable mapping={mapping} reservations={reservations} />
+      {activities && activities.length ? (
+        <AutomaticSchedulingTable mapping={mapping} activities={activities} />
       ) : (
         <Empty
           imageStyle={{
@@ -95,11 +77,11 @@ const FormInstanceReservationOverview = ({
           }}
           description={(
             <span>
-              This submission has not been converted into reservations yet.
+              This submission has not been converted into activities yet.
             </span>
           )}
         >
-          <Button type="primary" onClick={onCreateReservations}>Convert it now</Button>
+          <Button type="primary" onClick={onCreateActivities}>Convert it now</Button>
         </Empty>
       )}
     </div>
@@ -109,17 +91,16 @@ const FormInstanceReservationOverview = ({
 FormInstanceReservationOverview.propTypes = {
   formInstance: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
-  reservations: PropTypes.array,
-  mappings: PropTypes.object,
+  activities: PropTypes.array,
+  mapping: PropTypes.object,
   setBreadcrumbs: PropTypes.func.isRequired,
-  saveReservations: PropTypes.func.isRequired,
-  fetchReservationsForFormInstance: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
+  saveActivities: PropTypes.func.isRequired,
+  fetchActivitiesForFormInstance: PropTypes.func.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {
-  reservations: [],
-  mappings: {},
+  activities: [],
+  mapping: {},
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(FormInstanceReservationOverview));
+export default connect(mapStateToProps, mapActionsToProps)(FormInstanceReservationOverview);
