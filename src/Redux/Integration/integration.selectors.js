@@ -1,49 +1,59 @@
 // import _ from 'lodash';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType';
-import { SECTION_VERTICAL, SECTION_TABLE, SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
+import {
+  SECTION_VERTICAL,
+  SECTION_TABLE,
+  SECTION_CONNECTED
+} from '../../Constants/sectionTypes.constants';
 
 export const getTECoreAPIPayload = (value, datasource, state) => {
   if (!value) return null;
   const _datasource = datasource.split(',');
-  if (!_datasource.length || _datasource.length < 2) return [{ valueType: undefined, extId: undefined }];
-  let _retVal = [{
-    valueType: datasourceValueTypes.TYPE_EXTID,
-    extId: _datasource[0], // _.get(state, `integration.mapping[${_datasource[0]}].mapping`, undefined),
-  }];
+  if (!_datasource.length || _datasource.length < 2)
+    return [{ valueType: undefined, extId: undefined }];
+  let _retVal = [
+    {
+      valueType: datasourceValueTypes.TYPE_EXTID,
+      extId: _datasource[0]
+    }
+  ];
 
   if (_datasource[1] === 'object')
     return [
       {
         valueType: datasourceValueTypes.OBJECT_EXTID,
-        extId: value,
+        extId: value
       },
-      ..._retVal,
+      ..._retVal
     ];
   return [
     {
       valueType: datasourceValueTypes.FIELD_VALUE,
-      value,
+      value
     },
     ..._retVal,
     {
       valueType: datasourceValueTypes.FIELD_EXTID,
-      extId: _datasource[1],
-    },
+      extId: _datasource[1]
+    }
   ];
 };
 
 const initialState = {
   objects: [],
   fields: [],
-  types: [],
+  types: []
 };
 
 export const getExtIdPropsPayload = (sections, values, state) => {
   const elements = sections.reduce((allSections, section) => {
     const _elements = section.elements.reduce((allElements, element) => {
       if (element.datasource)
-        return [...allElements, ...getPayloadForSection(element, section, values, state)];
+        return [
+          ...allElements,
+          ...getPayloadForSection(element, section, values, state)
+        ];
       return allElements;
     }, []);
     return [...allSections, ..._elements];
@@ -54,10 +64,7 @@ export const getExtIdPropsPayload = (sections, values, state) => {
       if (extIdIdx === -1)
         return {
           ...retVal,
-          objects: [
-            ...retVal.objects,
-            element.extId,
-          ],
+          objects: [...retVal.objects, element.extId]
         };
       return retVal;
     }
@@ -67,10 +74,7 @@ export const getExtIdPropsPayload = (sections, values, state) => {
       if (extIdIdx === -1)
         return {
           ...retVal,
-          types: [
-            ...retVal.types,
-            element.extId,
-          ],
+          types: [...retVal.types, element.extId]
         };
       return retVal;
     }
@@ -80,16 +84,13 @@ export const getExtIdPropsPayload = (sections, values, state) => {
       if (extIdIdx === -1)
         return {
           ...retVal,
-          fields: [
-            ...retVal.fields,
-            element.extId,
-          ],
+          fields: [...retVal.fields, element.extId]
         };
       return retVal;
     }
     return retVal;
   }, initialState);
-}
+};
 
 const getPayloadForSection = (element, section, values, state) => {
   if (!values[section._id] && process.env.NODE_ENV === 'development') {
@@ -115,16 +116,27 @@ const getValueFromElement = el => {
   return null;
 };
 
-const getPayloadForVerticalSection = (element, values, state) => values
-  .filter(el => el.elementId === element._id)
-  .map(el => getTECoreAPIPayload(getValueFromElement(el), element.datasource, state));
+const getPayloadForVerticalSection = (element, values, state) =>
+  values
+    .filter(el => el.elementId === element._id)
+    .map(el =>
+      getTECoreAPIPayload(getValueFromElement(el), element.datasource, state)
+    );
 
-const getPayloadForTableSection = (element, values, state) => Object.keys(values).reduce((allRows, rowKey) => {
-  const rowValues = values[rowKey];
-  return [...allRows, ...getPayloadForVerticalSection(element, rowValues, state)];
-}, []);
+const getPayloadForTableSection = (element, values, state) =>
+  Object.keys(values).reduce((allRows, rowKey) => {
+    const rowValues = values[rowKey];
+    return [
+      ...allRows,
+      ...getPayloadForVerticalSection(element, rowValues, state)
+    ];
+  }, []);
 
-const getPayloadForConnectedSection = (element, values, state) => Object.keys(values).reduce((allEvents, eventId) => {
-  const event = values[eventId];
-  return [...allEvents, ...getPayloadForVerticalSection(element, event.values, state)];
-}, []);
+const getPayloadForConnectedSection = (element, values, state) =>
+  Object.keys(values).reduce((allEvents, eventId) => {
+    const event = values[eventId];
+    return [
+      ...allEvents,
+      ...getPayloadForVerticalSection(element, event.values, state)
+    ];
+  }, []);

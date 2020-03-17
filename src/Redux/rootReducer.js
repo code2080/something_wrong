@@ -9,7 +9,6 @@ import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
 import mappings from './Mapping/mappings.reducer';
 import te from './TE/te.reducer';
-import integration from './Integration/integration.reducer';
 import users from './Users/users.reducer';
 
 const rootReducer = combineReducers({
@@ -21,8 +20,7 @@ const rootReducer = combineReducers({
   activities,
   mappings,
   users,
-  te,
-  integration,
+  te
 });
 
 export default rootReducer;
