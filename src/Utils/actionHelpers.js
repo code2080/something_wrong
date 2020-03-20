@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_URL } from '../configs';
 import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
+import React from 'react';
 // import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status
@@ -21,17 +22,17 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
     method,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      ...headers,
+      ...headers
     },
-    body: {},
+    body: {}
   };
 
   if (requiresAuth) {
     const token = await getToken();
     option.headers = {
       'Access-Control-Allow-Origin': '*',
-      'Authorization': `Bearer ${token}`,
-      ...headers,
+      Authorization: `Bearer ${token}`,
+      ...headers
     };
   }
 
@@ -43,7 +44,7 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
     }
   }
   return option;
-}
+};
 
 /**
  * @function doDispatch
@@ -82,7 +83,7 @@ const refreshToken = async () => {
   window.tePrefsLibStore.dispatch({ type: 'LOGIN_FAILURE' });
   await deleteToken();
   console.log('Token refreshing');
-}
+};
 
 function createThunkAction({
   method,
@@ -99,7 +100,7 @@ function createThunkAction({
     allApis[endpoint].inprogress = true;
   } else {
     allApis[endpoint] = {
-      inprogress: true,
+      inprogress: true
     };
   }
 
@@ -128,7 +129,7 @@ function createThunkAction({
         if (successNotification)
           notification.success({
             message: 'Operation completed',
-            description: successNotification,
+            description: successNotification
           });
       })
       .catch(error => {
@@ -155,8 +156,10 @@ function createThunkAction({
         // Display failure message
         if (successNotification)
           notification.error({
+            getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation failed',
             description: error.toString(),
+            duration: 15
           });
 
         // If no response, return
@@ -177,6 +180,23 @@ function createThunkAction({
         }
 
         if (typeof failure === 'function') {
+          console.log(data, option.params);
+          notification.error({
+            getContainer: () => document.getElementById('te-prefs-lib'),
+            message: 'API call failed',
+            description: (
+              <p>
+                <b>{data.code}:</b> {data.message}
+                <br />
+                This is not your fault, it's either a bug or a temporary server
+                problem. Please contact TimeEdit if you keep getting this
+                message.
+                <br />
+                (When trying to call {endpoint})
+              </p>
+            ),
+            duration: 15
+          });
           dispatch(failure({ ...data }, option.params));
         }
         return null;
@@ -191,7 +211,7 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification,
+    successNotification
   }) =>
     createThunkAction({
       method: 'GET',
@@ -208,7 +228,7 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification,
+    successNotification
   }) =>
     createThunkAction({
       method: 'PUT',
@@ -225,7 +245,7 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification,
+    successNotification
   }) =>
     createThunkAction({
       method: 'PATCH',
@@ -242,7 +262,7 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification,
+    successNotification
   }) =>
     createThunkAction({
       method: 'POST',
@@ -259,7 +279,7 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification,
+    successNotification
   }) =>
     createThunkAction({
       method: 'DELETE',
@@ -269,5 +289,5 @@ export const asyncAction = {
       requiresAuth,
       headers,
       successNotification
-    }),
+    })
 };
