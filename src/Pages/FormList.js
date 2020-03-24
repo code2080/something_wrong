@@ -61,7 +61,7 @@ const FormList = ({
           {
             title: 'Responses',
             dataIndex: 'responseCount',
-            key: 'responseCount'
+            render: (text, value) => value.responses.SUBMITTED
           }
         ]}
         dataSource={forms}
