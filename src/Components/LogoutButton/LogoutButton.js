@@ -5,10 +5,13 @@ import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 
 // ACTIONS
-import { logout } from '../Redux/Auth/auth.actions';
+import { logout } from '../../Redux/Auth/auth.actions';
+
+// STYLES
+import './LogoutButton.scss';
 
 // CONSTANTS
-import { authenticationStatuses } from '../Constants/auth.constants';
+import { authenticationStatuses } from '../../Constants/auth.constants';
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
 });
@@ -26,9 +29,10 @@ const LogoutButton = ({ isAuthenticated, logout, history }) => {
   return (
     <Button
       size="small"
-      type="danger"
+      type="link"
       onClick={logOutCallback}
       disabled={!isAuthenticated}
+      className="logout--button"
     >
       Log out
     </Button>

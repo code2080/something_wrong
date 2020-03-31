@@ -1,11 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { toProgressLabel, toAcceptanceLabel } from './teCoreProps.constants';
+import { toProgressLabel, toAcceptanceLabel } from '../../Constants/teCoreProps.constants';
 
 // COMPONENTS
-import SubmissionActionButton from '../Components/DynamicTable/SubmissionActionButton';
+import SubmissionActionButton from './Components/SubmissionActionButton';
 
-export const staticCols = {
+export const formSubmission = {
   NAME: {
     title: 'Submitter',
     key: 'submitter',

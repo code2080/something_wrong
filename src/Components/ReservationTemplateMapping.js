@@ -9,6 +9,7 @@ import { validateMapping } from '../Redux/Mapping/mappings.helpers';
 
 // CONSTANTS
 import { mappingStatuses } from '../Constants/mappingStatus.constants';
+import { formStatus } from '../Constants/formStatuses.constants';
 
 const mapStateToProps = (state, ownProps) => ({
   mappings: state.mappings,
@@ -16,6 +17,15 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const ReservationTemplateMapping = ({ form, mappings, history }) => {
+  if (form.status !== formStatus.ACTIVE)
+    return (
+      <div className="activity-template-mapping--wrapper">
+        <span className="activity-template-mapping--status">
+          Form cannot be mapped to a reservation template
+        </span>
+      </div>
+    );
+
   const mappingStatus = useMemo(() => validateMapping(form._id, mappings), [form, mappings]);
 
   const label = useMemo(() => {
