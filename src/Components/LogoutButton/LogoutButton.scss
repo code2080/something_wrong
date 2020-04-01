@@ -1,0 +1,12 @@
+@import '../../Styles/globals.scss';
+
+.logout--button {
+  color: $bittersweet;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+
+  &:hover {
+    color: darken($bittersweet, 15%) !important;
+    text-decoration: underline !important;
+  }
+}

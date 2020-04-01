@@ -7,7 +7,14 @@ import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
 
-const DynamicTableHOC = ({ columns, dataSource, rowKey, isLoading }) => {
+const DynamicTableHOC = ({
+  columns,
+  dataSource,
+  rowKey,
+  onRow,
+  pagination,
+  isLoading
+}) => {
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
   // State variable to hold which columns should be shown
@@ -54,11 +61,9 @@ const DynamicTableHOC = ({ columns, dataSource, rowKey, isLoading }) => {
             columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
             dataSource={_dataSource}
             rowKey={rowKey}
-            pagination={{
-              size: 'small',
-              pageSize: 50
-            }}
+            pagination={pagination}
             loading={isLoading}
+            onRow={onRow || null}
           />
         </React.Fragment>
       )}
@@ -70,14 +75,21 @@ DynamicTableHOC.propTypes = {
   columns: PropTypes.array,
   dataSource: PropTypes.array,
   rowKey: PropTypes.string,
+  onRow: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   isLoading: PropTypes.bool,
+  pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
 };
 
 DynamicTableHOC.defaultProps = {
   columns: [],
   dataSource: [],
   rowKey: '_id',
+  onRow: null,
   isLoading: false,
+  pagination: {
+    size: 'small',
+    showSizeChanger: true,
+  },
 };
 
 export default DynamicTableHOC;

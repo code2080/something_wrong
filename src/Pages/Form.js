@@ -21,7 +21,7 @@ import { getSubmissionColumns } from '../Utils/getSubmissionColumns';
 import { getSubmissionData } from '../Utils/getSubmissionData';
 
 // CONSTANTS
-import { staticCols } from '../Constants/staticFormSubmissionColumns.constants';
+import { tableColumns } from '../Components/TableColumns';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const mapStateToProps = (state, ownProps) => {
@@ -85,7 +85,16 @@ const FormPage = ({
     <div className="form--wrapper">
       <FormToolbar formId={formId} />
       <DynamicTable
-        columns={[staticCols.NAME, staticCols.SUBMISSION_DATE, staticCols.SCOPED_OBJECT, staticCols.ACCEPTANCE_STATUS, staticCols.ACCEPTANCE_COMMENT, staticCols.SCHEDULING_PROGRESS, ..._cols, staticCols.ACTION_BUTTON]}
+        columns={[
+          tableColumns.formSubmission.NAME,
+          tableColumns.formSubmission.SUBMISSION_DATE,
+          tableColumns.formSubmission.SCOPED_OBJECT,
+          tableColumns.formSubmission.ACCEPTANCE_STATUS,
+          tableColumns.formSubmission.ACCEPTANCE_COMMENT,
+          tableColumns.formSubmission.SCHEDULING_PROGRESS,
+          ..._cols,
+          tableColumns.formSubmission.ACTION_BUTTON
+        ]}
         dataSource={_dataSource}
         rowKey="_id"
         isLoading={isLoadingSubmissions}

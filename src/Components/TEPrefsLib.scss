@@ -16,9 +16,16 @@
 .ant-table {
   font-size: $defaultFontSize !important;
 
-  .ant-table-thead > tr > th, 
+  .ant-table-thead > tr > th {
+    padding: 2px $outerComponentPadding;
+  }
+
   .ant-table-tbody > tr > td {
-    padding: $outerComponentPadding;
+    padding: 4px $outerComponentPadding;
+  }
+
+  .ant-table-thead > tr > th .ant-table-column-sorter {
+    vertical-align: baseline;
   }
 
   .ant-table-column-title {

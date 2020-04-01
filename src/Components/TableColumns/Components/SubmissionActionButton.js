@@ -5,13 +5,13 @@ import { withRouter } from 'react-router-dom';
 import { Menu, Dropdown, Icon, Button } from 'antd';
 
 // COMPONENTS
-import FormInstanceAcceptanceStatusModal from '../Modals/FormInstanceAcceptanceStatus';
+import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
 
 // ACTIONS
-import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormInstanceSchedulingProgress } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // CONSTANTS
-import { teCoreSchedulingProgress } from '../../Constants/teCoreProps.constants';
+import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
 
 const EDIT_FORM_INSTANCE = 'EDIT_FORM_INSTANCE';
 const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';

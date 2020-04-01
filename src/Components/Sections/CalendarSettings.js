@@ -50,7 +50,7 @@ const CalendarSettings = ({ calendarSettings }) => (
               <div className="setting--label">Disable until:</div>
               <TimePicker
                 size="small"
-                value={calendarSettings.disabledUntil}
+                value={moment(calendarSettings.disabledUntil)}
                 disabled
                 format="HH:mm"
                 style={{ marginRight: '1.2rem' }}
@@ -58,7 +58,7 @@ const CalendarSettings = ({ calendarSettings }) => (
               <div className="setting--label">Disable from:</div>
               <TimePicker
                 size="small"
-                value={calendarSettings.disabledFrom}
+                value={moment(calendarSettings.disabledFrom)}
                 disabled
                 format="HH:mm"
               />
