@@ -30,8 +30,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     searchValue: value.value,
     searchCriteria: getSearchCriteria(value),
-    fieldLabel: fieldEl && state.te.extIdProps.fields[fieldEl.extId] ? state.te.extIdProps.fields[fieldEl.extId].label : fieldEl.extId,
-    typeLabel: typeEl && state.te.extIdProps.types[typeEl.extId] ? state.te.extIdProps.types[typeEl.extId].label : typeEl.extId,
+    fieldLabel: fieldEl && state.te.extIdProps.fields[fieldEl.extId]
+      ? state.te.extIdProps.fields[fieldEl.extId].label
+      : fieldEl.extId,
+    typeLabel: typeEl && state.te.extIdProps.types[typeEl.extId]
+      ? state.te.extIdProps.types[typeEl.extId].label
+      : typeEl.extId,
     payload,
   };
 };

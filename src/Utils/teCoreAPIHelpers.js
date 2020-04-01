@@ -37,18 +37,12 @@ export const transformPayloadForFreeTextFiltering = (payload, searchCriteria = s
   const searchString = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
   const searchField = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
   if (!type || !searchString || !searchField) return null;
-  if (searchCriteria === searchCriteriaFreeText.CONTAINS)
-    return {
-      type: type.extId,
-      categories: [],
-      searchString: searchString.value,
-      searchFields: [searchField.extId],
-    };
   return {
     type: type.extId,
-    categories: [{ id: searchField.extId, values: [searchString.value] }], // TE Prefs doesn't really know what these would be
-    searchString: null,
-    searchFields: null,
+    categories: [],
+    exactSearch: searchCriteria !== searchCriteriaFreeText.CONTAINS,
+    searchString: searchString.value,
+    searchFields: [searchField.extId],
   };
 };
 
