@@ -60,7 +60,6 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
         .getCompatibleFunctionsForElement(element.elementId)
         .filter(action => {
           const src = element.datasource.split(',')[1];
-          console.log(action, src);
           if (src === 'object' && action === 'FILTER_OBJECTS') {
             return false;
           }
