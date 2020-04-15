@@ -1,6 +1,8 @@
 import { reservationTemplates } from '../Mock/ReservationTemplates';
 import { reservationTypes } from '../Mock/ReservationTypes';
 import { reservationFields } from '../Mock/ReservationFields';
+import { coreObject } from '../Mock/CoreObject';
+import { coreFilter } from '../Mock/CoreFilter';
 
 export const teCoreCallnames = {
   SELECT_OBJECT: 'selectObject',
@@ -14,7 +16,8 @@ export const teCoreCallnames = {
   SCHEDULE_ACTIVITY: 'scheduleReservation',
   POPULATE_SELECTION: 'populateSelection',
   GET_RESERVATION_TYPES: 'getReservationTypes',
-  GET_RESERVATION_FIELDS: 'getReservationFields'
+  GET_RESERVATION_FIELDS: 'getReservationFields',
+  REQUEST_OPERATION: 'requestOperation'
 };
 
 export const teCoreActions = {
@@ -67,5 +70,13 @@ export const teCoreActions = {
   GET_RESERVATION_FIELDS: {
     callname: teCoreCallnames.GET_RESERVATION_FIELDS,
     mockFunction: () => reservationFields
+  },
+  GET_OBJECT_FROM_FILTER: {
+    callname: teCoreCallnames.REQUEST_OPERATION,
+    mockFunction: () => coreObject
+  },
+  GET_FILTER_FROM_FILTER: {
+    callname: teCoreCallnames.REQUEST_OPERATION,
+    mockFunction: data => coreFilter
   }
 };
