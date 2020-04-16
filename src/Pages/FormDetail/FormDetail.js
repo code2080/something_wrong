@@ -4,24 +4,23 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 // ACTIONS
-import { fetchFormSubmissions } from '../Redux/FormSubmissions/formSubmissions.actions';
-import { fetchMappings } from '../Redux/Mapping/mappings.actions';
-import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
-import { fetchActivitiesForForm } from '../Redux/Activities/activities.actions';
+import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
+import { fetchMappings } from '../../Redux/Mapping/mappings.actions';
+import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
+import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 
 // SELECTORS
-import { createLoadingSelector } from '../Redux/APIStatus/apiStatus.selectors';
+import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
 // COMPONENTS
-import DynamicTable from '../Components/DynamicTable/DynamicTableHOC';
-import FormToolbar from '../Components/Toolbars/FormToolbar';
+import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
+import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 
 // HELPERS
-import { getSubmissionColumns } from '../Utils/getSubmissionColumns';
-import { getSubmissionData } from '../Utils/getSubmissionData';
+import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
 
 // CONSTANTS
-import { tableColumns } from '../Components/TableColumns';
+import { tableColumns } from '../../Components/TableColumns';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const mapStateToProps = (state, ownProps) => {
@@ -72,8 +71,8 @@ const FormPage = ({
     ]);
   }, []);
 
-  const _cols = getSubmissionColumns(form);
-  const _elementTableData = getSubmissionData(submissions, _cols);
+  const _cols = extractSubmissionColumns(form);
+  const _elementTableData = extractSubmissionData(submissions, _cols);
   const _dataSource = submissions.map(submission => {
     if (!_elementTableData[submission._id]) return submission;
     return {

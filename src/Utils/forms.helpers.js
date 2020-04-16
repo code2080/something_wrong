@@ -3,17 +3,17 @@ import {
 } from '../Constants/sectionTypes.constants';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { valueTypes } from '../Constants/valueTypes.constants';
-import { determineSectionType } from './determineSectionType';
-import { renderElementValue } from './sectionHelpers';
+import { determineSectionType } from './sections.helpers';
+import { renderElementValue } from './rendering.helpers';
 
 /**
- * @function getSubmissionColumns
+ * @function extractSubmissionColumns
  * @description returns all columns in a form that can be displayed in a table
  * @param {Object} form
  * @returns {Array<Object>} array of columns
  */
 
-export const getSubmissionColumns = form => {
+export const extractSubmissionColumns = form => {
   // Get all regular sections
   const { sections } = form;
   const regularSections = sections.filter(section => determineSectionType(section) === SECTION_VERTICAL);
@@ -39,4 +39,33 @@ export const getSubmissionColumns = form => {
         }))
     ],
   []);
+};
+
+/**
+ * @function extractSubmissionData
+ * @description extracts data from an arbitrary number of submissions based on an arbitrary set of columns
+ * @param {Array<Object>} submissions the submissions to process
+ * @param {Array<Object<} cols the columns to extract values from
+ */
+
+export const extractSubmissionData = (submissions, cols) => {
+  /**
+   * @important function assumes all values to be processed are in SECTION_VERTICALs
+   */
+  return submissions.reduce(
+    (extractedData, submission) => {
+      const { values } = submission;
+      return {
+        ...extractedData,
+        [submission._id]: (cols || []).reduce((row, col) => {
+          const { sectionId, dataIndex: elementId } = col;
+          // Loop through alues to find right elementIdx
+          const elementIdx = values[sectionId] ? values[sectionId].findIndex(el => el.elementId === elementId) : -1;
+          if (elementIdx === -1) return row;
+          return { ...row, [elementId]: values[sectionId][elementIdx].value };
+        }, {}),
+      };
+    },
+    {}
+  );
 };

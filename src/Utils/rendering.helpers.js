@@ -1,13 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import { getElementTypeFromId } from '../Utils/elementHelpers';
-import { elementTypes } from '../Constants/elementTypes.constants';
-import {
-  SECTION_VERTICAL,
-  SECTION_TABLE,
-  SECTION_CONNECTED
-} from '../Constants/sectionTypes.constants';
 
+// HELPERS
+import { getElementTypeFromId } from './elements.helpers';
+
+// COMPONENTS
 import Datasource from '../Components/Elements/Datasource';
 import TimePicker from '../Components/Elements/TimePicker';
 import DatePicker from '../Components/Elements/DatePicker';
@@ -18,6 +15,14 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import ConnectedSectionSchedulingColumn from '../Components/AutomaticScheduling/ConnectedSectionSchedulingColumn';
+
+// CONSTANTS
+import { elementTypes } from '../Constants/elementTypes.constants';
+import {
+  SECTION_VERTICAL,
+  SECTION_TABLE,
+  SECTION_CONNECTED
+} from '../Constants/sectionTypes.constants';
 
 const connectedSectionColumns = {
   NO_TIMESLOTS: [
@@ -124,12 +129,12 @@ export const renderElementValue = (value, element) => {
 };
 
 /**
- * @function extractColumnsFromSection
- * @description transform the elements in a section into table columns
+ * @function transformSectionToTableColumns
+ * @description transform the various elements in a section into table columns
  * @param {Object} section the form section object to extract the columns from
  * @returns {Array} columns
  */
-export const extractColumnsFromSection = (section, sectionType, formInstanceId, formId) => {
+export const transformSectionToTableColumns = (section, sectionType, formInstanceId, formId) => {
   const _elementColumns = section.elements.map(el => ({
     title: el.label,
     key: el._id,
@@ -159,12 +164,12 @@ export const extractColumnsFromSection = (section, sectionType, formInstanceId, 
 };
 
 /**
- * @function extractVerticalSectionDataFromValues
- * @description extracts table data for arbtriray columns in a vertical section
- * @param {Array} values the values to extract the data from
+ * @function transformVerticalSectionValuesToTableRows
+ * @description takes section values from a vertical section, and maps them to each respective column
+ * @param {Array} values the vertical section values to extract the data from
  * @param {Array} columns the columns to use as transformation map
  */
-const extractVerticalSectionDataFromValues = (values, columns, sectionId) => {
+const transformVerticalSectionValuesToTableRows = (values, columns, sectionId) => {
   const _data = columns.reduce((data, col) => {
     if (!values || !columns || !sectionId || !values.length || !columns.length) return data;
     // Find the element idx
@@ -175,7 +180,13 @@ const extractVerticalSectionDataFromValues = (values, columns, sectionId) => {
   return [ { ..._data, rowKey: sectionId } ];
 };
 
-const extractConnectedSectionDataFromValues = (values, columns) => {
+/**
+ * @function transformConnectedSectionValuesToTableRows
+ * @description takes section values from a connected section, and maps them to each respective column
+ * @param {Array} values the vertical section values to extract the data from
+ * @param {Array} columns the columns to use as transformation map
+ */
+const transformConnectedSectionValuesToTableRows = (values, columns) => {
   if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
 
   const _data = (Object.keys(values) || []).map(eventId => {
@@ -196,7 +207,13 @@ const extractConnectedSectionDataFromValues = (values, columns) => {
   return _data;
 };
 
-const extractTableSectionDataFromValues = (values, columns) => {
+/**
+ * @function transformTableSectionValuesToTableRows
+ * @description takes section values from a table section, and maps them to each respective column
+ * @param {Array} values the vertical section values to extract the data from
+ * @param {Array} columns the columns to use as transformation map
+ */
+const transformTableSectionValuesToTableRows = (values, columns) => {
   if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
   const _data = (Object.keys(values) || []).map(eventId => {
     const _eventValues = columns.reduce((eventValues, col) => {
@@ -214,21 +231,21 @@ const extractTableSectionDataFromValues = (values, columns) => {
 };
 
 /**
- * @function extractColumnDataFromValues
- * @description returns the equivalent table data source array for an arbitrary set of columns
+ * @function transformSectionValuesToTableRows
+ * @description takes section value from a section of any type, and maps the values to each respective column
  * @param {Array || Object} values the values object to transform the data from
  * @param {Array} columns the columns to base the transformation on
  * @param {String} sectionId the id of the section
  * @param {String} sectionType the type of section
  */
-export const extractColumnDataFromValues = (values, columns, sectionId, sectionType) => {
+export const transformSectionValuesToTableRows = (values, columns, sectionId, sectionType) => {
   switch (sectionType) {
     case SECTION_VERTICAL:
-      return extractVerticalSectionDataFromValues(values, columns, sectionId);
+      return transformVerticalSectionValuesToTableRows(values, columns, sectionId);
     case SECTION_TABLE:
-      return extractTableSectionDataFromValues(values, columns);
+      return transformTableSectionValuesToTableRows(values, columns);
     case SECTION_CONNECTED:
-      return extractConnectedSectionDataFromValues(values, columns);
+      return transformConnectedSectionValuesToTableRows(values, columns);
     default:
       return [];
   }

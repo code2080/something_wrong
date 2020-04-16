@@ -1,4 +1,4 @@
-import { findElementValueInSubmission } from '../../Utils/elementHelpers';
+import { findElementValueInSubmission } from '../../Utils/elements.helpers';
 
 const initialState = {
   objects: [],

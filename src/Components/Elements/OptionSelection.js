@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 
 // HELPERS
-import { extractOptionFromValue } from '../../Utils/elementHelpers';
+import { extractOptionFromValue } from '../../Utils/elements.helpers';
 
 // STYLES
 import './OptionSelection.scss';

@@ -7,28 +7,28 @@ import _ from 'lodash';
 import ReactRouterPause from '@allpro/react-router-pause';
 
 // COMPONENTS
-import withTECoreAPI from '../Components/TECoreAPI/withTECoreAPI';
-import ObjectMapping from '../Components/ReservationTemplateMapping/ObjectMapping';
-import FieldMapping from '../Components/ReservationTemplateMapping/FieldMapping';
-import TimingMapping from '../Components/ReservationTemplateMapping/TimingMapping';
+import withTECoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
+import ObjectMapping from '../../Components/ReservationTemplateMapping/ObjectMapping';
+import FieldMapping from '../../Components/ReservationTemplateMapping/FieldMapping';
+import TimingMapping from '../../Components/ReservationTemplateMapping/TimingMapping';
 
 // ACTIONS
-import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
-import { updateMapping } from '../Redux/Mapping/mappings.actions';
-import { deleteActivities } from '../Redux/Activities/activities.actions';
+import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
+import { updateMapping } from '../../Redux/Mapping/mappings.actions';
+import { deleteActivities } from '../../Redux/Activities/activities.actions';
 
 // HELPERS
 import {
   validateMapping,
   getElementsForMapping,
-} from '../Redux/Mapping/mappings.helpers';
+} from '../../Redux/Mapping/mappings.helpers';
 
 // STYLES
 import './FormReservationTemplateMapping.scss';
-import { ReservationTemplateMapping } from '../Models/Mapping.model';
+import { ReservationTemplateMapping } from '../../Models/Mapping.model';
 
 // CONSTANTS
-import { mappingStatuses } from '../Constants/mappingStatus.constants';
+import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;

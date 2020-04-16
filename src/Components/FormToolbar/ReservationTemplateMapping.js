@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { Button } from 'antd';
 
 // HELPERS
-import { validateMapping } from '../Redux/Mapping/mappings.helpers';
+import { validateMapping } from '../../Redux/Mapping/mappings.helpers';
 
 // CONSTANTS
-import { mappingStatuses } from '../Constants/mappingStatus.constants';
-import { formStatus } from '../Constants/formStatuses.constants';
+import { mappingStatuses } from '../../Constants/mappingStatus.constants';
+import { formStatus } from '../../Constants/formStatuses.constants';
 
 const mapStateToProps = (state, ownProps) => ({
   mappings: state.mappings,
@@ -31,9 +31,9 @@ const ReservationTemplateMapping = ({ form, mappings, history }) => {
   const label = useMemo(() => {
     switch (mappingStatus) {
       case mappingStatuses.NOT_SET:
-        return `Form has not been mapped for assisted scheduling`;
+        return `Form has not been mapped to a reservation template`;
       case mappingStatuses.COMPLETE:
-        return `Form is ready for assisted scheduling`;
+        return `Form is mapped to a reservation template`;
       default:
         return 'N/A';
     }

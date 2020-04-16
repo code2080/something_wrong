@@ -4,20 +4,20 @@ import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
 
 // ACTIONS
-import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
+import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import {
   fetchActivitiesForFormInstance,
   saveActivities,
-} from '../Redux/Activities/activities.actions';
+} from '../../Redux/Activities/activities.actions';
 
 // HELPERS
-import { createActivities } from '../Utils/automaticSchedulingHelpers';
+import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
 
 // COMPONENTS
-import AutomaticSchedulingTable from '../Components/AutomaticScheduling/AutomaticSchedulingTable';
+import AutomaticSchedulingTable from '../../Components/AutomaticScheduling/AutomaticSchedulingTable';
 
 // STYLES
-import './FormInstance.scss';
+import './FormInstanceActivitiesOverview.scss';
 
 // CONSTANTS
 const mapStateToProps = (state, ownProps) => {
@@ -61,7 +61,7 @@ const FormInstanceReservationOverview = ({
   }, []);
 
   const onCreateActivities = useCallback(() => {
-    const activities = createActivities(formInstance, form.sections, mapping);
+    const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 
 // COMPONENTS
 import RecipientAvatar from '../Avatars/RecipientAvatar';
-import ScopedObject from './ScopedObject';
+import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
-import SectionSelector from '../SectionSelector';
+import SectionSelector from '../SectionSelector/SectionSelector';
 
 // STYLES
-import './Toolbar.scss';
+import '../../Styles/Toolbar.scss';
 
 // CONSTANTS
 import {

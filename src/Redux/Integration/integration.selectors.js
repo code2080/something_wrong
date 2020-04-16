@@ -1,6 +1,6 @@
 // import _ from 'lodash';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
-import { determineSectionType } from '../../Utils/determineSectionType';
+import { determineSectionType } from '../../Utils/sections.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,

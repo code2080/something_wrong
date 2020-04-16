@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // ACTIONS
-import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
-import { setTEDataForValues } from '../Redux/TE/te.actions';
+import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
+import { setTEDataForValues } from '../../Redux/TE/te.actions';
 
 // COMPONENTS
-import BaseSection from '../Components/Sections/BaseSection';
-import { withTECoreAPI } from '../Components/TECoreAPI';
-import FormInstanceToolbar from '../Components/Toolbars/FormInstanceToolbar';
-import AutomaticSchedulingToolbar from '../Components/Toolbars/AutomaticSchedulingToolbar';
+import BaseSection from '../../Components/Sections/BaseSection';
+import { withTECoreAPI } from '../../Components/TECoreAPI';
+import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
+import AutomaticSchedulingToolbar from '../../Components/AutomaticSchedulingToolbar/AutomaticSchedulingToolbar';
 
 // SELECTORS
-import { getExtIdPropsPayload } from '../Redux/Integration/integration.selectors';
+import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 
 // STYLES
-import './FormInstance.scss';
+import './FormInstanceDetail.scss';
 
 // CONSTANTS
 const mapStateToProps = (state, ownProps) => {

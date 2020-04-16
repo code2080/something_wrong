@@ -5,17 +5,17 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 // COMPONENTS
-import DynamicTable from '../Components/DynamicTable/DynamicTableHOC';
+import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
-import { fetchForms } from '../Redux/Forms/forms.actions';
-import { setBreadcrumbs } from '../Redux/GlobalUI/globalUI.actions';
+import { fetchForms } from '../../Redux/Forms/forms.actions';
+import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
-import { createLoadingSelector } from '../Redux/APIStatus/apiStatus.selectors';
+import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
-import { tableColumns } from '../Components/TableColumns';
+import { tableColumns } from '../../Components/TableColumns';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({

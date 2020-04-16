@@ -5,10 +5,10 @@ import { Button } from 'antd';
 
 // COMPONENTS
 import UserAvatar from '../Avatars/UserAvatar';
-import ReservationTemplateMapping from '../ReservationTemplateMapping';
+import ReservationTemplateMapping from './ReservationTemplateMapping';
 
 // STYLES
-import './Toolbar.scss';
+import '../../Styles/Toolbar.scss';
 
 // CONSTANTS
 const mapStateToProps = (state, ownProps) => ({

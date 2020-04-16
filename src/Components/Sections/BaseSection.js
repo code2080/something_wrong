@@ -11,8 +11,8 @@ import BaseSectionListView from './BaseSectionListView';
 import CalendarSettings from './CalendarSettings';
 
 // HELPERS
-import { extractColumnsFromSection, extractColumnDataFromValues } from '../../Utils/sectionHelpers';
-import { determineSectionType } from '../../Utils/determineSectionType';
+import { determineSectionType } from '../../Utils/sections.helpers';
+import { transformSectionToTableColumns, transformSectionValuesToTableRows } from '../../Utils/rendering.helpers';
 
 // STYLES
 import './BaseSection.scss';
@@ -40,11 +40,11 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
   // Memoized var holding the columns
-  const _columns = useMemo(() => extractColumnsFromSection(section, sectionType, formInstanceId, formId), [section]);
+  const _columns = useMemo(() => transformSectionToTableColumns(section, sectionType, formInstanceId, formId), [section]);
 
   // Memoized var holding the transformed section values
   const _data = useMemo(
-    () => extractColumnDataFromValues(
+    () => transformSectionValuesToTableRows(
       values,
       _columns,
       section._id,

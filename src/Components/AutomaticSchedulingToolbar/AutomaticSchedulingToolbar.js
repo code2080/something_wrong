@@ -12,7 +12,7 @@ import { getActivitiesForFormInstance } from '../../Redux/Activities/activities.
 import SchedulingProgress from '../AutomaticScheduling/SchedulingProgress';
 
 // STYLES
-import './Toolbar.scss';
+import '../../Styles/Toolbar.scss';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';

@@ -44,7 +44,7 @@ const SectionSelector = ({ sections, selectedSection, onSectionChange }) => {
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
         <Button type="link">
-          View sections <Icon type="down" />
+          Filter sections <Icon type="down" />
         </Button>
       </Dropdown>,
     </div>

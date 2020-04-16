@@ -1,5 +1,5 @@
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
-import { determineSectionType } from './determineSectionType';
+import { determineSectionType } from './sections.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
