@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 
 // HELPERS
-import { getSchedulingPayloadForActivityValue } from '../../Redux/Activities/activities.helpers';
+import { getSchedulingPayloadForActivityValue } from '../../../Redux/Activities/activities.helpers';
 
 const BaseActivityColValue = ({ activityValue, activity, formatFn }) => {
   const schedulingPayload = getSchedulingPayloadForActivityValue(activityValue, activity, formatFn);

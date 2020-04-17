@@ -36,13 +36,13 @@ export const getActivitiesForFormInstance = (state, formId, formInstanceId) => {
 };
 
 /**
- * @function findObjectPathForReservationValue
+ * @function findObjectPathForActivityValue
  * @description finds the path (timing or values) for a value for a certain extId
  * @param {String} valueExtId the extId of the value we're looking for
  * @param {Object} activity the activity with all its values
  * @returns {String} values || timing
  */
-const findObjectPathForReservationValue = (valueExtId, activity) => {
+const findObjectPathForActivityValue = (valueExtId, activity) => {
   const timingIdx = activity.timing.findIndex(el => el.extId === valueExtId);
   if (timingIdx > -1) return 'timing';
   const valueIdx = activity.values.findIndex(el => el.extId === valueExtId);
@@ -51,21 +51,21 @@ const findObjectPathForReservationValue = (valueExtId, activity) => {
 };
 
 /**
- * @function updateReservationWithNewValue
+ * @function updateActivityWithNewValue
  * @description returns a new activity with an updated activity value
- * @param {Object} newReservationValue the new activity value object
+ * @param {Object} newActivityValue the new activity value object
  * @param {Object} activity the original activity
  * @param {String} objPath the path to mutate (timing, values)
  * @returns {Object} updated activity
  */
-const updateReservationWithNewValue = (newReservationValue, activity, objPath) => {
-  const valueIdx = activity[objPath].findIndex(el => el.extId === newReservationValue.extId);
+const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
+  const valueIdx = activity[objPath].findIndex(el => el.extId === newActivityValue.extId);
   if (valueIdx === -1) return null;
   return {
     ...activity,
     [objPath]: [
       ...activity[objPath].slice(0, valueIdx),
-      { ...newReservationValue },
+      { ...newActivityValue },
       ...activity[objPath].slice(valueIdx + 1),
     ],
   };
@@ -80,10 +80,10 @@ const updateReservationWithNewValue = (newReservationValue, activity, objPath) =
  * @returns {Object} updated activity
  */
 export const manuallyOverrideActivityValue = (newValue, activityValue, activity) => {
-  const newReservationValue = { ...activityValue, value: newValue, valueMode: activityValueModes.MANUAL };
-  const objPath = findObjectPathForReservationValue(newReservationValue.extId, activity);
+  const newActivityValue = { ...activityValue, value: newValue, valueMode: activityValueModes.MANUAL };
+  const objPath = findObjectPathForActivityValue(newActivityValue.extId, activity);
   if (!objPath) return null;
-  return updateReservationWithNewValue(newReservationValue, activity, objPath);
+  return updateActivityWithNewValue(newActivityValue, activity, objPath);
 };
 
 /**
@@ -111,7 +111,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
   if (
     submissionValueType === submissionValueTypes.OBJECT ||
     submissionValueType === submissionValueTypes.FREE_TEXT ||
-    (submissionValueType === submissionValueTypes.TIMING && timingMode === mappingTimingModes.EXACT) ||
+    (submissionValueType === submissionValueTypes.TIMING && timingMode.value === mappingTimingModes.EXACT) ||
     activityValue.extId === 'length'
   ) {
     newReservationValue = {
@@ -127,10 +127,10 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
     };
   }
 
-  const objPath = findObjectPathForReservationValue(newReservationValue.extId, activity);
+  const objPath = findObjectPathForActivityValue(newReservationValue.extId, activity);
   if (!objPath) return null;
   // 3. Update the activity and return
-  return updateReservationWithNewValue(newReservationValue, activity, objPath);
+  return updateActivityWithNewValue(newReservationValue, activity, objPath);
 };
 
 /**

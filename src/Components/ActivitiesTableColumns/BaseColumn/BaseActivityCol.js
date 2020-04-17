@@ -8,20 +8,20 @@ import './BaseActivityCol.scss';
 // COMPONENTS
 import BaseActivityColDropdown from './BaseActivityColDropdown';
 import BaseActivityColValue from './BaseActivityColValue';
-import ManualEditingComponent from './ManualEditingComponent';
+import ManualEditingComponent from '../../ActivityEditing/ManualEditingComponent';
 import BaseActivityColModal from './BaseActivityColModal';
 
 // ACTIONS
-import { overrideActivityValue, revertToSubmissionValue } from '../../Redux/Activities/activities.actions';
+import { overrideActivityValue, revertToSubmissionValue } from '../../../Redux/Activities/activities.actions';
 
 // HELPERS
-import { getMappingSettingsForProp, getMappingTypeForProp } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
+import { getMappingSettingsForProp, getMappingTypeForProp } from '../../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // CONSTANTS
-import { activityActions } from '../../Constants/activityActions.constants';
-import { mappingTimingModes } from '../../Constants/mappingTimingModes.constants';
-import { mappingTypes } from '../../Constants/mappingTypes.constants';
-import { manualEditingModes } from '../../Constants/manualEditingModes.constants';
+import { activityActions } from '../../../Constants/activityActions.constants';
+import { mappingTimingModes } from '../../../Constants/mappingTimingModes.constants';
+import { mappingTypes } from '../../../Constants/mappingTypes.constants';
+import { manualEditingModes } from '../../../Constants/manualEditingModes.constants';
 
 const getActivityValue = (activity, type, prop) => {
   const payload = type === 'VALUE' ? activity.values : activity.timing;
@@ -64,19 +64,15 @@ const BaseActivityCol = ({
   const manualEditingMode = useMemo(() => {
     /**
      * Can only be edited manually if:
-     * a) It's mapped to a field
-     * b) It's the length parameter in timing and mode is timeslots
+     * a) It's mapped to a field => TEXT_INPUT editing
+     * b) It's a timing property and the timing mode is exact => DATETIME_PICKER
+     * b) It's the length parameter in timing and mode is timeslots NUMBER_INPUT
      */
     if (mappingProps.type === mappingTypes.FIELD) return manualEditingModes.TEXT_INPUT;
+    if (mappingProps.type === mappingTypes.TIMING && mapping.timing.mode === mappingTimingModes.EXACT) return manualEditingModes.DATETIME_PICKER;
     if (activityValue.extId === 'length' && mapping.timing.mode === mappingTimingModes.TIMESLOTS) return manualEditingModes.NUMBER_INPUT;
     return manualEditingModes.NOT_ALLOWED;
   }, [mappingProps, activityValue, mapping]);
-
-  // Callback for reverting to submission value
-  const onRevertToSubmissionValue = useCallback(
-    () => revertToSubmissionValue(activityValue, activity),
-    [activityValue, activity]
-  );
 
   // Callback for manual input override
   const onManualInputOverride = useCallback(() => {
@@ -96,8 +92,8 @@ const BaseActivityCol = ({
     [activityActions.MANUAL_SELECT_OVERRIDE]: activityValue => console.log(`Manual select for ${activityValue.extId}`),
     [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => console.log(`Best fit select for ${activityValue.extId}`),
     [activityActions.SHOW_INFO]: () => setShowShowDetailsModal(true),
-    [activityActions.REVERT_TO_SUBMISSION_VALUE]: () => onRevertToSubmissionValue(),
-  }), [activityActions]);
+    [activityActions.REVERT_TO_SUBMISSION_VALUE]: () => revertToSubmissionValue(activityValue, activity),
+  }), [activityActions, activityValue, activity]);
 
   return (
     <div className="base-activity-col--wrapper">

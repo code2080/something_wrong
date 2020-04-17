@@ -14,7 +14,7 @@ import {
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
 
 // COMPONENTS
-import AutomaticSchedulingTable from '../../Components/AutomaticScheduling/AutomaticSchedulingTable';
+import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
 
 // STYLES
 import './FormInstanceActivitiesOverview.scss';
@@ -69,7 +69,7 @@ const FormInstanceReservationOverview = ({
     <div className="form-instance-automatic-scheduling--wrapper">
 
       {activities && activities.length ? (
-        <AutomaticSchedulingTable mapping={mapping} activities={activities} />
+        <ActivitiesTable mapping={mapping} activities={activities} />
       ) : (
         <Empty
           imageStyle={{

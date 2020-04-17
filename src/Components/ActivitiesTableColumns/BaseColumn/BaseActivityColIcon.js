@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Tooltip, Icon } from 'antd';
 
 // CONSTANTS
-import { activityValueModes, activityValueModeProps } from '../../Constants/activityValueModes.constants';
-import { submissionValueTypes, submissionValueTypeProps } from '../../Constants/submissionValueTypes.constants';
+import { activityValueModes, activityValueModeProps } from '../../../Constants/activityValueModes.constants';
+import { submissionValueTypes, submissionValueTypeProps } from '../../../Constants/submissionValueTypes.constants';
 
 const BaseActivityColIcon = ({ valueMode, submissionValueType }) => {
   const value = useMemo(() => {

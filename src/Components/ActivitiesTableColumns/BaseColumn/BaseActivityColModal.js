@@ -7,14 +7,14 @@ import {
   getSchedulingPayloadForActivityValue,
   getSchedulingAlgorithmForActivityValue,
   formatSubmissionValue,
-} from '../../Redux/Activities/activities.helpers';
+} from '../../../Redux/Activities/activities.helpers';
 
 // STYLES
 import './BaseActivityColModal.scss';
 
 // CONSTANTS
-import { mappingTypeProps } from '../../Constants/mappingTypes.constants';
-import { activityValueStatuses, activityValueStatusProps } from '../../Constants/activityStatuses.constants';
+import { mappingTypeProps } from '../../../Constants/mappingTypes.constants';
+import { activityValueStatuses, activityValueStatusProps } from '../../../Constants/activityStatuses.constants';
 
 const BaseActivityColModal = ({
   activityValue,
@@ -38,7 +38,7 @@ const BaseActivityColModal = ({
     () => formatSubmissionValue(activityValue.submissionValue || [], activityValue.submissionValueType),
     [activityValue]
   );
-  console.log(formattedSubmissionValue);
+
   return (
     <Modal
       title={`Details for property '${propTitle || prop}'`}

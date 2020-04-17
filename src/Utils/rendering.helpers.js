@@ -14,7 +14,7 @@ import OptionSelection from '../Components/Elements/OptionSelection';
 import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
-import ConnectedSectionSchedulingColumn from '../Components/AutomaticScheduling/ConnectedSectionSchedulingColumn';
+// import ConnectedSectionSchedulingColumn from '../Components/AutomaticScheduling/ConnectedSectionSchedulingColumn';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -59,7 +59,8 @@ const connectedSectionColumns = {
       render: (_, event) => <TimeSlotColumn event={event} timeslots={timeslots} />,
     },
   ],
-  SCHEDULING: (sectionId, formInstanceId, formId) => [
+  /*
+    SCHEDULING: (sectionId, formInstanceId, formId) => [
     {
       title: 'Scheduling',
       key: 'scheduling',
@@ -74,6 +75,7 @@ const connectedSectionColumns = {
       ),
     },
   ],
+  */
 };
 
 /**
@@ -148,13 +150,13 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
         return [
           ...connectedSectionColumns.WITH_TIMESLOTS(section.calendarSettings.timeslots),
           ..._elementColumns,
-          ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+          // ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ];
       }
       return [
         ...connectedSectionColumns.NO_TIMESLOTS,
         ..._elementColumns,
-        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        // ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
       ];
     }
 

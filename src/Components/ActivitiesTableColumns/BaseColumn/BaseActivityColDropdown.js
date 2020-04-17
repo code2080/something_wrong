@@ -6,10 +6,10 @@ import { Button, Menu, Dropdown } from 'antd';
 import BaseReservationColQuickview from './BaseActivityColQuickview';
 
 // CONSTANTS
-import { activityActions } from '../../Constants/activityActions.constants';
-import { mappingTypes } from '../../Constants/mappingTypes.constants';
-import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
-import { activityValueModes } from '../../Constants/activityValueModes.constants';
+import { activityActions } from '../../../Constants/activityActions.constants';
+import { mappingTypes } from '../../../Constants/mappingTypes.constants';
+import { submissionValueTypes } from '../../../Constants/submissionValueTypes.constants';
+import { activityValueModes } from '../../../Constants/activityValueModes.constants';
 
 const BaseReservationColDropdown = ({
   activityValue,
@@ -33,6 +33,9 @@ const BaseReservationColDropdown = ({
           formatFn={formatFn}
         />
         <Menu.Divider />
+        {mappingProps.type === mappingTypes.TIMING && (
+          <Menu.Item key={activityActions.MANUAL_INPUT_OVERRIDE}>Manually select time</Menu.Item>
+        )}
         {mappingProps.type === mappingTypes.OBJECT && (
           <Menu.Item key={activityActions.MANUAL_SELECT_OVERRIDE}>Manually select object</Menu.Item>
         )}

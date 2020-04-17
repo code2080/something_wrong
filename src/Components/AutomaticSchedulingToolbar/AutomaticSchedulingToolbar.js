@@ -9,7 +9,7 @@ import { validateMapping } from '../../Redux/ReservationTemplateMapping/reservat
 import { getActivitiesForFormInstance } from '../../Redux/Activities/activities.helpers';
 
 // COMPONENTS
-import SchedulingProgress from '../AutomaticScheduling/SchedulingProgress';
+import SchedulingProgress from './SchedulingProgress';
 
 // STYLES
 import '../../Styles/Toolbar.scss';

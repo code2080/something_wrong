@@ -1,9 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber } from 'antd';
+
+// COMPONENTS
+import TextEdit from './TextEdit';
+import NumberEdit from './NumberEdit';
+import DateTimeEdit from './DateTimeEdit';
 
 // CONSTANTS
 import { manualEditingModes } from '../../Constants/manualEditingModes.constants';
+
+const componentMapping = {
+  [manualEditingModes.DATETIME_PICKER]: DateTimeEdit,
+  [manualEditingModes.NUMBER_INPUT]: TextEdit,
+  [manualEditingModes.TEXT_INPUT]: NumberEdit,
+};
 
 const ManualEditingComponent = ({ activityValue, manualEditingMode, onFinish, onCancel }) => {
   const [value, setValue] = useState(activityValue.value || undefined);
@@ -12,30 +22,10 @@ const ManualEditingComponent = ({ activityValue, manualEditingMode, onFinish, on
     onFinish(value);
   }, [onFinish, value]);
 
-  if (manualEditingMode === manualEditingModes.TEXT_INPUT)
-    return (
-      <Input
-        size="small"
-        allowClear
-        onPressEnter={onFinishCallback}
-        value={value}
-        placeholder="Type here"
-        onChange={e => setValue(e.target.value)}
-      />
-    );
+  const ManualEditingComponent = componentMapping[manualEditingMode];
+  if (!ManualEditingComponent || ManualEditingComponent == null) return null;
 
-  if (manualEditingMode === manualEditingModes.NUMBER_INPUT)
-    return (
-      <InputNumber
-        size="small"
-        allowClear
-        onPressEnter={onFinishCallback}
-        value={value}
-        placeholder="Type here"
-        onChange={e => setValue(e.target.value)}
-      />
-    );
-  return null;
+  return <ManualEditingComponent value={value} setValue={setValue} onFinish={onFinishCallback} />;
 };
 
 ManualEditingComponent.propTypes = {

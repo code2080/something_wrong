@@ -6,10 +6,10 @@ import { Tooltip, Icon } from 'antd';
 import {
   getSchedulingAlgorithmForActivityValue,
   getSchedulingPayloadForActivityValue
-} from '../../Redux/Activities/activities.helpers';
+} from '../../../Redux/Activities/activities.helpers';
 
 // CONSTANTS
-import { mappingTypeProps } from '../../Constants/mappingTypes.constants';
+import { mappingTypeProps } from '../../../Constants/mappingTypes.constants';
 
 const BaseActivityColQuickview = ({
   activityValue,

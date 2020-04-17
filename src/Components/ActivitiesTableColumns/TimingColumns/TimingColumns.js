@@ -1,10 +1,9 @@
 import React from 'react';
-import { activityStatusProps } from '../../Constants/activityStatuses.constants';
-import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
-import StatusTag from '../StatusTag';
-import ActivityActionsDropdown from './ActivityActionsDropdown';
-import BaseActivityCol from './BaseActivityCol';
 import moment from 'moment';
+
+// CONSTANTS
+import { mappingTimingModes, mappingTimingModeProps } from '../../../Constants/mappingTimingModes.constants';
+import BaseActivityCol from '../BaseColumn/BaseActivityCol';
 
 const timingCols = ({
   mode: mapping => ({
@@ -98,7 +97,7 @@ const timingCols = ({
   }),
 });
 
-export const ASTableTimingCols = ({
+export const TimingColumns = ({
   [mappingTimingModes.EXACT]: mapping => [
     // timingCols.mode(mapping),
     timingCols.startTimeExact(mapping),
@@ -111,28 +110,3 @@ export const ASTableTimingCols = ({
     timingCols.length(mapping)
   ],
 });
-
-export const ASTableStaticCols = [
-  {
-    title: 'Status',
-    key: 'activityStatus',
-    dataIndex: 'activityStatus',
-    render: activityStatus => (
-      <StatusTag color={activityStatusProps[activityStatus].color}>
-        {activityStatusProps[activityStatus].label}
-      </StatusTag>
-    )
-  },
-  {
-    title: 'Reservation Id',
-    key: 'reservationId',
-    dataIndex: 'reservationId',
-    render: reservationId => reservationId || 'N/A',
-  },
-  {
-    title: 'Actions',
-    key: 'actions',
-    dataIndex: null,
-    render: (_, activity) => <ActivityActionsDropdown buttonType="more" activity={activity} />,
-  },
-];
