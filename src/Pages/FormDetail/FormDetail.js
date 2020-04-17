@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 // ACTIONS
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
-import { fetchMappings } from '../../Redux/Mapping/mappings.actions';
+import { fetchMappings } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 

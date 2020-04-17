@@ -7,7 +7,7 @@ import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
-import mappings from './Mapping/mappings.reducer';
+import mappings from './ReservationTemplateMapping/reservationTemplateMapping.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 

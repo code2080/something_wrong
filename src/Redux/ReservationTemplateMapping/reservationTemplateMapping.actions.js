@@ -6,7 +6,7 @@ import {
   UPDATE_MAPPING_FOR_FORM_REQUEST,
   UPDATE_MAPPING_FOR_FORM_SUCCESS,
   UPDATE_MAPPING_FOR_FORM_FAILURE,
-} from './mappings.actionTypes';
+} from './reservationTemplateMapping.actionTypes';
 
 const fetchMappingsFlow = {
   request: () => ({ type: FETCH_MAPPINGS_FOR_FORM_REQUEST }),

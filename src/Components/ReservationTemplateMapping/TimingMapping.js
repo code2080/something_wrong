@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Select, Cascader } from 'antd';
 
 // HELPERS
-import { getElementsForTimingMapping } from '../../Redux/Mapping/mappings.helpers';
+import { getElementsForTimingMapping } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // CONSTANTS
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';

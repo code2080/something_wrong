@@ -15,7 +15,7 @@ import BaseActivityColModal from './BaseActivityColModal';
 import { overrideActivityValue, revertToSubmissionValue } from '../../Redux/Activities/activities.actions';
 
 // HELPERS
-import { getMappingSettingsForProp, getMappingTypeForProp } from '../../Redux/Mapping/mappings.helpers';
+import { getMappingSettingsForProp, getMappingTypeForProp } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // CONSTANTS
 import { activityActions } from '../../Constants/activityActions.constants';

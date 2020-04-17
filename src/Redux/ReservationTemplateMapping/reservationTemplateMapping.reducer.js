@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import * as types from './mappings.actionTypes';
+import * as types from './reservationTemplateMapping.actionTypes';
 import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
 
 // INITIAL STATE
-import initialState from './mappings.initialState';
+import initialState from './reservationTemplateMapping.initialState';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

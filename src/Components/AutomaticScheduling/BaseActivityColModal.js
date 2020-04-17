@@ -38,7 +38,7 @@ const BaseActivityColModal = ({
     () => formatSubmissionValue(activityValue.submissionValue || [], activityValue.submissionValueType),
     [activityValue]
   );
-
+  console.log(formattedSubmissionValue);
   return (
     <Modal
       title={`Details for property '${propTitle || prop}'`}

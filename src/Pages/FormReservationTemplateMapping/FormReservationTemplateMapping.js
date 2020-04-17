@@ -14,14 +14,14 @@ import TimingMapping from '../../Components/ReservationTemplateMapping/TimingMap
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
-import { updateMapping } from '../../Redux/Mapping/mappings.actions';
+import { updateMapping } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.actions';
 import { deleteActivities } from '../../Redux/Activities/activities.actions';
 
 // HELPERS
 import {
   validateMapping,
   getElementsForMapping,
-} from '../../Redux/Mapping/mappings.helpers';
+} from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // STYLES
 import './FormReservationTemplateMapping.scss';

@@ -15,30 +15,44 @@ import { submissionValueTypes } from '../Constants/submissionValueTypes.constant
 import { activityValueModes } from '../Constants/activityValueModes.constants';
 
 /**
- * @function ensureValueIsArray
- * @description ensure's a value is an array
+ * @function ensureValueTypeFormat
+ * @description ensures a value is in the right format (object = array, field, timing = single)
  * @param {Any} value the value to check
- * @returns {Array} an array formatted value
+ * @param {String} valueType the value type
+ * @returns {String || Object || Array } the formatted value
  */
-const ensureValueIsArray = value => {
-  if (Array.isArray(value)) return value;
-  return [value];
+const ensureValueTypeFormat = (value, valueType) => {
+  switch (valueType) {
+    case activityValueTypes.OBJECT: {
+      if (Array.isArray(value)) return value;
+      return [value];
+    }
+
+    case activityValueTypes.TIMING:
+    case activityValueTypes.FIELD: {
+      if (Array.isArray(value)) return value[0];
+      return value;
+    }
+    default:
+      return value;
+  }
 };
 
 /**
- * @function formatActivityPayload
+ * @function formatActivityValuePayload
  * @description general purpose function to format the result of an activity payload generator for one of the section types
- * @param {*} element the element the value was for
- * @param {*} rawValue the raw submission value
+ * @param {Object} element the element the value was for
+ * @param {Any} rawValue the raw submission value
+ * @param {String} valueType the value type
  * @returns {Object} activityValuePayload
  */
-const formatActivityPayload = (element, rawValue) => {
-  const _rawValue = ensureValueIsArray(rawValue);
+const formatActivityValuePayload = (element, rawValue, valueType) => {
+  const _rawValue = ensureValueTypeFormat(rawValue, valueType);
   const _defPayload = {
-    submissionValue: _rawValue,
+    submissionValue: Array.isArray(_rawValue) ? _rawValue : [_rawValue],
     submissionValueType: submissionValueTypes.FREE_TEXT,
     valueMode: activityValueModes.FROM_SUBMISSION,
-    value: _rawValue[0],
+    value: _rawValue,
   };
   // IF no datasource we interpret the value as is
   if (!element.datasource)
@@ -67,8 +81,9 @@ const formatActivityPayload = (element, rawValue) => {
  * @param {String} eventId the event id
  * @param {String} elementId the element id
  * @param {Array} sections all sections in the form
+ * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections) => {
+const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType) => {
   if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
@@ -79,7 +94,7 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
   const rawValue = eventValues[elementIdx].value;
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return formatActivityPayload(element, rawValue);
+  return formatActivityValuePayload(element, rawValue, valueType);
 };
 
 /**
@@ -90,8 +105,9 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
  * @param {String} rowIdx the table row
  * @param {String} elementId the element id
  * @param {Array} sections all sections in the form
+ * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, sections) => {
+const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, sections, valueType) => {
   if (!formInstance || !sectionId || !rowIdx || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
@@ -102,7 +118,7 @@ const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx
   const rawValue = rowValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return formatActivityPayload(element, rawValue);
+  return formatActivityValuePayload(element, rawValue, valueType);
 };
 
 /**
@@ -112,9 +128,9 @@ const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx
  * @param {String} sectionId the section id
  * @param {String} elementId the element id
  * @param {Array} sections all sections in the form
+ * @param {String} valueType the activity value's type
  */
-
-const getActivityValuePayloadFromRegularSection = (formInstance, sectionId, elementId, sections) => {
+const getActivityValuePayloadFromRegularSection = (formInstance, sectionId, elementId, sections, valueType) => {
   if (!formInstance || !sectionId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
@@ -125,7 +141,7 @@ const getActivityValuePayloadFromRegularSection = (formInstance, sectionId, elem
   const rawValue = sectionValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
-  return formatActivityPayload(element, rawValue);
+  return formatActivityValuePayload(element, rawValue, valueType);
 };
 
 /**
@@ -211,7 +227,7 @@ const createActivityValueForConnectedSectionSpecialProp = (
     : submissionValueTypes.TIMING;
   const { mode } = reservationTemplateMapping.timing;
   const value = mode === mappingTimingModes.EXACT || submissionValueType === submissionValueTypes.FREE_TEXT
-    ? submissionValue
+    ? ensureValueTypeFormat(submissionValue, valueType)
     : null;
 
   return new ActivityValue({
@@ -312,13 +328,13 @@ export const createActivityValueForProp = (valueType, reservationTemplateMapping
     let props = {};
     switch (sectionType) {
       case SECTION_CONNECTED:
-        props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections);
+        props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType);
         break;
       case SECTION_TABLE:
-        props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections);
+        props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections, valueType);
         break;
       default:
-        props = getActivityValuePayloadFromRegularSection(formInstance, sectionId, elementId, sections);
+        props = getActivityValuePayloadFromRegularSection(formInstance, sectionId, elementId, sections, valueType);
         break;
     }
     return [
