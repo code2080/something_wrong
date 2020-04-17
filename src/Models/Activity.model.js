@@ -1,30 +1,53 @@
 import { ActivityValue } from './ActivityValue.model';
 import moment from 'moment';
 
+/**
+ * @class Activity
+ * @description the Activity class describes the intermediary state between a form instance and a reservation
+ */
+
 export class Activity {
+  /**
+   * Identification
+   */
   _id;
 
-  formId;
+  formId; // The form id the activity was derived from
 
-  formInstanceId;
+  formInstanceId; // The form instance id the activity was derived from
 
-  sectionId;
+  sectionId; // The section id the activity was derived from
 
-  eventId;
+  eventId; // The event id the activity was derived from (if section === SECTION_CONNECTED, otherwise null)
 
-  rowIdx;
+  rowIdx; // The row index the activity was derived from (if section === SECTION_TABLE, otherwise null)
 
-  reservationTemplateExtId;
+  /**
+   * Scheduling informationn
+   */
+  /**
+   * @todo remove
+   */
+  reservationTemplateExtId; // DEPRECATED
 
-  activityStatus;
+  activityStatus; // The status of the activity, one of the enum values in Constants/activityStatuses.constants.js
 
-  reservationId;
+  reservationId; //  If actvitiyStatus indicates the activity has been scheduled, this prop holds the reservation id
 
-  schedulingDate;
+  /**
+   * @todo change name to schedulingTimestamp ?
+   */
+  schedulingDate; // Timestamp for when the activity was scheduled
 
-  timing;
+  /**
+   * Timing information
+   */
+  timing; // An array of ActivityValue, with each element's extId representing one of the properties in the ActivityTiming.model.js
 
-  values;
+  /**
+   * Object and Field values
+   */
+  values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's ReservationTemplateMapping
 
   constructor({
     _id,

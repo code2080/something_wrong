@@ -1,4 +1,4 @@
-import { ReservationTemplateMapping } from '../../Models/Mapping.model';
+import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
 import { determineSectionType } from '../../Utils/sections.helpers';
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';

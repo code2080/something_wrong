@@ -1,4 +1,4 @@
-import { Timing } from './Timing.model';
+import { ActvitiyTiming } from './ActivityTiming.model';
 
 export class ReservationTemplateMapping {
   name;
@@ -25,7 +25,7 @@ export class ReservationTemplateMapping {
     this.name = name;
     this.formId = formId;
     this.reservationTemplateExtId = reservationTemplateExtId;
-    this.timing = new Timing(timing || {});
+    this.timing = new ActvitiyTiming(timing || {});
     this.objects = objects || {};
     this.fields = fields || {};
     this.propSettings = propSettings || {};
