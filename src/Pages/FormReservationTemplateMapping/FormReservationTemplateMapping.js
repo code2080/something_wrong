@@ -25,7 +25,7 @@ import {
 
 // STYLES
 import './FormReservationTemplateMapping.scss';
-import { ReservationTemplateMapping } from '../../Models/Mapping.model';
+import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';

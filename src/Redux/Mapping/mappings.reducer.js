@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as types from './mappings.actionTypes';
-import { ReservationTemplateMapping } from '../../Models/Mapping.model';
+import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
 
 // INITIAL STATE
 import initialState from './mappings.initialState';
