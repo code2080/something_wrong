@@ -17,22 +17,6 @@ export const getTimingModeForActivity = activity => {
 }
 
 /**
- * @function getReservationForEvent
- * @description picks the activity corresponding to a specific event from a connected section
- * @param {Object} state a redux state object
- * @param {String} formId the form Id
- * @param {String} formInstanceId the form instance id
- * @param {String} sectionId the section id
- * @param {String} eventId the event id
- * @returns {Object} activity corresponding to the event
- */
-export const getReservationForEvent = (state, formId, formInstanceId, sectionId, eventId) => {
-  if (!state || !formId || !formInstanceId || !sectionId || !eventId) return [];
-  const activities = _.get(state, `[${formId}][${formInstanceId}]`, []);
-  return activities.find(el => el.sectionId === sectionId && el.eventId === eventId);
-};
-
-/**
  * @function getActivitiesForFormInstance
  * @description selects all the activities for a form instance
  * @param {Object} state a redux state object
@@ -82,6 +66,41 @@ const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
 };
 
 /**
+ * @function updateSingleActivityValue
+ * @description performs a manual override of a single value
+ * @param {Any} newValue the new value
+ * @param {Object} activityValue the old activityValue
+ * @param {Object} activity the old activity
+ */
+const updateSingleActivityValue = (newValue, activityValue, activity) => {
+  const newActivityValue = { ...activityValue, value: newValue, valueMode: activityValueModes.MANUAL };
+  const objPath = findObjectPathForActivityValue(newActivityValue.extId, activity);
+  if (!objPath) return null;
+  return updateActivityWithNewValue(newActivityValue, activity, objPath);
+};
+
+/**
+ * @function updateMultipleActivityValues
+ * @description performs a manual override of multiple values
+ * @param {Any} newValue the new value
+ * @param {Object} activityValue the old activityValue
+ * @param {Object} activity the old activity
+ */
+const updateMultipleActivityValues = (newValue, activityValue, activity) => {
+  let updatedActivity = activity;
+  newValue.forEach(value => {
+    const objPath = findObjectPathForActivityValue(value.extId, activity);
+    const activityValueIdx = activity[objPath].findIndex(el => el.extId === value.extId);
+    updatedActivity[objPath] = [
+      ...updatedActivity[objPath].slice(0, activityValueIdx),
+      { ...activity[objPath][activityValueIdx], value: value.value, valueMode: activityValueModes.MANUAL },
+      ...updatedActivity[objPath].slice(activityValueIdx + 1),
+    ]
+  });
+  return updatedActivity;
+};
+
+/**
  * @function manuallyOverrideActivityValue
  * @description return a new activity value with a manually overriden value param
  * @param {String || Number} newValue the new value
@@ -90,11 +109,32 @@ const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
  * @returns {Object} updated activity
  */
 export const manuallyOverrideActivityValue = (newValue, activityValue, activity) => {
-  const newActivityValue = { ...activityValue, value: newValue, valueMode: activityValueModes.MANUAL };
-  const objPath = findObjectPathForActivityValue(newActivityValue.extId, activity);
-  if (!objPath) return null;
-  return updateActivityWithNewValue(newActivityValue, activity, objPath);
+  /**
+   * All props only affect themselves, except for certain timing changes
+   */
+  const timingMode = getTimingModeForActivity(activity);
+  if (
+    timingMode !== mappingTimingModes.EXACT &&
+    (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
+  )
+    return updateMultipleActivityValues(newValue, activityValue, activity);
+
+  return updateSingleActivityValue(newValue, activityValue, activity);
 };
+
+const revertMultipleActivityValues = (extIds, activity) => {
+  let updatedActivity = activity;
+  extIds.forEach(extId => {
+    const objPath = findObjectPathForActivityValue(extId, activity);
+    const activityValueIdx = activity[objPath].findIndex(el => el.extId === extId);
+    updatedActivity[objPath] = [
+      ...updatedActivity[objPath].slice(0, activityValueIdx),
+      { ...activity[objPath][activityValueIdx], value: activity[objPath][activityValueIdx].submissionValue[0], valueMode: activityValueModes.FROM_SUBMISSION },
+      ...updatedActivity[objPath].slice(activityValueIdx + 1),
+    ]
+  });
+  return updatedActivity;
+}
 
 /**
  * @function revertActivityValueToSubmission
@@ -107,40 +147,28 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
   /**
    * @logic
    * valueMode: FROM_SUBMISSION
-   * value should then be reverted to:
-   *  if submissionValueType === OBJECT || FREE_TEXT => set to submissionValue[0]
-   *  if submissionValueType === FILTER => set to null
-   *  if submissionValueType === TIMING && timingMode === EXACT => set to submissionValue[0]
-   *  if submissionValueType === TIMING && timingMode === TIMESLOTS
-   *    if extId === LENGTH => set to submissionValue[0]
-   *    if extId === startTime || endTime => set to null
+   * value should then be reverted to submissionValue[0]
+   * most reverts only affect the activity value itself
+   * but reverting timeslots needs to happen on both start and endtime properties
    */
-  const { submissionValueType, submissionValue } = activityValue;
-  const timingMode = activity.timing.find(el => el.extId === 'mode');
-  let newReservationValue;
+  const { submissionValue } = activityValue;
+  const timingMode = getTimingModeForActivity(activity);
   if (
-    submissionValueType === submissionValueTypes.OBJECT ||
-    submissionValueType === submissionValueTypes.FREE_TEXT ||
-    (submissionValueType === submissionValueTypes.TIMING && timingMode.value === mappingTimingModes.EXACT) ||
-    activityValue.extId === 'length'
+    timingMode !== mappingTimingModes.EXACT &&
+    (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
   ) {
-    newReservationValue = {
-      ...activityValue,
-      valueMode: activityValueModes.FROM_SUBMISSION,
-      value: submissionValue[0],
-    };
+    return revertMultipleActivityValues(['startTime', 'endTime'], activity);
   } else {
-    newReservationValue = {
-      ...activityValue,
-      valueMode: activityValueModes.FROM_SUBMISSION,
-      value: null,
-    };
+    return updateActivityWithNewValue(
+      {
+        ...activityValue,
+        valueMode: activityValueModes.FROM_SUBMISSION,
+        value: submissionValue[0],
+      },
+      activity,
+      findObjectPathForActivityValue(activityValue.extId, activity)
+    );
   }
-
-  const objPath = findObjectPathForActivityValue(newReservationValue.extId, activity);
-  if (!objPath) return null;
-  // 3. Update the activity and return
-  return updateActivityWithNewValue(newReservationValue, activity, objPath);
 };
 
 /**
@@ -176,7 +204,7 @@ const createSchedulingValuePayload = ({ status, rawValue, formattedValue, errorM
  */
 
 const getSchedulingPayloadForTimeSlotStartTime = (activityValue, timingValues) => {
-  if (!activityValue.submissionValue[0])
+  if (!activityValue.value)
     return createSchedulingValuePayload({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: 'Start time is missing, please input the value manually to calculate a start time range'
@@ -184,15 +212,15 @@ const getSchedulingPayloadForTimeSlotStartTime = (activityValue, timingValues) =
 
   const _length = timingValues.find(el => el.extId === 'length');
   const _endTime = timingValues.find(el => el.extId === 'endTime');
-  if (!_length || !_endTime || !_length.value || !_endTime.submissionValue[0])
+  if (!_length || !_endTime || !_length.value || !_endTime.value)
     return createSchedulingValuePayload({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: 'End time or length is missing, please input these values manually to calculate a start time range'
     });
 
-  const startTime = activityValue.submissionValue[0];
+  const startTime = activityValue.value;
   const length = _length.value;
-  const endTime = _endTime.submissionValue[0];
+  const endTime = _endTime.value;
 
   return createSchedulingValuePayload({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
@@ -209,7 +237,7 @@ const getSchedulingPayloadForTimeSlotStartTime = (activityValue, timingValues) =
  * @returns {Object} schedulingValuePayload
  */
 const getSchedulingPayloadForTimeSlotEndTime = (activityValue, timingValues) => {
-  if (!activityValue.submissionValue[0])
+  if (!activityValue.value)
     return createSchedulingValuePayload({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: 'End time is missing, please input the value manually to calculate an end time range',
@@ -217,15 +245,15 @@ const getSchedulingPayloadForTimeSlotEndTime = (activityValue, timingValues) => 
 
   const _length = timingValues.find(el => el.extId === 'length');
   const _startTime = timingValues.find(el => el.extId === 'startTime');
-  if (!_length || !_startTime || !_length.value || !_startTime.submissionValue[0])
+  if (!_length || !_startTime || !_length.value || !_startTime.value)
     return createSchedulingValuePayload({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: 'Start time or length is missing, please input these values manually to calculate a start time range',
     });
 
-  const endTime = activityValue.submissionValue[0];
+  const endTime = activityValue.value;
   const length = _length.value;
-  const startTime = _startTime.submissionValue[0];
+  const startTime = _startTime.value;
   return createSchedulingValuePayload({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [moment(startTime).add(length, 'hours'), moment(endTime)],
@@ -268,14 +296,14 @@ const addExtrasToReservationValue = (activityValue, mappingType) => {
   if (activityValue.submissionValueType === submissionValueTypes.FILTER)
     return { icon: submissionValueTypeProps[submissionValueTypes.FILTER].icon, tooltip: 'The object filter values are from the submission' };
   // Else, if it's a timing property and we DON'T have a value
-  if (mappingType === mappingTypes.TIMING && !activityValue.value)
-    return { icon: 'column-height', tooltip: 'The timing range is based on the submission' };
+  if (mappingType === mappingTypes.TIMING)
+    return { icon: 'column-height', tooltip: 'The timing is based on the submission' };
   // Else, return from submission
   return { icon: activityValueModeProps[activityValueModes.FROM_SUBMISSION].icon, tooltip: 'The value is from the submission' };
 };
 
 /**
- * @function getReservationValueForScheduling
+ * @function getSchedulingPayloadForActivityValue
  * @description calculates the value from a activity value that should be used in scheduling
  * @param {Object} activityValue the activity value
  * @param {Object} activity the activity on which the activity value resides
@@ -292,15 +320,19 @@ export const getSchedulingPayloadForActivityValue = (
 ) => {
   let retVal = null;
   const timingMode = activity.timing.find(el => el.extId === 'mode');
+
   // Special case: start time and time slots
   if (activityValue.extId === 'startTime' && timingMode.value === mappingTimingModes.TIMESLOTS)
     retVal = getSchedulingPayloadForTimeSlotStartTime(activityValue, activity.timing);
+
   // Special case: end time and time slots
   if (activityValue.extId === 'endTime' && timingMode.value === mappingTimingModes.TIMESLOTS)
     retVal = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
+
   // Special case: filters
   if (activityValue.submissionValueType === submissionValueTypes.FILTER)
     retVal = getSchedulingPayloadForObjectFilter(activityValue);
+
   // General case
   if (!retVal)
     retVal = createSchedulingValuePayload({

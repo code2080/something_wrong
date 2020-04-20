@@ -225,10 +225,7 @@ const createActivityValueForConnectedSectionSpecialProp = (
   const submissionValueType = elementId === 'title'
     ? submissionValueTypes.FREE_TEXT
     : submissionValueTypes.TIMING;
-  const { mode } = reservationTemplateMapping.timing;
-  const value = mode === mappingTimingModes.EXACT || submissionValueType === submissionValueTypes.FREE_TEXT
-    ? ensureValueTypeFormat(submissionValue, valueType)
-    : null;
+  const value = ensureValueTypeFormat(submissionValue, valueType);
 
   return new ActivityValue({
     type: valueType,
