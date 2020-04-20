@@ -9,15 +9,17 @@ export const teCoreCallnames = {
   SELECT_TYPE: 'selectType',
   FILTER_OBJECTS: 'filterObjects',
   GET_EXTID_PROPS: 'getExtIdProps',
-  GET_RESERVATION_TEMPLATES: 'getReservationTemplates',
-  GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate',
+  GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
+  GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
   SELECT_RESERVATION: 'selectReservation',
   DELETE_RESERVATION: 'deleteReservation',
   SCHEDULE_ACTIVITY: 'scheduleReservation',
   POPULATE_SELECTION: 'populateSelection',
   GET_RESERVATION_TYPES: 'getReservationTypes',
   GET_RESERVATION_FIELDS: 'getReservationFields',
-  REQUEST_OPERATION: 'requestOperation'
+  REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
+  REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
+  REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
 };
 
 export const teCoreActions = {
@@ -43,11 +45,11 @@ export const teCoreActions = {
   GET_EXTID_PROPS: {
     callname: teCoreCallnames.GET_EXTID_PROPS
   },
-  GET_RESERVATION_TEMPLATES: {
+  GET_RESERVATION_TEMPLATES: { // DEPRECATED
     callname: teCoreCallnames.GET_EXTID_PROPS,
     mockFunction: () => reservationTemplates
   },
-  GET_SELECTED_RESERVATION_TEMPLATE: {
+  GET_SELECTED_RESERVATION_TEMPLATE: { // DEPRECATED
     callname: teCoreCallnames.GET_SELECTED_RESERVATION_TEMPLATE,
     mockFunction: () => 'scheduling'
   },
@@ -71,12 +73,18 @@ export const teCoreActions = {
     callname: teCoreCallnames.GET_RESERVATION_FIELDS,
     mockFunction: () => reservationFields
   },
-  GET_OBJECT_FROM_FILTER: {
-    callname: teCoreCallnames.REQUEST_OPERATION,
+  REQUEST_GET_OBJECT_FROM_FILTER: {
+    callname: teCoreCallnames.REQUEST_GET_OBJECT_FROM_FILTER,
     mockFunction: () => coreObject
   },
-  GET_FILTER_FROM_FILTER: {
-    callname: teCoreCallnames.REQUEST_OPERATION,
+  REQUEST_GET_FILTER_FROM_FILTER: {
+    callname: teCoreCallnames.REQUEST_GET_FILTER_FROM_FILTER,
     mockFunction: data => coreFilter
+  },
+  REQUEST_REPLACE_OBJECT: {
+    callname: teCoreCallnames.REQUEST_REPLACE_OBJECT,
+    mockFunction: ({ activityValue, activity, callback }) => {
+      callback(coreObject);
+    }
   }
 };

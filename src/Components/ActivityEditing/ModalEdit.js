@@ -4,7 +4,6 @@ import { Modal } from 'antd';
 
 // COMPONENTS
 import ShowInfo from './ModalEdits/ShowInfo';
-import TimeslotChange from './ModalEdits/TimeslotChange';
 import TimeslotToExactTime from './ModalEdits/TimeslotToExactTime';
 
 // STYLES
@@ -14,7 +13,6 @@ import './ModalEdit.scss';
 import { activityActions } from '../../Constants/activityActions.constants';
 
 const componentMapping = {
-  [activityActions.TIMESLOT_CHANGE_OVERRIDE]: TimeslotChange,
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: TimeslotToExactTime,
   [activityActions.SHOW_INFO]: ShowInfo,
 };
@@ -58,7 +56,7 @@ const ModalEdit = ({
 };
 
 ModalEdit.propTypes = {
-  action: PropTypes.string.isRequired,
+  action: PropTypes.string,
   activityValue: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
   formatFn: PropTypes.func,
@@ -70,6 +68,7 @@ ModalEdit.propTypes = {
 };
 
 ModalEdit.defaultProps = {
+  action: null,
   formatFn: val => val,
   propTitle: null,
   visible: false,

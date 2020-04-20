@@ -3,6 +3,7 @@ import { submissionValueTypes } from './submissionValueTypes.constants';
 import { activityValueModes } from './activityValueModes.constants';
 import { mappingTimingModes } from './mappingTimingModes.constants';
 import { activityViews } from './activityViews.constants';
+import { teCoreCallnames } from './teCoreActions.constants';
 
 export const activityActions = {
   FREE_TEXT_OVERRIDE: 'FREE_TEXT_OVERRIDE',
@@ -13,7 +14,7 @@ export const activityActions = {
   SELECT_OBJECT_FROM_FILTER_OVERRIDE: 'SELECT_OBJECT_FROM_FILTER_OVERRIDE',
   EDIT_OBJECT: 'EDIT_OBJECT',
   EDIT_FILTER_OVERRIDE: 'EDIT_FILTER_OVERRIDE',
-  SELECT_BEST_FIT_VALUE: 'SELECT_BEST_FIT_VALUE',
+  // SELECT_BEST_FIT_VALUE: 'SELECT_BEST_FIT_VALUE',
   REVERT_TO_SUBMISSION_VALUE: 'REVERT_TO_SUBMISSION_VALUE',
   SHOW_INFO: 'SHOW_INFO',
 };
@@ -27,7 +28,7 @@ export const activityActionFilters = {
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: activityValue => activityValue.type === activityValueTypes.OBJECT && activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.EDIT_OBJECT]: activityValue => activityValue.type === activityValueTypes.OBJECT && activityValue.submissionValueType === submissionValueTypes.OBJECT,
   [activityActions.EDIT_FILTER_OVERRIDE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
-  [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
+  // [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.REVERT_TO_SUBMISSION_VALUE]: activityValue => activityValue.valueMode === activityValueModes.MANUAL,
   [activityActions.SHOW_INFO]: () => true,
 };
@@ -36,12 +37,12 @@ export const activityActionViews = {
   [activityActions.FREE_TEXT_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.NUMBER_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.EXACT_TIME_OVERRIDE]: activityViews.INLINE_EDIT,
-  [activityActions.TIMESLOT_CHANGE_OVERRIDE]: activityViews.MODAL_EDIT,
+  [activityActions.TIMESLOT_CHANGE_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: activityViews.MODAL_EDIT,
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: activityViews.EXTERNAL_EDIT,
   [activityActions.EDIT_OBJECT]: activityViews.EXTERNAL_EDIT,
   [activityActions.EDIT_FILTER_OVERRIDE]: activityViews.EXTERNAL_EDIT,
-  [activityActions.SELECT_BEST_FIT_VALUE]: activityViews.EXTERNAL_EDIT,
+  // [activityActions.SELECT_BEST_FIT_VALUE]: activityViews.EXTERNAL_EDIT,
   [activityActions.SHOW_INFO]: activityViews.MODAL_EDIT,
 };
 
@@ -54,7 +55,14 @@ export const activityActionLabels = {
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: 'Manually select object',
   [activityActions.EDIT_FILTER_OVERRIDE]: 'Manually edit filter',
   [activityActions.EDIT_OBJECT]: 'Manually select object',
-  [activityActions.SELECT_BEST_FIT_VALUE]: 'Select best fit object',
+  // [activityActions.SELECT_BEST_FIT_VALUE]: 'Select best fit object',
   [activityActions.REVERT_TO_SUBMISSION_VALUE]: 'Revert to submission value',
   [activityActions.SHOW_INFO]: 'Show details',
+};
+
+export const externalActivityActionMapping = {
+  [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: teCoreCallnames.REQUEST_GET_OBJECT_FROM_FILTER,
+  [activityActions.EDIT_OBJECT]: teCoreCallnames.REQUEST_REPLACE_OBJECT,
+  [activityActions.EDIT_FILTER_OVERRIDE]: teCoreCallnames.REQUEST_GET_FILTER_FROM_FILTER,
+  // [activityActions.SELECT_BEST_FIT_VALUE]: ,
 };

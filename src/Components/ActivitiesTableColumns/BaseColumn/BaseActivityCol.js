@@ -9,7 +9,8 @@ import './BaseActivityCol.scss';
 import BaseActivityColDropdown from './BaseActivityColDropdown';
 import BaseActivityColValue from './BaseActivityColValue';
 import InlineEdit from '../../ActivityEditing/InlineEdit';
-import BaseActivityColModal from '../../ActivityEditing/ModalEdit';
+import ModalEdit from '../../ActivityEditing/ModalEdit';
+import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 
 // ACTIONS
 import { overrideActivityValue, revertToSubmissionValue } from '../../../Redux/Activities/activities.actions';
@@ -18,7 +19,7 @@ import { overrideActivityValue, revertToSubmissionValue } from '../../../Redux/A
 import { getMappingSettingsForProp, getMappingTypeForProp } from '../../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // CONSTANTS
-import { activityActions, activityActionFilters, activityActionViews } from '../../../Constants/activityActions.constants';
+import { activityActions, activityActionFilters, activityActionViews, externalActivityActionMapping } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
 
 const getActivityValue = (activity, type, prop) => {
@@ -42,6 +43,7 @@ const BaseActivityCol = ({
   mapping,
   overrideActivityValue,
   revertToSubmissionValue,
+  teCoreAPI,
 }) => {
   // State var to hold the component's mode
   const [viewProps, setViewProps] = useState({ view: activityViews.VALUE_VIEW, action: null });
@@ -65,6 +67,12 @@ const BaseActivityCol = ({
     setViewProps(resetView());
   }, [activityValue, activity, setViewProps]);
 
+  const onFinshExternalEdit = response => {
+    console.log(response);
+    overrideActivityValue(response, activityValue, activity);
+    setViewProps(resetView());
+  }
+
   // Memoized func object with the various editing possibilities
   const onActionCallback = useCallback(action => {
     /**
@@ -80,7 +88,21 @@ const BaseActivityCol = ({
 
     // Construct the new view props
     const updView = activityActionViews[action];
+    /**
+     * Add case for external edits; call the function from te core api,
+     * potentially update view to show we're waiting for a value
+     */
     if (!updView || updView == null) return;
+    if (updView === activityViews.EXTERNAL_EDIT) {
+      // Here begins our journey into the belly of TE Core
+      /**
+       * x) Figure out which function to call based on action and create function mapping
+       * x) Call mapped function together with callback
+       * x) Ensure callback updates activity correctly
+       */
+      const callName = externalActivityActionMapping[action];
+      teCoreAPI[callName]({ activityValue, activity, callback: onFinshExternalEdit });
+    }
     setViewProps({ view: updView, action });
   }, [revertToSubmissionValue, activity]);
 
@@ -106,6 +128,9 @@ const BaseActivityCol = ({
           formatFn={formatFn}
         />
       )}
+      {/*
+        Add rendering case for waiting for external input
+      */}
       <BaseActivityColDropdown
         activityValue={activityValue}
         activity={activity}
@@ -114,7 +139,7 @@ const BaseActivityCol = ({
         availableActions={activityValueActions}
         onActionClick={onActionCallback}
       />
-      <BaseActivityColModal
+      <ModalEdit
         activityValue={activityValue}
         activity={activity}
         formatFn={formatFn}
@@ -138,6 +163,7 @@ BaseActivityCol.propTypes = {
   mapping: PropTypes.object,
   overrideActivityValue: PropTypes.func.isRequired,
   revertToSubmissionValue: PropTypes.func.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
 };
 
 BaseActivityCol.defaultProps = {
@@ -147,4 +173,4 @@ BaseActivityCol.defaultProps = {
   mapping: null,
 };
 
-export default connect(null, mapActionsToProps)(BaseActivityCol);
+export default connect(null, mapActionsToProps)(withTECoreAPI(BaseActivityCol));
