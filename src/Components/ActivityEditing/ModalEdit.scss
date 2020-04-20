@@ -1,8 +1,8 @@
-@import '../../../Styles/globals.scss';
+@import '../../Styles/globals.scss';
 
 $iconDimension: 25px;
 
-.base-activity-col--modal {
+.modal-edit--wrapper {
   .ant-form-text {
     display: flex;
     align-items: flex-start;

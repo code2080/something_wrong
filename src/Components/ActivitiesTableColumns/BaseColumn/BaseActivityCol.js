@@ -8,8 +8,8 @@ import './BaseActivityCol.scss';
 // COMPONENTS
 import BaseActivityColDropdown from './BaseActivityColDropdown';
 import BaseActivityColValue from './BaseActivityColValue';
-import ManualEditingComponent from '../../ActivityEditing/ManualEditingComponent';
-import BaseActivityColModal from './BaseActivityColModal';
+import InlineEdit from '../../ActivityEditing/InlineEdit';
+import BaseActivityColModal from '../../ActivityEditing/ModalEdit';
 
 // ACTIONS
 import { overrideActivityValue, revertToSubmissionValue } from '../../../Redux/Activities/activities.actions';
@@ -18,15 +18,15 @@ import { overrideActivityValue, revertToSubmissionValue } from '../../../Redux/A
 import { getMappingSettingsForProp, getMappingTypeForProp } from '../../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 
 // CONSTANTS
-import { activityActions } from '../../../Constants/activityActions.constants';
-import { mappingTimingModes } from '../../../Constants/mappingTimingModes.constants';
-import { mappingTypes } from '../../../Constants/mappingTypes.constants';
-import { manualEditingModes } from '../../../Constants/manualEditingModes.constants';
+import { activityActions, activityActionFilters, activityActionViews } from '../../../Constants/activityActions.constants';
+import { activityViews } from '../../../Constants/activityViews.constants';
 
 const getActivityValue = (activity, type, prop) => {
   const payload = type === 'VALUE' ? activity.values : activity.timing;
   return payload.find(el => el.extId === prop);
 };
+
+const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
 const mapActionsToProps = {
   overrideActivityValue,
@@ -43,10 +43,9 @@ const BaseActivityCol = ({
   overrideActivityValue,
   revertToSubmissionValue,
 }) => {
-  // State var to hold if in edit mode
-  const [isInEditMode, setIsInEditMode] = useState(false);
-  // State var to hold if show details modal is open
-  const [showShowDetailsModal, setShowShowDetailsModal] = useState(false);
+  // State var to hold the component's mode
+  const [viewProps, setViewProps] = useState({ view: activityViews.VALUE_VIEW, action: null });
+
   // Memoized activity value
   const activityValue = useMemo(
     () => getActivityValue(activity, type, prop),
@@ -60,51 +59,47 @@ const BaseActivityCol = ({
     };
   }, [activityValue, mapping]);
 
-  // Memoized value determining what type of manual editing can be done on this property
-  const manualEditingMode = useMemo(() => {
-    /**
-     * Can only be edited manually if:
-     * a) It's mapped to a field => TEXT_INPUT editing
-     * b) It's a timing property and the timing mode is exact => DATETIME_PICKER
-     * b) It's the length parameter in timing and mode is timeslots NUMBER_INPUT
-     */
-    if (mappingProps.type === mappingTypes.FIELD) return manualEditingModes.TEXT_INPUT;
-    if (mappingProps.type === mappingTypes.TIMING && mapping.timing.mode === mappingTimingModes.EXACT) return manualEditingModes.DATETIME_PICKER;
-    if (activityValue.extId === 'length' && mapping.timing.mode === mappingTimingModes.TIMESLOTS) return manualEditingModes.NUMBER_INPUT;
-    return manualEditingModes.NOT_ALLOWED;
-  }, [mappingProps, activityValue, mapping]);
-
-  // Callback for manual input override
-  const onManualInputOverride = useCallback(() => {
-    if (manualEditingMode !== manualEditingModes.NOT_ALLOWED)
-      setIsInEditMode(!isInEditMode);
-  }, [manualEditingMode]);
-
   // Memoized callback handler for when manual override is completed and activity should be updated
   const onFinishManualEditing = useCallback(value => {
     overrideActivityValue(value, activityValue, activity);
-    setIsInEditMode(false);
-  }, [activityValue, activity, setIsInEditMode]);
+    setViewProps(resetView());
+  }, [activityValue, activity, setViewProps]);
 
   // Memoized func object with the various editing possibilities
-  const reservationActionFnsObj = useMemo(() => ({
-    [activityActions.MANUAL_INPUT_OVERRIDE]: () => onManualInputOverride(),
-    [activityActions.MANUAL_SELECT_OVERRIDE]: activityValue => console.log(`Manual select for ${activityValue.extId}`),
-    [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => console.log(`Best fit select for ${activityValue.extId}`),
-    [activityActions.SHOW_INFO]: () => setShowShowDetailsModal(true),
-    [activityActions.REVERT_TO_SUBMISSION_VALUE]: () => revertToSubmissionValue(activityValue, activity),
-  }), [activityActions, activityValue, activity]);
+  const onActionCallback = useCallback(action => {
+    /**
+     * Most actions change the view props
+     * but revert to submission value has no view impact
+     * so we test for it first
+     */
+    if (action === activityActions.REVERT_TO_SUBMISSION_VALUE)
+      /**
+       * This will have to be augmented as some reverts affect more than one property, such as timeslot reverts
+       */
+      return revertToSubmissionValue(activityValue, activity);
+
+    // Construct the new view props
+    const updView = activityActionViews[action];
+    if (!updView || updView == null) return;
+    setViewProps({ view: updView, action });
+  }, [revertToSubmissionValue, activity]);
+
+  const activityValueActions = useMemo(() => Object.keys(activityActions)
+    .filter(activityAction => activityActionFilters[activityAction](activityValue, activity, mapping)), [activityValue, activity, mapping]
+  );
 
   return (
     <div className="base-activity-col--wrapper">
-      {isInEditMode ? (
-        <ManualEditingComponent
+      {viewProps.view === activityViews.INLINE_EDIT && (
+        <InlineEdit
           onFinish={onFinishManualEditing}
-          onCancel={() => setIsInEditMode(false)}
+          onCancel={() => setViewProps(resetView())}
           activityValue={activityValue}
-          manualEditingMode={manualEditingMode}
+          activity={activity}
+          action={viewProps.action}
         />
-      ) : (
+      )}
+      {viewProps.view === activityViews.VALUE_VIEW && (
         <BaseActivityColValue
           activityValue={activityValue}
           activity={activity}
@@ -115,9 +110,9 @@ const BaseActivityCol = ({
         activityValue={activityValue}
         activity={activity}
         formatFn={formatFn}
-        mapping={mapping}
-        reservationActionFns={reservationActionFnsObj}
         mappingProps={mappingProps}
+        availableActions={activityValueActions}
+        onActionClick={onActionCallback}
       />
       <BaseActivityColModal
         activityValue={activityValue}
@@ -126,8 +121,9 @@ const BaseActivityCol = ({
         mappingProps={mappingProps}
         propTitle={propTitle}
         prop={prop}
-        onClose={() => setShowShowDetailsModal(false)}
-        visible={showShowDetailsModal}
+        onClose={() => setViewProps(resetView())}
+        visible={viewProps.view === activityViews.MODAL_EDIT}
+        action={viewProps.action}
       />
     </div>
   );

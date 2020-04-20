@@ -6,6 +6,16 @@ import { mappingTimingModes } from '../../Constants/mappingTimingModes.constants
 import { activityValueStatuses, activityValueStatusProps } from '../../Constants/activityStatuses.constants';
 import { mappingTypes } from '../../Constants/mappingTypes.constants';
 import { schedulingAlgorithms, schedulingAlgorithmProps } from '../../Constants/schedulingAlgorithms.constants';
+
+export const getTimingModeForActivity = activity => {
+  try {
+    const aV = activity.timing.find(el => el.extId === 'mode');
+    return aV.value;
+  } catch (error) {
+    return null;
+  }
+}
+
 /**
  * @function getReservationForEvent
  * @description picks the activity corresponding to a specific event from a connected section

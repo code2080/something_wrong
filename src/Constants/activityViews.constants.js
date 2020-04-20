@@ -1,0 +1,6 @@
+export const activityViews = {
+  VALUE_VIEW: 'VALUE_VIEW',
+  INLINE_EDIT: 'INLINE_EDIT',
+  EXTERNAL_EDIT: 'EXTERNAL_EDIT',
+  MODAL_EDIT: 'MODAL_EDIT',
+};
