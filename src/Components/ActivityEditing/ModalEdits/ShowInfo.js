@@ -4,10 +4,10 @@ import { Form, Icon, Alert } from 'antd';
 
 // HELPERS
 import {
-  getSchedulingPayloadForActivityValue,
+  getRenderPayloadForActivityValue,
   getSchedulingAlgorithmForActivityValue,
   formatSubmissionValue,
-} from '../../../Redux/Activities/activities.helpers';
+} from '../../../Utils/activityValues.rendering';
 
 // STYLES
 import '../ModalEdit.scss';
@@ -25,11 +25,11 @@ const ShowInfo = ({
 }) => {
   const mappingType = useMemo(() => mappingTypeProps[mappingProps.type] || null, [mappingProps]);
   const schedulingPayload = useMemo(
-    () => getSchedulingPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
+    () => getRenderPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
     [activityValue, activity, formatFn, mappingProps]);
   const schedulingAlgorithm = useMemo(
-    () => getSchedulingAlgorithmForActivityValue(activityValue, mappingProps.type),
-    [activityValue, mappingProps]
+    () => getSchedulingAlgorithmForActivityValue(activityValue, activity),
+    [activityValue, activity]
   );
   const formattedSubmissionValue = useMemo(
     () => formatSubmissionValue(activityValue.submissionValue || [], activityValue.submissionValueType),

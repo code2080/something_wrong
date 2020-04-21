@@ -254,7 +254,7 @@ const createActivityValueForConnectedSectionSpecialProp = (
 export const createActivityValueForProp = (valueType, reservationTemplateMapping, formInstance, sections, eventId, rowIdx) => {
   /**
    * Based on the valueType (objects, fields, timing)
-   * we reduce over all the items that in the reservationTemplateMapping have been mapped onto that type
+   * we reduce over all the items that in the reservationTemplateMapping have been mapped onto this valueType
    */
   return (Object.keys(reservationTemplateMapping[activityValueTypeProps[valueType].path]) || []).reduce((retVal, extId) => {
     /**
@@ -347,4 +347,4 @@ export const createActivityValueForProp = (valueType, reservationTemplateMapping
       })
     ];
   }, []);
-}
+};

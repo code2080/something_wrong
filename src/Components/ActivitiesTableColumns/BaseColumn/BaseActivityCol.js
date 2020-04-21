@@ -112,11 +112,6 @@ const BaseActivityCol = ({
       if (!updView || updView == null) return;
       if (updView === activityViews.EXTERNAL_EDIT) {
         // Here begins our journey into the belly of TE Core
-        /**
-         * x) Figure out which function to call based on action and create function mapping
-         * x) Call mapped function together with callback
-         * x) Ensure callback updates activity correctly
-         */
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
           activityValue,

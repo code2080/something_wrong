@@ -51,7 +51,8 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS:
-    case types.REVERT_TO_SUBMISSION_VALUE_SUCCESS: {
+    case types.REVERT_TO_SUBMISSION_VALUE_SUCCESS:
+    case types.UPDATE_ACTIVITY_SUCCESS: {
       const { formId, formInstanceId, _id } = action.payload.activity;
       if (!formId || !formInstanceId)
         return state;

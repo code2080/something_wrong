@@ -14,7 +14,7 @@ export const mappingTypeProps = {
   [mappingTypes.OBJECT]: {
     label: 'Object',
     icon: 'build',
-    tooltip: 'Mapped to a activity object',
+    tooltip: 'Mapped to a reservation object',
   },
   [mappingTypes.TIMING]: {
     label: 'Timing',

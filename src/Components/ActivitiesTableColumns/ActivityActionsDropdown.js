@@ -3,50 +3,69 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown, Menu, Button, Icon } from 'antd';
 
+// HELPERS
+import { scheduleActivity } from '../../Utils/scheduling.helpers';
+
 // ACTIONS
-import { scheduleActivity } from '../../Redux/Activities/activities.actions';
+import { updateActivity } from '../../Redux/Activities/activities.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
+import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const mapActionsToProps = {
-  scheduleActivity,
+  updateActivity,
 };
 
 const activityActions = {
   SCHEDULE: {
     label: 'Schedule activity',
     filterFn: activity => !activity.reservationId && activity.activityStatus === activityStatuses.NOT_SCHEDULED,
+    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITY,
   },
   SELECT: {
     label: 'Select activity',
     filterFn: activity => activity.reservationId && activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
-    callname: 'selectReservation',
+    callname: teCoreCallnames.SELECT_RESERVATION,
   },
   DELETE: {
     label: 'Delete activity',
     filterFn: activity => activity.reservationId && activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
-    callname: 'deleteReservation',
+    callname: teCoreCallnames.DELETE_RESERVATION,
   },
 }
 
 const ActivityActionsDropdown = ({
   buttonType,
   activity,
-  scheduleActivity,
+  updateActivity,
   teCoreAPI,
 }) => {
-  const handleMenuClick = useCallback(({ key }) => {
-    if (activityActions[key] && activityActions[key].callname)
-      teCoreAPI[activityActions[key].callname](activity);
+  const onFinishSchedule = response => {
+    console.log(response);
+    const { status: activityStatus, reservationId } = response;
+    const updatedActivity = {
+      ...activity,
+      activityStatus,
+      reservationId,
+    };
+    updateActivity(updatedActivity);
+  }
 
-    if (key === 'SCHEDULE') {
-      scheduleActivity({ api: teCoreAPI, activity });
+  const handleMenuClick = useCallback(({ key }) => {
+    if (!activityActions[key] || !activityActions[key].callname) return;
+    switch (key) {
+      case 'SCHEDULE':
+        scheduleActivity(activity, teCoreAPI[activityActions[key].callname], onFinishSchedule);
+        break;
+      default:
+        teCoreAPI[activityActions[key].callname](activity);
+        break;
     }
-  }, [teCoreAPI, activity]);
+  }, [teCoreAPI, activity, onFinishSchedule]);
 
   const menu = useMemo(() => (
     <Menu onClick={handleMenuClick}>
@@ -78,7 +97,7 @@ const ActivityActionsDropdown = ({
 ActivityActionsDropdown.propTypes = {
   buttonType: PropTypes.string,
   activity: PropTypes.object.isRequired,
-  scheduleActivity: PropTypes.func.isRequired,
+  updateActivity: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
 };
 

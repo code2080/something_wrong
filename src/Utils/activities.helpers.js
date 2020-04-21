@@ -22,6 +22,30 @@ const determiningSectionInterface = ({
 
 // FUNCTIONS
 
+export const getTimingModeForActivity = activity => {
+  try {
+    const aV = activity.timing.find(el => el.extId === 'mode');
+    return aV.value;
+  } catch (error) {
+    return null;
+  }
+};
+
+/**
+ * @function findObjectPathForActivityValue
+ * @description finds the path (timing or values) for a value for a certain extId
+ * @param {String} valueExtId the extId of the value we're looking for
+ * @param {Object} activity the activity with all its values
+ * @returns {String} values || timing
+ */
+export const findObjectPathForActivityValue = (valueExtId, activity) => {
+  const timingIdx = activity.timing.findIndex(el => el.extId === valueExtId);
+  if (timingIdx > -1) return 'timing';
+  const valueIdx = activity.values.findIndex(el => el.extId === valueExtId);
+  if (valueIdx > -1) return 'values';
+  return null;
+};
+
 /**
  * @function determineControllingSectionForActivityConversion
  * @description For converting to activities; determines which section is "controlling", i.e., determines the basis for how many activities should be created

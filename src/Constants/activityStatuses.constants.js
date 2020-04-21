@@ -4,6 +4,7 @@ export const activityStatuses = {
   MODIFIED: 'MODIFIED', // Activity is scheduled, but has been modified in external system
   DELETED: 'DELETED', // Activity is scheduled, but has been deleted in external system
   NO_AVAILABILITY: 'NO_AVAILABILITY', // When the combination of objects are impossible to schedule in the given time range
+  VALIDATION_ERROR: 'VALIDATION_ERROR', // One of the activity values has a validation error
   FAILED: 'FAILED', // When a scheduling attempt has been made but failed
 };
 
@@ -37,6 +38,12 @@ export const activityStatusProps = {
     label: 'No availability',
     icon: 'warning',
     tooltip: () => `There's no availability to schedule this combination of objects within the given time constraints`,
+  },
+  [activityStatuses.VALIDATION_ERROR]: {
+    color: 'bittersweet',
+    label: 'Validation error',
+    icon: 'warning',
+    tooltip: () => `One or many acitivty values have validations errors`,
   },
   [activityStatuses.FAILED]: {
     color: 'bittersweet',

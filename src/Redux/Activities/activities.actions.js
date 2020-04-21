@@ -16,9 +16,9 @@ import {
   MANUALLY_OVERRIDE_ACTIVITY_VALUE_REQUEST,
   MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS,
   MANUALLY_OVERRIDE_ACTIVITY_VALUE_FAILURE,
-  SCHEDULE_ACTIVITY_REQUEST,
-  SCHEDULE_ACTIVITY_SUCCESS,
-  SCHEDULE_ACTIVITY_FAILURE,
+  UPDATE_ACTIVITY_REQUEST,
+  UPDATE_ACTIVITY_SUCCESS,
+  UPDATE_ACTIVITY_FAILURE,
   SCHEDULE_ACTIVITIES_REQUEST,
   SCHEDULE_ACTIVITIES_SUCCESS,
   SCHEDULE_ACTIVITIES_FAILURE,
@@ -119,7 +119,20 @@ export const deleteActivities = formId =>
     params: { formId }
   });
 
-export const scheduleActivity = ({ api, activity }) => (dispatch, getState) => {
+const updateActivityFlow = {
+  request: () => ({ type: UPDATE_ACTIVITY_REQUEST }),
+  success: response => ({ type: UPDATE_ACTIVITY_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: UPDATE_ACTIVITY_FAILURE, payload: { ...err } }),
+};
+
+export const updateActivity = activity =>
+  asyncAction.PUT({
+    flow: updateActivityFlow,
+    endpoint: `form-instances/${activity.formInstanceId}/activities/${activity._id}`,
+    params: { activity }
+  });
+
+export const scheduleActivity = ({ apiFn, callback, activity }) => (dispatch, getState) => {
   /**
    * 1. Determine timing mode (timing mode determines what we need to do)
    * 2. If timing mode === EXACT

@@ -5,8 +5,8 @@ import { Tooltip, Icon } from 'antd';
 // HELPERS
 import {
   getSchedulingAlgorithmForActivityValue,
-  getSchedulingPayloadForActivityValue
-} from '../../../Redux/Activities/activities.helpers';
+  getRenderPayloadForActivityValue
+} from '../../../Utils/activityValues.rendering';
 
 // CONSTANTS
 import { mappingTypeProps } from '../../../Constants/mappingTypes.constants';
@@ -19,11 +19,11 @@ const BaseActivityColQuickview = ({
 }) => {
   const mappingType = useMemo(() => mappingTypeProps[mappingProps.type] || null, [mappingProps]);
   const schedulingPayload = useMemo(
-    () => getSchedulingPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
+    () => getRenderPayloadForActivityValue(activityValue, activity, formatFn, true, mappingProps.type),
     [activityValue, activity, formatFn, mappingProps]);
   const schedulingAlgorithm = useMemo(
-    () => getSchedulingAlgorithmForActivityValue(activityValue, mappingProps.type),
-    [activityValue, mappingProps]
+    () => getSchedulingAlgorithmForActivityValue(activityValue, activity),
+    [activityValue, activity]
   );
 
   return (

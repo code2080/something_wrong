@@ -1,0 +1,4 @@
+export const activityValueValidations = {
+  MISSING_VALUE: 'MISSING_VALUE',
+  MISSING_DEPENDENT_PROP: 'MISSING_DEPENDENT_PROP',
+};

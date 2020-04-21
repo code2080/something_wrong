@@ -3,6 +3,8 @@ import { reservationTypes } from '../Mock/ReservationTypes';
 import { reservationFields } from '../Mock/ReservationFields';
 import { coreObject } from '../Mock/CoreObject';
 import { coreFilter } from '../Mock/CoreFilter';
+import { SchedulingReturn } from '../Models/SchedulingReturn.model';
+import { activityStatuses } from './activityStatuses.constants';
 
 export const teCoreCallnames = {
   SELECT_OBJECT: 'selectObject',
@@ -13,13 +15,13 @@ export const teCoreCallnames = {
   GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
   SELECT_RESERVATION: 'selectReservation',
   DELETE_RESERVATION: 'deleteReservation',
-  SCHEDULE_ACTIVITY: 'scheduleReservation',
-  POPULATE_SELECTION: 'populateSelection',
+  POPULATE_SELECTION: 'populateSelection', // WHERE IS THIS ONE USED?
   GET_RESERVATION_TYPES: 'getReservationTypes',
   GET_RESERVATION_FIELDS: 'getReservationFields',
   REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
+  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
 };
 
 export const teCoreActions = {
@@ -85,6 +87,18 @@ export const teCoreActions = {
     callname: teCoreCallnames.REQUEST_REPLACE_OBJECT,
     mockFunction: ({ activityValue, activity, callback }) => {
       callback(coreObject);
+    }
+  },
+  REQUEST_SCHEDULE_ACTIVITY: {
+    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITY,
+    mockFunction: ({ reservation, callback }) => {
+      callback(
+        new SchedulingReturn({
+          status: activityStatuses.FAILED,
+          errorCode: activityStatuses.FAILED,
+          errorMessage: 'Im just a mock-up :( '
+        })
+      );
     }
   }
 };
