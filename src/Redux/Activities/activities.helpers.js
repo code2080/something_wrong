@@ -423,7 +423,11 @@ export const getSchedulingPayloadForActivityValue = (
     retVal = getSchedulingPayloadForObjectFilter(activityValue);
 
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object
-  if (activityValue.type === 'object' && activityValue.value.extid) {
+  if (
+    activityValue.type === 'object' &&
+    activityValue.value &&
+    activityValue.value.extid
+  ) {
     formatFn = teObject => teObject.extid;
   }
   // General case
