@@ -20,8 +20,9 @@ const componentMapping = {
 const InlineEdit = ({ activity, activityValue, action, onFinish, onCancel }) => {
   const [value, setValue] = useState(activityValue.value || undefined);
 
-  const onFinishCallback = useCallback(() => {
-    onFinish(value);
+  const onFinishCallback = useCallback(finishVal => {
+    const valToUse = finishVal != null ? finishVal : value;
+    onFinish(valToUse);
   }, [onFinish, value]);
 
   const InlineComponent = componentMapping[action];

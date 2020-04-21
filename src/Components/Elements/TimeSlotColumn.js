@@ -3,20 +3,11 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Icon, Tooltip } from 'antd';
 
+// HELPERS
+import { findTimeSlot } from '../../Utils/sections.helpers';
+
 // STYLES
 import './Pickers.scss';
-
-const findTimeSlot = (startTime, endTime, timeslots) => {
-  const _startTime = moment(startTime).format('HH:mm');
-  const _endTime = moment(endTime).format('HH:mm');
-  const timeslotIdx = (timeslots || []).findIndex(
-    el =>
-      moment(el.startTime).format('HH:mm') === _startTime &&
-        moment(el.endTime).format('HH:mm') === _endTime
-  );
-  if (timeslotIdx > -1) return timeslots[timeslotIdx];
-  return null;
-};
 
 const TimeSlotColumn = ({ event, timeslots }) => {
   const timeslot = useMemo(

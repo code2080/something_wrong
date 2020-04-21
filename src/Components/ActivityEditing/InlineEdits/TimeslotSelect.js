@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
 
 // SELECTORS
 import { selectTimeslotsForSection } from '../../../Redux/Forms/forms.selectors';
+
+// HELPERS
+import { findTimeSlot } from '../../../Utils/sections.helpers';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, sectionId } = ownProps.activity;
@@ -15,20 +18,31 @@ const mapStateToProps = (state, ownProps) => {
 
 /**
  * @todo
- * x) Make sure value is relevant annd right option in dropdown is selected to begin with
  * x) Make sure selection updates correctly, and updates across all values
  */
 
-const TimeslotSelect = ({ timeslots, value, setValue, onFinish }) => {
+const TimeslotSelect = ({ timeslots, activity, value, setValue, onFinish }) => {
+  const timeslot = useMemo(
+    () => {
+      const startTime = activity.timing.find(el => el.extId === 'startTime');
+      const endTime = activity.timing.find(el => el.extId === 'endTime');
+      return findTimeSlot(startTime.value, endTime.value, timeslots);
+    },
+    [activity, timeslots]
+  );
+
   const onChangeCallback = value => {
-    setValue(value);
-    onFinish();
+    const selectedTimeslot = timeslots.find(el => el._id === value);
+    onFinish([
+      { extId: 'startTime', value: selectedTimeslot.startTime },
+      { extId: 'endTime', value: selectedTimeslot.endTime },
+    ]);
   };
 
   return (
     <Select
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      defaultValue={value}
+      defaultValue={timeslot ? timeslot._id : undefined}
       style={{ width: 120 }}
       size="small"
       onChange={onChangeCallback}
@@ -40,6 +54,7 @@ const TimeslotSelect = ({ timeslots, value, setValue, onFinish }) => {
 
 TimeslotSelect.propTypes = {
   timeslots: PropTypes.array,
+  activity: PropTypes.object.isRequired,
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
   onFinish: PropTypes.func.isRequired,

@@ -68,7 +68,6 @@ const BaseActivityCol = ({
   }, [activityValue, activity, setViewProps]);
 
   const onFinshExternalEdit = response => {
-    console.log(response);
     overrideActivityValue(response, activityValue, activity);
     setViewProps(resetView());
   }
@@ -88,10 +87,6 @@ const BaseActivityCol = ({
 
     // Construct the new view props
     const updView = activityActionViews[action];
-    /**
-     * Add case for external edits; call the function from te core api,
-     * potentially update view to show we're waiting for a value
-     */
     if (!updView || updView == null) return;
     if (updView === activityViews.EXTERNAL_EDIT) {
       // Here begins our journey into the belly of TE Core
@@ -128,8 +123,8 @@ const BaseActivityCol = ({
           formatFn={formatFn}
         />
       )}
-      {/*
-        Add rendering case for waiting for external input
+      {/**
+        * @todo Add rendering case for waiting for external input
       */}
       <BaseActivityColDropdown
         activityValue={activityValue}

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
@@ -84,4 +85,25 @@ export const getSectionsToUseInActivities = (sections, mapping) => {
     if (sectionIdx > -1) return [...foundSections, sections[sectionIdx]];
     return foundSections;
   }, []);
+};
+
+/**
+ * @function findTimeSlot
+ * @description identifies a time slot based on the start and end time
+ * @param {Any} startTime the start time
+ * @param {Any} endTime the end time
+ * @param {Array} timeslots the timeslots
+ * @returns {Object} identifiedTimeslot
+ */
+
+export const findTimeSlot = (startTime, endTime, timeslots) => {
+  const _startTime = moment(startTime).format('HH:mm');
+  const _endTime = moment(endTime).format('HH:mm');
+  const timeslotIdx = (timeslots || []).findIndex(
+    el =>
+      moment(el.startTime).format('HH:mm') === _startTime &&
+        moment(el.endTime).format('HH:mm') === _endTime
+  );
+  if (timeslotIdx > -1) return timeslots[timeslotIdx];
+  return null;
 };
