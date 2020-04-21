@@ -6,7 +6,7 @@ const TextEdit = ({ value, setValue, onFinish }) => (
   <Input
     size="small"
     allowClear
-    onPressEnter={onFinish}
+    onPressEnter={() => onFinish()}
     value={value}
     placeholder="Type here"
     onChange={e => setValue(e.target.value)}
