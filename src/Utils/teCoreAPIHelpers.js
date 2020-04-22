@@ -3,7 +3,7 @@ import { searchCriteriaFreeText, searchCriteriaNumber, searchCriteriaNumberProps
 
 /**
  * @function transformPayloadForDatasourceFiltering
- * @description transforms an internal TE Core payload to a TE Core compatible format
+ * @description transforms an internal TE Preferences payload to a TE Core compatible format
  * @param {Array} payload the payload to transforms
  * @returns {Object} transformedPayload
  */

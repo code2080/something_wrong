@@ -13,6 +13,8 @@ import {
 } from '../Constants/sectionTypes.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 import { activityValueModes } from '../Constants/activityValueModes.constants';
+import { elementTypeMapping } from '../Constants/elementTypes.constants';
+import { searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/searchCriteria.constants';
 
 /**
  * @function ensureValueTypeFormat
@@ -38,10 +40,69 @@ const ensureValueTypeFormat = (value, valueType) => {
   }
 };
 
+/**
+ * @function determineContentOfValue
+ * @description asserts which type of content the activityValue.value contains
+ * @param {Object} activityValue the activity value to be assessed
+ * @returns {String} value type (enum of submissionValueTypes)
+ */
 export const determineContentOfValue = activityValue => {
   if (activityValue.type !== activityValueTypes.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
+}
+
+const transformFieldSearchToFilter = (datasource, rawValue) => {
+  return {
+    type: datasource[0],
+    categories: [],
+    exactSearch: rawValue.matchWholeWord,
+    searchString: rawValue.value,
+    searchFields: [datasource[1]],
+  };
+}
+
+const transformNumberSearchToFilter = (datasource, rawValue) => {
+  return {
+    type: datasource[0],
+    categories: [],
+    searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
+    searchFields: [datasource[1]],
+  };
+}
+
+const transformDatasourceToFilter = (datasource, rawValue) => {
+  return {
+    type: datasource[0],
+    categories: [{ id: datasource[1], values: [...rawValue] }],
+    searchString: null,
+    searchFields: null,
+  };
+}
+
+const createActivityValueFilterPayload = (element, datasource, rawValue) => {
+  /**
+   * We need to create the filters differently depending on element type
+   */
+  let value;
+  switch (element.elementId) {
+    case elementTypeMapping.ELEMENT_TYPE_INPUT_DATASOURCE.elementId:
+      value = transformFieldSearchToFilter(datasource, rawValue);
+      break;
+    case elementTypeMapping.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE.elementId:
+      value = transformNumberSearchToFilter(datasource, rawValue);
+      break;
+    case elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId:
+    default:
+      value = transformDatasourceToFilter(datasource, rawValue);
+      break;
+  }
+  return {
+    submissionValue: [value],
+    submissionValueType: submissionValueTypes.FILTER,
+    valueMode: activityValueModes.FROM_SUBMISSION,
+    value,
+  };
 }
 
 /**
@@ -53,30 +114,44 @@ export const determineContentOfValue = activityValue => {
  * @returns {Object} activityValuePayload
  */
 const formatActivityValuePayload = (element, rawValue, valueType) => {
+  /**
+   * Ensure type consistency
+   */
   const _rawValue = ensureValueTypeFormat(rawValue, valueType);
+  /**
+   * Create a default payload - basically a free text base case
+   * if all other interpretations fail
+   */
   const _defPayload = {
     submissionValue: Array.isArray(_rawValue) ? _rawValue : [_rawValue],
     submissionValueType: submissionValueTypes.FREE_TEXT,
     valueMode: activityValueModes.FROM_SUBMISSION,
     value: _rawValue,
   };
-  // IF no datasource we interpret the value as is
+  /**
+   * If there's no datasource attached to the object, we can be sure it should be free text interpretation
+   */
   if (!element.datasource)
     return _defPayload
-  // Split the data source to get its components
+  /**
+   *  Split the data source to get its components
+   */
   const datasource = element.datasource.split(',');
-  // If data source doesn't match format, return def value payload
+  /**
+   * If data source doesn't match format, return def value payload
+   */
   if (!datasource.length || datasource.length < 2)
     return _defPayload;
-  // If datasource[1] === 'object'
+  /**
+   * If the datasource contains an object
+   */
   if (datasource[1] === 'object')
     return { ..._defPayload, submissionValueType: submissionValueTypes.OBJECT };
-  return {
-    submissionValue: [{ field: datasource[1], value: rawValue }],
-    submissionValueType: submissionValueTypes.FILTER,
-    valueMode: activityValueModes.FROM_SUBMISSION,
-    value: { field: datasource[1], value: rawValue },
-  };
+
+  /**
+   * Activity value will contain a filter - delegate to dedicated function
+   */
+  return createActivityValueFilterPayload(element, datasource, rawValue);
 };
 
 /**

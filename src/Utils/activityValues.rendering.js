@@ -180,7 +180,7 @@ const getRenderPayloadForObjectFilter = activityValue => {
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: activityValue.submissionValue,
       formattedValue: activityValue.submissionValue
-        .map(el => `Field: ${el.field}, value: ${el.value[0]}`)
+        .map(el => `Field: ${el.categories.length ? el.categories[0].id : el.searchFields}, value: ${el.categories.length ? el.categories[0].values[0] : el.searchString}`)
         .toString()
     });
 

@@ -24,8 +24,8 @@ export const validateGeneralValue = activityValue => {
 export const validateFilterValue = activityValue => {
   if (
     !activityValue.value ||
-    !activityValue.value.value ||
-    !activityValue.value.value[0]
+    !activityValue.value.type ||
+    (activityValue.value.categories == null && activityValue.value.searchFields == null)
   )
     return new ActivityValueValidation({
       status: activityValueStatuses.MISSING_DATA,
