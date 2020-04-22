@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { notification } from 'antd';
 
 // STYLES
 import './BaseActivityCol.scss';
@@ -17,6 +18,7 @@ import {
   overrideActivityValue,
   revertToSubmissionValue
 } from '../../../Redux/Activities/activities.actions';
+import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 
 // HELPERS
 import {
@@ -42,7 +44,8 @@ const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
 const mapActionsToProps = {
   overrideActivityValue,
-  revertToSubmissionValue
+  revertToSubmissionValue,
+  setExtIdPropsForObject,
 };
 
 const BaseActivityCol = ({
@@ -54,6 +57,7 @@ const BaseActivityCol = ({
   mapping,
   overrideActivityValue,
   revertToSubmissionValue,
+  setExtIdPropsForObject,
   teCoreAPI
 }) => {
   // State var to hold the component's mode
@@ -85,12 +89,57 @@ const BaseActivityCol = ({
     [activityValue, activity, setViewProps]
   );
 
-  const onFinshExternalEdit = response => {
-    // TODO Fetch extid, label from response
-    // TODO Pass just extid to overrideactivityvalue
-    // TODO Invoke new Redux action to add extid and label. te.actions te.reducer …
-    overrideActivityValue(response, activityValue, activity);
-    setViewProps(resetView());
+  const onProcessObjectReturn = res => {
+    try {
+      // Grab the extid and the fields
+      const { extid, fields } = res;
+      // Override the activity
+      overrideActivityValue([extid], activityValue, activity);
+      // Grab the label
+      const labelField = fields[0].values[0];
+      setExtIdPropsForObject(extid, { label: labelField });
+    } catch (error) {
+      notification.error({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        message: 'Operation failed',
+        description: `Something went wrong...`,
+      });
+    }
+  }
+
+  const onProcessFilterReturn = res => {
+    try {
+      console.log(res);
+      // Grab the extid and the fields
+      const { extid, fields } = res;
+      // Override the activity
+      overrideActivityValue([extid], activityValue, activity);
+      // Grab the label
+      const labelField = fields[0].values[0];
+      setExtIdPropsForObject(extid, { label: labelField });
+    } catch (error) {
+      notification.error({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        message: 'Operation failed',
+        description: `Something went wrong...`,
+      });
+    }
+  }
+
+  const onFinshExternalEdit = (res, action) => {
+    /**
+     * We need to parse the response differently depending on action
+     */
+    switch (action) {
+      case activityActions.EDIT_OBJECT:
+        return onProcessObjectReturn(res);
+      case activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE:
+        return onProcessObjectReturn(res);
+      case activityActions.EDIT_FILTER_OVERRIDE:
+        return onProcessFilterReturn(res);
+      default:
+        break;
+    }
   };
 
   // Memoized func object with the various editing possibilities
@@ -102,9 +151,6 @@ const BaseActivityCol = ({
        * so we test for it first
        */
       if (action === activityActions.REVERT_TO_SUBMISSION_VALUE)
-        /**
-         * This will have to be augmented as some reverts affect more than one property, such as timeslot reverts
-         */
         return revertToSubmissionValue(activityValue, activity);
 
       // Construct the new view props
@@ -116,12 +162,13 @@ const BaseActivityCol = ({
         teCoreAPI[callName]({
           activityValue,
           activity,
-          callback: onFinshExternalEdit
+          callback: res => onFinshExternalEdit(res, action)
         });
+      } else {
+        setViewProps({ view: updView, action });
       }
-      setViewProps({ view: updView, action });
     },
-    [revertToSubmissionValue, activity]
+    [revertToSubmissionValue, activity, viewProps, setViewProps]
   );
 
   const activityValueActions = useMemo(
@@ -185,6 +232,7 @@ BaseActivityCol.propTypes = {
   mapping: PropTypes.object,
   overrideActivityValue: PropTypes.func.isRequired,
   revertToSubmissionValue: PropTypes.func.isRequired,
+  setExtIdPropsForObject: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired
 };
 

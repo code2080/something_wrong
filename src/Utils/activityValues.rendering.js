@@ -5,6 +5,8 @@ import { validateTimeslotTimingMode, validateFilterValue, validateGeneralValue }
 
 // HELPERS
 import { determineSchedulingAlgorithmForActivityValue } from './scheduling.helpers';
+import { determineContentOfValue } from './activityValues.helpers';
+import { getTimingModeForActivity } from './activities.helpers';
 
 // CONSTANTS
 import { activityValueModes, activityValueModeProps } from '../Constants/activityValueModes.constants';
@@ -13,7 +15,6 @@ import { mappingTypes } from '../Constants/mappingTypes.constants';
 import { schedulingAlgorithmProps } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes, submissionValueTypeProps } from '../Constants/submissionValueTypes.constants';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
-import { getTimingModeForActivity } from './activities.helpers';
 
 /**
  * @function getSchedulingAlgorithmForActivityValue
@@ -216,7 +217,7 @@ export const getRenderPayloadForActivityValue = (
     renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
 
   // Special case: filters
-  if (activityValue.submissionValueType === submissionValueTypes.FILTER)
+  if (activityValue.submissionValueType === submissionValueTypes.FILTER && determineContentOfValue(activityValue) === submissionValueTypes.FILTER)
     renderPayload = getRenderPayloadForObjectFilter(activityValue);
 
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object

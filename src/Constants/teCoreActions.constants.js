@@ -77,11 +77,15 @@ export const teCoreActions = {
   },
   REQUEST_GET_OBJECT_FROM_FILTER: {
     callname: teCoreCallnames.REQUEST_GET_OBJECT_FROM_FILTER,
-    mockFunction: () => coreObject
+    mockFunction: ({ activityValue, activity, callback }) => {
+      callback(coreObject);
+    }
   },
   REQUEST_GET_FILTER_FROM_FILTER: {
     callname: teCoreCallnames.REQUEST_GET_FILTER_FROM_FILTER,
-    mockFunction: data => coreFilter
+    mockFunction: ({ activityValue, activity, callback }) => {
+      callback(coreFilter);
+    },
   },
   REQUEST_REPLACE_OBJECT: {
     callname: teCoreCallnames.REQUEST_REPLACE_OBJECT,

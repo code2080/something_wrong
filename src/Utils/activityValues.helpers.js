@@ -38,6 +38,12 @@ const ensureValueTypeFormat = (value, valueType) => {
   }
 };
 
+export const determineContentOfValue = activityValue => {
+  if (activityValue.type !== activityValueTypes.OBJECT) return null;
+  if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
+  return submissionValueTypes.FILTER;
+}
+
 /**
  * @function formatActivityValuePayload
  * @description general purpose function to format the result of an activity payload generator for one of the section types
@@ -69,7 +75,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
     submissionValue: [{ field: datasource[1], value: rawValue }],
     submissionValueType: submissionValueTypes.FILTER,
     valueMode: activityValueModes.FROM_SUBMISSION,
-    value: null,
+    value: { field: datasource[1], value: rawValue },
   };
 };
 
