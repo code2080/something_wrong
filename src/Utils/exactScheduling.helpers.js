@@ -9,7 +9,7 @@ import {
 } from '../Models/TECoreReservation.model';
 
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-import { activityStatuses } from './activityStatuses.constants';
+import { activityStatuses } from '../Constants/activityStatuses.constants';
 
 const convertActivityValueToReservationProp = activityValue => {
   switch (activityValue.type) {
