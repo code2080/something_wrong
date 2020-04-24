@@ -7,5 +7,6 @@ export const coreFilter = {
     ],
     'room.equipment': ['Computer Lab']
   },
-  searchString: 'de'
+  searchString: 'de',
+  type: 'room'
 };
