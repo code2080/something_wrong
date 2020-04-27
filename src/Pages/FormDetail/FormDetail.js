@@ -49,7 +49,8 @@ const FormPage = ({
   fetchFormSubmissions,
   fetchActivitiesForForm,
   setBreadcrumbs,
-  fetchMappings
+  fetchMappings,
+  history,
 }) => {
   // Fetch submissions
   useEffect(() => {
@@ -96,6 +97,9 @@ const FormPage = ({
         ]}
         dataSource={_dataSource}
         rowKey="_id"
+        onRow={formInstance => ({
+          onClick: () => history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`)
+        })}
         isLoading={isLoadingSubmissions}
       />
     </div>
@@ -111,6 +115,7 @@ FormPage.propTypes = {
   fetchActivitiesForForm: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchMappings: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 FormPage.defaultProps = {

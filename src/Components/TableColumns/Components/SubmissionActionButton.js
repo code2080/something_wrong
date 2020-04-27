@@ -88,7 +88,7 @@ const SubmissionActionButton = ({
         overlay={actionMenu}
         trigger={['click']}
       >
-        <Button size="small">
+        <Button size="small" onClick={e => e.stopPropagation()}>
           Actions <Icon type="down" />
         </Button>
       </Dropdown>
