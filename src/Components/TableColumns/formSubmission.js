@@ -9,6 +9,9 @@ import {
 import SubmissionActionButton from './Components/SubmissionActionButton';
 import EllipsisRenderer from './Components/EllipsisRenderer';
 
+// SORTERS
+import { sortAlpha } from './Helpers/sorters';
+
 export const formSubmission = {
   NAME: {
     title: 'Submitter',
@@ -44,20 +47,20 @@ export const formSubmission = {
     key: 'schedulingProgress',
     dataIndex: 'teCoreProps.schedulingProgress',
     render: val => toProgressLabel(val),
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => sortAlpha(a.teCoreProps.schedulingProgress, b.teCoreProps.schedulingProgress),
   },
   ACCEPTANCE_STATUS: {
     title: 'Acceptance status',
     key: 'acceptanceStatus',
     dataIndex: 'teCoreProps.acceptanceStatus',
     render: val => toAcceptanceLabel(val),
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => sortAlpha(a.teCoreProps.acceptanceStatus, b.teCoreProps.acceptanceStatus),
   },
   ACCEPTANCE_COMMENT: {
     title: 'Acceptance comment',
     key: 'acceptanceComment',
     dataIndex: 'teCoreProps.acceptanceComment',
     render: val => <EllipsisRenderer text={val} />,
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => sortAlpha(a.teCoreProps.acceptanceComment, b.teCoreProps.acceptanceComment),
   }
 };
