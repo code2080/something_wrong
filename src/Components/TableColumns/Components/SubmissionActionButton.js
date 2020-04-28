@@ -38,7 +38,9 @@ const SubmissionActionButton = ({
     });
   }, [setFormInstanceSchedulingProgress]);
 
-  const onClick = useCallback(({ key }) => {
+  const onClick = useCallback(({ key, domEvent }) => {
+    domEvent.stopPropagation();
+
     switch (key) {
       case SET_ACCEPTANCE_STATUS:
         setIsAcceptanceStatusModalOpen(true);
