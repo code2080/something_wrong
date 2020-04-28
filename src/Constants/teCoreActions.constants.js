@@ -68,7 +68,11 @@ export const teCoreActions = {
     callname: teCoreCallnames.SCHEDULE_ACTIVITY
   },
   POPULATE_SELECTION: {
-    callname: teCoreCallnames.POPULATE_SELECTION
+    callname: teCoreCallnames.POPULATE_SELECTION,
+    mockFunction: selection => {
+      console.log('Should populate the selection list with');
+      console.log(selection);
+    },
   },
   GET_RESERVATION_TYPES: {
     callname: teCoreCallnames.GET_RESERVATION_TYPES,
@@ -118,13 +122,6 @@ export const teCoreActions = {
           errorMessage
         })
       );
-      /* callback(
-        new SchedulingReturn({
-          status: activityStatuses.FAILED,
-          errorCode: activityStatuses.FAILED,
-          errorMessage: 'Im just a mock-up :( '
-        })
-      ); */
     }
   }
 };

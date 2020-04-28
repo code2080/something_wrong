@@ -158,6 +158,12 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
       ];
     }
 
+    case SECTION_TABLE:
+      return [
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ..._elementColumns
+      ];
+
     default:
       return [ ..._elementColumns ];
   };

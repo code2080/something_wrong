@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon } from 'antd';
 
+// HELPERS
+import { pickElement } from '../../../../Utils/elements.helpers';
+import { getTECoreAPIPayload } from '../../../../Redux/Integration/integration.selectors';
+import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
+
 // STYLES
 import './ManualSchedulingColumn.scss';
 
@@ -18,26 +23,41 @@ const getClassName = (rowStatus, showInvertedState) => {
   }
 };
 
-const mapStateToProps = (state, ownProps) => ({});
+const mapStateToProps = (state, ownProps) => {
+  const { event, sectionId, formId } = ownProps;
+  const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
+  const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
+  const teCorePayload = elements.reduce((prev, el) => {
+    const value = event[el._id];
+    const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, state));
+    return [...prev, ...p];
+  }, []);
+  return {
+    teCorePayload,
+  };
+}
 
 const ManualSchedulingColumn = ({
   rowStatus,
+  teCorePayload,
+  teCoreAPI,
 }) => {
   const [showInvertedState, setShowInvertedState] = useState(false);
 
   const onSelectAllCallback = useCallback(() => {
-    console.log('should select all objects in the row and send to core')
-  }, []);
+    if (teCorePayload && Array.isArray(teCorePayload))
+      teCoreAPI.populateSelection(teCorePayload);
+  }, [teCorePayload]);
 
   const derivedStatus = getClassName(rowStatus, showInvertedState);
 
   return (
-    <div
-      onMouseEnter={() => setShowInvertedState(true)}
-      onMouseLeave={() => setShowInvertedState(false)}
-      className="manual-scheduling-column--wrapper"
-    >
-      <div className={`manual-scheduling--status ${derivedStatus}`}>
+    <div className="manual-scheduling-column--wrapper">
+      <div
+        onMouseEnter={() => setShowInvertedState(true)}
+        onMouseLeave={() => setShowInvertedState(false)}
+        className={`manual-scheduling--status ${derivedStatus}`}
+      >
         {derivedStatus === manualSchedulingStatuses.NOT_COMPLETED && (
           <Icon type="minus-square" />
         )}
@@ -54,10 +74,13 @@ const ManualSchedulingColumn = ({
 
 ManualSchedulingColumn.propTypes = {
   rowStatus: PropTypes.string,
+  teCoreAPI: PropTypes.object.isRequired,
+  teCorePayload: PropTypes.array,
 };
 
 ManualSchedulingColumn.defaultProps = {
+  teCorePayload: [],
   rowStatus: manualSchedulingStatuses.NOT_COMPLETED,
 };
 
-export default connect(mapStateToProps, null)(ManualSchedulingColumn);
+export default connect(mapStateToProps, null)(withTECoreAPI(ManualSchedulingColumn));
