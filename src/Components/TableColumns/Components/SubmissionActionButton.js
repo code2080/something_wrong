@@ -96,7 +96,10 @@ const SubmissionActionButton = ({
       </Dropdown>
       <FormInstanceAcceptanceStatusModal
         isVisible={isAcceptanceStatusModalOpen}
-        onClose={() => setIsAcceptanceStatusModalOpen(false)}
+        onClose={e => {
+          e.stopPropagation();
+          setIsAcceptanceStatusModalOpen(false)
+        }}
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
