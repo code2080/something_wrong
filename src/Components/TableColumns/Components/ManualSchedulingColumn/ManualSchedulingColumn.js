@@ -1,7 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { Icon } from 'antd';
+
+// ACTIONS
+import { toggleRowSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.actions';
 
 // HELPERS
 import { pickElement } from '../../../../Utils/elements.helpers';
@@ -24,7 +28,11 @@ const getClassName = (rowStatus, showInvertedState) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { event, sectionId, formId } = ownProps;
+  // Collect own props
+  const { event, sectionId, formId, formInstanceId } = ownProps;
+  const rowKey = event.rowKey;
+
+  // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
   const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
   const teCorePayload = elements.reduce((prev, el) => {
@@ -32,15 +40,28 @@ const mapStateToProps = (state, ownProps) => {
     const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, state));
     return [...prev, ...p];
   }, []);
+
+  // Get the manual scheduling state
+  const rowStatus = _.get(state.manualSchedulings, `${formInstanceId}.${sectionId}.${rowKey}`, manualSchedulingStatuses.NOT_COMPLETED);
   return {
     teCorePayload,
+    rowKey,
+    rowStatus,
   };
-}
+};
+
+const mapActionsToProps = {
+  toggleRowSchedulingStatus,
+};
 
 const ManualSchedulingColumn = ({
   rowStatus,
   teCorePayload,
+  toggleRowSchedulingStatus,
   teCoreAPI,
+  formInstanceId,
+  sectionId,
+  rowKey,
 }) => {
   const [showInvertedState, setShowInvertedState] = useState(false);
 
@@ -49,13 +70,20 @@ const ManualSchedulingColumn = ({
       teCoreAPI.populateSelection(teCorePayload);
   }, [teCorePayload]);
 
+  const onToggleRowSchedulingStatusCallback = useCallback(() => {
+    toggleRowSchedulingStatus({ formInstanceId, sectionId, rowKey });
+  })
   const derivedStatus = getClassName(rowStatus, showInvertedState);
 
   return (
     <div className="manual-scheduling-column--wrapper">
+      {rowStatus === manualSchedulingStatuses.COMPLETED && (
+        <div className="manual-scheduling--strikethrough" />
+      )}
       <div
         onMouseEnter={() => setShowInvertedState(true)}
         onMouseLeave={() => setShowInvertedState(false)}
+        onClick={onToggleRowSchedulingStatusCallback}
         className={`manual-scheduling--status ${derivedStatus}`}
       >
         {derivedStatus === manualSchedulingStatuses.NOT_COMPLETED && (
@@ -76,6 +104,10 @@ ManualSchedulingColumn.propTypes = {
   rowStatus: PropTypes.string,
   teCoreAPI: PropTypes.object.isRequired,
   teCorePayload: PropTypes.array,
+  toggleRowSchedulingStatus: PropTypes.func.isRequired,
+  formInstanceId: PropTypes.string.isRequired,
+  sectionId: PropTypes.string.isRequired,
+  rowKey: PropTypes.string.isRequired,
 };
 
 ManualSchedulingColumn.defaultProps = {
@@ -83,4 +115,4 @@ ManualSchedulingColumn.defaultProps = {
   rowStatus: manualSchedulingStatuses.NOT_COMPLETED,
 };
 
-export default connect(mapStateToProps, null)(withTECoreAPI(ManualSchedulingColumn));
+export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(ManualSchedulingColumn));

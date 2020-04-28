@@ -12,8 +12,9 @@ $statusColumnLength: 0.8rem;
     transition: all 0.2s;
     border-radius: 0.8rem;
     padding: 0.2rem 0.4rem;
-    background: rgba($deepSeaGreen, 0.1);
-
+    background: mix($deepSeaGreen, #fff, 10%);
+    z-index: 1;
+  
     &:hover {
       background: $candlelight;
       color: $deepSeaGreen;
@@ -25,13 +26,21 @@ $statusColumnLength: 0.8rem;
     border-radius: 0.8rem;
     padding: 0.2rem 0.4rem;
     cursor: pointer;
-    
+    z-index: 1;
     &.NOT_COMPLETED {
-      background: rgba($bittersweet, 0.2);
+      background: mix($bittersweet, #fff, 20%);
     }
 
     &.COMPLETED {
-      background: rgba($jungleGreen, 0.2);
+      background: mix($jungleGreen, #fff, 20%);
     }
+  }
+
+  .manual-scheduling--strikethrough {
+    width: 100%;
+    height: 2px;
+    background: $jungleGreen;
+    position: absolute;
+    z-index: 0;
   }
 }

@@ -9,6 +9,9 @@ import { datasourceValueTypes } from '../../Constants/datasource.constants';
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 import { transformPayloadForNumberFiltering } from '../../Utils/teCoreAPIHelpers';
 
+// STYLES
+import './FilterElements.scss';
+
 // CONSTANTS
 import { teCoreActions, teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { searchCriteriaNumber, searchCriteriaNumberProps } from '../../Constants/searchCriteria.constants';
