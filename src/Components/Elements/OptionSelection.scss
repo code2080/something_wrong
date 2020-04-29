@@ -2,6 +2,8 @@
 
 .option-selection--wrapper {
   display: flex;
+  z-index: 1;
+  position: relative;
 
   .delimiter {
     margin-right: 0.2rem;

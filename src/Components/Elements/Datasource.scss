@@ -3,6 +3,9 @@
 .element__datasource--wrapper {
   width: fit-content;
   cursor: pointer;
+  z-index: 1;
+  position: relative;
+
   .element__datasource--inner {
     border: 1px solid rgb(232, 232, 232);
     border-radius: 0.8rem;

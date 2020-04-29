@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { setTEDataForValues } from '../../Redux/TE/te.actions';
+import { fetchManualSchedulingsForFormInstance } from '../../Redux/ManualSchedulings/manualSchedulings.actions';
 
 // COMPONENTS
 import BaseSection from '../../Components/Sections/BaseSection';
@@ -35,6 +36,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapActionsToProps = {
   setBreadcrumbs,
   setTEDataForValues,
+  fetchManualSchedulingsForFormInstance,
 };
 
 const FormInstancePage = ({
@@ -44,7 +46,8 @@ const FormInstancePage = ({
   teValues,
   setBreadcrumbs,
   teCoreAPI,
-  setTEDataForValues
+  setTEDataForValues,
+  fetchManualSchedulingsForFormInstance,
 }) => {
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -53,6 +56,11 @@ const FormInstancePage = ({
       { path: `/forms/${formInstance.formId}`, label: formName },
       { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`, label: `Submission from ${formInstance.submitter}` }
     ]);
+  }, []);
+
+  // Effect to fetch all manual schedulings
+  useEffect(() => {
+    fetchManualSchedulingsForFormInstance({ formInstanceId: formInstance._id })
   }, []);
 
   // Effect to get all TE values
@@ -100,6 +108,7 @@ FormInstancePage.propTypes = {
   setBreadcrumbs: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
   setTEDataForValues: PropTypes.func.isRequired,
+  fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
 };
 
 FormInstancePage.defaultProps = {

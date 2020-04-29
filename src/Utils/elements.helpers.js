@@ -7,6 +7,23 @@ import {
 } from '../Constants/sectionTypes.constants';
 
 /**
+ * @function pickElement
+ * @description picks an element from the form based on its element and section ids
+ * @param {*} elementId the id of the element to pick
+ * @param {*} sectionId the id of the section where the element is
+ * @param {*} sections all the form's sections
+ */
+export const pickElement = (elementId, sectionId, sections) => {
+  try {
+    const section = sections.find(el => el._id === sectionId);
+    const element = section.elements.find(el => el._id === elementId);
+    return element;
+  } catch (error) {
+    return null;
+  }
+};
+
+/**
  * @function getElementTypeFromId
  * @description returns the element type from an element id
  * @param {String} elementId the element id

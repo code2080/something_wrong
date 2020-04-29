@@ -3,7 +3,9 @@
 .picker--wrapper {
   display: flex;
   align-items: center;
-
+  z-index: 1;
+  position: relative;
+  
   .icon--wrapper {
     padding: 0 0.2rem;
     background: $swedishSkies;

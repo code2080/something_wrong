@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'antd';
 
+// STYLES
+import './ElementBase.scss';
+
 const Checkbox = ({ value }) => (
-  <Switch size="small" checked={value || false} />
+  <div className="element--wrapper">
+    <Switch size="small" checked={value || false} />
+  </div>
 );
 
 Checkbox.propTypes = {
