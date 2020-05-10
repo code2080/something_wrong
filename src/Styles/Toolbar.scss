@@ -11,6 +11,13 @@
 .toolbar--wrapper {
   display: flex;
   align-items: center;
+
+  .toolbar--section-flex {
+    display: flex;
+    align-items: center;
+    margin-right: 0.4rem;
+  }
+  
   .label,
   .value {
     margin-right: 0.4rem;
@@ -20,10 +27,12 @@
     color: $rustyGrey;
   }
 
-  .toolbar--section-flex {
-    display: flex;
-    align-items: center;
-    margin-right: 0.4rem;
+  .value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    min-width: 0;
   }
 
   .adjust-right {
@@ -39,18 +48,4 @@
     border: 1px solid darken(rgb(232, 232, 232), 20%);
     background-color: #fff;
   }
-}
-
-.toolbar--foldout {
-  .toolbar__foldout--header {
-    color: $darkBlack;
-    font-weight: 700;
-  }
-}
-
-.toolbar--wrapper .form-description {
-  width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

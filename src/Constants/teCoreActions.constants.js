@@ -8,6 +8,7 @@ import { SchedulingReturn } from '../Models/SchedulingReturn.model';
 import { activityStatuses } from './activityStatuses.constants';
 
 export const teCoreCallnames = {
+  SET_TOOLBAR_CONTENT: 'setToolbarContent',
   SELECT_OBJECT: 'selectObject',
   SELECT_TYPE: 'selectType',
   FILTER_OBJECTS: 'filterObjects',

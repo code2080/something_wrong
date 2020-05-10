@@ -37,6 +37,7 @@ const configureTECoreAPI = teCoreAPI => {
     , {});
   const utilityActions = {
     listSupportedActions: () => Object.keys(teCoreAPI) || [],
+    apiSupportsFunc: callname => apiSupportsFunc(teCoreAPI, callname),
     getCompatibleFunctionsForElement:
       elementId => Object.keys(teCoreActions).filter(
         actionKey =>

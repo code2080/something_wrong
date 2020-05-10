@@ -3,6 +3,7 @@ import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
 
 // PAGES
 import LoginPage from '../Pages/Auth/Login';
+
 // ALL FORMS
 import FormOverviewPage from '../Pages/FormOverview/FormOverview';
 
@@ -15,13 +16,13 @@ import FormInstanceDetailPage from '../Pages/FormInstanceDetail/FormInstanceDeta
 import FormInstanceActivitiesOverview from '../Pages/FormInstanceActivitiesOverview/FormInstanceActivitiesOverview';
 
 // COMPONENTS
-import BreadcrumbsWrapper from './Breadcrumbs/Breadcrumbs';
+import Toolbar from './Toolbar/Toolbar';
 import AuthenticatedRoutes from './AuthenticatedRoutes/AuthenticatedRoutes';
 
 const TEPrefsLibRouter = () => {
   return (
     <Router>
-      <BreadcrumbsWrapper />
+      <Toolbar />
       <Switch>
         <Route exact path="/" component={LoginPage} />
         <AuthenticatedRoutes>

@@ -3,7 +3,10 @@
 .avatar--wrapper {
   display: flex;
   align-items: center;
-
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
   .avatar--circle {
     display: flex;
     align-items: center;
@@ -11,10 +14,14 @@
     font-size: 0.6rem;
     background: $deepSeaGreen;
     color: #fff;
-    width: 1.2rem;
-    height: 1.2rem;
     border-radius: 0.4rem;
     margin-right: 0.4rem;
+    min-width: 1.2rem;
+    width: 1.2rem;
+    max-width: 1.2rem;
+    min-height: 1.2rem;
+    height: 1.2rem;
+    max-height: 1.2rem;
 
     &.recipient {
       background: $candlelight;
