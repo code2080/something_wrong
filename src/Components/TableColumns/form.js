@@ -17,14 +17,14 @@ export const form = {
     key: 'name',
     dataIndex: 'name',
     sorter: (a, b) => sortAlpha(a.name, b.name, false),
-    render: name => <EllipsisRenderer text={name} />,
+    // render: name => <EllipsisRenderer text={name} />,
   },
   DESCRIPTION: {
     title: 'Description',
     dataIndex: 'description',
     key: 'description',
     sorter: (a, b) => sortAlpha(a.description, b.description, false),
-    render: description => <EllipsisRenderer text={description} width={250} />,
+    // render: description => <EllipsisRenderer text={description} width={250} />,
   },
   OBJECT_SCOPE: {
     title: 'Scope',

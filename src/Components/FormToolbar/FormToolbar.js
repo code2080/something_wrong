@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
 
 // COMPONENTS
-import UserAvatar from '../Avatars/UserAvatar';
+import UserLabel from './UserLabel';
 
 // STYLES
 import '../../Styles/Toolbar.scss';
@@ -19,7 +18,7 @@ const FormToolbar = ({ form }) => (
     <div className="toolbar--wrapper">
       <div className="toolbar--section-flex">
         <span className="label">By:</span>
-        <UserAvatar ownerId={form.ownerId} />
+        <UserLabel ownerId={form.ownerId} />
       </div>
       <div className="toolbar--section-flex">
         <span className="label">Name:</span>

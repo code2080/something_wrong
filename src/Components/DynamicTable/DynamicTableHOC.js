@@ -1,11 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
+import { withResizeDetector } from 'react-resize-detector';
 
 // COMPONENTS
 import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
+import ResizableColumnHeader from './ResizableColumnHeader';
+import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 
 const DynamicTableHOC = ({
   columns,
@@ -13,18 +16,51 @@ const DynamicTableHOC = ({
   rowKey,
   onRow,
   pagination,
-  isLoading
+  isLoading,
+  width,
 }) => {
+  // State var to hold the columns
+  const [cols, setCols] = useState([]);
+
+  // Memoized calculated width
+  const _width = useMemo(() => width ? width - 40 : 0, [width]);
+
+  // Effect to update cols everytime columnns change
+  useEffect(() => {
+    setCols(columns);
+  }, [columns]);
+
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
+
   // State variable to hold which columns should be shown
   const [visibleColumns, setVisibleColumns] = useState(
     columns.reduce((colState, col) => ({ ...colState, [col.title]: true }), {})
   );
+
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
+
   // Memoized variable with the visible column definitions
-  const _cols = useMemo(() => columns.filter(col => visibleColumns[col.title]), [columns, visibleColumns]);
+  const _cols = useMemo(
+    () =>
+      cols
+        .filter(col => visibleColumns[col.title])
+        .map((col, idx, arr) => ({
+          ...col,
+          width: _width / arr.length,
+          onHeaderCell: column => ({
+            width: column.width,
+          }),
+          render:
+            (val, el) =>
+              col.render
+                ? <EllipsisTruncater width={_width / arr.length}>{col.render(val, el)}</EllipsisTruncater>
+                : <EllipsisTruncater width={_width / arr.length}>{val}</EllipsisTruncater>,
+        })),
+    [cols, visibleColumns, _width]
+  );
+
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
     if (filterQuery === '' || filterQuery.length < 3) return dataSource;
@@ -47,7 +83,9 @@ const DynamicTableHOC = ({
   }, [filterQuery, dataSource, _cols]);
 
   return (
-    <React.Fragment>
+    <div
+      className="dynamic-table--wrapper"
+    >
       {showColumnSelection ? (
         <ColumnSelector
           columnState={visibleColumns}
@@ -58,6 +96,11 @@ const DynamicTableHOC = ({
         <React.Fragment>
           <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />
           <Table
+            components={{
+              header: {
+                cell: ResizableColumnHeader,
+              },
+            }}
             columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
             dataSource={_dataSource}
             rowKey={rowKey}
@@ -67,7 +110,7 @@ const DynamicTableHOC = ({
           />
         </React.Fragment>
       )}
-    </React.Fragment>
+    </div>
   )
 };
 
@@ -78,6 +121,7 @@ DynamicTableHOC.propTypes = {
   onRow: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   isLoading: PropTypes.bool,
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  width: PropTypes.number,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -90,6 +134,7 @@ DynamicTableHOC.defaultProps = {
     size: 'small',
     showSizeChanger: true,
   },
+  width: null,
 };
 
-export default DynamicTableHOC;
+export default withResizeDetector(DynamicTableHOC);

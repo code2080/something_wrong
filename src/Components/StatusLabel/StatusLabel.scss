@@ -21,6 +21,7 @@
   margin: 0 0.8rem;
   text-transform: uppercase;
   font-size: $defaultFontSize !important;
+  overflow: hidden;
 
   &:first-child {
     margin-left: 0;
