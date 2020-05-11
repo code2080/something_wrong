@@ -11,6 +11,7 @@
   display: block;
   padding: 0;
   font-size: $defaultFontSize !important;
+  overflow-x: hidden;
 }
 
 .ant-table {

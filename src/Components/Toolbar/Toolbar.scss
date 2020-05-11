@@ -5,6 +5,7 @@
   padding: 4px $outerComponentPadding;
   display: flex;
   align-items: center;
+  overflow: hidden;
 
   .toolbar--breadcrumbs__label {
     margin-right: 0.8rem;
