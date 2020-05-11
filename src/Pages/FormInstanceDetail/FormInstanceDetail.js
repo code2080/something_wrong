@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -72,16 +72,11 @@ const FormInstancePage = ({
     exec();
   }, []);
 
-  // State var to hold section selectionn
-  const [selectedSection, setSelectedSection] = useState('ALL_SECTIONS');
-
   return (
     <React.Fragment>
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
-        selectedSection={selectedSection}
-        onSectionChange={selSection => setSelectedSection(selSection)}
       />
       <AutomaticSchedulingToolbar
         formId={formInstance.formId}
@@ -89,10 +84,6 @@ const FormInstancePage = ({
       />
       <div className="form-instance--wrapper">
         {(sections || [])
-          .filter(section => {
-            if (selectedSection === 'ALL_SECTIONS') return true;
-            return section._id === selectedSection;
-          })
           .map(section => <BaseSection section={section} key={section._id} />)
         }
       </div>

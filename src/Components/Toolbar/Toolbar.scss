@@ -15,6 +15,7 @@
 
   .ant-breadcrumb {
     font-size: 0.8rem !important;
+    white-space: nowrap;
   }
 
   .ant-breadcrumb-link {
@@ -26,6 +27,7 @@
   }
 
   & > button {
-    margin-left: auto;
+    position: absolute;
+    right: 4px;
   }
 }

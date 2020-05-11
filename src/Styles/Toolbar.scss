@@ -21,18 +21,15 @@
   .label,
   .value {
     margin-right: 0.4rem;
-  }
-  .label {
-    flex-wrap: nowrap;
-    color: $rustyGrey;
-  }
-
-  .value {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
     min-width: 0;
+  }
+  .label {
+    flex-wrap: nowrap;
+    color: $rustyGrey;
   }
 
   .adjust-right {

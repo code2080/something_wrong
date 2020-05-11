@@ -1,5 +1,36 @@
+@import '../../Styles/globals.scss';
+
 .base-section--wrapper {
+  position: relative;
+
   &:not(:last-child) {
     margin-bottom: 1.2rem;
+  }
+
+  .base-section--name__wrapper {
+    padding: 2px 8px;
+    font-weight: 700;
+  
+    &.SECTION_CONNECTED {
+      background: $candlelight;
+      color: $deepSeaGreen;
+    }
+
+    &.SECTION_VERTICAL {
+      background: $deepSeaGreen;
+      color: #fff;
+    }
+
+    &.SECTION_TABLE {
+      background: $pelorous;
+      color: #fff;
+    }
+  }
+
+  .base-section--extra__btn {
+    position: absolute;
+    right: 8px;
+    top: 2px;
+    cursor: pointer;
   }
 }

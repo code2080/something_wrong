@@ -15,6 +15,7 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
+import EllipsisRenderer from '../Components/TableColumns/Components/EllipsisRenderer';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -30,19 +31,19 @@ const connectedSectionColumns = {
       title: 'Title',
       key: 'title',
       dataIndex: 'title',
-      render: val => val || 'N/A',
+      render: val => <EllipsisRenderer text={val || 'N/A'} width={100} />,
     },
     {
       title: 'Start time',
       key: 'startTime',
       dataIndex: 'startTime',
-      render: val => moment(val).format('YYYY-MM-DD HH:mm'),
+      render: val => <EllipsisRenderer text={moment(val).format('YYYY-MM-DD HH:mm')} width={100} />,
     },
     {
       title: 'End time',
       key: 'endTime',
       dataIndex: 'endTime',
-      render: val => moment(val).format('YYYY-MM-DD HH:mm'),
+      render: val => <EllipsisRenderer text={moment(val).format('YYYY-MM-DD HH:mm')} width={100} />,
     },
   ],
   WITH_TIMESLOTS: timeslots => [

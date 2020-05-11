@@ -1,13 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Icon } from 'antd';
 
 // COMPONENTS
-import ViewSelector from './ViewSelector';
 import BaseSectionTableView from './BaseSectionTableView';
-import BaseSectionListView from './BaseSectionListView';
 import CalendarSettings from './CalendarSettings';
 
 // HELPERS
@@ -18,7 +16,6 @@ import { transformSectionToTableColumns, transformSectionValuesToTableRows } fro
 import './BaseSection.scss';
 
 // CONSTANTS
-import { sectionViews } from '../../Constants/sectionViews.constants';
 import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
 
 const mapStateToProps = (state, ownProps) => {
@@ -35,8 +32,9 @@ const mapStateToProps = (state, ownProps) => {
  * 3) Add styling to improve section separation
  */
 const BaseSection = ({ section, values, formId, formInstanceId }) => {
-  // State var to hold current view (table or list)
-  const [view, setView] = useState(sectionViews.TABLE_VIEW);
+  // State var to hold if we should show extra or not
+  const [showExtra, setShowExtra] = useState(false);
+
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
   // Memoized var holding the columns
@@ -54,21 +52,19 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
   );
   return (
     <div className="base-section--wrapper">
-      <Card
-        size="small"
-        title={section.name}
-        extra={<ViewSelector view={view} onViewChange={setView} />}
-      >
+      <div className={`base-section--name__wrapper ${sectionType}`}>
+        {section.name}
         {sectionType === SECTION_CONNECTED && (
-          <CalendarSettings calendarSettings={section.calendarSettings} />
+          <div
+            className="base-section--extra__btn"
+            onClick={() => setShowExtra(!showExtra)}
+          >
+            <Icon type="setting" />
+          </div>
         )}
-        {view === sectionViews.TABLE_VIEW && (
-          <BaseSectionTableView columns={_columns} dataSource={_data} />
-        )}
-        {view === sectionViews.LIST_VIEW && (
-          <BaseSectionListView columns={_columns} dataSource={_data} />
-        )}
-      </Card>
+      </div>
+      {showExtra && section && section.calendarSettings && (<CalendarSettings calendarSettings={section.calendarSettings} />)}
+      <BaseSectionTableView columns={_columns} dataSource={_data} />
     </div>
   );
 };

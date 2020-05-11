@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // COMPONENTS
-import RecipientAvatar from '../Avatars/RecipientAvatar';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
-import SectionSelector from '../SectionSelector/SectionSelector';
+// import SectionSelector from '../SectionSelector/SectionSelector';
 
 // STYLES
 import '../../Styles/Toolbar.scss';
@@ -26,14 +25,12 @@ const mapStateToProps = (state, ownProps) => {
 
 const FormInstanceToolbar = ({
   formInstance,
-  selectedSection,
-  onSectionChange,
 }) => {
   return (
     <div className="toolbar--wrapper">
       <div className="toolbar--section-flex">
         <span className="label">By:</span>
-        <RecipientAvatar firstName={formInstance.firstName} lastName={formInstance.lastName} />
+        <span className="value">{`${formInstance.firstName} ${formInstance.lastName}`}</span>
       </div>
       <div className="toolbar--section-flex">
         <span className="label">Scoped object:</span>
@@ -61,17 +58,12 @@ const FormInstanceToolbar = ({
           </StatusLabel>
         ) : 'N/A' }
       </div>
-      <div className="toolbar--section-flex adjust-right">
-        <SectionSelector selectedSection={selectedSection} onSectionChange={onSectionChange} />
-      </div>
     </div>
   );
 };
 
 FormInstanceToolbar.propTypes = {
   formInstance: PropTypes.object.isRequired,
-  selectedSection: PropTypes.string.isRequired,
-  onSectionChange: PropTypes.func.isRequired,
 };
 
 export default connect(
