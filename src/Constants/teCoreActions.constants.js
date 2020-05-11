@@ -73,7 +73,7 @@ export const teCoreActions = {
     mockFunction: selection => {
       console.log('Should populate the selection list with');
       console.log(selection);
-    },
+    }
   },
   GET_RESERVATION_TYPES: {
     callname: teCoreCallnames.GET_RESERVATION_TYPES,
@@ -124,5 +124,8 @@ export const teCoreActions = {
         })
       );
     }
+  },
+  SET_TOOLBAR_CONTENT: {
+    callname: teCoreCallnames.SET_TOOLBAR_CONTENT
   }
 };

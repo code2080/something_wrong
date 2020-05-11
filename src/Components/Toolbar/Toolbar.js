@@ -15,7 +15,7 @@ import './Toolbar.scss';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const mapStateToProps = state => ({
-  breadcrumbs: state.globalUI.breadcrumbs,
+  breadcrumbs: state.globalUI.breadcrumbs
 });
 
 /**
@@ -27,25 +27,32 @@ const mapStateToProps = state => ({
  */
 
 const Toolbar = ({ breadcrumbs, teCoreAPI }) => {
-  const renderedToolbar = useMemo(() => (
-    <div className="toolbar--wrapper">
-      <span className="toolbar--breadcrumbs__label">Navigate:</span>
-      <Breadcrumb>
-        {breadcrumbs && breadcrumbs.map((el, idx) => (
-          <Breadcrumb.Item key={idx}>
-            <Link to={el.path}>{el.label}</Link>
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
-      <ActionsButton />
-    </div>
-  ), [breadcrumbs]);
+  const renderedToolbar = useMemo(
+    () => (
+      <div className="toolbar--wrapper">
+        <span className="toolbar--breadcrumbs__label">Navigate:</span>
+        <Breadcrumb>
+          {breadcrumbs &&
+            breadcrumbs.map((el, idx) => (
+              <Breadcrumb.Item key={idx}>
+                <Link to={el.path}>{el.label}</Link>
+              </Breadcrumb.Item>
+            ))}
+        </Breadcrumb>
+        <ActionsButton />
+      </div>
+    ),
+    [breadcrumbs]
+  );
 
   useEffect(() => {
     if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT))
-      teCoreAPI[teCoreCallnames](renderedToolbar);
-  }, [breadcrumbs])
-  const shouldShowToolbar = useMemo(() => !teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT), [teCoreAPI]);
+      teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](renderedToolbar);
+  }, [breadcrumbs]);
+  const shouldShowToolbar = useMemo(
+    () => !teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT),
+    [teCoreAPI]
+  );
 
   if (!shouldShowToolbar) return null;
 
@@ -54,14 +61,11 @@ const Toolbar = ({ breadcrumbs, teCoreAPI }) => {
 
 Toolbar.propTypes = {
   breadcrumbs: PropTypes.array,
-  teCoreAPI: PropTypes.object.isRequired,
+  teCoreAPI: PropTypes.object.isRequired
 };
 
 Toolbar.defaultProps = {
-  breadcrumbs: [],
+  breadcrumbs: []
 };
 
-export default connect(
-  mapStateToProps,
-  null
-)(withTECoreAPI(Toolbar));
+export default connect(mapStateToProps, null)(withTECoreAPI(Toolbar));
