@@ -1,8 +1,8 @@
 @import '../../Styles/globals.scss';
 
 .top-toolbar--wrapper {
-  background: rgb(250, 250, 250);
-  padding: 4px $outerComponentPadding;
+  background: #fff;
+  padding: 2px $outerComponentPadding;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -26,8 +26,9 @@
     }
   }
 
-  & > button {
+  & > i.anticon {
     position: absolute;
-    right: 4px;
+    right: 8px;
+    color: $deepSeaGreen;
   }
 }
