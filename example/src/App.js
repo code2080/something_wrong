@@ -1,16 +1,24 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-import ExampleComponent from 'te-prefs-lib'
+import TEPrefsLib from 'te-prefs-lib'
 
 // STYLES
 import 'te-prefs-lib/dist/te-prefs-lib.css';
 
-export default class App extends Component {
-  render () {
-    return (
-      <div>
-        <ExampleComponent text='Modern React component module' />
-      </div>
-    )
-  }
-}
+const App = () => {
+  const [toolbarContent, setToolbarContent] = useState(null);
+
+  return (
+    <div>
+      {toolbarContent}
+      <span>I am a divider, belonging to the host application and exemplifying that the toolbar is being rendered outside of TEPrefsLib</span>
+      <TEPrefsLib
+        coreAPI={{
+          setToolbarContent: content => setToolbarContent(content),
+        }}
+      />
+    </div>
+  );
+};
+
+export default App;
