@@ -30,7 +30,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticationStatus: authenticationStatuses.AUTHENTICATED,
-        user: action.payload.user,
       };
     };
 
@@ -51,7 +50,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticationStatus: authenticationStatuses.MULTIPLE_ORGS,
-        user: action.payload.user,
       }
     }
 

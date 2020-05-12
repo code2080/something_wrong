@@ -15,17 +15,18 @@ import {
   SELECT_ORG_FOR_USER_REQUEST,
   SELECT_ORG_FOR_USER_SUCCESS,
   SELECT_ORG_FOR_USER_FAILURE,
-  LOGOUT
+  LOGOUT,
+  VALIDATE_LOGIN
 } from './auth.actionTypes';
 
-const fetchUserFlow = {
+const fetchProfileFlow = {
   request: () => ({ type: FETCH_PROFILE_REQUEST }),
   success: response => ({ type: FETCH_PROFILE_SUCCESS, payload: { ...response } }),
   failure: err => ({ type: FETCH_PROFILE_FAILURE, payload: { ...err } }),
 };
 
-const fetchUser = () => asyncAction.GET({
-  flow: fetchUserFlow,
+export const fetchProfile = () => asyncAction.GET({
+  flow: fetchProfileFlow,
   endpoint: 'users/profile',
   requiresAuth: true,
 });
@@ -33,13 +34,12 @@ const fetchUser = () => asyncAction.GET({
 export const validateLogin = () => async dispatch => {
   const token = await window.localStorage.getItem(TOKEN_NAME);
   if (token)
-    dispatch(fetchUser());
+    dispatch(({ type: VALIDATE_LOGIN, payload: { token } }));
 };
 
 const loginFlow = {
   request: () => ({ type: LOGIN_REQUEST }),
   success: response => {
-    console.log(response);
     if (!response.user)
       return ({ type: LOGIN_FAILURE, payload: { ...response } });
     if (!response.user.organizationId)

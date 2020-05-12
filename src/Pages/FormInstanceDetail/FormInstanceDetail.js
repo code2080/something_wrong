@@ -15,6 +15,9 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 
+// HELPERS
+import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
+
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 
@@ -92,16 +95,18 @@ const FormInstancePage = ({
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
-      <Tabs defaultActiveKey={tabs.OVERVIEW} size="small">
-        <Tabs.TabPane tab="Overview" key={tabs.OVERVIEW}>
-          {(sections || [])
-            .map(section => <BaseSection section={section} key={section._id} />)
-          }
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Activities" key={tabs.ACTIVITIES}>
-          <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
-        </Tabs.TabPane>
-      </Tabs>
+      {hasAssistedSchedulingPermissions() ? (
+        <Tabs defaultActiveKey={tabs.OVERVIEW} size="small">
+          <Tabs.TabPane tab="Overview" key={tabs.OVERVIEW}>
+            {(sections || [])
+              .map(section => <BaseSection section={section} key={section._id} />)
+            }
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Activities" key={tabs.ACTIVITIES}>
+            <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+          </Tabs.TabPane>
+        </Tabs>
+      ) : (sections || []).map(section => <BaseSection section={section} key={section._id} />)}
     </div>
   );
 };

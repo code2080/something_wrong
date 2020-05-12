@@ -8,6 +8,7 @@ import moment from 'moment';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
+import { fetchProfile } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 
@@ -27,6 +28,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   fetchForms,
+  fetchProfile,
   setBreadcrumbs
 };
 
@@ -34,11 +36,16 @@ const FormList = ({
   forms,
   isLoading,
   fetchForms,
+  fetchProfile,
   setBreadcrumbs,
   history
 }) => {
   useEffect(() => {
     fetchForms();
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
   }, []);
 
   useEffect(() => {
@@ -73,6 +80,7 @@ FormList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   forms: PropTypes.array,
   fetchForms: PropTypes.func.isRequired,
+  fetchProfile: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
