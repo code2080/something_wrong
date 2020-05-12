@@ -1,13 +1,13 @@
 @import '../../Styles/globals.scss';
 
-.toolbar--wrapper {
+.top-toolbar--wrapper {
   background: rgb(250, 250, 250);
   padding: 4px $outerComponentPadding;
   display: flex;
   align-items: center;
   overflow: hidden;
 
-  .toolbar--breadcrumbs__label {
+  .top-toolbar--breadcrumbs__label {
     margin-right: 0.8rem;
     color: $rustyGrey;
     font-size: 0.8rem;

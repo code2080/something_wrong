@@ -11,6 +11,7 @@
 .toolbar--wrapper {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   .toolbar--section-flex {
     display: flex;

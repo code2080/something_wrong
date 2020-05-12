@@ -2,4 +2,16 @@
 
 .form-instance--wrapper {
   padding: 0;
+
+  .ant-tabs-bar {
+    margin-bottom: 0;
+  }
+
+  .ant-tabs-nav .ant-tabs-tab-active {
+    color: $jungleGreen !important;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: $jungleGreen !important;
+  }
 }

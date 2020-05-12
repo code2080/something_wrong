@@ -13,7 +13,6 @@ import FormReservationTemplateMappingPage from '../Pages/FormReservationTemplate
 
 // FORM INSTANCE
 import FormInstanceDetailPage from '../Pages/FormInstanceDetail/FormInstanceDetail';
-import FormInstanceActivitiesOverview from '../Pages/FormInstanceActivitiesOverview/FormInstanceActivitiesOverview';
 
 // COMPONENTS
 import Toolbar from './Toolbar/Toolbar';
@@ -30,7 +29,6 @@ const TEPrefsLibRouter = () => {
           <Route exact path="/forms/:formId" component={FormDetailPage} />
           <Route exact path="/forms/:formId/mapping" component={FormReservationTemplateMappingPage} />
           <Route exact path="/forms/:formId/form-instances/:formInstanceId" component={FormInstanceDetailPage} />
-          <Route exact path="/forms/:formId/form-instances/:formInstanceId/activities" component={FormInstanceActivitiesOverview} />
         </AuthenticatedRoutes>
       </Switch>
     </Router>

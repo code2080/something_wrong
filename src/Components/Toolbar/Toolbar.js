@@ -29,8 +29,8 @@ const mapStateToProps = state => ({
 const Toolbar = ({ breadcrumbs, teCoreAPI }) => {
   const renderedToolbar = useMemo(
     () => (
-      <div className="toolbar--wrapper">
-        <span className="toolbar--breadcrumbs__label">Navigate:</span>
+      <div className="top-toolbar--wrapper">
+        <span className="top-toolbar--breadcrumbs__label">Navigate:</span>
         <Breadcrumb>
           {breadcrumbs &&
             breadcrumbs.map((el, idx) => (

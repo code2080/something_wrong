@@ -1,14 +1,10 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
 
 // ACTIONS
-import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
-import {
-  fetchActivitiesForFormInstance,
-  saveActivities,
-} from '../../Redux/Activities/activities.actions';
+import { saveActivities } from '../../Redux/Activities/activities.actions';
 
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
@@ -16,12 +12,9 @@ import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
 
-// STYLES
-import './FormInstanceActivitiesOverview.scss';
-
 // CONSTANTS
 const mapStateToProps = (state, ownProps) => {
-  const { match: { params: { formId, formInstanceId } } } = ownProps;
+  const { formId, formInstanceId } = ownProps;
   return {
     form: state.forms[formId],
     formInstance: state.submissions[formId][formInstanceId],
@@ -31,9 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapActionsToProps = {
-  setBreadcrumbs,
   saveActivities,
-  fetchActivitiesForFormInstance,
 };
 
 const FormInstanceReservationOverview = ({
@@ -41,25 +32,8 @@ const FormInstanceReservationOverview = ({
   form,
   activities,
   mapping,
-  setBreadcrumbs,
   saveActivities,
-  fetchActivitiesForFormInstance,
 }) => {
-  // Effect to update breadcrumbs
-  useEffect(() => {
-    setBreadcrumbs([
-      { path: '/forms', label: 'Forms' },
-      { path: `/forms/${formInstance.formId}`, label: form.name },
-      { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`, label: `Submission from ${formInstance.submitter}` },
-      { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}/activities`, label: `Activities` }
-    ]);
-  }, []);
-
-  // Effect to fetch activities
-  useEffect(() => {
-    fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
-  }, []);
-
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
     saveActivities(formInstance.formId, formInstance._id, activities);
@@ -93,9 +67,7 @@ FormInstanceReservationOverview.propTypes = {
   form: PropTypes.object.isRequired,
   activities: PropTypes.array,
   mapping: PropTypes.object,
-  setBreadcrumbs: PropTypes.func.isRequired,
   saveActivities: PropTypes.func.isRequired,
-  fetchActivitiesForFormInstance: PropTypes.func.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {
