@@ -2,7 +2,9 @@ import { TOKEN_NAME, AUTH_URL, APP_ID } from '../../configs';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { deleteToken } from '../../Utils/tokenHelpers';
 import {
-  VALIDATE_LOGIN,
+  FETCH_PROFILE_REQUEST,
+  FETCH_PROFILE_SUCCESS,
+  FETCH_PROFILE_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -16,15 +18,28 @@ import {
   LOGOUT
 } from './auth.actionTypes';
 
+const fetchUserFlow = {
+  request: () => ({ type: FETCH_PROFILE_REQUEST }),
+  success: response => ({ type: FETCH_PROFILE_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: FETCH_PROFILE_FAILURE, payload: { ...err } }),
+};
+
+const fetchUser = () => asyncAction.GET({
+  flow: fetchUserFlow,
+  endpoint: 'users/profile',
+  requiresAuth: true,
+});
+
 export const validateLogin = () => async dispatch => {
   const token = await window.localStorage.getItem(TOKEN_NAME);
   if (token)
-    dispatch({ type: VALIDATE_LOGIN, payload: { token } });
+    dispatch(fetchUser());
 };
 
 const loginFlow = {
   request: () => ({ type: LOGIN_REQUEST }),
   success: response => {
+    console.log(response);
     if (!response.user)
       return ({ type: LOGIN_FAILURE, payload: { ...response } });
     if (!response.user.organizationId)

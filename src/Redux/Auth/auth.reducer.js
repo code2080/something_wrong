@@ -30,8 +30,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticationStatus: authenticationStatuses.AUTHENTICATED,
+        user: action.payload.user,
       };
     };
+
+    case types.FETCH_PROFILE_SUCCESS:
+      return {
+        ...state,
+        authenticationStatus: authenticationStatuses.AUTHENTICATED,
+        user: action.payload,
+      };
 
     case types.LOGIN_MULTIPLE_ORGS: {
       // If payload doesn't contain token
@@ -43,6 +51,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticationStatus: authenticationStatuses.MULTIPLE_ORGS,
+        user: action.payload.user,
       }
     }
 
