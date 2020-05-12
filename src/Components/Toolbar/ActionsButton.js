@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Button, Icon, Menu } from 'antd';
+import { Dropdown, Icon, Menu } from 'antd';
 
 // CONSTANTS
 import { formStatus } from '../../Constants/formStatuses.constants';
@@ -44,9 +44,7 @@ const ActionsButton = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <Button size="small" >
-        <Icon type="menu" />
-      </Button>
+      <Icon type="menu" />
     </Dropdown>
   );
 };
