@@ -3,6 +3,10 @@ import * as types from './formSubmissions.actionTypes';
 // INITIAL STATE
 import initialState from './formSubmissions.initialState';
 
+// MODELS
+import FormInstance from '../../Models/FormInstance.model';
+import FormInstanceTECoreProps from '../../Models/FormInstanceTECoreProps.model';
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_SUBMISSIONS_FOR_FORM_SUCCESS: {
@@ -20,10 +24,7 @@ const reducer = (state = initialState, action) => {
           ...submissions.reduce(
             (f, el) => ({
               ...f,
-              [el._id]: {
-                ...el,
-                submitter: `${el.firstName} ${el.lastName}`
-              }
+              [el._id]: new FormInstance(el),
             }),
             {}
           ),
@@ -42,6 +43,21 @@ const reducer = (state = initialState, action) => {
           [formInstance._id]: {
             ...state[formInstance.formId][formInstance._id],
             ...formInstance,
+          },
+        },
+      };
+    }
+
+    case types.ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS: {
+      const { payload: { formInstance } } = action;
+      const updatedTECoreProps = new FormInstanceTECoreProps(formInstance.teCoreProps);
+      return {
+        ...state,
+        [formInstance.formId]: {
+          ...state[formInstance.formId],
+          [formInstance._id]: {
+            ...state[formInstance.formId][formInstance._id],
+            teCoreProps: updatedTECoreProps,
           },
         },
       };

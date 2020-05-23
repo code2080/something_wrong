@@ -11,6 +11,7 @@ import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
 import mappings from './ReservationTemplateMapping/reservationTemplateMapping.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
+import integration from './Integration/integration.reducer';
 
 const rootReducer = combineReducers({
   apiStatus,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   manualSchedulings,
   mappings,
   users,
-  te
+  te,
+  integration,
 });
 
 export default rootReducer;

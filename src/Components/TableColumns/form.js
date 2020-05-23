@@ -1,7 +1,6 @@
 import React from 'react';
 
 // COMPONENTS
-import EllipsisRenderer from './Components/EllipsisRenderer';
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
 
@@ -17,19 +16,18 @@ export const form = {
     key: 'name',
     dataIndex: 'name',
     sorter: (a, b) => sortAlpha(a.name, b.name, false),
-    // render: name => <EllipsisRenderer text={name} />,
   },
   DESCRIPTION: {
     title: 'Description',
     dataIndex: 'description',
     key: 'description',
     sorter: (a, b) => sortAlpha(a.description, b.description, false),
-    // render: description => <EllipsisRenderer text={description} width={250} />,
   },
   OBJECT_SCOPE: {
     title: 'Scope',
     dataIndex: 'objectScope',
     key: 'objectScope',
+    fixedWidth: 100,
     sorter: (a, b) => sortAlpha(a.objectScope, b.objectScope, false),
     render: scope => scope || 'N/A',
   },
@@ -53,14 +51,19 @@ export const form = {
   DUE_DATE: {
     title: 'Due date',
     dataIndex: 'dueDateDisplay',
+    fixedWidth: 90,
     sorter: (a, b) => sortTime(a.dueDate, b.dueDate),
   },
   FORM_STATUS: {
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
+    fixedWidth: 100,
     render: status => formStatusProps[status] != null ? (
-      <StatusLabel color={formStatusProps[status].color}>
+      <StatusLabel
+        color={formStatusProps[status].color}
+        className="no-margin"
+      >
         {formStatusProps[status].label}
       </StatusLabel>
     ) : null,

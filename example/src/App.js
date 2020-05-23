@@ -11,7 +11,6 @@ const App = () => {
   return (
     <div>
       {toolbarContent}
-      <span>I am a divider, belonging to the host application and exemplifying that the toolbar is being rendered outside of TEPrefsLib</span>
       <TEPrefsLib
         coreAPI={{
           setToolbarContent: content => setToolbarContent(content),

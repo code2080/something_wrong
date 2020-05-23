@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 // COMPONENTS
 import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
-// import SectionSelector from '../SectionSelector/SectionSelector';
 
 // STYLES
 import '../../Styles/Toolbar.scss';

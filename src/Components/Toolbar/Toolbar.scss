@@ -13,6 +13,10 @@
     font-size: 0.8rem;
   }
 
+  .top-toolbar--breadcrumbs__item {
+    cursor: pointer;
+  }
+
   .ant-breadcrumb {
     font-size: 0.8rem !important;
     white-space: nowrap;

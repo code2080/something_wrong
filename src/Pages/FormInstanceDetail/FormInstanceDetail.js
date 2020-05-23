@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -89,24 +88,35 @@ const FormInstancePage = ({
     exec();
   }, []);
 
+  // State var to hold active tab
+  const [activeView, setActiveView] = useState(tabs.OVERVIEW);
+
   return (
     <div className="form-instance--wrapper">
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
-      {hasAssistedSchedulingPermissions() ? (
-        <Tabs defaultActiveKey={tabs.OVERVIEW} size="small">
-          <Tabs.TabPane tab="Overview" key={tabs.OVERVIEW}>
-            {(sections || [])
-              .map(section => <BaseSection section={section} key={section._id} />)
-            }
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Activities" key={tabs.ACTIVITIES}>
-            <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
-          </Tabs.TabPane>
-        </Tabs>
-      ) : (sections || []).map(section => <BaseSection section={section} key={section._id} />)}
+      {hasAssistedSchedulingPermissions() && (
+        <div className="form-instance--tabs">
+          <div
+            className={`form-instance--tabs__tab ${activeView === tabs.OVERVIEW ? 'is-active' : ''}`}
+            onClick={() => setActiveView(tabs.OVERVIEW)}
+          >
+            Overview
+          </div>
+          <div
+            className={`form-instance--tabs__tab ${activeView === tabs.ACTIVITIES ? 'is-active' : ''}`}
+            onClick={() => setActiveView(tabs.ACTIVITIES)}
+          >
+            Activities
+          </div>
+        </div>
+      )}
+      {activeView === tabs.OVERVIEW
+        ? (sections || []).map(section => <BaseSection section={section} key={section._id} />)
+        : <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+      }
     </div>
   );
 };

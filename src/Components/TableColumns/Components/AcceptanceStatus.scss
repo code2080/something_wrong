@@ -1,0 +1,16 @@
+.acceptance-status--wrapper {
+  display: flex;
+  align-items: center;
+
+  .status-label--wrapper {
+    flex-shrink: 0;
+  }
+
+  .acceptance-status--comment {
+    margin-left: 4px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

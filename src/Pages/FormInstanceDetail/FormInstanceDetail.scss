@@ -14,4 +14,23 @@
   .ant-tabs-ink-bar {
     background-color: $jungleGreen !important;
   }
+
+  .form-instance--tabs {
+    background: #333;
+    display: flex;
+    padding: 0 8px;
+
+    .form-instance--tabs__tab {
+      padding: 2px 6px;
+      color: #fff;
+      border-bottom: 2px solid #333;
+      cursor: pointer;
+      
+      &.is-active {
+        color: $candlelight;
+        background-color: rgba(255, 255, 255, 0.15);
+        border-bottom-color: $candlelight;
+      }
+    }
+  }
 }

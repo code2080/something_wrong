@@ -18,12 +18,10 @@ const DynamicTableHOC = ({
   pagination,
   isLoading,
   width,
+  showFilter,
 }) => {
   // State var to hold the columns
   const [cols, setCols] = useState([]);
-
-  // Memoized calculated width
-  const _width = useMemo(() => width ? width - 40 : 0, [width]);
 
   // Effect to update cols everytime columnns change
   useEffect(() => {
@@ -41,6 +39,16 @@ const DynamicTableHOC = ({
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
 
+  // Memoized calculated width
+  const fixedWidthCols = useMemo(() => cols.filter(col => visibleColumns[col.title] && col.fixedWidth), [cols, visibleColumns]);
+
+  const _width = useMemo(() => {
+    // Get the visible columns
+    const fixedWidth = fixedWidthCols
+      .reduce((tot, col) => col.fixedWidth ? tot + col.fixedWidth : tot, 0);
+    return width ? width - (fixedWidth + 40) : 0;
+  }, [fixedWidthCols, width]);
+
   // Memoized variable with the visible column definitions
   const _cols = useMemo(
     () =>
@@ -48,15 +56,15 @@ const DynamicTableHOC = ({
         .filter(col => visibleColumns[col.title])
         .map((col, idx, arr) => ({
           ...col,
-          width: _width / arr.length,
+          width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
           onHeaderCell: column => ({
             width: column.width,
           }),
           render:
             (val, el) =>
               col.render
-                ? <EllipsisTruncater width={_width / arr.length}>{col.render(val, el)}</EllipsisTruncater>
-                : <EllipsisTruncater width={_width / arr.length}>{val}</EllipsisTruncater>,
+                ? <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
+                : <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
         })),
     [cols, visibleColumns, _width]
   );
@@ -94,7 +102,7 @@ const DynamicTableHOC = ({
         />
       ) : (
         <React.Fragment>
-          <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />
+          {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
           <Table
             components={{
               header: {
@@ -122,6 +130,7 @@ DynamicTableHOC.propTypes = {
   isLoading: PropTypes.bool,
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.number,
+  showFilter: PropTypes.bool,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -135,6 +144,7 @@ DynamicTableHOC.defaultProps = {
     showSizeChanger: true,
   },
   width: null,
+  showFilter: true,
 };
 
 export default withResizeDetector(DynamicTableHOC);

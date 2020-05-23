@@ -11,6 +11,8 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { fetchProfile } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
+import { fetchUsers } from '../../Redux/Users/users.actions';
+import { fetchMapping } from '../../Redux/Integration/integration.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
@@ -23,34 +25,40 @@ const mapStateToProps = state => ({
   isLoading: loadingSelector(state),
   forms: (Object.keys(state.forms) || [])
     .map(key => state.forms[key])
-    .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf())
+    .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf()),
+  user: state.auth.user,
 });
 
 const mapActionsToProps = {
   fetchForms,
   fetchProfile,
-  setBreadcrumbs
+  fetchUsers,
+  setBreadcrumbs,
+  fetchMapping,
 };
 
 const FormList = ({
   forms,
+  user,
   isLoading,
   fetchForms,
   fetchProfile,
+  fetchUsers,
+  fetchMapping,
   setBreadcrumbs,
   history
 }) => {
   useEffect(() => {
     fetchForms();
-  }, []);
-
-  useEffect(() => {
     fetchProfile();
-  }, []);
-
-  useEffect(() => {
+    fetchUsers();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
+
+  useEffect(() => {
+    if (user && user.organizationId)
+      fetchMapping();
+  }, [user]);
 
   return (
     <div className="form-list--wrapper">
@@ -79,14 +87,18 @@ const FormList = ({
 FormList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   forms: PropTypes.array,
+  user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
   fetchProfile: PropTypes.func.isRequired,
+  fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
 
 FormList.defaultProps = {
-  forms: []
+  forms: [],
+  user: null,
 };
 
 export default withRouter(

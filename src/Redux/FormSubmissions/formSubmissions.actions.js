@@ -9,6 +9,9 @@ import {
   SET_SCHEDULING_PROGRESS_REQUEST,
   SET_SCHEDULING_PROGRESS_SUCCESS,
   SET_SCHEDULING_PROGRESS_FAILURE,
+  ASSIGN_USER_TO_FORM_INSTANCE_REQUEST,
+  ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS,
+  ASSIGN_USER_TO_FORM_INSTANCE_FAILURE,
 } from './formSubmissions.actionTypes';
 
 const fetchFormSubmissionsFlow = {
@@ -72,4 +75,26 @@ export const setFormInstanceSchedulingProgress = ({
     flow: setFormInstanceSchedulingProgressFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/scheduling-progress`,
     params: { schedulingProgress }
+  });
+
+const toggleUserForFormInstanceFlow = {
+  request: () => ({ type: ASSIGN_USER_TO_FORM_INSTANCE_REQUEST }),
+  success: response => ({
+    type: ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS,
+    payload: { ...response }
+  }),
+  failure: err => ({
+    type: ASSIGN_USER_TO_FORM_INSTANCE_FAILURE,
+    payload: { ...err }
+  })
+};
+
+export const toggleUserForFormInstance = ({
+  formInstanceId,
+  userId
+}) =>
+  asyncAction.PUT({
+    flow: toggleUserForFormInstanceFlow,
+    endpoint: `form-instances/${formInstanceId}/te-core/assign`,
+    params: { userId }
   });

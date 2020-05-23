@@ -90,8 +90,8 @@ const SubmissionActionButton = ({
         overlay={actionMenu}
         trigger={['click']}
       >
-        <Button size="small" onClick={e => e.stopPropagation()}>
-          Actions <Icon type="down" />
+        <Button type="link" size="small" onClick={e => e.stopPropagation()}>
+          <Icon type="more" />
         </Button>
       </Dropdown>
       <FormInstanceAcceptanceStatusModal

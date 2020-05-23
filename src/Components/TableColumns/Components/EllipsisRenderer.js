@@ -9,10 +9,13 @@ const EllipsisRenderer = ({ text, width }) => (
       width: `${width}px`,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      textOverflow: 'ellipsis'
+      textOverflow: 'ellipsis',
+      background: 'transparent',
+      position: 'relative',
+      zIndex: 2,
     }}
   >
-    {text}
+    <span style={{ background: 'rgba(255, 255, 255, 0.75)' }}>{text}</span>
   </div>
 );
 

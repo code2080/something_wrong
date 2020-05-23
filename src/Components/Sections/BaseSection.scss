@@ -8,12 +8,27 @@
   }
 
   .base-section--name__wrapper {
-    padding: 2px 8px;
+    padding: 2px 8px 2px 1.4rem;
     font-weight: 700;
-  
+    background: #fff;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      left: 0.4rem;
+      top: calc(50% - 0.3rem);
+      background-color: red;
+    }
+
     &.SECTION_CONNECTED {
-      background: $candlelight;
-      color: $deepSeaGreen;
+      &::after {
+        background-color: $candlelight;
+      }
     }
 
     &.SECTION_VERTICAL {

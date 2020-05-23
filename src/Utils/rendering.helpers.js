@@ -15,7 +15,6 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
-import EllipsisRenderer from '../Components/TableColumns/Components/EllipsisRenderer';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -25,25 +24,39 @@ import {
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
 
+const unformattedValue = value => (
+  <div
+    style={{
+      zIndex: 2,
+      position: 'relative',
+      background: '#ffffff',
+    }}
+  >
+    {value}
+  </div>
+);
+
 const connectedSectionColumns = {
   NO_TIMESLOTS: [
     {
       title: 'Title',
       key: 'title',
       dataIndex: 'title',
-      render: val => <EllipsisRenderer text={val || 'N/A'} width={100} />,
+      render: val => val || 'N/A',
     },
     {
-      title: 'Start time',
+      title: 'Start',
       key: 'startTime',
       dataIndex: 'startTime',
-      render: val => <EllipsisRenderer text={moment(val).format('YYYY-MM-DD HH:mm')} width={100} />,
+      fixedWidth: 110,
+      render: val => moment(val).format("MMM DD 'YY HH:mm"),
     },
     {
-      title: 'End time',
+      title: 'End',
       key: 'endTime',
       dataIndex: 'endTime',
-      render: val => <EllipsisRenderer text={moment(val).format('YYYY-MM-DD HH:mm')} width={100} />,
+      fixedWidth: 80,
+      render: val => moment(val).format('HH:mm'),
     },
   ],
   WITH_TIMESLOTS: timeslots => [
@@ -65,6 +78,7 @@ const connectedSectionColumns = {
       title: 'Scheduling',
       key: 'scheduling',
       dataIndex: null,
+      fixedWidth: 82,
       render: (_, event) => (
         <ManualSchedulingColumn
           event={event}
@@ -108,12 +122,12 @@ export const renderElementValue = (value, element) => {
       /**
        * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
        */
-      return value.toString();
+      return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_CALENDAR:
       /**
        * @todo break into separate component
        */
-      return value.toString();
+      return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
       return <Datasource value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATASOURCE:
@@ -125,7 +139,7 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER:
     default:
-      return value.toString();
+      return unformattedValue(value.toString());
   }
 };
 

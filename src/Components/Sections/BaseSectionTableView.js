@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+
+// COMPONENTS
+import DynamicTable from '../DynamicTable/DynamicTableHOC';
 
 const BaseSectionTableView = ({ columns, dataSource }) => (
-  <Table
+  <DynamicTable
     columns={columns}
     dataSource={dataSource}
     rowKey="rowKey"

@@ -1,16 +1,17 @@
 import React from 'react';
 import moment from 'moment';
-import {
-  toProgressLabel,
-  toAcceptanceLabel
-} from '../../Constants/teCoreProps.constants';
 
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
-import EllipsisRenderer from './Components/EllipsisRenderer';
+import StatusLabel from '../StatusLabel/StatusLabel';
+import AcceptanceStatus from './Components/AcceptanceStatus';
+import FormInstanceAssignment from './Components/FormInstanceAssignment';
 
 // SORTERS
 import { sortAlpha } from './Helpers/sorters';
+
+// CONSTANTS
+import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 
 export const formSubmission = {
   NAME: {
@@ -20,7 +21,7 @@ export const formSubmission = {
     sorter: (a, b) => a.localeCompare(b)
   },
   SUBMISSION_DATE: {
-    title: 'Date',
+    title: 'Submitted',
     key: 'updatedAt',
     dataIndex: 'updatedAt',
     render: val => moment(val).format('YYYY-MM-DD'),
@@ -35,9 +36,10 @@ export const formSubmission = {
     sorter: (a, b) => a.scopedObject - b.scopedObject
   },
   ACTION_BUTTON: {
-    title: 'Actions',
+    title: '',
     key: 'actions',
     dataIndex: null,
+    fixedWidth: 40,
     render: (_, formInstance) => (
       <SubmissionActionButton formInstance={formInstance} />
     )
@@ -46,21 +48,29 @@ export const formSubmission = {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
     dataIndex: 'teCoreProps.schedulingProgress',
-    render: val => toProgressLabel(val),
+    render: val => val ? (
+      <StatusLabel
+        color={teCoreSchedulingProgressProps[val].color}
+        className="no-margin"
+      >
+        {teCoreSchedulingProgressProps[val].label}
+      </StatusLabel>
+    ) : 'N/A',
     sorter: (a, b) => sortAlpha(a.teCoreProps.schedulingProgress, b.teCoreProps.schedulingProgress),
   },
   ACCEPTANCE_STATUS: {
     title: 'Acceptance status',
     key: 'acceptanceStatus',
-    dataIndex: 'teCoreProps.acceptanceStatus',
-    render: val => toAcceptanceLabel(val),
+    dataIndex: 'teCoreProps',
+    render: teCoreProps => <AcceptanceStatus acceptanceStatus={teCoreProps.acceptanceStatus} acceptanceComment={teCoreProps.acceptanceComment} />,
     sorter: (a, b) => sortAlpha(a.teCoreProps.acceptanceStatus, b.teCoreProps.acceptanceStatus),
   },
-  ACCEPTANCE_COMMENT: {
-    title: 'Acceptance comment',
-    key: 'acceptanceComment',
-    dataIndex: 'teCoreProps.acceptanceComment',
-    render: val => <EllipsisRenderer text={val} />,
-    sorter: (a, b) => sortAlpha(a.teCoreProps.acceptanceComment, b.teCoreProps.acceptanceComment),
+  ASSIGNMENT: {
+    title: 'Assigned to',
+    key: 'assignedTo',
+    dataIndex: 'teCoreProps.assignedTo',
+    fixedWidth: 80,
+    render: (assignedTo, formInstance) =>
+      <FormInstanceAssignment assignedTo={assignedTo} formId={formInstance.formId} formInstanceId={formInstance._id} />,
   }
 };

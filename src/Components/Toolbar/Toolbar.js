@@ -90,7 +90,7 @@ const Toolbar = ({
           {breadcrumbs &&
             breadcrumbs.map((el, idx) => (
               <Breadcrumb.Item key={idx}>
-                <span onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
+                <span className="top-toolbar--breadcrumbs__item" onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
               </Breadcrumb.Item>
             ))}
         </Breadcrumb>
