@@ -24,7 +24,7 @@ import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import {
   getMappingSettingsForProp,
   getMappingTypeForProp
-} from '../../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
+} from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
 import {

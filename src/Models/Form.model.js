@@ -30,6 +30,8 @@ export default class Form {
 
   objectScope;
 
+  reservationMode;
+
   excludedObjects;
 
   submitterCanSubmitMultiple;
@@ -65,6 +67,7 @@ export default class Form {
     sendAutomaticReminders = true,
     formPeriod,
     objectScope,
+    reservationMode,
     excludedObjects = [],
     submitterCanSubmitMultiple = true,
     submitterMustSelectObject = true,
@@ -104,6 +107,7 @@ export default class Form {
           ${moment(formPeriod.endDate).format("MMM DD 'YY")}`
         : null;
     this.objectScope = objectScope;
+    this.reservationMode = reservationMode;
     this.excludedObjects = excludedObjects;
     this.submitterCanSubmitMultiple = submitterCanSubmitMultiple;
     this.submitterMustSelectObject = submitterMustSelectObject;

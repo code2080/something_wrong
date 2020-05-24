@@ -74,7 +74,7 @@ const Toolbar = ({
         logOutCallback();
         break;
       case actionKeys.ACTIVITY_DESIGNER:
-        history.push(`/forms/${form._id}/mapping`);
+        history.push(`/forms/${form._id}/activity-designer`);
         break;
       default:
         break;

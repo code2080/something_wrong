@@ -51,3 +51,51 @@ export const fetchDataForDataSource = (datasource) => (dispatch, getState) => {
     })
   );
 };
+
+const findTypesOnReservationModeFlow = {
+  request: () => ({ type: types.FETCH_TYPES_ON_RESERVATION_MODE_REQUEST }),
+  success: (response, params) => ({
+    type: types.FETCH_TYPES_ON_RESERVATION_MODE_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err, params) => ({
+    type: types.FETCH_TYPES_ON_RESERVATION_MODE_FAILURE,
+    payload: { ...err, actionMeta: { ...params } },
+  }),
+};
+
+export const findTypesOnReservationMode = reservationMode => (dispatch, getState) => {
+  const storeState = getState();
+  const organizationId = _.get(storeState, 'auth.user.organizationId', null);
+  return dispatch(
+    asyncAction.GET({
+      flow: findTypesOnReservationModeFlow,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/find/${reservationMode}`,
+      params: { reservationMode },
+    })
+  );
+};
+
+const findFieldsOnReservationModeFlow = {
+  request: () => ({ type: types.FETCH_FIELDS_ON_RESERVATION_MODE_REQUEST }),
+  success: (response, params) => ({
+    type: types.FETCH_FIELDS_ON_RESERVATION_MODE_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err, params) => ({
+    type: types.FETCH_FIELDS_ON_RESERVATION_MODE_FAILURE,
+    payload: { ...err, actionMeta: { ...params } },
+  }),
+};
+
+export const findFieldsOnReservationMode = reservationMode => (dispatch, getState) => {
+  const storeState = getState();
+  const organizationId = _.get(storeState, 'auth.user.organizationId', null);
+  return dispatch(
+    asyncAction.GET({
+      flow: findFieldsOnReservationModeFlow,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/fields/${reservationMode}`,
+      params: { reservationMode: reservationMode },
+    })
+  );
+};

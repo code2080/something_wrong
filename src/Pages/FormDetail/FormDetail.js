@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 // ACTIONS
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
-import { fetchMappings } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.actions';
+import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchDataForDataSource } from '../../Redux/Integration/integration.actions';
@@ -174,6 +174,7 @@ const FormPage = ({
         freeTextFilter={freeTextFilter}
         onFreeTextFilterChange={setFreeTextFilter}
         togglePropsFilter={() => setShowScopedObjectFilters(!showScopedObjectFilters)}
+        isPropsFilterVisible={showScopedObjectFilters}
       />
       {showScopedObjectFilters && form.objectScope && (
         <ScopedObjectFilters

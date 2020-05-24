@@ -8,7 +8,7 @@ import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
 import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
-import mappings from './ReservationTemplateMapping/reservationTemplateMapping.reducer';
+import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   submissions,
   activities,
   manualSchedulings,
-  mappings,
+  activityDesigner,
   users,
   te,
   integration,

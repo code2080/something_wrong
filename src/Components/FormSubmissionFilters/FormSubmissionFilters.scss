@@ -3,13 +3,29 @@
 .form-submission-filter-bar--wrapper {
   display: flex;
   background: rgb(250, 250, 250);
-  padding: 6px 6px 2px 6px;
+  padding: 4px 6px;
   border-top: 1px solid rgb(232, 232, 232);
+
+  .ant-btn {
+    margin-left: 6px;
+    margin-right: 6px;
+    color: $deepSeaGreen;
+    &.active {
+      background-color: $deepSeaGreen;
+      color: #fff !important;
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      color: $deepSeaGreen;
+    }
+  }
 }
 
 .scoped-object-filters--wrapper {
   .scoped-object-filters--header {
-    background: rgb(250, 250, 250);
+    background: $deepSeaGreen;
+    color: #fff;
     padding: 2px 8px;
     font-weight: 500;
   }

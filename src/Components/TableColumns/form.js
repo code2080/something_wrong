@@ -3,6 +3,7 @@ import React from 'react';
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
+import ObjectScopeCol from './Components/ObjectScopeCol';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
@@ -29,7 +30,7 @@ export const form = {
     key: 'objectScope',
     fixedWidth: 100,
     sorter: (a, b) => sortAlpha(a.objectScope, b.objectScope, false),
-    render: scope => scope || 'N/A',
+    render: objectScope => <ObjectScopeCol objectScope={objectScope} />,
   },
   RESPONSE_TRACKER: {
     key: 'responses',

@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
     formInstance: state.submissions[formId][formInstanceId],
-    mappings: state.mappings,
+    mappings: state.activityDesigner,
     activities: getActivitiesForFormInstance(state.activities, formId, formInstanceId),
   };
 };

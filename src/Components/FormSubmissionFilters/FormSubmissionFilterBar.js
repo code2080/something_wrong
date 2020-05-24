@@ -8,6 +8,7 @@ import './FormSubmissionFilters.scss';
 const FormSubmissionFilterBar = ({
   freeTextFilter,
   onFreeTextFilterChange,
+  isPropsFilterVisible,
   togglePropsFilter,
 }) => {
   return (
@@ -19,8 +20,14 @@ const FormSubmissionFilterBar = ({
         suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
         size="small"
       />
-      <Button type="link" size="small" onClick={togglePropsFilter}>
-        <Icon type="filter" />
+      <Button
+        className={isPropsFilterVisible ? 'active' : ''}
+        type="link"
+        size="small"
+        shape="circle"
+        onClick={togglePropsFilter}
+      >
+        <Icon type="filter" theme="filled" />
       </Button>
     </div>
   );
@@ -30,6 +37,7 @@ FormSubmissionFilterBar.propTypes = {
   freeTextFilter: PropTypes.string.isRequired,
   onFreeTextFilterChange: PropTypes.func.isRequired,
   togglePropsFilter: PropTypes.func.isRequired,
+  isPropsFilterVisible: PropTypes.bool.isRequired,
 };
 
 export default FormSubmissionFilterBar;

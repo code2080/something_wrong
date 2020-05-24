@@ -37,6 +37,34 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.FETCH_TYPES_ON_RESERVATION_MODE_SUCCESS: {
+      const { type, actionMeta: { reservationMode } } = action.payload;
+      return {
+        ...state,
+        reservationModes: {
+          ...state.reservationModes,
+          [reservationMode]: {
+            ...(state.reservationModes[reservationMode] || {}),
+            types: type,
+          },
+        },
+      };
+    }
+
+    case types.FETCH_FIELDS_ON_RESERVATION_MODE_SUCCESS: {
+      const { actionMeta: { reservationMode }, ...fields } = action.payload;
+      return {
+        ...state,
+        reservationModes: {
+          ...state.reservationModes,
+          [reservationMode]: {
+            ...(state.reservationModes[reservationMode] || {}),
+            fields: Object.keys(fields).map(n => fields[n]),
+          },
+        },
+      };
+    }
+
     default:
       return state;
   }

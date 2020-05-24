@@ -1,6 +1,6 @@
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
 
-export class ActvitiyTiming {
+export class ActivityTiming {
   mode;
 
   startDate;
