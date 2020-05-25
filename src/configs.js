@@ -1,8 +1,8 @@
 export const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://preferences.timeedit.com/v1/'
-    : 'http://localhost:3002/v1/';
-    //  'https://preferences.timeedit.io/v1/';
+    : //: 'http://localhost:3002/v1/';
+      'https://preferences.timeedit.io/v1/';
 //'https://preferences.timeedit.com/v1/';
 
 export const AUTH_URL =
