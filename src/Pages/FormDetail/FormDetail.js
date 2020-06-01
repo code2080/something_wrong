@@ -135,7 +135,7 @@ const FormPage = ({
     tableColumns.formSubmission.SCOPED_OBJECT,
     tableColumns.formSubmission.ACCEPTANCE_STATUS,
     tableColumns.formSubmission.SCHEDULING_PROGRESS,
-    ..._cols,
+    // ..._cols,
     tableColumns.formSubmission.ACTION_BUTTON
   ], [_cols]);
 

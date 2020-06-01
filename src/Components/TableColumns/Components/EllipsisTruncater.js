@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const EllipsisTruncater = ({ children, width }) => (
   <div
     style={{
-      lineHeight: 1.5,
+      // lineHeight: 1.5,
       width: `${width - 16}px`,
       whiteSpace: 'nowrap',
       overflow: 'hidden',

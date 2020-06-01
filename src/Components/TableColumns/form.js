@@ -4,6 +4,7 @@ import React from 'react';
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import ObjectScopeCol from './Components/ObjectScopeCol';
+import OwnerCol from './Components/OwnerCol';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
@@ -41,8 +42,8 @@ export const form = {
   OWNER: {
     key: 'owner',
     title: 'Owner',
-    dataIndex: 'ownerName',
-    sorter: (a, b) => sortAlpha(a.ownerName, b.ownerName, false),
+    dataIndex: 'ownerId',
+    render: ownerId => <OwnerCol ownerId={ownerId} />,
   },
   PERIOD: {
     key: 'Period',
