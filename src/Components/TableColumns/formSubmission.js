@@ -69,7 +69,7 @@ export const formSubmission = {
     title: 'Assigned to',
     key: 'assignedTo',
     dataIndex: 'teCoreProps.assignedTo',
-    fixedWidth: 80,
+    fixedWidth: 85,
     render: (assignedTo, formInstance) =>
       <FormInstanceAssignment assignedTo={assignedTo} formId={formInstance.formId} formInstanceId={formInstance._id} />,
   }

@@ -16,7 +16,7 @@
     white-space: nowrap;
   
     & i {
-      &:not(:last-child) {
+      &:first-child {
         margin-right: 0.2rem;
         &.anticon {
           color: $rustyGrey;

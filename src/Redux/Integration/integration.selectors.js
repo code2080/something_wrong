@@ -59,6 +59,7 @@ export const getExtIdPropsPayload = (sections, values, state) => {
     return [...allSections, ..._elements];
   }, []);
   return elements.flat().reduce((retVal, element) => {
+    if (!element) return retVal;
     if (element.valueType === datasourceValueTypes.OBJECT_EXTID) {
       const extIdIdx = retVal.objects.indexOf(element.extId);
       if (extIdIdx === -1)

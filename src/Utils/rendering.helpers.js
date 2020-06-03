@@ -29,7 +29,6 @@ const unformattedValue = value => (
     style={{
       zIndex: 2,
       position: 'relative',
-      background: '#ffffff',
     }}
   >
     {value}
@@ -38,12 +37,6 @@ const unformattedValue = value => (
 
 const connectedSectionColumns = {
   NO_TIMESLOTS: [
-    {
-      title: 'Title',
-      key: 'title',
-      dataIndex: 'title',
-      render: val => val || 'N/A',
-    },
     {
       title: 'Start',
       key: 'startTime',
@@ -60,12 +53,6 @@ const connectedSectionColumns = {
     },
   ],
   WITH_TIMESLOTS: timeslots => [
-    {
-      title: 'Title',
-      key: 'title',
-      dataIndex: 'title',
-      render: val => val || 'N/A',
-    },
     {
       title: 'Timeslot',
       key: 'timeslot',

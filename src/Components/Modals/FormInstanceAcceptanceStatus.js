@@ -80,6 +80,7 @@ const FormInstanceAcceptanceStatus = ({
       onCancel={onClose}
       getContainer={() => document.getElementById('te-prefs-lib')}
       id="acceptanceStatusModal"
+      destroyOnClose
     >
       <Form.Item label="Set acceptance status">
         <Select

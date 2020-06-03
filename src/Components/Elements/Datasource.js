@@ -85,6 +85,16 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
     [onClickCallback, supportedActions]
   );
 
+  if (payload == null)
+    return (
+      <div className="element__datasource--wrapper">
+        <div className="element__datasource--inner">
+          <Icon type="appstore" />
+          N/A
+        </div>
+      </div>
+    );
+
   return (
     <div className="element__datasource--wrapper">
       <Dropdown
@@ -93,7 +103,7 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
       >
         <div className="element__datasource--inner">
           <Icon type="appstore" />
-          {label || value.toString()}
+          {label || value.toString() || 'N/A'}
           <Icon type="down" />
         </div>
       </Dropdown>
@@ -102,7 +112,7 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
 };
 
 Datasource.propTypes = {
-  payload: PropTypes.array.isRequired,
+  payload: PropTypes.array,
   label: PropTypes.string,
   value: PropTypes.array,
   element: PropTypes.object,
@@ -110,6 +120,7 @@ Datasource.propTypes = {
 };
 
 Datasource.defaultProps = {
+  payload: null,
   label: null,
   value: null,
   element: {}

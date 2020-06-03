@@ -59,6 +59,7 @@ const DynamicTableHOC = ({
           width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
           onHeaderCell: column => ({
             width: column.width,
+            title: col.title,
           }),
           render:
             (val, el) =>
