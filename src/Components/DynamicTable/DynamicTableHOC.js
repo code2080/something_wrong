@@ -15,6 +15,7 @@ const DynamicTableHOC = ({
   dataSource,
   rowKey,
   onRow,
+  expandedRowRender,
   pagination,
   isLoading,
   width,
@@ -113,6 +114,7 @@ const DynamicTableHOC = ({
             columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
             dataSource={_dataSource}
             rowKey={rowKey}
+            expandedRowRender={expandedRowRender || null}
             pagination={pagination}
             loading={isLoading}
             onRow={onRow || null}
@@ -128,6 +130,7 @@ DynamicTableHOC.propTypes = {
   dataSource: PropTypes.array,
   rowKey: PropTypes.string,
   onRow: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  expandedRowRender: PropTypes.func,
   isLoading: PropTypes.bool,
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.number,
@@ -140,6 +143,7 @@ DynamicTableHOC.defaultProps = {
   rowKey: '_id',
   onRow: null,
   isLoading: false,
+  expandedRowRender: null,
   pagination: {
     size: 'small',
     showSizeChanger: true,

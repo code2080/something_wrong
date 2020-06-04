@@ -66,6 +66,7 @@ const connectedSectionColumns = {
       key: 'scheduling',
       dataIndex: null,
       fixedWidth: 82,
+      hideInList: true,
       render: (_, event) => (
         <ManualSchedulingColumn
           event={event}

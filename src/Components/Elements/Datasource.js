@@ -102,7 +102,6 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
         overlay={menu}
       >
         <div className="element__datasource--inner">
-          <Icon type="appstore" />
           {label || value.toString() || 'N/A'}
           <Icon type="down" />
         </div>

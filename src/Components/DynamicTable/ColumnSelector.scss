@@ -1,5 +1,12 @@
 .column-selector--wrapper {
 
+  .column-selector--header {
+    span.column-selector--title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+
   .column-selector--col {
     
     &:not(:last-child) {

@@ -1,0 +1,30 @@
+@import '../../Styles/globals.scss';
+
+.base-section--wrapper {
+  .ant-table-expanded-row {
+    background: #fff;
+    td {
+      background: #fff;
+    }
+  }
+}
+.base-section--expanded__wrapper {
+  background: #fff;
+
+  .base-section--expanded--item {
+    display: flex;
+    margin-bottom: 0.3rem;
+    &:not(:last-child) {
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid rgba($rustyGrey, 0.5);
+    }
+    .title {
+      font-weight: 700;
+      margin-right: 4px;
+      width: 15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

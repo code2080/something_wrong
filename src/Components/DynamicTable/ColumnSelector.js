@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Button, Icon, Typography } from 'antd';
+import { Switch, Button, Icon } from 'antd';
 
 // STYLES
 import './ColumnSelector.scss';
@@ -16,11 +16,13 @@ const ColumnSelector = ({
 
   return (
     <div className="column-selector--wrapper">
-      <Button type="link" onClick={onHide}>
-        <Icon type="arrow-left" />
-        Back
-      </Button>
-      <Typography.Title level={4}>Select columns to display</Typography.Title>
+      <div className="column-selector--header">
+        <Button type="link" onClick={onHide}>
+          <Icon type="arrow-left" />
+          Back
+        </Button>
+        <span className="column-selector--title">Select columns to display</span>
+      </div>
       {(Object.keys(columnState) || []).map(col => (
         <div className="column-selector--col" key={col}>
           <Switch
