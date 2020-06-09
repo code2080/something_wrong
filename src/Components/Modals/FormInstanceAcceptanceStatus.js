@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { Modal, Form, Input, Select } from 'antd';
 
 // ACTIONS
-import {
-  setFormInstanceAcceptanceStatus,
-} from '../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormInstanceAcceptanceStatus } from '../../Redux/FormSubmissions/formSubmissions.actions';
 
 // CONSTANTS
 import { teCoreAcceptanceStatusProps } from '../../Constants/teCoreProps.constants';
@@ -22,17 +20,17 @@ const mapStateToProps = (state, ownProps) => {
     return {};
   const {
     acceptanceComment: _acceptanceComment,
-    acceptanceStatus: _acceptanceStatus,
+    acceptanceStatus: _acceptanceStatus
   } = state.submissions[formId][formInstanceId].teCoreProps || {};
 
   return {
     _acceptanceStatus,
-    _acceptanceComment,
+    _acceptanceComment
   };
 };
 
 const mapActionsToProps = {
-  setFormInstanceAcceptanceStatus,
+  setFormInstanceAcceptanceStatus
 };
 
 const FormInstanceAcceptanceStatus = ({
@@ -41,7 +39,7 @@ const FormInstanceAcceptanceStatus = ({
   formInstanceId,
   isVisible,
   onClose,
-  setFormInstanceAcceptanceStatus,
+  setFormInstanceAcceptanceStatus
 }) => {
   // State vars to hold acceptance status, comment
   const [acceptanceStatus, setAcceptanceStatus] = useState(null);
@@ -61,11 +59,10 @@ const FormInstanceAcceptanceStatus = ({
     setFormInstanceAcceptanceStatus({
       formInstanceId,
       acceptanceStatus,
-      acceptanceComment,
+      acceptanceComment
     });
     onClose();
-  },
-  [
+  }, [
     acceptanceStatus,
     acceptanceComment,
     setFormInstanceAcceptanceStatus,
@@ -75,6 +72,7 @@ const FormInstanceAcceptanceStatus = ({
   return (
     <Modal
       title="Set acceptance status"
+      destroyOnClose={true}
       visible={isVisible}
       onOk={onSubmitAcceptanceStatusCallback}
       onCancel={onClose}
@@ -84,13 +82,17 @@ const FormInstanceAcceptanceStatus = ({
     >
       <Form.Item label="Set acceptance status">
         <Select
-          getPopupContainer={() => document.querySelector('#te-prefs-lib .ant-modal-content')}
+          getPopupContainer={() =>
+            document.querySelector('#te-prefs-lib .ant-modal-content')
+          }
           value={acceptanceStatus}
           onChange={val => setAcceptanceStatus(val)}
           style={{ width: '100%' }}
         >
           {Object.keys(teCoreAcceptanceStatusProps).map(key => (
-            <Select.Option key={key} value={key}>{teCoreAcceptanceStatusProps[key].label}</Select.Option>
+            <Select.Option key={key} value={key}>
+              {teCoreAcceptanceStatusProps[key].label}
+            </Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -111,13 +113,13 @@ FormInstanceAcceptanceStatus.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
   isVisible: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
-  setFormInstanceAcceptanceStatus: PropTypes.func.isRequired,
+  setFormInstanceAcceptanceStatus: PropTypes.func.isRequired
 };
 
 FormInstanceAcceptanceStatus.defaultProps = {
   _acceptanceStatus: null,
   _acceptanceComment: null,
-  isVisible: false,
+  isVisible: false
 };
 
 export default connect(
