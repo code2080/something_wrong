@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 // REDUCERS
 import { apiStatus } from './APIStatus/apiStatus.reducer';
 import globalUI from './GlobalUI/globalUI.reducer';
+import filters from './Filters/filters.reducer';
 import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   globalUI,
   auth,
   forms,
+  filters,
   submissions,
   activities,
   manualSchedulings,

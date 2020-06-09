@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Input } from 'antd';
 
+// ACTIONS
+import { updateFilter } from '../../Redux/Filters/filters.actions';
+
+// SELECTORS
+import { selectFilter } from '../../Redux/Filters/filters.selectors';
+
 // STYLES
 import './FormSubmissionFilters.scss';
+
+import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
 const PropSearchWrapper = ({ label, value, onChange, }) => (
   <div className="prop-search--wrapper">
@@ -30,21 +38,31 @@ PropSearchWrapper.defaultProps = {
   value: '',
 };
 
-const mapStateToProps = (state, { objectScope }) => {
+const mapStateToProps = (state, { objectScope, formId }) => {
   const scopedObjProps = _.get(state, `integration.mappedObjectTypes.${objectScope}`, {});
 
   return {
+    filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
     label: scopedObjProps.applicationObjectTypeLabel || null,
     fields: scopedObjProps.fields || [],
   };
 };
 
+const mapActionsToProps = {
+  updateFilter,
+};
+
 const ScopedObjectFilters = ({
   label,
   fields,
-  scopedObjectFilters,
-  onFiltersChange
+  filters,
+  updateFilter,
+  formId,
 }) => {
+  const onUpdateFilter = useCallback((extId, value) => {
+    updateFilter({ filterId: formId, key: 'scopedObject', value: { ...filters.scopedObject, [extId]: value } });
+  }, [formId, filters, updateFilter]);
+
   return (
     <div className="scoped-object-filters--wrapper">
       <div className="scoped-object-filters--header">
@@ -55,8 +73,8 @@ const ScopedObjectFilters = ({
           <PropSearchWrapper
             key={field.fieldExtId}
             label={field.fieldLabel}
-            value={scopedObjectFilters[field.fieldExtId]}
-            onChange={value => onFiltersChange({ ...scopedObjectFilters, [field.fieldExtId]: value })}
+            value={filters.scopedObject[field.fieldExtId]}
+            onChange={value => onUpdateFilter(field.fieldExtId, value)}
           />
         ))}
       </div>
@@ -67,8 +85,9 @@ const ScopedObjectFilters = ({
 ScopedObjectFilters.propTypes = {
   label: PropTypes.string,
   fields: PropTypes.array,
-  scopedObjectFilters: PropTypes.object.isRequired,
-  onFiltersChange: PropTypes.func.isRequired,
+  filters: PropTypes.object.isRequired,
+  updateFilter: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
 };
 
 ScopedObjectFilters.defaultProps = {
@@ -76,4 +95,4 @@ ScopedObjectFilters.defaultProps = {
   fields: [],
 };
 
-export default connect(mapStateToProps, null)(ScopedObjectFilters);
+export default connect(mapStateToProps, mapActionsToProps)(ScopedObjectFilters);

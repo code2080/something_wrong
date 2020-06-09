@@ -20,7 +20,7 @@ export const extractSubmissionColumns = form => {
 
   // Get array of acceptable element ids
   const safeElTypes = (Object.keys(elementTypeMapping) || [])
-    .filter(elType => elementTypeMapping[elType].valueType === valueTypes.SINGLE)
+    // .filter(elType => elementTypeMapping[elType].valueType === valueTypes.SINGLE)
     .map(elType => elementTypeMapping[elType].elementId);
 
   // Grab all safe elements and transform to columns

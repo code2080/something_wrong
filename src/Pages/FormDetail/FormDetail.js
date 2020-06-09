@@ -10,23 +10,26 @@ import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.act
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchDataForDataSource } from '../../Redux/Integration/integration.actions';
+import { loadFilter } from '../../Redux/Filters/filters.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
+import { selectFilter } from '../../Redux/Filters/filters.selectors';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
-import ScopedObjectFilters from '../../Components/FormSubmissionFilters/ScopedObjectFilters';
+import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
+import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
-const filterForProps = (el, objs, filters) => {
+const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
   if (!scopedObject) return false;
   const obj = objs[el.scopedObject];
@@ -40,6 +43,8 @@ const filterForProps = (el, objs, filters) => {
     return nC.indexOf(nVal) > -1;
   })
 };
+
+const filterForOwn = (el, userId) => (el.teCoreProps.assignedTo || []).includes(userId);
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const mapStateToProps = (state, ownProps) => {
@@ -55,6 +60,8 @@ const mapStateToProps = (state, ownProps) => {
     : {};
 
   return {
+    userId: _.get(state, 'auth.user.id', null),
+    filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
     isLoadingSubmissions: loadingSelector(state),
     formId,
     form,
@@ -69,10 +76,13 @@ const mapActionsToProps = {
   fetchActivitiesForForm,
   setBreadcrumbs,
   fetchDataForDataSource,
+  loadFilter,
 };
 
 const FormPage = ({
+  userId,
   formId,
+  filters,
   form,
   submissions,
   scopedObjects,
@@ -82,14 +92,11 @@ const FormPage = ({
   setBreadcrumbs,
   fetchMappings,
   fetchDataForDataSource,
+  loadFilter,
   history,
 }) => {
-  // Filter state
-  const [freeTextFilter, setFreeTextFilter] = useState('');
-  const [scopedObjectFilters, setScopedObjectFilters] = useState({});
-
   // Show scoped object filters
-  const [showScopedObjectFilters, setShowScopedObjectFilters] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   // Fetch submissions
   useEffect(() => {
@@ -108,6 +115,10 @@ const FormPage = ({
     if (form.objectScope)
       fetchDataForDataSource(form.objectScope);
   }, []);
+  // Fetch filters
+  useEffect(() => {
+    loadFilter({ filterId: formId });
+  }, [formId]);
 
   // Set breadcrumbs
   useEffect(() => {
@@ -135,21 +146,23 @@ const FormPage = ({
     tableColumns.formSubmission.SCOPED_OBJECT,
     tableColumns.formSubmission.ACCEPTANCE_STATUS,
     tableColumns.formSubmission.SCHEDULING_PROGRESS,
-    // ..._cols,
+    ..._cols,
     tableColumns.formSubmission.ACTION_BUTTON
   ], [_cols]);
 
   const filteredDatasource = useMemo(() => {
+    const { freeTextFilter, scopedObject } = filters;
     // Normalized free text filter
     const query = freeTextFilter.toString().toLowerCase();
 
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return _dataSource
+      .filter(el => filters.onlyOwn ? filterForOwn(el, userId) : true)
       .filter(
-        el => Object.keys(scopedObjectFilters)
-          .filter(key => scopedObjectFilters[key].length > 0)
+        el => Object.keys(scopedObject)
+          .filter(key => scopedObject[key].length > 0)
           .length > 0
-          ? filterForProps(el, scopedObjects, scopedObjectFilters)
+          ? applyScopedObjectFilters(el, scopedObjects, scopedObject)
           : true
       )
       .filter(
@@ -165,24 +178,22 @@ const FormPage = ({
               })
             : true
       )
-  }, [freeTextFilter, _dataSource, columns, scopedObjectFilters]);
-
+  }, [userId, filters, _dataSource, columns]);
   return (
     <div className="form--wrapper">
       <FormToolbar formId={formId} />
       <FormSubmissionFilterBar
-        freeTextFilter={freeTextFilter}
-        onFreeTextFilterChange={setFreeTextFilter}
-        togglePropsFilter={() => setShowScopedObjectFilters(!showScopedObjectFilters)}
-        isPropsFilterVisible={showScopedObjectFilters}
+        formId={formId}
+        togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
+        isPropsFilterVisible={showFilterModal}
       />
-      {showScopedObjectFilters && form.objectScope && (
-        <ScopedObjectFilters
-          scopedObjectFilters={scopedObjectFilters}
-          onFiltersChange={setScopedObjectFilters}
-          objectScope={form.objectScope}
-        />
-      )}
+      <FilterModal
+        formId={formId}
+        objectScope={form.objectScope}
+        isVisible={showFilterModal}
+        contentFilters={_cols}
+        onClose={() => setShowFilterModal(false)}
+      />
       <DynamicTable
         columns={columns}
         dataSource={filteredDatasource}
@@ -207,8 +218,10 @@ const FormPage = ({
 };
 
 FormPage.propTypes = {
+  userId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   form: PropTypes.object,
+  filters: PropTypes.object,
   submissions: PropTypes.array,
   scopedObjects: PropTypes.object,
   isLoadingSubmissions: PropTypes.bool,
@@ -217,6 +230,7 @@ FormPage.propTypes = {
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchMappings: PropTypes.func.isRequired,
   fetchDataForDataSource: PropTypes.func.isRequired,
+  loadFilter: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 

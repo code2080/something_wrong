@@ -1,0 +1,25 @@
+@import '../../Styles/globals.scss';
+
+.filter-modal--pane {
+  .filter-modal__pane--title {
+    color: $darkBlack;
+    font-weight: 700;
+  }
+
+  .ant-row.ant-form-item {
+    display: flex;
+    margin-bottom: 0;
+  }
+
+  .ant-col.ant-form-item-control-wrapper {
+    flex-grow: 1;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 0.4rem;
+  }
+}
+
+.filter-modal--wrapper .ant-modal-body {
+  padding: 8px 24px;
+}

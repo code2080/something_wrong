@@ -1,27 +1,64 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon, Button } from 'antd';
+import { connect } from 'react-redux';
+import { Input, Icon, Button, Switch } from 'antd';
+
+// ACTIONS
+import { updateFilter } from '../../Redux/Filters/filters.actions';
+
+// SELECTORS
+import { selectFilter } from '../../Redux/Filters/filters.selectors';
 
 // STYLES
 import './FormSubmissionFilters.scss';
 
+// CONSTANTS
+import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
+
+const mapStateToProps = (state, { formId }) => ({
+  filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
+});
+
+const mapActionsToProps = {
+  updateFilter,
+};
+
 const FormSubmissionFilterBar = ({
-  freeTextFilter,
-  onFreeTextFilterChange,
+  formId,
+  filters,
+  updateFilter,
   isPropsFilterVisible,
   togglePropsFilter,
 }) => {
+  const onUpdateFilter = useCallback((key, value) => {
+    updateFilter({ filterId: formId, key, value });
+  }, [formId, updateFilter]);
+
+  const filterIconClass = useMemo(() => {
+    if (isPropsFilterVisible) return 'active';
+    if ((Object.keys(filters.scopedObject) || []).some(key => filters.scopedObject[key] && filters.scopedObject[key].length > 0))
+      return 'has-filters';
+  }, [filters, isPropsFilterVisible]);
+
   return (
     <div className="form-submission-filter-bar--wrapper">
       <Input
         placeholder="Filter..."
-        value={freeTextFilter}
-        onChange={e => onFreeTextFilterChange(e.target.value)}
+        value={filters.freeTextFilter}
+        onChange={e => onUpdateFilter('freeTextFilter', e.target.value)}
         suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
         size="small"
       />
+      <div className="form-submission-filter-bar--switch">
+        <Switch
+          checked={filters.onlyOwn}
+          onChange={onlyOwn => onUpdateFilter('onlyOwn', onlyOwn)}
+          size="small"
+        />
+        <span>Show only own</span>
+      </div>
       <Button
-        className={isPropsFilterVisible ? 'active' : ''}
+        className={filterIconClass}
         type="link"
         size="small"
         shape="circle"
@@ -34,10 +71,15 @@ const FormSubmissionFilterBar = ({
 };
 
 FormSubmissionFilterBar.propTypes = {
-  freeTextFilter: PropTypes.string.isRequired,
-  onFreeTextFilterChange: PropTypes.func.isRequired,
-  togglePropsFilter: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
+  filters: PropTypes.object,
+  updateFilter: PropTypes.func.isRequired,
   isPropsFilterVisible: PropTypes.bool.isRequired,
+  togglePropsFilter: PropTypes.func.isRequired,
 };
 
-export default FormSubmissionFilterBar;
+FormSubmissionFilterBar.defaultProps = {
+  filters: null,
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(FormSubmissionFilterBar);

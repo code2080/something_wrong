@@ -47,7 +47,8 @@ const DynamicTableHOC = ({
     // Get the visible columns
     const fixedWidth = fixedWidthCols
       .reduce((tot, col) => col.fixedWidth ? tot + col.fixedWidth : tot, 0);
-    return width ? width - (fixedWidth + 40) : 0;
+    const constant = expandedRowRender ? 90 : 40;
+    return width ? width - (fixedWidth + constant) : 0;
   }, [fixedWidthCols, width]);
 
   // Memoized variable with the visible column definitions

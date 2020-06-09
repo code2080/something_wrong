@@ -89,7 +89,6 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
     return (
       <div className="element__datasource--wrapper">
         <div className="element__datasource--inner">
-          <Icon type="appstore" />
           N/A
         </div>
       </div>
