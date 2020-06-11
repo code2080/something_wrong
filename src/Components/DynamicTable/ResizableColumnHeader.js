@@ -43,13 +43,14 @@ const ResizeableColumnHeader = props => {
 
 ResizeableColumnHeader.propTypes = {
   width: PropTypes.number,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 ResizeableColumnHeader.defaultProps = {
   width: 0,
   title: null,
+  children: null,
 };
 
 export default ResizeableColumnHeader;

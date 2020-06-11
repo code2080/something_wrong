@@ -2,21 +2,26 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Icon } from 'antd';
+import { Icon, Modal } from 'antd';
 
 // ACTIONS
 import { toggleRowSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.actions';
+import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // HELPERS
 import { pickElement } from '../../../../Utils/elements.helpers';
 import { getTECoreAPIPayload } from '../../../../Redux/Integration/integration.selectors';
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
 
+// SELECTORS
+import { selectManualSchedulingStatusForRow, selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
+
 // STYLES
 import './ManualSchedulingColumn.scss';
 
 // CONSTANTS
-import { manualSchedulingStatuses } from '../../../../Constants/manualSchedulingConstants';
+import { manualSchedulingStatuses, manualSchedulingFormStatuses } from '../../../../Constants/manualSchedulingConstants';
+import { teCoreSchedulingProgress } from '../../../../Constants/teCoreProps.constants';
 
 const getClassName = (rowStatus, showInvertedState) => {
   if (showInvertedState) {
@@ -41,27 +46,31 @@ const mapStateToProps = (state, ownProps) => {
     return [...prev, ...p];
   }, []);
 
-  // Get the manual scheduling state
-  const rowStatus = _.get(state.manualSchedulings, `${formInstanceId}.${sectionId}.${rowKey}`, manualSchedulingStatuses.NOT_COMPLETED);
   return {
     teCorePayload,
     rowKey,
-    rowStatus,
+    rowStatus: selectManualSchedulingStatusForRow(state)(formInstanceId, sectionId, rowKey),
+    mSStatus: selectManualSchedulingStatus(state)(formInstanceId, formId),
+    formInstance: _.get(state, `submissions.${formId}.${formInstanceId}`, {}),
   };
 };
 
 const mapActionsToProps = {
   toggleRowSchedulingStatus,
+  setFormInstanceSchedulingProgress,
 };
 
 const ManualSchedulingColumn = ({
   rowStatus,
   teCorePayload,
   toggleRowSchedulingStatus,
+  setFormInstanceSchedulingProgress,
   teCoreAPI,
   formInstanceId,
   sectionId,
   rowKey,
+  formInstance,
+  mSStatus,
 }) => {
   const [showInvertedState, setShowInvertedState] = useState(false);
 
@@ -71,8 +80,25 @@ const ManualSchedulingColumn = ({
   }, [teCorePayload]);
 
   const onToggleRowSchedulingStatusCallback = useCallback(() => {
+    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED)
+      Modal.confirm({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        title: 'Do you want to update the scheduling progress?',
+        content: 'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
+        onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.IN_PROGRESS }),
+        onCancel: () => {},
+      });
+    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED)
+      Modal.confirm({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        title: 'Do you want to update the scheduling progress?',
+        content: 'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
+        onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.SCHEDULING_FINISHED }),
+        onCancel: () => {},
+      });
+
     toggleRowSchedulingStatus({ formInstanceId, sectionId, rowKey });
-  })
+  }, [mSStatus, toggleRowSchedulingStatus, formInstanceId, sectionId, rowKey])
   const derivedStatus = getClassName(rowStatus, showInvertedState);
 
   return (
@@ -108,6 +134,9 @@ ManualSchedulingColumn.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
   sectionId: PropTypes.string.isRequired,
   rowKey: PropTypes.string.isRequired,
+  mSStatus: PropTypes.object.isRequired,
+  setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
+  formInstance: PropTypes.object.isRequired,
 };
 
 ManualSchedulingColumn.defaultProps = {

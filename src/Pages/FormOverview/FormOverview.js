@@ -19,12 +19,14 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
+import { formStatus } from '../../Constants/formStatuses.constants';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
   isLoading: loadingSelector(state),
   forms: (Object.keys(state.forms) || [])
     .map(key => state.forms[key])
+    .filter(form => form.status !== formStatus.ARCHIVED)
     .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf()),
   user: state.auth.user,
 });
