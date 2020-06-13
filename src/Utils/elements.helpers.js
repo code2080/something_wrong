@@ -1,5 +1,5 @@
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
-import { determineSectionType } from './sections.helpers';
+import { determineSectionType } from './determineSectionType.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
@@ -97,6 +97,33 @@ export const findElementValueInSubmission = (element, sections, values) => {
       return findElementValueInTableSection(element.elementId, sectionValues);
     case SECTION_CONNECTED:
       return findElementValueInConnectedSection(element.elementId, sectionValues);
+    default:
+      return null;
+  }
+};
+
+/**
+ * @function findElementValueInSubmissionFromId
+ * @description returns the element value from an element id
+ * @param {String} elementId the element id
+ * @param {String} sectionId the section id
+ * @param {Array} sections the sections in the form
+ * @param {Object} values the submission values
+ * @returns {String} element value
+ */
+export const findElementValueInSubmissionFromId = (elementId, sectionId, sections, values) => {
+  // Find the appropriate section
+  const sectionIdx = sections.findIndex(section => section._id === sectionId);
+  if (sectionIdx === -1) return null;
+  const sectionValues = values[sectionId];
+  const sectionType = determineSectionType(sections[sectionIdx]);
+  switch (sectionType) {
+    case SECTION_VERTICAL:
+      return findElementValueInRegularSection(elementId, sectionValues);
+    case SECTION_TABLE:
+      return findElementValueInTableSection(elementId, sectionValues);
+    case SECTION_CONNECTED:
+      return findElementValueInConnectedSection(elementId, sectionValues);
     default:
       return null;
   }

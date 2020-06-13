@@ -12,6 +12,9 @@ import {
   ASSIGN_USER_TO_FORM_INSTANCE_REQUEST,
   ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS,
   ASSIGN_USER_TO_FORM_INSTANCE_FAILURE,
+  UPDATE_SELECTION_SETTINGS_REQUEST,
+  UPDATE_SELECTION_SETTINGS_SUCCESS,
+  UPDATE_SELECTION_SETTINGS_FAILURE,
 } from './formSubmissions.actionTypes';
 
 const fetchFormSubmissionsFlow = {
@@ -97,4 +100,33 @@ export const toggleUserForFormInstance = ({
     flow: toggleUserForFormInstanceFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/assign`,
     params: { userId }
+  });
+
+const updateSelectionSettingsFlow = {
+  request: () => ({ type: UPDATE_SELECTION_SETTINGS_REQUEST }),
+  success: response => ({
+    type: UPDATE_SELECTION_SETTINGS_SUCCESS,
+    payload: { ...response }
+  }),
+  failure: err => ({
+    type: UPDATE_SELECTION_SETTINGS_FAILURE,
+    payload: { ...err }
+  })
+};
+
+export const updateSelectionSettings = ({
+  formId,
+  formInstanceId,
+  sectionId,
+  selectionSettings
+}) =>
+  asyncAction.PUT({
+    flow: updateSelectionSettingsFlow,
+    endpoint: `form-instances/${formInstanceId}/te-core/selection-settings`,
+    params: {
+      formId,
+      formInstanceId,
+      sectionId,
+      selectionSettings,
+    },
   });

@@ -63,6 +63,31 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.UPDATE_SELECTION_SETTINGS_SUCCESS: {
+      const {
+        actionMeta: {
+          formId,
+          formInstanceId,
+        },
+        formInstance: {
+          teCoreProps
+        }
+      } = action.payload;
+
+      const updatedTECoreProps = new FormInstanceTECoreProps(teCoreProps);
+
+      return {
+        ...state,
+        [formId]: {
+          ...state[formId],
+          [formInstanceId]: {
+            ...state[formId][formInstanceId],
+            teCoreProps: updatedTECoreProps,
+          },
+        },
+      };
+    }
+
     default:
       return state;
   }

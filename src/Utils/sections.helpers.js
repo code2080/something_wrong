@@ -1,31 +1,9 @@
 import moment from 'moment';
-import {
-  SECTION_VERTICAL,
-  SECTION_TABLE,
-  SECTION_CONNECTED
-} from '../Constants/sectionTypes.constants';
-
-/**
- * @function determineSectionTypes
- * @description determines the types of multiple sections
- * @param {Array} sections the sections
- * @returns {Array<Object>}
- */
-export const determineSectionTypes = sections =>
-  sections.map(el => ({ sectionId: el._id, sectionType: determineSectionType(el) }));
-
-/**
- * @function determineSectionType
- * @description returns the section type for any given section
- * @param {Object} section the section
- * @returns {String} sectionType
- */
-export const determineSectionType = section => {
-  if (section.isConnected) return SECTION_CONNECTED;
-  if (section.settings && section.settings.hasMultipleValues)
-    return SECTION_TABLE;
-  return SECTION_VERTICAL;
-};
+import _ from 'lodash';
+import { SelectionSettings } from '../Models/SelectionSettings.model';
+import { getElementTypeFromId } from './elements.helpers';
+import { elementTypes } from '../Constants/elementTypes.constants';
+import { determineSectionType } from './determineSectionType.helpers';
 
 /**
  * @function getSectionTypeFromId
@@ -107,3 +85,29 @@ export const findTimeSlot = (startTime, endTime, timeslots) => {
   if (timeslotIdx > -1) return timeslots[timeslotIdx];
   return null;
 };
+
+/**
+ * @function getSelectionSettings
+ * @description gets the selection settings for a section or returns a default
+ * @param sectionId the section id to return the selection settings for
+ * @param formInstance the form instance
+ * @returns selectionSettings
+ */
+export const getSelectionSettings = (sectionId, formInstance) =>
+  _.get(formInstance, `teCoreProps.selectionSettings.${sectionId}`, new SelectionSettings({}));
+
+/**
+ * @function getSelectionFieldElements
+ * @description gets the elements in a section that are compatible with being included as a field value
+ * @param section the section to filter the elements in
+ * @returns fieldElements
+ */
+export const getSelectionFieldElements = section =>
+  (section.elements || [])
+    .filter(el => {
+      const elementType = getElementTypeFromId(el.elementId);
+      return elementType === elementTypes.ELEMENT_TYPE_INPUT_TEXT ||
+        elementType === elementTypes.ELEMENT_TYPE_INPUT_NUMBER ||
+        elementType === elementTypes.ELEMENT_TYPE_TEXTAREA
+    })
+    .map(el => ({ value: el._id, label: el.label }))

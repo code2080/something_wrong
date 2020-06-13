@@ -1,5 +1,6 @@
 // HELPERS
-import { determineSectionTypes, getSectionsToUseInActivities } from './sections.helpers';
+import { determineSectionTypes } from './determineSectionType.helpers';
+import { getSectionsToUseInActivities } from './sections.helpers';
 import { createActivityValueForProp } from './activityValues.helpers';
 
 // MODELS

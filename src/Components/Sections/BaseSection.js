@@ -6,17 +6,17 @@ import { Icon } from 'antd';
 
 // COMPONENTS
 import BaseSectionTableView from './BaseSectionTableView';
-import CalendarSettings from './CalendarSettings';
+import SectionExtra from './SectionExtra';
 
 // HELPERS
-import { determineSectionType } from '../../Utils/sections.helpers';
+import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import { transformSectionToTableColumns, transformSectionValuesToTableRows } from '../../Utils/rendering.helpers';
 
 // STYLES
 import './BaseSection.scss';
 
 // CONSTANTS
-import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
+import { SECTION_CONNECTED, SECTION_TABLE } from '../../Constants/sectionTypes.constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } }, section } = ownProps;
@@ -63,7 +63,14 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
           </div>
         )}
       </div>
-      {showExtra && section && section.calendarSettings && (<CalendarSettings calendarSettings={section.calendarSettings} />)}
+      {showExtra && section && (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE) && (
+        <SectionExtra
+          formId={formId}
+          formInstanceId={formInstanceId}
+          section={section}
+          sectionType={sectionType}
+        />
+      )}
       <BaseSectionTableView columns={_columns} dataSource={_data} />
     </div>
   );

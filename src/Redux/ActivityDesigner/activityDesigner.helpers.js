@@ -1,5 +1,5 @@
 import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
-import { determineSectionType } from '../../Utils/sections.helpers';
+import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { mappingTypes } from '../../Constants/mappingTypes.constants';
@@ -143,15 +143,11 @@ export const getElementsForMapping = (formSections, mapping) => {
       )
         isDisabled = true;
 
-      const children = sectionType === SECTION_CONNECTED
-        ? [({ value: 'title', label: 'Event title' }), ...section.elements.map(element => ({ value: element._id, label: element.label }))]
-        : section.elements.map(element => ({ value: element._id, label: element.label }));
-
       return {
         value: section._id,
         label: section.name,
         disabled: isDisabled,
-        children: children,
+        children: section.elements.map(element => ({ value: element._id, label: element.label })),
       };
     }),
   ];

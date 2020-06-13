@@ -1,0 +1,15 @@
+@import '../../Styles/globals.scss';
+
+.extra-object--wrapper {
+  display: flex;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+
+  .extra-object__value--wrapper {
+    margin-left: 20px;
+  }
+
+  &:last-child {
+    margin-bottom: 0.6rem;
+  }
+}

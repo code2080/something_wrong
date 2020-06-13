@@ -1,0 +1,27 @@
+@import '../../Styles/globals.scss';
+
+.selection-settings--wrapper {
+  .ant-switch {
+    margin-left: 0.4rem;
+  }
+
+  .selection-settings__setting--title {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+  }
+
+  .selection-settings--setting:not(:last-of-type) {
+    margin-bottom: 1.4rem;
+  }
+
+  .selection-settings__columns {
+    display: flex;
+
+    .selection-settings__column {
+      &:first-child {
+        width: 220px;
+      }
+    }
+  }
+}

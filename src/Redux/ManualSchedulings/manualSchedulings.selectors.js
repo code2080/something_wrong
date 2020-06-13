@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
-import { determineSectionType } from '../../Utils/sections.helpers';
+import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 
 import { manualSchedulingStatuses, manualSchedulingFormStatuses } from '../../Constants/manualSchedulingConstants';
 import { SECTION_CONNECTED, SECTION_TABLE } from '../../Constants/sectionTypes.constants';
