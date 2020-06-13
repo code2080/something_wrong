@@ -6,15 +6,16 @@ import initialState from './activities.initialState';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
+    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS:
+    case types.UPDATE_ACTIVITIES_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       const activities = (action.payload.activities || [])
         .map(el => new Activity(el))
         .reduce(
-          (_reservations, activity) => ({
-            ..._reservations,
+          (_activities, activity) => ({
+            ..._activities,
             [activity.formInstanceId]: [
-              ...(_reservations[activity.formInstanceId] || []),
+              ...(_activities[activity.formInstanceId] || []),
               activity
             ]
           }),
@@ -56,17 +57,17 @@ const reducer = (state = initialState, action) => {
       const { formId, formInstanceId, _id } = action.payload.activity;
       if (!formId || !formInstanceId)
         return state;
-      const reservationIdx = state[formId][formInstanceId].findIndex(el => el._id === _id);
-      if (reservationIdx === -1) return state;
+      const activityIdx = state[formId][formInstanceId].findIndex(el => el._id === _id);
+      if (activityIdx === -1) return state;
       const activity = new Activity(action.payload.activity);
       return {
         ...state,
         [formId]: {
           ...state[formId],
           [formInstanceId]: [
-            ...state[formId][formInstanceId].slice(0, reservationIdx),
+            ...state[formId][formInstanceId].slice(0, activityIdx),
             activity,
-            ...state[formId][formInstanceId].slice(reservationIdx + 1),
+            ...state[formId][formInstanceId].slice(activityIdx + 1),
           ],
         },
       };

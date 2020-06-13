@@ -8,9 +8,6 @@ import {
   TECoreReservationModel
 } from '../Models/TECoreReservation.model';
 
-import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-import { activityStatuses } from '../Constants/activityStatuses.constants';
-
 const convertActivityValueToReservationProp = activityValue => {
   switch (activityValue.type) {
     case activityValueTypes.FIELD:
@@ -34,27 +31,7 @@ const convertValuesToReservationProps = activity =>
     { objects: [], fields: [] }
   );
 
-const parseTECoreResultToScheduleReturn = (teCoreReturn, callback) => {
-  const errorCode = teCoreReturn.failures[0]
-    ? teCoreReturn.failures[0].result.references[0]
-    : 0;
-  const errorMessage = teCoreReturn.failures[0]
-    ? teCoreReturn.failures[0].result.reservation
-    : '';
-  callback(
-    new SchedulingReturn({
-      status:
-        teCoreReturn.failures.length === 0
-          ? activityStatuses.SCHEDULED
-          : activityStatuses.FAILED,
-      reservationId: teCoreReturn.newIds[0],
-      errorCode,
-      errorMessage
-    })
-  );
-};
-
-export const scheduleActivityExact = (activity, teCoreScheduleFn, callback) => {
+export const formatActivityForExactScheduling = activity => {
   /**
    * Create the reservation
    */
@@ -63,18 +40,10 @@ export const scheduleActivityExact = (activity, teCoreScheduleFn, callback) => {
   const _endTime = activity.timing.find(el => el.extId === 'endTime');
   const startTime = _startTime.value;
   const endTime = _endTime.value;
-  const reservation = new TECoreReservationModel({
+  return new TECoreReservationModel({
     startTime,
     endTime,
     objects,
     fields
-  });
-  /**
-   * Call the external API
-   */
-  return teCoreScheduleFn({
-    reservation,
-    callback: teCoreResult =>
-      parseTECoreResultToScheduleReturn(teCoreResult, callback)
   });
 };

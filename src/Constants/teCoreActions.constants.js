@@ -23,7 +23,8 @@ export const teCoreCallnames = {
   REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
-  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity'
+  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
+  REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
 };
 
 export const teCoreActions = {
@@ -124,6 +125,14 @@ export const teCoreActions = {
         })
       );
     }
+  },
+  REQUEST_SCHEDULE_ACTIVITIES: {
+    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+    mockFunction: ({ reservations, callback }) =>
+      callback(reservations.map(r => ({
+        activityId: r.activityId,
+        result: coreReservationResult,
+      })))
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT

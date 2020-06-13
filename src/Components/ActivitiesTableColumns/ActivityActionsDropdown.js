@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Dropdown, Menu, Button, Icon } from 'antd';
 
 // HELPERS
-import { scheduleActivity } from '../../Utils/scheduling.helpers';
+import { scheduleActivity, scheduleActivities } from '../../Utils/scheduling.helpers';
 
 // ACTIONS
-import { updateActivity } from '../../Redux/Activities/activities.actions';
+import { updateActivity, updateActivities } from '../../Redux/Activities/activities.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
@@ -16,23 +16,33 @@ import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
+const mapStateToProps = (state, { activity }) => ({
+  activities: state.activities[activity.formId][activity.formInstanceId],
+});
+
 const mapActionsToProps = {
   updateActivity,
+  updateActivities,
 };
 
 const activityActions = {
+  SCHEDULE_ALL: {
+    label: 'Schedule all activities',
+    filterFn: activity => !activity.reservationId && activity.activityStatus !== activityStatuses.SCHEDULED,
+    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+  },
   SCHEDULE: {
     label: 'Schedule activity',
-    filterFn: activity => !activity.reservationId && activity.activityStatus === activityStatuses.NOT_SCHEDULED,
+    filterFn: activity => !activity.reservationId && activity.activityStatus !== activityStatuses.SCHEDULED,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITY,
   },
   SELECT: {
-    label: 'Select activity',
+    label: 'Select reservation',
     filterFn: activity => activity.reservationId && activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
     callname: teCoreCallnames.SELECT_RESERVATION,
   },
   DELETE: {
-    label: 'Delete activity',
+    label: 'Delete reservation',
     filterFn: activity => activity.reservationId && activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
     callname: teCoreCallnames.DELETE_RESERVATION,
   },
@@ -41,7 +51,9 @@ const activityActions = {
 const ActivityActionsDropdown = ({
   buttonType,
   activity,
+  activities,
   updateActivity,
+  updateActivities,
   teCoreAPI,
 }) => {
   const onFinishSchedule = response => {
@@ -53,11 +65,34 @@ const ActivityActionsDropdown = ({
       reservationId,
     };
     updateActivity(updatedActivity);
+  };
+
+  const onFinishScheduleMultiple = responses => {
+    console.log(responses);
+    const updatedActivities = activities.map(a => {
+      const response = responses.find(r => r.activityId === a._id);
+      if (!response) return a;
+      const { result: { status: activityStatus, reservationId } } = response;
+      return {
+        ...a,
+        activityStatus,
+        reservationId,
+      };
+    });
+    // console.log(updatedActivities);
+    updateActivities(activity.formId, activity.formInstanceId, updatedActivities);
   }
 
   const handleMenuClick = useCallback(({ key }) => {
     if (!activityActions[key] || !activityActions[key].callname) return;
     switch (key) {
+      case 'SCHEDULE_ALL':
+        scheduleActivities(
+          activities.filter(a => a.activityStatus !== activityStatuses.SCHEDULED),
+          teCoreAPI[activityActions[key].callname],
+          onFinishScheduleMultiple
+        );
+        break;
       case 'SCHEDULE':
         scheduleActivity(activity, teCoreAPI[activityActions[key].callname], onFinishSchedule);
         break;
@@ -97,7 +132,9 @@ const ActivityActionsDropdown = ({
 ActivityActionsDropdown.propTypes = {
   buttonType: PropTypes.string,
   activity: PropTypes.object.isRequired,
+  activities: PropTypes.array.isRequired,
   updateActivity: PropTypes.func.isRequired,
+  updateActivities: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
 };
 
@@ -105,4 +142,4 @@ ActivityActionsDropdown.defaultProps = {
   buttonType: 'default',
 };
 
-export default connect(null, mapActionsToProps)(withTECoreAPI(ActivityActionsDropdown));
+export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(ActivityActionsDropdown));

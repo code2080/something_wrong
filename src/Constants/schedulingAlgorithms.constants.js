@@ -2,6 +2,7 @@ export const schedulingAlgorithms = {
   EXACT: 'EXACT',
   BEST_FIT_OBJECT: 'BEST_FIT_OBJECT',
   BEST_FIT_TIME: 'BEST_FIT_TIME',
+  BEST_FIT_OBJECT_TIME: 'BEST_FIT_OBJECT_TIME',
 };
 
 export const schedulingAlgorithmProps = {
