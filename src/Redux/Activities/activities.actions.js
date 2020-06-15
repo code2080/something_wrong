@@ -25,6 +25,9 @@ import {
   REVERT_TO_SUBMISSION_VALUE_REQUEST,
   REVERT_TO_SUBMISSION_VALUE_SUCCESS,
   REVERT_TO_SUBMISSION_VALUE_FAILURE,
+  UPDATE_ACTIVITIES_REQUEST,
+  UPDATE_ACTIVITIES_SUCCESS,
+  UPDATE_ACTIVITIES_FAILURE,
 } from './activities.actionTypes';
 
 import { manuallyOverrideActivityValue, revertActivityValueToSubmission } from './activities.helpers';
@@ -130,6 +133,23 @@ export const updateActivity = activity =>
     flow: updateActivityFlow,
     endpoint: `form-instances/${activity.formInstanceId}/activities/${activity._id}`,
     params: { activity }
+  });
+
+const updateActivitiesFlow = {
+  request: () => ({ type: UPDATE_ACTIVITIES_REQUEST }),
+  success: response => ({ type: UPDATE_ACTIVITIES_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: UPDATE_ACTIVITIES_FAILURE, payload: { ...err } }),
+};
+
+export const updateActivities = (formId, formInstanceId, activities) =>
+  asyncAction.PUT({
+    flow: updateActivitiesFlow,
+    endpoint: `form-instances/${formInstanceId}/activities`,
+    params: {
+      formId,
+      formInstanceId,
+      activities
+    }
   });
 
 export const scheduleActivity = ({ apiFn, callback, activity }) => (dispatch, getState) => {

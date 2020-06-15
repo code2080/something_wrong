@@ -5,7 +5,7 @@ import { Table } from 'antd';
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColumns/ActivitiesTableColumns';
 
-const AutomaticSchedulingTable = ({ mapping, activities }) => {
+const ActivitiesTable = ({ mapping, activities }) => {
   const columns = mapping ? createActivitiesTableColumnsFromMapping(mapping) : [];
   const dataSource = activities && activities.length
     ? activities
@@ -19,14 +19,14 @@ const AutomaticSchedulingTable = ({ mapping, activities }) => {
   );
 };
 
-AutomaticSchedulingTable.propTypes = {
+ActivitiesTable.propTypes = {
   mapping: PropTypes.object,
   activities: PropTypes.array,
 };
 
-AutomaticSchedulingTable.defaultProps = {
+ActivitiesTable.defaultProps = {
   mapping: null,
   activities: [],
 };
 
-export default AutomaticSchedulingTable;
+export default ActivitiesTable;

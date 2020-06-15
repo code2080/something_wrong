@@ -93,7 +93,7 @@ const mapStateToProps = (state, ownProps) => {
     const mappedTypes = Object.keys(_.get(state, 'integration.mappedObjectTypes', {}));
     const availableTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []);
     validTypes = createValidTypesArray(mappedTypes, availableTypes);
-    validFields =  _.get(state, `integration.reservationModes.${reservationMode}.fields`, []);
+    validFields = _.get(state, `integration.reservationModes.${reservationMode}.fields`, []);
   }
 
   return {
@@ -200,7 +200,7 @@ const FormReservationTemplateMapping = ({
       );
     return availableTypes;
   }, [form, validTypes, availableTypes]);
-  const fieldOptions = useMemo(() => { 
+  const fieldOptions = useMemo(() => {
     if (validFields.length > 0)
       return validFields.map(
         value => ({

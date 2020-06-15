@@ -1,5 +1,5 @@
 // HELPERS
-import { scheduleActivityExact } from './exactScheduling.helpers';
+import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import { validateTiming, validateValue } from './activityValues.validation';
 import { getTimingModeForActivity } from './activities.helpers';
 
@@ -41,35 +41,138 @@ export const determineSchedulingAlgorithmForActivityValue = (activityValue, acti
   return schedulingAlgorithms.EXACT;
 };
 
-export const scheduleActivity = (activity, teCoreScheduleFn, callback) => {
-  /**
-   * Validate the timing, values activity values
-   */
+const parseTECoreResultToScheduleReturn = teCoreReturn =>
+  new SchedulingReturn({
+    status:
+      teCoreReturn.failures.length === 0
+        ? activityStatuses.SCHEDULED
+        : activityStatuses.FAILED,
+    reservationId: teCoreReturn.newIds[0],
+    errorCode: teCoreReturn.failures[0]
+      ? teCoreReturn.failures[0].result.references[0]
+      : 0,
+    errorMessage: teCoreReturn.failures[0]
+      ? teCoreReturn.failures[0].result.reservation
+      : '',
+  });
+
+const parseTECoreResultsToScheduleReturns = teCoreReturns =>
+  teCoreReturns.map(
+    el => ({
+      activityId: el.activityId,
+      result: new SchedulingReturn({
+        status: el.result.failures.length === 0
+          ? activityStatuses.SCHEDULED
+          : activityStatuses.FAILED,
+        reservationId: el.result.newIds[0],
+        errorCode: el.result.failures[0]
+          ? el.result.failures[0].result.references[0]
+          : '',
+        errorMessage: el.result.failures[0]
+          ? el.result.failures[0].result.reservation
+          : '',
+      }),
+    })
+  );
+
+export const validateActivity = activity => {
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map(activityValue => validateValue(activityValue)),
   ];
   const hasValidationErrors = validationResults.some(el => el.status !== activityValueStatuses.READY_FOR_SCHEDULING);
-  if (hasValidationErrors)
-    return callback(new SchedulingReturn({
+  if (hasValidationErrors) return false;
+  return true;
+};
+
+export const determineSchedulingAlgorithmForActivity = activity => {
+  const activityValues = [...activity.timing, ...activity.values];
+  const allSchedulingAlgorithms = activityValues.map(el => determineSchedulingAlgorithmForActivityValue(el, activity));
+  // Test for exact
+  if (allSchedulingAlgorithms.every(alg => alg === schedulingAlgorithms.EXACT)) return schedulingAlgorithms.EXACT;
+  // Check if we have props of best fit time and object
+  const hasBestFitTime = allSchedulingAlgorithms.some(alg => alg === schedulingAlgorithms.BEST_FIT_TIME);
+  const hasBestFitObject = allSchedulingAlgorithms.some(alg => alg === schedulingAlgorithms.BEST_FIT_OBJECT);
+  if (hasBestFitObject && hasBestFitTime) return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
+  if (hasBestFitTime) return schedulingAlgorithms.BEST_FIT_TIME;
+  if (hasBestFitObject) return schedulingAlgorithms.BEST_FIT_OBJECT;
+};
+
+export const scheduleActivity = (activity, teCoreScheduleFn, callback) => {
+  // Validate the activity
+  if (!validateActivity(activity))
+    return new SchedulingReturn({
       status: activityStatuses.VALIDATION_ERROR,
       errorCode: activityStatuses.VALIDATION_ERROR,
       errorMessage: activityStatusProps[activityStatuses.VALIDATION_ERROR].label,
-    }));
-
-  /**
-   * Get the scheduling algorithms for all activity values
-   */
-  const activityValues = [...activity.timing, ...activity.values];
-  const allSchedulingAlgorithms = activityValues.map(el => determineSchedulingAlgorithmForActivityValue(el, activity));
+    });
+  const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(activity);
 
   // Special case: EVERTHING is schedulingAlgorithms.EXACT
-  if (allSchedulingAlgorithms.every(alg => alg === schedulingAlgorithms.EXACT))
-    return scheduleActivityExact(activity, teCoreScheduleFn, callback);
+  if (schedulingAlgorithm === schedulingAlgorithms.EXACT) {
+    const reservation = formatActivityForExactScheduling(activity);
+    return teCoreScheduleFn({
+      reservation,
+      callback: teCoreResult => callback(parseTECoreResultToScheduleReturn(teCoreResult)),
+    });
+  }
 
   return callback(new SchedulingReturn({
     status: activityStatuses.FAILED,
     errorCode: activityStatuses.FAILED,
     errorMessage: 'The scheduling algorithm has not yet been implemented',
   }));
+}
+
+export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
+  // Preprocess all activities
+  const preprocessingMap = activities
+    .map(a => {
+      const validates = validateActivity(a);
+      return {
+        activity: a,
+        activityId: a._id,
+        validates,
+        result: validates
+          ? null
+          : new SchedulingReturn({
+            status: activityStatuses.VALIDATION_ERROR,
+            errorCode: activityStatuses.VALIDATION_ERROR,
+            errorMessage: activityStatusProps[activityStatuses.VALIDATION_ERROR].label,
+          }),
+      };
+    })
+    .map(a => {
+      if (!a.validates) return a;
+      const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(a.activity);
+      return {
+        ...a,
+        result: schedulingAlgorithm === schedulingAlgorithms.EXACT
+          ? null
+          : new SchedulingReturn({
+            status: activityStatuses.FAILED,
+            errorCode: activityStatuses.FAILED,
+            errorMessage: 'The scheduling algorithm has not yet been implemented',
+          }),
+        reservation: schedulingAlgorithm === schedulingAlgorithms.EXACT
+          ? formatActivityForExactScheduling(a.activity)
+          : null,
+      };
+    });
+
+  // Get the ones we're able to schedule
+  const toSchedule = preprocessingMap
+    .filter(a => a.result == null)
+    .map(a => ({ activityId: a.activityId, reservation: a.reservation }));
+  const failedActivities = preprocessingMap
+    .filter(a => a.result != null)
+    .map(a => ({ activityId: a.activityId, result: a.result }));
+
+  if (toSchedule.length === 0)
+    return cFn(failedActivities);
+
+  return teCoreScheduleFn({
+    reservations: toSchedule,
+    callback: teCoreResults => cFn([...failedActivities, ...parseTECoreResultsToScheduleReturns(teCoreResults)]),
+  });
 }

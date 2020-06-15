@@ -12,7 +12,8 @@ import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmiss
 import { pickElement } from '../../../../Utils/elements.helpers';
 import { getTECoreAPIPayload } from '../../../../Redux/Integration/integration.selectors';
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
-
+import { getSelectionSettings } from '../../../../Utils/sections.helpers';
+import { getSelectionSettingsTECorePayload } from '../../../../Utils/forms.helpers';
 // SELECTORS
 import { selectManualSchedulingStatusForRow, selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 
@@ -36,15 +37,21 @@ const mapStateToProps = (state, ownProps) => {
   // Collect own props
   const { event, sectionId, formId, formInstanceId } = ownProps;
   const rowKey = event.rowKey;
+  const form = state.forms[formId];
+  const formInstance = state.submissions[formId][formInstanceId];
+  const selectionSettings = getSelectionSettings(sectionId, formInstance);
 
   // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
   const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
-  const teCorePayload = elements.reduce((prev, el) => {
-    const value = event[el._id];
-    const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, state));
-    return [...prev, ...p];
-  }, []);
+  const teCorePayload = [
+    ...elements.reduce((prev, el) => {
+      const value = event[el._id];
+      const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, state));
+      return [...prev, ...p];
+    }, []),
+    ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
+  ];
 
   return {
     teCorePayload,
