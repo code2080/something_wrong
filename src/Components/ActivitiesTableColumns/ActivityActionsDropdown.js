@@ -71,7 +71,6 @@ const ActivityActionsDropdown = ({
   teCoreAPI
 }) => {
   const onFinishSchedule = response => {
-    console.log(response);
     const { status: activityStatus, reservationId } = response;
     const updatedActivity = {
       ...activity,
@@ -95,7 +94,6 @@ const ActivityActionsDropdown = ({
         reservationId
       };
     });
-    // console.log(updatedActivities);
     updateActivities(
       activity.formId,
       activity.formInstanceId,
@@ -104,15 +102,15 @@ const ActivityActionsDropdown = ({
   };
 
   const onDeleteActivity = response => {
-    console.log(response);
     // Check result parameter to see if everything went well or not
-    if (response.result.details) {
-      // There was some error message
-    } else {
-      // Cancellation was successful
-      // Update activity status to NOT_SCHEDULED
-      // Set reservationId = null
-      // Call updateActivity with the updated activity
+    if (!response.result.details) {
+      const updatedActivity = {
+        ...activity,
+        schedulingDate: null,
+        activityStatus: activityStatuses.NOT_SCHEDULED,
+        reservationId: null,
+      };
+      updateActivity(updatedActivity);
     }
   };
 
