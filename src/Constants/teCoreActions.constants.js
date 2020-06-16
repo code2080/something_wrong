@@ -24,7 +24,7 @@ export const teCoreCallnames = {
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
   REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
-  REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
+  REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities'
 };
 
 export const teCoreActions = {
@@ -65,7 +65,8 @@ export const teCoreActions = {
   },
   DELETE_RESERVATION: {
     callname: teCoreCallnames.DELETE_RESERVATION,
-    mock: (activity, cbFn) => cbFn({ activityId: activity._id, result: true }),
+    mock: ({ activity, callback }) =>
+      callback({ activityId: activity._id, result: true })
   },
   SCHEDULE_ACTIVITY: {
     callname: teCoreCallnames.SCHEDULE_ACTIVITY
@@ -130,10 +131,12 @@ export const teCoreActions = {
   REQUEST_SCHEDULE_ACTIVITIES: {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
     mockFunction: ({ reservations, callback }) =>
-      callback(reservations.map(r => ({
-        activityId: r.activityId,
-        result: coreReservationResult,
-      })))
+      callback(
+        reservations.map((r, index) => ({
+          activityId: r.activityId,
+          result: { reference: 1000 + index }
+        }))
+      )
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT
