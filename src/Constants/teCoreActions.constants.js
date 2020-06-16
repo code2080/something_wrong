@@ -64,7 +64,8 @@ export const teCoreActions = {
     callname: teCoreCallnames.SELECT_RESERVATION
   },
   DELETE_RESERVATION: {
-    callname: teCoreCallnames.DELETE_RESERVATION
+    callname: teCoreCallnames.DELETE_RESERVATION,
+    mock: (activity, cbFn) => cbFn({ activityId: activity._id, result: true }),
   },
   SCHEDULE_ACTIVITY: {
     callname: teCoreCallnames.SCHEDULE_ACTIVITY

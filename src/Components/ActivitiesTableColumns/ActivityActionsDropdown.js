@@ -83,6 +83,13 @@ const ActivityActionsDropdown = ({
     updateActivities(activity.formId, activity.formInstanceId, updatedActivities);
   }
 
+  const onDeleteActivity = response => {
+    console.log(response);
+    // Update activity status to NOT_SCHEDULED
+    // Set reservationId = null
+    // Call updateActivity with the updated activity
+  }
+
   const handleMenuClick = useCallback(({ key }) => {
     if (!activityActions[key] || !activityActions[key].callname) return;
     switch (key) {
@@ -95,6 +102,9 @@ const ActivityActionsDropdown = ({
         break;
       case 'SCHEDULE':
         scheduleActivity(activity, teCoreAPI[activityActions[key].callname], onFinishSchedule);
+        break;
+      case 'DELETE':
+        teCoreAPI[activityActions[key].callname](activity, onDeleteActivity);
         break;
       default:
         teCoreAPI[activityActions[key].callname](activity);
