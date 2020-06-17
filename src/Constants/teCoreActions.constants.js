@@ -4,8 +4,6 @@ import { reservationFields } from '../Mock/ReservationFields';
 import { coreObject } from '../Mock/CoreObject';
 import { coreFilter } from '../Mock/CoreFilter';
 import { coreReservationResult } from '../Mock/CoreReservationResult';
-import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-import { activityStatuses } from './activityStatuses.constants';
 
 export const teCoreCallnames = {
   SET_TOOLBAR_CONTENT: 'setToolbarContent',
@@ -65,8 +63,7 @@ export const teCoreActions = {
   },
   DELETE_RESERVATION: {
     callname: teCoreCallnames.DELETE_RESERVATION,
-    mock: ({ activity, callback }) =>
-      callback({ activityId: activity._id, result: true })
+    mock: ({ activity, callback: cbFn }) => cbFn({ activityId: activity._id, result: true })
   },
   SCHEDULE_ACTIVITY: {
     callname: teCoreCallnames.SCHEDULE_ACTIVITY
@@ -106,27 +103,7 @@ export const teCoreActions = {
   },
   REQUEST_SCHEDULE_ACTIVITY: {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITY,
-    mockFunction: ({ reservation, callback }) => {
-      const mockResult = coreReservationResult;
-      // status, reservationId, errorCode, errorMessage
-      const errorCode = mockResult.failures[0]
-        ? mockResult.failures[0].result.references[0]
-        : 0;
-      const errorMessage = mockResult.failures[0]
-        ? mockResult.failures[0].result.reservation
-        : '';
-      callback(
-        new SchedulingReturn({
-          status:
-            mockResult.failures.length === 0
-              ? activityStatuses.SCHEDULED
-              : activityStatuses.FAILED,
-          reservationId: mockResult.newIds[0],
-          errorCode,
-          errorMessage
-        })
-      );
-    }
+    mockFunction: ({ reservation, callback }) => callback(coreReservationResult),
   },
   REQUEST_SCHEDULE_ACTIVITIES: {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,

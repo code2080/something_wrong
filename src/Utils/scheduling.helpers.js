@@ -48,32 +48,31 @@ export const determineSchedulingAlgorithmForActivityValue = (
   return schedulingAlgorithms.EXACT;
 };
 
-const parseTECoreResultToScheduleReturn = teCoreReturn =>
-  new SchedulingReturn({
-    status:
-      teCoreReturn.failures.length === 0
-        ? activityStatuses.SCHEDULED
-        : activityStatuses.FAILED,
-    reservationId: teCoreReturn.newIds[0],
-    errorCode: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.references[0]
-      : 0,
-    errorMessage: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.reservation
-      : ''
-  });
+const parseTECoreResultToScheduleReturn = teCoreReturn => new SchedulingReturn({
+  status:
+    teCoreReturn.failures.length === 0
+      ? activityStatuses.SCHEDULED
+      : activityStatuses.FAILED,
+  reservationId: teCoreReturn.newIds[0],
+  errorCode: teCoreReturn.failures[0]
+    ? teCoreReturn.failures[0].result.references[0]
+    : 0,
+  errorMessage: teCoreReturn.failures[0]
+    ? teCoreReturn.failures[0].result.reservation
+    : ''
+});
 
 const parseTECoreResultsToScheduleReturns = teCoreReturns =>
   teCoreReturns.map(el => ({
     activityId: el.activityId,
     result: new SchedulingReturn({
       status:
-        el.result.result > 0
+        el.result.reference > 0
           ? activityStatuses.SCHEDULED
           : activityStatuses.FAILED,
-      reservationId: el.result.result > 0 ? el.result.reference : 0,
-      errorCode: el.result.result < 0 ? el.result.result : '',
-      errorMessage: el.result.result < 0 ? el.result.details : ''
+      reservationId: el.result.reference > 0 ? el.result.reference : 0,
+      errorCode: el.result.reference < 0 ? el.result.reference : '',
+      errorMessage: el.result.reference < 0 ? el.result.details : ''
     })
   }));
 
@@ -151,11 +150,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
         result: validates
           ? null
           : new SchedulingReturn({
-              status: activityStatuses.VALIDATION_ERROR,
-              errorCode: activityStatuses.VALIDATION_ERROR,
-              errorMessage:
-                activityStatusProps[activityStatuses.VALIDATION_ERROR].label
-            })
+            status: activityStatuses.VALIDATION_ERROR,
+            errorCode: activityStatuses.VALIDATION_ERROR,
+            errorMessage:
+              activityStatusProps[activityStatuses.VALIDATION_ERROR].label
+          })
       };
     })
     .map(a => {
@@ -169,11 +168,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? null
             : new SchedulingReturn({
-                status: activityStatuses.FAILED,
-                errorCode: activityStatuses.FAILED,
-                errorMessage:
-                  'The scheduling algorithm has not yet been implemented'
-              }),
+              status: activityStatuses.FAILED,
+              errorCode: activityStatuses.FAILED,
+              errorMessage:
+                'The scheduling algorithm has not yet been implemented'
+            }),
         reservation:
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? formatActivityForExactScheduling(a.activity)
