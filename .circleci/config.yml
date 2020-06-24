@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  gcp-cli: circleci/gcp-cli@1.8.4
+  gcloud: ceddy/gcloud@0.0.2
   node: circleci/node@1.1.6
 jobs:
   build-and-deploy-prod:
@@ -12,22 +12,18 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn build
-      - run:
-          name: 'Go to build directory'
-          command: |
-            cd dist
-            ls
-      - run:
-          name: 'Copy files to storage bucket'
-          command: |
-            gsutil cp index.js gs://te-prefs-lib
+      - gcloud/auth:
+          service_key: ${GCLOUD_SERVICE_KEY}
+          project_id: ${GCLOUD_PROJECT_ID}
+          compute_zone: ${GCLOUD_COMPUTE_ZONE}
+            
 workflows:
   build-and-deploy-prod:
     jobs:
       - build-and-deploy-prod
-  install_and_configure_cli:
-    jobs:
-      - gcp-cli/install_and_initialize_cli:
-          gcloud-service-key: GCLOUD_SERVICE_KEY
-          google-compute-zone: GCLOUD_COMPUTE_ZONE
-          google-project-id: GCLOUD_PROJECT_ID
+  # install_and_configure_cli:
+    # jobs:
+      # - gcp-cli/install_and_initialize_cli:
+          # gcloud-service-key: GCLOUD_SERVICE_KEY
+          # google-compute-zone: GCLOUD_COMPUTE_ZONE
+          # google-project-id: GCLOUD_PROJECT_ID
