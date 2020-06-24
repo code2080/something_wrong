@@ -13,10 +13,14 @@ jobs:
             - run: yarn install
             - run: yarn build
       - run:
-          name: 'Copy files'
+          name: 'Go to build directory'
           command: |
             cd dist
             ls
+      - run:
+          name: 'Copy files to storage bucket'
+          command: |
+            gsutil cp index.js gs://te-prefs-lib
 workflows:
   build-and-deploy-prod:
     jobs:
