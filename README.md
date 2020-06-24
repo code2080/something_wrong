@@ -53,12 +53,12 @@ npm install --save te-prefs-lib
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'te-prefs-lib'
+import TEPrefsLib from 'te-prefs-lib'
 
 class Example extends Component {
   render () {
     return (
-      <MyComponent />
+      <TEPrefsLib coreAPI={teCoreAPIObj} env="desiredEnvironment" />
     )
   }
 }
