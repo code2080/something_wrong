@@ -32,8 +32,8 @@ jobs:
           name: Rename files
           command: |
             cd dist
-            mv index.es.js index@${CIRCLE_BRANCH}.es.js
-            mv index.js index@${CIRCLE_BRANCH}.js
+            mv te-prefs-lib.es.js te-prefs-lib@${CIRCLE_BRANCH}.es.js
+            mv te-prefs-lib.js te-prefs-lib@${CIRCLE_BRANCH}.js
             mv te-prefs-lib.css te-prefs-lib@${CIRCLE_BRANCH}.css
       - run:
           name: Copy files to storage bucket
@@ -45,15 +45,19 @@ jobs:
 workflows:
   build_deploy:
     jobs:
-      - build-and-persist
+      - build-and-persist:
+          filters:
+            branches:
+              only:
+                - beta
+                - test
+                - production
       - deploy:
+          filters:
+            branches:
+              only:
+                - beta
+                - test
+                - production
           requires:
             - build-and-persist
-
-
-  # install_and_configure_cli:
-    # jobs: asdg
-      # - gcp-cli/install_and_initialize_cli:
-          # gcloud-service-key: GCLOUD_SERVICE_KEY
-          # google-compute-zone: GCLOUD_COMPUTE_ZONE
-          # google-project-id: GCLOUD_PROJECT_ID

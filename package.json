@@ -5,9 +5,9 @@
   "author": "TimeEdit",
   "license": "ISC",
   "repository": "TimeEdit/te-prefs-lib",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
+  "main": "dist/te-prefs-lib.js",
+  "module": "dist/te-prefs-lib.es.js",
+  "jsnext:main": "dist/te-prefs-lib.es.js",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
