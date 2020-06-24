@@ -24,10 +24,23 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: list files
+          name: Init gcloud
+          command: |
+            echo ${GCLOUD_SERVICE_KEY} > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
+      - run:
+          name: List files
           command: |
             cd dist
-            ls
+            ls 
+      - run:
+          name: Copy files to storage bucket
+          command: |
+            gsutil defacl ch -u AllUsers:READER gs://${GCLOUD_STORAGE_BUCKET}
+            gsutil rsync -R /dist gs://${GCLOUD_STORAGE_BUCKET}
+            gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" \
+              gs://${GCLOUD_STORAGE_BUCKET}/*.js
 workflows:
   build_deploy:
     jobs:
