@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-  gcloud: ceddy/gcloud@0.0.2
   node: circleci/node@1.1.6
 jobs:
   build-and-persist:
@@ -30,17 +29,19 @@ jobs:
             gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
       - run:
-          name: List files
+          name: Rename files
           command: |
             cd dist
-            ls 
+            mv index.es.js index@${CIRCLE_BRANCH}.es.js
+            mv index.js index@${CIRCLE_BRANCH}.js
+            mv te-prefs-lib.css te-prefs-lib@${CIRCLE_BRANCH}.css
       - run:
           name: Copy files to storage bucket
           command: |
             gsutil defacl ch -u AllUsers:READER gs://${GCLOUD_STORAGE_BUCKET}
             gsutil rsync -R ./dist gs://${GCLOUD_STORAGE_BUCKET}
             gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" \
-              gs://${GCLOUD_STORAGE_BUCKET}/*.js
+              gs://${GCLOUD_STORAGE_BUCKET}/*@${CIRCLE_BRANCH}.*
 workflows:
   build_deploy:
     jobs:

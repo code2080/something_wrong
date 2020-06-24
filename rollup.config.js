@@ -16,12 +16,12 @@ export default {
     {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: true
+      sourcemap: false
     },
     {
       file: pkg.module,
       format: 'es',
-      sourcemap: true
+      sourcemap: false
     }
   ],
   external: [
@@ -38,7 +38,7 @@ export default {
         ['sass']
       ],
       plugins: [ PrefixWrap('.te-prefs-lib') ],
-      sourceMap: true
+      sourceMap: false
     }),
     url(),
     svgr(),
