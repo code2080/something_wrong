@@ -12,13 +12,12 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn build
-            - run: ls
-      - persist_to_workspace:
-          root: /dist
-          paths:
-            - index.es.js
-            - index.js
-            - te-prefs-lib.css
+            - persist_to_workspace:
+                root: /dist
+                paths:
+                  - index.es.js
+                  - index.js
+                  - te-prefs-lib.css
 
   deploy:
     docker:
