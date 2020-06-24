@@ -1,6 +1,4 @@
 version: 2.1
-defaults:
-  working_directory: /tmp
 orbs:
   gcloud: ceddy/gcloud@0.0.2
   node: circleci/node@1.1.6
@@ -15,19 +13,23 @@ jobs:
             - run: yarn install
             - run: yarn build
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /dist
           paths:
-            - dist
+            - index.es.js
+            - index.js
+            - te-prefs-lib.css
 
   deploy:
     docker:
       - image: google/cloud-sdk
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: /dist
       - run:
           name: list files
-          command: ls /tmp/workspace/dist
+          command: |
+            cd dist
+            ls
 workflows:
   build_deploy:
     jobs:
