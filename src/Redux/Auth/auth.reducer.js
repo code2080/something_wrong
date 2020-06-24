@@ -4,7 +4,7 @@ import { authenticationStatuses } from '../../Constants/auth.constants';
 import { actionsToSignOutOnFailure } from './auth.constants';
 
 // INITIAL STATE
-import initialState from './Auth.initialState';
+import initialState from './auth.initialState';
 
 const reducer = (state = initialState, action) => {
   if (actionsToSignOutOnFailure.indexOf(action.type) > -1) {
