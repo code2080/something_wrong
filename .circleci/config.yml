@@ -22,7 +22,7 @@ workflows:
     jobs:
       - build-and-deploy-prod
   # install_and_configure_cli:
-    # jobs:
+    # jobs: asd
       # - gcp-cli/install_and_initialize_cli:
           # gcloud-service-key: GCLOUD_SERVICE_KEY
           # google-compute-zone: GCLOUD_COMPUTE_ZONE
