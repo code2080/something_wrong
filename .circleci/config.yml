@@ -38,7 +38,7 @@ jobs:
           name: Copy files to storage bucket
           command: |
             gsutil defacl ch -u AllUsers:READER gs://${GCLOUD_STORAGE_BUCKET}
-            gsutil rsync -R /dist gs://${GCLOUD_STORAGE_BUCKET}
+            gsutil rsync -R ./dist gs://${GCLOUD_STORAGE_BUCKET}
             gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" \
               gs://${GCLOUD_STORAGE_BUCKET}/*.js
 workflows:
