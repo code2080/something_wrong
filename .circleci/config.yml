@@ -1,28 +1,44 @@
 version: 2.1
+defaults:
+  working_directory: /tmp
 orbs:
   gcloud: ceddy/gcloud@0.0.2
   node: circleci/node@1.1.6
 jobs:
-  build-and-deploy-prod:
+  build-and-persist:
     executor:
       name: node/default
     steps:
       - checkout
-      - node/with-cache:
+      - node/with-cache: # build the dist files
           steps:
             - run: yarn install
             - run: yarn build
-      - gcloud/auth:
-          service_key: ${GCLOUD_SERVICE_KEY}
-          project_id: ${GCLOUD_PROJECT_ID}
-          compute_zone: ${GCLOUD_COMPUTE_ZONE}
-            
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - dist
+
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: list files
+          command: ls /tmp/workspace/dist
 workflows:
-  build-and-deploy-prod:
+  build_deploy:
     jobs:
-      - build-and-deploy-prod
+      - build-and-persist
+      - deploy:
+          requires:
+            - build-and-persist
+
+
   # install_and_configure_cli:
-    # jobs: asd
+    # jobs: asdg
       # - gcp-cli/install_and_initialize_cli:
           # gcloud-service-key: GCLOUD_SERVICE_KEY
           # google-compute-zone: GCLOUD_COMPUTE_ZONE
