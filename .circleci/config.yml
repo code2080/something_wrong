@@ -13,18 +13,16 @@ jobs:
             - run: yarn install
             - run: yarn build
             - persist_to_workspace:
-                root: /dist
+                root: .
                 paths:
-                  - index.es.js
-                  - index.js
-                  - te-prefs-lib.css
+                  - dist
 
   deploy:
     docker:
       - image: google/cloud-sdk
     steps:
       - attach_workspace:
-          at: /dist
+          at: .
       - run:
           name: list files
           command: |
