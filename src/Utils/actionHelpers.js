@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../configs';
+import { getEnvParams } from '../configs';
 import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
 import React from 'react';
@@ -70,6 +70,7 @@ const getAPIUrl = endpoint => {
   if (endpoint.search('http://') > -1 || endpoint.search('https://') > -1) {
     return endpoint;
   }
+  const { API_URL } = getEnvParams();
   return `${API_URL}${endpoint}`;
 };
 

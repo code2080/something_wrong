@@ -1,4 +1,4 @@
-import { TOKEN_NAME, AUTH_URL, APP_ID } from '../../configs';
+import { TOKEN_NAME, getEnvParams } from '../../configs';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { deleteToken } from '../../Utils/tokenHelpers';
 import {
@@ -53,7 +53,7 @@ const loginFlow = {
 export const login = ({ account, password }) =>
   asyncAction.POST({
     flow: loginFlow,
-    endpoint: `${AUTH_URL}auth/validate-login`,
+    endpoint: `${getEnvParams().AUTH_URL}auth/validate-login`,
     params: { account, password, },
     requiresAuth: false,
   });
@@ -67,7 +67,7 @@ const fetchOrgsForUserFlow = {
 export const fetchOrgsForUser = () =>
   asyncAction.GET({
     flow: fetchOrgsForUserFlow,
-    endpoint: `${AUTH_URL}apps/${APP_ID}/organizations/`,
+    endpoint: `${getEnvParams().AUTH_URL}apps/${getEnvParams().APP_ID}/organizations/`,
     requiresAuth: true,
   });
 
@@ -80,7 +80,7 @@ const selectOrgForUserFlow = {
 export const selectOrgForUser = ({ organizationId }) =>
   asyncAction.POST({
     flow: selectOrgForUserFlow,
-    endpoint: `${AUTH_URL}auth/change-organization`,
+    endpoint: `${getEnvParams().AUTH_URL}auth/change-organization`,
     params: { organizationId },
     requiresAuth: true,
   });

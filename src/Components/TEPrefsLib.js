@@ -6,6 +6,7 @@ import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
 // REDUX
 import configureStore from '../Redux/store';
 import { validateLogin } from '../Redux/Auth/auth.actions';
+import { SET_ENVIRONMENT } from '../Redux/Auth/auth.actionTypes';
 
 // COMPONENTS
 import TEPrefsLibRouter from './TEPrefsLibRouter';
@@ -23,8 +24,9 @@ Promise.resolve();
 // Validate token presence
 store.dispatch(validateLogin());
 
-const TEPrefsLib = ({ coreAPI: _teCoreAPI }) => {
+const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
+  window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI}>
@@ -38,10 +40,12 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI }) => {
 
 TEPrefsLib.propTypes = {
   coreAPI: PropTypes.object,
+  env: PropTypes.string,
 };
 
 TEPrefsLib.defaultProps = {
   coreAPI: {},
+  env: 'production',
 };
 
 export default TEPrefsLib

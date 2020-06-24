@@ -12,6 +12,14 @@ const reducer = (state = initialState, action) => {
   }
 
   switch (action.type) {
+    case types.SET_ENVIRONMENT: {
+      const { env } = action.payload;
+      return {
+        ...state,
+        env,
+      };
+    }
+
     case types.VALIDATE_LOGIN:
       if (!action || !action.payload || !action.payload.token)
         return initialState;
