@@ -47,7 +47,7 @@ const FormInstanceReservationOverview = ({
   return (
     <div className="form-instance-activities--wrapper">
       {hasOngoingExternalAction && (
-        <div className="form-instance-activites--mask" onClick={endExternalAction} />
+        <div className="form-instance-activites--mask" />
       )}
       {activities && activities.length ? (
         <ActivitiesTable mapping={mapping} activities={activities} />
