@@ -19,6 +19,7 @@ import {
   revertToSubmissionValue
 } from '../../../Redux/Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
+import { beginExternalAction, endExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -42,22 +43,34 @@ const getActivityValue = (activity, type, prop) => {
 
 const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
+const mapStateToProps = (state, { activity: { _id: activityId }, prop }) => ({
+  hasOngoingExternalAction:
+    state.globalUI.externalAction &&
+    state.globalUI.externalAction.activityId === activityId &&
+    state.globalUI.externalAction.prop === prop,
+});
+
 const mapActionsToProps = {
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
+  beginExternalAction,
+  endExternalAction,
 };
 
 const BaseActivityCol = ({
   activity,
   type,
   prop,
+  hasOngoingExternalAction,
   propTitle,
   formatFn,
   mapping,
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
+  beginExternalAction,
+  endExternalAction,
   teCoreAPI
 }) => {
   // State var to hold the component's mode
@@ -109,7 +122,6 @@ const BaseActivityCol = ({
 
   const onProcessFilterReturn = res => {
     try {
-      console.log(res);
       // Grab the extid and the fields
       const { extid, fields } = res;
       // Override the activity
@@ -127,6 +139,11 @@ const BaseActivityCol = ({
   }
 
   const onFinshExternalEdit = (res, action) => {
+    /**
+     * Regardless of external action type; we should reset the external action
+     * redux state prop by ending the action
+     */
+    endExternalAction();
     /**
      * We need to parse the response differently depending on action
      */
@@ -157,6 +174,8 @@ const BaseActivityCol = ({
       const updView = activityActionViews[action];
       if (!updView || updView == null) return;
       if (updView === activityViews.EXTERNAL_EDIT) {
+        // Set the redux state prop
+        beginExternalAction(activity._id, prop);
         // Here begins our journey into the belly of TE Core
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
@@ -180,7 +199,8 @@ const BaseActivityCol = ({
   );
 
   return (
-    <div className="base-activity-col--wrapper">
+    <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
+      {hasOngoingExternalAction && <div className="base-activity-col--active-mask" />}
       {viewProps.view === activityViews.INLINE_EDIT && (
         <InlineEdit
           onFinish={onFinishManualEditing}
@@ -197,9 +217,7 @@ const BaseActivityCol = ({
           formatFn={formatFn}
         />
       )}
-      {/**
-       * @todo Add rendering case for waiting for external input
-       */}
+
       <BaseActivityColDropdown
         activityValue={activityValue}
         activity={activity}
@@ -207,6 +225,7 @@ const BaseActivityCol = ({
         mappingProps={mappingProps}
         availableActions={activityValueActions}
         onActionClick={onActionCallback}
+        disabled={hasOngoingExternalAction}
       />
       <ModalEdit
         activityValue={activityValue}
@@ -227,12 +246,15 @@ BaseActivityCol.propTypes = {
   activity: PropTypes.object.isRequired,
   type: PropTypes.string,
   prop: PropTypes.string.isRequired,
+  hasOngoingExternalAction: PropTypes.bool,
   propTitle: PropTypes.string,
   formatFn: PropTypes.func,
   mapping: PropTypes.object,
   overrideActivityValue: PropTypes.func.isRequired,
   revertToSubmissionValue: PropTypes.func.isRequired,
   setExtIdPropsForObject: PropTypes.func.isRequired,
+  beginExternalAction: PropTypes.func.isRequired,
+  endExternalAction: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired
 };
 
@@ -240,7 +262,8 @@ BaseActivityCol.defaultProps = {
   type: 'VALUE',
   propTitle: null,
   formatFn: value => value,
-  mapping: null
+  mapping: null,
+  hasOngoingExternalAction: false,
 };
 
-export default connect(null, mapActionsToProps)(withTECoreAPI(BaseActivityCol));
+export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(BaseActivityCol));
