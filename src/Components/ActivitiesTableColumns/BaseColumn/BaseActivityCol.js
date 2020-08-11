@@ -143,7 +143,7 @@ const BaseActivityCol = ({
      * Regardless of external action type; we should reset the external action
      * redux state prop by ending the action
      */
-    endExternalAction();
+    // endExternalAction();
     /**
      * We need to parse the response differently depending on action
      */
@@ -200,7 +200,6 @@ const BaseActivityCol = ({
 
   return (
     <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
-      {hasOngoingExternalAction && <div className="base-activity-col--active-mask" />}
       {viewProps.view === activityViews.INLINE_EDIT && (
         <InlineEdit
           onFinish={onFinishManualEditing}

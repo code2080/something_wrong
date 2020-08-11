@@ -8,22 +8,6 @@
   .base-activity-col--icon {
     color: $rustyGrey;
   }
-
-  &.is-active {
-    z-index: 1000;
-
-    span {
-      z-index: 1000;
-    }
-  }
-
-  .base-activity-col--active-mask {
-    background: radial-gradient(ellipse closest-side, rgba(255,255,255,1) 90%, rgba(0,0,0,0.0) 100%);
-    position: absolute;
-    height: 160%;
-    width: 120%;
-    left: -30%;
-  }
 }
 
 .base-activity-col--quickview {

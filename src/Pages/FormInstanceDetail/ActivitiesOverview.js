@@ -5,7 +5,6 @@ import { Empty, Button } from 'antd';
 
 // ACTIONS
 import { saveActivities } from '../../Redux/Activities/activities.actions';
-import { endExternalAction } from '../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
@@ -27,7 +26,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   saveActivities,
-  endExternalAction,
 };
 
 const FormInstanceReservationOverview = ({
@@ -37,18 +35,33 @@ const FormInstanceReservationOverview = ({
   mapping,
   saveActivities,
   hasOngoingExternalAction,
-  endExternalAction,
 }) => {
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
+  const mask = () => {
+    if (!hasOngoingExternalAction) return null;
+
+    const els = document.getElementsByClassName('base-activity-col--wrapper is-active');
+    if (!els || !els.length || els.length > 1) return null;
+    const el = els[0];
+    const boundingRect = el.getBoundingClientRect();
+    const { x, y, width, height } = boundingRect;
+    return (
+      <div
+        className="form-instance-activites--mask"
+        style={{
+          background: `radial-gradient(${width}px ${height}px at ${x + width / 2}px ${y - height / 4}px, transparent 0px, transparent 70%, rgba(0, 0, 0, 0.5) 80%)`,
+        }}
+      />
+    );
+  };
+
   return (
     <div className="form-instance-activities--wrapper">
-      {hasOngoingExternalAction && (
-        <div className="form-instance-activites--mask" />
-      )}
+      {mask()}
       {activities && activities.length ? (
         <ActivitiesTable mapping={mapping} activities={activities} />
       ) : (
@@ -76,7 +89,6 @@ FormInstanceReservationOverview.propTypes = {
   mapping: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
   hasOngoingExternalAction: PropTypes.bool.isRequired,
-  endExternalAction: PropTypes.func.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {
