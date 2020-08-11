@@ -55,7 +55,7 @@ const AssignmentPopoverVanilla = ({ selfUID, assignedTo, users, formInstanceId, 
       const _users = Object.keys(users).map(uId => users[uId]);
       const filteredUsers = (_users || [])
         .filter(u => assignedTo.indexOf(u._id) === -1)
-        .filter(u => !query || query.length < 3 || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.indexOf(normalizedQuery) > -1)
+        .filter(u => !query || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.indexOf(normalizedQuery) > -1)
       const selfUIDIdx = filteredUsers.findIndex(el => el._id === selfUID);
       if (selfUIDIdx > -1)
         return [ filteredUsers[selfUIDIdx], ...filteredUsers.slice(0, selfUIDIdx), ...filteredUsers.slice(selfUIDIdx + 1) ];
