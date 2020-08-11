@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
@@ -11,6 +12,8 @@ import { formStatusProps } from '../../Constants/formStatuses.constants';
 
 // HELPERS
 import { sortAlpha, sortTime } from './Helpers/sorters';
+
+const getOwnerName = (ownerId) => _.get(window.tePrefsLibStore.getState(), `users.${ownerId}.name`, 'N/A')
 
 export const form = {
   NAME: {
@@ -43,6 +46,7 @@ export const form = {
     key: 'owner',
     title: 'Owner',
     dataIndex: 'ownerId',
+    sorter: (a, b) => sortAlpha(getOwnerName(a.ownerId), getOwnerName(b.ownerId)),
     render: ownerId => <OwnerCol ownerId={ownerId} />,
   },
   PERIOD: {
