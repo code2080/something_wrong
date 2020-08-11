@@ -5,6 +5,7 @@ import { Empty, Button } from 'antd';
 
 // ACTIONS
 import { saveActivities } from '../../Redux/Activities/activities.actions';
+import { endExternalAction } from '../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
@@ -20,11 +21,13 @@ const mapStateToProps = (state, ownProps) => {
     formInstance: state.submissions[formId][formInstanceId],
     mapping: state.activityDesigner[formId],
     activities: state.activities[formId] ? (state.activities[formId][formInstanceId] || []) : [],
+    hasOngoingExternalAction: state.globalUI.externalAction != null,
   };
 };
 
 const mapActionsToProps = {
   saveActivities,
+  endExternalAction,
 };
 
 const FormInstanceReservationOverview = ({
@@ -33,6 +36,8 @@ const FormInstanceReservationOverview = ({
   activities,
   mapping,
   saveActivities,
+  hasOngoingExternalAction,
+  endExternalAction,
 }) => {
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
@@ -40,8 +45,10 @@ const FormInstanceReservationOverview = ({
   }, [mapping, formInstance, form, saveActivities]);
 
   return (
-    <div className="form-instance-automatic-scheduling--wrapper">
-
+    <div className="form-instance-activities--wrapper">
+      {hasOngoingExternalAction && (
+        <div className="form-instance-activites--mask" />
+      )}
       {activities && activities.length ? (
         <ActivitiesTable mapping={mapping} activities={activities} />
       ) : (
@@ -68,6 +75,8 @@ FormInstanceReservationOverview.propTypes = {
   activities: PropTypes.array,
   mapping: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
+  hasOngoingExternalAction: PropTypes.bool.isRequired,
+  endExternalAction: PropTypes.func.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {

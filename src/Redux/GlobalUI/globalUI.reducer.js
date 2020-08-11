@@ -14,6 +14,21 @@ const reducer = (state = initialState, action) => {
       };
     };
 
+    case types.BEGIN_EXTERNAL_ACTION: {
+      if (!action || !action.payload || !action.payload.prop || !action.payload.activityId) return state;
+      const { payload: { prop, activityId } } = action;
+      return {
+        ...state,
+        externalAction: { prop, activityId },
+      };
+    }
+
+    case types.END_EXTERNAL_ACTION:
+      return {
+        ...state,
+        externalAction: null,
+      };
+
     default:
       return state;
   }

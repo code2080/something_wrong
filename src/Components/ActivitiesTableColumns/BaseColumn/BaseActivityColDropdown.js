@@ -13,6 +13,7 @@ const BaseReservationColDropdown = ({
   activity,
   formatFn,
   mappingProps,
+  disabled,
   availableActions,
   onActionClick,
 }) => {
@@ -39,8 +40,9 @@ const BaseReservationColDropdown = ({
     <Dropdown
       overlay={menuOptions}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      disabled={disabled}
     >
-      <Button type="link" icon="more" />
+      <Button type="link" icon="more" disabled={disabled} />
     </Dropdown>
   );
 };
@@ -50,8 +52,13 @@ BaseReservationColDropdown.propTypes = {
   mappingProps: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
   formatFn: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
   availableActions: PropTypes.array.isRequired,
   onActionClick: PropTypes.func.isRequired,
+};
+
+BaseReservationColDropdown.defaultProps = {
+  disabled: false,
 };
 
 export default BaseReservationColDropdown;
