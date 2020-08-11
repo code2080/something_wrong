@@ -12,7 +12,7 @@ import { formStatusProps } from '../../Constants/formStatuses.constants';
 
 // HELPERS
 import { sortAlpha, sortTime } from './Helpers/sorters';
-const state = () => window.tePrefsLibStore.getState()
+
 const getOwnerName = (ownerId) => _.get(state, `users.${ownerId}.name`, 'N/A')
 
 
