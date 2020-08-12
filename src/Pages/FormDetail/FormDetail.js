@@ -11,12 +11,16 @@ import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchDataForDataSource } from '../../Redux/Integration/integration.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
+import { setTEDataForValues } from '../../Redux/TE/te.actions';
 
 // SELECTORS
+import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 import { selectFilter } from '../../Redux/Filters/filters.selectors';
+import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 
 // COMPONENTS
+import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
@@ -48,17 +52,24 @@ const applyScopedObjectFilters = (el, objs, filters) => {
 const filterForOwn = (el, userId) => (el.teCoreProps.assignedTo || []).includes(userId);
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
+
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;
   const form = state.forms[formId];
-  const submissions = Object.keys(state.submissions[formId] || []).map(
-    key => state.submissions[formId][key]
-  );
-
+  const submissions = selectSubmissions(state, formId);
   const scopedObjectIds = form.objectScope ? _.uniq(submissions.map(el => el.scopedObject)) : [];
   const scopedObjects = form.objectScope && state.integration.objects[form.objectScope]
     ? _.keyBy(scopedObjectIds.map(id => state.integration.objects[form.objectScope][id]), 'te_extid')
     : {};
+  const sections = form.sections;
+  const values = submissions.reduce((acc, submission) => ({
+    ...acc,
+    ...submission.values
+  }), {});
+  let teValues = _.isEmpty(values)
+    ? { types: [], objects: [], fields: [] }
+    : getExtIdPropsPayload(sections, values);
+  teValues.objects = _.concat(teValues.objects, submissions.map(s => s.scopedObject))
 
   return {
     userId: _.get(state, 'auth.user.id', null),
@@ -66,6 +77,7 @@ const mapStateToProps = (state, ownProps) => {
     isLoadingSubmissions: loadingSelector(state),
     formId,
     form,
+    teValues,
     submissions,
     scopedObjects,
   };
@@ -76,6 +88,7 @@ const mapActionsToProps = {
   fetchMappings,
   fetchActivitiesForForm,
   setBreadcrumbs,
+  setTEDataForValues,
   fetchDataForDataSource,
   loadFilter,
 };
@@ -85,6 +98,9 @@ const FormPage = ({
   formId,
   filters,
   form,
+  teCoreAPI,
+  teValues,
+  setTEDataForValues,
   submissions,
   scopedObjects,
   isLoadingSubmissions,
@@ -103,19 +119,23 @@ const FormPage = ({
   useEffect(() => {
     fetchFormSubmissions(formId);
   }, []);
+
   // Fetch mappings
   useEffect(() => {
     fetchMappings(formId);
   }, []);
+
   // Fetch activities
   useEffect(() => {
     fetchActivitiesForForm(formId);
   }, []);
+
   // Fetch scoped objects
   useEffect(() => {
     if (form.objectScope)
       fetchDataForDataSource(form.objectScope);
   }, []);
+
   // Fetch filters
   useEffect(() => {
     loadFilter({ filterId: formId });
@@ -129,6 +149,15 @@ const FormPage = ({
     ]);
   }, []);
 
+  // Effect to get all TE values
+  useEffect(() => {
+    async function exec() {
+      const extIdProps = await teCoreAPI.getExtIdProps(teValues);
+      setTEDataForValues(extIdProps || {});
+    }
+    exec();
+  }, [submissions]);
+
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(() => extractSubmissionData(submissions, _cols), [submissions, _cols]);
   const _dataSource = useMemo(() =>
@@ -139,7 +168,8 @@ const FormPage = ({
         ..._elementTableData[submission._id],
       };
     }),
-  [submissions, _elementTableData]);
+    [submissions, _elementTableData]);
+
   const columns = useMemo(() => [
     tableColumns.formSubmission.ASSIGNMENT,
     tableColumns.formSubmission.NAME,
@@ -243,4 +273,4 @@ FormPage.defaultProps = {
   scopedObjects: {},
 };
 
-export default withRouter(connect(mapStateToProps, mapActionsToProps)(FormPage));
+export default withRouter(withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormPage)));
