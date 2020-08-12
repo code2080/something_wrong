@@ -11,12 +11,20 @@ import { getRenderPayloadForActivityValue } from '../../../Utils/activityValues.
 import { activityValueTypes } from '../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../Constants/submissionValueTypes.constants';
 
+// COMPONENTS
+import ArrayIterator from '../../TableColumns/Components/ArrayIterator';
+
 // CONSTANTS
 const mapStateToProps = state => ({
-  extIdProps: state.te.extIdProps,
+  extIdProps: state.te.extIdProps
 });
 
-const BaseActivityColValue = ({ activityValue, activity, formatFn, extIdProps }) => {
+const BaseActivityColValue = ({
+  activityValue,
+  activity,
+  formatFn,
+  extIdProps
+}) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
       case activityValueTypes.OBJECT: {
@@ -25,14 +33,25 @@ const BaseActivityColValue = ({ activityValue, activity, formatFn, extIdProps })
           return getRenderPayloadForActivityValue(
             activityValue,
             activity,
-            extId => extIdProps.objects[extId] ? extIdProps.objects[extId].label : extId
+            extId =>
+              extIdProps.objects[extId]
+                ? extIdProps.objects[extId].label
+                : extId
           );
-        return getRenderPayloadForActivityValue(activityValue, activity, formatFn);
+        return getRenderPayloadForActivityValue(
+          activityValue,
+          activity,
+          formatFn
+        );
       }
       case activityValueTypes.FIELD:
       case activityValueTypes.TIMING:
       default:
-        return getRenderPayloadForActivityValue(activityValue, activity, formatFn);
+        return getRenderPayloadForActivityValue(
+          activityValue,
+          activity,
+          formatFn
+        );
     }
   }, [activityValue, activity, formatFn, extIdProps]);
   if (schedulingPayload.tooltip)
@@ -45,20 +64,25 @@ const BaseActivityColValue = ({ activityValue, activity, formatFn, extIdProps })
       </Tooltip>
     );
 
-  return (
-    <span>{schedulingPayload.formattedValue}</span>
-  );
+  if (Array.isArray(schedulingPayload.formattedValue)) {
+    return (
+      <span>
+        <ArrayIterator arr={schedulingPayload.formattedValue} />
+      </span>
+    );
+  }
+  return <span>{schedulingPayload.formattedValue}</span>;
 };
 
 BaseActivityColValue.propTypes = {
   activityValue: PropTypes.object.isRequired,
   activity: PropTypes.object,
   formatFn: PropTypes.func,
-  extIdProps: PropTypes.object.isRequired,
+  extIdProps: PropTypes.object.isRequired
 };
 
 BaseActivityColValue.defaultProps = {
-  formatFn: val => val,
+  formatFn: val => val
 };
 
 export default connect(mapStateToProps, null)(BaseActivityColValue);
