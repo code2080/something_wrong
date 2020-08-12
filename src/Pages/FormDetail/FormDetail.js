@@ -27,6 +27,7 @@ import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/for
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
+import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
@@ -212,6 +213,7 @@ const FormPage = ({
         })}
         isLoading={isLoadingSubmissions}
         showFilter={false}
+        datasourceId={tableViews.SUBMISSION_OVERVIEW}
       />
     </div>
   );

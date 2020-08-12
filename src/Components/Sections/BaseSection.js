@@ -71,7 +71,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
           sectionType={sectionType}
         />
       )}
-      <BaseSectionTableView columns={_columns} dataSource={_data} />
+      <BaseSectionTableView columns={_columns} dataSource={_data} sectionId={section._id} />
     </div>
   );
 };

@@ -63,7 +63,7 @@ const FormInstanceReservationOverview = ({
     <div className="form-instance-activities--wrapper">
       {mask()}
       {activities && activities.length ? (
-        <ActivitiesTable mapping={mapping} activities={activities} />
+        <ActivitiesTable mapping={mapping} activities={activities} formInstanceId={formInstance._id} />
       ) : (
         <Empty
           imageStyle={{

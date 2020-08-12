@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect} from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import { withResizeDetector } from 'react-resize-detector';
@@ -10,6 +11,20 @@ import FilterBar from './FilterBar';
 import ResizableColumnHeader from './ResizableColumnHeader';
 import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 
+// ACTIONS
+import { initView, getView, updateView } from '../../Redux/GlobalUI/globalUI.actions';
+
+// CONSTANTS
+const mapStateToProps = (state, { datasourceId }) => ({
+  visibleCols: state.globalUI.tableViews[datasourceId] || {},
+});
+
+const mapActionsToProps = {
+  initView,
+  getView,
+  updateView,
+};
+
 const DynamicTableHOC = ({
   columns,
   dataSource,
@@ -20,28 +35,30 @@ const DynamicTableHOC = ({
   isLoading,
   width,
   showFilter,
+  datasourceId,
+  visibleCols,
+  initView,
+  getView,
+  updateView,
 }) => {
-  // State var to hold the columns
-  const [cols, setCols] = useState([]);
-
-  // Effect to update cols everytime columnns change
+  // Effect to load stored views
   useEffect(() => {
-    setCols(columns);
-  }, [columns]);
+    getView(datasourceId);
+  }, []);
+
+  // Effect to update cols everytime columns change
+  useEffect(() => {
+    initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [col.title]: true }), {}));
+  }, []);
 
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
-
-  // State variable to hold which columns should be shown
-  const [visibleColumns, setVisibleColumns] = useState(
-    columns.reduce((colState, col) => ({ ...colState, [col.title]: true }), {})
-  );
 
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
 
   // Memoized calculated width
-  const fixedWidthCols = useMemo(() => cols.filter(col => visibleColumns[col.title] && col.fixedWidth), [cols, visibleColumns]);
+  const fixedWidthCols = useMemo(() => columns.filter(col => visibleCols[col.title] && col.fixedWidth), [columns, visibleCols]);
 
   const _width = useMemo(() => {
     // Get the visible columns
@@ -54,8 +71,8 @@ const DynamicTableHOC = ({
   // Memoized variable with the visible column definitions
   const _cols = useMemo(
     () =>
-      cols
-        .filter(col => visibleColumns[col.title])
+      columns
+        .filter(col => visibleCols[col.title])
         .map((col, idx, arr) => ({
           ...col,
           width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
@@ -69,7 +86,7 @@ const DynamicTableHOC = ({
                 ? <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
                 : <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
         })),
-    [cols, visibleColumns, _width]
+    [columns, visibleCols, _width]
   );
 
   // Memoized datasource filtered on filter query
@@ -99,8 +116,8 @@ const DynamicTableHOC = ({
     >
       {showColumnSelection ? (
         <ColumnSelector
-          columnState={visibleColumns}
-          onColumnStateChange={newColState => setVisibleColumns(newColState)}
+          columnState={visibleCols}
+          onColumnStateChange={newColState => updateView(datasourceId, newColState)}
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
@@ -136,6 +153,11 @@ DynamicTableHOC.propTypes = {
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.number,
   showFilter: PropTypes.bool,
+  datasourceId: PropTypes.string.isRequired,
+  visibleCols: PropTypes.object,
+  initView: PropTypes.func.isRequired,
+  getView: PropTypes.func.isRequired,
+  updateView: PropTypes.func.isRequired,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -151,6 +173,7 @@ DynamicTableHOC.defaultProps = {
   },
   width: null,
   showFilter: true,
+  visibleCols: {},
 };
 
-export default withResizeDetector(DynamicTableHOC);
+export default withResizeDetector(connect(mapStateToProps, mapActionsToProps)(DynamicTableHOC));

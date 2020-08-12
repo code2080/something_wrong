@@ -8,7 +8,6 @@ import moment from 'moment';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
-import { fetchProfile } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
@@ -20,6 +19,7 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
 import { formStatus } from '../../Constants/formStatuses.constants';
+import { tableViews } from '../../Constants/tableViews.constants';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -33,7 +33,6 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   fetchForms,
-  fetchProfile,
   fetchUsers,
   setBreadcrumbs,
   fetchMapping,
@@ -44,7 +43,6 @@ const FormList = ({
   user,
   isLoading,
   fetchForms,
-  fetchProfile,
   fetchUsers,
   fetchMapping,
   setBreadcrumbs,
@@ -52,14 +50,14 @@ const FormList = ({
 }) => {
   useEffect(() => {
     fetchForms();
-    fetchProfile();
     fetchUsers();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
   useEffect(() => {
-    if (user && user.organizationId)
+    if (user && user.organizationId) {
       fetchMapping();
+    }
   }, [user]);
 
   return (
@@ -81,6 +79,7 @@ const FormList = ({
           onClick: () => history.push(`/forms/${form._id}`)
         })}
         pagination={false}
+        datasourceId={tableViews.FORM_OVERVIEW}
       />
     </div>
   );
@@ -92,7 +91,6 @@ FormList.propTypes = {
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
-  fetchProfile: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired

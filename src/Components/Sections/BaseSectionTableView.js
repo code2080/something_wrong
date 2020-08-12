@@ -7,6 +7,9 @@ import DynamicTable from '../DynamicTable/DynamicTableHOC';
 // STYLES
 import './BaseSectionTableView.scss';
 
+// CONSTANTS
+import { tableViews } from '../../Constants/tableViews.constants';
+
 const ExpandedPane = ({ columns, row }) => (
   <div className="base-section--expanded__wrapper">
     {(columns || [])
@@ -25,17 +28,19 @@ ExpandedPane.propTypes = {
   row: PropTypes.object.isRequired,
 };
 
-const BaseSectionTableView = ({ columns, dataSource }) => (
+const BaseSectionTableView = ({ sectionId, columns, dataSource }) => (
   <DynamicTable
     columns={columns}
     dataSource={dataSource}
     rowKey="rowKey"
     pagination={false}
     expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
+    datasourceId={`${tableViews.SECTION}-${sectionId}`}
   />
 );
 
 BaseSectionTableView.propTypes = {
+  sectionId: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
   dataSource: PropTypes.array.isRequired,
 };

@@ -23,16 +23,18 @@ const ColumnSelector = ({
         </Button>
         <span className="column-selector--title">Select columns to display</span>
       </div>
-      {(Object.keys(columnState) || []).map(col => (
-        <div className="column-selector--col" key={col}>
-          <Switch
-            checked={columnState[col]}
-            onChange={visible => onColumnStateChangeCallback({ colName: col, visible })}
-            size="small"
-          />
-          <span>{col}</span>
-        </div>
-      ))}
+      {(Object.keys(columnState) || [])
+        .filter(col => col && col !== '')
+        .map(col => (
+          <div className="column-selector--col" key={col}>
+            <Switch
+              checked={columnState[col]}
+              onChange={visible => onColumnStateChangeCallback({ colName: col, visible })}
+              size="small"
+            />
+            <span>{col}</span>
+          </div>
+        ))}
     </div>
   );
 };
