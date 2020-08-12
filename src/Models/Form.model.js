@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 export default class Form {
   // FORM IDENTIFICATION
@@ -120,5 +121,15 @@ export default class Form {
 
     // DESIGN
     this.sections = sections || [];
+  }
+
+  static getOwnerName(ownerId) {
+    try {
+      const storeState = window.tePrefsLibStore.getState();
+      const ownerName = _.get(storeState, `users.${ownerId}.name`, null);
+      return ownerName;
+    } catch (err) {
+      return null;
+    }
   }
 }

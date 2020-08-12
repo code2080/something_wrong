@@ -1,19 +1,16 @@
 import React from 'react';
-import _ from 'lodash';
 
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import ObjectScopeCol from './Components/ObjectScopeCol';
-import OwnerCol from './Components/OwnerCol';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
 
 // HELPERS
 import { sortAlpha, sortTime } from './Helpers/sorters';
-
-const getOwnerName = (ownerId) => _.get(window.tePrefsLibStore.getState(), `users.${ownerId}.name`, 'N/A')
+import Form from '../../Models/Form.model';
 
 export const form = {
   NAME: {
@@ -46,8 +43,8 @@ export const form = {
     key: 'owner',
     title: 'Owner',
     dataIndex: 'ownerId',
-    sorter: (a, b) => sortAlpha(getOwnerName(a.ownerId), getOwnerName(b.ownerId)),
-    render: ownerId => <OwnerCol ownerId={ownerId} />,
+    sorter: (a, b) => sortAlpha(Form.getOwnerName(a.ownerId), Form.getOwnerName(b.ownerId)),
+    render: ownerId => Form.getOwnerName(ownerId) || 'N/A',
   },
   PERIOD: {
     key: 'Period',
