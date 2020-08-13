@@ -5,9 +5,12 @@ import { Tooltip } from 'antd';
 
 const ArrayIterator = ({ arr, arrProp, maxWidth }) => {
   const flatArr = useMemo(
-    () => (arrProp ? (arr || [])
-      .filter(value => value)
-      .map(arr => arr[arrProp] || arr.teExtId) : arr),
+    () =>
+      arrProp
+        ? (arr || [])
+            .filter(value => value)
+            .map(arr => arr[arrProp] || arr.teExtId)
+        : arr,
     [arr, arrProp]
   );
   const renderedArr = useMemo(
@@ -20,14 +23,19 @@ const ArrayIterator = ({ arr, arrProp, maxWidth }) => {
   );
 
   if (!flatArr || flatArr.length === 0) return 'N/A';
+  //return renderedArr;
   return (
-    <Tooltip title={renderedArr}>
+    <Tooltip
+      title={renderedArr}
+      mouseEnterDelay={0.8}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+    >
       <div
         style={{
           width: maxWidth,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          textOverflow: 'ellipsis'
         }}
       >
         {renderedArr}
@@ -39,13 +47,13 @@ const ArrayIterator = ({ arr, arrProp, maxWidth }) => {
 ArrayIterator.propTypes = {
   arr: PropTypes.array,
   arrProp: PropTypes.string,
-  maxWidth: PropTypes.string,
+  maxWidth: PropTypes.string
 };
 
 ArrayIterator.defaultProps = {
   arr: [],
   arrProp: null,
-  maxWidth: '150px',
+  maxWidth: '150px'
 };
 
 export default ArrayIterator;
