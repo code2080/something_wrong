@@ -129,6 +129,7 @@ function createThunkAction({
         doDispatch({ ...flow, dispatch, getState }, params, response.data);
         if (successNotification)
           notification.success({
+            getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation completed',
             description: successNotification
           });

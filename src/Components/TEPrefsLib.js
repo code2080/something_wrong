@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
@@ -26,7 +26,10 @@ store.dispatch(validateLogin());
 
 const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
-  window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
+  useEffect(() => {
+    window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
+  }, []);
+
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI}>

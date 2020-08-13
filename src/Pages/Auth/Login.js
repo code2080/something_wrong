@@ -42,18 +42,18 @@ const LoginPage = ({
   history,
 }) => {
   useEffect(() => {
+    setBreadcrumbs([
+      { path: '/', label: 'Login' }
+    ]);
+  }, [])
+
+  useEffect(() => {
     if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null)
       fetchProfile();
     if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null)
       history.push('/forms');
     if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
   }, [authenticationStatus, userStatus]);
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { path: '/', label: 'Login' }
-    ]);
-  }, [])
 
   const handleLogin = useCallback(({ account, password }) => {
     login({ account, password });

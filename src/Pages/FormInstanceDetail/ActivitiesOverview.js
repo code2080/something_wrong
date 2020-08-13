@@ -48,12 +48,12 @@ const FormInstanceReservationOverview = ({
     if (!els || !els.length || els.length > 1) return null;
     const el = els[0];
     const boundingRect = el.getBoundingClientRect();
-    const { x, y, width, height } = boundingRect;
+    const { top, left, width, height } = boundingRect;
     return (
       <div
         className="form-instance-activites--mask"
         style={{
-          background: `radial-gradient(${width}px ${height}px at ${x + width / 2}px ${y - height / 4}px, transparent 0px, transparent 70%, rgba(0, 0, 0, 0.5) 80%)`,
+          background: `radial-gradient(${width}px ${height}px at ${left + width / 2}px ${top - height / 4}px, transparent 0px, transparent 70%, rgba(0, 0, 0, 0.5) 80%)`,
         }}
       />
     );

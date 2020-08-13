@@ -97,7 +97,7 @@ export const teCoreActions = {
   },
   REQUEST_REPLACE_OBJECT: {
     callname: teCoreCallnames.REQUEST_REPLACE_OBJECT,
-    mockFunction: ({ activityValue, activity, callback }) => {
+    mockFunction: async ({ activityValue, activity, callback }) => {
       callback(coreObject);
     }
   },

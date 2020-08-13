@@ -139,6 +139,7 @@ const BaseActivityCol = ({
   }
 
   const onFinshExternalEdit = (res, action) => {
+    console.log('im called');
     /**
      * Regardless of external action type; we should reset the external action
      * redux state prop by ending the action
@@ -161,7 +162,7 @@ const BaseActivityCol = ({
 
   // Memoized func object with the various editing possibilities
   const onActionCallback = useCallback(
-    action => {
+    async action => {
       /**
        * Most actions change the view props
        * but revert to submission value has no view impact
