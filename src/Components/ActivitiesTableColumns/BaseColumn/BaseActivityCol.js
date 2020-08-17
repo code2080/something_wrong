@@ -139,12 +139,11 @@ const BaseActivityCol = ({
   }
 
   const onFinshExternalEdit = (res, action) => {
-    console.log('im called');
     /**
      * Regardless of external action type; we should reset the external action
      * redux state prop by ending the action
      */
-    // endExternalAction();
+    endExternalAction();
     /**
      * We need to parse the response differently depending on action
      */
