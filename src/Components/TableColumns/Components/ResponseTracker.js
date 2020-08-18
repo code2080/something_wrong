@@ -22,10 +22,9 @@ const ResponseTracker = ({ responses }) => {
         percent={total ? (drafts / total) * 100 : 0}
         successPercent={total ? (submissions / total) * 100 : 0}
         size="small"
-        format={() => {
-          if (total) return `${total}/${drafts}/${submissions}`;
-          return 'N/A';
-        }}
+        format={() => 
+          total ? `${submissions}/${total}` : `${submissions}`
+        }
       />
     </Tooltip>
   );

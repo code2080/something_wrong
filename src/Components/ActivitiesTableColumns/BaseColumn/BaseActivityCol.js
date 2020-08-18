@@ -103,6 +103,9 @@ const BaseActivityCol = ({
   );
 
   const onProcessObjectReturn = res => {
+    if (res === null) {
+      return;
+    }
     try {
       // Grab the extid and the fields
       const { extid, fields } = res;
