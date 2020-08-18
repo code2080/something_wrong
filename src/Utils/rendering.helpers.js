@@ -90,7 +90,6 @@ export const renderElementValue = (value, element) => {
   if (value == null) return 'N/A';
   const elementType = getElementTypeFromId(element.elementId);
   if (!elementType || !elementTypes[elementType]) return value.toString();
-
   switch (elementType) {
     case elementTypes.ELEMENT_TYPE_INPUT_TIME:
       return <TimePicker value={value} />;

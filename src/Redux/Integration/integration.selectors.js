@@ -1,4 +1,4 @@
-// import _ from 'lodash';
+import _ from 'lodash';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
@@ -7,11 +7,31 @@ import {
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
 
-export const getTECoreAPIPayload = (value, datasource, state) => {
+/**
+ * @function getTECoreAPIPayload
+ * @description transforms the element payload to be compatible with the TE Core API
+ * @param {Mixed} value depending on element type; string, number, array, object
+ * @param {String} datasource the selected datasource
+ */
+
+export const getTECoreAPIPayload = (value, datasource) => {
+  /**
+   * No value is a no-op
+   */
   if (!value) return null;
+  /**
+   * Datasource is stored as a string
+   */
   const _datasource = datasource.split(',');
+  /**
+   * Ensure the split array contains at least 2 elements
+   */
   if (!_datasource.length || _datasource.length < 2)
     return [{ valueType: undefined, extId: undefined }];
+
+  /**
+   * Default return value
+   */
   let _retVal = [
     {
       valueType: datasourceValueTypes.TYPE_EXTID,
@@ -19,25 +39,38 @@ export const getTECoreAPIPayload = (value, datasource, state) => {
     }
   ];
 
-  if (_datasource[1] === 'object')
+  /**
+   * If the datasource selection is object
+   */
+  if (_datasource[1] === 'object') {
+    const _value = Array.isArray(value) ? value : [value];
     return [
-      {
+      ..._retVal,
+      ...(_value || []).map(v => ({
         valueType: datasourceValueTypes.OBJECT_EXTID,
-        extId: value
-      },
-      ..._retVal
+        extId: v,
+      })),
     ];
-  return [
-    {
-      valueType: datasourceValueTypes.FIELD_VALUE,
-      value
-    },
-    ..._retVal,
-    {
-      valueType: datasourceValueTypes.FIELD_EXTID,
-      extId: _datasource[1]
-    }
-  ];
+  }
+  /**
+   * If it's not "object" => the values contain different fields
+   * We need to iterate over the fields and construct the payload
+   */
+  return _datasource.slice(1).reduce(
+    (prev, curr) => [
+      ...prev,
+      {
+        valueType: datasourceValueTypes.FIELD_EXTID,
+        extId: curr
+      },
+      {
+        valueType: datasourceValueTypes.FIELD_VALUE,
+        value: Array.isArray(value) ? value[0][curr] : value,
+        extId: curr,
+      }
+    ],
+    [..._retVal]
+  );
 };
 
 const initialState = {
@@ -112,7 +145,7 @@ const getPayloadForSection = (element, section, values, state) => {
 };
 
 const getValueFromElement = el => {
-  if (Array.isArray(el.value)) return el.value[0];
+  if (Array.isArray(el.value)) return el.value;
   if (el && el.value && el.value.value) return el.value.value;
   return null;
 };
@@ -141,3 +174,21 @@ const getPayloadForConnectedSection = (element, values, state) =>
       ...getPayloadForVerticalSection(element, event.values, state)
     ];
   }, []);
+
+export const getLabelsForDatasource = (payload, state) => payload
+  .filter(
+    el =>
+      el.valueType === datasourceValueTypes.OBJECT_EXTID ||
+      el.valueType === datasourceValueTypes.FIELD_EXTID
+  )
+  .reduce(
+    (prev, curr) => ({
+      ...prev,
+      [curr.extId]: _.get(
+        state,
+        `te.extIdProps.${curr.valueType === datasourceValueTypes.OBJECT_EXTID ? 'objects' : 'fields'}[${curr.extId}].label`,
+        curr.extId
+      ),
+    }),
+    {}
+  );

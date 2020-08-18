@@ -101,11 +101,11 @@ export const elementTypeMapping = {
   ELEMENT_TYPE_INPUT_DATASOURCE: {
     label: 'Field search (text)',
     valueType: valueTypes.OBJECT,
-    elementId: '5dbadccf1c9d4400002c7884',
+    elementId: '5e4f39674012050020028bcc',
   },
   ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE: {
     label: 'Field search (number)',
     valueType: valueTypes.OBJECT,
-    elementId: '5dbadde11c9d4400002c7886',
+    elementId: '5e4f39674012050020028bcb',
   },
 };

@@ -22,8 +22,12 @@ const executeAPICall = async (api, callname, args, actionKey) => {
     return _retVal;
   }
   if (callCanBeMocked(actionKey)) {
+    console.info('Call is unsupported but can be mocked');
+    console.info(`Mocking ${actionKey} with arguments:`, args);
     return teCoreActions[actionKey].mockFunction(args);
   }
+  console.info('Call is unsupported and can not be mocked');
+  console.info(`Suppressing call to ${actionKey} with arguments:`, args);
   return unsupportedFuncCall(callname);
 };
 

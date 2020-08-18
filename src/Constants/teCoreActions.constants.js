@@ -1,3 +1,4 @@
+import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { reservationTemplates } from '../Mock/ReservationTemplates';
 import { reservationTypes } from '../Mock/ReservationTypes';
 import { reservationFields } from '../Mock/ReservationFields';
@@ -29,20 +30,20 @@ export const teCoreActions = {
   SELECT_OBJECT: {
     callname: teCoreCallnames.SELECT_OBJECT,
     label: 'Select object',
-    compatibleWith: ['5d8331e47cd014cfb7e15394']
+    compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
   },
   SELECT_TYPE: {
     callname: teCoreCallnames.SELECT_TYPE,
     label: 'Select type',
-    compatibleWith: ['5d8331e47cd014cfb7e15394']
+    compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
   },
   FILTER_OBJECTS: {
     callname: teCoreCallnames.FILTER_OBJECTS,
     label: 'Filter objects',
     compatibleWith: [
-      '5d8331e47cd014cfb7e15394',
-      '5dbadccf1c9d4400002c7884',
-      '5dbadde11c9d4400002c7886'
+      elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId,
+      elementTypeMapping.ELEMENT_TYPE_INPUT_DATASOURCE.elementId,
+      elementTypeMapping.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE.elementId,
     ]
   },
   GET_EXTID_PROPS: {
@@ -50,7 +51,7 @@ export const teCoreActions = {
   },
   GET_RESERVATION_TEMPLATES: {
     // DEPRECATED
-    callname: teCoreCallnames.GET_EXTID_PROPS,
+    callname: teCoreCallnames.GET_RESERVATION_TEMPLATES,
     mockFunction: () => reservationTemplates
   },
   GET_SELECTED_RESERVATION_TEMPLATE: {

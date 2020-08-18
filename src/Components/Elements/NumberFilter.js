@@ -76,7 +76,7 @@ const NumberFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, elem
       >
         <div className="element__filter--inner">
           <Icon type="filter" />
-          {`${fieldLabel} on type ${typeLabel} ${searchCriteriaNumberProps[searchCriteria].label} ${searchValue}`}
+          {`${typeLabel}/${fieldLabel} ${searchCriteriaNumberProps[searchCriteria].label} ${searchValue}`}
           <Icon type="down" />
         </div>
       </Dropdown>

@@ -40,7 +40,15 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const FreeTextFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, element, payload, teCoreAPI }) => {
+const FreeTextFilter = ({
+  searchValue,
+  searchCriteria,
+  fieldLabel,
+  typeLabel,
+  element,
+  payload,
+  teCoreAPI,
+}) => {
   // Callback on menu click
   const onClickCallback = useCallback(({ key }) => {
     const { callname } = teCoreActions[key];
@@ -82,7 +90,7 @@ const FreeTextFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, el
       >
         <div className="element__filter--inner">
           <Icon type="filter" />
-          {`${fieldLabel} on type ${typeLabel} ${searchCriteriaFreeTextProps[searchCriteria].label} ${searchValue}`}
+          {`${typeLabel}/${fieldLabel}: ${searchValue}`}
           <Icon type="down" />
         </div>
       </Dropdown>
