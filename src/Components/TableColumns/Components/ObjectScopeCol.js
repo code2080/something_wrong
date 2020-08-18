@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 const mapStateToProps = (state, { objectScope }) => ({
-  label: _.get(state, `integration.mappedObjectTypes.${objectScope}.applicationObjectTypeLabel`, null),
+  label: _.get(state, `te.extIdProps.types.${objectScope}.label`, null),
 });
 
 const ObjectScopeCol = ({ objectScope, label }) => label || objectScope || 'N/A';
