@@ -199,7 +199,7 @@ const FormInstanceAssignment = ({ selfUID, users, assignedTo, formInstanceId }) 
     const selfUIDIdx = assignedTo.indexOf(selfUID);
     if (selfUIDIdx > -1)
       return [ assignedTo[selfUIDIdx], ...assignedTo.slice(0, selfUIDIdx), ...assignedTo.slice(selfUIDIdx + 1) ];
-    return assignedTo;
+    return assignedTo.filter(Boolean);
   }, [assignedTo]);
 
   return (
