@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import PropTypes, { object } from 'prop-types';
+import _ from 'lodash';
 
 // COMPONENTS
+import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
@@ -12,22 +13,20 @@ import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
+import { setTEDataForValues } from '../../Redux/TE/te.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
-import { formStatus } from '../../Constants/formStatuses.constants';
 import { tableViews } from '../../Constants/tableViews.constants';
+import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
   isLoading: loadingSelector(state),
-  forms: (Object.keys(state.forms) || [])
-    .map(key => state.forms[key])
-    .filter(form => form.status !== formStatus.ARCHIVED)
-    .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf()),
+  forms: selectAllForms(state),
   user: state.auth.user,
 });
 
@@ -35,6 +34,7 @@ const mapActionsToProps = {
   fetchForms,
   fetchUsers,
   setBreadcrumbs,
+  setTEDataForValues,
   fetchMapping,
 };
 
@@ -45,6 +45,8 @@ const FormList = ({
   fetchForms,
   fetchUsers,
   fetchMapping,
+  teCoreAPI,
+  setTEDataForValues,
   setBreadcrumbs,
   history
 }) => {
@@ -59,6 +61,22 @@ const FormList = ({
       fetchMapping();
     }
   }, [user]);
+
+  useEffect(() => {
+    const objectScopes = _.uniq(forms.reduce((acc, form) =>
+      form.objectScope
+        ? [...acc, form.objectScope] :
+        acc
+      , [])
+    );
+    console.log('objscopes: ', objectScopes);
+    const payload = { objects: [], types: objectScopes, fields: [] };
+    async function exec() {
+      const extIdProps = await teCoreAPI.getExtIdProps(payload);
+      setTEDataForValues(extIdProps || {});
+    }
+    exec();
+  }, [forms])
 
   return (
     <div className="form-list--wrapper">
@@ -102,5 +120,5 @@ FormList.defaultProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapActionsToProps)(FormList)
+  withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormList))
 );
