@@ -1,11 +1,12 @@
 import React from 'react';
 import moment from 'moment';
-
+import _ from 'lodash';
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
+import ScopedObject from '../FormToolbar/ScopedObject';
 
 // SORTERS
 import { sortAlpha } from './Helpers/sorters';
@@ -32,7 +33,7 @@ export const formSubmission = {
     title: 'Scoped object',
     key: 'scopedObject',
     dataIndex: 'scopedObject',
-    render: val => val || 'Not scoped',
+    render: val => <ScopedObject objectExtId={val} />,
     sorter: (a, b) => a.scopedObject - b.scopedObject
   },
   ACTION_BUTTON: {

@@ -33,7 +33,7 @@ const FormInstanceToolbar = ({
       </div>
       <div className="toolbar--section-flex">
         <span className="label">Scoped object:</span>
-        <ScopedObject scopedObjectExtId={formInstance.scopedObject} />
+        <ScopedObject objectExtId={formInstance.scopedObject} />
       </div>
       <div className="toolbar--section-flex">
         <span className="label">Acceptance status:</span>
