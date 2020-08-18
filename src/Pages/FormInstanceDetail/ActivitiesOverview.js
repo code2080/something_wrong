@@ -19,13 +19,15 @@ const mapStateToProps = (state, ownProps) => {
     form: state.forms[formId],
     formInstance: state.submissions[formId][formInstanceId],
     mapping: state.activityDesigner[formId],
-    activities: state.activities[formId] ? (state.activities[formId][formInstanceId] || []) : [],
-    hasOngoingExternalAction: state.globalUI.externalAction != null,
+    activities: state.activities[formId]
+      ? state.activities[formId][formInstanceId] || []
+      : [],
+    hasOngoingExternalAction: state.globalUI.externalAction != null
   };
 };
 
 const mapActionsToProps = {
-  saveActivities,
+  saveActivities
 };
 
 const FormInstanceReservationOverview = ({
@@ -34,17 +36,23 @@ const FormInstanceReservationOverview = ({
   activities,
   mapping,
   saveActivities,
-  hasOngoingExternalAction,
+  hasOngoingExternalAction
 }) => {
   const onCreateActivities = useCallback(() => {
-    const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
+    const activities = createActivitiesFromFormInstance(
+      formInstance,
+      form.sections,
+      mapping
+    );
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
   const mask = () => {
     if (!hasOngoingExternalAction) return null;
 
-    const els = document.getElementsByClassName('base-activity-col--wrapper is-active');
+    const els = document.getElementsByClassName(
+      'base-activity-col--wrapper is-active'
+    );
     if (!els || !els.length || els.length > 1) return null;
     const el = els[0];
     const boundingRect = el.getBoundingClientRect();
@@ -53,7 +61,9 @@ const FormInstanceReservationOverview = ({
       <div
         className="form-instance-activites--mask"
         style={{
-          background: `radial-gradient(${width}px ${height}px at ${left + width / 2}px ${top - height / 4}px, transparent 0px, transparent 70%, rgba(0, 0, 0, 0.5) 80%)`,
+          background: `radial-gradient(at ${left - width / 2}px ${top -
+            height / 4}px, transparent 0px, transparent ${width /
+            2}px, rgba(0, 0, 0, 0.5) ${width / 2 + 15}px)`
         }}
       />
     );
@@ -63,19 +73,25 @@ const FormInstanceReservationOverview = ({
     <div className="form-instance-activities--wrapper">
       {mask()}
       {activities && activities.length ? (
-        <ActivitiesTable mapping={mapping} activities={activities} formInstanceId={formInstance._id} />
+        <ActivitiesTable
+          mapping={mapping}
+          activities={activities}
+          formInstanceId={formInstance._id}
+        />
       ) : (
         <Empty
           imageStyle={{
-            height: 60,
+            height: 60
           }}
-          description={(
+          description={
             <span>
               This submission has not been converted into activities yet.
             </span>
-          )}
+          }
         >
-          <Button type="primary" onClick={onCreateActivities}>Convert it now</Button>
+          <Button type="primary" onClick={onCreateActivities}>
+            Convert it now
+          </Button>
         </Empty>
       )}
     </div>
@@ -88,12 +104,15 @@ FormInstanceReservationOverview.propTypes = {
   activities: PropTypes.array,
   mapping: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
-  hasOngoingExternalAction: PropTypes.bool.isRequired,
+  hasOngoingExternalAction: PropTypes.bool.isRequired
 };
 
 FormInstanceReservationOverview.defaultProps = {
   activities: [],
-  mapping: {},
+  mapping: {}
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(FormInstanceReservationOverview);
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(FormInstanceReservationOverview);
