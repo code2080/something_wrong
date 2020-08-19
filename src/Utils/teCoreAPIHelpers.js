@@ -9,15 +9,18 @@ import { searchCriteriaFreeText, searchCriteriaNumber, searchCriteriaNumberProps
  */
 
 export const transformPayloadForDatasourceFiltering = payload => {
+  // No payload is a no-op
   if (!payload || payload.length === 0) return {};
+  // There can only be one type, so we can safely use find
   const type = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
-  const searchString = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
-  const searchField = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
-
-  if (!type || !searchString || !searchField) return null;
+  // No type is a no-op
+  if (!type) return null;
+  // There can be multiple filters, so need to use Array.prototype.filter
+  const searchString = payload.filter(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
+  const categories = (searchString || []).reduce((prev, curr) => [...prev, { id: curr.extId, values: curr.value }], []);
   return {
     type: type.extId,
-    categories: [{ id: searchField.extId, values: [searchString.value] }],
+    categories,
     searchString: null,
     searchFields: null,
   };
@@ -55,15 +58,21 @@ export const transformPayloadForFreeTextFiltering = (payload, searchCriteria = s
  */
 
 export const transformPayloadForNumberFiltering = (payload, searchCriteria = searchCriteriaNumber.EQUAL_TO) => {
+  // No payload is a no-op
   if (!payload || payload.length === 0) return {};
+  // There can only be one type, so we can safely use find
   const type = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
-  const searchString = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
-  const searchField = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
-  if (!type || !searchString || !searchField) return null;
+  // No type is a no-op
+  if (!type) return null;
+  // There can be multiple filters, so need to use Array.prototype.filter
+  const searchStrings = payload.filter(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
+  // Make sure we have one element in the search string
+  if (!searchStrings || !searchStrings.length) return null;
+
   return {
     type: type.extId,
     categories: [],
-    searchString: `${searchCriteriaNumberProps[searchCriteria].label}${searchString.value}`,
-    searchFields: [searchField.extId],
+    searchString: `${searchCriteriaNumberProps[searchCriteria].label}${searchStrings[0].value}`,
+    searchFields: [searchStrings[0].extId],
   };
 };
