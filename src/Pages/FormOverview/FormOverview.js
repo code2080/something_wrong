@@ -69,7 +69,6 @@ const FormList = ({
         acc
       , [])
     );
-    console.log('objscopes: ', objectScopes);
     const payload = { objects: [], types: objectScopes, fields: [] };
     async function exec() {
       const extIdProps = await teCoreAPI.getExtIdProps(payload);
