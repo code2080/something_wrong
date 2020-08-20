@@ -84,7 +84,10 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.LOGOUT:
-      return initialState;
+      return {
+        ...initialState,
+        env: state.env
+      };
 
     case types.LOGIN_FAILURE:
       setToken(null);
