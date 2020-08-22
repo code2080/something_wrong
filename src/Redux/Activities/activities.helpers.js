@@ -152,11 +152,11 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
    * most reverts only affect the activity value itself
    * but reverting timeslots needs to happen on both start and endtime properties
    */
-  const { submissionValue } = activityValue;
+  const { extId, submissionValue, value } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
   if (
     timingMode !== mappingTimingModes.EXACT &&
-    (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
+    (extId === 'startTime' || extId === 'endTime')
   ) {
     return revertMultipleActivityValues(['startTime', 'endTime'], activity);
   } else {
@@ -164,10 +164,10 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
       {
         ...activityValue,
         valueMode: activityValueModes.FROM_SUBMISSION,
-        value: submissionValue[0]
+        value: Array.isArray(value) ? submissionValue : submissionValue[0],
       },
       activity,
-      findObjectPathForActivityValue(activityValue.extId, activity)
+      findObjectPathForActivityValue(extId, activity)
     );
   }
 };

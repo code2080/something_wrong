@@ -168,7 +168,7 @@ const FormPage = ({
         ..._elementTableData[submission._id],
       };
     }),
-    [submissions, _elementTableData]);
+  [submissions, _elementTableData]);
 
   const columns = useMemo(() => [
     tableColumns.formSubmission.ASSIGNMENT,
@@ -264,6 +264,9 @@ FormPage.propTypes = {
   fetchDataForDataSource: PropTypes.func.isRequired,
   loadFilter: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
+  teValues: PropTypes.object,
+  setTEDataForValues: PropTypes.func.isRequired,
 };
 
 FormPage.defaultProps = {
@@ -271,6 +274,7 @@ FormPage.defaultProps = {
   submissions: [],
   isLoadingSubmissions: false,
   scopedObjects: {},
+  teValues: { types: [], objects: [], fields: [] },
 };
 
 export default withRouter(withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormPage)));

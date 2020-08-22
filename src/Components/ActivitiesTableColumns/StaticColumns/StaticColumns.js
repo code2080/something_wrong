@@ -8,6 +8,7 @@ export const StaticColumns = [
     title: 'Status',
     key: 'activityStatus',
     dataIndex: 'activityStatus',
+    fixedWidth: 150,
     render: activityStatus => (
       <StatusTag color={activityStatusProps[activityStatus].color}>
         {activityStatusProps[activityStatus].label}
@@ -15,15 +16,17 @@ export const StaticColumns = [
     )
   },
   {
-    title: 'Reservation Id',
+    title: 'Id',
     key: 'reservationId',
     dataIndex: 'reservationId',
+    fixedWidth: 75,
     render: reservationId => reservationId || 'N/A',
   },
   {
-    title: 'Actions',
+    title: '',
     key: 'actions',
     dataIndex: null,
+    fixedWidth: 40,
     render: (_, activity) => <ActivityActionsDropdown buttonType="more" activity={activity} />,
   },
 ];

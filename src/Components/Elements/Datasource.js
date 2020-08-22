@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import { datasourceValueTypes } from '../../Constants/datasource.constants';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Menu, Dropdown } from 'antd';
@@ -45,7 +44,8 @@ const mapStateToProps = (state, ownProps) => {
 const Datasource = ({ payload, labels, value, element, teCoreAPI }) => {
   const elType = useMemo(() => {
     if (payload == null) return elTypes.EMPTY;
-    if (payload.findIndex(el => el.valueType === datasourceValueTypes.OBJECT_EXTID) > -1) return elTypes.OBJECT;
+    const datasourceSplit = (element.datasource || []).split(',');
+    if (datasourceSplit && datasourceSplit[1] && datasourceSplit[1] === 'object') return elTypes.OBJECT;
     return elTypes.FILTER;
   }, [payload]);
 
