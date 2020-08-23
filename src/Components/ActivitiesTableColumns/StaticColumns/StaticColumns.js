@@ -1,19 +1,14 @@
 import React from 'react';
-import { activityStatusProps } from '../../../Constants/activityStatuses.constants';
-import StatusTag from '../../StatusTag';
 import ActivityActionsDropdown from '../ActivityActionsDropdown';
+import ActivityStatusCol from './ActivityStatusCol';
 
 export const StaticColumns = [
   {
     title: 'Status',
     key: 'activityStatus',
-    dataIndex: 'activityStatus',
+    dataIndex: null,
     fixedWidth: 150,
-    render: activityStatus => (
-      <StatusTag color={activityStatusProps[activityStatus].color}>
-        {activityStatusProps[activityStatus].label}
-      </StatusTag>
-    )
+    render: (_, activity) => <ActivityStatusCol activity={activity} />,
   },
   {
     title: 'Id',

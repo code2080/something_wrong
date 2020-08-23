@@ -30,6 +30,15 @@ const reducer = (state = initialState, action) => {
       };
 
     case types.GET_VIEW_SUCCESS: {
+      if (
+        !action ||
+        !action.payload ||
+        !action.payload.table ||
+        !action.payload.table.datasourceId ||
+        !action.payload.table.columns
+      )
+        return state;
+
       const { table: { datasourceId, columns } } = action.payload;
       if (!datasourceId || !columns) return state;
       return {

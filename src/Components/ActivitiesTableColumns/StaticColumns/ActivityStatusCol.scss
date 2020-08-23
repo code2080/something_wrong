@@ -1,0 +1,13 @@
+@import '../../../Styles/globals.scss';
+
+.activity-col--popover {
+  .ant-row.ant-form-item {
+    margin-bottom: 4px !important;
+  }
+
+  .ant-form-item-label {
+    text-align: left !important;
+    font-weight: 700;
+    color: $darkBlack;
+  }
+}

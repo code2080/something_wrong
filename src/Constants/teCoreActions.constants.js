@@ -110,11 +110,11 @@ export const teCoreActions = {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
     mockFunction: ({ reservations, callback }) =>
       callback(
-        reservations.map((r, index) => ({
-          activityId: r.activityId,
-          result: { reference: 1000 + index }
-        }))
-      )
+        reservations.map(
+          r => ({
+            activityId: r.activityId,
+            result: coreReservationResult,
+          })))
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT

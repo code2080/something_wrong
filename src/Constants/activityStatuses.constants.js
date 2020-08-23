@@ -10,43 +10,43 @@ export const activityStatuses = {
 
 export const activityStatusProps = {
   [activityStatuses.NOT_SCHEDULED]: {
-    color: 'swedishSkies',
+    color: 'default',
     label: 'Not scheduled',
     icon: 'minus',
     tooltip: () => 'The activity has not been scheduled yet',
   },
   [activityStatuses.SCHEDULED]: {
-    color: 'jungleGreen',
+    color: 'success',
     label: 'Scheduled',
     icon: 'check',
     tooltip: reservationId => `Activity has been scheduled with reservation id ${reservationId}`,
   },
   [activityStatuses.MODIFIED]: {
-    color: 'candlelight',
+    color: 'warning',
     label: 'Modified',
     icon: 'exclamation',
     tooltip: reservationId => `The activity has been scheduled with id ${reservationId}, but has been modified since`,
   },
   [activityStatuses.DELETED]: {
-    color: 'bittersweet',
+    color: 'attention',
     label: 'Deleted',
     icon: 'warning',
     tooltip: reservationId => `The activity was scheduled with id ${reservationId}, but has been deleted since`,
   },
   [activityStatuses.NO_AVAILABILITY]: {
-    color: 'bittersweet',
+    color: 'attention',
     label: 'No availability',
     icon: 'warning',
     tooltip: () => `There's no availability to schedule this combination of objects within the given time constraints`,
   },
   [activityStatuses.VALIDATION_ERROR]: {
-    color: 'bittersweet',
+    color: 'attention',
     label: 'Validation error',
     icon: 'warning',
     tooltip: () => `One or many acitivty values have validations errors`,
   },
   [activityStatuses.FAILED]: {
-    color: 'bittersweet',
+    color: 'attention',
     label: 'Failed',
     icon: 'warning',
     tooltip: () => `An attempt to schedule this activity was made, but it failed`,
