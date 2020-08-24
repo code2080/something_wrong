@@ -64,24 +64,39 @@ export const determineSchedulingAlgorithmForActivityValue = (
  * @param {Object<TECoreAPISchedulingReturn>} teCoreReturn unprocessed return from TE Core
  * @returns SchedulingReturn
  */
-const parseTECoreResultToScheduleReturn = teCoreReturn => new SchedulingReturn({
-  status:
-    teCoreReturn.failures.length === 0
-      ? activityStatuses.SCHEDULED
-      : activityStatuses.FAILED,
-  reservationId: teCoreReturn.newIds[0],
-  errorCode: teCoreReturn.failures[0]
-    ? teCoreReturn.failures[0].result.references[0]
-    : 0,
-  errorMessage: teCoreReturn.failures[0]
-    ? teCoreReturn.failures[0].result.reservation
-    : ''
-});
+const parseTECoreResultToScheduleReturn = teCoreReturn =>
+  new SchedulingReturn({
+    status:
+      teCoreReturn.failures.length === 0
+        ? activityStatuses.SCHEDULED
+        : activityStatuses.FAILED,
+    reservationId: teCoreReturn.newIds[0],
+    errorCode: teCoreReturn.failures[0]
+      ? teCoreReturn.failures[0].result.references[0]
+      : 0,
+    errorMessage: teCoreReturn.failures[0]
+      ? teCoreReturn.failures[0].result.reservation
+      : ''
+  });
 
-const parseTECoreResultsToScheduleReturns = teCoreReturns => teCoreReturns.map(el => ({
-  activityId: el.activityId,
-  result: parseTECoreResultToScheduleReturn(el.result),
-}));
+const parseTECoreResultsToScheduleReturns = teCoreReturns =>
+  teCoreReturns.map(el => {
+    const status =
+      el.result.result && el.result.result < 0
+        ? activityStatuses.FAILED
+        : activityStatuses.SCHEDULED;
+    return {
+      activityId: el.activityId,
+      result: {
+        status,
+        reservationId:
+          status === activityStatuses.SCHEDULED ? el.result.reference : null,
+        errorCode: status === activityStatuses.FAILED ? el.result.result : null,
+        errorMessage:
+          status === activityStatuses.FAILED ? el.result.message : null
+      }
+    };
+  });
 
 export const validateActivity = activity => {
   const validationResults = [
@@ -157,11 +172,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
         result: validates
           ? null
           : new SchedulingReturn({
-            status: activityStatuses.VALIDATION_ERROR,
-            errorCode: activityStatuses.VALIDATION_ERROR,
-            errorMessage:
-              activityStatusProps[activityStatuses.VALIDATION_ERROR].label
-          })
+              status: activityStatuses.VALIDATION_ERROR,
+              errorCode: activityStatuses.VALIDATION_ERROR,
+              errorMessage:
+                activityStatusProps[activityStatuses.VALIDATION_ERROR].label
+            })
       };
     })
     .map(a => {
@@ -175,11 +190,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? null
             : new SchedulingReturn({
-              status: activityStatuses.FAILED,
-              errorCode: activityStatuses.FAILED,
-              errorMessage:
-                'The scheduling algorithm has not yet been implemented'
-            }),
+                status: activityStatuses.FAILED,
+                errorCode: activityStatuses.FAILED,
+                errorMessage:
+                  'The scheduling algorithm has not yet been implemented'
+              }),
         reservation:
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? formatActivityForExactScheduling(a.activity)
@@ -214,48 +229,56 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
  * @param {Object<SchedulingReturn>} schedulingReturn the scheduling return
  */
 
-export const updateActivityWithSchedulingResult = (activity, schedulingReturn) => {
+export const updateActivityWithSchedulingResult = (
+  activity,
+  schedulingReturn
+) => {
   const {
     status: activityStatus,
     reservationId,
     errorCode,
-    errorMessage,
+    errorMessage
   } = schedulingReturn;
 
   let errorDetails = null;
   if (activityStatus === activityStatuses.FAILED)
-    errorDetails = new SchedulingError({ message: errorMessage, code: errorCode });
+    errorDetails = new SchedulingError({
+      message: errorMessage,
+      code: errorCode
+    });
 
   return {
     ...activity,
     activityStatus,
     reservationId,
     errorDetails,
-    schedulingTimestamp: moment.utc(),
+    schedulingTimestamp: moment.utc()
   };
-}
+};
 
-export const updateActivitiesWithSchedulingResults = (activities, schedulingReturns) => activities.map(a => {
-  const response = schedulingReturns.find(r => r.activityId === a._id);
-  if (!response) return a;
-  const {
-    result: {
-      status: activityStatus,
+export const updateActivitiesWithSchedulingResults = (
+  activities,
+  schedulingReturns
+) =>
+  activities.map(a => {
+    const response = schedulingReturns.find(r => r.activityId === a._id);
+    if (!response) return a;
+    const {
+      result: { status: activityStatus, reservationId, errorCode, errorMessage }
+    } = response;
+
+    let errorDetails = null;
+    if (activityStatus === activityStatuses.FAILED)
+      errorDetails = new SchedulingError({
+        message: errorMessage,
+        code: errorCode
+      });
+
+    return {
+      ...a,
+      activityStatus,
       reservationId,
-      errorCode,
-      errorMessage,
-    }
-  } = response;
-
-  let errorDetails = null;
-  if (activityStatus === activityStatuses.FAILED)
-    errorDetails = new SchedulingError({ message: errorMessage, code: errorCode });
-
-  return {
-    ...a,
-    activityStatus,
-    reservationId,
-    errorDetails,
-    schedulingTimestamp: moment.utc(),
-  };
-});
+      errorDetails,
+      schedulingTimestamp: moment.utc()
+    };
+  });
