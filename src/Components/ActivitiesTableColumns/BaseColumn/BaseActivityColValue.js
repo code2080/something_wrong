@@ -35,7 +35,7 @@ const BaseActivityColValue = ({
             activity,
             extId =>
               extIdProps.objects[extId]
-                ? extIdProps.objects[extId].label
+                ? [extIdProps.objects[extId].label]
                 : extId
           );
         return getRenderPayloadForActivityValue(
@@ -54,6 +54,7 @@ const BaseActivityColValue = ({
         );
     }
   }, [activityValue, activity, formatFn, extIdProps]);
+
   if (schedulingPayload.tooltip)
     return (
       <Tooltip

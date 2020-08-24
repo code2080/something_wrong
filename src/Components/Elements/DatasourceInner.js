@@ -78,7 +78,7 @@ DatasourceFilterInner.defaultProps = {
 const DatasourceObjectInner = ({ labels }) => {
   return (
     <div className="element__datasource--inner">
-      {Object.keys(labels).reduce((text, key, idx) => `${text}${idx > 0 ? ', ' : ''}${labels[key]}`, '')}
+      {Object.keys(labels).length > 0 ? Object.keys(labels).reduce((text, key, idx) => `${text}${idx > 0 ? ', ' : ''}${labels[key]}`, '') : 'N/A'}
       <Icon type="down" />
     </div>
   )

@@ -42,7 +42,7 @@ const BaseReservationColDropdown = ({
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       disabled={disabled}
     >
-      <Button type="link" icon="more" disabled={disabled} />
+      <Button size="small" type="link" icon="more" disabled={disabled} />
     </Dropdown>
   );
 };

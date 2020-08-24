@@ -65,7 +65,11 @@ export const getTECoreAPIPayload = (value, datasource) => {
       },
       {
         valueType: datasourceValueTypes.FIELD_VALUE,
-        value: Array.isArray(value) ? value[0][curr] : value,
+        value: Array.isArray(value)
+          ? value[0] && value[0][curr]
+            ? value[0][curr]
+            : ''
+          : value,
         extId: curr,
       }
     ],

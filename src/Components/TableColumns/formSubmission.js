@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import _ from 'lodash';
+
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
 import StatusLabel from '../StatusLabel/StatusLabel';

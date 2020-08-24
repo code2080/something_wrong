@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 // HELPERS
 import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import { validateTiming, validateValue } from './activityValues.validation';
@@ -5,6 +7,7 @@ import { getTimingModeForActivity } from './activities.helpers';
 
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
+import { SchedulingError } from '../Models/SchedulingError.model';
 
 // CONSTANTS
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
@@ -16,6 +19,13 @@ import {
   activityStatuses,
   activityStatusProps
 } from '../Constants/activityStatuses.constants';
+
+/**
+ * @function determineSchedulingAlgorithmForActivityValue
+ * @description determines which scheduling algorithm we need to use for one individual activity
+ * @param {Object<ActivityValue>} activityValue the activity value
+ * @param {Object<Activity>} activity the whole activity
+ */
 
 export const determineSchedulingAlgorithmForActivityValue = (
   activityValue,
@@ -48,6 +58,12 @@ export const determineSchedulingAlgorithmForActivityValue = (
   return schedulingAlgorithms.EXACT;
 };
 
+/**
+ * @function parseTECoreResultToScheduleReturn
+ * @description transform a single TECoreSchedulingReturn into PIC native SchedulingReturn
+ * @param {Object<TECoreAPISchedulingReturn>} teCoreReturn unprocessed return from TE Core
+ * @returns SchedulingReturn
+ */
 const parseTECoreResultToScheduleReturn = teCoreReturn => new SchedulingReturn({
   status:
     teCoreReturn.failures.length === 0
@@ -62,19 +78,10 @@ const parseTECoreResultToScheduleReturn = teCoreReturn => new SchedulingReturn({
     : ''
 });
 
-const parseTECoreResultsToScheduleReturns = teCoreReturns =>
-  teCoreReturns.map(el => ({
-    activityId: el.activityId,
-    result: new SchedulingReturn({
-      status:
-        el.result.reference > 0
-          ? activityStatuses.SCHEDULED
-          : activityStatuses.FAILED,
-      reservationId: el.result.reference > 0 ? el.result.reference : 0,
-      errorCode: el.result.reference < 0 ? el.result.reference : '',
-      errorMessage: el.result.reference < 0 ? el.result.details : ''
-    })
-  }));
+const parseTECoreResultsToScheduleReturns = teCoreReturns => teCoreReturns.map(el => ({
+  activityId: el.activityId,
+  result: parseTECoreResultToScheduleReturn(el.result),
+}));
 
 export const validateActivity = activity => {
   const validationResults = [
@@ -199,3 +206,56 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
       ])
   });
 };
+
+/**
+ * @function updateActivityWithSchedulingResult
+ * @description create a new activity with the result of a scheduling return
+ * @param {Object<Activity>} activity the original activity
+ * @param {Object<SchedulingReturn>} schedulingReturn the scheduling return
+ */
+
+export const updateActivityWithSchedulingResult = (activity, schedulingReturn) => {
+  const {
+    status: activityStatus,
+    reservationId,
+    errorCode,
+    errorMessage,
+  } = schedulingReturn;
+
+  let errorDetails = null;
+  if (activityStatus === activityStatuses.FAILED)
+    errorDetails = new SchedulingError({ message: errorMessage, code: errorCode });
+
+  return {
+    ...activity,
+    activityStatus,
+    reservationId,
+    errorDetails,
+    schedulingTimestamp: moment.utc(),
+  };
+}
+
+export const updateActivitiesWithSchedulingResults = (activities, schedulingReturns) => activities.map(a => {
+  const response = schedulingReturns.find(r => r.activityId === a._id);
+  if (!response) return a;
+  const {
+    result: {
+      status: activityStatus,
+      reservationId,
+      errorCode,
+      errorMessage,
+    }
+  } = response;
+
+  let errorDetails = null;
+  if (activityStatus === activityStatuses.FAILED)
+    errorDetails = new SchedulingError({ message: errorMessage, code: errorCode });
+
+  return {
+    ...a,
+    activityStatus,
+    reservationId,
+    errorDetails,
+    schedulingTimestamp: moment.utc(),
+  };
+});

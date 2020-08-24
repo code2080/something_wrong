@@ -6,7 +6,9 @@ import { Dropdown, Menu, Button, Icon } from 'antd';
 // HELPERS
 import {
   scheduleActivity,
-  scheduleActivities
+  scheduleActivities,
+  updateActivityWithSchedulingResult,
+  updateActivitiesWithSchedulingResults,
 } from '../../Utils/scheduling.helpers';
 
 // ACTIONS
@@ -70,34 +72,14 @@ const ActivityActionsDropdown = ({
   updateActivities,
   teCoreAPI
 }) => {
-  const onFinishSchedule = response => {
-    const { status: activityStatus, reservationId } = response;
-    const updatedActivity = {
-      ...activity,
-      activityStatus,
-      reservationId
-    };
-    updateActivity(updatedActivity);
-  };
+  const onFinishSchedule =
+    schedulingReturn => updateActivity(updateActivityWithSchedulingResult(activity, schedulingReturn));
 
-  const onFinishScheduleMultiple = responses => {
-    console.log(responses);
-    const updatedActivities = activities.map(a => {
-      const response = responses.find(r => r.activityId === a._id);
-      if (!response) return a;
-      const {
-        result: { status: activityStatus, reservationId }
-      } = response;
-      return {
-        ...a,
-        activityStatus,
-        reservationId
-      };
-    });
+  const onFinishScheduleMultiple = schedulingReturns => {
     updateActivities(
       activity.formId,
       activity.formInstanceId,
-      updatedActivities
+      updateActivitiesWithSchedulingResults(activities, schedulingReturns)
     );
   };
 
