@@ -33,6 +33,7 @@ import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/for
 import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -88,7 +89,6 @@ const mapActionsToProps = {
   fetchMappings,
   fetchActivitiesForForm,
   setBreadcrumbs,
-  setTEDataForValues,
   fetchDataForDataSource,
   loadFilter,
 };
@@ -100,7 +100,6 @@ const FormPage = ({
   form,
   teCoreAPI,
   teValues,
-  setTEDataForValues,
   submissions,
   scopedObjects,
   isLoadingSubmissions,
@@ -149,14 +148,10 @@ const FormPage = ({
     ]);
   }, []);
 
-  // Effect to get all TE values
-  useEffect(() => {
-    async function exec() {
-      const extIdProps = await teCoreAPI.getExtIdProps(teValues);
-      setTEDataForValues(extIdProps || {});
-    }
-    exec();
-  }, [submissions]);
+  // Workaround because of DEV-5341
+  const payload = useMemo(() => ({...teValues}), [submissions]);
+  // Effect to get all TE values into redux state
+  useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(() => extractSubmissionData(submissions, _cols), [submissions, _cols]);
@@ -266,7 +261,6 @@ FormPage.propTypes = {
   history: PropTypes.object.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
   teValues: PropTypes.object,
-  setTEDataForValues: PropTypes.func.isRequired,
 };
 
 FormPage.defaultProps = {

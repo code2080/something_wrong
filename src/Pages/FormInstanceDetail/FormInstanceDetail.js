@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -22,6 +22,7 @@ import { getExtIdPropsPayload } from '../../Redux/Integration/integration.select
 
 // STYLES
 import './FormInstanceDetail.scss';
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 // CONSTANTS
 const tabs = {
@@ -44,7 +45,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   setBreadcrumbs,
-  setTEDataForValues,
   fetchManualSchedulingsForFormInstance,
   fetchActivitiesForFormInstance,
 };
@@ -56,7 +56,6 @@ const FormInstancePage = ({
   teValues,
   setBreadcrumbs,
   teCoreAPI,
-  setTEDataForValues,
   fetchManualSchedulingsForFormInstance,
   fetchActivitiesForFormInstance,
 }) => {
@@ -79,14 +78,10 @@ const FormInstancePage = ({
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
 
-  // Effect to get all TE values
-  useEffect(() => {
-    async function exec() {
-      const extIdProps = await teCoreAPI.getExtIdProps(teValues);
-      setTEDataForValues(extIdProps || {});
-    }
-    exec();
-  }, []);
+  // Workaround because of DEV-5341
+  const payload = useMemo(() => ({...teValues}), [formInstance]);
+  // Effect to get all TE values into redux state
+  useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
   const [activeView, setActiveView] = useState(tabs.OVERVIEW);
@@ -128,7 +123,6 @@ FormInstancePage.propTypes = {
   teValues: PropTypes.object.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
-  setTEDataForValues: PropTypes.func.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
   fetchActivitiesForFormInstance: PropTypes.func.isRequired,
 };

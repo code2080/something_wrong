@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes, { object } from 'prop-types';
@@ -22,6 +22,7 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -34,7 +35,6 @@ const mapActionsToProps = {
   fetchForms,
   fetchUsers,
   setBreadcrumbs,
-  setTEDataForValues,
   fetchMapping,
 };
 
@@ -46,10 +46,20 @@ const FormList = ({
   fetchUsers,
   fetchMapping,
   teCoreAPI,
-  setTEDataForValues,
   setBreadcrumbs,
   history
 }) => {
+
+  const objectScopes = useMemo(() => _.uniq(forms.reduce((objScopes, form) =>
+    form.objectScope
+      ? [...objScopes, form.objectScope] :
+      objScopes
+    , [])
+  ), [forms]);
+  const payload = useMemo(() => ({ objects: [], types: objectScopes, fields: [] }), [objectScopes]);
+  
+  useFetchLabelsFromExtIds(teCoreAPI, payload);
+  
   useEffect(() => {
     fetchForms();
     fetchUsers();
@@ -61,21 +71,6 @@ const FormList = ({
       fetchMapping();
     }
   }, [user]);
-
-  useEffect(() => {
-    const objectScopes = _.uniq(forms.reduce((acc, form) =>
-      form.objectScope
-        ? [...acc, form.objectScope] :
-        acc
-      , [])
-    );
-    const payload = { objects: [], types: objectScopes, fields: [] };
-    async function exec() {
-      const extIdProps = await teCoreAPI.getExtIdProps(payload);
-      setTEDataForValues(extIdProps || {});
-    }
-    exec();
-  }, [forms])
 
   return (
     <div className="form-list--wrapper">
