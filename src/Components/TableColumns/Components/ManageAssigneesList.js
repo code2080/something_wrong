@@ -4,11 +4,11 @@ import { List, Icon, Empty, Avatar } from 'antd';
 import _ from 'lodash';
 
 // STYLES
-import './FormInstanceAssignment.scss';
+//import './FormInstanceAssignment.scss';
 
 const User = ({ isSelf, user, onToggleUser, isAssigned }) => {
   return (
-    <div className={`assignment__popover--item ${isAssigned ? `assigned-user` : `user`} ${isSelf ? 'is-self' : ''}`} onClick={isAssigned ? null : onToggleUser} >
+    <List.Item className={`assignment__popover--item ${isAssigned ? `assigned-user` : `user`} ${isSelf ? 'is-self' : ''}`} onClick={isAssigned ? null : onToggleUser} >
       <Avatar className="assignment__popover__item__avatar">{user.initials}</Avatar>
       <div className="assignment__popover__item__name">{user.name}</div>
       {isAssigned && (
@@ -16,7 +16,7 @@ const User = ({ isSelf, user, onToggleUser, isAssigned }) => {
           <Icon type="close-circle" />
         </div>
       )}
-    </div>
+    </List.Item>
   );
 };
 
@@ -50,21 +50,19 @@ const ManageAssigneesList = ({
       locale={{
         emptyText: isAssigned ? 'No users assigned' : 'No users found',
       }}
-      pagination={{
+      pagination={(users.length > 10 || !isAssigned) && {
         size: "small",
+        defaultPageSize: 10,
         total: users.length,
-        hideOnSinglePage: true
       }}
       renderItem={user =>
         (
-          <List.Item>
             <User
               isSelf={selfUID === user._id}
               onToggleUser={() => onToggleUser(user._id)}
               user={user}
               isAssigned={isAssigned}
             />
-          </List.Item>
         )
       }
     />
