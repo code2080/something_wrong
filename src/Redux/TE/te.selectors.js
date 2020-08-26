@@ -1,7 +1,18 @@
 import { createSelector } from 'reselect';
+import _ from 'lodash';
 
-const selectExtIdProps = (state) => state.te.extIdProps;
+const selectExtIdProps = state => state.te.extIdProps;
 
+export const selectExtIds = createSelector(
+  [selectExtIdProps],
+  extIdProps => 
+    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => {
+      return {
+        ...extIds,
+        ...extIdTypes
+      }
+    }, {})
+);
 
 /**
  * @function selectExtIdLabel
