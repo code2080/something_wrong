@@ -157,6 +157,7 @@ const FormInstanceAssignment = ({ selfUID, users, assignedTo, formInstanceId, to
             placeholder="Find users"
             suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.45)' }} />}
             onChange={e => setFilterQuery(e.target.value)}
+            size='small'
             value={filterQuery}
           />
           {userLists.map(({ users, isAssigned }, i) => (
