@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
-import { setTEDataForValues } from '../../Redux/TE/te.actions';
 import { fetchManualSchedulingsForFormInstance } from '../../Redux/ManualSchedulings/manualSchedulings.actions';
 import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activities.actions';
 
@@ -33,12 +32,9 @@ const tabs = {
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } } } = ownProps;
   const sections = state.forms[formId].sections;
-  const values = state.submissions[formId][formInstanceId].values;
-  const teValues = getExtIdPropsPayload(sections, values, state);
   return {
     formName: state.forms[formId].name,
     formInstance: state.submissions[formId][formInstanceId],
-    teValues,
     sections,
   };
 };
@@ -53,7 +49,6 @@ const FormInstancePage = ({
   formInstance,
   formName,
   sections,
-  teValues,
   setBreadcrumbs,
   teCoreAPI,
   fetchManualSchedulingsForFormInstance,
@@ -78,9 +73,8 @@ const FormInstancePage = ({
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
 
-  // Workaround because of DEV-5341
-  const payload = useMemo(() => ({...teValues}), [formInstance]);
   // Effect to get all TE values into redux state
+  const payload = useMemo(() => getExtIdPropsPayload(sections, formInstance.values), [formInstance, sections]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
@@ -120,7 +114,6 @@ FormInstancePage.propTypes = {
   formInstance: PropTypes.object.isRequired,
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
-  teValues: PropTypes.object.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
