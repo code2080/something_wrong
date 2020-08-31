@@ -33,6 +33,7 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
+import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -143,7 +144,7 @@ const FormPage = ({
         ...submission.values
       }), {});
     const teValues = _.isEmpty(values)
-      ? { types: [], objects: [], fields: [] }
+      ? initialPayload
       : getExtIdPropsPayload(sections, values);
     const scopedObjectExtids = submissions.map(s => s.scopedObject)
 

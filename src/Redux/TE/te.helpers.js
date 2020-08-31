@@ -1,6 +1,6 @@
 import { findElementValueInSubmission } from '../../Utils/elements.helpers';
 
-const initialState = {
+export const initialState = {
   objects: [],
   fields: [],
   types: [],
