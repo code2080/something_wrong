@@ -11,7 +11,6 @@ import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchDataForDataSource } from '../../Redux/Integration/integration.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
-import { setTEDataForValues } from '../../Redux/TE/te.actions';
 
 // SELECTORS
 import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
@@ -34,6 +33,7 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
+import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -62,15 +62,6 @@ const mapStateToProps = (state, ownProps) => {
   const scopedObjects = form.objectScope && state.integration.objects[form.objectScope]
     ? _.keyBy(scopedObjectIds.map(id => state.integration.objects[form.objectScope][id]), 'te_extid')
     : {};
-  const sections = form.sections;
-  const values = submissions.reduce((acc, submission) => ({
-    ...acc,
-    ...submission.values
-  }), {});
-  let teValues = _.isEmpty(values)
-    ? { types: [], objects: [], fields: [] }
-    : getExtIdPropsPayload(sections, values);
-  teValues.objects = _.concat(teValues.objects, submissions.map(s => s.scopedObject))
 
   return {
     userId: _.get(state, 'auth.user.id', null),
@@ -78,7 +69,6 @@ const mapStateToProps = (state, ownProps) => {
     isLoadingSubmissions: loadingSelector(state),
     formId,
     form,
-    teValues,
     submissions,
     scopedObjects,
   };
@@ -99,7 +89,6 @@ const FormPage = ({
   filters,
   form,
   teCoreAPI,
-  teValues,
   submissions,
   scopedObjects,
   isLoadingSubmissions,
@@ -148,8 +137,26 @@ const FormPage = ({
     ]);
   }, []);
 
-  // Workaround because of DEV-5341
-  const payload = useMemo(() => ({...teValues}), [submissions]);
+  const payload = useMemo(() => {
+    const sections = form.sections;
+    const values = submissions.reduce((acc, submission) => ({
+        ...acc,
+        ...submission.values
+      }), {});
+    const teValues = _.isEmpty(values)
+      ? initialPayload
+      : getExtIdPropsPayload(sections, values);
+    const scopedObjectExtids = submissions.map(s => s.scopedObject)
+
+    return {
+      ...teValues,
+      objects: [
+        ...teValues.objects,
+        ...scopedObjectExtids
+      ],
+    }
+}, [submissions, form]);
+
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
@@ -260,7 +267,6 @@ FormPage.propTypes = {
   loadFilter: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
-  teValues: PropTypes.object,
 };
 
 FormPage.defaultProps = {
@@ -268,7 +274,6 @@ FormPage.defaultProps = {
   submissions: [],
   isLoadingSubmissions: false,
   scopedObjects: {},
-  teValues: { types: [], objects: [], fields: [] },
 };
 
 export default withRouter(withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormPage)));

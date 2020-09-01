@@ -6,12 +6,12 @@ const selectExtIdProps = state => state.te.extIdProps;
 export const selectExtIds = createSelector(
   [selectExtIdProps],
   extIdProps => 
-    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => {
-      return {
+    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => (
+      [
         ...extIds,
-        ...extIdTypes
-      }
-    }, {})
+        ...Object.keys(extIdTypes)
+      ]
+    ), []) || []
 );
 
 /**
