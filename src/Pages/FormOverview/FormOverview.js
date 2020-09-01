@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PropTypes, { object } from 'prop-types';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // COMPONENTS
@@ -13,7 +13,6 @@ import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
-import { setTEDataForValues } from '../../Redux/TE/te.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
@@ -23,6 +22,8 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
+import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
+
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -50,16 +51,18 @@ const FormList = ({
   history
 }) => {
 
-  const objectScopes = useMemo(() => _.uniq(forms.reduce((objScopes, form) =>
-    form.objectScope
-      ? [...objScopes, form.objectScope] :
-      objScopes
-    , [])
-  ), [forms]);
-  const payload = useMemo(() => ({ objects: [], types: objectScopes, fields: [] }), [objectScopes]);
-  
-  useFetchLabelsFromExtIds(teCoreAPI, payload);
-  
+  const objectScopes = useMemo(() => ({
+    ...initialPayload,
+    types: _.uniq(forms.reduce((objScopes, form) =>
+      form.objectScope
+        ? [...objScopes, form.objectScope] :
+        objScopes
+      , [])
+    )
+  }), [forms]);
+
+  useFetchLabelsFromExtIds(teCoreAPI, objectScopes);
+
   useEffect(() => {
     fetchForms();
     fetchUsers();

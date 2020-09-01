@@ -8,24 +8,15 @@ export const useFetchLabelsFromExtIds = (teCoreAPI, payload) => {
   const dispatch = useDispatch();
   const extIds = useSelector(state => selectExtIds(state));
 
+  async function exec(payload) {
+    const extIdProps = await teCoreAPI.getExtIdProps(payload);
+    dispatch(setTEDataForValues(extIdProps));
+  }
+
   useEffect(() => {
-    const filterPayload = (payload) => {
-      // const { types, objects, fields } = extIdProps;
-      // const { payloadTypes, payloadObjs, payloadFields } = payload;
-      
-      let payloadCopy = { ...payload };
-      _.flatMap(payload).forEach(type => Object.keys(type).forEach(extId => Object.keys(extIds).includes(extId) && delete payloadCopy[type][extId]));
-      return payloadCopy;
-    }    
-    
-    async function exec(payload) {
-      const extIdProps = await teCoreAPI.getExtIdProps(filterPayload(payload));
-      dispatch(setTEDataForValues(extIdProps));
-    }
-    
-    const filteredPayload = filterPayload(payload);
-    const { types, objects, fields } = filteredPayload;
-    if (!(_.isEmpty(types) && _.isEmpty(objects) && _.isEmpty(fields)))
-      exec(filteredPayload);
+    const payloadExtids = _.flatMap(payload)
+    const missingExtIdsInStore = !payloadExtids.every(extId => extIds.includes(extId))
+    if (!_.isEmpty(payloadExtids) && missingExtIdsInStore)
+      exec(payload)
   }, [payload])
 }
