@@ -9,8 +9,7 @@ export const selectExtIds = createSelector(
     _.flatMap(extIdProps).reduce((extIds, extIdTypes) => [
         ...extIds,
         ...extIdTypes
-      ]
-    , [])
+      ], [])
 );
 
 /**
