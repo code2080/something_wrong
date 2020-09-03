@@ -10,9 +10,19 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         extIdProps: {
-          objects: { ...objects },
-          fields: { ...fields },
-          types: { ...types },
+          ...state.extIdProps,
+          objects: {
+            ...state.extIdProps.objects,
+            ...objects
+          },
+          fields: {
+            ...state.extIdProps.fields,
+            ...fields
+          },
+          types: {
+            ...state.extIdProps.types,
+            ...types
+          },
         }
       };
     }
