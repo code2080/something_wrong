@@ -179,6 +179,14 @@ const getPayloadForConnectedSection = (element, values, state) =>
     ];
   }, []);
 
+const getLabelFromExtId = (state, type, extId) => {
+  const label =_.get(
+    state,
+    `te.extIdProps.${type === datasourceValueTypes.OBJECT_EXTID ? 'objects' : 'fields'}[${extId}].label`,
+    extId
+  );
+  return _.isEmpty(label) ? extId : label;
+}
 export const getLabelsForDatasource = (payload, state) => payload
   .filter(
     el =>
@@ -188,11 +196,7 @@ export const getLabelsForDatasource = (payload, state) => payload
   .reduce(
     (prev, curr) => ({
       ...prev,
-      [curr.extId]: _.get(
-        state,
-        `te.extIdProps.${curr.valueType === datasourceValueTypes.OBJECT_EXTID ? 'objects' : 'fields'}[${curr.extId}].label`,
-        curr.extId
-      ),
+      [curr.extId]: getLabelFromExtId(state, curr.valueType, curr.extId),
     }),
     {}
   );
