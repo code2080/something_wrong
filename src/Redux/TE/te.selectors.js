@@ -5,13 +5,12 @@ const selectExtIdProps = state => state.te.extIdProps;
 
 export const selectExtIds = createSelector(
   [selectExtIdProps],
-  extIdProps => 
-    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => (
-      [
+  extIdProps =>
+    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => [
         ...extIds,
-        ...Object.keys(extIdTypes)
+        ...extIdTypes
       ]
-    ), []) || []
+    , [])
 );
 
 /**
@@ -26,5 +25,7 @@ export const selectExtIdLabel = createSelector(
    * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first
    */
   selectExtIdProps,
-  extIdProps => (field, extId) => extIdProps[field][extId] ? extIdProps[field][extId].label : extId
+  extIdProps => (field, extId) => 
+    extIdProps[field][extId] && !_.isEmpty(extIdProps[field][extId].label) ? extIdProps[field][extId].label : extId
+  
 );
