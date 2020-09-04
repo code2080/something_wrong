@@ -10,6 +10,7 @@ import './ExtraObjectValue.scss';
 
 // CONSTANTS
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
 
 const mapStateToProps = (state, { formId, formInstanceId, extraObject }) => {
   const form = state.forms[formId];
@@ -21,21 +22,17 @@ const mapStateToProps = (state, { formId, formInstanceId, extraObject }) => {
   const valueExtId = valueObj ? valueObj.extId : null;
   return {
     typeExtId,
-    typeLabel: typeExtId && state.te.extIdProps.types[typeExtId]
-      ? state.te.extIdProps.types[typeExtId].label
-      : null,
+    typeLabel: typeExtId && selectExtIdLabel(state)('types', typeExtId, 'N/A'),
     valueExtId,
-    valueLabel: valueExtId && state.te.extIdProps.objects[valueExtId]
-      ? state.te.extIdProps.objects[valueExtId].label
-      : null,
+    valueLabel: valueExtId && selectExtIdLabel(state)('objects', valueExtId, 'N/A')
   };
 }
 
 const ExtraObjectValue = ({ typeExtId, typeLabel, valueLabel, valueExtId }) => {
   return (
     <div className="extra-object--value">
-      <span>Type: <strong>{typeLabel || typeExtId || 'N/A'}</strong></span>
-      <span>Value: <strong>{valueLabel || valueExtId || 'N/A'}</strong></span>
+      <span>Type: <strong>{typeLabel }</strong></span>
+      <span>Value: <strong>{valueLabel}</strong></span>
     </div>
   );
 };

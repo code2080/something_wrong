@@ -16,6 +16,9 @@ import './FilterElements.scss';
 import { teCoreActions, teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { searchCriteriaFreeText, searchCriteriaFreeTextProps } from '../../Constants/searchCriteria.constants';
 
+// SELECTORS
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+
 const getSearchCriteria = value => {
   if (!value.matchWholeWord) return searchCriteriaFreeText.CONTAINS;
   return searchCriteriaFreeText.IS_EQUAL_TO;
@@ -30,12 +33,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     searchValue: value.value,
     searchCriteria: getSearchCriteria(value),
-    fieldLabel: fieldEl && state.te.extIdProps.fields[fieldEl.extId]
-      ? state.te.extIdProps.fields[fieldEl.extId].label
-      : fieldEl.extId,
-    typeLabel: typeEl && state.te.extIdProps.types[typeEl.extId]
-      ? state.te.extIdProps.types[typeEl.extId].label
-      : typeEl.extId,
+    fieldLabel: fieldEl && selectExtIdLabel(state)('fields', fieldEl.extId),
+    typeLabel: typeEl && selectExtIdLabel(state)('types', typeEl.extId),
     payload,
   };
 };
