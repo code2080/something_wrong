@@ -1,11 +1,13 @@
 import _ from 'lodash';
-import { datasourceValueTypes } from '../../Constants/datasource.constants';
+import { selectExtIdLabel } from '../TE/te.selectors'
+import { datasourceValueTypes, mapValueTypeToFieldName } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
+import { initialState } from '../TE/te.helpers';
 
 /**
  * @function getTECoreAPIPayload
@@ -77,58 +79,103 @@ export const getTECoreAPIPayload = (value, datasource) => {
   );
 };
 
-const initialState = {
-  objects: [],
-  fields: [],
-  types: []
+const getElementsFromSection = (section, values) => section.elements.reduce((elements, element) => {
+  // We only care about the values if it is a datasource element
+  return element.datasource ? [...elements, ...getPayloadForSection(element, section, values)]
+    : elements;
+}, []).flat();
+
+const getAllElementsFromSections = (sections, submissionValues) => sections.reduce((elements, section) => [
+  ...elements,
+  ...getElementsFromSection(section, submissionValues)
+], []);
+
+
+
+const extractPayloadFromElements = (elements) => elements.reduce((elementsPayload, element) => {
+  if (!element) return elementsPayload;
+  const { valueType } = element;
+  // We don't care about field values
+  if (valueType == datasourceValueTypes.FIELD_VALUE) return elementsPayload;
+
+  const fieldName = mapValueTypeToFieldName(valueType);
+
+  return elementsPayload[fieldName].includes(element.extId)
+    ? elementsPayload
+    : {
+      ...elementsPayload,
+      [fieldName]: [
+        ...elementsPayload[fieldName],
+        element.extId
+      ]
+    };
+}, initialState);
+
+const getExtIdPairsForActivity = values => {
+  // Each value contains the type of the values within, and the values (extIds) themselves
+  const typeExtidPairs = values.reduce((typeExtidPairs, value) =>
+    [
+      ...typeExtidPairs,
+      [
+        value.type,
+        value.type === 'field'
+          ? [value.extId]
+          : value.value
+      ]
+    ]
+    , []);
+  return typeExtidPairs;
 };
 
-export const getExtIdPropsPayload = (sections, values, state) => {
-  const elements = sections.reduce((allSections, section) => {
-    const _elements = section.elements.reduce((allElements, element) => {
-      if (element.datasource)
-        return [
-          ...allElements,
-          ...getPayloadForSection(element, section, values, state)
-        ];
-      return allElements;
-    }, []);
-    return [...allSections, ..._elements];
+const extractPayloadFromActivities = activities => {
+  const allExtIdPairs = activities.reduce((extIdPairs, activity) => {
+    const extIdPairsForActivity = getExtIdPairsForActivity(activity.values);
+    return [...extIdPairs, ...extIdPairsForActivity];
   }, []);
-  return elements.flat().reduce((retVal, element) => {
-    if (!element) return retVal;
-    if (element.valueType === datasourceValueTypes.OBJECT_EXTID) {
-      const extIdIdx = retVal.objects.indexOf(element.extId);
-      if (extIdIdx === -1)
-        return {
-          ...retVal,
-          objects: [...retVal.objects, element.extId]
-        };
-      return retVal;
-    }
 
-    if (element.valueType === datasourceValueTypes.TYPE_EXTID) {
-      const extIdIdx = retVal.types.indexOf(element.extId);
-      if (extIdIdx === -1)
-        return {
-          ...retVal,
-          types: [...retVal.types, element.extId]
-        };
-      return retVal;
-    }
-
-    if (element.valueType === datasourceValueTypes.FIELD_EXTID) {
-      const extIdIdx = retVal.fields.indexOf(element.extId);
-      if (extIdIdx === -1)
-        return {
-          ...retVal,
-          fields: [...retVal.fields, element.extId]
-        };
-      return retVal;
-    }
-    return retVal;
-  }, initialState);
+  return allExtIdPairs.reduce((payload, [type, values]) => ({
+    ...payload,
+    [`${type}s`]: _.uniq([
+      ...payload[`${type}s`],
+      ...values,
+    ]),
+  }), initialState);
 };
+
+const injectObjectScopeIntoPayload = (payload, objectScope) => objectScope && objectScope.length > 0
+  ? {
+    ...payload,
+    types:
+      [...payload.types,
+        objectScope
+      ]
+  }
+  : payload;
+
+  const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => ({
+    ...combinedPayload,
+    fields: [
+      ...combinedPayload.fields,
+      ...payload.fields
+    ],
+    objects: [
+      ...combinedPayload.objects,
+      ...payload.objects
+    ],
+    types: [
+      ...combinedPayload.types,
+      ...payload.types
+    ]
+  }), initialState);
+  
+  export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectScope = null }) => {
+    const elements = getAllElementsFromSections(sections, submissionValues);
+    const submissionPayload = extractPayloadFromElements(elements);
+    const activitiesPayload = extractPayloadFromActivities(activities);
+    const payloadWithObjectScope = objectScope ? injectObjectScopeIntoPayload(activitiesPayload, objectScope) : activitiesPayload;
+    return mergePayloads([submissionPayload, payloadWithObjectScope]);
+  };
+
 
 const getPayloadForSection = (element, section, values, state) => {
   if (!values[section._id] && process.env.NODE_ENV === 'development') {

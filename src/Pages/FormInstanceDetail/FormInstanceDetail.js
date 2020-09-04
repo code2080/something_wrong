@@ -31,11 +31,11 @@ const tabs = {
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } } } = ownProps;
-  const sections = state.forms[formId].sections;
   return {
     formName: state.forms[formId].name,
     formInstance: state.submissions[formId][formInstanceId],
-    sections,
+    sections: state.forms[formId].sections,
+    activities: state.activities[formId][formInstanceId]
   };
 };
 
@@ -53,6 +53,7 @@ const FormInstancePage = ({
   teCoreAPI,
   fetchManualSchedulingsForFormInstance,
   fetchActivitiesForFormInstance,
+  activities,
 }) => {
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -74,7 +75,7 @@ const FormInstancePage = ({
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload(sections, formInstance.values), [formInstance, sections]);
+  const payload = useMemo(() => getExtIdPropsPayload({sections, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
