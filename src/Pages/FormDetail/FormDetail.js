@@ -139,13 +139,13 @@ const FormPage = ({
 
   const payload = useMemo(() => {
     const sections = form.sections;
-    const values = submissions.reduce((acc, submission) => ({
+    const submissionValues = submissions.reduce((acc, submission) => ({
         ...acc,
         ...submission.values
       }), {});
-    const teValues = _.isEmpty(values)
+    const teValues = _.isEmpty(submissionValues)
       ? initialPayload
-      : getExtIdPropsPayload(sections, values);
+      : getExtIdPropsPayload({ sections, submissionValues, objectScope: form.objectScope });
     const scopedObjectExtids = submissions.map(s => s.scopedObject)
 
     return {
