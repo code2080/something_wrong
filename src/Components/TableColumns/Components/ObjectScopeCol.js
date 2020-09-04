@@ -2,9 +2,10 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 
 const mapStateToProps = (state, { objectScope }) => ({
-  label: _.get(state, `te.extIdProps.types.${objectScope}.label`, null),
+  label: selectExtIdLabel(state)('types', objectScope),
 });
 
 const ObjectScopeCol = ({ objectScope, label }) => label || objectScope || 'N/A';
