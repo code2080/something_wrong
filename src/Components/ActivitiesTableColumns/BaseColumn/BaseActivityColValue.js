@@ -67,7 +67,6 @@ const BaseActivityColValue = ({
     );
 
   if (Array.isArray(schedulingPayload.formattedValue)) {
-    // console.log(schedulingPayload.formattedValue + 'isArray');
     return (
       <span>
         <ArrayIterator arr={schedulingPayload.formattedValue} />

@@ -85,7 +85,7 @@ export const formatSubmissionValue = (submissionValue, submissionValueType) => {
  */
 const createRenderPayload = ({
   status,
-  rawValue,
+  value,
   formattedValue,
   errorMessage
 }) => ({
@@ -93,7 +93,7 @@ const createRenderPayload = ({
   rawValue:
     status === activityValueStatuses.MISSING_DATA
       ? activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
-      : rawValue,
+      : value,
   formattedValue:
     status === activityValueStatuses.MISSING_DATA
       ? activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
@@ -231,7 +231,7 @@ export const getRenderPayloadForActivityValue = (
       renderPayload = createRenderPayload({
         status: activityValueStatuses.READY_FOR_SCHEDULING,
         value: activityValue.value,
-        formattedValue: formatFn(activityValue.value),
+        formattedValue: Array.isArray(activityValue.value) ? activityValue.value.map(formatFn) : formatFn(activityValue.value),
       });
     } else {
       renderPayload = createRenderPayload({
