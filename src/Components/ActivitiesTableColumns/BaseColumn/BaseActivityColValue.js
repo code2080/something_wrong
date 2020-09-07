@@ -65,15 +65,15 @@ const BaseActivityColValue = ({
       </Tooltip>
     );
 
-  if (Array.isArray(schedulingPayload.formattedValue)) {
     return (
-      <span>
-        <ArrayIterator arr={schedulingPayload.formattedValue} />
+      <span style={{ overflow: 'hidden' }}>
+        {Array.isArray(schedulingPayload.formattedValue) && schedulingPayload.formattedValue.length > 1 
+        ? (<ArrayIterator arr={schedulingPayload.formattedValue} />)
+          : (schedulingPayload.formattedValue)
+        }
       </span>
     );
-  }
-  return <span>{schedulingPayload.formattedValue}</span>;
-};
+  };
 
 BaseActivityColValue.propTypes = {
   activityValue: PropTypes.object.isRequired,
