@@ -44,7 +44,7 @@ const DynamicTableHOC = ({
 
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
-  const isVisibleCol = column => !!visibleCols[visibilityIndexor(column)];
+  const isVisibleCol = column => !!(visibleCols[visibilityIndexor(column)] || visibleCols[column.title]);
 
   // Effect to load stored views
   useEffect(() => {
@@ -123,7 +123,7 @@ const DynamicTableHOC = ({
         <ColumnSelector
           columns={columns.map(col => [
             visibilityIndexor(col),
-            visibleCols[visibilityIndexor(col)],
+            isVisibleCol(col),
             col.title
             ])}
           onColumnStateChange={({colIndex, newVisibility}) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
