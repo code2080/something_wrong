@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'antd';
+import _ from 'lodash';
 
 // HELPERS
 import { determineContentOfValue } from '../../../Utils/activityValues.helpers';
@@ -34,9 +35,9 @@ const BaseActivityColValue = ({
             activityValue,
             activity,
             extId =>
-              extIdProps.objects[extId]
+              extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
                 ? [extIdProps.objects[extId].label]
-                : extId
+                : extId 
           );
         return getRenderPayloadForActivityValue(
           activityValue,

@@ -43,7 +43,7 @@ const DynamicTableHOC = ({
 }) => {
   // Effect to load stored views
   useEffect(() => {
-    getView(datasourceId);
+    //getView(datasourceId);
   }, []);
 
   // Effect to update cols everytime columns change
