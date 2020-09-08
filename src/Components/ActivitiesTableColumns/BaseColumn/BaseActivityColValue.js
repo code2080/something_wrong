@@ -23,7 +23,7 @@ const BaseActivityColValue = ({
   activityValue,
   activity,
   formatFn,
-  extIdProps
+  extIdProps,
 }) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
@@ -79,11 +79,11 @@ BaseActivityColValue.propTypes = {
   activityValue: PropTypes.object.isRequired,
   activity: PropTypes.object,
   formatFn: PropTypes.func,
-  extIdProps: PropTypes.object.isRequired
+  extIdProps: PropTypes.object.isRequired,
 };
 
 BaseActivityColValue.defaultProps = {
-  formatFn: val => val
+  formatFn: val => val,
 };
 
 export default connect(mapStateToProps, null)(BaseActivityColValue);

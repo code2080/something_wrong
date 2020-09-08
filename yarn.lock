@@ -4008,6 +4008,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jsum@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/jsum/-/jsum-0.1.4.tgz#9a40809b000e49ff8418ada7b7e9279cc4498ffa"
+  integrity sha512-2SgwwEwnj/RmRHBRV2pOwUKJ6suYJhSd9K61xv7gjWwvN2XKtzJVr3WJZrvPcqEQUkM2yF4OzUTXqJvf6i6uBg==
+
 jsx-ast-utils@^2.2.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.2.3.tgz#8a9364e402448a3ce7f14d357738310d9248054f"

@@ -1,17 +1,17 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { notification } from 'antd';
+import { notification, Menu, Dropdown } from 'antd';
 
 // STYLES
 import './BaseActivityCol.scss';
 
 // COMPONENTS
-import BaseActivityColDropdown from './BaseActivityColDropdown';
 import BaseActivityColValue from './BaseActivityColValue';
 import InlineEdit from '../../ActivityEditing/InlineEdit';
 import ModalEdit from '../../ActivityEditing/ModalEdit';
 import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
+import BaseReservationColQuickview from './BaseActivityColQuickview';
 
 // ACTIONS
 import {
@@ -32,14 +32,10 @@ import {
   activityActions,
   activityActionFilters,
   activityActionViews,
-  externalActivityActionMapping
+  externalActivityActionMapping,
+  activityActionLabels
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
-
-const getActivityValue = (activity, type, prop) => {
-  const payload = type === 'VALUE' ? activity.values : activity.timing;
-  return payload.find(el => el.extId === prop);
-};
 
 const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
@@ -58,14 +54,21 @@ const mapActionsToProps = {
   endExternalAction,
 };
 
+const getActivityValue = (activityValue, activity, type, prop) => {
+  if (activityValue) return activityValue;
+  const payload = type === 'VALUE' ? activity.values : activity.timing;
+  return payload.find(el => el.extId === prop);
+};
+
 const BaseActivityCol = ({
+  activityValue,
   activity,
-  type,
   prop,
-  hasOngoingExternalAction,
+  type,
   propTitle,
   formatFn,
   mapping,
+  hasOngoingExternalAction,
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
@@ -73,33 +76,31 @@ const BaseActivityCol = ({
   endExternalAction,
   teCoreAPI
 }) => {
+  // Activity value
+  const _activityValue = getActivityValue(activityValue, activity, type, prop);
   // State var to hold the component's mode
   const [viewProps, setViewProps] = useState({
     view: activityViews.VALUE_VIEW,
     action: null
   });
 
-  // Memoized activity value
-  const activityValue = useMemo(() => getActivityValue(activity, type, prop), [
-    activity,
-    type,
-    prop
-  ]);
   // Memoized properties of the prop the value is mapped to on the activity template
   const mappingProps = useMemo(() => {
     return {
-      settings: getMappingSettingsForProp(activityValue.extId, mapping),
-      type: getMappingTypeForProp(activityValue.extId, mapping)
+      settings: getMappingSettingsForProp(_activityValue.extId, mapping),
+      type: getMappingTypeForProp(_activityValue.extId, mapping)
     };
-  }, [activityValue, mapping]);
+  }, [_activityValue, mapping]);
+
+  const handleMenuClick = ({ key }) => onActionCallback(key);
 
   // Memoized callback handler for when manual override is completed and activity should be updated
   const onFinishManualEditing = useCallback(
     value => {
-      overrideActivityValue(value, activityValue, activity);
+      overrideActivityValue(value, _activityValue, activity);
       setViewProps(resetView());
     },
-    [activityValue, activity, setViewProps]
+    [_activityValue, activity, setViewProps]
   );
 
   const onProcessObjectReturn = res => {
@@ -110,7 +111,7 @@ const BaseActivityCol = ({
       // Grab the extid and the fields
       const { extid, fields } = res;
       // Override the activity
-      overrideActivityValue([extid], activityValue, activity);
+      overrideActivityValue([extid], _activityValue, activity);
       // Grab the label
       const labelField = fields[0].values[0];
       setExtIdPropsForObject(extid, { label: labelField });
@@ -128,7 +129,7 @@ const BaseActivityCol = ({
       // Grab the extid and the fields
       const { extid, fields } = res;
       // Override the activity
-      overrideActivityValue([extid], activityValue, activity);
+      overrideActivityValue([extid], _activityValue, activity);
       // Grab the label
       const labelField = fields[0].values[0];
       setExtIdPropsForObject(extid, { label: labelField });
@@ -171,7 +172,7 @@ const BaseActivityCol = ({
        * so we test for it first
        */
       if (action === activityActions.REVERT_TO_SUBMISSION_VALUE)
-        return revertToSubmissionValue(activityValue, activity);
+        return revertToSubmissionValue(_activityValue, activity);
 
       // Construct the new view props
       const updView = activityActionViews[action];
@@ -182,7 +183,7 @@ const BaseActivityCol = ({
         // Here begins our journey into the belly of TE Core
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
-          activityValue,
+          _activityValue,
           activity,
           callback: res => onFinshExternalEdit(res, action)
         });
@@ -196,58 +197,72 @@ const BaseActivityCol = ({
   const activityValueActions = useMemo(
     () =>
       Object.keys(activityActions).filter(activityAction =>
-        activityActionFilters[activityAction](activityValue, activity, mapping)
+        activityActionFilters[activityAction](_activityValue, activity, mapping)
       ),
-    [activityValue, activity, mapping]
+    [_activityValue, activity, mapping]
   );
 
-  return (
-    <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
-      {viewProps.view === activityViews.INLINE_EDIT && (
-        <InlineEdit
-          onFinish={onFinishManualEditing}
-          onCancel={() => setViewProps(resetView())}
-          activityValue={activityValue}
-          activity={activity}
-          action={viewProps.action}
-        />
-      )}
-      {viewProps.view === activityViews.VALUE_VIEW && (
-        <BaseActivityColValue
-          activityValue={activityValue}
+  const menuOptions = useMemo(() => {
+    return (
+      <Menu onClick={handleMenuClick}>
+        <BaseReservationColQuickview
+          activityValue={_activityValue}
+          mappingProps={mappingProps}
           activity={activity}
           formatFn={formatFn}
         />
-      )}
+        <Menu.Divider />
+        {(activityValueActions || []).map(action => (
+          <Menu.Item key={action}>{activityActionLabels[action]}</Menu.Item>
+        ))}
+      </Menu>
+    );
+  }, [_activityValue, activityValueActions]);
 
-      <BaseActivityColDropdown
-        activityValue={activityValue}
-        activity={activity}
-        formatFn={formatFn}
-        mappingProps={mappingProps}
-        availableActions={activityValueActions}
-        onActionClick={onActionCallback}
-        disabled={hasOngoingExternalAction}
-      />
-      <ModalEdit
-        activityValue={activityValue}
-        activity={activity}
-        formatFn={formatFn}
-        mappingProps={mappingProps}
-        propTitle={propTitle}
-        prop={prop}
-        onClose={() => setViewProps(resetView())}
-        visible={viewProps.view === activityViews.MODAL_EDIT}
-        action={viewProps.action}
-      />
-    </div>
+  return (
+    <Dropdown
+      overlay={menuOptions}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      disabled={hasOngoingExternalAction}
+    >
+      <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
+        {viewProps.view === activityViews.INLINE_EDIT && (
+          <InlineEdit
+            onFinish={onFinishManualEditing}
+            onCancel={() => setViewProps(resetView())}
+            activityValue={_activityValue}
+            activity={activity}
+            action={viewProps.action}
+          />
+        )}
+        {viewProps.view === activityViews.VALUE_VIEW && (
+          <BaseActivityColValue
+            activityValue={_activityValue}
+            activity={activity}
+            formatFn={formatFn}
+          />
+        )}
+        <ModalEdit
+          activityValue={_activityValue}
+          activity={activity}
+          formatFn={formatFn}
+          mappingProps={mappingProps}
+          propTitle={propTitle}
+          prop={prop}
+          onClose={() => setViewProps(resetView())}
+          visible={viewProps.view === activityViews.MODAL_EDIT}
+          action={viewProps.action}
+        />
+      </div>
+    </Dropdown>
   );
 };
 
 BaseActivityCol.propTypes = {
+  activityValue: PropTypes.object,
   activity: PropTypes.object.isRequired,
-  type: PropTypes.string,
   prop: PropTypes.string.isRequired,
+  type: PropTypes.string,
   hasOngoingExternalAction: PropTypes.bool,
   propTitle: PropTypes.string,
   formatFn: PropTypes.func,
@@ -261,8 +276,9 @@ BaseActivityCol.propTypes = {
 };
 
 BaseActivityCol.defaultProps = {
-  type: 'VALUE',
+  activityValue: null,
   propTitle: null,
+  type: 'VALUE',
   formatFn: value => value,
   mapping: null,
   hasOngoingExternalAction: false,

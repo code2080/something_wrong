@@ -10,6 +10,30 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
 
+const ExpandedPane = ({ columns, row }) => {
+  console.log(row);
+  return (
+    <div className="dynamic-table--expanded__wrapper">
+      {(columns || [])
+        .filter(col => !col.hideInList && col.title && col.title !== '')
+        .map(col => {
+          console.log(col);
+          return (
+            <div className="dynamic-table--expanded--item" key={col.dataIndex}>
+              <div className="title">{col.title}:</div>
+              <div className="value">{col.render(null, row)}</div>
+            </div>
+          );
+        })}
+    </div>
+  );
+};
+
+ExpandedPane.propTypes = {
+  columns: PropTypes.array.isRequired,
+  row: PropTypes.object.isRequired,
+};
+
 const ActivitiesTable = ({
   formInstanceId,
   mapping,
@@ -23,6 +47,7 @@ const ActivitiesTable = ({
       dataSource={dataSource}
       rowKey="_id"
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
+      expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
     />
   );
 };

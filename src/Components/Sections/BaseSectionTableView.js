@@ -3,30 +3,13 @@ import PropTypes from 'prop-types';
 
 // COMPONENTS
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
+import ExpandedPane from '../TableColumns/Components/ExpandedPane';
 
 // STYLES
 import './BaseSectionTableView.scss';
 
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
-
-const ExpandedPane = ({ columns, row }) => (
-  <div className="base-section--expanded__wrapper">
-    {(columns || [])
-      .filter(col => !col.hideInList)
-      .map(col => (
-        <div className="base-section--expanded--item" key={col.dataIndex}>
-          <div className="title">{col.title}:</div>
-          <div className="value">{col.render(row[col.dataIndex])}</div>
-        </div>
-      ))}
-  </div>
-);
-
-ExpandedPane.propTypes = {
-  columns: PropTypes.array.isRequired,
-  row: PropTypes.object.isRequired,
-};
 
 const BaseSectionTableView = ({ sectionId, columns, dataSource }) => (
   <DynamicTable
