@@ -41,6 +41,11 @@ const DynamicTableHOC = ({
   getView,
   updateView,
 }) => {
+
+  // Assuming that the key is most likely to be persistent, if not defined, fallback on title
+  const visibilityIndexor = column => column.key || column.title;
+  const isVisibleCol = column => !!visibleCols[visibilityIndexor(column)];
+
   // Effect to load stored views
   useEffect(() => {
     getView(datasourceId);
@@ -48,7 +53,7 @@ const DynamicTableHOC = ({
 
   // Effect to update cols everytime columns change
   useEffect(() => {
-    initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [col.title]: true }), {}));
+    initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [visibilityIndexor(col)]: true }), {}));
   }, []);
 
   // State to hold whether column selection should be visible or not
@@ -58,8 +63,8 @@ const DynamicTableHOC = ({
   const [filterQuery, setFilterQuery] = useState('');
 
   // Memoized calculated width
-  const fixedWidthCols = useMemo(() => columns.filter(col => visibleCols[col.title] && col.fixedWidth), [columns, visibleCols]);
-
+  const fixedWidthCols = useMemo(() => columns.filter(col => isVisibleCol(col) && col.fixedWidth), [columns, visibleCols]);
+  
   const _width = useMemo(() => {
     // Get the visible columns
     const fixedWidth = fixedWidthCols
@@ -72,7 +77,7 @@ const DynamicTableHOC = ({
   const _cols = useMemo(
     () =>
       columns
-        .filter(col => visibleCols[col.title])
+        .filter(col => isVisibleCol(col))
         .map((col, idx, arr) => ({
           ...col,
           width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
@@ -116,8 +121,12 @@ const DynamicTableHOC = ({
     >
       {showColumnSelection ? (
         <ColumnSelector
-          columnState={visibleCols}
-          onColumnStateChange={newColState => updateView(datasourceId, newColState)}
+          columns={columns.map(col => [
+            visibilityIndexor(col),
+            visibleCols[visibilityIndexor(col)],
+            col.title
+            ])}
+          onColumnStateChange={({colIndex, newVisibility}) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
