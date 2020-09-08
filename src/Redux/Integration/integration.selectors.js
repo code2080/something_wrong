@@ -117,10 +117,9 @@ const getExtIdPairsForActivity = values => {
     [
       ...typeExtidPairs,
       [
-        value.type,
-        value.type === 'field'
-          ? [value.extId]
-          : value.value
+        value.type === 'object' ? 'types' : `${value.type}s`,
+        value.value,
+        value.extId
       ]
     ]
     , []);
@@ -128,18 +127,26 @@ const getExtIdPairsForActivity = values => {
 };
 
 const extractPayloadFromActivities = activities => {
-  const allExtIdPairs = activities.reduce((extIdPairs, activity) => {
-    const extIdPairsForActivity = getExtIdPairsForActivity(activity.values);
-    return [...extIdPairs, ...extIdPairsForActivity];
-  }, []);
+  const allExtIdPairs = activities.reduce((extIdPairs, activity) => [...extIdPairs, ...getExtIdPairsForActivity(activity.values)], []);
 
-  return allExtIdPairs.reduce((payload, [type, values]) => ({
-    ...payload,
-    [`${type}s`]: _.uniq([
-      ...payload[`${type}s`],
-      ...values,
-    ]),
-  }), initialState);
+  return allExtIdPairs.reduce((payload, [type, values, extId]) => {
+    const newPayloadWithExtId = {
+      ...payload,
+      [type]: [
+        ...payload[type],
+        extId
+      ]
+    }
+    return type === 'types' 
+      ? {
+        ...newPayloadWithExtId,
+        objects: [
+          newPayloadWithExtId['objects'],
+          values
+        ]
+      }
+      : newPayloadWithExtId;
+  }, initialState);
 };
 
 const injectObjectScopeIntoPayload = (payload, objectScope) => objectScope && objectScope.length > 0
