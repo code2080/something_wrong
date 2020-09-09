@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
@@ -48,7 +48,7 @@ const DynamicTableHOC = ({
 
   // Effect to load stored views
   useEffect(() => {
-    //getView(datasourceId);
+    getView(datasourceId);
   }, []);
 
   // Effect to update cols everytime columns change
@@ -64,7 +64,7 @@ const DynamicTableHOC = ({
 
   // Memoized calculated width
   const fixedWidthCols = useMemo(() => columns.filter(col => isVisibleCol(col) && col.fixedWidth), [columns, visibleCols]);
-  
+
   const _width = useMemo(() => {
     // Get the visible columns
     const fixedWidth = fixedWidthCols
@@ -125,29 +125,29 @@ const DynamicTableHOC = ({
             visibilityIndexor(col),
             isVisibleCol(col),
             col.title
-            ])}
-          onColumnStateChange={({colIndex, newVisibility}) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
+          ])}
+          onColumnStateChange={({ colIndex, newVisibility }) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
-        <React.Fragment>
-          {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
-          <Table
-            components={{
-              header: {
-                cell: ResizableColumnHeader,
-              },
-            }}
-            columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
-            dataSource={_dataSource}
-            rowKey={rowKey}
-            expandedRowRender={expandedRowRender || null}
-            pagination={pagination}
-            loading={isLoading}
-            onRow={onRow || null}
-          />
-        </React.Fragment>
-      )}
+          <React.Fragment>
+            {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
+            <Table
+              components={{
+                header: {
+                  cell: ResizableColumnHeader,
+                },
+              }}
+              columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
+              dataSource={_dataSource}
+              rowKey={rowKey}
+              expandedRowRender={expandedRowRender || null}
+              pagination={pagination}
+              loading={isLoading}
+              onRow={onRow || null}
+            />
+          </React.Fragment>
+        )}
     </div>
   )
 };
