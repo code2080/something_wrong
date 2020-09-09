@@ -6,13 +6,10 @@ import { Switch, Button, Icon } from 'antd';
 import './ColumnSelector.scss';
 
 const ColumnSelector = ({
-  columnState,
+  columns,
   onColumnStateChange,
   onHide,
 }) => {
-  const onColumnStateChangeCallback = useCallback(
-    ({ colName, visible }) => onColumnStateChange({ ...columnState, [colName]: visible })
-    , [columnState]);
 
   return (
     <div className="column-selector--wrapper">
@@ -23,30 +20,29 @@ const ColumnSelector = ({
         </Button>
         <span className="column-selector--title">Select columns to display</span>
       </div>
-      {(Object.keys(columnState) || [])
-        .filter(col => col && col !== '')
-        .map(col => (
-          <div className="column-selector--col" key={col}>
-            <Switch
-              checked={columnState[col]}
-              onChange={visible => onColumnStateChangeCallback({ colName: col, visible })}
-              size="small"
-            />
-            <span>{col}</span>
-          </div>
+      {columns
+        .filter(([_, __, colTitle]) => colTitle !== '')
+        .map(([indexor, isVisible, colTitle]) => (<div className='column-selector--col' key={indexor}>
+          <Switch
+            checked={isVisible}
+            onChange={newVisibility => onColumnStateChange({ colIndex: indexor, newVisibility })}
+            size='small'
+          />
+          <span>{colTitle}</span>
+        </div>
         ))}
     </div>
   );
 };
 
 ColumnSelector.propTypes = {
-  columnState: PropTypes.object,
+  colums: PropTypes.array,
   onColumnStateChange: PropTypes.func.isRequired,
   onHide: PropTypes.func.isRequired,
 };
 
 ColumnSelector.defaultProps = {
-  columnState: {},
+  colums: [],
 };
 
 export default ColumnSelector;

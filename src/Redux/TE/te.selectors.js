@@ -5,13 +5,11 @@ const selectExtIdProps = state => state.te.extIdProps;
 
 export const selectExtIds = createSelector(
   [selectExtIdProps],
-  extIdProps => 
-    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => (
-      [
+  extIdProps =>
+    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => [
         ...extIds,
-        ...Object.keys(extIdTypes)
-      ]
-    ), []) || []
+        ...extIdTypes
+      ], [])
 );
 
 /**
@@ -20,11 +18,14 @@ export const selectExtIds = createSelector(
  * @param {Object} state curried redux state
  * @param {String} field field to access of the extIdProps object (valid arguments: 'fields', 'objects', 'types')
  * @param {String} extId extId that you want to get related label from
+ * @param {String} fallbackVal value you want this function to return if it does not find a label for the specified extid
  */
 export const selectExtIdLabel = createSelector(
   /** 
-   * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first
+   * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first (recommend using useFetchLabelsFromExtids hook)
    */
   selectExtIdProps,
-  extIdProps => (field, extId) => extIdProps[field][extId] ? extIdProps[field][extId].label : extId
+  extIdProps => (field, extId, fallbackVal = extId) => 
+    extIdProps[field][extId] && !_.isEmpty(extIdProps[field][extId].label) ? extIdProps[field][extId].label : fallbackVal
+  
 );

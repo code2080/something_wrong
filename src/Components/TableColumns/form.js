@@ -54,6 +54,7 @@ export const form = {
   DUE_DATE: {
     title: 'Due date',
     dataIndex: 'dueDateDisplay',
+    key: 'dueDateDisplay',
     fixedWidth: 90,
     sorter: (a, b) => sortTime(a.dueDate, b.dueDate),
   },
