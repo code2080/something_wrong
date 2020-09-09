@@ -60,6 +60,12 @@ const getActivityValue = (activityValue, activity, type, prop) => {
   return payload.find(el => el.extId === prop);
 };
 
+/**
+ * @TODO
+ * x) Ensure manual edits work
+ * x) Update scheduling algo
+ */
+
 const BaseActivityCol = ({
   activityValue,
   activity,
