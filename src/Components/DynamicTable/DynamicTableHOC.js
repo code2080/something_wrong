@@ -45,11 +45,13 @@ const DynamicTableHOC = ({
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
   const isVisibleCol = column => {
-    const isVisibleInDb = visibleCols[visibilityIndexor(column)] || visibleCols[column.title];
-    if (isVisibleCol === undefined) {
-      return true;
+    const visibleByIndexor = visibleCols[visibilityIndexor(column)];
+    const visibleByTitle = visibleCols[column.title];
+
+    if (visibleByIndexor !== undefined) {
+      return visibleByIndexor;
     }
-    return isVisibleInDb;
+    else return visibleByTitle === undefined ? true : visibleByTitle;
   };
 
   // Effect to load stored views
