@@ -23,12 +23,10 @@ const convertValuesToReservationProps = activity => {
   // Get all of the same ext id
   const objects = activity.values.filter(aV => aV.type === activityValueTypes.OBJECT);
   const fields = activity.values.filter(aV => aV.type === activityValueTypes.FIELD);
-  const retVal = {
+  return {
     objects: mergeActivityValuesForObjects(objects),
     fields: mergeActivityValuesForFields(fields),
   };
-  console.log(retVal);
-  return retVal;
 }
 
 export const formatActivityForExactScheduling = activity => {
