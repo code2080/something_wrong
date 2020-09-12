@@ -4,8 +4,6 @@
  */
 
 export class ActivityValue {
-  _id; // The id
-
   type; // The activity value type, an enum of Constants/activityValueTypes.constants.js
 
   extId; // The extId property this represents on a reservation, as described in the forms Activity Designer Mapping
@@ -46,7 +44,6 @@ export class ActivityValue {
   rowIdx; // The row this activity value is from (if section === SECTION_TABLE, otherwise null)
 
   constructor({
-    _id,
     type,
     extId,
     submissionValue,
@@ -58,7 +55,6 @@ export class ActivityValue {
     eventId,
     rowIdx,
   }) {
-    this._id = _id;
     this.type = type;
     this.extId = extId;
     this.value = value;

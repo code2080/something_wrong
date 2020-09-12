@@ -24,8 +24,9 @@ const BaseActivityColOuter = ({
 
   return (
     <div className="base-activity-col--outer--wrapper">
-      {activityValues && activityValues.length && (activityValues || []).map(activityValue => (
+      {activityValues && activityValues.length && (activityValues || []).map((activityValue, idx) => (
         <BaseActivityCol
+          key={`av-${idx}`}
           activityValue={activityValue}
           activity={activity}
           type={type}

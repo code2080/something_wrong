@@ -41,14 +41,13 @@ const DynamicTableHOC = ({
   getView,
   updateView,
 }) => {
-
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
   const isVisibleCol = column => !!(visibleCols[visibilityIndexor(column)] || visibleCols[column.title]);
 
   // Effect to load stored views
   useEffect(() => {
-    //getView(datasourceId);
+    getView(datasourceId);
   }, []);
 
   // Effect to update cols everytime columns change
@@ -64,7 +63,7 @@ const DynamicTableHOC = ({
 
   // Memoized calculated width
   const fixedWidthCols = useMemo(() => columns.filter(col => isVisibleCol(col) && col.fixedWidth), [columns, visibleCols]);
-  
+
   const _width = useMemo(() => {
     // Get the visible columns
     const fixedWidth = fixedWidthCols
@@ -125,7 +124,7 @@ const DynamicTableHOC = ({
             visibilityIndexor(col),
             isVisibleCol(col),
             col.title
-            ])}
+          ])}
           onColumnStateChange={({colIndex, newVisibility}) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
           onHide={() => setShowColumnSelection(false)}
         />
