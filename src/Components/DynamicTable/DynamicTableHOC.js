@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
@@ -43,7 +43,13 @@ const DynamicTableHOC = ({
 }) => {
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
-  const isVisibleCol = column => !!(visibleCols[visibilityIndexor(column)] || visibleCols[column.title]);
+  const isVisibleCol = column => {
+    const visibleByIndexor = visibleCols[visibilityIndexor(column)];
+    const visibleByTitle = visibleCols[column.title];
+
+    if (visibleByIndexor !== undefined) return visibleByIndexor;
+    return visibleByTitle === undefined ? true : visibleByTitle;
+  };
 
   // Effect to load stored views
   useEffect(() => {
@@ -125,7 +131,7 @@ const DynamicTableHOC = ({
             isVisibleCol(col),
             col.title
           ])}
-          onColumnStateChange={({colIndex, newVisibility}) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
+          onColumnStateChange={({ colIndex, newVisibility }) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
@@ -137,7 +143,7 @@ const DynamicTableHOC = ({
                 cell: ResizableColumnHeader,
               },
             }}
-            columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
+            columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
             dataSource={_dataSource}
             rowKey={rowKey}
             expandedRowRender={expandedRowRender || null}
