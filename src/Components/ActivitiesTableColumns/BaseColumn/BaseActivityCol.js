@@ -189,7 +189,7 @@ const BaseActivityCol = ({
         // Here begins our journey into the belly of TE Core
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
-          _activityValue,
+          activityValue: _activityValue,
           activity,
           callback: res => onFinshExternalEdit(res, action)
         });
@@ -197,7 +197,7 @@ const BaseActivityCol = ({
         setViewProps({ view: updView, action });
       }
     },
-    [revertToSubmissionValue, activity, viewProps, setViewProps]
+    [_activityValue, revertToSubmissionValue, activity, viewProps, setViewProps]
   );
 
   const activityValueActions = useMemo(
