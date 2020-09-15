@@ -10,6 +10,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
 import { fetchForms } from '../../Redux/Forms/forms.actions';
+import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
@@ -35,6 +36,7 @@ const mapStateToProps = state => ({
 const mapActionsToProps = {
   fetchForms,
   fetchUsers,
+  fetchObjectRequests,
   setBreadcrumbs,
   fetchMapping,
 };
@@ -46,6 +48,7 @@ const FormList = ({
   fetchForms,
   fetchUsers,
   fetchMapping,
+  fetchObjectRequests,
   teCoreAPI,
   setBreadcrumbs,
   history
@@ -74,6 +77,10 @@ const FormList = ({
       fetchMapping();
     }
   }, [user]);
+
+  useEffect(() => {
+    fetchObjectRequests();
+  }, []);
 
   return (
     <div className="form-list--wrapper">
@@ -106,6 +113,7 @@ FormList.propTypes = {
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
+  fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
