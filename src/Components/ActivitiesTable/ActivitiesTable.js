@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 
 // COMPONENtS
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
+import ExpandedPane from '../TableColumns/Components/ExpandedPane'
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColumns/ActivitiesTableColumns';
 
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
+
 
 const ActivitiesTable = ({
   formInstanceId,
@@ -23,6 +25,7 @@ const ActivitiesTable = ({
       dataSource={dataSource}
       rowKey="_id"
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
+      expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
     />
   );
 };

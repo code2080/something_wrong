@@ -28,7 +28,7 @@ import {
 
 // STYLES
 import './ActivityDesigner.scss';
-import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
+import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.model';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -123,7 +123,7 @@ const extractReservationTypes = payload => {
 const extractReservationFields = payload =>
   payload.map(el => ({ label: el.name, value: el.extid }));
 
-const FormReservationTemplateMapping = ({
+const ActivityDesignerPage = ({
   form,
   formId,
   mapping,
@@ -145,7 +145,7 @@ const FormReservationTemplateMapping = ({
     }
   }, []);
 
-  const navigationHandler = (navigation, location, action) => {
+  const navigationHandler = (navigation) => {
     Modal.confirm({
       getContainer: () => document.getElementById('te-prefs-lib'),
       title: 'The activity design is incomplete',
@@ -218,7 +218,7 @@ const FormReservationTemplateMapping = ({
 
   // Callback to update the timing section of the mapping
   const updateTimingMappingCallback = useCallback((timingProp, value) => {
-    const updatedMapping = new ReservationTemplateMapping({
+    const updatedMapping = new ActivityDesignerMapping({
       ...mapping,
       formId: formId,
       name: `Mapping for ${form.name}`,
@@ -378,7 +378,7 @@ const FormReservationTemplateMapping = ({
   );
 };
 
-FormReservationTemplateMapping.propTypes = {
+ActivityDesignerPage.propTypes = {
   form: PropTypes.object.isRequired,
   formId: PropTypes.string.isRequired,
   mapping: PropTypes.object,
@@ -394,11 +394,11 @@ FormReservationTemplateMapping.propTypes = {
   teCoreAPI: PropTypes.object.isRequired,
 };
 
-FormReservationTemplateMapping.defaultProps = {
+ActivityDesignerPage.defaultProps = {
   mapping: {},
   mappings: {},
   validFields: [],
   validTypes: [],
 };
 
-export default withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormReservationTemplateMapping));
+export default withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(ActivityDesignerPage));

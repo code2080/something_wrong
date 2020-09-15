@@ -1,6 +1,6 @@
 import { ActivityTiming } from './ActivityTiming.model';
 
-export class ReservationTemplateMapping {
+export class ActivityDesignerMapping {
   name;
 
   formId;

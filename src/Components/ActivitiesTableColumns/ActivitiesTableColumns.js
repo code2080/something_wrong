@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import _ from 'lodash';
 
 // COMPONENTS
-import BaseActivityCol from './BaseColumn/BaseActivityCol';
+import BaseActivityColOuter from './BaseColumn/BaseActivityColOuter';
 
 // CONSTANTS
 import { StaticColumns } from './StaticColumns/StaticColumns';
@@ -20,9 +19,8 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
     {
       title: useSelector(state => selectExtIdLabel(state)(field, extId)),
       key: extId,
-      dataIndex: null,
-      render: (_, activity) => (
-        <BaseActivityCol
+      render: activity => (
+        <BaseActivityColOuter
           activity={activity}
           type="VALUE"
           prop={extId}
@@ -31,7 +29,7 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
       )
     }
   ],
-    []
+  []
   ),
   ...StaticColumns
 ];
