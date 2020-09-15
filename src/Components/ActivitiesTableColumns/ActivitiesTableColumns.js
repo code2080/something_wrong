@@ -19,8 +19,7 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
     {
       title: useSelector(state => selectExtIdLabel(state)(field, extId)),
       key: extId,
-      dataIndex: null,
-      render: (_, activity) => (
+      render: activity => (
         <BaseActivityColOuter
           activity={activity}
           type="VALUE"

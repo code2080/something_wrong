@@ -8,7 +8,7 @@ export const StaticColumns = [
     key: 'activityStatus',
     dataIndex: null,
     fixedWidth: 150,
-    render: (_, activity) => <ActivityStatusCol activity={activity} />,
+    render: activity => <ActivityStatusCol activity={activity} />,
   },
   {
     title: 'Id',
@@ -22,6 +22,6 @@ export const StaticColumns = [
     key: 'actions',
     dataIndex: null,
     fixedWidth: 40,
-    render: (_, activity) => <ActivityActionsDropdown buttonType="more" activity={activity} />,
+    render: activity => <ActivityActionsDropdown buttonType="more" activity={activity} />,
   },
 ];
