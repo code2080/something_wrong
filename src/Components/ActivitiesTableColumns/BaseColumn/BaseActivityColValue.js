@@ -37,7 +37,7 @@ const BaseActivityColValue = ({
             extId =>
               extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
                 ? [extIdProps.objects[extId].label]
-                : extId 
+                : extId
           );
         return getRenderPayloadForActivityValue(
           activityValue,
@@ -62,19 +62,19 @@ const BaseActivityColValue = ({
         title={schedulingPayload.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <span>{schedulingPayload.formattedValue}</span>
+        <span>{schedulingPayload.formattedValue || 'N/A'}</span>
       </Tooltip>
     );
 
-    return (
-      <span style={{ overflow: 'hidden' }}>
-        {Array.isArray(schedulingPayload.formattedValue) && schedulingPayload.formattedValue.length > 1 
+  return (
+    <span style={{ overflow: 'hidden' }}>
+      {Array.isArray(schedulingPayload.formattedValue)
         ? (<ArrayIterator arr={schedulingPayload.formattedValue} />)
-          : (schedulingPayload.formattedValue)
-        }
-      </span>
-    );
-  };
+        : (schedulingPayload.formattedValue || 'N/A')
+      }
+    </span>
+  );
+};
 
 BaseActivityColValue.propTypes = {
   activityValue: PropTypes.object.isRequired,

@@ -48,24 +48,3 @@ ArrayIterator.defaultProps = {
 };
 
 export default ArrayIterator;
-
-/**
- * return (
-    <Tooltip
-      title={renderedArr}
-      mouseEnterDelay={0.8}
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    >
-      <div
-        style={{
-          width: maxWidth,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}
-      >
-        {renderedArr}
-      </div>
-    </Tooltip>
-  );
- */
