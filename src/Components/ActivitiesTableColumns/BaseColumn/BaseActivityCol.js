@@ -90,6 +90,13 @@ const BaseActivityCol = ({
     action: null
   });
 
+  // State var to hold the dropdown's visibility
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const _setIsDropdownVisible = vis => {
+    if (viewProps.view === activityViews.MODAL_EDIT) return setIsDropdownVisible(false);
+    return setIsDropdownVisible(vis);
+  };
+
   // Memoized properties of the prop the value is mapped to on the activity template
   const mappingProps = useMemo(() => {
     return {
@@ -98,7 +105,10 @@ const BaseActivityCol = ({
     };
   }, [_activityValue, mapping]);
 
-  const handleMenuClick = ({ key }) => onActionCallback(key);
+  const handleMenuClick = ({ key }) => {
+    _setIsDropdownVisible(false);
+    onActionCallback(key);
+  }
 
   // Memoized callback handler for when manual override is completed and activity should be updated
   const onFinishManualEditing = useCallback(
@@ -197,7 +207,7 @@ const BaseActivityCol = ({
         setViewProps({ view: updView, action });
       }
     },
-    [_activityValue, revertToSubmissionValue, activity, viewProps, setViewProps]
+    [_activityValue, revertToSubmissionValue, activity, viewProps, setViewProps, setIsDropdownVisible]
   );
 
   const activityValueActions = useMemo(
@@ -230,6 +240,9 @@ const BaseActivityCol = ({
       overlay={menuOptions}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       disabled={hasOngoingExternalAction}
+      visible={isDropdownVisible}
+      onVisibleChange={_setIsDropdownVisible}
+      trigger={['hover']}
     >
       <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
         {viewProps.view === activityViews.INLINE_EDIT && (
