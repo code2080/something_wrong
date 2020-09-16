@@ -1,9 +1,15 @@
 import { createSelector } from 'reselect';
-import { keyBy, curry } from 'lodash';
-
-const getRequestsForSubmission = (objectRequests, formInstanceId) => objectRequests.filter(request => request.formInstanceId === formInstanceId);
+import _ from 'lodash';
 
 const selectObjectRequestsState = state => state.objectRequests;
+const getRequestsForSubmission = (objectRequests, formInstanceId) => objectRequests.filter(request => request.formInstanceId === formInstanceId);
+const getObjectRequestByValue = (objReqList, value) => objReqList.find(req => req._id === value || req.objectExtId === value);
+const getObjectRequestsByValues = (objReqList, values) => values.reduce(
+  (objReqs, value) => {
+    const objReq = getObjectRequestByValue(objReqList, value);
+    return objReq ? [...objReqs, objReq] : objReqs;
+  }, []);
+    
 
 export const selectObjectRequests = () =>
   createSelector(selectObjectRequestsState, state => state.objectRequest);
@@ -16,19 +22,12 @@ export const selectFormInstanceObjectRequests = (formInstanceId) =>
     return getRequestsForSubmission(state.list, formInstanceId);
   });
 
-export const selectObjectRequestsByValue = curry((formInstanceId, value) =>
-  createSelector(selectObjectRequestsState, (state) => {
-    if (!formInstanceId) return [];
-    const objectRequests = getRequestsForSubmission(state.list, formInstanceId);
-    const indexedByObjectExtId = keyBy(objectRequests, 'objectExtId');
-    const indexedById = keyBy(objectRequests, '_id');
-    return value.map(val => indexedByObjectExtId[val] || indexedById[val]);
-  }));
+export const selectObjectRequestsByValues = values =>
+  createSelector(selectObjectRequestsState, objectRequests =>
+    getObjectRequestsByValues(objectRequests.list, values)
+  );
 
-export const selectObjectRequestByValue = curry((formInstanceId, value) =>
-  createSelector(selectObjectRequestsState, state => {
-    if (!formInstanceId) return null;
-    return getRequestsForSubmission(state.lis, formInstanceId).find(
-      obj => obj.objectExtId === value || obj._id === value
-    );
-  }));
+export const selectObjectRequestByValue = value =>
+  createSelector(selectObjectRequestsState, objectRequests => {
+    getObjectRequestByValue(objectRequests.list, value)
+  });
