@@ -41,17 +41,14 @@ const DynamicTableHOC = ({
   getView,
   updateView,
 }) => {
-
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
   const isVisibleCol = column => {
     const visibleByIndexor = visibleCols[visibilityIndexor(column)];
     const visibleByTitle = visibleCols[column.title];
 
-    if (visibleByIndexor !== undefined) {
-      return visibleByIndexor;
-    }
-    else return visibleByTitle === undefined ? true : visibleByTitle;
+    if (visibleByIndexor !== undefined) return visibleByIndexor;
+    return visibleByTitle === undefined ? true : visibleByTitle;
   };
 
   // Effect to load stored views
@@ -138,24 +135,24 @@ const DynamicTableHOC = ({
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
-          <React.Fragment>
-            {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
-            <Table
-              components={{
-                header: {
-                  cell: ResizableColumnHeader,
-                },
-              }}
-              columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
-              dataSource={_dataSource}
-              rowKey={rowKey}
-              expandedRowRender={expandedRowRender || null}
-              pagination={pagination}
-              loading={isLoading}
-              onRow={onRow || null}
-            />
-          </React.Fragment>
-        )}
+        <React.Fragment>
+          {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
+          <Table
+            components={{
+              header: {
+                cell: ResizableColumnHeader,
+              },
+            }}
+            columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
+            dataSource={_dataSource}
+            rowKey={rowKey}
+            expandedRowRender={expandedRowRender || null}
+            pagination={pagination}
+            loading={isLoading}
+            onRow={onRow || null}
+          />
+        </React.Fragment>
+      )}
     </div>
   )
 };

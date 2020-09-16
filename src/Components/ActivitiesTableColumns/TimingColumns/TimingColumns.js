@@ -10,7 +10,7 @@ const timingCols = ({
     title: 'Timing mode',
     key: 'mode',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
@@ -25,7 +25,7 @@ const timingCols = ({
     title: 'Start time',
     key: 'startTime',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
@@ -40,7 +40,7 @@ const timingCols = ({
     title: 'End time',
     key: 'endTime',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
@@ -55,7 +55,7 @@ const timingCols = ({
     title: 'Start after or at:',
     key: 'startTime',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
@@ -70,7 +70,7 @@ const timingCols = ({
     title: 'End before or at:',
     key: 'endTime',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
@@ -85,7 +85,7 @@ const timingCols = ({
     title: 'Length',
     key: 'length',
     dataIndex: null,
-    render: (_, activity) => (
+    render: activity => (
       <BaseActivityCol
         activity={activity}
         type="TIMING"
