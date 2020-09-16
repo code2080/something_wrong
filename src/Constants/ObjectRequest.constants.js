@@ -1,3 +1,9 @@
 export const NEW_OBJECT_REQUEST = 'NEW_OBJECT';
 export const EDIT_OBJECT_REQUEST = 'EDIT_OBJECT';
 export const MISSING_OBJECT_REQUEST = 'MISSING_OBJECT';
+
+export const objectRequestTypeToText = {
+  [NEW_OBJECT_REQUEST]: '(NEW)',
+  [EDIT_OBJECT_REQUEST]: '(EDITED)',
+  [MISSING_OBJECT_REQUEST]: '(MISSING)'
+};

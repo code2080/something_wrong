@@ -5,12 +5,12 @@
   cursor: pointer;
   z-index: 1;
   position: relative;
+  display: flex;
 
   .element__datasource--inner {
     border: 1px solid rgb(232, 232, 232);
     border-radius: 0.3rem;
     background: rgb(250, 250, 250);
-    display: flex;
     align-items: center;
     padding: 0 0.15rem;
     white-space: nowrap;
@@ -23,8 +23,6 @@
     }
 
     .field--wrapper {
-      display: flex;
-
       .field--label {
         margin-right: 0.2rem;
         color: $rustyGrey;
