@@ -5,9 +5,8 @@ import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
 
-import { ObjectRequestValue } from './ObjectRequestValue';
+import { ObjectRequestValue, objectRequestDropdownMenu } from './ObjectRequestValue';
 import { selectObjectRequestsByValues } from '../../Redux/ObjectRequests/ObjectRequests.selectors'
-import ObjectRequestDropdownMenu from './ObjectRequestDropdownMenu';
 
 // CONSTANTS
 const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
@@ -95,7 +94,7 @@ const DatasourceObjectInner = ({ labels, menu }) => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return <Dropdown
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={objReq ? <ObjectRequestDropdownMenu onClickCallback={({ key }) => console.log(`clicked ${key}`)} /> : menu}
+      overlay={objReq ? objectRequestDropdownMenu : menu}
       key={label}
     >
       <div className="dd-trigger element__datasource--inner">
