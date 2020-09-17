@@ -11,9 +11,10 @@ export const ObjectRequestValue = ({ request }) => <React.Fragment>
   <span>{objectRequestTypeToText[request.type]}</span>
 </React.Fragment>
 
-export const objectRequestDropdownMenu = <Menu
+// Iplement 
+export const objectRequestDropdownMenu = ({ onClick}) => <Menu
     getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    onClick={({key}) => console.log(key)}
+    onClick={onClick}
     >
       <Menu.Item key='accept'><Icon type="check" size='small' style={{ color: 'rgb(0,255,0)' }} /> Accept</Menu.Item>
       <Menu.Item key='decline'><Icon type="close" size='small' style={{ color: 'rgb(255,0,0)' }} /> Decline</Menu.Item>

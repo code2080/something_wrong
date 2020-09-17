@@ -87,14 +87,14 @@ DatasourceFilterInner.defaultProps = {
   payload: [],
 };
 
-// TODO: special dropdown menu for object request, and implement select all/select this object in the menu
+// TODO: implement select all/select this object in the menu
 const DatasourceObjectInner = ({ labels, menu }) => {
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
   return labels.map(label => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return <Dropdown
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={objReq ? objectRequestDropdownMenu : menu}
+      overlay={objReq ? objectRequestDropdownMenu({onClick: ({key}) => console.log(`Whaat key is this: ${key}?`)}) : menu}
       key={label}
     >
       <div className="dd-trigger element__datasource--inner">
