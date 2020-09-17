@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
 import { datasourceValueTypes } from '../../Constants/datasource.constants';
 
-import { objectRequestTypeToText } from '../../Constants/ObjectRequest.constants';
+import { ObjectRequestValue } from './ObjectRequestValue';
 import { selectObjectRequestsByValues } from '../../Redux/ObjectRequests/ObjectRequests.selectors'
+import ObjectRequestDropdownMenu from './ObjectRequestDropdownMenu';
 
 // CONSTANTS
 const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
@@ -87,22 +88,14 @@ DatasourceFilterInner.defaultProps = {
   payload: [],
 };
 
-const ObjectRequestStatus = status => <Icon type="question" style={{ color: 'rgba(255,0,0, 0.8)' }} />
-
-const ObjectRequestValue = ({ request }) => <React.Fragment>
-  <ObjectRequestStatus status='shouldBeRequest.status' />
-  <span>{request.objectExtId}</span>
-  <span>{objectRequestTypeToText[request.type]}</span>
-</React.Fragment>
-
-
+// TODO: special dropdown menu for object request, and implement select all/select this object in the menu
 const DatasourceObjectInner = ({ labels, menu }) => {
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
   return labels.map(label => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return <Dropdown
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={menu}
+      overlay={objReq ? <ObjectRequestDropdownMenu onClickCallback={({ key }) => console.log(`clicked ${key}`)} /> : menu}
       key={label}
     >
       <div className="dd-trigger element__datasource--inner">
