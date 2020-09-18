@@ -12,13 +12,13 @@ import { selectObjectRequestsByValues } from '../../Redux/ObjectRequests/ObjectR
 const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
 
 const DatasourceEmptyInner = () => (
-  <div className="element__datasource--inner">
+  <div className="element__datasource--inner--empty">
     N/A
   </div>
 );
 
 export const DatasourceInner = ({ elType, labels, payload, menu }) => {
-  if (elType === 'EMPTY')  return <DatasourceEmptyInner/>
+  if (elType === 'EMPTY' || _.isEmpty(labels))  return <DatasourceEmptyInner/>
   if (elType === 'OBJECT') return <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu}/>
   if (elType === 'FILTER') return <DatasourceFilterInner labels={labels} payload={payload} menu={menu} />
   return null;
