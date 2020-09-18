@@ -1,39 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import _ from 'lodash'
 import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
-import { datasourceValueTypes } from '../../Constants/datasource.constants';
-
-import { ObjectRequestValue, objectRequestDropdownMenu } from './ObjectRequestValue';
-import { selectObjectRequestsByValues } from '../../Redux/ObjectRequests/ObjectRequests.selectors'
+import { datasourceValueTypes } from '../../../Constants/datasource.constants';
 
 // CONSTANTS
 const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
-
-const DatasourceEmptyInner = () => (
-  <div className="element__datasource--inner--empty">
-    N/A
-  </div>
-);
-
-export const DatasourceInner = ({ elType, labels, payload, menu }) => {
-  if (elType === 'EMPTY' || _.isEmpty(labels))  return <DatasourceEmptyInner/>
-  if (elType === 'OBJECT') return <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu}/>
-  if (elType === 'FILTER') return <DatasourceFilterInner labels={labels} payload={payload} menu={menu} />
-  return null;
-};
-
-DatasourceInner.propTypes = {
-  elType: PropTypes.string.isRequired,
-  labels: PropTypes.object,
-  payload: PropTypes.array,
-};
-
-DatasourceInner.defaultProps = {
-  labels: {},
-  payload: [],
-};
 
 const DatasourceFilterInner = ({ labels, payload, menu }) => {
   const [visIdx, setVisIdx] = useState(0);
@@ -87,29 +59,4 @@ DatasourceFilterInner.defaultProps = {
   payload: [],
 };
 
-// TODO: implement select all/select this object in the menu
-const DatasourceObjectInner = ({ labels, menu }) => {
-  const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
-  return labels.map(label => {
-    const objReq = foundObjReqs.find(req => req._id === label);
-    return <Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={objReq ? objectRequestDropdownMenu({onClick: ({key}) => console.log(`Whaat key is this: ${key}?`)}) : menu}
-      key={label}
-    >
-      <div className="dd-trigger element__datasource--inner">
-        {objReq ? <ObjectRequestValue request={objReq} /> : label || 'N/A'}
-        <Icon type="down" />
-      </div>
-    </Dropdown>
-  })
-};
-
-DatasourceObjectInner.propTypes = {
-  labels: PropTypes.array,
-  menu: PropTypes.object.isRequired
-};
-
-DatasourceFilterInner.defaultProps = {
-  labels: [],
-};
+export default DatasourceFilterInner;

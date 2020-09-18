@@ -22,7 +22,7 @@ import {
   teCoreCallnames
 } from '../../Constants/teCoreActions.constants';
 
-import { DatasourceInner } from './DatasourceInner';
+import DatasourceInner from './DatasourceInner/DatasourceInner';
 
 const elTypes = {
   EMPTY: 'EMPTY',
