@@ -73,17 +73,20 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
       teCoreAPI
         .getCompatibleFunctionsForElement(element.elementId)
         .filter(action => {
-          const src = element.datasource.split(',')[1];
-          if (src === 'object' && action === 'FILTER_OBJECTS') {
-            return false;
-          }
-          if (src !== 'object' && action === 'SELECT_OBJECT') {
+          const isObject = element.datasource.split(',')[1] === 'object';
+          const isSingleLabel = Object.keys(labels).length === 1;
+          if (
+            (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
+            ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
+            (isObject && action === 'FILTER_OBJECTS')
+            ) {
             return false;
           }
           return true;
         }),
     [teCoreAPI, element]
   );
+
   // Memoized menu
   const menu = useMemo(
     () => (

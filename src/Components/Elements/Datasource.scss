@@ -5,6 +5,7 @@
   cursor: pointer;
   z-index: 1;
   position: relative;
+  display:flex;
 
   .element__datasource--inner {
     border: 1px solid rgb(232, 232, 232);

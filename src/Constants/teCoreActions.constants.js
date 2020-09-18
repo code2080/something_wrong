@@ -32,6 +32,11 @@ export const teCoreActions = {
     label: 'Select object',
     compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
   },
+  SELECT_OBJECTS: {
+    callname: teCoreCallnames.SELECT_OBJECT,
+    label: 'Select all objects',
+    compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
+  },
   SELECT_TYPE: {
     callname: teCoreCallnames.SELECT_TYPE,
     label: 'Select type',
