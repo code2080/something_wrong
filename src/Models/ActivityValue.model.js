@@ -6,7 +6,7 @@
 export class ActivityValue {
   type; // The activity value type, an enum of Constants/activityValueTypes.constants.js
 
-  extId; // The extId property this represents on a reservation, as described in the forms ReservationTemplateMapping
+  extId; // The extId property this represents on a reservation, as described in the forms Activity Designer Mapping
 
   submissionValue; // The original submission value, always stored as 0 -> n elements in an array
 

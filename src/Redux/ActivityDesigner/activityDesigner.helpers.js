@@ -1,4 +1,4 @@
-import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
+import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.model';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -34,7 +34,7 @@ export const validateTemplateAgainstMapping = (template, mapping) => {
 };
 
 export const createNewMappingFromTemplate = (template, extId, formId) =>
-  new ReservationTemplateMapping({
+  new ActivityDesignerMapping({
     name: template.name,
     reservationTemplateExtId: extId,
     formId,

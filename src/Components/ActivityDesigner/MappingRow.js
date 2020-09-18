@@ -1,6 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Cascader, Switch, Button } from 'antd';
+
+// HELPERS
+import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
 
 const MappingRow = ({
   teProp,
@@ -13,16 +16,25 @@ const MappingRow = ({
   onRemoveTEProp,
   disabled,
 }) => {
+  // Memos
+  const _mappedValues = useMemo(() => ensureBackwardsCompatibleValueRow(formMapping), [formMapping]);
+
   // Callbacks
   const onChangeTEPropCallback = useCallback(
     _teProp => onChangeMapping({ [_teProp]: formMapping }), [formMapping, onChangeMapping]
   );
   const onChangeFormMapping = useCallback(
-    _formMapping => onChangeMapping({ [teProp]: _formMapping }, [teProp, onChangeMapping])
-  );
+    (el, idx) => {
+      if (!el || !el[0]) return onChangeMapping({ [teProp]: [..._mappedValues.slice(0, idx), ..._mappedValues.slice(idx + 1)] });
+      onChangeMapping({ [teProp]: [..._mappedValues.slice(0, idx), el, ..._mappedValues.slice(idx + 1)] });
+    }, [teProp, onChangeMapping, _mappedValues]);
+
   const onChangePropsCallback = useCallback(
     checked => onChangeProps({ mandatory: checked }), [onChangeProps]
   );
+  const addElementProp = useCallback(() => {
+    return onChangeMapping({ [teProp]: [..._mappedValues, []] })
+  }, [_mappedValues]);
 
   return (
     <div className="object-mapping-row--wrapper">
@@ -39,15 +51,28 @@ const MappingRow = ({
           ))}
         </Select>
       </div>
-      <Cascader
-        disabled={disabled}
-        options={mappingOptions}
-        value={formMapping}
-        onChange={onChangeFormMapping}
-        placeholder="Select an element"
-        getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        size="small"
-      />
+      {_mappedValues && _mappedValues.map((el, idx) => (
+        <Cascader
+          key={`mapper-${idx}`}
+          disabled={disabled}
+          options={mappingOptions}
+          value={el}
+          onChange={val => onChangeFormMapping(val, idx)}
+          placeholder="Select an element"
+          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          size="small"
+          style={{ width: '200px', marginRight: '8px' }}
+        />
+      ))}
+      <div className="object-mapping-row--add">
+        <Button
+          size="small"
+          type="link"
+          onClick={addElementProp}
+        >
+          + Add element
+        </Button>
+      </div>
       <div className="object-mapping-row--props">
         <span>Is mandatory:&nbsp;</span>
         <Switch

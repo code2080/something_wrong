@@ -47,7 +47,7 @@ export class Activity {
   /**
    * Object and Field values
    */
-  values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's ReservationTemplateMapping
+  values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
 
   constructor({
     _id,

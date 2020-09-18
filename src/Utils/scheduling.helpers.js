@@ -172,11 +172,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
         result: validates
           ? null
           : new SchedulingReturn({
-              status: activityStatuses.VALIDATION_ERROR,
-              errorCode: activityStatuses.VALIDATION_ERROR,
-              errorMessage:
-                activityStatusProps[activityStatuses.VALIDATION_ERROR].label
-            })
+            status: activityStatuses.VALIDATION_ERROR,
+            errorCode: activityStatuses.VALIDATION_ERROR,
+            errorMessage:
+              activityStatusProps[activityStatuses.VALIDATION_ERROR].label
+          })
       };
     })
     .map(a => {
@@ -190,11 +190,11 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? null
             : new SchedulingReturn({
-                status: activityStatuses.FAILED,
-                errorCode: activityStatuses.FAILED,
-                errorMessage:
-                  'The scheduling algorithm has not yet been implemented'
-              }),
+              status: activityStatuses.FAILED,
+              errorCode: activityStatuses.FAILED,
+              errorMessage:
+                'The scheduling algorithm has not yet been implemented'
+            }),
         reservation:
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? formatActivityForExactScheduling(a.activity)
