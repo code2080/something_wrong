@@ -23,7 +23,7 @@ export const objectRequestActions = {
   ACCEPT: 'ACCEPT',
   DECLINE: 'DECLINE',
   REPLACE: 'REPLACE',
-  SEARCH: 'SEARCH',
+  //SEARCH: 'SEARCH', // TODO: scope the search feature. What is its' purpose?
 };
 
 export const objectRequestActionToStatus = {
