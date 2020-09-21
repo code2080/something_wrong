@@ -1,26 +1,49 @@
 import React from 'react';
-import { Menu, Icon } from 'antd';
+import { useSelector } from 'react-redux';
+import { Menu } from 'antd';
 import _ from 'lodash';
 
-import { objectRequestTypeToText, requestStatusToIcon, RequestStatus } from '../../Constants/ObjectRequest.constants';
+// SELECTORS
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
 
-const ObjectRequestStatusIcon = ({status}) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
-const ObjectRequestLabel = ({request}) => _.head(Object.values(request)) || 'N/A';
-const ObjectRequestType = ({type}) => objectRequestTypeToText[type] || 'N/A';
+// CONSTANTS
+import {
+  objectRequestTypeToText,
+  requestStatusToIcon,
+  RequestStatus,
+  objectRequestActions,
+  objectRequestActionIcon,
+  objectRequestActionLabels,
+} from '../../Constants/objectRequest.constants';
+
+const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
+
+const ObjectRequestLabel = ({ request }) => {
+  // TODO: Make sure the labels are fetched while loading submission, and on return from core.
+  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtI || request.objectExtId));
+  // TODO: implement core api call to get selected primary field of type. In the meanwhile just use first field listed in obj req
+  const firstFieldLabel = _.head(Object.values(request));
+  return extIdLabel || firstFieldLabel || 'N/A';
+}
+const ObjectRequestType = ({ type }) => objectRequestTypeToText[type] || 'N/A';
 
 export const ObjectRequestValue = ({ request }) => <React.Fragment>
-  <ObjectRequestStatusIcon status={request.status} /> 
-  <ObjectRequestLabel request={request.objectRequest} /> 
+  <ObjectRequestStatusIcon status={request.status} />
+  <ObjectRequestLabel request={request.objectRequest} />
   <ObjectRequestType type={request.type} />
 </React.Fragment>
 
 // Iplement 
-export const objectRequestDropdownMenu = ({ onClick}) => <Menu
-    getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    onClick={onClick}
-    >
-      <Menu.Item key='accept'>{requestStatusToIcon[RequestStatus.ACCEPTED]} Accept</Menu.Item>
-      <Menu.Item key='decline'>{requestStatusToIcon[RequestStatus.DECLINED]} Decline</Menu.Item>
-      <Menu.Item key='replace'>{requestStatusToIcon[RequestStatus.REPLACED]} Replace</Menu.Item>
-      <Menu.Item key='search'><Icon type="search" size='small' style={{ color: 'rgb(0,0,0)' }} /> Search</Menu.Item>
-    </Menu>
+export const objectRequestDropdownMenu = ({ onClick }) => <Menu
+  getPopupContainer={() => document.getElementById('te-prefs-lib')}
+  onClick={onClick}
+>
+  {/* TODO: style this properly */}
+  <span style={{ paddingLeft: '0.8rem', cursor:'default' }}>Execute request...</span>
+  <Menu.Divider />
+  {_.flatMap(objectRequestActions).map(action =>
+    <Menu.Item key={action} >
+      {objectRequestActionIcon[action]} {objectRequestActionLabels[action]}
+    </Menu.Item>
+  )}
+</Menu>
