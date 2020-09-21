@@ -200,7 +200,8 @@ const BaseActivityCol = ({
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
           activityValue: _activityValue,
-          activity,
+          objectExtId: activityValue.value,
+          typeExtId: activityValue.extId,      
           callback: res => onFinshExternalEdit(res, action)
         });
       } else {
