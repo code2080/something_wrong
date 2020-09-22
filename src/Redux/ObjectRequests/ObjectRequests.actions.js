@@ -28,8 +28,8 @@ export const fetchObjectRequests = () =>
 
 const updateObjectRequestFlow = {
   request: () => ({ type: types.UPDATE_OBJECT_REQUEST_REQUEST }),
-  success: response => ({ type: types.UPDATE_OBJECT_REQUESTS_SUCCESS, payload: response }),
-  failure: err => ({ type: types.UPDATE_OBJECT_REQUESTS_FAILURE, ...err }),
+  success: response => ({ type: types.UPDATE_OBJECT_REQUEST_SUCCESS, payload: response }),
+  failure: err => ({ type: types.UPDATE_OBJECT_REQUEST_FAILURE, ...err }),
 };
 export const updateObjectRequest = objectRequest =>
   asyncAction.PUT({
