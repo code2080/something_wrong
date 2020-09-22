@@ -58,7 +58,7 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         payload = { 
           ...payload,
           extId: request.objectExtId, 
-          fields: _.toPairs(request.objectRequest), 
+          fields: request.objectRequest, 
           objectType: request.datasource, 
           requestType: request.type, 
         };
