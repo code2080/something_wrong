@@ -4,10 +4,10 @@ import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
 
 export const RequestStatus = {
-  PENDING: 'PENDING',
-  ACCEPTED: 'ACCEPTED',
-  DECLINED: 'decline',
-  REPLACED: 'REPLACED',
+  PENDING: 'pending',
+  ACCEPTED: 'accepted',
+  DECLINED: 'declined',
+  REPLACED: 'replaced',
 };
 
 export const requestStatusToIcon = {
@@ -23,7 +23,7 @@ export const objectRequestActions = {
   ACCEPT: 'ACCEPT',
   DECLINE: 'DECLINE',
   REPLACE: 'REPLACE',
-  //SEARCH: 'SEARCH', // TODO: scope the search feature. What is its' purpose?
+  SEARCH: 'SEARCH', // TODO: scope the search feature. What is its' purpose?
 };
 
 export const objectRequestActionToStatus = {

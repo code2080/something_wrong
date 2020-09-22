@@ -33,7 +33,7 @@ export default class ObjectRequest {
     formInstanceId,
     replacementObjectExtI = null,
     objectExtId = null,
-    status = 'PENDING',
+    status = 'pending',
     type,
     isActive,
     createdAt,
