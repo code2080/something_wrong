@@ -57,7 +57,7 @@ const connectedSectionColumns = {
       title: 'Timeslot',
       key: 'timeslot',
       dataIndex: null,
-      render: (_, event) => <TimeSlotColumn event={event} timeslots={timeslots} />,
+      render: event => <TimeSlotColumn event={event} timeslots={timeslots} />,
     },
   ],
   SCHEDULING: (sectionId, formInstanceId, formId) => [
