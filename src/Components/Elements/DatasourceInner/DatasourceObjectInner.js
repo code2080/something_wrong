@@ -37,7 +37,7 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
     }
     const updatedObjectRequest = {
       ...request,
-      replacementObjectExtI: extId,
+      replacementObjectExtId: extId,
       status: objectRequestActionToStatus[action]
     }
     
@@ -69,7 +69,6 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
           ...request,
           status: RequestStatus.DECLINED
         };
-        console.log('setting declined status!');
         updateObjectRequest(declinedRequest)(dispatch);
         return;
       case objectRequestActions.REPLACE:
@@ -77,7 +76,7 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         // TODO: set up payload
         payload = {
           ...payload,
-          objectExtId: request.finalObjectExtI || request.objectExtId,
+          objectExtId: request.replacementObjectExtId || request.objectExtId, // TODO: This could be null, should we make core handle this, or is it better to use some kind of requestGetObjectOfType? requestGetObjectFromFilter?
           typeExtId: request.datasource,
         };
         break;

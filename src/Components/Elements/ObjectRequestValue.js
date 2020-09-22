@@ -21,7 +21,7 @@ const ObjectRequestStatusIcon = ({ status }) => <span style={{paddingRight:'.2re
 
 const ObjectRequestLabel = ({ request }) => {
   // TODO: Make sure the labels are fetched while loading submission, and on return from core.
-  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtI || request.objectExtId));
+  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtId || request.objectExtId));
   // TODO: implement core api call to get selected primary field of type. In the meanwhile just use first field listed in obj req
   // What to display?
   const firstFieldLabel = _.head(Object.values(request));

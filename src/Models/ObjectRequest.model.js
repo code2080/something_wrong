@@ -13,7 +13,7 @@ export default class ObjectRequest {
   datasource;
 
   // New object if applicable
-  replacementObjectExtI;
+  replacementObjectExtId;
 
   // Extid of the object to be edited if type is EDIT_OBJECT
   objectExtId;
@@ -31,7 +31,7 @@ export default class ObjectRequest {
     datasource,
     organizationId,
     formInstanceId,
-    replacementObjectExtI = null,
+    replacementObjectExtId = null,
     objectExtId = null,
     status = 'pending',
     type,
@@ -45,7 +45,7 @@ export default class ObjectRequest {
     this.datasource = datasource;
     this.organizationId = organizationId;
     this.formInstanceId = formInstanceId;
-    this.replacementObjectExtI = replacementObjectExtI;
+    this.replacementObjectExtId = replacementObjectExtId;
     this.objectExtId = objectExtId;
     this.status = status;
     this.type = type;
