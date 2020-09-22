@@ -9,19 +9,20 @@ import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 import { ObjectRequestValue, objectRequestDropdownMenu } from '../ObjectRequestValue';
 import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/ObjectRequests.selectors'
 
+// ACTIONS
+import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { updateObjectRequest} from '../../../Redux/ObjectRequests/ObjectRequests.actions'
 
 // CONSTANTS
 import { objectRequestActions, externalobjectRequestActionMapping, RequestStatus, objectRequestActionToStatus } from '../../../Constants/objectRequest.constants'
 
-// TODO: Implement action on clicking obj req dropdown item. 
-// TODO: Detect edit requests before selecting label, or else it will be a label instead of extid. Can we change this to always show ID as the other types of requests?
+// TODO: Detect edit requests before selecting label, or else it will be a label instead of extid. Can we change this to always show ID as the other types of requests? Create ticket, explain edge cases
+// TODO: labels -> label: only one label per objectInner
 const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
   const dispatch = useDispatch();
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
 
-  const onHandledObjectRequest = (requestId, action) => ({ extId, label }) => {
-    // TODO: call redux action to update object request with replacedObjectExtI and set status
+  const onHandledObjectRequest = (requestId, action) => ({ extId, fields }) => {
     if(extId === null) {
       console.log('api call failed (or was cancelled)');
       return;
@@ -31,22 +32,24 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
       console.log('request not found on return from api');
       return;
     }
-
+    
     if(action === objectRequestActions.SEARCH){
       return; // We do not want to set any status as of now at least, maybe replace?? Or just show in core a la select object?
     }
+    
     const updatedObjectRequest = {
       ...request,
       replacementObjectExtId: extId,
       status: objectRequestActionToStatus[action]
     }
-    
-    console.log({action: updateObjectRequest(updatedObjectRequest)});
+
+    // TODO: test this when api call is implemented
+    const labelField = fields[0].values[0];
+    dispatch(setExtIdPropsForObject(extId, { label: labelField }));
     updateObjectRequest(updatedObjectRequest)(dispatch);
   }
 
   const handleObjectRequestClick = request => ({ key }) => {
-    console.log({ key, type: request.type });
     const callname = externalobjectRequestActionMapping[key];
     let payload = {
       callback: onHandledObjectRequest(request._id, key)
@@ -73,7 +76,6 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         return;
       case objectRequestActions.REPLACE:
         // replace -> REQUEST_REPLACE_OBJECT
-        // TODO: set up payload
         payload = {
           ...payload,
           objectExtId: request.replacementObjectExtId || request.objectExtId, // TODO: This could be null, should we make core handle this, or is it better to use some kind of requestGetObjectOfType? requestGetObjectFromFilter?
