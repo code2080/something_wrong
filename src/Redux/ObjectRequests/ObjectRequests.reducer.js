@@ -15,6 +15,13 @@ export default (state = initialState, action) => {
       };
     }
 
+    case types.UPDATE_OBJECT_REQUEST_SUCCESS: {
+      return {
+        ...state,
+        list:[...state.list.filter(obj => obj._id !== action.payload.request._id), action.payload.request],
+      }
+    }
+
     case types.SET_OBJECT_REQUEST:
       return {
         ...state,
