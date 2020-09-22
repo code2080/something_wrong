@@ -14,18 +14,20 @@ import {
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
+   RequestType
 } from '../../Constants/objectRequest.constants';
 
-const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
+const ObjectRequestStatusIcon = ({ status }) => <span style={{paddingRight:'.2rem'}} >{requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING]}</span>;
 
 const ObjectRequestLabel = ({ request }) => {
   // TODO: Make sure the labels are fetched while loading submission, and on return from core.
   const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtI || request.objectExtId));
   // TODO: implement core api call to get selected primary field of type. In the meanwhile just use first field listed in obj req
+  // What to display?
   const firstFieldLabel = _.head(Object.values(request));
   return extIdLabel || firstFieldLabel || 'N/A';
 }
-const ObjectRequestType = ({ type }) => objectRequestTypeToText[type] || 'N/A';
+const ObjectRequestType = ({ type }) =>  <span style={{paddingLeft: '0.2rem', color:type === RequestType.MISSING_OBJECT ? 'red' : 'green'}} className={type}>{objectRequestTypeToText[type] || 'N/A'}</span>;
 
 export const ObjectRequestValue = ({ request }) => <React.Fragment>
   <ObjectRequestStatusIcon status={request.status} />
@@ -39,7 +41,7 @@ export const objectRequestDropdownMenu = ({ onClick }) => <Menu
   onClick={onClick}
 >
   {/* TODO: style this properly */}
-  <span style={{ paddingLeft: '0.8rem', cursor:'default' }}>Execute request...</span>
+  <span style={{ padding: '5px 12px', cursor:'default' }}>Execute request...</span>
   <Menu.Divider />
   {_.flatMap(objectRequestActions).map(action =>
     <Menu.Item key={action} >

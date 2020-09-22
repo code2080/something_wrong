@@ -132,7 +132,7 @@ export const teCoreActions = {
       callback,
     }) => {
       console.log(`Asking core to handle request of type ${requestType}`);
-      callback({ extId: 'fakeReplacementExtId', label: 'fakeLabel' });
+      callback({ extId: 'fakeReplacementExtId', fields: [{ values: ['fakeLabel'] }] });
     })
   },
   SET_TOOLBAR_CONTENT: {
