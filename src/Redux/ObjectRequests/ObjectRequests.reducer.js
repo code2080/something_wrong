@@ -16,9 +16,15 @@ export default (state = initialState, action) => {
     }
 
     case types.UPDATE_OBJECT_REQUEST_SUCCESS: {
-      return {
+      const reqIdx = state.list.find(req => req._id === action.payload.request._id);
+      
+      return reqIdx === -1 ? state : {
         ...state,
-        list:[...state.list.filter(obj => obj._id !== action.payload.request._id), action.payload.request],
+        list: [
+          ...state.list.slice(0, reqIdx),
+          action.payload.request,
+          ...state.list.slice(reqIdx + 1)
+        ]
       }
     }
 
