@@ -83,9 +83,15 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         };
         break;
       case objectRequestActions.SEARCH:
-        // search -> REQUEST_GET_OBJECT_FROM_FILTER
+        // search -> REQUEST_GET_OBJECT_FROM_FILTER (?)
         // TODO: set up payload
-        break;
+        // Decline -> no action, update obj req status
+        const pendingRequest = {
+          ...request,
+          status: RequestStatus.PENDING
+        };
+        updateObjectRequest(pendingRequest)(dispatch);
+        return;
       default:
         console.log(`Unsupported object request action: ${callname}`);
         return;
