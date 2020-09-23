@@ -1,4 +1,4 @@
-const ASSISTED_SCHEDULING_PERMISSION_GROUP_NAME = 'tePref:scheduling:assisted';
+const ASSISTED_SCHEDULING_PERMISSION_GROUP_NAME = 'pic:assisted';
 
 export const hasAssistedSchedulingPermissions = () => {
   try {
