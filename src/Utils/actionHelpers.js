@@ -155,6 +155,9 @@ function createThunkAction({
           };
         }
 
+        // Log to console
+        console.error(error.toString());
+
         // Display failure message
         if (successNotification)
           notification.error({
