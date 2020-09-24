@@ -4,6 +4,10 @@ import { Dropdown, Icon, Menu } from 'antd';
 
 // CONSTANTS
 import { formStatus } from '../../Constants/formStatuses.constants';
+
+// HELPERS
+import {hasAssistedSchedulingPermissions} from '../../Utils/permissionHelpers'
+
 const actionKeys = {
   LOGOUT: 'LOGOUT',
   ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
@@ -18,7 +22,7 @@ const ActionsButton = ({
 }) => {
   const menu = (
     <Menu onClick={handleClick}>
-      {hasSelectedForm(breadcrumbs) && (
+      {hasSelectedForm(breadcrumbs) && hasAssistedSchedulingPermissions() && (
         <Menu.Item
           key={actionKeys.ACTIVITY_DESIGNER}
           disabled={!form || form.status !== formStatus.ACTIVE}
@@ -26,7 +30,7 @@ const ActionsButton = ({
           Activity Designer
         </Menu.Item>
       )}
-      {hasSelectedForm(breadcrumbs) && (
+      {hasSelectedForm(breadcrumbs) && hasAssistedSchedulingPermissions() && (
         <Menu.Divider />
       )}
       <Menu.Item
