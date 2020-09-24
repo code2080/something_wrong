@@ -1,14 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Icon, Popover, Input, Button } from 'antd';
 import _ from 'lodash';
+
+// CONSTANTS
+import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants'
 
 // ACTIONS
 import { toggleUserForFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // COMPONENTS
 import ManageAssigneesList from './ManageAssigneesList';
+
+// SELECTORS
+import { getUsers } from '../../../Redux/Users/users.selectors'
 
 // STYLES
 import './FormInstanceAssignment.scss';
@@ -101,7 +107,6 @@ AssignmentPopoverTitle.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  users: state.users,
   selfUID: state.auth.user.id,
 });
 
@@ -114,8 +119,9 @@ const withKeyMovedToHead = (list, key, accessor = _.identity) => {
   return keyIndex > -1 ? [list[keyIndex], ...list.slice(0, keyIndex), ...list.slice(keyIndex + 1)] : [...list];
 };
 
-const FormInstanceAssignment = ({ selfUID, users, assignedTo, formInstanceId, toggleUserForFormInstance }) => {
+const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUserForFormInstance }) => {
   const [filterQuery, setFilterQuery] = useState('');
+  const users = useSelector(getUsers(ASSIGNABLE_PERMISSION_NAME));
   const sortedUsers = _.sortBy(_.flatMap(users), ['firstName', 'lastName']);
   const _users = withKeyMovedToHead(sortedUsers, selfUID, user => user._id);
 
@@ -184,7 +190,6 @@ const FormInstanceAssignment = ({ selfUID, users, assignedTo, formInstanceId, to
 
 FormInstanceAssignment.propTypes = {
   selfUID: PropTypes.string.isRequired,
-  users: PropTypes.object,
   assignedTo: PropTypes.array,
   formInstanceId: PropTypes.string.isRequired,
 };

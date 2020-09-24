@@ -1,5 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
 import * as types from './users.actionTypes';
+import { getEnvParams } from '../../configs';
 
 const fetchUserFlow = {
   request: () => ({ type: types.FETCH_USER_REQUEST }),
@@ -7,10 +8,10 @@ const fetchUserFlow = {
   failure: err => ({ type: types.FETCH_USER_FAILURE, payload: { ...err } }),
 };
 
-export const fetchUser = userId =>
+export const fetchUser = (organizationId, userId) =>
   asyncAction.GET({
     flow: fetchUserFlow,
-    endpoint: `users/${userId}`,
+    endpoint: `${getEnvParams().ADMIN_URL}organizations/${organizationId}/users/${userId}`,
   });
 
 const fetchUsersFlow = {
@@ -19,8 +20,8 @@ const fetchUsersFlow = {
   failure: err => ({ type: types.FETCH_USERS_FAILURE, payload: { ...err } }),
 };
 
-export const fetchUsers = () =>
+export const fetchUsers = organizationId =>
   asyncAction.GET({
     flow: fetchUsersFlow,
-    endpoint: `users`,
+    endpoint: `${getEnvParams().ADMIN_URL}organizations/${organizationId}/users`,
   });

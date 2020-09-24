@@ -65,13 +65,13 @@ const FormList = ({
 
   useEffect(() => {
     fetchForms();
-    fetchUsers();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
   useEffect(() => {
     if (user && user.organizationId) {
       fetchMapping();
+      fetchUsers(user.organizationId);
     }
   }, [user]);
 

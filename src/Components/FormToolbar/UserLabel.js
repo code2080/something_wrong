@@ -15,10 +15,6 @@ const mapActionsToProps = {
 };
 
 const UserLabel = ({ user, ownerId, fetchUser }) => {
-  useEffect(() => {
-    fetchUser(ownerId);
-  }, []);
-
   return (
     <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
       {user.name}
