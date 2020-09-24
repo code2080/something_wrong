@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
     case types.FETCH_OBJECT_REQUESTS_SUCCESS: {
       return {
         ...state,
-        list: action.payload.requests.reduce((reqs, req) => [...reqs, new ObjectRequest(req)]),
+        list: action.payload.requests.reduce((reqs, req) => [...reqs, new ObjectRequest(req)], []),
       };
     }
 
