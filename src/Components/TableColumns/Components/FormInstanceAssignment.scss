@@ -105,6 +105,7 @@
       padding: 2px 4px; 
       display: flex;
       align-items: center;
+      cursor: default;
 
       &.empty {
         font-style: italic;
