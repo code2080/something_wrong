@@ -33,13 +33,6 @@ const reducer = (state = initialState, action) => {
         [u._id]: new User(u),
       }), state);
 
-    case FETCH_FORMS_SUCCESS: {
-      return (action.payload.owners || []).reduce((s, owner) => ({
-        ...s,
-        [owner._id]: new User(owner)
-      }), state);
-    };
-
     default:
       return state;
   };
