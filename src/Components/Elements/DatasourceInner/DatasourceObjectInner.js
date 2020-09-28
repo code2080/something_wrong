@@ -71,7 +71,8 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         // Decline -> no action, update obj req status
         const declinedRequest = {
           ...request,
-          status: RequestStatus.DECLINED
+          status: RequestStatus.DECLINED,
+          replacementObjectExtId: null
         };
         updateObjectRequest(declinedRequest)(dispatch);
         return;
