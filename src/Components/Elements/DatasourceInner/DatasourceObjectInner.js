@@ -46,7 +46,7 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
 
     // TODO: test this when api call is implemented
     const labelField = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extid, [labelField]));
+    dispatch(setExtIdPropsForObject(extid, { label: labelField }));
     updateObjectRequest(updatedObjectRequest)(dispatch);
   }
 
