@@ -16,8 +16,6 @@ import { updateObjectRequest} from '../../../Redux/ObjectRequests/ObjectRequests
 // CONSTANTS
 import { objectRequestActions, externalobjectRequestActionMapping, RequestStatus, objectRequestActionToStatus } from '../../../Constants/objectRequest.constants'
 
-// TODO: Detect edit requests before selecting label, or else it will be a label instead of extid. Can we change this to always show ID as the other types of requests? Create ticket, explain edge cases
-// TODO: labels -> label: only one label per objectInner
 const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
   const dispatch = useDispatch();
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
@@ -44,7 +42,6 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
       status: objectRequestActionToStatus[action]
     }
 
-    // TODO: test this when api call is implemented
     const labelField = fields[0].values[0];
     dispatch(setExtIdPropsForObject(extid, { label: labelField }));
     updateObjectRequest(updatedObjectRequest)(dispatch);
@@ -80,19 +77,12 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         // replace -> REQUEST_REPLACE_OBJECT
         payload = {
           ...payload,
-          objectExtId: request.replacementObjectExtId || request.objectExtId, // TODO: This could be null, should we make core handle this, or is it better to use some kind of requestGetObjectOfType? requestGetObjectFromFilter?
+          objectExtId: request.replacementObjectExtId || request.objectExtId,
           typeExtId: request.datasource,
         };
         break;
       case objectRequestActions.SEARCH:
-        // search -> REQUEST_GET_OBJECT_FROM_FILTER (?)
-        // TODO: set up payload
-        // Decline -> no action, update obj req status
-        const pendingRequest = {
-          ...request,
-          status: RequestStatus.PENDING
-        };
-        updateObjectRequest(pendingRequest)(dispatch);
+        // search -> SELECT_OBJECT/request from filters (?)
         return;
       default:
         console.log(`Unsupported object request action: ${callname}`);
