@@ -141,46 +141,48 @@ const extractPayloadFromActivities = activities => {
       ? {
         ...newPayloadWithExtId,
         objects: [
-          newPayloadWithExtId['objects'],
-          values
+          ...newPayloadWithExtId.objects,
+          ...values
         ]
       }
       : newPayloadWithExtId;
   }, initialState);
 };
 
-const injectObjectScopeIntoPayload = (payload, objectScope) => objectScope && objectScope.length > 0
-  ? {
-    ...payload,
-    types:
-      [...payload.types,
-        objectScope
-      ]
-  }
-  : payload;
+const extractPayloadFromObjectRequests = requests => requests.reduce((payload, req) => ({ 
+  ...payload, objects: [
+    ...payload.objects, 
+    req.objectExtId, 
+    req.replacementObjectExtId,
+  ].filter(_.identity) 
+}), { objects: [] });
 
-  const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => ({
-    ...combinedPayload,
-    fields: [
-      ...combinedPayload.fields,
-      ...payload.fields
-    ],
-    objects: [
-      ...combinedPayload.objects,
-      ...payload.objects
-    ],
-    types: [
-      ...combinedPayload.types,
-      ...payload.types
-    ]
-  }), initialState);
-  
-  export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectScope = null }) => {
+  const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => {
+    const payloadWithCorrectFields = { ...initialState, ...payload }
+    return {
+      ...combinedPayload,
+      fields: _.uniq([
+        ...combinedPayload.fields,
+        ...payloadWithCorrectFields.fields
+      ]),
+      objects: _.uniq([
+        ...combinedPayload.objects,
+        ...payloadWithCorrectFields.objects
+      ]),
+      types: _.uniq([
+        ...combinedPayload.types,
+        ...payloadWithCorrectFields.types
+      ]),
+    }
+  }, initialState)
+
+  export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectRequests = [], objectScope = null }) => {
     const elements = getAllElementsFromSections(sections, submissionValues);
     const submissionPayload = extractPayloadFromElements(elements);
     const activitiesPayload = extractPayloadFromActivities(activities);
-    const payloadWithObjectScope = objectScope ? injectObjectScopeIntoPayload(activitiesPayload, objectScope) : activitiesPayload;
-    return mergePayloads([submissionPayload, payloadWithObjectScope]);
+    const objectScopePayload = objectScope ? { types: [objectScope] } : {};
+    const objectRequestsPayload = extractPayloadFromObjectRequests(objectRequests);
+    return mergePayloads([submissionPayload, activitiesPayload, objectScopePayload, objectRequestsPayload]);
   };
 
 

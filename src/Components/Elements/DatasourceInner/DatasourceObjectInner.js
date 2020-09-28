@@ -22,11 +22,12 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
   const dispatch = useDispatch();
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
 
-  const onHandledObjectRequest = (requestId, action) => ({ extId, fields }) => {
-    if(extId === null) {
-      console.log('api call failed (or was cancelled)');
+  const onHandledObjectRequest = (requestId, action) => (response = {}) => {
+    if(!response) {
+      // api call failed (or was cancelled)
       return;
     }
+    const { extid, fields } = response;
     const request = foundObjReqs.find(req => req._id === requestId);
     if(!request) {
       console.log('request not found on return from api');
@@ -39,13 +40,13 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
     
     const updatedObjectRequest = {
       ...request,
-      replacementObjectExtId: extId,
+      replacementObjectExtId: extid,
       status: objectRequestActionToStatus[action]
     }
 
     // TODO: test this when api call is implemented
     const labelField = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extId, { label: labelField }));
+    dispatch(setExtIdPropsForObject(extid, [labelField]));
     updateObjectRequest(updatedObjectRequest)(dispatch);
   }
 

@@ -23,8 +23,9 @@ const ObjectRequestLabel = ({ request }) => {
   // TODO: Make sure the labels are fetched while loading submission, and on return from core.
   const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtId || request.objectExtId));
   // TODO: implement core api call to get selected primary field of type. In the meanwhile just use first field listed in obj req
+  // TODO: use label field from integration
   // What to display?
-  const firstFieldLabel = _.head(Object.values(request));
+  const firstFieldLabel = _.head(Object.values(request.objectRequest));
   return extIdLabel || firstFieldLabel || 'N/A';
 }
 const ObjectRequestType = ({ type }) => <span className={`requestType ${type === RequestType.MISSING_OBJECT && 'missingObject'}`} >{objectRequestTypeToText[type] || 'N/A'}</span>;
@@ -32,7 +33,7 @@ const ObjectRequestType = ({ type }) => <span className={`requestType ${type ===
 export const ObjectRequestValue = ({ request }) => (
   <div className={'object_request'}>
     <ObjectRequestStatusIcon status={request.status} />
-    <ObjectRequestLabel request={request.objectRequest} />
+    <ObjectRequestLabel request={request} />
     <ObjectRequestType type={request.type} />
   </div>
 )
