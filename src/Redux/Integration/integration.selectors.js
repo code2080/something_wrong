@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { createSelector } from 'reselect';
 import { selectExtIdLabel } from '../TE/te.selectors'
 import { datasourceValueTypes, mapValueTypeToFieldName } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
@@ -8,6 +9,8 @@ import {
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
 import { initialState } from '../TE/te.helpers';
+
+const selectIntegration = state => state.integration;
 
 /**
  * @function getTECoreAPIPayload
@@ -248,3 +251,10 @@ export const getLabelsForDatasource = (payload, state) => payload
     }),
     {}
   );
+
+
+  export const selectLabelField = type => 
+  createSelector(selectIntegration, 
+    integration => 
+      integration.mappedObjectTypes[type].fields.find(field => field.appProperty === 'LABEL').fieldExtId
+  )

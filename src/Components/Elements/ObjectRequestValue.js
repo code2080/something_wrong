@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 // SELECTORS
 import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+import { selectLabelField } from '../../Redux/Integration/integration.selectors';
 
 // CONSTANTS
 import {
@@ -20,12 +21,9 @@ import {
 const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
 const ObjectRequestLabel = ({ request }) => {
-  // TODO: Make sure the labels are fetched while loading submission, and on return from core.
+  const labelField = useSelector(selectLabelField(request.datasource));
   const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtId || request.objectExtId));
-  // TODO: implement core api call to get selected primary field of type. In the meanwhile just use first field listed in obj req
-  // TODO: use label field from integration
-  // What to display?
-  const firstFieldLabel = _.head(Object.values(request.objectRequest));
+  const firstFieldLabel = request.objectRequest[labelField] || _.head(Object.values(request.objectRequest));
   return extIdLabel || firstFieldLabel || 'N/A';
 }
 const ObjectRequestType = ({ type }) => <span className={`requestType ${type === RequestType.MISSING_OBJECT && 'missingObject'}`} >{objectRequestTypeToText[type] || 'N/A'}</span>;
