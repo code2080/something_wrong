@@ -14,10 +14,10 @@ import {
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
-   RequestType
+  RequestType
 } from '../../Constants/objectRequest.constants';
 
-const ObjectRequestStatusIcon = ({ status }) => <span style={{paddingRight:'.2rem'}} >{requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING]}</span>;
+const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
 const ObjectRequestLabel = ({ request }) => {
   // TODO: Make sure the labels are fetched while loading submission, and on return from core.
@@ -27,20 +27,22 @@ const ObjectRequestLabel = ({ request }) => {
   const firstFieldLabel = _.head(Object.values(request));
   return extIdLabel || firstFieldLabel || 'N/A';
 }
-const ObjectRequestType = ({ type }) =>  <span style={{paddingLeft: '0.2rem', color:type === RequestType.MISSING_OBJECT ? 'red' : 'green'}} className={type}>{objectRequestTypeToText[type] || 'N/A'}</span>;
+const ObjectRequestType = ({ type }) => <span className={`requestType ${type === RequestType.MISSING_OBJECT && 'missingObject'}`} >{objectRequestTypeToText[type] || 'N/A'}</span>;
 
-export const ObjectRequestValue = ({ request }) => <React.Fragment>
-  <ObjectRequestStatusIcon status={request.status} />
-  <ObjectRequestLabel request={request.objectRequest} />
-  <ObjectRequestType type={request.type} />
-</React.Fragment>
+export const ObjectRequestValue = ({ request }) => (
+  <div className={'object_request'}>
+    <ObjectRequestStatusIcon status={request.status} />
+    <ObjectRequestLabel request={request.objectRequest} />
+    <ObjectRequestType type={request.type} />
+  </div>
+)
 
-// Iplement 
+// This is a function instead of a component because antd styling didn't apply properly when it was a component
 export const objectRequestDropdownMenu = ({ onClick }) => <Menu
   getPopupContainer={() => document.getElementById('te-prefs-lib')}
   onClick={onClick}
 >
-  {/* TODO: style this properly */}
+  {/* TODO: fix this inline styling? */}
   <span style={{ padding: '5px 12px', cursor:'default' }}>Execute request...</span>
   <Menu.Divider />
   {_.flatMap(objectRequestActions).map(action =>
