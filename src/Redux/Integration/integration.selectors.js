@@ -256,5 +256,7 @@ export const getLabelsForDatasource = (payload, state) => payload
   export const selectLabelField = type => 
   createSelector(selectIntegration, 
     integration => 
-      integration.mappedObjectTypes[type].fields.find(field => field.appProperty === 'LABEL').fieldExtId
+      (type && integration.mappedObjectTypes[type])
+        ? integration.mappedObjectTypes[type].fields.find(field => field.appProperty === 'LABEL').fieldExtId 
+        : null
   )
