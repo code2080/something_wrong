@@ -54,7 +54,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
     <div className="base-section--wrapper">
       <div className={`base-section--name__wrapper ${sectionType}`}>
         {section.name}
-        {sectionType === SECTION_CONNECTED && (
+        {(sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) && (
           <div
             className="base-section--extra__btn"
             onClick={() => setShowExtra(!showExtra)}
