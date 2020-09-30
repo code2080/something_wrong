@@ -63,7 +63,7 @@ export const activityActionViews = {
   [activityActions.NUMBER_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.EXACT_TIME_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: activityViews.INLINE_EDIT,
-  [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: activityViews.MODAL_EDIT,
+  // [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: activityViews.MODAL_EDIT,
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]:
     activityViews.EXTERNAL_EDIT,
   [activityActions.EDIT_OBJECT]: activityViews.EXTERNAL_EDIT,
@@ -77,8 +77,7 @@ export const activityActionLabels = {
   [activityActions.NUMBER_OVERRIDE]: 'Manually input value',
   [activityActions.EXACT_TIME_OVERRIDE]: 'Manually select time',
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: 'Manually change timeslot',
-  [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]:
-    'Manually convert to an exact time',
+  // [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: 'Manually convert to an exact time',
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]:
     'Manually select object',
   [activityActions.EDIT_FILTER_OVERRIDE]: 'Manually edit filter',
