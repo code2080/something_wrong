@@ -34,7 +34,7 @@ const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value && ownProps.value[0])
     return { labels: null, payload: null };
   const { value, element } = ownProps;
-  const payload = getTECoreAPIPayload(value, element.datasource, state);
+  const payload = getTECoreAPIPayload(value, element.datasource);
   const labels = getLabelsForDatasource(payload, state);
   return {
     payload,

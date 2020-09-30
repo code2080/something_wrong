@@ -19,7 +19,7 @@ const selectIntegration = state => state.integration;
  * @param {String} datasource the selected datasource
  */
 
-export const getTECoreAPIPayload = (value, datasource) => {
+export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
   /**
    * No value is a no-op
    */
@@ -51,10 +51,12 @@ export const getTECoreAPIPayload = (value, datasource) => {
     const _value = Array.isArray(value) ? value : [value];
     return [
       ..._retVal,
-      ...(_value || []).map(v => ({
+      ...(_value || []).map(v => {
+        const objReq = objectRequests.find(req => req._id === v);
+        return {
         valueType: datasourceValueTypes.OBJECT_EXTID,
-        extId: v,
-      })),
+        extId:  objReq ? objReq.replacementObjectExtId : v
+      }}),
     ];
   }
   /**
@@ -217,7 +219,7 @@ const getPayloadForVerticalSection = (element, values, state) =>
   values
     .filter(el => el.elementId === element._id)
     .map(el =>
-      getTECoreAPIPayload(getValueFromElement(el), element.datasource, state)
+      getTECoreAPIPayload(getValueFromElement(el), element.datasource)
     );
 
 const getPayloadForTableSection = (element, values, state) =>
