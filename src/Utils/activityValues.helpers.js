@@ -164,7 +164,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
  * @param {Array} sections all sections in the form
  * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType) => {
+const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs = []) => {
   if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
@@ -172,7 +172,10 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
   if (!eventValues) return null;
   const elementIdx = eventValues.findIndex(el => el.elementId === elementId);
   if (elementIdx === -1) return null;
-  const rawValue = eventValues[elementIdx].value;
+  const rawValue = eventValues[elementIdx].value.map(v => {
+    const objReq = formInstanceObjReqs.find(req => req._id === v);
+    return objReq ? (objReq.replacementObjectExtId || `(${objReq.status} ${objReq.type} REQUEST)`.toUpperCase()) : v
+  });
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
   return formatActivityValuePayload(element, rawValue, valueType);
@@ -323,7 +326,8 @@ const extractActivityValue = (
   formInstance,
   sections,
   eventId,
-  rowIdx
+  rowIdx, 
+  formInstanceObjReqs = []
 ) => {
   /**
    * Extraction logic:
@@ -374,7 +378,7 @@ const extractActivityValue = (
   let props = {};
   switch (sectionType) {
     case SECTION_CONNECTED:
-      props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType);
+      props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs);
       break;
     case SECTION_TABLE:
       props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections, valueType);
@@ -404,7 +408,7 @@ const extractActivityValue = (
  * @param {*} eventId the event id (in the case controlling section === SECTION_CONNECTED)
  * @param {*} rowIdx the event id (in the case controlling section === SECTION_TABLE)
  */
-export const createActivityValueForProp = (valueType, activityDesign, formInstance, sections, eventId, rowIdx) => {
+export const createActivityValueForProp = (valueType, activityDesign, formInstance, sections, eventId, rowIdx, formInstanceObjReqs = []) => {
   /**
    * Based on the valueType (objects, fields, timing)
    * we reduce over all the items that in the activity design have been mapped onto this valueType
@@ -442,7 +446,8 @@ export const createActivityValueForProp = (valueType, activityDesign, formInstan
             formInstance,
             sections,
             eventId,
-            rowIdx
+            rowIdx,
+            formInstanceObjReqs
           ),
         ];
       }, []);

@@ -131,7 +131,8 @@ const createActivity = (
   controllingSectionId,
   eventId = null,
   rowIdx = null,
-  sections
+  sections,
+  formInstanceObjReqs = []
 ) => {
   /**
    * An activity connsists of
@@ -141,7 +142,7 @@ const createActivity = (
    * 4) objects and field values in the values property
    */
   // Grab the object values
-  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, activityDesign, formInstance, sections, eventId, rowIdx, 'object');
+  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, activityDesign, formInstance, sections, eventId, rowIdx, formInstanceObjReqs);
   // Grab the field values
   const fieldValues = createActivityValueForProp(activityValueTypes.FIELD, activityDesign, formInstance, sections, eventId, rowIdx);
   // Grab the timing values
@@ -169,7 +170,7 @@ const createActivity = (
  * @param {*} activityDesign the form's activity design
  * @returns {Array<Object>} activities
  */
-export const createActivitiesFromFormInstance = (formInstance, sections, _activityDesign) => {
+export const createActivitiesFromFormInstance = (formInstance, sections, _activityDesign, formInstanceObjReqs = []) => {
   // Make sure we have all that we need
   if (!_activityDesign || !sections || !sections.length || !_activityDesign) return [];
   // Assert activity design format
@@ -181,7 +182,7 @@ export const createActivitiesFromFormInstance = (formInstance, sections, _activi
   // If we don't have a determining section we know the form instance will only be converted into one activity
   if (!controllingSectionInfo.determiningSectionId)
     // Create the one activity and return it
-    return [createActivity(activityDesign, formInstance, null, null, null, sections)];
+    return [createActivity(activityDesign, formInstance, null, null, null, sections, formInstanceObjReqs)];
 
   /**
    * If we have a determining section; each value of that determining section represents 1 activity
@@ -197,7 +198,8 @@ export const createActivitiesFromFormInstance = (formInstance, sections, _activi
       controllingSectionInfo.determiningSectionId,
       controllingSectionInfo.sectionType === SECTION_CONNECTED ? key : null,
       controllingSectionInfo.sectionType === SECTION_TABLE ? key : null,
-      sections
+      sections, 
+      formInstanceObjReqs
     )
   );
 };
