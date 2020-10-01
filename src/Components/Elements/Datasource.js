@@ -75,14 +75,11 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
         .filter(action => {
           const isObject = element.datasource.split(',')[1] === 'object';
           const isSingleLabel = Object.keys(labels).length === 1;
-          if (
+          return !(
             (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
             ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
             (isObject && action === 'FILTER_OBJECTS')
-            ) {
-            return false;
-          }
-          return true;
+          ); 
         }),
     [teCoreAPI, element]
   );
