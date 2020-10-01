@@ -19,6 +19,8 @@ import {
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
+  objectRequestActionCondition,
+  objectRequestOnClick,
 } from '../../Constants/objectRequestActions.constants';
 
 const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
@@ -40,16 +42,19 @@ export const ObjectRequestValue = ({ request }) => (
 )
 
 // This is a function instead of a component because antd styling didn't apply properly when it was a component
-export const objectRequestDropdownMenu = ({ onClick }) => <Menu
+export const objectRequestDropdownMenu = ({ dispatch, teCoreAPI, coreCallback, request }) => <Menu
   getPopupContainer={() => document.getElementById('te-prefs-lib')}
-  onClick={onClick}
+  onClick={objectRequestOnClick( {dispatch, teCoreAPI, request, coreCallback})}
 >
   {/* TODO: fix this inline styling? */}
   <span style={{ padding: '5px 12px', cursor:'default' }}>Execute request...</span>
   <Menu.Divider />
-  {_.flatMap(objectRequestActions).map(action =>
-    <Menu.Item key={action} >
-      {objectRequestActionIcon[action]} {objectRequestActionLabels[action]}
-    </Menu.Item>
-  )}
+  {_.flatMap(objectRequestActions).reduce((items, action) =>
+    objectRequestActionCondition(request)[action]
+    ? [...items, <Menu.Item key={action} >
+        {objectRequestActionIcon[action]} {objectRequestActionLabels[action]}
+      </Menu.Item>
+    ]
+    : items
+  , [])}
 </Menu>
