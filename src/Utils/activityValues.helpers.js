@@ -168,14 +168,17 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
   if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
-  const eventValues = formInstance.values[sectionId][eventId].values;
+  const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
+    const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
+    if(objReq) {
+      return objReq.replacementObjectExtId ? [...values, { ...val, value: [objReq.replacementObjectExtId] }] : values;
+    }
+    return [...values, val]
+  }, []);
   if (!eventValues) return null;
   const elementIdx = eventValues.findIndex(el => el.elementId === elementId);
   if (elementIdx === -1) return null;
-  const rawValue = eventValues[elementIdx].value.map(v => {
-    const objReq = formInstanceObjReqs.find(req => req._id === v);
-    return objReq ? (objReq.replacementObjectExtId || `(${objReq.status} ${objReq.type} REQUEST)`.toUpperCase()) : v
-  });
+  const rawValue = eventValues[elementIdx].value;
   const element = getElementFromSection(elementId, section);
   if (!element) return null;
   return formatActivityValuePayload(element, rawValue, valueType);
@@ -388,7 +391,7 @@ const extractActivityValue = (
       break;
   }
 
-  return new ActivityValue({
+  return (props || valueType != 'object') ? new ActivityValue({
     type: valueType,
     extId,
     ...props,
@@ -396,7 +399,7 @@ const extractActivityValue = (
     elementId: elementId,
     eventId: eventId,
     rowIdx: rowIdx,
-  })
+  }) : null;
 }
 /**
  * @function createActivityValueForProp
@@ -437,19 +440,20 @@ export const createActivityValueForProp = (valueType, activityDesign, formInstan
     } else {
       // Create the activity values based on the mapped elements
       const activityValues = (mappedElements || []).reduce((activityValues, el) => {
-        return [
+        const extractedActivityValue = extractActivityValue(
+          el,
+          extId,
+          valueType,
+          formInstance,
+          sections,
+          eventId,
+          rowIdx,
+          formInstanceObjReqs
+        ); 
+        return extractedActivityValue ? [
           ...activityValues,
-          extractActivityValue(
-            el,
-            extId,
-            valueType,
-            formInstance,
-            sections,
-            eventId,
-            rowIdx,
-            formInstanceObjReqs
-          ),
-        ];
+          extractedActivityValue
+        ] : activityValues;
       }, []);
       return [...retVal, ...activityValues];
     }
