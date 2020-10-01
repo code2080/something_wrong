@@ -95,12 +95,13 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
       payload = {
         type: request.datasource,
         searchString: '',
-        categories: [
-          Object.entries(request.objectRequest).map(([fieldExtId, filterValue]) => ({
-            id: fieldExtId,
-            values: [filterValue]
-          })),
-        ]
+        categories: Object.entries(request.objectRequest).reduce((categories, [fieldExtId, filterValue]) =>
+          _.isEmpty(filterValue)
+            ? categories
+            : [...categories, {
+              id: fieldExtId,
+              values: [filterValue]
+            }], []),
       }
       teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
     },
