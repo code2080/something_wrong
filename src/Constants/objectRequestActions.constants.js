@@ -13,7 +13,7 @@ export const objectRequestActions = {
   REPLACE: 'REPLACE',
   REVERT: 'REVERT',
   SELECT: 'SELECT',
-  //SEARCH: 'SEARCH', // TODO: scope the search feature. What is its' purpose? DEV-5290
+  FILTER: 'FILTER',
 };
 
 export const objectRequestActionCondition = request => ({
@@ -37,7 +37,7 @@ export const objectRequestActionLabels = {
   [objectRequestActions.REPLACE]: 'Replace',
   [objectRequestActions.REVERT]: 'Revert',
   [objectRequestActions.SELECT]: 'Select',
-  [objectRequestActions.FILTER]: 'Filter fields',
+  [objectRequestActions.FILTER]: 'Filter',
 };
 
 export const objectRequestActionIcon = {
@@ -92,7 +92,17 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
       teCoreAPI[teCoreCallnames.SELECT_OBJECT](payload);
     },
     [objectRequestActions.FILTER]: () => { 
-      teCoreCallnames.SELECT_OBJECT 
+      payload = {
+        type: request.datasource,
+        searchString: '',
+        categories: [
+          Object.entries(request.objectRequest).map(([fieldExtId, filterValue]) => ({
+            id: fieldExtId,
+            values: [filterValue]
+          })),
+        ]
+      }
+      teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
     },
   }
   objectRequestActionClickFunc[key]();
