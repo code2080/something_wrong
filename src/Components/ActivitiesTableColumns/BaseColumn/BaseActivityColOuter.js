@@ -35,7 +35,7 @@ const BaseActivityColOuter = ({
           formatFn={formatFn}
           mapping={mapping}
         />
-      ))}
+      )) || 'No values'}
     </div>
   );
 };
