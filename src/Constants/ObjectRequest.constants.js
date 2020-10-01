@@ -1,7 +1,5 @@
 import React from 'react';
 import { Icon } from 'antd';
-import { teCoreCallnames } from './teCoreActions.constants';
-import _ from 'lodash';
 
 export const RequestStatus = {
   PENDING: 'pending',
@@ -15,42 +13,6 @@ export const requestStatusToIcon = {
   [RequestStatus.ACCEPTED]: <Icon type="check" style={{ color: 'rgba(0,255,0, 0.8)', marginRight: '0.2rem' }} />,
   [RequestStatus.DECLINED]: <Icon type="close" style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
   [RequestStatus.REPLACED]: <Icon type="swap" style={{ color: 'rgba(0,0,0, 0.8)', marginRight: '0.2rem' }} />,
-};
-
-
-// TODO: Move actions into its' own file?
-export const objectRequestActions = {
-  ACCEPT: 'ACCEPT',
-  DECLINE: 'DECLINE',
-  REPLACE: 'REPLACE',
-  //SEARCH: 'SEARCH', // TODO: scope the search feature. What is its' purpose? DEV-5290
-};
-
-export const objectRequestActionToStatus = {
-  [objectRequestActions.ACCEPT]: RequestStatus.ACCEPTED,
-  [objectRequestActions.DECLINE]: RequestStatus.DECLINED,
-  [objectRequestActions.REPLACE]: RequestStatus.REPLACED,
-}
-
-export const objectRequestActionLabels = {
-  [objectRequestActions.ACCEPT]: 'Accept',
-  [objectRequestActions.DECLINE]: 'Decline',
-  [objectRequestActions.REPLACE]: 'Replace',
-  [objectRequestActions.SEARCH]: 'Search',
-};
-
-export const objectRequestActionIcon = {
-  [objectRequestActions.ACCEPT]: requestStatusToIcon[RequestStatus.ACCEPTED],
-  [objectRequestActions.DECLINE]: requestStatusToIcon[RequestStatus.DECLINED],
-  [objectRequestActions.REPLACE]: requestStatusToIcon[RequestStatus.REPLACED],
-  [objectRequestActions.SEARCH]: <Icon type="search" size='small' style={{ color: 'rgb(0,0,0)' }} />,
-};
-
-export const externalobjectRequestActionMapping = {
-  [objectRequestActions.ACCEPT]: teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST,  
-  [objectRequestActions.DECLINE]: _.noop,  
-  [objectRequestActions.REPLACE]: teCoreCallnames.REQUEST_REPLACE_OBJECT,  
-  [objectRequestActions.SEARCH]: teCoreCallnames.REQUEST_GET_OBJECT_FROM_FILTER,  
 };
 
 export const RequestType = {

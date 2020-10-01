@@ -12,11 +12,14 @@ import {
   objectRequestTypeToText,
   requestStatusToIcon,
   RequestStatus,
+  RequestType
+} from '../../Constants/objectRequest.constants';
+
+import {
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
-  RequestType
-} from '../../Constants/objectRequest.constants';
+} from '../../Constants/objectRequestActions.constants';
 
 const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 

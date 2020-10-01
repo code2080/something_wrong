@@ -6,15 +6,20 @@ import { Dropdown, Icon } from 'antd';
 
 import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 
+// COMPONENTS
 import { ObjectRequestValue, objectRequestDropdownMenu } from '../ObjectRequestValue';
-import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/ObjectRequests.selectors'
+
+// SELECTORS
+import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
+import { getTECoreAPIPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { updateObjectRequest} from '../../../Redux/ObjectRequests/ObjectRequests.actions'
 
 // CONSTANTS
-import { objectRequestActions, externalobjectRequestActionMapping, RequestStatus, objectRequestActionToStatus } from '../../../Constants/objectRequest.constants'
+import { objectRequestActions, externalobjectRequestActionMapping, objectRequestActionToStatus } from '../../../Constants/objectRequestActions.constants';
+import { RequestStatus } from '../../../Constants/objectRequest.constants'
 
 const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
   const dispatch = useDispatch();
@@ -81,6 +86,9 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
           typeExtId: request.datasource,
         };
         break;
+        case objectRequestActions.SELECT:
+          payload = getTECoreAPIPayload(request.replacementObjectExtId || request.objectExtId, `${request.datasource},object`);
+        break;
       case objectRequestActions.SEARCH:
         // search -> SELECT_OBJECT/request from filters (?)
         return;
@@ -88,7 +96,7 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
         console.log(`Unsupported object request action: ${callname}`);
         return;
     }
-    teCoreAPI[callname](payload);
+    payload && teCoreAPI[callname](payload);
   }
 
   return labels.map(label => {
