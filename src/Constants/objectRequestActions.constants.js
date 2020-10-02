@@ -20,7 +20,7 @@ export const objectRequestActionCondition = request => ({
   [objectRequestActions.ACCEPT]: request.status === 'pending',
   [objectRequestActions.DECLINE]: request.status === 'pending',
   [objectRequestActions.REPLACE]: request.status === 'pending',
-  [objectRequestActions.REVERT]: request.status !== 'pending',
+  [objectRequestActions.REVERT]: request.status !== 'pending' && request.type !== RequestType.EDIT_OBJECT,
   [objectRequestActions.SELECT]: request.replacementObjectExtId || request.objectExtId,
   [objectRequestActions.FILTER]: request.status === 'pending',
 });
