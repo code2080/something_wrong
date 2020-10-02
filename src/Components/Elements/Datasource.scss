@@ -2,19 +2,34 @@
 
 .element__datasource--wrapper {
   width: fit-content;
-  cursor: pointer;
   z-index: 1;
   position: relative;
+  display:flex;
+  
+  & > :not(.element__datasource--inner--empty) {
+  cursor: pointer;
+  }
 
   .element__datasource--inner {
     border: 1px solid rgb(232, 232, 232);
     border-radius: 0.3rem;
     background: rgb(250, 250, 250);
-    display: flex;
     align-items: center;
     padding: 0 0.15rem;
     white-space: nowrap;
-  
+    display:flex;
+
+    .object_request {
+      .requestType {
+        margin-left: 0.2rem;
+        color: green;
+        
+        &.missingObject {
+          color: red;
+        }
+      }
+    }
+
     & > i {
       &.anticon {
         color: $rustyGrey;
@@ -23,8 +38,7 @@
     }
 
     .field--wrapper {
-      display: flex;
-
+      display:flex;
       .field--label {
         margin-right: 0.2rem;
         color: $rustyGrey;

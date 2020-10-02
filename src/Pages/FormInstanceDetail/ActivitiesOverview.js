@@ -1,11 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
 
 // ACTIONS
 import { saveActivities } from '../../Redux/Activities/activities.actions';
+
+// SELECTORS
+import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
@@ -60,11 +63,13 @@ const FormInstanceReservationOverview = ({
   hasOngoingExternalAction,
   history,
 }) => {
+  const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance._id))
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(
       formInstance,
       form.sections,
-      mapping
+      mapping,
+      formInstanceObjReqs,
     );
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);

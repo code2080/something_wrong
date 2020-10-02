@@ -14,8 +14,10 @@ import { getTECoreAPIPayload } from '../../../../Redux/Integration/integration.s
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
 import { getSelectionSettings } from '../../../../Utils/sections.helpers';
 import { getSelectionSettingsTECorePayload } from '../../../../Utils/forms.helpers';
+
 // SELECTORS
 import { selectManualSchedulingStatusForRow, selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
+import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // STYLES
 import './ManualSchedulingColumn.scss';
@@ -40,6 +42,7 @@ const mapStateToProps = (state, ownProps) => {
   const form = state.forms[formId];
   const formInstance = state.submissions[formId][formInstanceId];
   const selectionSettings = getSelectionSettings(sectionId, formInstance);
+  const formInstanceObjectRequests = selectFormInstanceObjectRequests(formInstanceId)(state);
 
   // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
@@ -47,7 +50,7 @@ const mapStateToProps = (state, ownProps) => {
   const teCorePayload = [
     ...elements.reduce((prev, el) => {
       const value = event[el._id];
-      const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, state));
+      const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
       return [...prev, ...p];
     }, []),
     ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
@@ -65,6 +68,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapActionsToProps = {
   toggleRowSchedulingStatus,
   setFormInstanceSchedulingProgress,
+  selectFormInstanceObjectRequests,
 };
 
 const ManualSchedulingColumn = ({

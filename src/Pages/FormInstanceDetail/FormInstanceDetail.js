@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // ACTIONS
@@ -18,6 +18,7 @@ import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers'
 
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
+import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // STYLES
 import './FormInstanceDetail.scss';
@@ -55,6 +56,8 @@ const FormInstancePage = ({
   fetchActivitiesForFormInstance,
   activities,
 }) => {
+  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+
   // Effect to update breadcrumbs
   useEffect(() => {
     setBreadcrumbs([
@@ -75,7 +78,7 @@ const FormInstancePage = ({
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload({sections, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
+  const payload = useMemo(() => getExtIdPropsPayload({sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
