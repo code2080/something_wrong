@@ -9,8 +9,8 @@ export const activityActions = {
   FREE_TEXT_OVERRIDE: 'FREE_TEXT_OVERRIDE',
   NUMBER_OVERRIDE: 'NUMBER_OVERRIDE',
   EXACT_TIME_OVERRIDE: 'EXACT_TIME_OVERRIDE',
-  TIMESLOT_CHANGE_OVERRIDE: 'TIMESLOT_CHANGE_OVERRIDE',
-  TIMESLOT_TO_EXACT_OVERRIDE: 'TIMESLOT_TO_EXACT_OVERRIDE',
+  // TIMESLOT_CHANGE_OVERRIDE: 'TIMESLOT_CHANGE_OVERRIDE',
+  // TIMESLOT_TO_EXACT_OVERRIDE: 'TIMESLOT_TO_EXACT_OVERRIDE',
   SELECT_OBJECT_FROM_FILTER_OVERRIDE: 'SELECT_OBJECT_FROM_FILTER_OVERRIDE',
   EDIT_OBJECT: 'EDIT_OBJECT',
   EDIT_FILTER_OVERRIDE: 'EDIT_FILTER_OVERRIDE',
@@ -52,7 +52,7 @@ export const activityActionFilters = {
     activityValue.submissionValueType === submissionValueTypes.OBJECT,
   [activityActions.EDIT_FILTER_OVERRIDE]: activityValue =>
     activityValue.submissionValueType === submissionValueTypes.FILTER,
-  // [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
+  [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.REVERT_TO_SUBMISSION_VALUE]: activityValue =>
     activityValue.valueMode === activityValueModes.MANUAL,
   [activityActions.SHOW_INFO]: () => true
@@ -63,7 +63,7 @@ export const activityActionViews = {
   [activityActions.NUMBER_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.EXACT_TIME_OVERRIDE]: activityViews.INLINE_EDIT,
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: activityViews.INLINE_EDIT,
-  // [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: activityViews.MODAL_EDIT,
+  [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: activityViews.MODAL_EDIT,
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]:
     activityViews.EXTERNAL_EDIT,
   [activityActions.EDIT_OBJECT]: activityViews.EXTERNAL_EDIT,
@@ -77,7 +77,7 @@ export const activityActionLabels = {
   [activityActions.NUMBER_OVERRIDE]: 'Manually input value',
   [activityActions.EXACT_TIME_OVERRIDE]: 'Manually select time',
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: 'Manually change timeslot',
-  // [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: 'Manually convert to an exact time',
+  [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: 'Manually convert to an exact time',
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]:
     'Manually select object',
   [activityActions.EDIT_FILTER_OVERRIDE]: 'Manually edit filter',
