@@ -7,9 +7,9 @@ export default class FormInstanceTECoreProps {
 
   constructor({
     assignedTo = [],
-    acceptanceStatus,
-    acceptanceComment,
-    schedulingProgress,
+    acceptanceStatus = null,
+    acceptanceComment = null,
+    schedulingProgress = null,
     selectionSettings = {},
   }) {
     this.assignedTo = assignedTo;

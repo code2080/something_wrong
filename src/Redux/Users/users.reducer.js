@@ -1,4 +1,5 @@
 import * as types from './users.actionTypes';
+import { FETCH_FORMS_SUCCESS } from '../Forms/forms.actionTypes';
 import { FETCH_PROFILE_SUCCESS } from '../Auth/auth.actionTypes';
 import { User } from '../../Models/User.model';
 
@@ -34,7 +35,7 @@ const reducer = (state = initialState, action) => {
 
     default:
       return state;
-  }
-}
+  };
+};
 
 export default reducer;

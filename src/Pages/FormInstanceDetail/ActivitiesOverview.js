@@ -91,11 +91,12 @@ const FormInstanceReservationOverview = ({
       <div
         className="form-instance-activites--mask"
         style={{
-          background: `radial-gradient(at ${offset.left +
-            width / 2 -
-            20}px ${offset.top +
-            height / 2}px, transparent 0px, transparent ${width /
-            2}px, rgba(0, 0, 0, 0.5) ${width / 2 + 15}px)`
+          background: `radial-gradient(closest-side at 
+            ${offset.left + width / 2}px 
+            ${offset.top + height / 2}px,
+            transparent 0px, 
+            transparent ${width / 2}px,
+            rgba(0, 0, 0, 0.5) ${width / 2 + 15}px)`
         }}
       />
     );

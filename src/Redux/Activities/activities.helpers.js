@@ -30,7 +30,7 @@ export const getActivitiesForFormInstance = (state, formId, formInstanceId) => {
  */
 const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
   const valueIdx = activity[objPath].findIndex(
-    el => el.extId === newActivityValue.extId
+    el => el.extId === newActivityValue.extId && el.submissionValue === newActivityValue.submissionValue
   );
   if (valueIdx === -1) return null;
   return {

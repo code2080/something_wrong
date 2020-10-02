@@ -40,7 +40,7 @@ export default class FormInstance {
     firstName,
     lastName,
     teCoreProps,
-    values,
+    values = [],
     createdAt,
     updatedAt,
   }) {
@@ -54,7 +54,7 @@ export default class FormInstance {
     this.firstName = firstName;
     this.lastName = lastName;
     this.submitter = `${firstName} ${lastName}`;
-    this.teCoreProps = new FormInstanceTECoreProps(teCoreProps);
+    this.teCoreProps = new FormInstanceTECoreProps(teCoreProps || {});
     this.values = values;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;

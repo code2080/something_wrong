@@ -18,10 +18,6 @@ const mapActionsToProps = {
 };
 
 const UserAvatar = ({ user, ownerId, fetchUser }) => {
-  useEffect(() => {
-    fetchUser(ownerId);
-  }, []);
-
   return (
     <div className="avatar--wrapper">
       <div className="avatar--circle">

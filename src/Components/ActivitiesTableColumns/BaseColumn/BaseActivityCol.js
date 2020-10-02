@@ -39,11 +39,14 @@ import { activityViews } from '../../../Constants/activityViews.constants';
 
 const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
-const mapStateToProps = (state, { activity: { _id: activityId }, prop }) => ({
+const mapStateToProps = (state, { activityValue, activity: { _id: activityId }, prop: typeExtId }) => ({
   hasOngoingExternalAction:
     state.globalUI.externalAction &&
     state.globalUI.externalAction.activityId === activityId &&
-    state.globalUI.externalAction.prop === prop,
+    state.globalUI.externalAction.prop.typeExtId === typeExtId &&
+    state.globalUI.externalAction.prop.submissionValue === activityValue.submissionValue,
+  activityValue: activityValue,
+  typeExtId: typeExtId,
 });
 
 const mapActionsToProps = {
@@ -69,6 +72,7 @@ const getActivityValue = (activityValue, activity, type, prop) => {
 const BaseActivityCol = ({
   activityValue,
   activity,
+  typeExtId,
   prop,
   type,
   propTitle,
@@ -83,7 +87,7 @@ const BaseActivityCol = ({
   teCoreAPI
 }) => {
   // Activity value
-  const _activityValue = getActivityValue(activityValue, activity, type, prop);
+  const _activityValue = getActivityValue(activityValue, activity, type, typeExtId);
   // State var to hold the component's mode
   const [viewProps, setViewProps] = useState({
     view: activityViews.VALUE_VIEW,
@@ -195,7 +199,7 @@ const BaseActivityCol = ({
       if (!updView || updView == null) return;
       if (updView === activityViews.EXTERNAL_EDIT) {
         // Set the redux state prop
-        beginExternalAction(activity._id, prop);
+        beginExternalAction(activity._id, { submissionValue: _activityValue.submissionValue, typeExtId: typeExtId });
         // Here begins our journey into the belly of TE Core
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
@@ -281,7 +285,7 @@ const BaseActivityCol = ({
 BaseActivityCol.propTypes = {
   activityValue: PropTypes.object,
   activity: PropTypes.object.isRequired,
-  prop: PropTypes.string.isRequired,
+  typeExtId: PropTypes.string.isRequired,
   type: PropTypes.string,
   hasOngoingExternalAction: PropTypes.bool,
   propTitle: PropTypes.string,
