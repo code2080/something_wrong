@@ -14,20 +14,12 @@ const reducer = (state = initialState, action) => {
       };
     };
 
-    case types.BEGIN_EXTERNAL_ACTION: {
-      if (!action || !action.payload || !action.payload.prop || !action.payload.activityId) return state;
-      const { payload: { prop, activityId } } = action;
+    case types.SET_EXTERNAL_ACTION: {
       return {
         ...state,
-        externalAction: { prop, activityId },
+        externalActionRef: action.payload.spotlightRef
       };
     }
-
-    case types.END_EXTERNAL_ACTION:
-      return {
-        ...state,
-        externalAction: null,
-      };
 
     case types.GET_VIEW_SUCCESS: {
       if (

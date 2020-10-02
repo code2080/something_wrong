@@ -24,7 +24,9 @@ import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/Obj
 import './FormInstanceDetail.scss';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
-// CONSTANTS
+// HOOKS
+import { useExternalActionMask } from '../../Hooks/useExternalActionMask';
+
 const tabs = {
   OVERVIEW: 'OVERVIEW',
   ACTIVITIES: 'ACTIVITIES',
@@ -57,6 +59,8 @@ const FormInstancePage = ({
   activities,
 }) => {
   const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const externalActionRef = useSelector(state => state.globalUI.externalActionRef);
+  const mask = useExternalActionMask();
 
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -86,6 +90,7 @@ const FormInstancePage = ({
 
   return (
     <div className="form-instance--wrapper">
+      {mask(externalActionRef)}
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
