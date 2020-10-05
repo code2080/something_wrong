@@ -1,10 +1,10 @@
 import React from 'react';
 
 export const useExternalActionMask = () => {
-  const mask = (boundingRect) => {
-    if (!boundingRect) return null;
+  const mask = (spotlightPositionInfo) => {
+    if (!spotlightPositionInfo) return null;
     
-    const { x: left, y: top, width, height } = boundingRect;
+    const { boundingRect: { x: left, y: top, width, height}, scroll: [scrollLeft, scrollTop] } = spotlightPositionInfo;
     return (
       <div
         className="mask"
@@ -15,10 +15,10 @@ export const useExternalActionMask = () => {
           zIndex: 99,
           top: 0,
           background: `radial-gradient(closest-side at 
-            ${left}px ${top - height}px,
+            ${left + scrollLeft}px ${top + scrollTop - height * 1.25}px,
             transparent 0px,
-            transparent ${width / 2}px,
-            rgba(0, 0, 0, 0.5) ${width / 2 + 15}px)`
+            transparent ${width / 2 + 15}px,
+            rgba(0, 0, 0, 0.5) ${width / 2 + 30}px)`
         }}
       />
     );
