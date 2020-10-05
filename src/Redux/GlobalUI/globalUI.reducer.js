@@ -17,7 +17,7 @@ const reducer = (state = initialState, action) => {
     case types.SET_EXTERNAL_ACTION: {
       return {
         ...state,
-        externalActionRef: action.payload.spotlightRef
+        spotlightPositionInfo: action.payload.spotlightPositionInfo
       };
     }
 

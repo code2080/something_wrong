@@ -18,11 +18,17 @@ export const setBreadcrumbs = fragments => ({
   payload: { fragments },
 });
 
-export const setExternalAction = (spotlightRef) => ({
-  type: SET_EXTERNAL_ACTION,
-  // also send current.scrolltop, current.scrollleft
-  payload: { spotlightRef: spotlightRef.current.getBoundingClientRect() }
-});
+export const setExternalAction = (spotlightRef) => {
+  const el = spotlightRef && spotlightRef.current;
+  const spotlightPositionInfo = el ? {
+    boundingRect: spotlightRef.current.getBoundingClientRect(),
+    scroll: window.tePrefsScroll,
+  } : null;
+  return ({
+    type: SET_EXTERNAL_ACTION,
+    payload: { spotlightPositionInfo }
+  });
+};
 
 export const initView = (datasourceId, columns) => ({ type: INIT_VIEW, payload: { datasourceId, columns } });
 

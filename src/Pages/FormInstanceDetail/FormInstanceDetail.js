@@ -59,7 +59,7 @@ const FormInstancePage = ({
   activities,
 }) => {
   const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
-  const externalActionRef = useSelector(state => state.globalUI.externalActionRef);
+  const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
   const mask = useExternalActionMask();
 
   // Effect to update breadcrumbs
