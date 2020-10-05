@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash'
 import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
 
-import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
-
 // COMPONENTS
+import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 import { ObjectRequestValue, objectRequestDropdownMenu } from '../ObjectRequestValue';
 
 // SELECTORS
@@ -15,6 +14,7 @@ import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/Obje
 // ACTIONS
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { updateObjectRequest} from '../../../Redux/ObjectRequests/ObjectRequests.actions';
+import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // CONSTANTS
 import { objectRequestActionToStatus } from '../../../Constants/objectRequestActions.constants';
@@ -22,8 +22,10 @@ import { objectRequestActionToStatus } from '../../../Constants/objectRequestAct
 const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
   const dispatch = useDispatch();
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
+  const spotlightRef = useRef(null);
 
   const onHandledObjectRequest = request => action => (response = {}) => {
+    dispatch(setExternalAction(null));
     if(!response || !request) {
       // api call failed (or was cancelled)
       return;
@@ -45,10 +47,18 @@ const DatasourceObjectInner = ({ labels, menu, teCoreAPI }) => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return <Dropdown
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={objReq ? objectRequestDropdownMenu({ dispatch: dispatch, teCoreAPI: teCoreAPI, coreCallback: onHandledObjectRequest(objReq), request: objReq }) : menu}
+      overlay={objReq
+        ? objectRequestDropdownMenu({
+          dispatch: dispatch,
+          teCoreAPI: teCoreAPI,
+          coreCallback: onHandledObjectRequest(objReq),
+          request: objReq,
+          spotlightRef: spotlightRef,
+        })
+        : menu}
       key={label}
     >
-      <div className="dd-trigger element__datasource--inner">
+      <div className="dd-trigger element__datasource--inner" ref={spotlightRef}>
         {objReq ? <ObjectRequestValue request={objReq} /> : label || 'N/A'}
         <Icon type="down" />
       </div>

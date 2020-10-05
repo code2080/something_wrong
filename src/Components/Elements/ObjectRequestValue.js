@@ -42,9 +42,9 @@ export const ObjectRequestValue = ({ request }) => (
 )
 
 // This is a function instead of a component because antd styling didn't apply properly when it was a component
-export const objectRequestDropdownMenu = ({ dispatch, teCoreAPI, coreCallback, request }) => <Menu
+export const objectRequestDropdownMenu = ({ dispatch, teCoreAPI, coreCallback, request, spotlightRef }) => <Menu
   getPopupContainer={() => document.getElementById('te-prefs-lib')}
-  onClick={objectRequestOnClick( {dispatch, teCoreAPI, request, coreCallback})}
+  onClick={objectRequestOnClick( {dispatch, teCoreAPI, request, spotlightRef, coreCallback})}
 >
   {/* TODO: fix this inline styling? */}
   <span style={{ padding: '5px 12px', cursor:'default' }}>Execute request...</span>
