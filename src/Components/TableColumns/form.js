@@ -4,6 +4,7 @@ import React from 'react';
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import ObjectScopeCol from './Components/ObjectScopeCol';
+import IconFormType from '../FormType/IconFormType';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
@@ -13,6 +14,13 @@ import { sortAlpha, sortTime } from './Helpers/sorters';
 import Form from '../../Models/Form.model';
 
 export const form = {
+  TYPE: {
+    title: '',
+    key: 'formType',
+    dataIndex: 'formType',
+    fixedWidth: 35,
+    render: type => <IconFormType type={type}/>
+  },
   NAME: {
     title: 'Name',
     key: 'name',

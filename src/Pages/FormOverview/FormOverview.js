@@ -86,6 +86,7 @@ const FormList = ({
     <div className="form-list--wrapper">
       <DynamicTable
         columns={[
+          tableColumns.form.TYPE,
           tableColumns.form.NAME,
           tableColumns.form.DESCRIPTION,
           tableColumns.form.OWNER,
