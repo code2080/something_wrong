@@ -33,7 +33,7 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI}>
-        <div className='te-prefs-lib' id="te-prefs-lib">
+        <div className='te-prefs-lib' id="te-prefs-lib" ref={prefsRef} onScroll={() => window.tePrefsScroll = (prefsRef && prefsRef.current) && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]}>
           <TEPrefsLibRouter />
         </div>
       </TECoreAPIProvider>
