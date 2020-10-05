@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
@@ -13,6 +14,14 @@ import { sortAlpha, sortTime } from './Helpers/sorters';
 import Form from '../../Models/Form.model';
 
 export const form = {
+  CREATEDAT: {
+    title: 'Created at',
+    key: 'createdAt',
+    dataIndex: 'createdAt',
+    fixedWidth: 100,
+    sorter: (a, b) => sortTime(b.createdAt, a.createdAt),
+    render: createdDate => moment(createdDate).format('MMM Do YYYY'),
+  },
   NAME: {
     title: 'Name',
     key: 'name',
@@ -56,7 +65,7 @@ export const form = {
     dataIndex: 'dueDateDisplay',
     key: 'dueDateDisplay',
     fixedWidth: 90,
-    sorter: (a, b) => sortTime(a.dueDate, b.dueDate),
+    sorter: (a, b) => sortTime(b.dueDate, a.dueDate),
   },
   FORM_STATUS: {
     title: 'Status',
