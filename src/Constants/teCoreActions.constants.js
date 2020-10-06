@@ -23,13 +23,19 @@ export const teCoreCallnames = {
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
   REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
-  REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities'
+  REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
+  REQUEST_HANDLE_OBJECT_REQUEST: 'requestHandleObjectRequest',
 };
 
 export const teCoreActions = {
   SELECT_OBJECT: {
     callname: teCoreCallnames.SELECT_OBJECT,
     label: 'Select object',
+    compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
+  },
+  SELECT_OBJECTS: {
+    callname: teCoreCallnames.SELECT_OBJECT,
+    label: 'Select all objects',
     compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
   },
   SELECT_TYPE: {
@@ -98,7 +104,7 @@ export const teCoreActions = {
   },
   REQUEST_REPLACE_OBJECT: {
     callname: teCoreCallnames.REQUEST_REPLACE_OBJECT,
-    mockFunction: async ({ activityValue, activity, callback }) => {
+    mockFunction: async ({ objectExtId, typeExtId, callback }) => {
       callback(coreObject);
     }
   },
@@ -115,6 +121,19 @@ export const teCoreActions = {
             activityId: r.activityId,
             result: coreReservationResult,
           })))
+  },
+  REQUEST_HANDLE_OBJECT_REQUEST: {
+    callname: teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST,
+    mockFunction: (({
+      extId,
+      fields,
+      objectType,
+      requestType,
+      callback,
+    }) => {
+      console.log(`Asking core to handle request of type ${requestType}`);
+      callback({ extId: 'fakeReplacementExtId', fields: [{ values: ['fakeLabel'] }] });
+    })
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT

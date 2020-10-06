@@ -13,6 +13,7 @@ import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
+import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 
 const rootReducer = combineReducers({
   apiStatus,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   users,
   te,
   integration,
+  objectRequests,
 });
 
 export default rootReducer;

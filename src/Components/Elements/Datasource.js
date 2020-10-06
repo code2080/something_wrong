@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Menu, Dropdown } from 'antd';
+import { Menu } from 'antd';
+import _ from 'lodash';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
@@ -21,7 +22,7 @@ import {
   teCoreCallnames
 } from '../../Constants/teCoreActions.constants';
 
-import { DatasourceInner, DatasourceEmptyInner } from './DatasourceInner';
+import DatasourceInner from './DatasourceInner/DatasourceInner';
 
 const elTypes = {
   EMPTY: 'EMPTY',
@@ -33,7 +34,7 @@ const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value && ownProps.value[0])
     return { labels: null, payload: null };
   const { value, element } = ownProps;
-  const payload = getTECoreAPIPayload(value, element.datasource, state);
+  const payload = getTECoreAPIPayload(value, element.datasource);
   const labels = getLabelsForDatasource(payload, state);
   return {
     payload,
@@ -41,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const Datasource = ({ payload, labels, value, element, teCoreAPI }) => {
+const Datasource = ({ payload, labels, element, teCoreAPI }) => {
   const elType = useMemo(() => {
     if (payload == null) return elTypes.EMPTY;
     const datasourceSplit = (element.datasource || []).split(',');
@@ -72,17 +73,17 @@ const Datasource = ({ payload, labels, value, element, teCoreAPI }) => {
       teCoreAPI
         .getCompatibleFunctionsForElement(element.elementId)
         .filter(action => {
-          const src = element.datasource.split(',')[1];
-          if (src === 'object' && action === 'FILTER_OBJECTS') {
-            return false;
-          }
-          if (src !== 'object' && action === 'SELECT_OBJECT') {
-            return false;
-          }
-          return true;
+          const isObject = element.datasource.split(',')[1] === 'object';
+          const isSingleLabel = Object.keys(labels).length === 1;
+          return !(
+            (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
+            ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
+            (isObject && action === 'FILTER_OBJECTS')
+          ); 
         }),
     [teCoreAPI, element]
   );
+
   // Memoized menu
   const menu = useMemo(
     () => (
@@ -98,27 +99,10 @@ const Datasource = ({ payload, labels, value, element, teCoreAPI }) => {
     [onClickCallback, supportedActions]
   );
 
-  if (elType === elTypes.EMPTY)
-    return (
-      <div className="element__datasource--wrapper">
-        <DatasourceEmptyInner />
-      </div>
-    );
-
-  return (
-    <div className="element__datasource--wrapper">
-      <Dropdown
-        getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        overlay={menu}
-        trigger={['hover']}
-      >
-        <div className="dd-trigger">
-          <DatasourceInner elType={elType} labels={labels} payload={payload} />
-        </div>
-      </Dropdown>
-    </div>
-  );
-};
+  return <div className="element__datasource--wrapper">
+    <DatasourceInner elType={elType} labels={labels} menu={menu} />
+  </div>
+}
 
 Datasource.propTypes = {
   payload: PropTypes.array,
