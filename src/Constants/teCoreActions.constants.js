@@ -152,7 +152,7 @@ export const teCoreActions = {
     })
   },
   SET_RESERVATION_MODE: {
-    callName:teCoreCallnames.SET_FUNCTION_MODE,
+    callName:teCoreCallnames.SET_RESERVATION_MODE,
     mockFunction: (({mode, callback}) => {
       console.log(`Setting reservation mode: ${mode}`);
       callback({res: 'SUCCESS'});
