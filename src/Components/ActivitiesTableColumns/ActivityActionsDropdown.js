@@ -46,7 +46,7 @@ const activityActions = {
     filterFn: activity =>
       !activity.reservationId &&
       activity.activityStatus !== activityStatuses.SCHEDULED,
-    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITY
+    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES
   },
   SELECT: {
     label: 'Select reservation',
@@ -110,10 +110,10 @@ const ActivityActionsDropdown = ({
           );
           break;
         case 'SCHEDULE':
-          scheduleActivity(
-            activity,
+          scheduleActivities(
+            [activity],
             teCoreAPI[activityActions[key].callname],
-            onFinishSchedule
+            onFinishScheduleMultiple
           );
           break;
         case 'DELETE':
