@@ -114,12 +114,12 @@ const FormPage = ({
     ]);
     loadFilter({ filterId: formId });
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
+    form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({res}) => {} });
   }, [formId]);
 
   // Fetch scoped objects
   useEffect(() => {
-    if (form.objectScope)
-      fetchDataForDataSource(form.objectScope);
+    form.objectScope && fetchDataForDataSource(form.objectScope);
   }, [form.objectScope]);
 
 
