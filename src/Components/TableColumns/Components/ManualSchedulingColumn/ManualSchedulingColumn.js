@@ -144,7 +144,7 @@ const ManualSchedulingColumn = ({
 ManualSchedulingColumn.propTypes = {
   rowStatus: PropTypes.string,
   teCoreAPI: PropTypes.object.isRequired,
-  teCorePayload: PropTypes.array,
+  teCorePayload: PropTypes.object,
   toggleRowSchedulingStatus: PropTypes.func.isRequired,
   formInstanceId: PropTypes.string.isRequired,
   sectionId: PropTypes.string.isRequired,
@@ -155,7 +155,11 @@ ManualSchedulingColumn.propTypes = {
 };
 
 ManualSchedulingColumn.defaultProps = {
-  teCorePayload: [],
+  teCorePayload: {
+    typedObjects: [],
+    formType: 'REGULAR',
+    reservationMode: null,
+  },
   rowStatus: manualSchedulingStatuses.NOT_COMPLETED,
 };
 
