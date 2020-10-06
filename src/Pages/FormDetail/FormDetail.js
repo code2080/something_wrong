@@ -113,7 +113,7 @@ const FormPage = ({
       { path: `/forms/${formId}`, label: form.name }
     ]);
     loadFilter({ filterId: formId });
-  }, []);
+    teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
   }, [formId]);
 
   // Fetch scoped objects
