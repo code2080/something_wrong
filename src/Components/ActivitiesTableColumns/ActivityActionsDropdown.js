@@ -1,11 +1,10 @@
 import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dropdown, Menu, Button, Icon } from 'antd';
 
 // HELPERS
 import {
-  scheduleActivity,
   scheduleActivities,
   updateActivityWithSchedulingResult,
   updateActivitiesWithSchedulingResults,
@@ -72,6 +71,10 @@ const ActivityActionsDropdown = ({
   updateActivities,
   teCoreAPI
 }) => {
+  const [formType, reservationMode] = useSelector(state => {
+    const form = state.forms[activity.formId];
+    return [form.formType, form.reservationMode];
+  });
   const onFinishSchedule =
     schedulingReturn => updateActivity(updateActivityWithSchedulingResult(activity, schedulingReturn));
 
@@ -105,13 +108,17 @@ const ActivityActionsDropdown = ({
             activities.filter(
               a => a.activityStatus !== activityStatuses.SCHEDULED
             ),
+            formType,
+            reservationMode,
             teCoreAPI[activityActions[key].callname],
             onFinishScheduleMultiple
-          );
-          break;
-        case 'SCHEDULE':
-          scheduleActivities(
-            [activity],
+            );
+            break;
+            case 'SCHEDULE':
+              scheduleActivities(
+                [activity],
+                formType,
+                reservationMode,
             teCoreAPI[activityActions[key].callname],
             onFinishScheduleMultiple
           );

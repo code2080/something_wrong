@@ -22,7 +22,7 @@ export const teCoreCallnames = {
   REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
-  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
+  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity', // DEPRECATED, use requestScheduleActivity(...[activity]...)
   REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
   REQUEST_HANDLE_OBJECT_REQUEST: 'requestHandleObjectRequest',
   SET_FORM_TYPE: 'setFormType',
@@ -121,7 +121,7 @@ export const teCoreActions = {
   },
   REQUEST_SCHEDULE_ACTIVITIES: {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-    mockFunction: ({ reservations, callback }) =>
+    mockFunction: ({ reservations, formInfo, callback }) =>
       callback(
         reservations.map(
           r => ({
