@@ -34,6 +34,7 @@ import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
+import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -103,39 +104,26 @@ const FormPage = ({
   // Show scoped object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  // Fetch submissions
   useEffect(() => {
     fetchFormSubmissions(formId);
-  }, []);
-
-  // Fetch mappings
-  useEffect(() => {
     fetchMappings(formId);
-  }, []);
-
-  // Fetch activities
-  useEffect(() => {
     fetchActivitiesForForm(formId);
+    setBreadcrumbs([
+      { path: '/forms', label: 'Forms' },
+      { path: `/forms/${formId}`, label: form.name }
+    ]);
+    loadFilter({ filterId: formId });
   }, []);
+  }, [formId]);
 
   // Fetch scoped objects
   useEffect(() => {
     if (form.objectScope)
       fetchDataForDataSource(form.objectScope);
-  }, []);
+  }, [form.objectScope]);
 
-  // Fetch filters
-  useEffect(() => {
-    loadFilter({ filterId: formId });
-  }, [formId]);
 
-  // Set breadcrumbs
-  useEffect(() => {
-    setBreadcrumbs([
-      { path: '/forms', label: 'Forms' },
-      { path: `/forms/${formId}`, label: form.name }
-    ]);
-  }, []);
+
 
   const payload = useMemo(() => {
     const sections = form.sections;
