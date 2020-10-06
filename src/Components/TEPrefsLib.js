@@ -17,6 +17,7 @@ import './TEPrefsLib.scss';
 // Configure store and attach to window object
 const store = configureStore();
 window.tePrefsLibStore = store;
+window.tePrefsScroll = [0, 0];
 
 // Hack to get babel's async runtime generators to work
 Promise.resolve();
@@ -26,6 +27,7 @@ store.dispatch(validateLogin());
 
 const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
+  const prefsRef = useRef(null);
   useEffect(() => {
     window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
   }, []);
