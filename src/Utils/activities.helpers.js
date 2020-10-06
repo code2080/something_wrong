@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // HELPERS
 import { determineSectionTypes } from './determineSectionType.helpers';
 import { getSectionsToUseInActivities } from './sections.helpers';
@@ -9,10 +11,14 @@ import { Activity } from '../Models/Activity.model';
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
+
+// ACTIONS
+import { updateActivities } from '../Redux/Activities/activities.actions';
 
 const determiningSectionInterface = ({
   validation: 'VALID',
@@ -203,3 +209,31 @@ export const createActivitiesFromFormInstance = (formInstance, sections, _activi
     )
   );
 };
+
+/**
+ * Validates that all activities that is scheduled has existing reservation in core,
+ * and sets NOT_SCHEDULED if reservation not found
+ * @param {array} activities Activities to validate
+ * @param {object} teCoreAPI 
+ * @param {object} dispatch 
+ */
+export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => {
+  const reservationIds = activities
+  .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
+  .map(activity => activity.reservationId);
+
+  teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
+    reservationIds, callback: ({ res: { invalidReservations } }) => {
+    const updatedActivities = invalidReservations.map(resId => {
+      const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
+      // add activity status NOT_FOUND or similar?
+      return( {
+        ...activityWithInvalidReservation,
+        schedulingDate: null,
+        activityStatus: activityStatuses.NOT_SCHEDULED,
+        reservationId: null,
+      })
+    })
+    !_.isEmpty(updatedActivities) && updateActivities(updatedActivities)(dispatch);
+  }})
+}

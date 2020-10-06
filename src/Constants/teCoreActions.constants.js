@@ -27,6 +27,7 @@ export const teCoreCallnames = {
   REQUEST_HANDLE_OBJECT_REQUEST: 'requestHandleObjectRequest',
   SET_FORM_TYPE: 'setFormType',
   SET_RESERVATION_MODE: 'setReservationMode',
+  VALIDATE_RESERVATIONS: 'validateReservations',
 };
 
 export const teCoreActions = {
@@ -156,6 +157,13 @@ export const teCoreActions = {
     mockFunction: (({mode, callback}) => {
       console.log(`Setting reservation mode: ${mode}`);
       callback({res: 'SUCCESS'});
+    })
+  },
+  VALIDATE_RESERVATIONS: {
+    callname:teCoreCallnames.VALIDATE_RESERVATIONS,
+    mockFunction: (({reservationIds, callback}) => {
+      console.log('No validation on mock');
+      callback({res: {invalidReservations: []}});
     })
   },
 };
