@@ -81,7 +81,7 @@ export const teCoreActions = {
     callname: teCoreCallnames.POPULATE_SELECTION,
     mockFunction: selection => {
       // selection = {
-      //   typedObject: [...],
+      //   typedObjects: [...],
       //   formType: form.formType,
       //   reservationMode: form.reservationMode,
       // };

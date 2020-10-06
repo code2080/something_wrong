@@ -48,7 +48,7 @@ const mapStateToProps = (state, ownProps) => {
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
   const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
   const teCorePayload = {
-    typedObject: [
+    typedObjects: [
       ...elements.reduce((prev, el) => {
         const value = event[el._id];
         const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
