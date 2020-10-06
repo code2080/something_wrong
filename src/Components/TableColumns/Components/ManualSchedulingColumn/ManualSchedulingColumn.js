@@ -57,6 +57,7 @@ const mapStateToProps = (state, ownProps) => {
       ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
     ],
     formType: form.formType,
+    reservationMode: form.reservationMode,
   };
 
   return {

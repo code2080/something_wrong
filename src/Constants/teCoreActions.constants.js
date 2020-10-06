@@ -83,6 +83,7 @@ export const teCoreActions = {
       // selection = {
       //   typedObject: [...],
       //   formType: form.formType,
+      //   reservationMode: form.reservationMode,
       // };
       console.log('Should populate the selection list with');
       console.log(selection);
