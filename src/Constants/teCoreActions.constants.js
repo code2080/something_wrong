@@ -25,6 +25,8 @@ export const teCoreCallnames = {
   REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
   REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
   REQUEST_HANDLE_OBJECT_REQUEST: 'requestHandleObjectRequest',
+  SET_FORM_TYPE: 'setFormType',
+  SET_RESERVATION_MODE: 'setReservationMode',
 };
 
 export const teCoreActions = {
@@ -78,6 +80,10 @@ export const teCoreActions = {
   POPULATE_SELECTION: {
     callname: teCoreCallnames.POPULATE_SELECTION,
     mockFunction: selection => {
+      // selection = {
+      //   typedObject: [...],
+      //   formType: form.formType,
+      // };
       console.log('Should populate the selection list with');
       console.log(selection);
     }
@@ -137,5 +143,18 @@ export const teCoreActions = {
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT
-  }
+  },
+  SET_FORM_TYPE: {
+    callName:teCoreCallnames.SET_FORM_TYPE,
+    mockFunction: (({formType}) => {
+      console.log(`Setting form type: ${formType}`);
+    })
+  },
+  SET_RESERVATION_MODE: {
+    callName:teCoreCallnames.SET_FUNCTION_MODE,
+    mockFunction: (({mode, callback}) => {
+      console.log(`Setting reservation mode: ${mode}`);
+      callback({res: 'SUCCESS'});
+    })
+  },
 };

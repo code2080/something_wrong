@@ -47,14 +47,17 @@ const mapStateToProps = (state, ownProps) => {
   // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
   const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
-  const teCorePayload = [
-    ...elements.reduce((prev, el) => {
-      const value = event[el._id];
-      const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
-      return [...prev, ...p];
-    }, []),
-    ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
-  ];
+  const teCorePayload = {
+    typedObject: [
+      ...elements.reduce((prev, el) => {
+        const value = event[el._id];
+        const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
+        return [...prev, ...p];
+      }, []),
+      ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
+    ],
+    formType: form.formType,
+  };
 
   return {
     teCorePayload,
