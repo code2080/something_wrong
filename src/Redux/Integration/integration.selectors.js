@@ -76,7 +76,7 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
           ? value[0] && value[0][curr]
             ? value[0][curr]
             : ''
-          : value,
+          : _.pickBy(value, (_, key) => key === curr),
         extId: curr,
       }
     ],
