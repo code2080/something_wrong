@@ -4,11 +4,7 @@ import { createSelector } from 'reselect';
 import { formStatus } from '../../Constants/formStatuses.constants';
 
 const formState = state => state.forms;
-
-export const selectForm = createSelector(
-  formState,
-  forms => formId => forms[formId],
-);
+export const selectForm = formId => state => formState(state)[formId];
 
 export const selectAllForms = createSelector(
   formState,
