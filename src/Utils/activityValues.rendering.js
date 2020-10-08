@@ -223,6 +223,11 @@ export const getRenderPayloadForActivityValue = (
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object
   if (activityValue.type === 'object' && activityValue.value && activityValue.value.extid)
     formatFn = teObject => teObject.extid;
+    
+  // TODO: Workaround for unhandled object request/empty activity value
+  if (activityValue.type === 'object' && !activityValue.value[0] )
+    formatFn = _ => 'No values';
+    
 
   // General case
   if (!renderPayload) {
