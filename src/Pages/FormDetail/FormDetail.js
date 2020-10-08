@@ -24,6 +24,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
 import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
+import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse'
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
@@ -215,6 +216,7 @@ const FormPage = ({
   return (
     <div className="form--wrapper">
       <FormToolbar formId={formId} />
+      <FormInfoCollapse formId={formId} />
       <FormSubmissionFilterBar
         formId={formId}
         togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
