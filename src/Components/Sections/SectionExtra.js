@@ -29,7 +29,6 @@ const SectionExtra = ({ formId, formInstanceId, section, sectionType }) => {
   return (
     <div className="base-section__extra--wrapper">
       <Collapse
-        bordered={false}
         defaultActiveKey={defaultActiveKey}
       >
         {(sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) && (
