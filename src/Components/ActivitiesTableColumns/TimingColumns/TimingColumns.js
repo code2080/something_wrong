@@ -2,10 +2,13 @@ import React from 'react';
 import moment from 'moment';
 
 // CONSTANTS
-import { mappingTimingModes, mappingTimingModeProps } from '../../../Constants/mappingTimingModes.constants';
+import {
+  mappingTimingModes,
+  mappingTimingModeProps
+} from '../../../Constants/mappingTimingModes.constants';
 import BaseActivityCol from '../BaseColumn/BaseActivityCol';
 
-const timingCols = ({
+const timingCols = {
   mode: mapping => ({
     title: 'Timing mode',
     key: 'mode',
@@ -19,7 +22,7 @@ const timingCols = ({
         formatFn={value => mappingTimingModeProps[value].label}
         mapping={mapping}
       />
-    ),
+    )
   }),
   startTimeExact: mapping => ({
     title: 'Start time',
@@ -31,10 +34,10 @@ const timingCols = ({
         type="TIMING"
         prop="startTime"
         propTitle="Start time"
-        formatFn={value => moment.utc(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
         mapping={mapping}
       />
-    ),
+    )
   }),
   endTimeExact: mapping => ({
     title: 'End time',
@@ -46,10 +49,10 @@ const timingCols = ({
         type="TIMING"
         prop="endTime"
         propTitle="End time"
-        formatFn={value => moment.utc(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
         mapping={mapping}
       />
-    ),
+    )
   }),
   startTimeTimeslots: mapping => ({
     title: 'Start after or at:',
@@ -61,10 +64,10 @@ const timingCols = ({
         type="TIMING"
         prop="startTime"
         propTitle="Start after or at"
-        formatFn={value => moment.utc(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
         mapping={mapping}
       />
-    ),
+    )
   }),
   endTimeTimeslots: mapping => ({
     title: 'End before or at:',
@@ -76,10 +79,10 @@ const timingCols = ({
         type="TIMING"
         prop="endTime"
         propTitle="End before or at"
-        formatFn={value => moment.utc(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
         mapping={mapping}
       />
-    ),
+    )
   }),
   length: mapping => ({
     title: 'Length',
@@ -93,11 +96,11 @@ const timingCols = ({
         propTitle="Length"
         mapping={mapping}
       />
-    ),
-  }),
-});
+    )
+  })
+};
 
-export const TimingColumns = ({
+export const TimingColumns = {
   [mappingTimingModes.EXACT]: mapping => [
     // timingCols.mode(mapping),
     timingCols.startTimeExact(mapping),
@@ -108,5 +111,5 @@ export const TimingColumns = ({
     timingCols.startTimeTimeslots(mapping),
     timingCols.endTimeTimeslots(mapping),
     timingCols.length(mapping)
-  ],
-});
+  ]
+};

@@ -5,6 +5,7 @@ import moment from 'moment';
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import ObjectScopeCol from './Components/ObjectScopeCol';
+import IconFormType from '../FormType/IconFormType';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
@@ -21,6 +22,12 @@ export const form = {
     fixedWidth: 100,
     sorter: (a, b) => sortTime(b.createdAt, a.createdAt),
     render: createdDate => moment(createdDate).format('MMM Do YYYY'),
+  TYPE: {
+    title: '',
+    key: 'formType',
+    dataIndex: 'formType',
+    fixedWidth: 35,
+    render: type => <IconFormType type={type}/>
   },
   NAME: {
     title: 'Name',

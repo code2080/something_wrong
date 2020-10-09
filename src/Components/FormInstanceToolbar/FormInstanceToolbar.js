@@ -19,11 +19,13 @@ const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
     formInstance: state.submissions[formId][formInstanceId],
+    formType: state.forms[formId].formType,
   };
 };
 
 const FormInstanceToolbar = ({
   formInstance,
+  formType,
 }) => {
   return (
     <div className="toolbar--wrapper">
@@ -34,6 +36,10 @@ const FormInstanceToolbar = ({
       <div className="toolbar--section-flex">
         <span className="label">Scoped object:</span>
         <ScopedObject objectExtId={formInstance.scopedObject} />
+      </div>
+      <div className="toolbar--section-flex">
+        <span className="label">Form type:</span>
+        <span className="value">{formType.toLowerCase()}</span>
       </div>
       <div className="toolbar--section-flex">
         <span className="label">Acceptance status:</span>
@@ -63,6 +69,7 @@ const FormInstanceToolbar = ({
 
 FormInstanceToolbar.propTypes = {
   formInstance: PropTypes.object.isRequired,
+  formType: PropTypes.string.isRequired,
 };
 
 export default connect(

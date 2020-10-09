@@ -24,6 +24,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
 import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
+import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse'
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
@@ -215,6 +216,7 @@ const FormPage = ({
   return (
     <div className="form--wrapper">
       <FormToolbar formId={formId} />
+      <FormInfoCollapse formId={formId} />
       <FormSubmissionFilterBar
         formId={formId}
         togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
@@ -232,15 +234,8 @@ const FormPage = ({
         dataSource={filteredDatasource}
         rowKey="_id"
         onRow={formInstance => ({
-          onClick: e => {
-            if (
-              e &&
-              e.target &&
-              e.target.className &&
-              e.target.className.length &&
-              e.target.className.indexOf('ant-table-column-has-actions') > -1
-            )
-              history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
+          onClick: () => {
+            formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
           }
         })}
         isLoading={isLoadingSubmissions}

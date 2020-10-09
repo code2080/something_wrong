@@ -87,6 +87,7 @@ const FormList = ({
       <DynamicTable
         columns={[
           tableColumns.form.CREATEDAT,
+          tableColumns.form.TYPE,
           tableColumns.form.NAME,
           tableColumns.form.DESCRIPTION,
           tableColumns.form.OWNER,
