@@ -12,7 +12,7 @@ export const selectAllForms = createSelector(
     (Object.keys(forms) || [])
       .map(key => forms[key])
       .filter(form => form.status !== formStatus.ARCHIVED)
-      .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf())
+      .sort((a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
 )
 
 export const selectTimeslotsForSection = createSelector(
