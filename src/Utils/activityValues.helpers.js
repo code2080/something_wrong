@@ -171,7 +171,7 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
   const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
     const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
     if(objReq) {
-      return objReq.replacementObjectExtId ? [...values, { ...val, value: [objReq.replacementObjectExtId] }] : values;
+      return  [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
     }
     return [...values, val]
   }, []);
