@@ -72,7 +72,7 @@ const FormInfo = ({ formId }) => {
   const form = useSelector(selectForm(formId));
   const formInfoFields = formToFieldInfo(form);
   const formInfoFieldItems = formInfoFields.map((fieldInfo) => {
-    return fieldInfo.value && <Descriptions.Item label={fieldInfo.label} key={fieldInfo.label} >{fieldInfo.value}</Descriptions.Item>
+    return fieldInfo.value && <Descriptions.Item label={`${fieldInfo.label}:`} key={fieldInfo.label} >{fieldInfo.value}</Descriptions.Item>
   });
   return (
     <div className={'formInfo--wrapper'}>
