@@ -232,15 +232,8 @@ const FormPage = ({
         dataSource={filteredDatasource}
         rowKey="_id"
         onRow={formInstance => ({
-          onClick: e => {
-            if (
-              e &&
-              e.target &&
-              e.target.className &&
-              e.target.className.length &&
-              e.target.className.indexOf('ant-table-column-has-actions') > -1
-            )
-              history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
+          onClick: () => {
+            formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
           }
         })}
         isLoading={isLoadingSubmissions}
