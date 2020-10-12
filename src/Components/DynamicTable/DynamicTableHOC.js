@@ -149,6 +149,7 @@ const DynamicTableHOC = ({
             expandedRowRender={expandedRowRender || null}
             pagination={pagination}
             loading={isLoading}
+            sortDirections={['descend', 'ascend']}
             onRow={onRow || null}
           />
         </React.Fragment>
