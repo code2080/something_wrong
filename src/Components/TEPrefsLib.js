@@ -36,6 +36,7 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   useEffect(() => {
     const { x, y } = prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
+    window.tePrefsLibStore.getState().globalUI.spotlightPositionInfo && console.log(`x: ${window.tePrefsOffset[0]}, y: ${window.tePrefsOffset[1]}: Offset in TePrefsLib div`);
   }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
 
   return (
