@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
@@ -18,6 +18,7 @@ import './TEPrefsLib.scss';
 const store = configureStore();
 window.tePrefsLibStore = store;
 window.tePrefsScroll = [0, 0];
+window.tePrefsOffset = [0, 0];
 
 // Hack to get babel's async runtime generators to work
 Promise.resolve();
@@ -32,10 +33,20 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
     window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
   }, []);
 
+  useEffect(() => {
+    const { x, y } = prefsRef.current && prefsRef.current.getBoundingClientRect();
+    window.tePrefsOffset = [x, y];
+  }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
+
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI}>
-        <div className='te-prefs-lib' id="te-prefs-lib" ref={prefsRef} onScroll={() => window.tePrefsScroll = (prefsRef && prefsRef.current) && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]}>
+        <div
+          className='te-prefs-lib'
+          id="te-prefs-lib"
+          ref={prefsRef}
+          onScroll={() => window.tePrefsScroll = prefsRef.current && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]}
+        >
           <TEPrefsLibRouter />
         </div>
       </TECoreAPIProvider>

@@ -22,7 +22,6 @@ export const setExternalAction = (spotlightRef) => {
   const el = spotlightRef && spotlightRef.current;
   const spotlightPositionInfo = el ? {
     boundingRect: spotlightRef.current.getBoundingClientRect(),
-    scroll: window.tePrefsScroll,
   } : null;
   return ({
     type: SET_EXTERNAL_ACTION,
