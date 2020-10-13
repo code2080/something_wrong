@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect, useSelector } from 'react-redux';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 // ACTIONS
@@ -13,6 +14,7 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse';
+import { Tabs } from 'antd';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
@@ -23,13 +25,9 @@ import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/Obj
 
 // STYLES
 import './FormInstanceDetail.scss';
-import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
-// CONSTANTS
-const tabs = {
-  OVERVIEW: 'OVERVIEW',
-  ACTIVITIES: 'ACTIVITIES',
-};
+// HOOKS
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } } } = ownProps;
@@ -79,11 +77,28 @@ const FormInstancePage = ({
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload({sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
+  const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
-  const [activeView, setActiveView] = useState(tabs.OVERVIEW);
+  const baseSections = sections.map(section => <BaseSection section={section} key={section._id} />);
+  const tabPanes = [
+    <Tabs.TabPane tab='Overview' key='OVERVIEW'>
+      {baseSections}
+    </Tabs.TabPane>,
+    !_.isEmpty(objectRequests) &&
+    <Tabs.TabPane tab='Object requests' key='OBJECT_REQUESTS' >
+      {`There are ${objectRequests.length} object requests on this submission!`}
+    </Tabs.TabPane>,
+    hasAssistedSchedulingPermissions() &&
+    <Tabs.TabPane tab='Activities' key='ACTIVITIES'>
+      <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+    </Tabs.TabPane>,
+  ].filter(_.identity);
+
+  const renderTabBar = (props, DefaultTabBar) => (
+    <DefaultTabBar {...props} className={`${props.className} form-instance--tabs`} />
+  );
 
   return (
     <div className="form-instance--wrapper">
@@ -92,25 +107,12 @@ const FormInstancePage = ({
         formInstanceId={formInstance._id}
       />
       <FormInfoCollapse formId={formInstance.formId} />
-      {hasAssistedSchedulingPermissions() && (
-        <div className="form-instance--tabs">
-          <div
-            className={`form-instance--tabs__tab ${activeView === tabs.OVERVIEW ? 'is-active' : ''}`}
-            onClick={() => setActiveView(tabs.OVERVIEW)}
-          >
-            Overview
-          </div>
-          <div
-            className={`form-instance--tabs__tab ${activeView === tabs.ACTIVITIES ? 'is-active' : ''}`}
-            onClick={() => setActiveView(tabs.ACTIVITIES)}
-          >
-            Activities
-          </div>
-        </div>
-      )}
-      {activeView === tabs.OVERVIEW
-        ? (sections || []).map(section => <BaseSection section={section} key={section._id} />)
-        : <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+      {
+        tabPanes.length > 1
+          ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar}>
+            {tabPanes}
+          </Tabs>
+          : baseSections
       }
     </div>
   );
