@@ -119,7 +119,7 @@ const extractPayloadFromElements = (elements) => elements.reduce((elementsPayloa
 const getExtIdPairsForActivity = values => {
   // Each value contains the type of the values within, and the values (extIds) themselves
   const typeExtidPairs = values.reduce((typeExtidPairs, value) =>
-    value.value[0] ? [
+    !_.isEmpty(value.value) ? [
       ...typeExtidPairs,
       [
         value.type === 'object' ? 'types' : `${value.type}s`,
