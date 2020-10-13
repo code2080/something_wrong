@@ -23,8 +23,8 @@ export const formSubmission = {
   },
   SUBMISSION_DATE: {
     title: 'Submitted',
-    key: 'updatedAt',
-    dataIndex: 'updatedAt',
+    key: 'createdAt',
+    dataIndex: 'createdAt',
     render: val => moment(val).format('YYYY-MM-DD'),
     sorter: (a, b) =>
       moment(a.updatedAt).valueOf() - moment(b.updatedAt).valueOf()
