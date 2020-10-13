@@ -19,7 +19,7 @@ export const formSubmission = {
     title: 'Submitter',
     key: 'submitter',
     dataIndex: 'submitter',
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => a.submitter.localeCompare(b.submitter)
   },
   SUBMISSION_DATE: {
     title: 'Submitted',
