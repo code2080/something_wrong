@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Menu, Modal } from 'antd';
+import { Menu, Modal, Descriptions } from 'antd';
 import _ from 'lodash';
 
 // SELECTORS
@@ -31,11 +31,12 @@ const ObjectRequestLabel = ({ request }) => {
   const firstFieldLabel = request.objectRequest[labelField] || _.head(Object.values(request.objectRequest));
   return extIdLabel || firstFieldLabel || 'N/A';
 }
-const ObjectRequestType = ({ type }) => <span className={`requestType ${type === RequestType.MISSING_OBJECT && 'missingObject'}`} >{objectRequestTypeToText[type] || 'N/A'}</span>;
+const ObjectRequestType = ({ type }) => <span className={`requestType`} style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }} >{objectRequestTypeToText[type] || 'N/A'}</span>;
 
 export const ObjectRequestModal = ({onClose, visible, request}) => {
   return <Modal
-    title={`${request.type} request`}
+    className='object_request'
+    title={'Object request details'}
     visible={visible}
     getContainer={() => document.getElementById('te-prefs-lib')}
     closable={true}
@@ -44,7 +45,12 @@ export const ObjectRequestModal = ({onClose, visible, request}) => {
     onCancel={onClose}
     onOk={onClose}
   >
-    <h1>Hello world!</h1>
+    Type: <ObjectRequestType type={request.type} /> <br />
+    Status: {request.status || RequestStatus.PENDING} <ObjectRequestStatusIcon status={request.status}/><br />
+    Fields: 
+    <Descriptions size='small' columns={1} bordered >
+    {Object.entries(request.objectRequest || {}).map(([field, value]) => <Descriptions.Item label={`${field}:`} key={field}>{value}</Descriptions.Item>)}
+    </Descriptions>
   </Modal>
 }
 
