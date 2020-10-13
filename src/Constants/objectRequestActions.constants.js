@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from 'antd';
-import { requestStatusToIcon, RequestStatus, RequestType } from './ObjectRequest.constants';
+import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
 
@@ -34,7 +34,7 @@ export const objectRequestActionToStatus = {
 }
 
 export const objectRequestActionLabels = {
-  [objectRequestActions.ACCEPT]: 'Accept',
+  [objectRequestActions.ACCEPT]: 'Accept...',
   [objectRequestActions.DECLINE]: 'Decline',
   [objectRequestActions.REPLACE]: 'Replace',
   [objectRequestActions.REVERT]: 'Revert',
