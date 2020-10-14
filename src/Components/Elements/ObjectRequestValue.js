@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Menu, Modal, Descriptions } from 'antd';
+import { Menu, Modal, Table } from 'antd';
 import _ from 'lodash';
 
 // SELECTORS
@@ -12,7 +12,8 @@ import {
   objectRequestTypeToText,
   requestStatusToIcon,
   RequestStatus,
-  RequestType
+  RequestType,
+  objectRequestTypeToPlainText,
 } from '../../Constants/objectRequest.constants';
 
 import {
@@ -33,7 +34,15 @@ const ObjectRequestLabel = ({ request }) => {
 }
 const ObjectRequestType = ({ type }) => <span className={`requestType`} style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }} >{objectRequestTypeToText[type] || 'N/A'}</span>;
 
+const capitalizeString = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export const ObjectRequestModal = ({onClose, visible, request}) => {
+  const fieldDatasource = Object.entries(request.objectRequest || {}).map(([field, value]) => ({
+    key: field,
+    field: field,
+    value: value,
+  }));
+
   return <Modal
     className='object_request'
     title={'Object request details'}
@@ -44,20 +53,22 @@ export const ObjectRequestModal = ({onClose, visible, request}) => {
     maskClosable={true}
     onCancel={onClose}
     onOk={onClose}
+    width={320}
   >
-    Type: <ObjectRequestType type={request.type} /> <br />
-    Status: {request.status || RequestStatus.PENDING} <ObjectRequestStatusIcon status={request.status}/><br />
-    Fields: 
-    <Descriptions size='small' columns={1} bordered >
-    {Object.entries(request.objectRequest || {}).map(([field, value]) => <Descriptions.Item label={`${field}:`} key={field}>{value}</Descriptions.Item>)}
-    </Descriptions>
+    <b>Type:</b> <ObjectRequestType type={request.type} /> {objectRequestTypeToPlainText[request.type]}<br />
+    <b>Status:</b> <ObjectRequestStatusIcon status={request.status} />{capitalizeString(request.status || RequestStatus.PENDING)}<br />
+    <br />
+    <Table bordered dataSource={fieldDatasource} pagination={{ hideOnSinglePage: true }}>
+      <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
+      <Table.Column title='Value' dataIndex='value' key='value' />
+    </Table>
   </Modal>
-}
+};
 
 ObjectRequestModal.defaultProps = {
   visible: false,
   request: null,
-}
+};
 
 export const ObjectRequestValue = ({ request }) => (
   <div className={'object_request'}>
