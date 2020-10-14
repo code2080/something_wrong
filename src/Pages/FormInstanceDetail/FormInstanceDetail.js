@@ -13,6 +13,7 @@ import BaseSection from '../../Components/Sections/BaseSection';
 import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
+import ObjectRequestOverview from './ObjectRequestOverview';
 import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse';
 import { Tabs } from 'antd';
 
@@ -88,7 +89,7 @@ const FormInstancePage = ({
     </Tabs.TabPane>,
     !_.isEmpty(objectRequests) &&
     <Tabs.TabPane tab='Object requests' key='OBJECT_REQUESTS' >
-      {`There are ${objectRequests.length} object requests on this submission!`}
+      <ObjectRequestOverview requests={objectRequests} />
     </Tabs.TabPane>,
     hasAssistedSchedulingPermissions() &&
     <Tabs.TabPane tab='Activities' key='ACTIVITIES'>
