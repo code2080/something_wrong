@@ -224,16 +224,10 @@ export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => 
 
   teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
     reservationIds, callback: ({ res: { invalidReservations } }) => {
-    const updatedActivities = invalidReservations.map(resId => {
-      const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
-      // add activity status NOT_FOUND or similar?
-      return( {
-        ...activityWithInvalidReservation,
-        schedulingDate: null,
-        activityStatus: activityStatuses.NOT_SCHEDULED,
-        reservationId: null,
+      const invalidActivityIds = invalidReservations.map(resId => {
+        const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
+        return activityWithInvalidReservation._id;
       })
-    })
-    !_.isEmpty(updatedActivities) && updateActivities(updatedActivities)(dispatch);
+      console.log('Found these invalid activities:', invalidActivityIds);
   }})
 }
