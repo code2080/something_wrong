@@ -22,20 +22,32 @@ const BaseActivityColOuter = ({
 }) => {
   const activityValues = getActivityValues(activity, type, prop);
 
+  const activityValueCols = activityValues && activityValues.length && (activityValues || []).reduce((activityCols, activityValue, idx) => (
+    activityValue.value[0] ? [...activityCols, <BaseActivityCol
+      key={`av-${idx}`}
+      activityValue={activityValue}
+      activity={activity}
+      type={type}
+      prop={prop}
+      propTitle={propTitle}
+      formatFn={formatFn}
+      mapping={mapping}
+    />] : activityCols
+  ), []);
+
   return (
     <div className="base-activity-col--outer--wrapper">
-      {activityValues && activityValues.length && (activityValues || []).map((activityValue, idx) => (
-        <BaseActivityCol
-          key={`av-${idx}`}
-          activityValue={activityValue}
+      {(activityValueCols.length
+        ? activityValueCols
+        : (activityValues && activityValues.length && <BaseActivityCol
+          activityValue={activityValues[0]}
           activity={activity}
           type={type}
           prop={prop}
           propTitle={propTitle}
           formatFn={formatFn}
           mapping={mapping}
-        />
-      )) || 'No values'}
+        />)) || 'No values'}
     </div>
   );
 };
