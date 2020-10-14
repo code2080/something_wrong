@@ -42,7 +42,8 @@ export const ObjectRequestModal = ({onClose, visible, request}) => {
     field: field,
     value: value,
   }));
-
+  const objectTypeLabel = useSelector(state => selectExtIdLabel(state)('types', request.datasource));
+  const objectLabel = useSelector(state => selectExtIdLabel(state)('objects', request.objectExtId));
   return <Modal
     className='object_request'
     title={'Object request details'}
@@ -55,9 +56,12 @@ export const ObjectRequestModal = ({onClose, visible, request}) => {
     onOk={onClose}
     width={320}
   >
-    <b>Type:</b> <ObjectRequestType type={request.type} /> {objectRequestTypeToPlainText[request.type]}<br />
+    <b>Reguest type:</b> <ObjectRequestType type={request.type} /> {objectRequestTypeToPlainText[request.type]}<br />
     <b>Status:</b> <ObjectRequestStatusIcon status={request.status} />{capitalizeString(request.status || RequestStatus.PENDING)}<br />
-    <br />
+    <b>Object type:</b> {objectTypeLabel}
+    {!_.isEmpty(objectLabel) && <React.Fragment><b>Object:</b> objectLabel<br /></React.Fragment>}
+    <br /><br />
+    <b>Request content:</b><br />
     <Table bordered dataSource={fieldDatasource} pagination={{ hideOnSinglePage: true }}>
       <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
       <Table.Column title='Value' dataIndex='value' key='value' />
