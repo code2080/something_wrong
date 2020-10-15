@@ -84,14 +84,14 @@ const mapActionsToProps = {
   loadFilter,
 };
 
-const traversedClassList = (element, stopAtClassName = null) => {
+const traversedClassList = element => {
   if(!element) return [];
   let currentNode = element;
   const classes = [];
   do {
     classes.push(...currentNode.classList);
     currentNode = currentNode.parentNode;
-  } while ((currentNode && currentNode.parentNode) || !(!_.isEmpty(stopAtClassName) && currentNode.classList.includes(stopAtClassName)));
+  } while (currentNode.parentNode);
   return classes;
 }
 
