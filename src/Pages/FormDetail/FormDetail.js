@@ -84,6 +84,17 @@ const mapActionsToProps = {
   loadFilter,
 };
 
+const traversedClassList = (element, stopAtClassName = null) => {
+  if(!element) return [];
+  let currentNode = element;
+  const classes = [];
+  do {
+    classes.push(...currentNode.classList);
+    currentNode = currentNode.parentNode;
+  } while ((currentNode && currentNode.parentNode) || !(!_.isEmpty(stopAtClassName) && currentNode.classList.includes(stopAtClassName)));
+  return classes;
+}
+
 const FormPage = ({
   userId,
   formId,
@@ -234,8 +245,8 @@ const FormPage = ({
         dataSource={filteredDatasource}
         rowKey="_id"
         onRow={formInstance => ({
-          onClick: () => {
-            formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
+          onClick: (e) => {
+            traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
           }
         })}
         isLoading={isLoadingSubmissions}
