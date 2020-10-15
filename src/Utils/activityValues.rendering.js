@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 // VALIDATION HELPERS
 import { validateTimeslotTimingMode, validateFilterValue, validateGeneralValue } from './activityValues.validation';
@@ -225,7 +226,7 @@ export const getRenderPayloadForActivityValue = (
     formatFn = teObject => teObject.extid;
     
   // TODO: Workaround for unhandled object request/empty activity value
-  if (activityValue.type === 'object' && !activityValue.value[0] )
+  if (activityValue.type === 'object' && _.isEmpty(activityValue.value) )
     formatFn = _ => 'No values';
     
 
