@@ -80,10 +80,10 @@ const FormInfo = ({ formId }) => {
     <div className={'formInfo--wrapper'}>
       <Table
         dataSource={formInfoFieldData}
-        title={() => form.name}
         bordered
         size={'small'}
         pagination={{ hideOnSinglePage: true }}
+        showHeader={false}
       >
         <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
         <Table.Column title='Value' dataIndex='value' key='value' />

@@ -24,7 +24,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
 import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
-import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse'
+import FormInfo from '../../Components/Sections/FormInfo';
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
@@ -114,6 +114,7 @@ const FormPage = ({
 }) => {
   // Show scoped object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showFormInfo, setShowFormInfo] = useState(false);
 
   // Fetch submissions
   useEffect(() => {
@@ -167,7 +168,7 @@ const FormPage = ({
         ...scopedObjectExtids
       ],
     }
-}, [submissions, form]);
+  }, [submissions, form]);
 
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(teCoreAPI, payload);
@@ -182,7 +183,9 @@ const FormPage = ({
         ..._elementTableData[submission._id],
       };
     }),
-  [submissions, _elementTableData]);
+    [submissions, _elementTableData]);
+
+  const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   const columns = useMemo(() => [
     tableColumns.formSubmission.ASSIGNMENT,
@@ -226,8 +229,8 @@ const FormPage = ({
   }, [userId, filters, _dataSource, columns]);
   return (
     <div className="form--wrapper">
-      <FormToolbar formId={formId} />
-      <FormInfoCollapse formId={formId} />
+      <FormToolbar formId={formId} onClickMore={handleClickMore} />
+      {showFormInfo && <FormInfo formId={formId} />}
       <FormSubmissionFilterBar
         formId={formId}
         togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
