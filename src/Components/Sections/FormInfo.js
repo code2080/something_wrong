@@ -1,7 +1,8 @@
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { Descriptions } from 'antd';
+import { Table } from 'antd';
 
 import './FormInfo.scss';
 
@@ -71,14 +72,22 @@ const formToFieldInfo = form => {
 const FormInfo = ({ formId }) => {
   const form = useSelector(selectForm(formId));
   const formInfoFields = formToFieldInfo(form);
-  const formInfoFieldItems = formInfoFields.map((fieldInfo) => {
-    return fieldInfo.value && <Descriptions.Item label={`${fieldInfo.label}:`} key={fieldInfo.label} >{fieldInfo.value}</Descriptions.Item>
-  });
+  const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
+    !_.isEmpty(value) ? [...rows, { key: field, field: field, value }] : rows
+    , []);
+
   return (
     <div className={'formInfo--wrapper'}>
-      <Descriptions title={form.name} bordered size={'small'} >
-        {formInfoFieldItems}
-      </Descriptions>
+      <Table
+        dataSource={formInfoFieldData}
+        title={() => form.name}
+        bordered
+        size={'small'}
+        pagination={{ hideOnSinglePage: true }}
+      >
+        <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
+        <Table.Column title='Value' dataIndex='value' key='value' />
+      </Table>
     </div>
   );
 };
