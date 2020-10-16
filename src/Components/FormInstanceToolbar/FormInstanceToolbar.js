@@ -26,6 +26,7 @@ const mapStateToProps = (state, ownProps) => {
 const FormInstanceToolbar = ({
   formInstance,
   formType,
+  onClickMore,
 }) => {
   return (
     <div className="toolbar--wrapper">
@@ -63,6 +64,9 @@ const FormInstanceToolbar = ({
           </StatusLabel>
         ) : 'N/A' }
       </div>
+      <div className="toolbar--section-flex">
+        <a onClick={() => onClickMore()}>Form info...</a>
+      </div>
     </div>
   );
 };
@@ -70,6 +74,7 @@ const FormInstanceToolbar = ({
 FormInstanceToolbar.propTypes = {
   formInstance: PropTypes.object.isRequired,
   formType: PropTypes.string.isRequired,
+  onClickMore: PropTypes.func.isRequired,
 };
 
 export default connect(

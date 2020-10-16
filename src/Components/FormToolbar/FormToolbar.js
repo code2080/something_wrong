@@ -33,7 +33,7 @@ const FormToolbar = ({ form, onClickMore }) => (
         <span className="value">{form.formType.toLowerCase()}</span>
       </div>
       <div className="toolbar--section-flex">
-        <a onClick={() => onClickMore()}>More info...</a>
+        <a onClick={() => onClickMore()}>Form info...</a>
       </div>
 
     </div>
