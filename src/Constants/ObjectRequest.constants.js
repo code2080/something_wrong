@@ -24,5 +24,11 @@ export const RequestType = {
 export const objectRequestTypeToText = {
   [RequestType.NEW_OBJECT]: '(NEW)',
   [RequestType.EDIT_OBJECT]: '(EDITED)',
-  [RequestType.MISSING_OBJECT]: '(MISSING)'
+  [RequestType.MISSING_OBJECT]: '(MISSING)',
+};
+
+export const objectRequestTypeToPlainText = {
+  [RequestType.NEW_OBJECT]: 'New',
+  [RequestType.EDIT_OBJECT]: 'Edit',
+  [RequestType.MISSING_OBJECT]: 'Missing',
 };

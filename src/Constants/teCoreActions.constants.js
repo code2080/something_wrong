@@ -22,9 +22,12 @@ export const teCoreCallnames = {
   REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
   REQUEST_GET_FILTER_FROM_FILTER: 'requestGetFilterFromFilter',
   REQUEST_REPLACE_OBJECT: 'requestReplaceObject',
-  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity',
+  REQUEST_SCHEDULE_ACTIVITY: 'requestScheduleActivity', // DEPRECATED, use requestScheduleActivity(...[activity]...)
   REQUEST_SCHEDULE_ACTIVITIES: 'requestScheduleActivities',
   REQUEST_HANDLE_OBJECT_REQUEST: 'requestHandleObjectRequest',
+  SET_FORM_TYPE: 'setFormType',
+  SET_RESERVATION_MODE: 'setReservationMode',
+  VALIDATE_RESERVATIONS: 'validateReservations',
 };
 
 export const teCoreActions = {
@@ -78,6 +81,11 @@ export const teCoreActions = {
   POPULATE_SELECTION: {
     callname: teCoreCallnames.POPULATE_SELECTION,
     mockFunction: selection => {
+      // selection = {
+      //   typedObjects: [...],
+      //   formType: form.formType,
+      //   reservationMode: form.reservationMode,
+      // };
       console.log('Should populate the selection list with');
       console.log(selection);
     }
@@ -114,7 +122,7 @@ export const teCoreActions = {
   },
   REQUEST_SCHEDULE_ACTIVITIES: {
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-    mockFunction: ({ reservations, callback }) =>
+    mockFunction: ({ reservations, formInfo, callback }) =>
       callback(
         reservations.map(
           r => ({
@@ -137,5 +145,25 @@ export const teCoreActions = {
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT
-  }
+  },
+  SET_FORM_TYPE: {
+    callname:teCoreCallnames.SET_FORM_TYPE,
+    mockFunction: (({formType}) => {
+      // Setting correct function in core
+    })
+  },
+  SET_RESERVATION_MODE: {
+    callname:teCoreCallnames.SET_RESERVATION_MODE,
+    mockFunction: (({mode, callback}) => {
+      console.log(`Setting reservation mode: ${mode}`);
+      callback({res: 'SUCCESS'});
+    })
+  },
+  VALIDATE_RESERVATIONS: {
+    callname:teCoreCallnames.VALIDATE_RESERVATIONS,
+    mockFunction: (({reservationIds, callback}) => {
+      console.log('No validation on mock');
+      callback({res: {invalidReservations: []}});
+    })
+  },
 };

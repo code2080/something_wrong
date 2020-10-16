@@ -3,8 +3,7 @@ import { getEnvParams } from '../../configs';
 
 import {
   SET_BREADCRUMBS,
-  BEGIN_EXTERNAL_ACTION,
-  END_EXTERNAL_ACTION,
+  SET_EXTERNAL_ACTION,
   GET_VIEW_REQUEST,
   GET_VIEW_SUCCESS,
   GET_VIEW_FAILURE,
@@ -19,14 +18,16 @@ export const setBreadcrumbs = fragments => ({
   payload: { fragments },
 });
 
-export const beginExternalAction = (activityId, prop) => ({
-  type: BEGIN_EXTERNAL_ACTION,
-  payload: { activityId, prop },
-});
-
-export const endExternalAction = () => ({
-  type: END_EXTERNAL_ACTION
-});
+export const setExternalAction = (spotlightRef) => {
+  const el = spotlightRef && spotlightRef.current;
+  const spotlightPositionInfo = el ? {
+    boundingRect: spotlightRef.current.getBoundingClientRect(),
+  } : null;
+  return ({
+    type: SET_EXTERNAL_ACTION,
+    payload: { spotlightPositionInfo }
+  });
+};
 
 export const initView = (datasourceId, columns) => ({ type: INIT_VIEW, payload: { datasourceId, columns } });
 

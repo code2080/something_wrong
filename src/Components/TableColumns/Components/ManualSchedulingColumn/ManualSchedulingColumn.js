@@ -47,14 +47,18 @@ const mapStateToProps = (state, ownProps) => {
   // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
   const elements = elementIds.map(eId => pickElement(eId, sectionId, state.forms[formId].sections));
-  const teCorePayload = [
-    ...elements.reduce((prev, el) => {
-      const value = event[el._id];
-      const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
-      return [...prev, ...p];
-    }, []),
-    ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
-  ];
+  const teCorePayload = {
+    typedObjects: [
+      ...elements.reduce((prev, el) => {
+        const value = event[el._id];
+        const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
+        return [...prev, ...p];
+      }, []),
+      ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
+    ],
+    formType: form.formType,
+    reservationMode: form.reservationMode,
+  };
 
   return {
     teCorePayload,
@@ -86,7 +90,7 @@ const ManualSchedulingColumn = ({
   const [showInvertedState, setShowInvertedState] = useState(false);
 
   const onSelectAllCallback = useCallback(() => {
-    if (teCorePayload && Array.isArray(teCorePayload))
+    if (teCorePayload)
       teCoreAPI.populateSelection(teCorePayload);
   }, [teCorePayload]);
 
@@ -140,7 +144,7 @@ const ManualSchedulingColumn = ({
 ManualSchedulingColumn.propTypes = {
   rowStatus: PropTypes.string,
   teCoreAPI: PropTypes.object.isRequired,
-  teCorePayload: PropTypes.array,
+  teCorePayload: PropTypes.object,
   toggleRowSchedulingStatus: PropTypes.func.isRequired,
   formInstanceId: PropTypes.string.isRequired,
   sectionId: PropTypes.string.isRequired,
@@ -151,7 +155,11 @@ ManualSchedulingColumn.propTypes = {
 };
 
 ManualSchedulingColumn.defaultProps = {
-  teCorePayload: [],
+  teCorePayload: {
+    typedObjects: [],
+    formType: 'REGULAR',
+    reservationMode: null,
+  },
   rowStatus: manualSchedulingStatuses.NOT_COMPLETED,
 };
 

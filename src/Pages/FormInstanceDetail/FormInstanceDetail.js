@@ -12,6 +12,7 @@ import BaseSection from '../../Components/Sections/BaseSection';
 import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
+import SpotlightMask from '../../Components/SpotlightMask';
 import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse';
 
 // HELPERS
@@ -25,7 +26,6 @@ import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/Obj
 import './FormInstanceDetail.scss';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
-// CONSTANTS
 const tabs = {
   OVERVIEW: 'OVERVIEW',
   ACTIVITIES: 'ACTIVITIES',
@@ -58,6 +58,7 @@ const FormInstancePage = ({
   activities,
 }) => {
   const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
 
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -79,7 +80,7 @@ const FormInstancePage = ({
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload({sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
+  const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
@@ -87,6 +88,7 @@ const FormInstancePage = ({
 
   return (
     <div className="form-instance--wrapper">
+      <SpotlightMask spotlightPositionInfo={externalActionRef} />
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
