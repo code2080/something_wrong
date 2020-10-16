@@ -26,14 +26,14 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
         <div className="field--wrapper">
           <div
             className="chevron"
-            onClick={() => setVisIdx(Math.max(visIdx - 1, 0))}
+            onClick={(e) => {e.stopPropagation(); setVisIdx(Math.max(visIdx - 1, 0))}}
           >
             <Icon type="caret-left" />
           </div>
           <div className="counter">{`${visIdx + 1}/${labelArr.length}`}</div>
           <div
             className="chevron"
-            onClick={() => setVisIdx(Math.min(visIdx + 1, labelArr.length - 1))}
+            onClick={(e) => {e.stopPropagation(); setVisIdx(Math.min(visIdx + 1, labelArr.length - 1))}}
           >
             <Icon type="caret-right" />
           </div>
