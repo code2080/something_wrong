@@ -6,7 +6,7 @@ import { DatePicker } from 'antd';
 const DateTimeEdit = ({ value, setValue, onFinish }) => (
   <DatePicker
     getCalendarContainer={() => document.getElementById('te-prefs-lib')}
-    value={value != null ? moment.utc(value) : null}
+    value={value != null ? moment(value) : null}
     showTime
     size="small"
     allowClear={false}
@@ -18,11 +18,11 @@ const DateTimeEdit = ({ value, setValue, onFinish }) => (
 DateTimeEdit.propTypes = {
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
-  onFinish: PropTypes.func.isRequired,
+  onFinish: PropTypes.func.isRequired
 };
 
 DateTimeEdit.defaultProps = {
-  value: '',
+  value: ''
 };
 
 export default DateTimeEdit;

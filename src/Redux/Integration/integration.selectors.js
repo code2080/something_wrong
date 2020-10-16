@@ -76,7 +76,7 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
           ? value[0] && value[0][curr]
             ? value[0][curr]
             : ''
-          : value,
+          : _.pickBy(value, (_, key) => key === curr),
         extId: curr,
       }
     ],
@@ -119,14 +119,14 @@ const extractPayloadFromElements = (elements) => elements.reduce((elementsPayloa
 const getExtIdPairsForActivity = values => {
   // Each value contains the type of the values within, and the values (extIds) themselves
   const typeExtidPairs = values.reduce((typeExtidPairs, value) =>
-    [
+    !_.isEmpty(value.value) ? [
       ...typeExtidPairs,
       [
         value.type === 'object' ? 'types' : `${value.type}s`,
         value.value,
         value.extId
       ]
-    ]
+    ] : typeExtidPairs
     , []);
   return typeExtidPairs;
 };

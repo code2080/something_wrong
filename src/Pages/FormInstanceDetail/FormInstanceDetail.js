@@ -13,6 +13,7 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 import SpotlightMask from '../../Components/SpotlightMask';
+import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
@@ -92,6 +93,7 @@ const FormInstancePage = ({
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
+      <FormInfoCollapse formId={formInstance.formId} />
       {hasAssistedSchedulingPermissions() && (
         <div className="form-instance--tabs">
           <div

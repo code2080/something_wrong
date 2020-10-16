@@ -69,6 +69,7 @@ const MappingRow = ({
           size="small"
           type="link"
           onClick={addElementProp}
+          disabled={disabled}
         >
           + Add element
         </Button>

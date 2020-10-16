@@ -22,11 +22,6 @@
     .object_request {
       .requestType {
         margin-left: 0.2rem;
-        color: green;
-        
-        &.missingObject {
-          color: red;
-        }
       }
     }
 

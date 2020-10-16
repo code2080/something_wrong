@@ -54,7 +54,7 @@ const getActivityValue = (activityValue, activity, type, prop) => {
 const BaseActivityCol = ({
   activityValue,
   activity,
-  prop,
+  prop: typeExtId,
   type,
   propTitle,
   formatFn,
@@ -68,8 +68,7 @@ const BaseActivityCol = ({
   const spotlightedElRef = useRef(null);
 
   // Activity value
-  const _activityValue = getActivityValue(activityValue, activity, type, prop);
-
+  const _activityValue = getActivityValue(activityValue, activity, type, typeExtId);
   // State var to hold the component's mode
   const [viewProps, setViewProps] = useState({
     view: activityViews.VALUE_VIEW,
@@ -253,7 +252,7 @@ const BaseActivityCol = ({
           formatFn={formatFn}
           mappingProps={mappingProps}
           propTitle={propTitle}
-          prop={prop}
+          prop={typeExtId}
           onClose={() => setViewProps(resetView())}
           visible={viewProps.view === activityViews.MODAL_EDIT}
           action={viewProps.action}
@@ -266,7 +265,7 @@ const BaseActivityCol = ({
 BaseActivityCol.propTypes = {
   activityValue: PropTypes.object,
   activity: PropTypes.object.isRequired,
-  prop: PropTypes.string.isRequired,
+  typeExtId: PropTypes.string.isRequired,
   type: PropTypes.string,
   propTitle: PropTypes.string,
   formatFn: PropTypes.func,

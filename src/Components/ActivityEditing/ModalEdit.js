@@ -14,7 +14,7 @@ import { activityActions } from '../../Constants/activityActions.constants';
 
 const componentMapping = {
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: TimeslotToExactTime,
-  [activityActions.SHOW_INFO]: ShowInfo,
+  [activityActions.SHOW_INFO]: ShowInfo
 };
 
 const ModalEdit = ({
@@ -31,9 +31,13 @@ const ModalEdit = ({
   const ModalComponent = componentMapping[action];
   if (!ModalComponent || ModalComponent == null) return null;
 
+  const title =
+    action === activityActions.SHOW_INFO
+      ? `Details for '${propTitle || prop}'`
+      : `Edit '${propTitle || prop}'`;
   return (
     <Modal
-      title={`Edit '${propTitle || prop}'`}
+      title={title}
       visible={visible}
       getContainer={() => document.getElementById('te-prefs-lib')}
       closable={true}
@@ -64,14 +68,14 @@ ModalEdit.propTypes = {
   prop: PropTypes.string.isRequired,
   propTitle: PropTypes.string,
   visible: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 ModalEdit.defaultProps = {
   action: null,
   formatFn: val => val,
   propTitle: null,
-  visible: false,
+  visible: false
 };
 
 export default ModalEdit;

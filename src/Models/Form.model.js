@@ -39,6 +39,8 @@ export default class Form {
 
   submitterMustSelectObject;
 
+  formType;
+
   // STATUS
   status;
 
@@ -68,10 +70,11 @@ export default class Form {
     sendAutomaticReminders = true,
     formPeriod,
     objectScope,
-    reservationMode,
+    reservationMode = null,
     excludedObjects = [],
     submitterCanSubmitMultiple = true,
     submitterMustSelectObject = true,
+    formType = 'REGULAR',
     allowLinkSharing = false,
     // STATUS
     status,
@@ -112,6 +115,7 @@ export default class Form {
     this.excludedObjects = excludedObjects;
     this.submitterCanSubmitMultiple = submitterCanSubmitMultiple;
     this.submitterMustSelectObject = submitterMustSelectObject;
+    this.formType = formType;
     this.allowLinkSharing = allowLinkSharing;
 
     // STATUS

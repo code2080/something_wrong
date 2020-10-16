@@ -1,24 +1,29 @@
+const apiVersion = 'v1';
+
 const envVarMap = {
   production: {
-    API_URL: 'https://preferences.timeedit.com/v1/',
-    AUTH_URL: 'https://auth.timeedit.com/v1/',
+    API_URL: `https://preferences.timeedit.com/${apiVersion}/`,
+    AUTH_URL: `https://auth.timeedit.com/${apiVersion}/`,
+    ADMIN_URL: `https://admin.timeedit.com/${apiVersion}/`,
     APP_ID: '5d08ae441dcbc63d30dd3e44',
     APP_NAME: 'tePIC',
-    VIEWS_URL: 'https://views.timeedit.com/v1/'
+    VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`
   },
   development: {
-    API_URL: 'https://preferences.timeedit.io/v1/',
-    AUTH_URL: 'https://auth.timeedit.io/v1/',
+    API_URL: `https://preferences.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
+    ADMIN_URL: `https://admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
-    VIEWS_URL: 'https://views.timeedit.io/v1/'
+    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`
   },
   localhost: {
-    API_URL: 'http://localhost:3002/v1/',
-    AUTH_URL: 'https://auth.timeedit.io/v1/',
+    API_URL: `http://localhost:3002/${apiVersion}/`,
+    AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
+    ADMIN_URL: `https://admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
-    VIEWS_URL: 'https://views.timeedit.io/v1/'
+    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`
   },
 };
 

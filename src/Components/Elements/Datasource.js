@@ -100,7 +100,7 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
   );
 
   return <div className="element__datasource--wrapper">
-    <DatasourceInner elType={elType} labels={labels} menu={menu} />
+    <DatasourceInner elType={elType} labels={labels} menu={menu} payload={payload} />
   </div>
 }
 

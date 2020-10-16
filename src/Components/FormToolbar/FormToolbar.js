@@ -28,6 +28,10 @@ const FormToolbar = ({ form }) => (
         <span className="label">Description:</span>
         <span className="value">{form.description}</span>
       </div>
+      <div className="toolbar--section-flex">
+        <span className="label">Form type:</span>
+        <span className="value">{form.formType.toLowerCase()}</span>
+      </div>
     </div>
   </React.Fragment>
 );

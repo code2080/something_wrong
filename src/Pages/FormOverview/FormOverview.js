@@ -68,13 +68,13 @@ const FormList = ({
 
   useEffect(() => {
     fetchForms();
-    fetchUsers();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
   useEffect(() => {
     if (user && user.organizationId) {
       fetchMapping();
+      fetchUsers(user.organizationId);
     }
   }, [user]);
 
@@ -86,6 +86,8 @@ const FormList = ({
     <div className="form-list--wrapper">
       <DynamicTable
         columns={[
+          tableColumns.form.CREATEDAT,
+          tableColumns.form.TYPE,
           tableColumns.form.NAME,
           tableColumns.form.DESCRIPTION,
           tableColumns.form.OWNER,
