@@ -86,12 +86,21 @@ const FormInfo = ({ formId }) => {
       <Table
         dataSource={formInfoFieldData}
         bordered
-        size={'small'}
         pagination={{ hideOnSinglePage: true }}
         showHeader={false}
       >
-        <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
-        <Table.Column title='Value' dataIndex='value' key='value' />
+        <Table.Column
+          title='Field'
+          dataIndex='field'
+          key='field'
+          width='125px'
+          render={field => <b>{field}:</b>}
+        />
+        <Table.Column
+          title='Value'
+          dataIndex='value'
+          key='value'
+        />
       </Table>
     </div>
   );

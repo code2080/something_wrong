@@ -1,12 +1,8 @@
 @import '../../Styles/globals.scss';
 
 .formInfo--wrapper {
-  .ant-descriptions {
-    * {
-      font-size: 0.7rem;
-    }
-    .ant-descriptions-title {
-      margin-bottom: 0.2rem;
-    }
+  padding: 0.2rem;
+  .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
+    padding: 0.2rem;
   }
 }
