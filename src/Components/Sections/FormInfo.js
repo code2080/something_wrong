@@ -23,6 +23,10 @@ import { selectForm } from '../../Redux/Forms/forms.selectors';
 const formToFieldInfo = form => {
   const formatDate = (date, withTime = false) => moment(date).format(`MMM Do YY${withTime ? ', H:mm' : ''}`);
   const formFieldMapping = [{
+    key: 'name',
+    label: 'Name',
+    formatValueFn: value => value,
+  }, {
     key: 'description',
     label: 'Description',
     formatValueFn: value => value,
@@ -72,8 +76,9 @@ const formToFieldInfo = form => {
 const FormInfo = ({ formId }) => {
   const form = useSelector(selectForm(formId));
   const formInfoFields = formToFieldInfo(form);
+
   const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
-    !_.isEmpty(value) ? [...rows, { key: field, field: field, value }] : rows
+    !_.isEmpty(value) ? [...rows, { key: field, field, value }] : rows
     , []);
 
   return (
