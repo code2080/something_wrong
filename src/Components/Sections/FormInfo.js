@@ -53,7 +53,7 @@ const formToFieldInfo = form => {
   }, {
     key: 'formPeriod',
     label: 'Form period',
-    formatValueFn: value => `${formatDate(value.startDate)} - ${formatDate(value.endDate)}`,
+    formatValueFn: value => <b>{`${formatDate(value.startDate)} - ${formatDate(value.endDate)}`}</b>,
   }, {
     key: 'objectScope',
     label: 'Object scope',
