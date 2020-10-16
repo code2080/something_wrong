@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { connect } from 'react-redux';
+import React, { useRef, useMemo, useState, useCallback } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { notification, Menu, Dropdown } from 'antd';
 
@@ -19,7 +19,7 @@ import {
   revertToSubmissionValue
 } from '../../../Redux/Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
-import { beginExternalAction, endExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
+import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -39,22 +39,10 @@ import { activityViews } from '../../../Constants/activityViews.constants';
 
 const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
-const mapStateToProps = (state, { activityValue, activity: { _id: activityId }, prop: typeExtId }) => ({
-  hasOngoingExternalAction:
-    state.globalUI.externalAction &&
-    state.globalUI.externalAction.activityId === activityId &&
-    state.globalUI.externalAction.prop.typeExtId === typeExtId &&
-    state.globalUI.externalAction.prop.submissionValue === activityValue.submissionValue,
-  activityValue: activityValue,
-  typeExtId: typeExtId,
-});
-
 const mapActionsToProps = {
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
-  beginExternalAction,
-  endExternalAction,
 };
 
 const getActivityValue = (activityValue, activity, type, prop) => {
@@ -63,29 +51,22 @@ const getActivityValue = (activityValue, activity, type, prop) => {
   return payload.find(el => el.extId === prop);
 };
 
-/**
- * @TODO
- * x) Ensure manual edits work
- * x) Update scheduling algo
- */
-
 const BaseActivityCol = ({
   activityValue,
   activity,
-  typeExtId,
-  prop,
+  prop: typeExtId,
   type,
   propTitle,
   formatFn,
   mapping,
-  hasOngoingExternalAction,
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
-  beginExternalAction,
-  endExternalAction,
   teCoreAPI
 }) => {
+  const dispatch = useDispatch();
+  const spotlightedElRef = useRef(null);
+
   // Activity value
   const _activityValue = getActivityValue(activityValue, activity, type, typeExtId);
   // State var to hold the component's mode
@@ -167,7 +148,7 @@ const BaseActivityCol = ({
      * Regardless of external action type; we should reset the external action
      * redux state prop by ending the action
      */
-    endExternalAction();
+    dispatch(setExternalAction(null));
     /**
      * We need to parse the response differently depending on action
      */
@@ -199,7 +180,7 @@ const BaseActivityCol = ({
       if (!updView || updView == null) return;
       if (updView === activityViews.EXTERNAL_EDIT) {
         // Set the redux state prop
-        beginExternalAction(activity._id, { submissionValue: _activityValue.submissionValue, typeExtId: typeExtId });
+        dispatch(setExternalAction(spotlightedElRef));
         // Here begins our journey into the belly of TE Core
         const callName = externalActivityActionMapping[action];
         teCoreAPI[callName]({
@@ -244,12 +225,11 @@ const BaseActivityCol = ({
     <Dropdown
       overlay={menuOptions}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      disabled={hasOngoingExternalAction}
       visible={isDropdownVisible}
       onVisibleChange={_setIsDropdownVisible}
       trigger={['hover']}
     >
-      <div className={`base-activity-col--wrapper ${hasOngoingExternalAction ? 'is-active' : ''}`}>
+      <div className={'base-activity-col--wrapper'} ref={spotlightedElRef}>
         {viewProps.view === activityViews.INLINE_EDIT && (
           <InlineEdit
             onFinish={onFinishManualEditing}
@@ -272,7 +252,7 @@ const BaseActivityCol = ({
           formatFn={formatFn}
           mappingProps={mappingProps}
           propTitle={propTitle}
-          prop={prop}
+          prop={typeExtId}
           onClose={() => setViewProps(resetView())}
           visible={viewProps.view === activityViews.MODAL_EDIT}
           action={viewProps.action}
@@ -287,15 +267,12 @@ BaseActivityCol.propTypes = {
   activity: PropTypes.object.isRequired,
   typeExtId: PropTypes.string.isRequired,
   type: PropTypes.string,
-  hasOngoingExternalAction: PropTypes.bool,
   propTitle: PropTypes.string,
   formatFn: PropTypes.func,
   mapping: PropTypes.object,
   overrideActivityValue: PropTypes.func.isRequired,
   revertToSubmissionValue: PropTypes.func.isRequired,
   setExtIdPropsForObject: PropTypes.func.isRequired,
-  beginExternalAction: PropTypes.func.isRequired,
-  endExternalAction: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired
 };
 
@@ -305,7 +282,6 @@ BaseActivityCol.defaultProps = {
   type: 'VALUE',
   formatFn: value => value,
   mapping: null,
-  hasOngoingExternalAction: false,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(BaseActivityCol));
+export default connect(null, mapActionsToProps)(withTECoreAPI(BaseActivityCol));

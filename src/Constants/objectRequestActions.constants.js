@@ -4,8 +4,10 @@ import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
 
+// ACTIONS
 import { getTECoreAPIPayload } from '../Redux/Integration/integration.selectors';
 import { updateObjectRequest} from '../Redux/ObjectRequests/ObjectRequests.actions';
+import { setExternalAction } from '../Redux/GlobalUI/globalUI.actions';
 
 export const objectRequestActions = {
   ACCEPT: 'ACCEPT',
@@ -53,7 +55,7 @@ export const objectRequestActionIcon = {
   [objectRequestActions.DETAILS]: <Icon type="info-circle" size='small' />,
 };
 
-export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI, showDetails }) => ({ key }) => {
+export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI, spotlightRef, showDetails }) => ({ key }) => {
   let payload = {
     callback: coreCallback(key)
   };
@@ -66,6 +68,7 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
         objectType: request.datasource,
         requestType: request.type,
       };
+      dispatch(setExternalAction(spotlightRef));
       teCoreAPI[teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST](payload);
     },
     [objectRequestActions.DECLINE]: () => {
@@ -81,6 +84,7 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
         objectExtId: request.replacementObjectExtId || request.objectExtId,
         typeExtId: request.datasource,
       };
+      dispatch(setExternalAction(spotlightRef));
       teCoreAPI[teCoreCallnames.REQUEST_REPLACE_OBJECT](payload);
     },
     [objectRequestActions.REVERT]: () => {

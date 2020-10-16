@@ -22,7 +22,7 @@ const DatasourceObjectInner = ({ labels, menu }) => {
         overlay={menu}
         key={label}
       >
-        <div className="dd-trigger element__datasource--inner">
+        <div className="dd-trigger element__datasource--inner" >
           {label || 'N/A'}
           <Icon type="down" />
         </div>
