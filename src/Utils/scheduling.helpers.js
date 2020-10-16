@@ -160,7 +160,7 @@ export const scheduleActivity = (activity, teCoreScheduleFn, callback) => {
   );
 };
 
-export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
+export const scheduleActivities = (activities, formType, reservationMode, teCoreScheduleFn, cFn) => {
   // Preprocess all activities
   const preprocessingMap = activities
     .map(a => {
@@ -214,6 +214,10 @@ export const scheduleActivities = (activities, teCoreScheduleFn, cFn) => {
 
   return teCoreScheduleFn({
     reservations: toSchedule,
+    formInfo: {
+      formType,
+      reservationMode,
+    },
     callback: teCoreResults =>
       cFn([
         ...failedActivities,

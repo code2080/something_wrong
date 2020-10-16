@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { connect, useSelector } from 'react-redux';
+import React, { useCallback, useMemo, useEffect } from 'react';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
@@ -13,9 +13,11 @@ import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/Obj
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
 import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
+import { validateScheduledActivities } from '../../Utils/activities.helpers';
 
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
+import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -62,7 +64,9 @@ const FormInstanceReservationOverview = ({
   saveActivities,
   hasOngoingExternalAction,
   history,
+  teCoreAPI,
 }) => {
+  const dispatch = useDispatch();
   const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance._id))
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(
@@ -75,6 +79,10 @@ const FormInstanceReservationOverview = ({
   }, [mapping, formInstance, form, saveActivities]);
 
   const onCreateActivityDesign = () => history.push(`/forms/${form._id}/activity-designer`);
+
+  useEffect(() => {
+    validateScheduledActivities(activities, teCoreAPI, dispatch);
+  }, [activities, teCoreAPI, dispatch]);
 
   const mask = () => {
     if (!hasOngoingExternalAction) return null;
@@ -190,4 +198,4 @@ FormInstanceReservationOverview.defaultProps = {
 export default withRouter(connect(
   mapStateToProps,
   mapActionsToProps
-)(FormInstanceReservationOverview));
+)(withTeCoreAPI(FormInstanceReservationOverview)));
