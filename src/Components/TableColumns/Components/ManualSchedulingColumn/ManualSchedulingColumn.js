@@ -90,7 +90,7 @@ const ManualSchedulingColumn = ({
   const [showInvertedState, setShowInvertedState] = useState(false);
 
   const onSelectAllCallback = useCallback(() => {
-    if (teCorePayload && Array.isArray(teCorePayload))
+    if (teCorePayload)
       teCoreAPI.populateSelection(teCorePayload);
   }, [teCorePayload]);
 
