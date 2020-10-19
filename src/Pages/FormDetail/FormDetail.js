@@ -35,6 +35,7 @@ import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
+import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -116,39 +117,26 @@ const FormPage = ({
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showFormInfo, setShowFormInfo] = useState(false);
 
-  // Fetch submissions
   useEffect(() => {
     fetchFormSubmissions(formId);
-  }, []);
-
-  // Fetch mappings
-  useEffect(() => {
     fetchMappings(formId);
-  }, []);
-
-  // Fetch activities
-  useEffect(() => {
     fetchActivitiesForForm(formId);
-  }, []);
-
-  // Fetch scoped objects
-  useEffect(() => {
-    if (form.objectScope)
-      fetchDataForDataSource(form.objectScope);
-  }, []);
-
-  // Fetch filters
-  useEffect(() => {
-    loadFilter({ filterId: formId });
-  }, [formId]);
-
-  // Set breadcrumbs
-  useEffect(() => {
     setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }
     ]);
-  }, []);
+    loadFilter({ filterId: formId });
+    teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
+    form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({res}) => {} });
+  }, [formId]);
+
+  // Fetch scoped objects
+  useEffect(() => {
+    form.objectScope && fetchDataForDataSource(form.objectScope);
+  }, [form.objectScope]);
+
+
+
 
   const payload = useMemo(() => {
     const sections = form.sections;

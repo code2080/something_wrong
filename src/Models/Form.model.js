@@ -70,7 +70,7 @@ export default class Form {
     sendAutomaticReminders = true,
     formPeriod,
     objectScope,
-    reservationMode,
+    reservationMode = null,
     excludedObjects = [],
     submitterCanSubmitMultiple = true,
     submitterMustSelectObject = true,
