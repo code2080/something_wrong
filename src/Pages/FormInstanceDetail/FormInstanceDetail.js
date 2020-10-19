@@ -14,8 +14,9 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 import ObjectRequestOverview from './ObjectRequestOverview';
-import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse';
 import { Tabs } from 'antd';
+import FormInfo from '../../Components/Sections/FormInfo';
+import SpotlightMask from '../../Components/SpotlightMask';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
@@ -57,6 +58,8 @@ const FormInstancePage = ({
   activities,
 }) => {
   const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const [showFormInfo, setShowFormInfo] = useState(false);
+  const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
 
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -76,6 +79,8 @@ const FormInstancePage = ({
   useEffect(() => {
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
+  
+  const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   // Effect to get all TE values into redux state
   const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
@@ -103,11 +108,13 @@ const FormInstancePage = ({
 
   return (
     <div className="form-instance--wrapper">
+      <SpotlightMask spotlightPositionInfo={externalActionRef} />
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
+        onClickMore={handleClickMore}
       />
-      <FormInfoCollapse formId={formInstance.formId} />
+      {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {
         tabPanes.length > 1
           ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar}>

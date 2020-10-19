@@ -24,7 +24,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
 import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
-import FormInfoCollapse from '../../Components/Sections/FormInfoCollapse'
+import FormInfo from '../../Components/Sections/FormInfo';
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
@@ -35,6 +35,7 @@ import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
+import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -84,6 +85,17 @@ const mapActionsToProps = {
   loadFilter,
 };
 
+const traversedClassList = element => {
+  if(!element) return [];
+  let currentNode = element;
+  const classes = [];
+  do {
+    classes.push(...currentNode.classList);
+    currentNode = currentNode.parentNode;
+  } while (currentNode.parentNode);
+  return classes;
+}
+
 const FormPage = ({
   userId,
   formId,
@@ -103,40 +115,28 @@ const FormPage = ({
 }) => {
   // Show scoped object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showFormInfo, setShowFormInfo] = useState(false);
 
-  // Fetch submissions
   useEffect(() => {
     fetchFormSubmissions(formId);
-  }, []);
-
-  // Fetch mappings
-  useEffect(() => {
     fetchMappings(formId);
-  }, []);
-
-  // Fetch activities
-  useEffect(() => {
     fetchActivitiesForForm(formId);
-  }, []);
-
-  // Fetch scoped objects
-  useEffect(() => {
-    if (form.objectScope)
-      fetchDataForDataSource(form.objectScope);
-  }, []);
-
-  // Fetch filters
-  useEffect(() => {
-    loadFilter({ filterId: formId });
-  }, [formId]);
-
-  // Set breadcrumbs
-  useEffect(() => {
     setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }
     ]);
-  }, []);
+    loadFilter({ filterId: formId });
+    teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
+    form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({res}) => {} });
+  }, [formId]);
+
+  // Fetch scoped objects
+  useEffect(() => {
+    form.objectScope && fetchDataForDataSource(form.objectScope);
+  }, [form.objectScope]);
+
+
+
 
   const payload = useMemo(() => {
     const sections = form.sections;
@@ -156,7 +156,7 @@ const FormPage = ({
         ...scopedObjectExtids
       ],
     }
-}, [submissions, form]);
+  }, [submissions, form]);
 
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(teCoreAPI, payload);
@@ -171,7 +171,9 @@ const FormPage = ({
         ..._elementTableData[submission._id],
       };
     }),
-  [submissions, _elementTableData]);
+    [submissions, _elementTableData]);
+
+  const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   const columns = useMemo(() => [
     tableColumns.formSubmission.ASSIGNMENT,
@@ -215,8 +217,8 @@ const FormPage = ({
   }, [userId, filters, _dataSource, columns]);
   return (
     <div className="form--wrapper">
-      <FormToolbar formId={formId} />
-      <FormInfoCollapse formId={formId} />
+      <FormToolbar formId={formId} onClickMore={handleClickMore} />
+      {showFormInfo && <FormInfo formId={formId} />}
       <FormSubmissionFilterBar
         formId={formId}
         togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
@@ -234,8 +236,8 @@ const FormPage = ({
         dataSource={filteredDatasource}
         rowKey="_id"
         onRow={formInstance => ({
-          onClick: () => {
-            formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
+          onClick: (e) => {
+            traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
           }
         })}
         isLoading={isLoadingSubmissions}

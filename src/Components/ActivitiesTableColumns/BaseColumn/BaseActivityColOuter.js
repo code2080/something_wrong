@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 // COMPONENTS
 import BaseActivityCol from './BaseActivityCol';
@@ -23,7 +24,7 @@ const BaseActivityColOuter = ({
   const activityValues = getActivityValues(activity, type, prop);
 
   const activityValueCols = activityValues && activityValues.length && (activityValues || []).reduce((activityCols, activityValue, idx) => (
-    activityValue.value[0] ? [...activityCols, <BaseActivityCol
+    !_.isEmpty(activityValue.value) ? [...activityCols, <BaseActivityCol
       key={`av-${idx}`}
       activityValue={activityValue}
       activity={activity}

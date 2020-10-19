@@ -1,11 +1,13 @@
 import React from 'react';
 import { Icon } from 'antd';
-import { requestStatusToIcon, RequestStatus, RequestType } from './ObjectRequest.constants';
+import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
 
+// ACTIONS
 import { getTECoreAPIPayload } from '../Redux/Integration/integration.selectors';
 import { updateObjectRequest} from '../Redux/ObjectRequests/ObjectRequests.actions';
+import { setExternalAction } from '../Redux/GlobalUI/globalUI.actions';
 
 export const objectRequestActions = {
   ACCEPT: 'ACCEPT',
@@ -14,6 +16,7 @@ export const objectRequestActions = {
   REVERT: 'REVERT',
   SELECT: 'SELECT',
   FILTER: 'FILTER',
+  DETAILS: 'SHOW_DETAILS'
 };
 
 export const objectRequestActionCondition = request => ({
@@ -23,6 +26,7 @@ export const objectRequestActionCondition = request => ({
   [objectRequestActions.REVERT]: ['replaced', 'declined'].includes(request.status),
   [objectRequestActions.SELECT]: request.replacementObjectExtId || request.objectExtId,
   [objectRequestActions.FILTER]: request.status === 'pending',
+  [objectRequestActions.DETAILS]: true,
 });
 
 export const objectRequestActionToStatus = {
@@ -32,12 +36,13 @@ export const objectRequestActionToStatus = {
 }
 
 export const objectRequestActionLabels = {
-  [objectRequestActions.ACCEPT]: 'Accept',
+  [objectRequestActions.ACCEPT]: 'Accept...',
   [objectRequestActions.DECLINE]: 'Decline',
   [objectRequestActions.REPLACE]: 'Replace',
   [objectRequestActions.REVERT]: 'Revert',
   [objectRequestActions.SELECT]: 'Select',
   [objectRequestActions.FILTER]: 'Filter',
+  [objectRequestActions.DETAILS]: 'Show details...',
 };
 
 export const objectRequestActionIcon = {
@@ -47,9 +52,10 @@ export const objectRequestActionIcon = {
   [objectRequestActions.REVERT]: <Icon type='undo' size='small' />,
   [objectRequestActions.SELECT]: <Icon type='select' size='small' />,
   [objectRequestActions.FILTER]: <Icon type='filter' size='small' />,
+  [objectRequestActions.DETAILS]: <Icon type="info-circle" size='small' />,
 };
 
-export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI }) => ({ key }) => {
+export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI, spotlightRef, showDetails }) => ({ key }) => {
   let payload = {
     callback: coreCallback(key)
   };
@@ -62,6 +68,7 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
         objectType: request.datasource,
         requestType: request.type,
       };
+      dispatch(setExternalAction(spotlightRef));
       teCoreAPI[teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST](payload);
     },
     [objectRequestActions.DECLINE]: () => {
@@ -77,6 +84,7 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
         objectExtId: request.replacementObjectExtId || request.objectExtId,
         typeExtId: request.datasource,
       };
+      dispatch(setExternalAction(spotlightRef));
       teCoreAPI[teCoreCallnames.REQUEST_REPLACE_OBJECT](payload);
     },
     [objectRequestActions.REVERT]: () => {
@@ -96,15 +104,18 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
         type: request.datasource,
         searchString: '',
         categories: Object.entries(request.objectRequest).reduce((categories, [fieldExtId, filterValue]) =>
-          _.isEmpty(filterValue)
-            ? categories
-            : [...categories, {
-              id: fieldExtId,
-              values: [filterValue]
-            }], []),
+        _.isEmpty(filterValue)
+        ? categories
+        : [...categories, {
+          id: fieldExtId,
+          values: [filterValue]
+        }], []),
       }
       teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
     },
+    [objectRequestActions.DETAILS]: () => { 
+      showDetails();
+    }
   }
   objectRequestActionClickFunc[key]();
 };
