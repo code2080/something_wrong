@@ -1,7 +1,8 @@
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { Descriptions } from 'antd';
+import { Table } from 'antd';
 
 import './FormInfo.scss';
 
@@ -22,6 +23,10 @@ import { selectForm } from '../../Redux/Forms/forms.selectors';
 const formToFieldInfo = form => {
   const formatDate = (date, withTime = false) => moment(date).format(`MMM Do YY${withTime ? ', H:mm' : ''}`);
   const formFieldMapping = [{
+    key: 'name',
+    label: 'Name',
+    formatValueFn: value => value,
+  }, {
     key: 'description',
     label: 'Description',
     formatValueFn: value => value,
@@ -48,7 +53,7 @@ const formToFieldInfo = form => {
   }, {
     key: 'formPeriod',
     label: 'Form period',
-    formatValueFn: value => `${formatDate(value.startDate)} - ${formatDate(value.endDate)}`,
+    formatValueFn: value => <b>{`${formatDate(value.startDate)} - ${formatDate(value.endDate)}`}</b>,
   }, {
     key: 'objectScope',
     label: 'Object scope',
@@ -71,14 +76,32 @@ const formToFieldInfo = form => {
 const FormInfo = ({ formId }) => {
   const form = useSelector(selectForm(formId));
   const formInfoFields = formToFieldInfo(form);
-  const formInfoFieldItems = formInfoFields.map((fieldInfo) => {
-    return fieldInfo.value && <Descriptions.Item label={`${fieldInfo.label}:`} key={fieldInfo.label} >{fieldInfo.value}</Descriptions.Item>
-  });
+
+  const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
+    !_.isEmpty(value) ? [...rows, { key: field, field, value }] : rows
+    , []);
+
   return (
     <div className={'formInfo--wrapper'}>
-      <Descriptions title={form.name} bordered size={'small'} >
-        {formInfoFieldItems}
-      </Descriptions>
+      <Table
+        dataSource={formInfoFieldData}
+        bordered
+        pagination={{ hideOnSinglePage: true }}
+        showHeader={false}
+      >
+        <Table.Column
+          title='Field'
+          dataIndex='field'
+          key='field'
+          width='125px'
+          render={field => <b>{field}:</b>}
+        />
+        <Table.Column
+          title='Value'
+          dataIndex='value'
+          key='value'
+        />
+      </Table>
     </div>
   );
 };
