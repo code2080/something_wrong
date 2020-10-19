@@ -86,7 +86,11 @@ const FormInfo = ({ formId }) => {
       <Table
         dataSource={formInfoFieldData}
         bordered
-        pagination={{ hideOnSinglePage: true }}
+        pagination={{
+          size: 'small',
+          hideOnSinglePage: true,
+          defaultPageSize: 20,
+        }}
         showHeader={false}
       >
         <Table.Column
