@@ -147,7 +147,7 @@ export const getSelectionSettingsTECorePayload = (selectionSettings, form, formI
     .filter(el => el.fieldExtId && el.element && event[el.element])
     .map(includedField => [
       { valueType: datasourceValueTypes.FIELD_EXTID, extId: includedField.fieldExtId },
-      { valueType: datasourceValueTypes.FIELD_VALUE, extId: event[includedField.element] },
+      { valueType: datasourceValueTypes.FIELD_VALUE, value: event[includedField.element] },
     ])
   return [...extraObjectsPayload, ...includedFieldsPaylod];
 }
