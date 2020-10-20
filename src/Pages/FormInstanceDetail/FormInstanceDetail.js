@@ -117,7 +117,7 @@ const FormInstancePage = ({
       {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {
         tabPanes.length > 1
-          ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar}>
+          ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar} animated={false} >
             {tabPanes}
           </Tabs>
           : baseSections
