@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
+import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+
 const selectObjectRequestsState = state => state.objectRequests;
-const getRequestsForSubmission = (objectRequests, formInstanceId) => objectRequests.filter(request => request.formInstanceId === formInstanceId);
 const getObjectRequestByValue = (objReqList, value) => objReqList.find(req => req._id === value || req.objectExtId === value);
 const getObjectRequestsByValues = (objReqList, values) => values.reduce(
   (objReqs, value) => {
@@ -14,13 +15,16 @@ const getObjectRequestsByValues = (objReqList, values) => values.reduce(
 export const selectObjectRequests = () =>
   createSelector(selectObjectRequestsState, state => state.objectRequest);
 
-export const selectObjectRequestsList = () =>
-  createSelector(selectObjectRequestsState, state => state.list);
+export const selectObjectRequestsList = () => createSelector(selectObjectRequestsState, objReqs => objReqs.list);
 
-export const selectFormInstanceObjectRequests = (formInstanceId) =>
-  createSelector(selectObjectRequestsState, state => {
-    return getRequestsForSubmission(state.list, formInstanceId);
-  });
+export const selectFormInstanceObjectRequests = (formId, formInstanceId) =>
+  createSelector(selectObjectRequestsList(), getSubmissionValues(formId, formInstanceId),
+    (requests, submissionValues) =>
+      requests.filter(req =>
+        req.formInstanceId === formInstanceId
+        && submissionValues.includes(req._id)
+      )
+  );
 
 export const selectObjectRequestsByValues = values =>
   createSelector(selectObjectRequestsState, objectRequests =>

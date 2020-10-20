@@ -50,7 +50,7 @@ const FormInstanceReservationOverview = ({
   teCoreAPI,
 }) => {
   const dispatch = useDispatch();
-  const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance._id))
+  const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(form._id, formInstance._id))
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(
       formInstance,

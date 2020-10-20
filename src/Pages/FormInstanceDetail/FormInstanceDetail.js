@@ -57,7 +57,7 @@ const FormInstancePage = ({
   fetchActivitiesForFormInstance,
   activities,
 }) => {
-  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance.formId, formInstance._id));
   const [showFormInfo, setShowFormInfo] = useState(false);
   const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
 
