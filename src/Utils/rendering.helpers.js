@@ -140,12 +140,19 @@ export const renderElementValue = (value, element) => {
  * @returns {Array} columns
  */
 export const transformSectionToTableColumns = (section, sectionType, formInstanceId, formId) => {
-  const _elementColumns = section.elements.reduce((cols, el) => el.elementId === "5c3248b3e3ae55831d79a27f" ? cols : [...cols, {
-    title: el.label,
-    key: el._id,
-    dataIndex: el._id,
-    render: value => renderElementValue(value, el),
-  }], []);
+  const _elementColumns = section.elements.reduce((cols, el) =>
+    getElementTypeFromId(el.elementId) === elementTypes.ELEMENT_TYPE_PLAINTEXT
+      ? cols
+      : [
+        ...cols,
+        {
+          title: el.label,
+          key: el._id,
+          dataIndex: el._id,
+          render: value => renderElementValue(value, el),
+        }
+      ]
+    , []);
 
   switch (sectionType) {
     case SECTION_CONNECTED: {
