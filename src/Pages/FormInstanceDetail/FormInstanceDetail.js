@@ -94,7 +94,7 @@ const FormInstancePage = ({
     </Tabs.TabPane>,
     !_.isEmpty(objectRequests) &&
     <Tabs.TabPane tab='Object requests' key='OBJECT_REQUESTS' >
-      <ObjectRequestOverview requests={objectRequests} />
+      <ObjectRequestOverview formInstanceId={formInstance._id} requests={objectRequests} />
     </Tabs.TabPane>,
     hasAssistedSchedulingPermissions() &&
     <Tabs.TabPane tab='Activities' key='ACTIVITIES'>
