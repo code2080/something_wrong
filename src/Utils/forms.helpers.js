@@ -80,10 +80,6 @@ export const extractSubmissionData = (submissions, cols) => {
 export const getExtraObjectElementsInForm = (formSections) => {
   if (!formSections || !formSections.length) return [];
   return [
-    {
-      value: 'scopedObject',
-      label: 'Scoped object',
-    },
     ...formSections
       .filter(section => determineSectionType(section) === SECTION_VERTICAL)
       .map(section => ({
