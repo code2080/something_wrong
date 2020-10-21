@@ -138,7 +138,7 @@ export const getPayloadForExtraObject = ({
  * @param event the event
  */
 export const getSelectionSettingsTECorePayload = (selectionSettings, form, formInstance, event) => {
-  const extraObjectsPayload = (selectionSettings.extraObjects || []).map(extraObject => getPayloadForExtraObject({ extraObject, form, formInstance }));
+  const extraObjectsPayload = ([['scopedObject'], ...selectionSettings.extraObjects] || []).map(extraObject => getPayloadForExtraObject({ extraObject, form, formInstance }));
   const includedFieldsPaylod = (selectionSettings.includedFields || [])
     .filter(el => el.fieldExtId && el.element && event[el.element])
     .map(includedField => [
