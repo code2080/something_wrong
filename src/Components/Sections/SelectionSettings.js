@@ -214,7 +214,7 @@ SelectionSettings.propTypes = {
   sectionId: PropTypes.string.isRequired,
   selectionSettings: PropTypes.object.isRequired,
   formSections: PropTypes.array.isRequired,
-  reservationMode: PropTypes.string.isRequired,
+  reservationMode: PropTypes.string,
   validFields: PropTypes.array.isRequired,
   updateSelectionSettings: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,
