@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Empty } from 'antd';
+import _ from 'lodash';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -115,7 +117,17 @@ const FormInstancePage = ({
         </div>
       )}
       {activeView === tabs.OVERVIEW
-        ? (sections || []).map(section => <BaseSection section={section} key={section._id} />)
+        ? _.isEmpty(sections)
+          ? <Empty
+            style={{ marginTop: '60px' }}
+            imageStyle={{
+              height: 60
+            }}
+            description={
+              'No sections found on form'
+            }
+          />
+          : sections.map(section => <BaseSection section={section} key={section._id} />)
         : <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
       }
     </div>
