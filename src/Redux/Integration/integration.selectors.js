@@ -257,8 +257,11 @@ export const getLabelsForDatasource = (payload, state) => payload
 
   export const selectLabelField = type => 
   createSelector(selectIntegration, 
-    integration => 
-      (type && integration.mappedObjectTypes[type])
-        ? integration.mappedObjectTypes[type].fields.find(field => field.appProperty === 'LABEL').fieldExtId 
-        : null
+    integration => {
+      if(!(type && integration.mappedObjectTypes[type])) return null;
+      const mappedObjectType = integration.mappedObjectTypes[type];
+      const { fields } = mappedObjectType;
+      const labelField = fields && fields.find(field => field.appProperty === 'LABEL');
+      return labelField ? labelField.fieldExtId : null;
+    }
   )
