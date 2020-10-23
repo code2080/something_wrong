@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
+import _ from 'lodash';
 
 // COMPONENTS
 import BaseSectionTableView from './BaseSectionTableView';
@@ -50,7 +51,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
     ),
     [section, values]
   );
-  return (
+  return !_.isEmpty(_columns) && (
     <div className="base-section--wrapper">
       <div className={`base-section--name__wrapper ${sectionType}`}>
         {section.name}
