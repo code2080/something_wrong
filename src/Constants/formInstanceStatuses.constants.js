@@ -5,6 +5,7 @@ export const formInstanceStatusTypes = {
   SUBMITTED: 'SUBMITTED',
   OVERDUE: 'OVERDUE',
   INVALIDATE: 'INVALIDATE',
+  DECLINED: 'DECLINED',
 };
 
 export const formInstanceStatusTypeMap = {
