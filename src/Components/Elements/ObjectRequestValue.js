@@ -26,7 +26,7 @@ import {
 
 const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
-const ObjectRequestLabel = ({ request }) => {
+export const ObjectRequestLabel = ({ request }) => {
   const labelField = useSelector(selectLabelField(request.datasource));
   const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtId || request.objectExtId));
   const firstFieldLabel = request.objectRequest[labelField] || _.head(Object.values(request.objectRequest));
