@@ -80,10 +80,6 @@ export const extractSubmissionData = (submissions, cols) => {
 export const getExtraObjectElementsInForm = (formSections) => {
   if (!formSections || !formSections.length) return [];
   return [
-    {
-      value: 'scopedObject',
-      label: 'Scoped object',
-    },
     ...formSections
       .filter(section => determineSectionType(section) === SECTION_VERTICAL)
       .map(section => ({
@@ -142,7 +138,7 @@ export const getPayloadForExtraObject = ({
  * @param event the event
  */
 export const getSelectionSettingsTECorePayload = (selectionSettings, form, formInstance, event) => {
-  const extraObjectsPayload = (selectionSettings.extraObjects || []).map(extraObject => getPayloadForExtraObject({ extraObject, form, formInstance }));
+  const extraObjectsPayload = ([['scopedObject'], ...selectionSettings.extraObjects] || []).map(extraObject => getPayloadForExtraObject({ extraObject, form, formInstance }));
   const includedFieldsPaylod = (selectionSettings.includedFields || [])
     .filter(el => el.fieldExtId && el.element && event[el.element])
     .map(includedField => [
