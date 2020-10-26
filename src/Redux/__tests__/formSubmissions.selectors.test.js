@@ -275,15 +275,15 @@ it('should handle no values', () => {
   expect(values).toEqual([]);
 })
 
-it('should extract values form connected section', () => {
+it('should extract values from connected section', () => {
   testValuesEqualsExpected(mockConnectedSectionValues);
 })
 
-it('should extract values form table section', () => {
+it('should extract values from table section', () => {
   testValuesEqualsExpected(mockTableSectionValues);
 })
 
-it('should extract values form regular section', () => {
+it('should extract values from regular section', () => {
   testValuesEqualsExpected(mockRegularSectionValues);
 })
 
