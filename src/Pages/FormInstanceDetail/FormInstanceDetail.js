@@ -137,4 +137,4 @@ FormInstancePage.defaultProps = {
   sections: [],
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(FormInstancePage));
+export default connect(mapStateToProps, mapActionsToProps)(FormInstancePage);
