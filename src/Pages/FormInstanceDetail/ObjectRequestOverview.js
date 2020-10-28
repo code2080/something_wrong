@@ -10,6 +10,7 @@ import { tableViews } from '../../Constants/tableViews.constants';
 
 // HELPERS
 import { sortAlpha } from '../../Components/TableColumns/Helpers/sorters';
+import { capitalizeString } from '../../Utils/string.helpers';
 
 // STATUS, SECTION, REQUEST TYPE, TYPE, EXTID, LABEL, ACTIONS
 
@@ -18,7 +19,8 @@ const objReqColumns = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    sorter: (a, b) => sortAlpha(a.type, b.type)
+    sorter: (a, b) => sortAlpha(a.type, b.type),
+    render: status =><React.Fragment><ObjectRequestStatusIcon status={status} />{capitalizeString(status || RequestStatus.PENDING)}</React.Fragment>
   },
   {
     title: 'Section',
