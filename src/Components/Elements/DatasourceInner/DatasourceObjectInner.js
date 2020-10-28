@@ -18,9 +18,11 @@ const DatasourceObjectInner = ({ labels, menu }) => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return objReq
       ? <ObjectRequestDropdown request={objReq} key={objReq._id}>
+        <div className='element__datasource--inner' >
           <ObjectRequestValue request={objReq} />
           <Icon type="down" />
-        </ObjectRequestDropdown>
+        </div>
+      </ObjectRequestDropdown>
       : <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}

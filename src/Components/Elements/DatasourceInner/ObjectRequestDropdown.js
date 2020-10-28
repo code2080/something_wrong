@@ -82,7 +82,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
     visible={isDropdownVisible}
     onVisibleChange={newVisibility => !detailsModalVisible && setIsDropdownVisible(newVisibility)}
   >
-    <div className="dd-trigger element__datasource--inner" ref={spotlightRef} >
+    <div className="dd-trigger" ref={spotlightRef} >
       {children}
       <ObjectRequestModal onClose={() => setDetailsModalVisible(false)} request={request} visible={detailsModalVisible} />
     </div>
