@@ -10,7 +10,6 @@ import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activitie
 
 // COMPONENTS
 import BaseSection from '../../Components/Sections/BaseSection';
-import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 import ObjectRequestOverview from './ObjectRequestOverview';
@@ -52,7 +51,6 @@ const FormInstancePage = ({
   formName,
   sections,
   setBreadcrumbs,
-  teCoreAPI,
   fetchManualSchedulingsForFormInstance,
   fetchActivitiesForFormInstance,
   activities,
@@ -84,7 +82,7 @@ const FormInstancePage = ({
 
   // Effect to get all TE values into redux state
   const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
-  useFetchLabelsFromExtIds(teCoreAPI, payload);
+  useFetchLabelsFromExtIds(payload);
 
   // State var to hold active tab
   const baseSections = sections.map(section => <BaseSection section={section} key={section._id} />);
@@ -131,7 +129,6 @@ FormInstancePage.propTypes = {
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
   fetchActivitiesForFormInstance: PropTypes.func.isRequired,
 };

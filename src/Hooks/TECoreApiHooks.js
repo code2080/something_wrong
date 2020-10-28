@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectExtIds } from '../Redux/TE/te.selectors';
 import { setTEDataForValues } from '../Redux/TE/te.actions';
 import { initialState as initialPayload } from '../Redux/TE/te.helpers';
+import { TECoreAPIContext } from '../Components/TECoreAPI/context';
 import _ from 'lodash'
 
-export const useFetchLabelsFromExtIds = (teCoreAPI, payload) => {
+export const useFetchLabelsFromExtIds = (payload) => {
+  const teCoreAPI = useContext(TECoreAPIContext);
   const dispatch = useDispatch();
     const extIds = useSelector(state => selectExtIds(state));
 

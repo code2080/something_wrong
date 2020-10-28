@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // COMPONENTS
-import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
@@ -47,7 +46,6 @@ const FormList = ({
   fetchUsers,
   fetchMapping,
   fetchObjectRequests,
-  teCoreAPI,
   setBreadcrumbs,
   history
 }) => {
@@ -61,7 +59,7 @@ const FormList = ({
     )
   }), [forms]);
 
-  useFetchLabelsFromExtIds(teCoreAPI, objectScopes);
+  useFetchLabelsFromExtIds(objectScopes);
 
   useEffect(() => {
     fetchForms();
@@ -124,5 +122,5 @@ FormList.defaultProps = {
 };
 
 export default withRouter(
-  withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormList))
+  connect(mapStateToProps, mapActionsToProps)(FormList)
 );
