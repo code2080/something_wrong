@@ -23,8 +23,6 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
-import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
-
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -55,7 +53,6 @@ const FormList = ({
 }) => {
 
   const objectScopes = useMemo(() => ({
-    ...initialPayload,
     types: _.uniq(forms.reduce((objScopes, form) =>
       form.objectScope
         ? [...objScopes, form.objectScope] :
