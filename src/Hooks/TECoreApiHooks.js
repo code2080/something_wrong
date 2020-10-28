@@ -6,8 +6,13 @@ import { initialState as initialPayload } from '../Redux/TE/te.helpers';
 import { TECoreAPIContext } from '../Components/TECoreAPI/context';
 import _ from 'lodash'
 
-export const useFetchLabelsFromExtIds = (payload) => {
+export const useTECoreAPI = () => {
   const teCoreAPI = useContext(TECoreAPIContext);
+  return teCoreAPI;
+}
+
+export const useFetchLabelsFromExtIds = (payload) => {
+  const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
     const extIds = useSelector(state => selectExtIds(state));
 

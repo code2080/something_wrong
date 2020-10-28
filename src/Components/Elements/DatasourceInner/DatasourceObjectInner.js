@@ -6,6 +6,7 @@ import { Dropdown, Icon } from 'antd';
 
 // COMPONENTS
 import ObjectRequestDropdown from './ObjectRequestDropdown';
+import ObjectRequestValue from '../ObjectRequestValue';
 
 // SELECTORS
 import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
@@ -16,7 +17,10 @@ const DatasourceObjectInner = ({ labels, menu }) => {
   return labels.map(label => {
     const objReq = foundObjReqs.find(req => req._id === label);
     return objReq
-      ? <ObjectRequestDropdown request={objReq} label={label} key={label}/>
+      ? <ObjectRequestDropdown request={objReq} key={objReq._id}>
+          <ObjectRequestValue request={objReq} />
+          <Icon type="down" />
+        </ObjectRequestDropdown>
       : <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}

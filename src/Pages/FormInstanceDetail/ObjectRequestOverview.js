@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
-import { Dropdown, Icon, Button } from 'antd';
-import { objectRequestDropdownMenu, ObjectRequestStatusIcon, ObjectRequestType } from '../../Components/Elements/ObjectRequestValue';
+import { Icon, Button } from 'antd';
+import { ObjectRequestStatusIcon, ObjectRequestType } from '../../Components/Elements/ObjectRequestValue';
 import { Table } from 'antd';
 import { LabelRenderer } from '../../Utils/rendering.helpers';
+import ObjectRequestDropdown from '../../Components/Elements/DatasourceInner/ObjectRequestDropdown';
 
 // CONSTANTS
 import { objectRequestTypeToPlainText } from '../../Constants/ObjectRequest.constants';
@@ -78,17 +79,13 @@ const objReqColumns = [
     dataIndex: null,
     key: 'actions',
     fixedWidth: 40,
-    render: request => (<Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      overlay={
-        objectRequestDropdownMenu({ request })
-      }
-      trigger={['click']}
-    >
-      <Button type="link" size="small">
-        <Icon type="more" />
-      </Button>
-    </Dropdown>)
+    render: request => (
+      <ObjectRequestDropdown request={request} >
+        <Button type="link" size="small">
+          <Icon type="more" />
+        </Button>
+      </ObjectRequestDropdown>
+    )
   },
 ];
 

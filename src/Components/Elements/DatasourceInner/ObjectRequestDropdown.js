@@ -1,24 +1,52 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { Dropdown, Icon } from 'antd';
-import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
+import { Dropdown, Menu} from 'antd';
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import _ from 'lodash';
 
 // COMPONENTS
-import { ObjectRequestValue, objectRequestDropdownMenu } from '../ObjectRequestValue';
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
+
 // ACTIONS
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { updateObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
+
 // CONSTANTS
 import { objectRequestActionToStatus } from '../../../Constants/objectRequestActions.constants';
+import {
+  objectRequestActions,
+  objectRequestActionIcon,
+  objectRequestActionLabels,
+  objectRequestActionCondition,
+  objectRequestOnClick,
+} from '../../../Constants/objectRequestActions.constants';
 
 
-const ObjectRequestDropdown = ({ label, request, teCoreAPI }) => {
+const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
+  const teCoreAPI = useTECoreAPI();
   const spotlightRef = useRef(null);
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const objectRequestDropdownMenu = ({ coreCallback, request, spotlightRef, showDetails }) => (
+    <Menu
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      onClick={objectRequestOnClick({ dispatch, teCoreAPI, coreCallback, request, spotlightRef, showDetails })}
+    >
+      <span style={{ padding: '5px 12px', cursor: 'default' }}>Execute request...</span>
+      <Menu.Divider />
+      {_.flatMap(objectRequestActions).reduce((items, action) =>
+        objectRequestActionCondition(request)[action]
+          ? [...items, <Menu.Item key={action} >
+            {objectRequestActionIcon[action]} {objectRequestActionLabels[action]}
+          </Menu.Item>
+          ]
+          : items
+        , [])}
+    </Menu>
+  );
 
   const onHandledObjectRequest = request => action => (response = {}) => {
     dispatch(setExternalAction(null));
@@ -34,16 +62,14 @@ const ObjectRequestDropdown = ({ label, request, teCoreAPI }) => {
       status: objectRequestActionToStatus[action] || request.status
     }
 
-    const labelField = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extid, { label: labelField }));
+    const label = fields[0].values[0];
+    dispatch(setExtIdPropsForObject(extid, { label }));
     updateObjectRequest(updatedObjectRequest)(dispatch);
   }
 
   return <Dropdown
     getPopupContainer={() => document.getElementById('te-prefs-lib')}
     overlay={objectRequestDropdownMenu({
-      dispatch,
-      teCoreAPI,
       coreCallback: onHandledObjectRequest(request),
       request,
       spotlightRef,
@@ -52,16 +78,15 @@ const ObjectRequestDropdown = ({ label, request, teCoreAPI }) => {
         setDetailsModalVisible(true)
       }
     })}
-    key={label}
+    key={request._id}
     visible={isDropdownVisible}
     onVisibleChange={newVisibility => !detailsModalVisible && setIsDropdownVisible(newVisibility)}
   >
     <div className="dd-trigger element__datasource--inner" ref={spotlightRef} >
-      {<ObjectRequestValue request={request} /> || 'N/A'}
-      <Icon type="down" />
+      {children}
       <ObjectRequestModal onClose={() => setDetailsModalVisible(false)} request={request} visible={detailsModalVisible} />
     </div>
   </Dropdown>
 };
 
-export default withTECoreAPI(ObjectRequestDropdown);
+export default ObjectRequestDropdown;
