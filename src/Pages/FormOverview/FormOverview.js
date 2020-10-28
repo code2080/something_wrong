@@ -9,7 +9,9 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
+import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
+import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
@@ -24,7 +26,6 @@ import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 
-
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
   isLoading: loadingSelector(state),
@@ -37,6 +38,9 @@ const mapActionsToProps = {
   fetchUsers,
   setBreadcrumbs,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
 };
 
 const FormList = ({
@@ -46,18 +50,19 @@ const FormList = ({
   fetchForms,
   fetchUsers,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
   teCoreAPI,
   setBreadcrumbs,
   history
 }) => {
-
   const objectScopes = useMemo(() => ({
     ...initialPayload,
     types: _.uniq(forms.reduce((objScopes, form) =>
       form.objectScope
-        ? [...objScopes, form.objectScope] :
-        objScopes
-      , [])
+        ? [...objScopes, form.objectScope]
+        : objScopes, [])
     )
   }), [forms]);
 
@@ -65,6 +70,8 @@ const FormList = ({
 
   useEffect(() => {
     fetchForms();
+    fetchOrg();
+    fetchAllJobs();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
@@ -72,6 +79,7 @@ const FormList = ({
     if (user && user.organizationId) {
       fetchMapping();
       fetchUsers(user.organizationId);
+      fetchIntegrationSettings(user.organizationId);
     }
   }, [user]);
 
@@ -108,6 +116,10 @@ FormList.propTypes = {
   fetchUsers: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  fetchAllJobs: PropTypes.func.isRequired,
+  fetchOrg: PropTypes.func.isRequired,
+  fetchIntegrationSettings: PropTypes.func.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired
 };
 

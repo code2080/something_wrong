@@ -15,6 +15,12 @@ import {
   SELECT_ORG_FOR_USER_REQUEST,
   SELECT_ORG_FOR_USER_SUCCESS,
   SELECT_ORG_FOR_USER_FAILURE,
+  GET_ORG_FOR_USER_REQUEST,
+  GET_ORG_FOR_USER_SUCCESS,
+  GET_ORG_FOR_USER_FAILURE,
+  GET_INTEGRATION_SETTINGS_REQUEST,
+  GET_INTEGRATION_SETTINGS_SUCCESS,
+  GET_INTEGRATION_SETTINGS_FAILURE,
   LOGOUT,
   VALIDATE_LOGIN
 } from './auth.actionTypes';
@@ -28,6 +34,30 @@ const fetchProfileFlow = {
 export const fetchProfile = () => asyncAction.GET({
   flow: fetchProfileFlow,
   endpoint: 'users/profile',
+  requiresAuth: true,
+});
+
+const fetchOrgFlow = {
+  request: () => ({ type: GET_ORG_FOR_USER_REQUEST }),
+  success: response => ({ type: GET_ORG_FOR_USER_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: GET_ORG_FOR_USER_FAILURE, payload: { ...err } }),
+};
+
+export const fetchOrg = () => asyncAction.GET({
+  flow: fetchOrgFlow,
+  endpoint: 'organization',
+  requiresAuth: true,
+});
+
+export const fetchIntegrationSettingsFlow = {
+  request: () => ({ type: GET_INTEGRATION_SETTINGS_REQUEST }),
+  success: response => ({ type: GET_INTEGRATION_SETTINGS_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: GET_INTEGRATION_SETTINGS_FAILURE, payload: { ...err } }),
+};
+
+export const fetchIntegrationSettings = organizationId => asyncAction.GET({
+  flow: fetchIntegrationSettingsFlow,
+  endpoint: `integration-service/connection-setting/${organizationId}`,
   requiresAuth: true,
 });
 

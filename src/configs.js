@@ -7,7 +7,9 @@ const envVarMap = {
     ADMIN_URL: `https://admin.timeedit.com/${apiVersion}/`,
     APP_ID: '5d08ae441dcbc63d30dd3e44',
     APP_NAME: 'tePIC',
-    VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`
+    VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`,
+    AE_OL_URL: `http://34.120.155.150/${apiVersion}/`,
+    // AE_OL_URL: `http://localhost:3000/${apiVersion}/`,
   },
   development: {
     API_URL: `https://preferences.timeedit.io/${apiVersion}/`,
@@ -15,7 +17,8 @@ const envVarMap = {
     ADMIN_URL: `https://admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
-    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`
+    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`,
+    AE_OL_URL: `http://34.120.155.150/${apiVersion}/`,
   },
   localhost: {
     API_URL: `http://localhost:3002/${apiVersion}/`,
@@ -23,7 +26,8 @@ const envVarMap = {
     ADMIN_URL: `https://admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
-    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`
+    VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`,
+    AE_OL_URL: `http://localhost:3000/${apiVersion}/`,
   },
 };
 
