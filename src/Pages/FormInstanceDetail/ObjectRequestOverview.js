@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { Icon, Button } from 'antd';
-import { ObjectRequestStatusIcon, ObjectRequestType } from '../../Components/Elements/ObjectRequestValue';
+import { ObjectRequestStatusIcon, ObjectRequestType, ObjectRequestLabel } from '../../Components/Elements/ObjectRequestValue';
 import { Table } from 'antd';
 import { LabelRenderer } from '../../Utils/rendering.helpers';
 import ObjectRequestDropdown from '../../Components/Elements/DatasourceInner/ObjectRequestDropdown';
@@ -75,15 +75,17 @@ const objReqColumns = [
   // TODO: ObjectRequestAcionButton component (ActionButton component with obj req child?)
   // TODO: Make sure action dropdown works
   {
-    title: '',
+    title: 'Label',
     dataIndex: null,
     key: 'actions',
-    fixedWidth: 40,
     render: request => (
       <ObjectRequestDropdown request={request} >
-        <Button type="link" size="small">
-          <Icon type="more" />
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }} >
+          <ObjectRequestLabel request={request} />
+          <Button type="link" size="small">
+            <Icon type="more" />
+          </Button>
+        </div>
       </ObjectRequestDropdown>
     )
   },
