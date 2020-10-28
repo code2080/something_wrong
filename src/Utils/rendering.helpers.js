@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
+
+// HOOKS
+import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
 
 // COMPONENTS
 import Datasource from '../Components/Elements/Datasource';
@@ -268,3 +272,13 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
       return [];
   }
 };
+
+
+export const LabelRenderer = ({ type, extId }) => {
+
+  if (!extId || !type) return 'N/A';
+  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
+  useFetchLabelsFromExtIds(payload);
+  const label = useSelector(state => state.te.extIdProps[type][extId]);
+  return label && label.label || extId || 'N/A';
+}

@@ -55,8 +55,13 @@ const extractValuesFromSectionData = sectionData => {
     }  
   }
 
-export const getSubmissionValues = (formId, formInstanceId) => createSelector(
-  state => Object.values(state.submissions[formId][formInstanceId].values),
-  sections =>
-    sections.reduce((values, sectionData) => [...values, ...extractValuesFromSectionData(sectionData)], [])
-);
+export const getSubmissionValues = formInstance =>
+  formInstance
+    ? Object.entries(formInstance.values).reduce((values, [sectionId, sectionData]) => [
+      ...values,
+      {
+        sectionId,
+        sectionValues: extractValuesFromSectionData(sectionData)
+      }
+    ], [])
+    : [];
