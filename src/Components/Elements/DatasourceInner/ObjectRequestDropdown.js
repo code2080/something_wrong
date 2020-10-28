@@ -4,8 +4,8 @@ import { Dropdown, Icon } from 'antd';
 import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 
 // COMPONENTS
-import { ObjectRequestValue, objectRequestDropdownMenu, ObjectRequestModal} from '../ObjectRequestValue';
-
+import { ObjectRequestValue, objectRequestDropdownMenu } from '../ObjectRequestValue';
+import ObjectRequestModal from '../../Modals/ObjectRequestModal';
 // ACTIONS
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { updateObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.actions';
