@@ -9,7 +9,7 @@ export const SpotlightMask = ({ spotlightPositionInfo }) => {
   return (
       <svg style={{
         width: '100%',
-        height: '100%',
+        height: `${window.tePrefsHeight}px`,
         top: 0,
         left: 0,
         position: 'absolute',
