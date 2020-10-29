@@ -11,6 +11,7 @@ import { capitalizeString } from '../../Utils/string.helpers';
 
 // COMPONENTS
 import { ObjectRequestType, ObjectRequestStatusIcon } from '../Elements/ObjectRequestValue';
+import { LabelRenderer } from '../../Utils/rendering.helpers';
 
 // CONSTANTS
 import {
@@ -45,7 +46,7 @@ const ObjectRequestModal = ({onClose, visible, request}) => {
     <br /><br />
     <b>Request content:</b><br />
     <Table bordered dataSource={fieldDatasource} pagination={{ hideOnSinglePage: true }}>
-      <Table.Column title='Field' dataIndex='field' key='field' render={field => <b>{field}:</b>} />
+      <Table.Column title='Field' dataIndex='field' key='field' render={field => <b><LabelRenderer type='fields' extId={field}/>:</b>} />
       <Table.Column title='Value' dataIndex='value' key='value' />
     </Table>
   </Modal>
