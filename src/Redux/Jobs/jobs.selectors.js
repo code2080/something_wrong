@@ -9,9 +9,8 @@ export const selectJobsForForm = formId => createSelector(
 );
 
 export const selectJobForActivities = (formId, activityIds = [])=> createSelector(
-  jobStateSelector,                                               // TODO: Use selectJobsForForm instead?
-  jobs => {
-    const formJobs = (jobs[formId] || {});
+  selectJobsForForm(formId),
+  formJobs => {
     const jobIds = (Object.keys(formJobs) || [])
     .filter(jobId => {
         if (!formJobs[jobId].activities || !formJobs[jobId].activities.length)
@@ -25,9 +24,8 @@ export const selectJobForActivities = (formId, activityIds = [])=> createSelecto
 );
 
 export const selectActiveJobsForFormInstance = (formId, formInstanceId) => createSelector(
-  jobStateSelector,                                                 // TODO: Use selectJobsForForm instead?
-  jobs => {
-    const formJobs = (jobs[formId] || {});
+  selectJobsForForm(formId),
+  formJobs => {
     const jobIds = (Object.keys(formJobs) || []).filter(
       jobId => formJobs[jobId] &&
         formJobs[jobId].formInstanceIds &&
