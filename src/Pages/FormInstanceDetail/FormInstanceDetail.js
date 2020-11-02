@@ -12,6 +12,7 @@ import BaseSection from '../../Components/Sections/BaseSection';
 import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
+import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
@@ -87,6 +88,7 @@ const FormInstancePage = ({
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
+      {hasAssistedSchedulingPermissions() && <JobToolbar />}
       {hasAssistedSchedulingPermissions() && (
         <div className="form-instance--tabs">
           <div

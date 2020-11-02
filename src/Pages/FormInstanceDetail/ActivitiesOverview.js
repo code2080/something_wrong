@@ -104,7 +104,6 @@ const FormInstanceReservationOverview = ({
     if (activities && activities.length > 0)
       return (
         <React.Fragment>
-          <JobToolbar />
           <ActivitiesTable
             mapping={mapping}
             activities={activities}
