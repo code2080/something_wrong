@@ -58,7 +58,6 @@ export const fetchIntegrationSettingsFlow = {
 export const fetchIntegrationSettings = organizationId => asyncAction.GET({
   flow: fetchIntegrationSettingsFlow,
   endpoint: `integration-service/connection-setting/${organizationId}`,
-  requiresAuth: true,
 });
 
 export const validateLogin = () => async dispatch => {
@@ -98,7 +97,6 @@ export const fetchOrgsForUser = () =>
   asyncAction.GET({
     flow: fetchOrgsForUserFlow,
     endpoint: `${getEnvParams().AUTH_URL}apps/${getEnvParams().APP_ID}/organizations/`,
-    requiresAuth: true,
   });
 
 const selectOrgForUserFlow = {
@@ -112,7 +110,6 @@ export const selectOrgForUser = ({ organizationId }) =>
     flow: selectOrgForUserFlow,
     endpoint: `${getEnvParams().AUTH_URL}auth/change-organization`,
     params: { organizationId },
-    requiresAuth: true,
   });
 
 export const logout = () => async dispatch => {
