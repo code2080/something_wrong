@@ -13,7 +13,7 @@ const JobToolbar = () => {
   const dispatch = useDispatch();
 
   const { formId, formInstanceId } = useParams();
-  const activeJobs = useSelector(state => selectActiveJobsForFormInstance(state)(formId, formInstanceId));
+  const activeJobs = useSelector(selectActiveJobsForFormInstance(formId, formInstanceId));
 
   const stopJob = () => {
     if (activeJobs && activeJobs.length && activeJobs[0]) {
