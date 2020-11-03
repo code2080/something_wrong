@@ -8,7 +8,7 @@ import { formInstanceStatusTypes } from '../../../Constants/formInstanceStatuses
 const ResponseTracker = ({ responses }) => {
   const submissions = responses[formInstanceStatusTypes.SUBMITTED] || 0;
   const declined = responses[formInstanceStatusTypes.DECLINED] || 0;
-  const totalCount = Object.values(responses).reduce((tot, value) => tot + value, 0);
+  const totalCount = Object.values(responses).reduce((tot, value) => tot + value) - declined;
   return (
     <div style={{ marginRight: '8px' }}>
       <Tooltip
@@ -20,8 +20,8 @@ const ResponseTracker = ({ responses }) => {
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
         <Progress
-          successPercent={(submissions / totalCount) * 100}
-          percent={((submissions + declined) / totalCount) * 100}
+          successPercent={((submissions - declined) / totalCount) * 100}
+          percent={(submissions / totalCount) * 100}
           size='small'
           strokeColor='red'
           format={() =>`${submissions}/${declined}/${totalCount}`}
