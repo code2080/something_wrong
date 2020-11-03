@@ -7,6 +7,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { Icon, Button } from 'antd';
 import { ObjectRequestStatusIcon, ObjectRequestType, ObjectRequestLabel } from '../../Components/Elements/ObjectRequestValue';
 import { Table } from 'antd';
+import ExpandedPane from '../../Components/TableColumns/Components/ExpandedPane';
 import { LabelRenderer } from '../../Utils/rendering.helpers';
 import ObjectRequestDropdown from '../../Components/Elements/DatasourceInner/ObjectRequestDropdown';
 
@@ -21,6 +22,9 @@ import { capitalizeString } from '../../Utils/string.helpers';
 // SELECTORS
 import { getSectionsForObjectRequest } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectSectionDesign } from '../../Redux/Forms/forms.selectors';
+
+// STYLES
+import '../../Components/TableColumns/Components/ExpandedPane.scss';
 
 const ObjectRequestSection = ({ request }) => {
   const { formId } = useParams();
@@ -91,28 +95,19 @@ const objReqColumns = [
   },
 ];
 
+const fieldColumns = request => Object.entries(request.objectRequest).map(([field, value]) => ({
+  title: <LabelRenderer type='fields' extId={field} />,
+  key: field,
+  render: () => value,
+}));
+
 const ObjectRequestOverview = ({ formInstanceId, requests }) => { 
   return (<DynamicTable
     columns={objReqColumns}
     dataSource={requests}
     rowKey="_id"
     pagination={false}
-    // TODO: Fix expanded row properly, set width or display as on submission overview?
-    expandedRowRender={request => <div>
-      <Table 
-        bordered
-        dataSource={Object.entries(request.objectRequest || {}).map(([field, value]) => ({
-          key: field,
-          field: field,
-          value: value,
-        }))}
-        style={{ backgroundColor: 'white', marginRight: '50px' }}
-        pagination={{ hideOnSinglePage: true }}
-      >
-        <Table.Column title='Field' dataIndex='field' key='field' render={field => <b><LabelRenderer type={'fields'} extId={field} />:</b>} />
-        <Table.Column title='Value' dataIndex='value' key='value' />
-      </Table>
-    </div>}
+    expandedRowRender={request => <ExpandedPane columns={fieldColumns(request)} row={request} />}
     datasourceId={`${tableViews.OBJECTREQUESTS}-${formInstanceId}`}
   />);
 };
