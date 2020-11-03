@@ -12,6 +12,7 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
+import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
@@ -36,6 +37,7 @@ const mapStateToProps = state => ({
 const mapActionsToProps = {
   fetchForms,
   fetchUsers,
+  fetchObjectRequests,
   setBreadcrumbs,
   fetchMapping,
   fetchAllJobs,
@@ -53,6 +55,7 @@ const FormList = ({
   fetchAllJobs,
   fetchOrg,
   fetchIntegrationSettings,
+  fetchObjectRequests,
   teCoreAPI,
   setBreadcrumbs,
   history
@@ -83,10 +86,16 @@ const FormList = ({
     }
   }, [user]);
 
+  useEffect(() => {
+    fetchObjectRequests();
+  }, []);
+
   return (
     <div className="form-list--wrapper">
       <DynamicTable
         columns={[
+          tableColumns.form.CREATEDAT,
+          tableColumns.form.TYPE,
           tableColumns.form.NAME,
           tableColumns.form.DESCRIPTION,
           tableColumns.form.OWNER,
@@ -114,6 +123,7 @@ FormList.propTypes = {
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
+  fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchAllJobs: PropTypes.func.isRequired,

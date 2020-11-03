@@ -1,5 +1,5 @@
 export default {
   breadcrumbs: [],
-  externalAction: null,
+  spotlightPositionInfo: null,
   tableViews: {},
 };

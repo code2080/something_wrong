@@ -121,6 +121,9 @@ export const renderElementValue = (value, element) => {
       return <FreeTextFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
       return <NumberFilter value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_DURATION:
+      const duration = moment.duration(value, 'minutes');
+      return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
@@ -137,12 +140,19 @@ export const renderElementValue = (value, element) => {
  * @returns {Array} columns
  */
 export const transformSectionToTableColumns = (section, sectionType, formInstanceId, formId) => {
-  const _elementColumns = section.elements.map(el => ({
-    title: el.label,
-    key: el._id,
-    dataIndex: el._id,
-    render: value => renderElementValue(value, el),
-  }));
+  const _elementColumns = section.elements.reduce((cols, el) =>
+    getElementTypeFromId(el.elementId) === elementTypes.ELEMENT_TYPE_PLAINTEXT
+      ? cols
+      : [
+        ...cols,
+        {
+          title: el.label,
+          key: el._id,
+          dataIndex: el._id,
+          render: value => renderElementValue(value, el),
+        }
+      ]
+    , []);
 
   switch (sectionType) {
     case SECTION_CONNECTED: {

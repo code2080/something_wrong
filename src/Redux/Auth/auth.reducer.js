@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as types from './auth.actionTypes';
 import { setToken } from '../../Utils/tokenHelpers';
 import { authenticationStatuses } from '../../Constants/auth.constants';
@@ -44,7 +45,7 @@ const reducer = (state = initialState, action) => {
     case types.FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        authenticationStatus: authenticationStatuses.AUTHENTICATED,
+        authenticationStatus: action.payload.organizationId ? authenticationStatuses.AUTHENTICATED : authenticationStatuses.MULTIPLE_ORGS,
         user: action.payload,
       };
 

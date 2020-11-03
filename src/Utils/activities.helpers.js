@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // HELPERS
 import { determineSectionTypes } from './determineSectionType.helpers';
 import { getSectionsToUseInActivities } from './sections.helpers';
@@ -9,10 +11,14 @@ import { Activity } from '../Models/Activity.model';
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
+
+// ACTIONS
+import { updateActivities } from '../Redux/Activities/activities.actions';
 
 const determiningSectionInterface = ({
   validation: 'VALID',
@@ -131,7 +137,8 @@ const createActivity = (
   controllingSectionId,
   eventId = null,
   rowIdx = null,
-  sections
+  sections,
+  formInstanceObjReqs = []
 ) => {
   /**
    * An activity connsists of
@@ -141,7 +148,7 @@ const createActivity = (
    * 4) objects and field values in the values property
    */
   // Grab the object values
-  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, activityDesign, formInstance, sections, eventId, rowIdx, 'object');
+  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, activityDesign, formInstance, sections, eventId, rowIdx, formInstanceObjReqs);
   // Grab the field values
   const fieldValues = createActivityValueForProp(activityValueTypes.FIELD, activityDesign, formInstance, sections, eventId, rowIdx);
   // Grab the timing values
@@ -169,7 +176,7 @@ const createActivity = (
  * @param {*} activityDesign the form's activity design
  * @returns {Array<Object>} activities
  */
-export const createActivitiesFromFormInstance = (formInstance, sections, _activityDesign) => {
+export const createActivitiesFromFormInstance = (formInstance, sections, _activityDesign, formInstanceObjReqs = []) => {
   // Make sure we have all that we need
   if (!_activityDesign || !sections || !sections.length || !_activityDesign) return [];
   // Assert activity design format
@@ -181,7 +188,7 @@ export const createActivitiesFromFormInstance = (formInstance, sections, _activi
   // If we don't have a determining section we know the form instance will only be converted into one activity
   if (!controllingSectionInfo.determiningSectionId)
     // Create the one activity and return it
-    return [createActivity(activityDesign, formInstance, null, null, null, sections)];
+    return [createActivity(activityDesign, formInstance, null, null, null, sections, formInstanceObjReqs)];
 
   /**
    * If we have a determining section; each value of that determining section represents 1 activity
@@ -197,7 +204,30 @@ export const createActivitiesFromFormInstance = (formInstance, sections, _activi
       controllingSectionInfo.determiningSectionId,
       controllingSectionInfo.sectionType === SECTION_CONNECTED ? key : null,
       controllingSectionInfo.sectionType === SECTION_TABLE ? key : null,
-      sections
+      sections, 
+      formInstanceObjReqs
     )
   );
 };
+
+/**
+ * Validates that all activities that is scheduled has existing reservation in core,
+ * and sets NOT_SCHEDULED if reservation not found
+ * @param {array} activities Activities to validate
+ * @param {object} teCoreAPI 
+ * @param {object} dispatch 
+ */
+export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => {
+  const reservationIds = activities
+  .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
+  .map(activity => activity.reservationId);
+
+  teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
+    reservationIds, callback: ({ res: { invalidReservations } }) => {
+      const invalidActivityIds = invalidReservations.map(resId => {
+        const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
+        return activityWithInvalidReservation._id;
+      })
+      console.log('Found these invalid activities:', invalidActivityIds);
+  }})
+}

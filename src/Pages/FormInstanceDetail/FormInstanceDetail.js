@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Empty } from 'antd';
+import _ from 'lodash';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -13,18 +15,20 @@ import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
 import JobToolbar from '../../Components/JobToolbar/JobToolbar';
+import FormInfo from '../../Components/Sections/FormInfo';
+import SpotlightMask from '../../Components/SpotlightMask';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
 
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
+import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // STYLES
 import './FormInstanceDetail.scss';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
-// CONSTANTS
 const tabs = {
   OVERVIEW: 'OVERVIEW',
   ACTIVITIES: 'ACTIVITIES',
@@ -56,6 +60,10 @@ const FormInstancePage = ({
   fetchActivitiesForFormInstance,
   activities,
 }) => {
+  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const [showFormInfo, setShowFormInfo] = useState(false);
+  const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
+
   // Effect to update breadcrumbs
   useEffect(() => {
     setBreadcrumbs([
@@ -74,9 +82,11 @@ const FormInstancePage = ({
   useEffect(() => {
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
+  
+  const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload({sections, submissionValues: formInstance.values, activities}), [formInstance, sections, activities]);
+  const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(teCoreAPI, payload);
 
   // State var to hold active tab
@@ -84,11 +94,14 @@ const FormInstancePage = ({
 
   return (
     <div className="form-instance--wrapper">
+      <SpotlightMask spotlightPositionInfo={externalActionRef} />
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
+        onClickMore={handleClickMore}
       />
       {hasAssistedSchedulingPermissions() && <JobToolbar />}
+      {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {hasAssistedSchedulingPermissions() && (
         <div className="form-instance--tabs">
           <div
@@ -106,7 +119,17 @@ const FormInstancePage = ({
         </div>
       )}
       {activeView === tabs.OVERVIEW
-        ? (sections || []).map(section => <BaseSection section={section} key={section._id} />)
+        ? _.isEmpty(sections)
+          ? <Empty
+            style={{ marginTop: '60px' }}
+            imageStyle={{
+              height: 60
+            }}
+            description={
+              'No sections found on form'
+            }
+          />
+          : sections.map(section => <BaseSection section={section} key={section._id} />)
         : <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
       }
     </div>

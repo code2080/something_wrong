@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useMemo, useEffect } from 'react';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
@@ -7,12 +7,17 @@ import { Empty, Button } from 'antd';
 // ACTIONS
 import { saveActivities } from '../../Redux/Activities/activities.actions';
 
+// SELECTORS
+import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
+
 // HELPERS
 import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
 import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
+import { validateScheduledActivities } from '../../Utils/activities.helpers';
 
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
+import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -28,27 +33,11 @@ const mapStateToProps = (state, ownProps) => {
     activities: state.activities[formId]
       ? state.activities[formId][formInstanceId] || []
       : [],
-    hasOngoingExternalAction: state.globalUI.externalAction != null
   };
 };
 
 const mapActionsToProps = {
   saveActivities
-};
-
-const nodeOffset = (node, stopAtClassName) => {
-  let top = 0;
-  let left = 0;
-  let currentNode = node;
-
-  while (currentNode !== null && currentNode.className !== stopAtClassName) {
-    top +=
-      currentNode.offsetTop - currentNode.scrollTop + currentNode.clientTop;
-    left +=
-      currentNode.offsetLeft - currentNode.scrollLeft + currentNode.clientLeft;
-    currentNode = currentNode.offsetParent;
-  }
-  return { top, left };
 };
 
 const FormInstanceReservationOverview = ({
@@ -58,45 +47,27 @@ const FormInstanceReservationOverview = ({
   mapping,
   mappings,
   saveActivities,
-  hasOngoingExternalAction,
   history,
+  teCoreAPI,
 }) => {
+  const dispatch = useDispatch();
+  const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance._id))
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(
       formInstance,
       form.sections,
-      mapping
+      mapping,
+      formInstanceObjReqs,
     );
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
   const onCreateActivityDesign = () => history.push(`/forms/${form._id}/activity-designer`);
 
-  const mask = () => {
-    if (!hasOngoingExternalAction) return null;
-
-    const els = document.getElementsByClassName(
-      'base-activity-col--wrapper is-active'
-    );
-    if (!els || !els.length || els.length > 1) return null;
-    const el = els[0];
-    const boundingRect = el.getBoundingClientRect();
-    const { width, height } = boundingRect;
-    const offset = nodeOffset(el, 'form-instance--wrapper');
-    return (
-      <div
-        className="form-instance-activites--mask"
-        style={{
-          background: `radial-gradient(at ${offset.left +
-            width / 2 -
-            20}px ${offset.top +
-            height / 2}px, transparent 0px, transparent ${width /
-            2}px, rgba(0, 0, 0, 0.5) ${width / 2 + 15}px)`
-        }}
-      />
-    );
-  };
-
+  useEffect(() => {
+    validateScheduledActivities(activities, teCoreAPI, dispatch);
+  }, [activities, teCoreAPI, dispatch]);
+  
   const renderedState = useMemo(() => {
     /**
      * Case 1: Activities exist
@@ -162,7 +133,6 @@ const FormInstanceReservationOverview = ({
 
   return (
     <div className="form-instance-activities--wrapper">
-      {mask()}
       {renderedState}
     </div>
   );
@@ -175,7 +145,6 @@ FormInstanceReservationOverview.propTypes = {
   mapping: PropTypes.object,
   mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
-  hasOngoingExternalAction: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
 };
 
@@ -187,4 +156,4 @@ FormInstanceReservationOverview.defaultProps = {
 export default withRouter(connect(
   mapStateToProps,
   mapActionsToProps
-)(FormInstanceReservationOverview));
+)(withTeCoreAPI(FormInstanceReservationOverview)));

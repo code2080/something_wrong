@@ -27,7 +27,7 @@ const getSearchCriteria = value => {
 const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value || !ownProps.value.value) return { label: null, payload: null };
   const { value, element } = ownProps;
-  const payload = getTECoreAPIPayload(value.value, element.datasource, state);
+  const payload = getTECoreAPIPayload(value.value, element.datasource);
   const typeEl = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
   const fieldEl = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
   return {

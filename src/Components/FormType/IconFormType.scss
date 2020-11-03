@@ -1,0 +1,32 @@
+@import '../../Styles/globals.scss';
+
+.form-type--icon {
+  display:flex;
+  align-items: center;
+  text-align: center;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  text-align: center;
+  font-size: 12px;
+  border-radius: 2px;
+  color: #fff;
+  background-color: $deepSeaGreen;
+  cursor: default;
+
+  &.icon--REGULAR {
+    color: #fff;
+    background-color: $deepSeaGreen;
+    border-color: $deepSeaGreen;
+  }
+  &.icon--AVAILABILITY {
+    color: #fff;
+    background-color: $jungleGreen;
+    border-color: $jungleGreen;
+  }
+  &.icon--UNAVAILABILITY {
+    color: #fff;
+    background-color: $bittersweet;
+    border-color: $bittersweet;
+  }
+}

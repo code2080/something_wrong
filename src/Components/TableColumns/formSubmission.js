@@ -19,12 +19,12 @@ export const formSubmission = {
     title: 'Submitter',
     key: 'submitter',
     dataIndex: 'submitter',
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => a.submitter.localeCompare(b.submitter)
   },
   SUBMISSION_DATE: {
     title: 'Submitted',
-    key: 'updatedAt',
-    dataIndex: 'updatedAt',
+    key: 'createdAt',
+    dataIndex: 'createdAt',
     render: val => moment(val).format('YYYY-MM-DD'),
     sorter: (a, b) =>
       moment(a.updatedAt).valueOf() - moment(b.updatedAt).valueOf()

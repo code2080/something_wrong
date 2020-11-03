@@ -1,6 +1,7 @@
 @import '../../Styles/globals.scss';
 
-.base-section__extra--wrapper {
+.base-section__extra--wrapper,
+.form_info--wrapper {
   .ant-collapse > .ant-collapse-item > .ant-collapse-header {
     padding: 4px;
     padding-left: 24px;
@@ -11,7 +12,7 @@
     }
   }
 
-  .ant-collapse-content-box {
+  .ant-collapse-content > .ant-collapse-content-box {
     padding: 4px 6px 6px 6px;
     font-size: 0.7rem; 
   }

@@ -80,15 +80,13 @@ export const getSectionsToUseInActivities = (sections, activityDesign) => {
  */
 
 export const findTimeSlot = (startTime, endTime, timeslots) => {
-  const _startTime = moment(startTime).format('HH:mm');
-  const _endTime = moment(endTime).format('HH:mm');
-  const timeslotIdx = (timeslots || []).findIndex(
-    el =>
-      moment(el.startTime).format('HH:mm') === _startTime &&
-        moment(el.endTime).format('HH:mm') === _endTime
-  );
-  if (timeslotIdx > -1) return timeslots[timeslotIdx];
-  return null;
+  const _startTime = moment.utc(startTime).format('HH:mm');
+  const _endTime = moment.utc(endTime).format('HH:mm');
+  return timeslots.find(timeslot => {
+    const slotStart = moment.utc(timeslot.startTime).format('HH:mm');
+    const slotEnd = moment.utc(timeslot.endTime).format('HH:mm');
+    return slotStart === _startTime && slotEnd === _endTime;
+  })
 };
 
 /**
