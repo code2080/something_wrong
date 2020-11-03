@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from "react-router-dom";
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
@@ -18,15 +19,16 @@ import { sortAlpha } from '../../Components/TableColumns/Helpers/sorters';
 import { capitalizeString } from '../../Utils/string.helpers';
 
 // SELECTORS
-import { getSectionsForObjectRequest, getFormInstanceForRequest } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
+import { getSectionsForObjectRequest } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
+import { selectSectionDesign } from '../../Redux/Forms/forms.selectors';
 
-// TODO: Cleanup this
 const ObjectRequestSection = ({ request }) => {
+  const { formId } = useParams();
   const sectionIds = useSelector(getSectionsForObjectRequest(request));
-  const formInstance = useSelector(getFormInstanceForRequest(request));
-  const sectionName = sectionIds.length > 0 
-  ? useSelector(state => state.forms[formInstance.formId].sections.find(section => section._id === sectionIds[0])).name
-  : 'No section';
+  const firstSection = sectionIds.length > 0 && useSelector(state => selectSectionDesign(state)(formId, sectionIds[0]));
+  const sectionName = firstSection
+    ? firstSection.name
+    : 'No section';
   return sectionName;
 }
 
@@ -72,8 +74,6 @@ const objReqColumns = [
     render: req => <LabelRenderer extId={req.replacementObjectExtId || req.objectExtId} type='objects' />
   },
 
-  // TODO: ObjectRequestAcionButton component (ActionButton component with obj req child?)
-  // TODO: Make sure action dropdown works
   {
     title: 'Label',
     dataIndex: null,
