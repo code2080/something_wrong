@@ -21,6 +21,7 @@ import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
+import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
@@ -73,11 +74,13 @@ const FormInstanceReservationOverview = ({
      */
     if (activities && activities.length > 0)
       return (
-        <ActivitiesTable
-          mapping={mapping}
-          activities={activities}
-          formInstanceId={formInstance._id}
-        />
+        <React.Fragment>
+          <ActivitiesTable
+            mapping={mapping}
+            activities={activities}
+            formInstanceId={formInstance._id}
+          />
+        </React.Fragment>
       );
     // Calculate mapping status
     const mappingStatus = validateMapping(form._id, mappings);

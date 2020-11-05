@@ -1,4 +1,5 @@
-import createSelector from 'reselect';
+import { createSelector } from 'reselect';
+import _ from 'lodash';
 
 const activityStateSelector = state => state.activities;
 
@@ -8,8 +9,8 @@ export const selectActivitiesForForm = createSelector(
 );
 
 export const selectActivitiesForFormInstanceId = createSelector(
-  selectActivitiesForForm,
-  activities => formInstanceId => activities[formInstanceId]
+  activityStateSelector,
+  activities => (formId, formInstanceId) => _.get(activities, `${formId}.${formInstanceId}`, []),
 );
 
 export const selectActivity = createSelector(
@@ -23,7 +24,7 @@ export const selectTimingModeForActivity = createSelector(
     try {
       const activityValue = activity.timing.find(el => el.extId === 'mode');
       return activityValue.value;
-    } catch {
+    } catch (e) {
       return null;
     }
   }

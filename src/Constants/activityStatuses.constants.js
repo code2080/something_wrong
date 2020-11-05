@@ -6,6 +6,7 @@ export const activityStatuses = {
   NO_AVAILABILITY: 'NO_AVAILABILITY', // When the combination of objects are impossible to schedule in the given time range
   VALIDATION_ERROR: 'VALIDATION_ERROR', // One of the activity values has a validation error
   FAILED: 'FAILED', // When a scheduling attempt has been made but failed
+  QUEUED: 'QUEUED', // Activity is waiting to be scheduled
 };
 
 export const activityStatusProps = {
@@ -50,6 +51,12 @@ export const activityStatusProps = {
     label: 'Failed',
     icon: 'warning',
     tooltip: () => `An attempt to schedule this activity was made, but it failed`,
+  },
+  [activityStatuses.QUEUED]: {
+    color: 'default',
+    label: 'Queued',
+    icon: 'warning',
+    tooltip: () => `The activity is waiting to be scheduled`,
   }
 };
 

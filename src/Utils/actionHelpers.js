@@ -52,11 +52,11 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-function doDispatch(flow, params, data) {
+function doDispatch(flow, params, data, postAction) {
   const { success, dispatch } = flow;
   const finalData = data.data || data;
   if (typeof success === 'function') {
-    dispatch(success({ ...finalData, actionMeta: { ...params } }, params));
+    dispatch(success({ ...finalData, actionMeta: { ...params } }, params, postAction));
   }
 }
 
@@ -94,7 +94,8 @@ function createThunkAction({
   params,
   requiresAuth = true,
   headers,
-  successNotification = null
+  successNotification = null,
+  postAction = {},
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
@@ -110,7 +111,7 @@ function createThunkAction({
     const option = await prepareOption(method, params, requiresAuth, headers);
     const { request, failure } = flow;
     if (typeof request === 'function') {
-      dispatch(request(params));
+      dispatch(request(params, postAction));
     }
     if (
       typeof allApis[endpoint].cancel === 'function' &&
@@ -126,7 +127,7 @@ function createThunkAction({
     return axios(fullUrl, option)
       .then(response => {
         allApis[endpoint].inprogress = false;
-        doDispatch({ ...flow, dispatch, getState }, params, response.data);
+        doDispatch({ ...flow, dispatch, getState }, params, response.data, postAction);
         if (successNotification)
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
@@ -149,7 +150,8 @@ function createThunkAction({
               doDispatch(
                 { ...flow, dispatch, getState },
                 params,
-                newResponse.data
+                newResponse.data,
+                postAction,
               );
             });
           };
@@ -185,7 +187,6 @@ function createThunkAction({
         }
 
         if (typeof failure === 'function') {
-          console.log(data, option.params);
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'API call failed',
@@ -202,7 +203,7 @@ function createThunkAction({
             ),
             duration: 15
           });
-          dispatch(failure({ ...data }, option.params));
+          dispatch(failure({ ...data, actionMeta: { ...params } }, option.params, postAction));
         }
         return null;
       });
@@ -216,7 +217,8 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
   }) =>
     createThunkAction({
       method: 'GET',
@@ -225,7 +227,8 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
     }),
   PUT: ({
     flow,
@@ -233,7 +236,8 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
   }) =>
     createThunkAction({
       method: 'PUT',
@@ -242,7 +246,8 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
     }),
   PATCH: ({
     flow,
@@ -250,7 +255,8 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
   }) =>
     createThunkAction({
       method: 'PATCH',
@@ -259,7 +265,8 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
     }),
   POST: ({
     flow,
@@ -267,7 +274,8 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
   }) =>
     createThunkAction({
       method: 'POST',
@@ -276,7 +284,8 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
     }),
   DELETE: ({
     flow,
@@ -284,7 +293,8 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
   }) =>
     createThunkAction({
       method: 'DELETE',
@@ -293,6 +303,7 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
     })
 };
