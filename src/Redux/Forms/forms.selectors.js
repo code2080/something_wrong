@@ -29,3 +29,12 @@ export const selectTimeslotsForSection = createSelector(
     }
   }
 );
+
+
+export const selectSectionDesign = createSelector(
+  formState,
+  forms => (formId, sectionId) => {
+    const form = forms[formId];
+    return form && form.sections.find(section => section._id === sectionId);
+  }
+);

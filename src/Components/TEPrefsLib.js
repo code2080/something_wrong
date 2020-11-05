@@ -19,6 +19,7 @@ const store = configureStore();
 window.tePrefsLibStore = store;
 window.tePrefsScroll = [0, 0];
 window.tePrefsOffset = [0, 0];
+window.tePrefsHeight = 0;
 
 // Hack to get babel's async runtime generators to work
 Promise.resolve();
@@ -35,9 +36,9 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
   }, []);
 
   useEffect(() => {
-    const { x, y } = prefsRef.current && prefsRef.current.getBoundingClientRect();
+    const { x, y, height} = prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
-    window.tePrefsLibStore.getState().globalUI.spotlightPositionInfo && console.log(`x: ${window.tePrefsOffset[0]}, y: ${window.tePrefsOffset[1]}: Offset in TePrefsLib div`);
+    window.tePrefsHeight = height;
   }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
 
   return (

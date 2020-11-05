@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export const SpotlightMask = ({ spotlightPositionInfo }) => {
   if (!spotlightPositionInfo) return null;
@@ -6,11 +6,10 @@ export const SpotlightMask = ({ spotlightPositionInfo }) => {
   const { boundingRect: { x: left, y: top, width, height } } = spotlightPositionInfo;
   const [scrollLeft, scrollTop] = window.tePrefsScroll;
   const [offsetX, offsetY] = window.tePrefsOffset;
-  window.tePrefsLibStore.getState().globalUI.spotlightPositionInfo && console.log(`x: ${offsetX}, y: ${offsetY}: Offset in SpotlightMask component`);
   return (
       <svg style={{
         width: '100%',
-        height: '100%',
+        height: `${window.tePrefsHeight}px`,
         top: 0,
         left: 0,
         position: 'absolute',
