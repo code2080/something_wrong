@@ -26,12 +26,11 @@ export const selectJobForActivities = (formId, activityIds = [])=> createSelecto
 export const selectActiveJobsForFormInstance = (formId, formInstanceId) => createSelector(
   selectJobsForForm(formId),
   formJobs => {
-    const jobIds = (Object.keys(formJobs) || []).filter(
-      jobId => formJobs[jobId] &&
-        formJobs[jobId].formInstanceIds &&
-        formJobs[jobId].formInstanceIds.includes(formInstanceId) &&
-        (formJobs[jobId].status === jobStatus.NOT_STARTED || formJobs[jobId].status === jobStatus.STARTED)
+    const activeJobs = (Object.values(formJobs) || []).filter(job => 
+      job.formInstanceIds &&
+        job.formInstanceIds.includes(formInstanceId) &&
+        (job.status === jobStatus.NOT_STARTED || job.status === jobStatus.STARTED)
     );
-    return (jobIds || []).map(jobId => formJobs[jobId]);
+    return activeJobs;
   }
 );
