@@ -7,8 +7,8 @@ import { submissionValueTypes } from '../Constants/submissionValueTypes.constant
 
 export const validateGeneralValue = activityValue => {
   if (
-    activityValue.value &&
-    activityValue.value !== null
+      activityValue.value !== null &&
+      activityValue.value !== undefined
   )
     return new ActivityValueValidation({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
