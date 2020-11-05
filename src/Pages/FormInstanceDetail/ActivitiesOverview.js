@@ -21,7 +21,6 @@ import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
-import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
