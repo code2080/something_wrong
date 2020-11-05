@@ -264,7 +264,7 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
   const a = preprocessingMap
     .filter(a => a.validates)
     .map(a => a.activity);
-  return window.tePrefsLibStore.dispatch(
+  return a.length && window.tePrefsLibStore.dispatch(
     createJob({
       activities: a,
       type: getBindingSchedulingAlgorithm(a),
