@@ -19,7 +19,7 @@ const fetchAllJobsFlow = {
 export const fetchAllJobs = () =>
   asyncAction.GET({
     flow: fetchAllJobsFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}jobs`,
+    endpoint: `${getEnvParams().AE_OL_URL}jobs?limit=200`,
   });
 
 const createJobFlow = {
