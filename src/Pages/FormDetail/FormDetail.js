@@ -159,7 +159,7 @@ const FormPage = ({
   }, [submissions, form]);
 
   // Effect to get all TE values into redux state
-  useFetchLabelsFromExtIds(teCoreAPI, payload);
+  useFetchLabelsFromExtIds(payload);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(() => extractSubmissionData(submissions, _cols), [submissions, _cols]);

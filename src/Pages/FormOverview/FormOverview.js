@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // COMPONENTS
-import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
@@ -23,8 +22,6 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
-import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
-
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -49,13 +46,11 @@ const FormList = ({
   fetchUsers,
   fetchMapping,
   fetchObjectRequests,
-  teCoreAPI,
   setBreadcrumbs,
   history
 }) => {
 
   const objectScopes = useMemo(() => ({
-    ...initialPayload,
     types: _.uniq(forms.reduce((objScopes, form) =>
       form.objectScope
         ? [...objScopes, form.objectScope] :
@@ -64,7 +59,7 @@ const FormList = ({
     )
   }), [forms]);
 
-  useFetchLabelsFromExtIds(teCoreAPI, objectScopes);
+  useFetchLabelsFromExtIds(objectScopes);
 
   useEffect(() => {
     fetchForms();
@@ -127,5 +122,5 @@ FormList.defaultProps = {
 };
 
 export default withRouter(
-  withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormList))
+  connect(mapStateToProps, mapActionsToProps)(FormList)
 );

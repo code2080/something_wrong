@@ -265,7 +265,7 @@ const BaseActivityCol = ({
 BaseActivityCol.propTypes = {
   activityValue: PropTypes.object,
   activity: PropTypes.object.isRequired,
-  typeExtId: PropTypes.string.isRequired,
+  prop: PropTypes.string.isRequired,
   type: PropTypes.string,
   propTitle: PropTypes.string,
   formatFn: PropTypes.func,

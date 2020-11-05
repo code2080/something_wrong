@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Empty } from 'antd';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -11,9 +10,10 @@ import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activitie
 
 // COMPONENTS
 import BaseSection from '../../Components/Sections/BaseSection';
-import { withTECoreAPI } from '../../Components/TECoreAPI';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
+import ObjectRequestOverview from './ObjectRequestOverview';
+import { Tabs } from 'antd';
 import FormInfo from '../../Components/Sections/FormInfo';
 import SpotlightMask from '../../Components/SpotlightMask';
 
@@ -26,12 +26,9 @@ import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/Obj
 
 // STYLES
 import './FormInstanceDetail.scss';
-import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
-const tabs = {
-  OVERVIEW: 'OVERVIEW',
-  ACTIVITIES: 'ACTIVITIES',
-};
+// HOOKS
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } } } = ownProps;
@@ -54,12 +51,11 @@ const FormInstancePage = ({
   formName,
   sections,
   setBreadcrumbs,
-  teCoreAPI,
   fetchManualSchedulingsForFormInstance,
   fetchActivitiesForFormInstance,
   activities,
 }) => {
-  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance._id));
+  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance));
   const [showFormInfo, setShowFormInfo] = useState(false);
   const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
 
@@ -86,10 +82,27 @@ const FormInstancePage = ({
 
   // Effect to get all TE values into redux state
   const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
-  useFetchLabelsFromExtIds(teCoreAPI, payload);
+  useFetchLabelsFromExtIds(payload);
 
   // State var to hold active tab
-  const [activeView, setActiveView] = useState(tabs.OVERVIEW);
+  const baseSections = sections.map(section => <BaseSection section={section} key={section._id} />);
+  const tabPanes = [
+    <Tabs.TabPane tab='Overview' key='OVERVIEW'>
+      {baseSections}
+    </Tabs.TabPane>,
+    !_.isEmpty(objectRequests) &&
+    <Tabs.TabPane tab='Object requests' key='OBJECT_REQUESTS' >
+      <ObjectRequestOverview formInstanceId={formInstance._id} requests={objectRequests} />
+    </Tabs.TabPane>,
+    hasAssistedSchedulingPermissions() &&
+    <Tabs.TabPane tab='Activities' key='ACTIVITIES'>
+      <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+    </Tabs.TabPane>,
+  ].filter(_.identity);
+
+  const renderTabBar = (props, DefaultTabBar) => (
+    <DefaultTabBar {...props} className={`${props.className} form-instance--tabs`} />
+  );
 
   return (
     <div className="form-instance--wrapper">
@@ -100,35 +113,12 @@ const FormInstancePage = ({
         onClickMore={handleClickMore}
       />
       {showFormInfo && <FormInfo formId={formInstance.formId} />}
-      {hasAssistedSchedulingPermissions() && (
-        <div className="form-instance--tabs">
-          <div
-            className={`form-instance--tabs__tab ${activeView === tabs.OVERVIEW ? 'is-active' : ''}`}
-            onClick={() => setActiveView(tabs.OVERVIEW)}
-          >
-            Overview
-          </div>
-          <div
-            className={`form-instance--tabs__tab ${activeView === tabs.ACTIVITIES ? 'is-active' : ''}`}
-            onClick={() => setActiveView(tabs.ACTIVITIES)}
-          >
-            Activities
-          </div>
-        </div>
-      )}
-      {activeView === tabs.OVERVIEW
-        ? _.isEmpty(sections)
-          ? <Empty
-            style={{ marginTop: '60px' }}
-            imageStyle={{
-              height: 60
-            }}
-            description={
-              'No sections found on form'
-            }
-          />
-          : sections.map(section => <BaseSection section={section} key={section._id} />)
-        : <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
+      {
+        tabPanes.length > 1
+          ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar} animated={false} >
+            {tabPanes}
+          </Tabs>
+          : baseSections
       }
     </div>
   );
@@ -139,7 +129,6 @@ FormInstancePage.propTypes = {
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
   fetchActivitiesForFormInstance: PropTypes.func.isRequired,
 };
@@ -148,4 +137,4 @@ FormInstancePage.defaultProps = {
   sections: [],
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(FormInstancePage));
+export default connect(mapStateToProps, mapActionsToProps)(FormInstancePage);

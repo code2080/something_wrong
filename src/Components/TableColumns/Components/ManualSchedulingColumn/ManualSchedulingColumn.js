@@ -42,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
   const form = state.forms[formId];
   const formInstance = state.submissions[formId][formInstanceId];
   const selectionSettings = getSelectionSettings(sectionId, formInstance);
-  const formInstanceObjectRequests = selectFormInstanceObjectRequests(formInstanceId)(state);
+  const formInstanceObjectRequests = selectFormInstanceObjectRequests(formId, formInstanceId)(state);
 
   // Get the payload
   const elementIds = Object.keys(event).filter(key => Array.isArray(event[key]));
