@@ -18,7 +18,7 @@ const FormInstanceActionsDropdown = ({ formInstance }) => {
     </Menu>
   ), [formInstance]);
 
-  if (!formInstance) return null;
+  if (!formInstance || !formInstance.reviewLink) return null;
 
   return (
     <Dropdown overlay={menu} getPopupContainer={() => document.getElementById('te-prefs-lib')} trigger={['click']}>
