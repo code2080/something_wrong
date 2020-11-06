@@ -14,6 +14,8 @@ import {
   teCoreSchedulingProgressProps,
   teCoreAcceptanceStatusProps
 } from '../../Constants/teCoreProps.constants';
+import { Button } from 'antd';
+import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
@@ -66,6 +68,9 @@ const FormInstanceToolbar = ({
       </div>
       <div className="toolbar--section-flex">
         <a onClick={() => onClickMore()}>Form info...</a>
+      </div>
+      <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
+        <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
     </div>
   );

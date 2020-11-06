@@ -73,5 +73,12 @@ export const formSubmission = {
     fixedWidth: 85,
     render: (assignedTo, formInstance) =>
       <FormInstanceAssignment assignedTo={assignedTo} formId={formInstance.formId} formInstanceId={formInstance._id} />,
+  },
+  SCHEDULE_LINK: {
+    title: 'Schedule link',
+    key: 'scheduleLink',
+    dataIndex: 'reviewLink',
+    fixedWidth: 185,
+    render: reviewLink => reviewLink ? <a href={reviewLink} target="_blank">Link</a> : 'N/A',
   }
 };

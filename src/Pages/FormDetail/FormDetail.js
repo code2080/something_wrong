@@ -175,16 +175,17 @@ const FormPage = ({
 
   const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
-  const columns = useMemo(() => [
+  const columns = useMemo(() => _.compact([
     tableColumns.formSubmission.ASSIGNMENT,
     tableColumns.formSubmission.NAME,
     tableColumns.formSubmission.SUBMISSION_DATE,
     tableColumns.formSubmission.SCOPED_OBJECT,
     tableColumns.formSubmission.ACCEPTANCE_STATUS,
     tableColumns.formSubmission.SCHEDULING_PROGRESS,
+    form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
     ..._cols,
     tableColumns.formSubmission.ACTION_BUTTON
-  ], [_cols]);
+  ]), [_cols]);
 
   const filteredDatasource = useMemo(() => {
     const { freeTextFilter, scopedObject } = filters;
