@@ -87,6 +87,13 @@ const FilterModal = ({
             size="small"
           />
         </Form.Item>
+        <Form.Item label="Show only starred submissions">
+          <Switch
+            checked={filters.onlyStarred}
+            onChange={onlyStarred => onUpdateFilterSimple('onlyStarred', onlyStarred)}
+            size="small"
+          />
+        </Form.Item>
       </div>
       <div className="filter-modal--pane">
         <div className="filter-modal__pane--title">{`Scoped object filters ${objectScopeLabel ? `(${objectScopeLabel})` : ''}`}</div>

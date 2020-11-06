@@ -7,9 +7,10 @@ import StatusLabel from '../StatusLabel/StatusLabel';
 import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
 import ScopedObject from '../FormToolbar/ScopedObject';
+import { Icon } from 'antd';
 
 // SORTERS
-import { sortAlpha } from './Helpers/sorters';
+import { sortAlpha, sortBoolean } from './Helpers/sorters';
 
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
@@ -80,5 +81,13 @@ export const formSubmission = {
     dataIndex: 'reviewLink',
     fixedWidth: 185,
     render: reviewLink => reviewLink ? <a href={reviewLink} target="_blank">Link</a> : 'N/A',
+  },
+  IS_STARRED: {
+    title: 'Is starred',
+    key: 'isStarred',
+    dataIndex: 'teCoreProps.isStarred',
+    sorter: (a, b) => sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
+    align: 'center',
+    fixedWidth: 100,
   }
 };

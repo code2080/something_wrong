@@ -83,6 +83,27 @@ export const setFormInstanceSchedulingProgress = ({
     params: { schedulingProgress }
   });
 
+const toggleFormInstanceStarringStatusFlow = {
+  request: () => ({ type: SET_SCHEDULING_PROGRESS_REQUEST }),
+  success: response => ({
+    type: SET_SCHEDULING_PROGRESS_SUCCESS,
+    payload: { ...response }
+  }),
+  failure: err => ({
+    type: SET_SCHEDULING_PROGRESS_FAILURE,
+    payload: { ...err }
+  })
+};
+
+export const toggleFormInstanceStarringStatus = ({
+  formInstanceId,
+  isStarred,
+}) =>
+  asyncAction.POST({
+    flow: toggleFormInstanceStarringStatusFlow,
+    endpoint: `form-instances/${formInstanceId}/te-core/${isStarred ? 'unstar' : 'star'}`,
+  });
+
 const toggleUserForFormInstanceFlow = {
   request: () => ({ type: ASSIGN_USER_TO_FORM_INSTANCE_REQUEST }),
   success: response => ({
