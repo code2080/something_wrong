@@ -5,9 +5,11 @@ export class SchedulingError {
 
   constructor({
     message,
+    details,
     code,
   }) {
     this.message = message;
+    this.details = details;
     this.code = code;
   }
 }

@@ -93,7 +93,7 @@ const parseTECoreResultsToScheduleReturns = teCoreReturns =>
           status === activityStatuses.SCHEDULED ? el.result.reference : null,
         errorCode: status === activityStatuses.FAILED ? el.result.result : null,
         errorMessage:
-          status === activityStatuses.FAILED ? el.result.message : null
+          status === activityStatuses.FAILED ? el.result.details : null
       }
     };
   });
