@@ -74,7 +74,7 @@ const transformNumberSearchToFilter = (datasource, rawValue) => {
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
     type: datasource[0],
-    categories: [{ id: datasource[1], values: [...rawValue] }],
+    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []), 
     searchString: null,
     searchFields: null,
   };

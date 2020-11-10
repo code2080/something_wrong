@@ -8,7 +8,7 @@ import { Menu, Dropdown, Icon, Button } from 'antd';
 import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
 
 // ACTIONS
-import { setFormInstanceSchedulingProgress } from '../../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormInstanceSchedulingProgress, fetchFormSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
@@ -19,9 +19,13 @@ const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
 const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
 
-const mapActionsToProps = {
-  setFormInstanceSchedulingProgress,
-};
+const mapActionsToProps = dispatch => ({
+  setFormInstanceSchedulingProgress: async ({ formInstanceId, schedulingProgress, formId }) => {
+    await dispatch(setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }));
+    // fetch submissions for getting all reviewLink
+    dispatch(fetchFormSubmissions(formId));
+  },
+});
 
 const SubmissionActionButton = ({
   formInstance,
@@ -35,6 +39,7 @@ const SubmissionActionButton = ({
     setFormInstanceSchedulingProgress({
       formInstanceId: formInstance._id,
       schedulingProgress,
+      formId: formInstance.formId,
     });
   }, [setFormInstanceSchedulingProgress]);
 

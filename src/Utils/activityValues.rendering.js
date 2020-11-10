@@ -60,6 +60,11 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
   };
 };
 
+
+const renderCategories = categories => categories.map(({ id, values }) => `${window.tePrefsLibStore.getState().te.extIdProps.fields[id].label || id}: ${values}`).join(', ');
+const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
+const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
+
 /**
  * @function formatSubmissionValue
  * @description returns a formatted submission value for html output
@@ -70,7 +75,7 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
 export const formatSubmissionValue = (submissionValue, submissionValueType) => {
   if (submissionValueType === submissionValueTypes.FILTER)
     return submissionValue.map(
-      el => `Field: ${el.field}, value: ${el.value[0]}`
+      el => renderFilterValues(el)
     );
   return submissionValue;
 };
@@ -181,8 +186,7 @@ const getRenderPayloadForObjectFilter = activityValue => {
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: activityValue.submissionValue,
       formattedValue: activityValue.submissionValue
-        .map(el => `Field: ${el.categories.length ? el.categories[0].id : el.searchFields}, value: ${el.categories.length ? el.categories[0].values[0] : el.searchString}`)
-        .toString()
+        .map(el => renderFilterValues(el)).join(', ')
     });
 
   return createRenderPayload({
