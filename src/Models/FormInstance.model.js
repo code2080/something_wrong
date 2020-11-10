@@ -46,6 +46,7 @@ export default class FormInstance {
     values = [],
     createdAt,
     updatedAt,
+    index,
   }) {
     this._id = _id;
     this.scopedObject = scopedObject;
@@ -62,5 +63,6 @@ export default class FormInstance {
     this.values = values;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.index = index;
   }
 }

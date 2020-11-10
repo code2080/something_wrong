@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
 // ACTIONS
-import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
+import { fetchFormSubmissions, toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
@@ -25,6 +25,7 @@ import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
 import FilterModal from '../../Components/FormSubmissionFilters/FilterModal';
 import FormInfo from '../../Components/Sections/FormInfo';
+import { Icon } from 'antd';
 
 // HELPERS
 import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/forms.helpers';
@@ -36,6 +37,7 @@ import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { themeColors } from '../../Constants/themeColors.constants';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -55,6 +57,7 @@ const applyScopedObjectFilters = (el, objs, filters) => {
 const filterForOwn = (el, userId) => (el.teCoreProps.assignedTo || []).includes(userId);
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
+const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;
@@ -69,6 +72,7 @@ const mapStateToProps = (state, ownProps) => {
     userId: _.get(state, 'auth.user.id', null),
     filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
     isLoadingSubmissions: loadingSelector(state),
+    isSaving: savingSelector(state),
     formId,
     form,
     submissions,
@@ -82,6 +86,7 @@ const mapActionsToProps = {
   fetchActivitiesForForm,
   setBreadcrumbs,
   fetchDataForDataSource,
+  toggleFormInstanceStarringStatus,
   loadFilter,
 };
 
@@ -105,11 +110,13 @@ const FormPage = ({
   submissions,
   scopedObjects,
   isLoadingSubmissions,
+  isSaving,
   fetchFormSubmissions,
   fetchActivitiesForForm,
   setBreadcrumbs,
   fetchMappings,
   fetchDataForDataSource,
+  toggleFormInstanceStarringStatus,
   loadFilter,
   history,
 }) => {
@@ -134,8 +141,6 @@ const FormPage = ({
   useEffect(() => {
     form.objectScope && fetchDataForDataSource(form.objectScope);
   }, [form.objectScope]);
-
-
 
 
   const payload = useMemo(() => {
@@ -184,8 +189,28 @@ const FormPage = ({
     tableColumns.formSubmission.SCHEDULING_PROGRESS,
     form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
     ..._cols,
+    {
+      ...tableColumns.formSubmission.IS_STARRED,
+      render: (isStarred, item) => (
+        <Icon
+          style={{ fontSize: '0.9rem', color: themeColors.jungleGreen }}
+          type="star"
+          theme={isStarred ? 'filled' : 'outlined'}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!isSaving) {
+              toggleFormInstanceStarringStatus({
+                formInstanceId: item._id,
+                isStarred,
+              });
+            }
+          }}
+        />
+      )
+    },
     tableColumns.formSubmission.ACTION_BUTTON
-  ]), [_cols]);
+  ]), [_cols, isSaving]);
 
   const filteredDatasource = useMemo(() => {
     const { freeTextFilter, scopedObject } = filters;
@@ -215,6 +240,9 @@ const FormPage = ({
               })
             : true
       )
+      .sort((a, b) => {
+        return a.index - b.index;
+      })
   }, [userId, filters, _dataSource, columns]);
   return (
     <div className="form--wrapper">

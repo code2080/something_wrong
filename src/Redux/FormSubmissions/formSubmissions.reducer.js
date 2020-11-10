@@ -22,9 +22,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         [formId]: {
           ...submissions.reduce(
-            (f, el) => ({
+            (f, el, index) => ({
               ...f,
-              [el._id]: new FormInstance(el),
+              [el._id]: new FormInstance({
+                ...el,
+                index // To make sure formInstance order is not changed after update
+              }),
             }),
             {}
           ),
