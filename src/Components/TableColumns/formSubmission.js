@@ -34,7 +34,7 @@ export const formSubmission = {
     key: 'scopedObject',
     dataIndex: 'scopedObject',
     render: val => <ScopedObject objectExtId={val} />,
-    sorter: (a, b) => a.scopedObject - b.scopedObject
+    sorter: (a, b) => sortAlpha(a.scopedObject, b.scopedObject)
   },
   ACTION_BUTTON: {
     title: '',
