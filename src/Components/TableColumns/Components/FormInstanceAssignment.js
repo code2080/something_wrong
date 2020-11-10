@@ -5,7 +5,7 @@ import { Icon, Popover, Input, Button } from 'antd';
 import _ from 'lodash';
 
 // CONSTANTS
-import { ASSIGNABLE_PERMISSION_NAME, ASSIGN_PERMISSION } from '../../../Constants/permissions.constants'
+import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants'
 
 // ACTIONS
 import { toggleUserForFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.actions';
@@ -15,7 +15,6 @@ import ManageAssigneesList from './ManageAssigneesList';
 
 // SELECTORS
 import { getUsers } from '../../../Redux/Users/users.selectors';
-import { hasPermission } from '../../../Redux/Auth/auth.selectors';
 
 // STYLES
 import './FormInstanceAssignment.scss';
@@ -88,10 +87,10 @@ AssignedAvatars.defaultProps = {
   show: 3
 };
 
-const AssignmentPopoverTitle= ({ hasAssignPermission, onAssignSelf, isSelf }) => (
+const AssignmentPopoverTitle= ({ onAssignSelf, isSelf }) => (
   <div className="assignment__popover--header">
-    <span className="assignment__popover__header--title">{hasAssignPermission ? 'Assign submission' : 'Assignees'}</span>
-    {!isSelf && hasAssignPermission && <Button
+    <span className="assignment__popover__header--title">Assign submission</span>
+    {!isSelf && <Button
       type='link'
       size="small"
       onClick={() => onAssignSelf()}
@@ -123,7 +122,6 @@ const withKeyMovedToHead = (list, key, accessor = _.identity) => {
 const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUserForFormInstance }) => {
   const [filterQuery, setFilterQuery] = useState('');
   const users = useSelector(getUsers(ASSIGNABLE_PERMISSION_NAME));
-  const hasAssignPermission = useSelector(hasPermission(ASSIGN_PERMISSION));
   const sortedUsers = _.sortBy(_.flatMap(users), ['firstName', 'lastName']);
   const _users = withKeyMovedToHead(sortedUsers, selfUID, user => user._id);
 
@@ -149,7 +147,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
     [_users, assignedTo, filterQuery]
   );
 
-  const userLists = [{ 'users': assignees, 'isAssigned': true }, hasAssignPermission && { 'users': filteredUsers, 'isAssigned': false }].filter(_.identity);
+  const userLists = [{ users: assignees, isAssigned: true }, { users: filteredUsers, isAssigned: false }];
   return (
     <Popover
       overlayClassName="assignment__popover--wrapper"
@@ -157,7 +155,6 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
         <AssignmentPopoverTitle
           onAssignSelf={() => toggleUserForFormInstance({ formInstanceId, userId: selfUID })}
           isSelf={!!_.find(assignees, assignee => assignee._id === selfUID)}
-          hasAssignPermission={hasAssignPermission}
         />
       )}
       content={(
@@ -175,7 +172,6 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
               users={users}
               selfUID={selfUID}
               isAssigned={isAssigned}
-              hasAssignPermission={hasAssignPermission}
               onToggleUser={userId => toggleUserForFormInstance({ formInstanceId, userId })}
             />
           ))}
