@@ -10,7 +10,7 @@ import ScopedObject from '../FormToolbar/ScopedObject';
 import { Icon } from 'antd';
 
 // SORTERS
-import { sortAlpha, sortBoolean } from './Helpers/sorters';
+import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
 
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
@@ -27,8 +27,7 @@ export const formSubmission = {
     key: 'createdAt',
     dataIndex: 'createdAt',
     render: val => moment(val).format('YYYY-MM-DD'),
-    sorter: (a, b) =>
-      moment(a.updatedAt).valueOf() - moment(b.updatedAt).valueOf()
+    sorter: (a, b) => sortTime(a.createdAt, b.createdAt)
   },
   SCOPED_OBJECT: {
     title: 'Scoped object',
