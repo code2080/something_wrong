@@ -220,6 +220,7 @@ const FormPage = ({
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return _dataSource
       .filter(el => filters.onlyOwn ? filterForOwn(el, userId) : true)
+      .filter(el => !filters.onlyStarred || el.teCoreProps.isStarred)
       .filter(
         el => Object.keys(scopedObject)
           .filter(key => scopedObject[key].length > 0)
