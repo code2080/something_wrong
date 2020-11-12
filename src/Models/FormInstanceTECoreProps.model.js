@@ -4,7 +4,7 @@ export default class FormInstanceTECoreProps {
   acceptanceComment;
   schedulingProgress;
   selectionSettings;
-  starred;
+  isStarred;
 
   constructor({
     assignedTo = [],
@@ -12,13 +12,13 @@ export default class FormInstanceTECoreProps {
     acceptanceComment = null,
     schedulingProgress = null,
     selectionSettings = {},
-    starred = [],
+    isStarred = false,
   }) {
     this.assignedTo = assignedTo;
     this.acceptanceStatus = acceptanceStatus;
     this.acceptanceComment = acceptanceComment;
     this.schedulingProgress = schedulingProgress;
     this.selectionSettings = selectionSettings;
-    this.starred = starred;
+    this.isStarred = isStarred;
   }
 }

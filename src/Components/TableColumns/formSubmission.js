@@ -84,8 +84,8 @@ export const formSubmission = {
   IS_STARRED: {
     title: 'Is starred',
     key: 'isStarred',
-    dataIndex: 'isStarred',
-    sorter: (a, b) => sortBoolean(a.isStarred, b.isStarred),
+    dataIndex: 'teCoreProps.isStarred',
+    sorter: (a, b) => sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
     align: 'center',
     fixedWidth: 100,
   }

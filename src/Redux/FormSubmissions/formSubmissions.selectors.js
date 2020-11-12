@@ -3,15 +3,11 @@ import _ from 'lodash';
 import { sortTime } from '../../Components/TableColumns/Helpers/sorters';
 
 const getSubmissions = (state, formId) => state.submissions[formId];
-const getAuthState = state => state.auth;
 
 export const selectSubmissions = createSelector(
-  [getSubmissions, getAuthState],
+    [getSubmissions],
     // Fix this sorted
-  (submissions, auth) => _.flatMap(submissions).map(submission => ({
-      ...submission,
-      isStarred: submission.teCoreProps.starred.includes(_.get(auth, ['user','id']))
-    }))
+    submissions => _.flatMap(submissions)
     .sort((a, b) => sortTime(a.updatedAt, b.updatedAt))
 );
 
