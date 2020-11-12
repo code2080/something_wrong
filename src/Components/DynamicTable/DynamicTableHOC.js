@@ -99,6 +99,9 @@ const DynamicTableHOC = ({
     [columns, visibleCols, _width]
   );
 
+  // If there are no accessors defined for the filter, we do not want to show filter bar at all
+  const _showFilter = showFilter && _cols.some(({dataIndex, filterFn }) => dataIndex || filterFn); 
+
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
     if (filterQuery === '' || filterQuery.length < 3) return dataSource;
@@ -107,15 +110,17 @@ const DynamicTableHOC = ({
       el => _cols
         .some(
           col => {
-            if (!el[col.dataIndex]) return false;
-            return el[col.dataIndex]
+            const { dataIndex, filterFn } = col;
+            const filterVal = (filterFn && filterFn(el)) || el[dataIndex];
+            if (!filterVal) return false;
+            return filterVal
               .toString()
               .toLowerCase()
-              .indexOf(
+              .includes(
                 filterQuery
                   .toString()
                   .toLowerCase()
-              ) > -1
+              )
           })
     );
   }, [filterQuery, dataSource, _cols]);
@@ -136,7 +141,7 @@ const DynamicTableHOC = ({
         />
       ) : (
         <React.Fragment>
-          {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
+          {_showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
           <Table
             components={{
               header: {
