@@ -25,6 +25,7 @@ const ActivitiesTable = ({
       dataSource={dataSource}
       rowKey="_id"
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
+      showFilter={false}
       expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
     />
   );
