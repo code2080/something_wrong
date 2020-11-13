@@ -8,28 +8,33 @@ import { Menu, Dropdown, Icon, Button } from 'antd';
 import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
 
 // ACTIONS
-import { setFormInstanceSchedulingProgress, fetchFormSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormInstanceSchedulingProgress, fetchFormSubmissions, sendReviewerLink } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
+import { formInstanceStatusTypes } from "../../../Constants/formInstanceStatuses.constants";
 
 const EDIT_FORM_INSTANCE = 'EDIT_FORM_INSTANCE';
 const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
 const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
 const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
-
+const REMIND_USER = 'REMIND_USER';
 const mapActionsToProps = dispatch => ({
   setFormInstanceSchedulingProgress: async ({ formInstanceId, schedulingProgress, formId }) => {
     await dispatch(setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }));
     // fetch submissions for getting all reviewLink
     dispatch(fetchFormSubmissions(formId));
   },
+  remindUser({ formInstanceId }) {
+    dispatch(sendReviewerLink({ formInstanceId }));
+  },
 });
 
 const SubmissionActionButton = ({
   formInstance,
   setFormInstanceSchedulingProgress,
+  remindUser,
   history,
 }) => {
   // State var to hold modal's visibility
@@ -62,10 +67,13 @@ const SubmissionActionButton = ({
       case SET_PROGRESS_SCHEDULED:
         setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
         break;
+      case REMIND_USER:
+        remindUser({ formInstanceId: formInstance._id });
+        break;
       default:
         break;
     }
-  }, [setFormInstanceSchedulingProgressCallback]);
+  }, [setFormInstanceSchedulingProgressCallback, formInstance]);
 
   const actionMenu = useMemo(() => (
     <Menu
@@ -73,6 +81,9 @@ const SubmissionActionButton = ({
       onClick={onClick}
     >
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
+      {formInstance.reviewLink && (
+        <Menu.Item key={REMIND_USER}>Remind user</Menu.Item>
+      )}
       <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
       <Menu.SubMenu title="Set scheduling progress">
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>
@@ -86,7 +97,7 @@ const SubmissionActionButton = ({
         </Menu.Item>
       </Menu.SubMenu>
     </Menu>
-  ), []);
+  ), [formInstance]);
 
   return (
     <React.Fragment>
@@ -112,6 +123,7 @@ const SubmissionActionButton = ({
 SubmissionActionButton.propTypes = {
   formInstance: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
+  remindUser: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
