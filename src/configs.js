@@ -17,6 +17,15 @@ const envVarMap = {
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`
   },
+  beta: {
+    API_URL: `http://preferences-beta.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `http://auth-beta.timeedit.io/${apiVersion}/`,
+    ADMIN_URL: `http://admin-beta.timeedit.io/${apiVersion}/`,
+    APP_ID: '5e35700bdb7664942c406b9d ',
+    APP_NAME: 'tePIC',
+    VIEWS_URL: `http://views-beta.timeedit.io/${apiVersion}/`,
+    AE_OL_URL: `http://34.120.138.176/${apiVersion}/`,
+  },
   localhost: {
     API_URL: `http://localhost:3002/${apiVersion}/`,
     AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
@@ -30,6 +39,7 @@ const envVarMap = {
 const availableEnvs = [
   'production',
   'development',
+  'beta',
   'localhost',
 ];
 
