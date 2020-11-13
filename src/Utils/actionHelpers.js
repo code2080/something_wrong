@@ -3,6 +3,7 @@ import { getEnvParams } from '../configs';
 import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
 import React from 'react';
+import { hasPermission } from '../Redux/Auth/auth.selectors';
 // import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status
@@ -96,6 +97,7 @@ function createThunkAction({
   headers,
   successNotification = null,
   postAction = {},
+  permission = null,
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
@@ -110,14 +112,20 @@ function createThunkAction({
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
     const option = await prepareOption(method, params, requiresAuth, headers);
     const { request, failure } = flow;
+
+    if (permission && !hasPermission(permission)(getState())) {
+      console.log(`Trying to call ${endpoint}, but missing permission: ${permission}`);
+      return;
+    }
+
     if (typeof request === 'function') {
       dispatch(request(params, postAction));
     }
     if (
       typeof allApis[endpoint].cancel === 'function' &&
       allApis[endpoint].inprogress
-    ) {
-      allApis[endpoint].cancel('DUPLICATED_CANCELLED');
+      ) {
+        allApis[endpoint].cancel('DUPLICATED_CANCELLED');
       allApis[endpoint].inprogress = false;
     }
     option.cancelToken = new CancelToken(c => {
@@ -219,6 +227,7 @@ export const asyncAction = {
     headers,
     successNotification,
     postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'GET',
@@ -229,6 +238,7 @@ export const asyncAction = {
       headers,
       successNotification,
       postAction,
+      permission,
     }),
   PUT: ({
     flow,
@@ -238,6 +248,7 @@ export const asyncAction = {
     headers,
     successNotification,
     postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'PUT',
@@ -248,6 +259,7 @@ export const asyncAction = {
       headers,
       successNotification,
       postAction,
+      permission,
     }),
   PATCH: ({
     flow,
@@ -257,6 +269,7 @@ export const asyncAction = {
     headers,
     successNotification,
     postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'PATCH',
@@ -267,6 +280,7 @@ export const asyncAction = {
       headers,
       successNotification,
       postAction,
+      permission,
     }),
   POST: ({
     flow,
@@ -276,6 +290,7 @@ export const asyncAction = {
     headers,
     successNotification,
     postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'POST',
@@ -286,6 +301,7 @@ export const asyncAction = {
       headers,
       successNotification,
       postAction,
+      permission,
     }),
   DELETE: ({
     flow,
@@ -295,6 +311,7 @@ export const asyncAction = {
     headers,
     successNotification,
     postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'DELETE',
@@ -305,5 +322,6 @@ export const asyncAction = {
       headers,
       successNotification,
       postAction,
+      permission,
     })
 };
