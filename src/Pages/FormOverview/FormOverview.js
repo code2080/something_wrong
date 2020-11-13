@@ -125,7 +125,6 @@ FormList.propTypes = {
   fetchAllJobs: PropTypes.func.isRequired,
   fetchOrg: PropTypes.func.isRequired,
   fetchIntegrationSettings: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired
 };
 
