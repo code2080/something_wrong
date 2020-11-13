@@ -9,6 +9,7 @@ import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { updateActivities } from '../Activities/activities.actions';
 import { updateActivitiesWithSchedulingResults } from '../../Utils/scheduling.helpers';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
+import { AEBETA_PERMISSIION } from '../../Constants/permissions.constants';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
@@ -20,6 +21,7 @@ export const fetchAllJobs = () =>
   asyncAction.GET({
     flow: fetchAllJobsFlow,
     endpoint: `${getEnvParams().AE_OL_URL}jobs?limit=200`,
+    permission: AEBETA_PERMISSIION,
   });
 
 const createJobFlow = {
@@ -93,6 +95,7 @@ export const createJob = ({
     endpoint: `${getEnvParams().AE_OL_URL}jobs`,
     params: job,
     postAction: { callback, meta, activities },
+    permission: AEBETA_PERMISSIION,
   }));
 }
 
@@ -140,4 +143,5 @@ export const abortJob = ({
   flow: abortJobFlow,
   endpoint: `${getEnvParams().AE_OL_URL}jobs/${jobId}/stop`,
   postAction: { formId, formInstanceId, activities, dispatch, getState },
+  permission: AEBETA_PERMISSIION,
 }));
