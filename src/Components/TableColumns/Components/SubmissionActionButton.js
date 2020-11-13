@@ -19,7 +19,7 @@ const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
 const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
 const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
-const REMIND_USER = 'REMIND_USER';
+const NOTIFY_USER_WITH_REVIEW_LINK = 'NOTIFY_USER_WITH_REVIEW_LINK';
 const mapActionsToProps = dispatch => ({
   setFormInstanceSchedulingProgress: async ({ formInstanceId, schedulingProgress, formId }) => {
     await dispatch(setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }));
@@ -67,7 +67,7 @@ const SubmissionActionButton = ({
       case SET_PROGRESS_SCHEDULED:
         setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
         break;
-      case REMIND_USER:
+      case NOTIFY_USER_WITH_REVIEW_LINK:
         remindUser({ formInstanceId: formInstance._id });
         break;
       default:
@@ -82,7 +82,7 @@ const SubmissionActionButton = ({
     >
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
       {formInstance.reviewLink && (
-        <Menu.Item key={REMIND_USER}>Remind user</Menu.Item>
+        <Menu.Item key={NOTIFY_USER_WITH_REVIEW_LINK}>Notify user with review link</Menu.Item>
       )}
       <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
       <Menu.SubMenu title="Set scheduling progress">
