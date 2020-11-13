@@ -105,6 +105,7 @@ const ObjectRequestOverview = ({ formInstanceId, requests }) => {
   return (<DynamicTable
     columns={objReqColumns}
     dataSource={requests}
+    showFilter={false}
     rowKey="_id"
     pagination={false}
     expandedRowRender={request => <ExpandedPane columns={fieldColumns(request)} row={request} />}
