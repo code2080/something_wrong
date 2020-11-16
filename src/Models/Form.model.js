@@ -1,5 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
+import { DATE_FORMAT } from '../Constants/common.constants';
 
 export default class Form {
   // FORM IDENTIFICATION
@@ -98,7 +99,7 @@ export default class Form {
 
     // SETTINGS
     this.dueDate = dueDate || moment().add(1, 'day');
-    this.dueDateDisplay = dueDate ? moment(dueDate).format("MMM DD 'YY") : null;
+    this.dueDateDisplay = dueDate ? moment(dueDate).format(DATE_FORMAT) : null;
     this.allowLateResponses = allowLateResponses;
     this.sendAutomaticReminders = sendAutomaticReminders;
     this.formPeriod = formPeriod || {
@@ -107,8 +108,8 @@ export default class Form {
     };
     this.formPeriodDisplay =
       formPeriod && formPeriod.startDate && formPeriod.endDate
-        ? `${moment(formPeriod.startDate).format("MMM DD 'YY")} - 
-          ${moment(formPeriod.endDate).format("MMM DD 'YY")}`
+        ? `${moment(formPeriod.startDate).format(DATE_FORMAT)} - 
+          ${moment(formPeriod.endDate).format(DATE_FORMAT)}`
         : null;
     this.objectScope = objectScope;
     this.reservationMode = reservationMode;

@@ -12,6 +12,7 @@ import ObjectScopeCol from '../TableColumns/Components/ObjectScopeCol';
 
 // SELECTORS
 import { selectForm } from '../../Redux/Forms/forms.selectors';
+import DateTime from '../Common/DateTime';
 
 // Include these fields?
 //     assigners = [],
@@ -21,7 +22,6 @@ import { selectForm } from '../../Redux/Forms/forms.selectors';
 //     responseCount,
 
 const formToFieldInfo = form => {
-  const formatDate = (date, withTime = false) => moment(date).format(`MMM Do YY${withTime ? ', H:mm' : ''}`);
   const formFieldMapping = [{
     key: 'name',
     label: 'Name',
@@ -37,15 +37,15 @@ const formToFieldInfo = form => {
   }, {
     key: 'createdAt',
     label: 'Created',
-    formatValueFn: value => formatDate(value),
+    formatValueFn: value => <DateTime value={value} />,
   }, {
     key: 'updatedAt',
     label: 'Updated',
-    formatValueFn: value => formatDate(value),
+      formatValueFn: value => <DateTime value={value} />,
   }, {
     key: 'dueDate',
     label: 'Due',
-    formatValueFn: value => formatDate(value),
+      formatValueFn: value => <DateTime value={value} />,
   }, {
     key: 'allowLateResponses',
     label: 'Allow late responses',
@@ -53,7 +53,7 @@ const formToFieldInfo = form => {
   }, {
     key: 'formPeriod',
     label: 'Form period',
-    formatValueFn: value => <b>{`${formatDate(value.startDate)} - ${formatDate(value.endDate)}`}</b>,
+    formatValueFn: value => <b><DateTime value={[value.startDate, value.endDate]} /></b>,
   }, {
     key: 'objectScope',
     label: 'Object scope',

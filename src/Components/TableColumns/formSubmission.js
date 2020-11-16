@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
@@ -7,6 +6,7 @@ import StatusLabel from '../StatusLabel/StatusLabel';
 import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
 import ScopedObject from '../FormToolbar/ScopedObject';
+import DateTime from '../Common/DateTime';
 import { Icon } from 'antd';
 
 // SORTERS
@@ -26,7 +26,7 @@ export const formSubmission = {
     title: 'Submitted',
     key: 'createdAt',
     dataIndex: 'createdAt',
-    render: val => moment(val).format('YYYY-MM-DD'),
+    render: val => <DateTime value={val} />,
     sorter: (a, b) => sortTime(a.createdAt, b.createdAt)
   },
   SCOPED_OBJECT: {

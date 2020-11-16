@@ -27,6 +27,8 @@ import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
+import DateTime from '../Components/Common/DateTime';
+import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 
 const unformattedValue = value => (
   <div
@@ -45,15 +47,15 @@ const connectedSectionColumns = {
       title: 'Start',
       key: 'startTime',
       dataIndex: 'startTime',
-      fixedWidth: 110,
-      render: val => moment(val).format("MMM DD 'YY HH:mm"),
+      fixedWidth: 130,
+      render: val => <DateTime value={val} format={DATE_TIME_FORMAT} />
     },
     {
       title: 'End',
       key: 'endTime',
       dataIndex: 'endTime',
       fixedWidth: 80,
-      render: val => moment(val).format('HH:mm'),
+      render: val => <DateTime value={val} format={TIME_FORMAT} />
     },
   ],
   WITH_TIMESLOTS: timeslots => [

@@ -7,6 +7,7 @@ import {
   mappingTimingModeProps
 } from '../../../Constants/mappingTimingModes.constants';
 import BaseActivityCol from '../BaseColumn/BaseActivityCol';
+import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
 
 const timingCols = {
   mode: mapping => ({
@@ -34,7 +35,7 @@ const timingCols = {
         type="TIMING"
         prop="startTime"
         propTitle="Start time"
-        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
       />
     )
@@ -49,7 +50,7 @@ const timingCols = {
         type="TIMING"
         prop="endTime"
         propTitle="End time"
-        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
       />
     )
@@ -64,7 +65,7 @@ const timingCols = {
         type="TIMING"
         prop="startTime"
         propTitle="Start after or at"
-        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
       />
     )
@@ -79,7 +80,7 @@ const timingCols = {
         type="TIMING"
         prop="endTime"
         propTitle="End before or at"
-        formatFn={value => moment(value).format('YYYY-MM-DD HH:mm')}
+        formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
       />
     )
