@@ -9,7 +9,7 @@ const envVarMap = {
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`
   },
-  development: {
+  staging: {
     API_URL: `https://preferences.timeedit.io/${apiVersion}/`,
     AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://admin.timeedit.io/${apiVersion}/`,
@@ -38,7 +38,7 @@ const envVarMap = {
 
 const availableEnvs = [
   'production',
-  'development',
+  'staging',
   'beta',
   'localhost',
 ];
