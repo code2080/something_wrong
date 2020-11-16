@@ -19,6 +19,43 @@ import {
   activityStatuses,
   activityStatusProps
 } from '../Constants/activityStatuses.constants';
+import { createJob } from '../Redux/Jobs/jobs.actions';
+import { schedulingModes } from '../Constants/schedulingModes.constants';
+
+/**
+ * @function createSchedulingReturns
+ * @description creates an array of scheduling returns from a mapped object
+ * @param {Object<SchedulingReturn>} protoReturns the mapped scheduling returns
+ */
+
+export const createSchedulingReturns = protoReturns => {
+  /**
+   * ProtoReturns should be formatted as such:
+   * ProtoReturns = { [activityId1]: SchedulingReturn1, [activityId2]: SchedulingReturn2 }
+   */
+  return (Object.keys(protoReturns) || []).map(activityId => ({
+    activityId,
+    result: {
+      ...protoReturns[activityId]
+    },
+  }));
+}
+
+/**
+ * @function getBindingSchedulingAlgorithm
+ * @description determines the binding (ie most complicated) scheduling algorithm in a set of activities
+ * @param {Array<Activities>} activities the activities to process
+ * @returns schedulingAlgorithm: String
+ */
+const getBindingSchedulingAlgorithm = activities => {
+  console.log(activities);
+  const schedA = activities.map(a => determineSchedulingAlgorithmForActivity(a));
+  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME))
+    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
+  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT))
+    return schedulingAlgorithms.BEST_FIT_OBJECT;
+  return schedulingAlgorithms.BEST_FIT_TIME;
+}
 
 /**
  * @function determineSchedulingAlgorithmForActivityValue
@@ -131,7 +168,7 @@ export const determineSchedulingAlgorithmForActivity = activity => {
   if (hasBestFitObject) return schedulingAlgorithms.BEST_FIT_OBJECT;
 };
 
-export const scheduleActivity = (activity, teCoreScheduleFn, callback) => {
+export const scheduleActivity = async (activity, teCoreScheduleFn, callback) => {
   // Validate the activity
   if (!validateActivity(activity))
     return new SchedulingReturn({
@@ -151,11 +188,14 @@ export const scheduleActivity = (activity, teCoreScheduleFn, callback) => {
     });
   }
 
-  return callback(
-    new SchedulingReturn({
-      status: activityStatuses.FAILED,
-      errorCode: activityStatuses.FAILED,
-      errorMessage: 'The scheduling algorithm has not yet been implemented'
+  return window.tePrefsLibStore.dispatch(
+    createJob({
+      activities: [activity],
+      type: schedulingAlgorithm,
+      formId: activity.formId,
+      formInstanceIds: [activity.formInstanceId],
+      callback,
+      meta: { schedulingMode: schedulingModes.SINGLE },
     })
   );
 };
@@ -186,15 +226,8 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
       );
       return {
         ...a,
-        result:
-          schedulingAlgorithm === schedulingAlgorithms.EXACT
-            ? null
-            : new SchedulingReturn({
-              status: activityStatuses.FAILED,
-              errorCode: activityStatuses.FAILED,
-              errorMessage:
-                'The scheduling algorithm has not yet been implemented'
-            }),
+        schedulingAlgorithm,
+        result: null,
         reservation:
           schedulingAlgorithm === schedulingAlgorithms.EXACT
             ? formatActivityForExactScheduling(a.activity)
@@ -202,28 +235,45 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
       };
     });
 
-  // Get the ones we're able to schedule
-  const toSchedule = preprocessingMap
-    .filter(a => a.result == null)
-    .map(a => ({ activityId: a.activityId, reservation: a.reservation }));
-  const failedActivities = preprocessingMap
-    .filter(a => a.result != null)
-    .map(a => ({ activityId: a.activityId, result: a.result }));
+  // Edge case: all activities have schedulingAlgorithm EXACT
+  if (preprocessingMap.every(el => el.schedulingAlgorithm === schedulingAlgorithms.EXACT)) {
+    // Get the ones we're able to schedule
+    const toSchedule = preprocessingMap
+      .filter(a => a.result == null)
+      .map(a => ({ activityId: a.activityId, reservation: a.reservation }));
+    const failedActivities = preprocessingMap
+      .filter(a => a.result != null)
+      .map(a => ({ activityId: a.activityId, result: a.result }));
 
-  if (toSchedule.length === 0) return cFn(failedActivities);
+    if (toSchedule.length === 0) return cFn(failedActivities);
 
-  return teCoreScheduleFn({
-    reservations: toSchedule,
-    formInfo: {
-      formType,
-      reservationMode,
-    },
-    callback: teCoreResults =>
-      cFn([
-        ...failedActivities,
-        ...parseTECoreResultsToScheduleReturns(teCoreResults)
-      ])
-  });
+    return teCoreScheduleFn({
+      reservations: toSchedule,
+      formInfo: {
+        formType,
+        reservationMode,
+      },
+      callback: teCoreResults =>
+        cFn([
+          ...failedActivities,
+          ...parseTECoreResultsToScheduleReturns(teCoreResults)
+        ])
+    });
+  }
+  // General case: start an automated scheduling job
+  const a = preprocessingMap
+    .filter(a => a.validates)
+    .map(a => a.activity);
+  return a.length && window.tePrefsLibStore.dispatch(
+    createJob({
+      activities: a,
+      type: getBindingSchedulingAlgorithm(a),
+      formId: a[0].formId,
+      formInstanceIds: a.map(a => a.formInstanceId),
+      callback: cFn,
+      meta: { schedulingMode: schedulingModes.MULTIPLE },
+    })
+  );
 };
 
 /**

@@ -11,7 +11,6 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
 
-
 const ActivitiesTable = ({
   formInstanceId,
   mapping,

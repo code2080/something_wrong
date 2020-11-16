@@ -3,6 +3,7 @@ export const schedulingAlgorithms = {
   BEST_FIT_OBJECT: 'BEST_FIT_OBJECT',
   BEST_FIT_TIME: 'BEST_FIT_TIME',
   BEST_FIT_OBJECT_TIME: 'BEST_FIT_OBJECT_TIME',
+  UNKNOWN: 'UNKNOW',
 };
 
 export const schedulingAlgorithmProps = {
@@ -20,5 +21,10 @@ export const schedulingAlgorithmProps = {
     label: 'Best fit',
     icon: 'dashboard',
     tooltip: 'A time within this range when all objects are available will be selected during scheduling',
+  },
+  [schedulingAlgorithms.UNKNOWN]: {
+    label: 'Unknown',
+    icon: 'dashboard',
+    tooltip: 'This scheduling algortihm is unknown',
   },
 };

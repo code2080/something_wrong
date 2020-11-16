@@ -49,6 +49,22 @@ const reducer = (state = initialState, action) => {
         user: action.payload,
       };
 
+    case types.GET_ORG_FOR_USER_SUCCESS: {
+      const { payload: { organization: org } } = action;
+      return {
+        ...state,
+        org,
+      };
+    }
+
+    case types.GET_INTEGRATION_SETTINGS_SUCCESS: {
+      const { payload: { connectionSetting } } = action;
+      return {
+        ...state,
+        integrationSettings: connectionSetting,
+      };
+    }
+
     case types.LOGIN_MULTIPLE_ORGS: {
       // If payload doesn't contain token
       if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken)

@@ -8,7 +8,9 @@ import _ from 'lodash';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
+import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
+import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
 import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
@@ -36,6 +38,9 @@ const mapActionsToProps = {
   fetchObjectRequests,
   setBreadcrumbs,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
 };
 
 const FormList = ({
@@ -45,17 +50,18 @@ const FormList = ({
   fetchForms,
   fetchUsers,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
   fetchObjectRequests,
   setBreadcrumbs,
   history
 }) => {
-
   const objectScopes = useMemo(() => ({
     types: _.uniq(forms.reduce((objScopes, form) =>
       form.objectScope
-        ? [...objScopes, form.objectScope] :
-        objScopes
-      , [])
+        ? [...objScopes, form.objectScope]
+        : objScopes, [])
     )
   }), [forms]);
 
@@ -63,6 +69,8 @@ const FormList = ({
 
   useEffect(() => {
     fetchForms();
+    fetchOrg();
+    fetchAllJobs();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
@@ -70,6 +78,7 @@ const FormList = ({
     if (user && user.organizationId) {
       fetchMapping();
       fetchUsers(user.organizationId);
+      fetchIntegrationSettings(user.organizationId);
     }
   }, [user]);
 
@@ -113,6 +122,9 @@ FormList.propTypes = {
   fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  fetchAllJobs: PropTypes.func.isRequired,
+  fetchOrg: PropTypes.func.isRequired,
+  fetchIntegrationSettings: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
 

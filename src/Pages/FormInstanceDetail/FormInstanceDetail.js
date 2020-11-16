@@ -12,6 +12,7 @@ import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activitie
 import BaseSection from '../../Components/Sections/BaseSection';
 import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import ActivitiesOverview from './ActivitiesOverview';
+import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 import ObjectRequestOverview from './ObjectRequestOverview';
 import { Tabs } from 'antd';
 import FormInfo from '../../Components/Sections/FormInfo';
@@ -112,6 +113,7 @@ const FormInstancePage = ({
         formInstanceId={formInstance._id}
         onClickMore={handleClickMore}
       />
+      {hasAssistedSchedulingPermissions() && <JobToolbar />}
       {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {
         tabPanes.length > 1

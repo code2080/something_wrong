@@ -3,6 +3,7 @@ import { getEnvParams } from '../configs';
 import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
 import React from 'react';
+import { hasPermission } from '../Redux/Auth/auth.selectors';
 // import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status
@@ -52,11 +53,11 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-function doDispatch(flow, params, data) {
+function doDispatch(flow, params, data, postAction) {
   const { success, dispatch } = flow;
   const finalData = data.data || data;
   if (typeof success === 'function') {
-    dispatch(success({ ...finalData, actionMeta: { ...params } }, params));
+    dispatch(success({ ...finalData, actionMeta: { ...params } }, params, postAction));
   }
 }
 
@@ -94,7 +95,9 @@ function createThunkAction({
   params,
   requiresAuth = true,
   headers,
-  successNotification = null
+  successNotification = null,
+  postAction = {},
+  permission = null,
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
@@ -109,14 +112,20 @@ function createThunkAction({
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
     const option = await prepareOption(method, params, requiresAuth, headers);
     const { request, failure } = flow;
+
+    if (permission && !hasPermission(permission)(getState())) {
+      console.log(`Trying to call ${endpoint}, but missing permission: ${permission}`);
+      return;
+    }
+
     if (typeof request === 'function') {
-      dispatch(request(params));
+      dispatch(request(params, postAction));
     }
     if (
       typeof allApis[endpoint].cancel === 'function' &&
       allApis[endpoint].inprogress
-    ) {
-      allApis[endpoint].cancel('DUPLICATED_CANCELLED');
+      ) {
+        allApis[endpoint].cancel('DUPLICATED_CANCELLED');
       allApis[endpoint].inprogress = false;
     }
     option.cancelToken = new CancelToken(c => {
@@ -126,7 +135,7 @@ function createThunkAction({
     return axios(fullUrl, option)
       .then(response => {
         allApis[endpoint].inprogress = false;
-        doDispatch({ ...flow, dispatch, getState }, params, response.data);
+        doDispatch({ ...flow, dispatch, getState }, params, response.data, postAction);
         if (successNotification)
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
@@ -149,7 +158,8 @@ function createThunkAction({
               doDispatch(
                 { ...flow, dispatch, getState },
                 params,
-                newResponse.data
+                newResponse.data,
+                postAction,
               );
             });
           };
@@ -185,7 +195,6 @@ function createThunkAction({
         }
 
         if (typeof failure === 'function') {
-          console.log(data, option.params);
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'API call failed',
@@ -202,7 +211,7 @@ function createThunkAction({
             ),
             duration: 15
           });
-          dispatch(failure({ ...data }, option.params));
+          dispatch(failure({ ...data, actionMeta: { ...params } }, option.params, postAction));
         }
         return null;
       });
@@ -216,7 +225,9 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'GET',
@@ -225,7 +236,9 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
+      permission,
     }),
   PUT: ({
     flow,
@@ -233,7 +246,9 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'PUT',
@@ -242,7 +257,9 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
+      permission,
     }),
   PATCH: ({
     flow,
@@ -250,7 +267,9 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'PATCH',
@@ -259,7 +278,9 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
+      permission,
     }),
   POST: ({
     flow,
@@ -267,7 +288,9 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'POST',
@@ -276,7 +299,9 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
+      permission,
     }),
   DELETE: ({
     flow,
@@ -284,7 +309,9 @@ export const asyncAction = {
     params,
     requiresAuth = true,
     headers,
-    successNotification
+    successNotification,
+    postAction,
+    permission = '',
   }) =>
     createThunkAction({
       method: 'DELETE',
@@ -293,6 +320,8 @@ export const asyncAction = {
       params,
       requiresAuth,
       headers,
-      successNotification
+      successNotification,
+      postAction,
+      permission,
     })
 };
