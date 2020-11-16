@@ -4,6 +4,7 @@ import { SelectionSettings } from '../Models/SelectionSettings.model';
 import { getElementTypeFromId } from './elements.helpers';
 import { elementTypes } from '../Constants/elementTypes.constants';
 import { determineSectionType } from './determineSectionType.helpers';
+import { TIME_FORMAT } from '../Constants/common.constants';
 
 /**
  * @function getSectionTypeFromId
@@ -80,11 +81,11 @@ export const getSectionsToUseInActivities = (sections, activityDesign) => {
  */
 
 export const findTimeSlot = (startTime, endTime, timeslots) => {
-  const _startTime = moment.utc(startTime).format('HH:mm');
-  const _endTime = moment.utc(endTime).format('HH:mm');
+  const _startTime = moment.utc(startTime).format(TIME_FORMAT);
+  const _endTime = moment.utc(endTime).format(TIME_FORMAT);
   return timeslots.find(timeslot => {
-    const slotStart = moment.utc(timeslot.startTime).format('HH:mm');
-    const slotEnd = moment.utc(timeslot.endTime).format('HH:mm');
+    const slotStart = moment.utc(timeslot.startTime).format(TIME_FORMAT);
+    const slotEnd = moment.utc(timeslot.endTime).format(TIME_FORMAT);
     return slotStart === _startTime && slotEnd === _endTime;
   })
 };

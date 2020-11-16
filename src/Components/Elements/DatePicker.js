@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Icon } from 'antd';
+import { DATE_FORMAT } from '../../Constants/common.constants';
 
 // STYLES
 import './Pickers.scss';
@@ -12,7 +13,7 @@ const DatePicker = ({ value }) => (
       <Icon type="calendar" />
     </div>
     <div className="value--wrapper">
-      {moment(value).format('YYYY-MM-DD') || 'N/A'}
+      {moment(value).format(DATE_FORMAT) || 'N/A'}
     </div>
   </div>
 );

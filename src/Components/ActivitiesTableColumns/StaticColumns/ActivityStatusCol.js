@@ -12,6 +12,7 @@ import './ActivityStatusCol.scss';
 
 // CONSTANTS
 import { activityStatusProps, activityStatuses } from '../../../Constants/activityStatuses.constants';
+import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
 
 const ActivityStatusCol = ({ activity }) => {
   const content = (
@@ -29,7 +30,7 @@ const ActivityStatusCol = ({ activity }) => {
         )}
         <Form.Item label="Time">
           <div className="ant-form-text">
-            {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format('YYYY-MM-DD HH:mm') : 'N/A'}
+            {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
           </div>
         </Form.Item>
       </Form>

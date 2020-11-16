@@ -13,6 +13,7 @@ import { formStatusProps } from '../../Constants/formStatuses.constants';
 // HELPERS
 import { sortAlpha, sortTime } from './Helpers/sorters';
 import Form from '../../Models/Form.model';
+import DateTime from '../Common/DateTime';
 
 export const form = {
   CREATEDAT: {
@@ -21,7 +22,7 @@ export const form = {
     dataIndex: 'createdAt',
     fixedWidth: 100,
     sorter: (a, b) => sortTime(b.createdAt, a.createdAt),
-    render: createdDate => moment(createdDate).format('MMM Do YYYY')
+    render: createdDate => <DateTime value={createdDate} />
   },
   TYPE: {
     title: '',
@@ -71,9 +72,10 @@ export const form = {
   },
   DUE_DATE: {
     title: 'Due date',
-    dataIndex: 'dueDateDisplay',
-    key: 'dueDateDisplay',
+    dataIndex: 'dueDate',
+    key: 'dueDate',
     fixedWidth: 90,
+    render: dueDate => <DateTime value={dueDate} />,
     sorter: (a, b) => sortTime(b.dueDate, a.dueDate)
   },
   FORM_STATUS: {

@@ -16,6 +16,7 @@ import { mappingTypes } from '../Constants/mappingTypes.constants';
 import { schedulingAlgorithmProps } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes, submissionValueTypeProps } from '../Constants/submissionValueTypes.constants';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { DATE_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 
 /**
  * @function getSchedulingAlgorithmForActivityValue
@@ -130,11 +131,11 @@ const getRenderPayloadForTimeSlotStartTime = (
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [activityValue.value, moment(endTime.value).subtract(length.value, 'hours')],
-      formattedValue: `${moment(activityValue.value).format('YYYY-MM-DD')} ${moment(
+      formattedValue: `${moment(activityValue.value).format(DATE_FORMAT)} ${moment(
         activityValue.value
-      ).format('HH:mm')} - ${moment(endTime.value)
+      ).format(TIME_FORMAT)} - ${moment(endTime.value)
         .subtract(length.value, 'hours')
-        .format('HH:mm')}`
+        .format(TIME_FORMAT)}`
     });
 
   return createRenderPayload({
@@ -161,11 +162,11 @@ const getSchedulingPayloadForTimeSlotEndTime = (
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [moment(startTime.value).add(length.value, 'hours'), moment(activityValue.value)],
-      formattedValue: `${moment(startTime.value).format('YYYY-MM-DD')} ${moment(
+      formattedValue: `${moment(startTime.value).format(DATE_FORMAT)} ${moment(
         startTime.value
       )
         .add(length.value, 'hours')
-        .format('HH:mm')} - ${moment(activityValue.value).format('HH:mm')}`
+        .format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}`
     });
 
   return createRenderPayload({
