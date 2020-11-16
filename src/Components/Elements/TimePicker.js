@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Icon } from 'antd';
+import { TIME_FORMAT } from '../../Constants/common.constants';
 
 // STYLES
 import './Pickers.scss';
@@ -12,7 +13,7 @@ const TimePicker = ({ value }) => (
       <Icon type="clock-circle" />
     </div>
     <div className="value--wrapper">
-      {moment(value).format('HH:mm') || 'N/A'}
+      {moment(value).format(TIME_FORMAT) || 'N/A'}
     </div>
   </div>
 );

@@ -11,7 +11,6 @@ const CalendarTimeslot = ({ timeslot }) => (
         size="small"
         value={moment(timeslot.startTime)}
         disabled
-        format="HH:mm"
       />
     </div>
     <div className="timeslot-setting--wrapper">
@@ -20,7 +19,6 @@ const CalendarTimeslot = ({ timeslot }) => (
         size="small"
         value={moment(timeslot.endTime)}
         disabled
-        format="HH:mm"
       />
     </div>
     <div className="timeslot-setting--wrapper">
