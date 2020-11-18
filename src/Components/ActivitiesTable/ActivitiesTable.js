@@ -26,6 +26,7 @@ const ActivitiesTable = ({
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
       showFilter={false}
       expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
+      resizable
     />
   );
 };

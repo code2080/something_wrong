@@ -54,24 +54,25 @@ const ResizableCell = props => {
 };
 
 ResizableCell.propTypes = {
-  onResize: PropTypes.func.isRequired,
   width: PropTypes.number,
 };
 ResizableCell.defaultProps = {
   width: null,
 };
 
-const ResizableHeaderCell = ({ resizable, ...restProps }) => {
+const ResizableHeaderCell = ({ resizable, onResized, expandable,  ...restProps }) => {
   if (!resizable) return <BasicHeaderCell {...restProps} />;
-  return <ResizableCell {...restProps} />;
+  return <ResizableCell {...restProps} onResized={onResized} expandable={expandable} />;
 };
 ResizableHeaderCell.propTypes = {
   resizable: PropTypes.bool,
   index: PropTypes.number,
+  expandable: PropTypes.bool,
 };
 ResizableHeaderCell.defaultProps = {
   resizable: false,
   index: 0,
+  expandable: false,
 };
 
 export default ResizableHeaderCell;

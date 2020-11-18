@@ -23,7 +23,6 @@ export const form = {
     fixedWidth: 100,
     sorter: (a, b) => sortTime(b.createdAt, a.createdAt),
     render: createdDate => <DateTime value={createdDate} />,
-    resizable: false,
   },
   TYPE: {
     title: '',
@@ -31,7 +30,6 @@ export const form = {
     dataIndex: 'formType',
     fixedWidth: 35,
     render: type => <IconFormType type={type} />,
-    resizable: false,
   },
   NAME: {
     title: 'Name',

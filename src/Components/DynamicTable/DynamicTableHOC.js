@@ -69,7 +69,16 @@ const DynamicTableHOC = ({
   const [showColumnSelection, setShowColumnSelection] = useState(false);
 
   // State to hold columns width
-  const [columnWidth, setColumnWidth] = useState(Object.values(columns).map(col => col.fixedWidth || col.width));
+  const [columnWidth, setColumnWidth] = useState([]);
+
+  // Initial columnWidth
+  useEffect(() => {
+    setColumnWidth(
+      columns
+        .filter(col => isVisibleCol(col))
+        .map(col => col.fixedWidth || col.width)
+    )
+  }, [columns, visibleCols])
 
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
