@@ -8,11 +8,14 @@ import { withResizeDetector } from 'react-resize-detector';
 import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
-import ResizableColumnHeader from './ResizableColumnHeader';
+import ResizableHeaderCell from './ResizableHeaderCell';
 import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 
 // ACTIONS
 import { initView, getView, updateView } from '../../Redux/GlobalUI/globalUI.actions';
+
+// STYLES
+import './DynamicTable.scss';
 
 // CONSTANTS
 const mapStateToProps = (state, { datasourceId }) => ({
@@ -40,6 +43,7 @@ const DynamicTableHOC = ({
   initView,
   getView,
   updateView,
+  resizable,
 }) => {
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
@@ -64,6 +68,9 @@ const DynamicTableHOC = ({
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
 
+  // State to hold columns width
+  const [columnWidth, setColumnWidth] = useState(Object.values(columns).map(col => col.fixedWidth || col.width));
+
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
 
@@ -85,18 +92,28 @@ const DynamicTableHOC = ({
         .filter(col => isVisibleCol(col))
         .map((col, idx, arr) => ({
           ...col,
-          width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
+          width: columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length)),
           onHeaderCell: column => ({
-            width: column.width,
+            resizable: resizable && col.resizable !== false,
+            width: columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length)),
             title: col.title,
+            index: idx,
+            expandable: !!expandedRowRender,
+            onResized: (changedWidth) => {
+              setColumnWidth([
+                ...columnWidth.slice(0, idx),
+                changedWidth ,
+                ...columnWidth.slice(idx + 1),
+              ]);
+            }
           }),
           render:
             (val, el) =>
               col.render
-                ? <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
-                : <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
+                ? <EllipsisTruncater width={columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
+                : <EllipsisTruncater width={columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
         })),
-    [columns, visibleCols, _width]
+    [columns, visibleCols, _width, columnWidth, expandedRowRender]
   );
 
   // If there are no accessors defined for the filter, we do not want to show filter bar at all
@@ -145,7 +162,7 @@ const DynamicTableHOC = ({
           <Table
             components={{
               header: {
-                cell: ResizableColumnHeader,
+                cell: ResizableHeaderCell,
               },
             }}
             columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
@@ -178,6 +195,7 @@ DynamicTableHOC.propTypes = {
   initView: PropTypes.func.isRequired,
   getView: PropTypes.func.isRequired,
   updateView: PropTypes.func.isRequired,
+  resizable: PropTypes.bool,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -194,6 +212,7 @@ DynamicTableHOC.defaultProps = {
   width: null,
   showFilter: true,
   visibleCols: {},
+  resizable: false,
 };
 
 export default withResizeDetector(connect(mapStateToProps, mapActionsToProps)(DynamicTableHOC));

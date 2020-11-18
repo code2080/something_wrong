@@ -108,6 +108,7 @@ const FormList = ({
         })}
         pagination={false}
         datasourceId={tableViews.FORM_OVERVIEW}
+        resizable
       />
     </div>
   );
