@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
-import { Dropdown, Menu, Button, Icon } from 'antd';
+import { Modal, Dropdown, Menu, Button, Icon } from 'antd';
 
 // HELPERS
 import {
@@ -104,24 +104,40 @@ const ActivityActionsDropdown = ({
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
-          scheduleActivities(
-            activities.filter(
-              a => a.activityStatus !== activityStatuses.SCHEDULED
-            ),
-            formType,
-            reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple
-            );
+          Modal.confirm({
+            getContainer: () => document.getElementById('te-prefs-lib'),
+            title: 'Do you want to update the scheduling progress?',
+            content: 'You just started to schedule one or several activities for this submission. Do you wish to update the scheduling status to in progress?',
+            onOk: () => {
+              scheduleActivities(
+                activities.filter(
+                  a => a.activityStatus !== activityStatuses.SCHEDULED
+                ),
+                formType,
+                reservationMode,
+                teCoreAPI[activityActions[key].callname],
+                onFinishScheduleMultiple
+              );
+            },
+            onCancel: () => { },
+          });
             break;
-            case 'SCHEDULE':
+        case 'SCHEDULE':
+          Modal.confirm({
+            getContainer: () => document.getElementById('te-prefs-lib'),
+            title: 'Do you want to update the scheduling progress?',
+            content: 'You just started to schedule one or several activities for this submission. Do you wish to update the scheduling status to in progress?',
+            onOk: () => {
               scheduleActivities(
                 [activity],
                 formType,
                 reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple
-          );
+                teCoreAPI[activityActions[key].callname],
+                onFinishScheduleMultiple
+              );
+            },
+            onCancel: () => { },
+          });
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
