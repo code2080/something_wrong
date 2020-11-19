@@ -127,13 +127,9 @@ const BaseActivityCol = ({
 
   const onProcessFilterReturn = res => {
     try {
-      // Grab the extid and the fields
-      const { extid, fields } = res;
       // Override the activity
-      overrideActivityValue([extid], _activityValue, activity);
-      // Grab the label
-      const labelField = fields[0].values[0];
-      setExtIdPropsForObject(extid, { label: labelField });
+      overrideActivityValue(res, _activityValue, activity);
+      // Do something label-ish?
     } catch (error) {
       notification.error({
         getContainer: () => document.getElementById('te-prefs-lib'),
