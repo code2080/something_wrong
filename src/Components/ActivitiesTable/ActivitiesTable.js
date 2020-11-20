@@ -13,7 +13,7 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../Constants/common.constants';
-import { stringIncludes } from '../../Utils/validation';
+import { stringIncludes, anyIncludes } from '../../Utils/validation';
 
 const ActivitiesTable = ({
   formInstanceId,
@@ -26,9 +26,8 @@ const ActivitiesTable = ({
     const validValue =
       stringIncludes(activity.extId, query) ||
       stringIncludes(activity.activityStatus, query) ||
-      (activity.values || []).some(item =>
-        (item.submissionValue || []).some(sV => stringIncludes(sV, query)) ||
-        (item.value || []).some(v => stringIncludes(v, query))
+      (activity.values || []).some(item => anyIncludes(item.submissionValue, query) ||
+        anyIncludes(item.value, query)
       ) || 
       (activity.timing || []).some(item => item.value && stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query));
     if (validValue) {

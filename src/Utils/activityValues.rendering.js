@@ -62,7 +62,7 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
 };
 
 
-const renderCategories = categories => categories.map(({ id, values }) => `${window.tePrefsLibStore.getState().te.extIdProps.fields[id].label || id}: ${values}`).join(', ');
+const renderCategories = categories => categories.map(({ id, values }) => `${_.get(window.tePrefsLibStore.getState(), ['te', 'extIdProps', 'fields', id, 'label'], id)}: ${values}`).join(', ');
 const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
 const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
 
