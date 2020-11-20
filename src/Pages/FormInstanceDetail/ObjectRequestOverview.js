@@ -103,6 +103,7 @@ const fieldColumns = request => Object.entries(request.objectRequest).map(([fiel
 
 const ObjectRequestOverview = ({ formInstanceId, requests }) => { 
   return (<DynamicTable
+    resizable
     columns={objReqColumns}
     dataSource={requests}
     showFilter={false}

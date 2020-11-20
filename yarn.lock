@@ -4008,11 +4008,6 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsum@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/jsum/-/jsum-0.1.4.tgz#9a40809b000e49ff8418ada7b7e9279cc4498ffa"
-  integrity sha512-2SgwwEwnj/RmRHBRV2pOwUKJ6suYJhSd9K61xv7gjWwvN2XKtzJVr3WJZrvPcqEQUkM2yF4OzUTXqJvf6i6uBg==
-
 jsx-ast-utils@^2.2.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.2.3.tgz#8a9364e402448a3ce7f14d357738310d9248054f"
@@ -5694,10 +5689,10 @@ react-redux@^7.1.3:
     prop-types "^15.7.2"
     react-is "^16.9.0"
 
-react-resizable@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-1.10.1.tgz#f0c2cf1d83b3470b87676ce6d6b02bbe3f4d8cd4"
-  integrity sha512-Jd/bKOKx6+19NwC4/aMLRu/J9/krfxlDnElP41Oc+oLiUWs/zwV1S9yBfBZRnqAwQb6vQ/HRSk3bsSWGSgVbpw==
+react-resizable@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-1.11.0.tgz#0b237c4aff16937b7663de1045861749683227ad"
+  integrity sha512-VoGz2ddxUFvildS8r8/29UZJeyiM3QJnlmRZSuXm+FpTqq/eIrMPc796Y9XQLg291n2hFZJtIoP1xC3hSTw/jg==
   dependencies:
     prop-types "15.x"
     react-draggable "^4.0.3"

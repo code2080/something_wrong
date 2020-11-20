@@ -273,6 +273,7 @@ const FormPage = ({
         isLoading={isLoadingSubmissions}
         showFilter={false}
         datasourceId={tableViews.SUBMISSION_OVERVIEW}
+        resizable
       />
     </div>
   );

@@ -8,7 +8,8 @@ const EllipsisTruncater = ({ children, width }) => (
       width: `${width - 16}px`,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      textOverflow: 'ellipsis'
+      textOverflow: 'ellipsis',
+      maxWidth: '100%',
     }}
   >
     {children}

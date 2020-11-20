@@ -1,0 +1,31 @@
+.dynamic-table--wrapper {
+  overflow: auto;
+  table {
+    table-layout: fixed;
+  }
+  .react-resizable {
+    position: relative;
+    background-clip: padding-box;
+  }
+
+  .react-resizable-handle {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+    right: 0px;
+    cursor: col-resize;
+    z-index: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 16px;
+      background-color: #e8e8e8;
+      width: 1px;
+    }
+  }
+}

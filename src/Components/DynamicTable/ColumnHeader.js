@@ -2,19 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const ResizableColumnHeader = props => {
+const ColumnHeader = props => {
   const { width, children, title, ...restProps } = props;
-  if (!title)
-    return (
-      <th {...restProps}>
-        {children}
-      </th>
-    );
+  if (!title) return children;
 
   const sorter = _.get(children, `[0].props.children.props.children[1]`, null);
   const subtract = sorter.props.children ? 36 : 16;
   return (
-    <th {...restProps}>
+    <div>
       <div
         style={{
           width: `${width - subtract}px`,
@@ -37,20 +32,20 @@ const ResizableColumnHeader = props => {
           {sorter}
         </div>
       )}
-    </th>
+    </div>
   );
 };
 
-ResizableColumnHeader.propTypes = {
+ColumnHeader.propTypes = {
   width: PropTypes.number,
   children: PropTypes.node,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
-ResizableColumnHeader.defaultProps = {
+ColumnHeader.defaultProps = {
   width: 0,
   title: null,
   children: null,
 };
 
-export default ResizableColumnHeader;
+export default ColumnHeader;

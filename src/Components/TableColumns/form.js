@@ -22,14 +22,14 @@ export const form = {
     dataIndex: 'createdAt',
     fixedWidth: 100,
     sorter: (a, b) => sortTime(b.createdAt, a.createdAt),
-    render: createdDate => <DateTime value={createdDate} />
+    render: createdDate => <DateTime value={createdDate} />,
   },
   TYPE: {
     title: '',
     key: 'formType',
     dataIndex: 'formType',
     fixedWidth: 35,
-    render: type => <IconFormType type={type} />
+    render: type => <IconFormType type={type} />,
   },
   NAME: {
     title: 'Name',
