@@ -126,6 +126,10 @@ const BaseActivityCol = ({
   }
 
   const onProcessFilterReturn = res => {
+    if (res === null) {
+      return;
+    }
+    // Map res to PiC format
     try {
       // Override the activity
       overrideActivityValue(res, _activityValue, activity);
