@@ -44,6 +44,7 @@ const DynamicTableHOC = ({
   getView,
   updateView,
   resizable,
+  onSearch,
 }) => {
   // Assuming that the key is most likely to be persistent, if not defined, fallback on title
   const visibilityIndexor = column => column.key || column.title;
@@ -126,28 +127,32 @@ const DynamicTableHOC = ({
   );
 
   // If there are no accessors defined for the filter, we do not want to show filter bar at all
-  const _showFilter = showFilter && _cols.some(({dataIndex, filterFn }) => dataIndex || filterFn); 
+  const _showFilter = showFilter &&
+    (typeof onSearch === 'function' ||  _cols.some(({ dataIndex, filterFn }) => dataIndex || filterFn));
 
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
     if (filterQuery === '' || filterQuery.length < 3) return dataSource;
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return dataSource.filter(
-      el => _cols
-        .some(
-          col => {
-            const { dataIndex, filterFn } = col;
-            const filterVal = (filterFn && filterFn(el)) || el[dataIndex];
-            if (!filterVal) return false;
-            return filterVal
-              .toString()
-              .toLowerCase()
-              .includes(
-                filterQuery
-                  .toString()
-                  .toLowerCase()
-              )
-          })
+      el => {
+        if (typeof onSearch === 'function') return onSearch(el, filterQuery);
+        return _cols
+          .some(
+            col => {
+              const { dataIndex, filterFn } = col;
+              const filterVal = (filterFn && filterFn(el, filterQuery)) || el[dataIndex];
+              if (!filterVal) return false;
+              return filterVal
+                .toString()
+                .toLowerCase()
+                .includes(
+                  filterQuery
+                    .toString()
+                    .toLowerCase()
+                )
+            });
+      }
     );
   }, [filterQuery, dataSource, _cols]);
 
@@ -205,6 +210,7 @@ DynamicTableHOC.propTypes = {
   getView: PropTypes.func.isRequired,
   updateView: PropTypes.func.isRequired,
   resizable: PropTypes.bool,
+  onSearch: PropTypes.func,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -222,6 +228,7 @@ DynamicTableHOC.defaultProps = {
   showFilter: true,
   visibleCols: {},
   resizable: false,
+  onSearch: null,
 };
 
 export default withResizeDetector(connect(mapStateToProps, mapActionsToProps)(DynamicTableHOC));
