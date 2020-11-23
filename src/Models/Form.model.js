@@ -60,7 +60,7 @@ export default class Form {
     updatedAt,
     // FORM DESCRIPTIVES
     name,
-    description,
+    description = null,
     ownerId,
     assigners = [],
     owner, // @deprecated
