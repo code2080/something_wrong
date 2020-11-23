@@ -187,7 +187,7 @@ const FormPage = ({
     tableColumns.formSubmission.SCOPED_OBJECT,
     tableColumns.formSubmission.ACCEPTANCE_STATUS,
     tableColumns.formSubmission.SCHEDULING_PROGRESS,
-    form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
+    // form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
     ..._cols,
     {
       ...tableColumns.formSubmission.IS_STARRED,
