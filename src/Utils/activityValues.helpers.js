@@ -98,7 +98,7 @@ const createActivityValueFilterPayload = (element, datasource, rawValue) => {
       break;
   }
   return {
-    submissionValue: [value],
+    submissionValue: value,
     submissionValueType: submissionValueTypes.FILTER,
     valueMode: activityValueModes.FROM_SUBMISSION,
     value,
