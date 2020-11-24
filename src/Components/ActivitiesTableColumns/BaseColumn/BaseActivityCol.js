@@ -125,6 +125,13 @@ const BaseActivityCol = ({
     }
   }
 
+  const mapToCategories = coreCategoryObject => {
+    // Categories is an array of objects with ids and values?
+    return Object.keys(coreCategoryObject).map(key => {
+      return {id: key, values: coreCategoryObject[key]};
+    });
+  }
+
   const onProcessFilterReturn = res => {
     if (res === null) {
       return;
@@ -132,7 +139,7 @@ const BaseActivityCol = ({
     // Map res to PiC format
     try {
       // Override the activity
-      overrideActivityValue(res, _activityValue, activity);
+      overrideActivityValue({extId: res.type, searchString: res.searchString || null, searchFields: res.searchFields || null, categories: mapToCategories(res.selectedCategories || [])}, _activityValue, activity);
       // Do something label-ish?
     } catch (error) {
       notification.error({
