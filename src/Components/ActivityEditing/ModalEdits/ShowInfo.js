@@ -80,11 +80,9 @@ const ShowInfo = ({
         </Form.Item>
         <Form.Item label="Value(s) in submission:">
           <div className="ant-form-text">
-            {formattedSubmissionValue.map((el, idx) => (
-              <div key={`el-${idx}`} className="base-activity-col__modal--submission-value">
-                {el}
-              </div>
-            ))}
+            <div key={`el-0`} className="base-activity-col__modal--submission-value">
+              {formattedSubmissionValue}
+            </div>
           </div>
         </Form.Item>
       </Form>

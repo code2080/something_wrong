@@ -152,7 +152,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
    * most reverts only affect the activity value itself
    * but reverting timeslots needs to happen on both start and endtime properties
    */
-  const { extId, submissionValue, value } = activityValue;
+  const { extId, submissionValue } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
   if (
     timingMode !== mappingTimingModes.EXACT &&
@@ -164,7 +164,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
       {
         ...activityValue,
         valueMode: activityValueModes.FROM_SUBMISSION,
-        value: Array.isArray(value) ? submissionValue : submissionValue[0],
+        value: submissionValue,
       },
       activity,
       findObjectPathForActivityValue(extId, activity)
