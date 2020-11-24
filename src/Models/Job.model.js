@@ -7,6 +7,7 @@ export class Job {
   type;
   organizationId;
   formId;
+  formPeriod;
   formInstanceIds;
   customerSignature;
   username;
@@ -19,6 +20,7 @@ export class Job {
     type = schedulingAlgorithms.UNKNOWN,
     organizationId,
     formId,
+    formPeriod,
     formInstanceIds = [],
     customerSignature,
     username,
@@ -30,6 +32,7 @@ export class Job {
     this.type = type;
     this.organizationId = organizationId;
     this.formId = formId;
+    this.formPeriod = formPeriod;
     this.formInstanceIds = formInstanceIds;
     this.customerSignature = customerSignature;
     this.username = username;
