@@ -7,86 +7,92 @@ import { submissionValueTypes } from '../Constants/submissionValueTypes.constant
 
 export const validateGeneralValue = activityValue => {
   if (
-      activityValue.value !== null &&
-      activityValue.value !== undefined
-  )
-    return new ActivityValueValidation({
-      status: activityValueStatuses.READY_FOR_SCHEDULING,
-    });
-
-  return new ActivityValueValidation({
-    status: activityValueStatuses.MISSING_DATA,
-    errorCode: activityValueValidations.MISSING_VALUE,
-    errorMessage: 'The value has an incorrect format, please update it manually',
-  });
-}
-
-export const validateFilterValue = activityValue => {
-  if (
-    !activityValue.value ||
-    !activityValue.value.type ||
-    (activityValue.value.categories == null && activityValue.value.searchFields == null)
-  )
+    activityValue.value !== null &&
+    activityValue.value !== undefined
+    ) {
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      });
+    }
     return new ActivityValueValidation({
       status: activityValueStatuses.MISSING_DATA,
       errorCode: activityValueValidations.MISSING_VALUE,
       errorMessage: 'The value has an incorrect format, please update it manually',
     });
-
-  return new ActivityValueValidation({
-    status: activityValueStatuses.READY_FOR_SCHEDULING,
-  });
-}
-
-export const validateTimeslotTimingMode = activity => {
-  const startTime = activity.timing.find(el => el.extId === 'startTime');
-  const length = activity.timing.find(el => el.extId === 'length');
-  const endTime = activity.timing.find(el => el.extId === 'endTime');
-  if (!startTime || !length || !endTime || !startTime.value || !length.value || !endTime.value)
-    return new ActivityValueValidation({
-      status: activityValueStatuses.MISSING_DATA,
-      errorCode: activityValueValidations.MISSING_VALUE,
-      errorMessage: 'Start time, end time or length are missing, please input these values manually to calculate a time range',
-    });
-
-  return new ActivityValueValidation({
-    status: activityValueStatuses.READY_FOR_SCHEDULING,
-  });
-};
-
-export const validateExactTimingMode = activity => {
-  const startTime = activity.timing.find(el => el.extId === 'startTime');
-  const endTime = activity.timing.find(el => el.extId === 'endTime');
-  if (!startTime || !endTime || !startTime.value || !endTime.value)
-    return new ActivityValueValidation({
-      status: activityValueStatuses.MISSING_DATA,
-      errorCode: activityValueValidations.MISSING_VALUE,
-      errorMessage: 'Start time or end time are missing, please input these values manually to schedule this activity',
-    });
-
-  return new ActivityValueValidation({
-    status: activityValueStatuses.READY_FOR_SCHEDULING,
-  });
-}
-
-export const validateTiming = activity => {
-  const timingMode = getTimingModeForActivity(activity);
-  switch (timingMode) {
-    case mappingTimingModes.EXACT:
-      return validateExactTimingMode(activity);
-    case mappingTimingModes.TIMESLOTS:
-      return validateTimeslotTimingMode(activity);
-    case mappingTimingModes.SEQUENCE:
-    default:
-      return false;
   }
-};
-
-export const validateValue = activityValue => {
-  switch (activityValue.submissionValueType) {
-    case submissionValueTypes.FILTER:
-      return validateFilterValue(activityValue);
-    default:
-      return validateGeneralValue(activityValue);
-  }
-};
+  
+  export const validateFilterValue = activityValue => {
+    if (Array.isArray(activityValue.value) && activityValue.value.length > 0) { // What I want to do here is pass validation if an object has been selected
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      });
+    }
+    if (
+      !activityValue.value ||
+      !activityValue.value.type ||
+      (activityValue.value.categories == null && activityValue.value.searchFields == null)
+      ) {
+        return new ActivityValueValidation({
+          status: activityValueStatuses.MISSING_DATA,
+          errorCode: activityValueValidations.MISSING_VALUE,
+          errorMessage: 'The value has an incorrect format, please update it manually',
+        });
+      }
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      });
+    }
+    
+    export const validateTimeslotTimingMode = activity => {
+      const startTime = activity.timing.find(el => el.extId === 'startTime');
+      const length = activity.timing.find(el => el.extId === 'length');
+      const endTime = activity.timing.find(el => el.extId === 'endTime');
+      if (!startTime || !length || !endTime || !startTime.value || !length.value || !endTime.value)
+      return new ActivityValueValidation({
+        status: activityValueStatuses.MISSING_DATA,
+        errorCode: activityValueValidations.MISSING_VALUE,
+        errorMessage: 'Start time, end time or length are missing, please input these values manually to calculate a time range',
+      });
+      
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      });
+    };
+    
+    export const validateExactTimingMode = activity => {
+      const startTime = activity.timing.find(el => el.extId === 'startTime');
+      const endTime = activity.timing.find(el => el.extId === 'endTime');
+      if (!startTime || !endTime || !startTime.value || !endTime.value)
+      return new ActivityValueValidation({
+        status: activityValueStatuses.MISSING_DATA,
+        errorCode: activityValueValidations.MISSING_VALUE,
+        errorMessage: 'Start time or end time are missing, please input these values manually to schedule this activity',
+      });
+      
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      });
+    }
+    
+    export const validateTiming = activity => {
+      const timingMode = getTimingModeForActivity(activity);
+      switch (timingMode) {
+        case mappingTimingModes.EXACT:
+        return validateExactTimingMode(activity);
+        case mappingTimingModes.TIMESLOTS:
+        return validateTimeslotTimingMode(activity);
+        case mappingTimingModes.SEQUENCE:
+        default:
+        return false;
+      }
+    };
+    
+    export const validateValue = activityValue => {
+      switch (activityValue.submissionValueType) {
+        case submissionValueTypes.FILTER:
+        return validateFilterValue(activityValue);
+        default:
+        return validateGeneralValue(activityValue);
+      }
+    };
+    
