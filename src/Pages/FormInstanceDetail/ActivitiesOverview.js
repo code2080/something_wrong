@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Empty, Button, Modal } from 'antd';
 
 // ACTIONS
-import { deleteActivities, saveActivities } from '../../Redux/Activities/activities.actions';
+import { deleteActivitiesInFormInstance, saveActivities } from '../../Redux/Activities/activities.actions';
 
 // SELECTORS
 import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
@@ -37,7 +37,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   saveActivities,
-  deleteActivities,
+  deleteActivitiesInFormInstance,
 };
 
 const FormInstanceReservationOverview = ({
@@ -47,7 +47,7 @@ const FormInstanceReservationOverview = ({
   mapping,
   mappings,
   saveActivities,
-  deleteActivities,
+  deleteActivitiesInFormInstance,
   history,
   teCoreAPI,
 }) => {
@@ -74,7 +74,7 @@ const FormInstanceReservationOverview = ({
       getContainer: () => document.getElementById('te-prefs-lib'),
       title: 'Do you want to delete all activities?',
       onOk: () => {
-        deleteActivities(form._id);
+        deleteActivitiesInFormInstance(form._id, formInstance._id);
       },
     });
   };
@@ -159,7 +159,7 @@ FormInstanceReservationOverview.propTypes = {
   mapping: PropTypes.object,
   mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
-  deleteActivities: PropTypes.func.isRequired,
+  deleteActivitiesInFormInstance: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
