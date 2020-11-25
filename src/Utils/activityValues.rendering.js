@@ -61,7 +61,6 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
   };
 };
 
-
 const renderCategories = categories => categories.map(({ id, values }) => `${_.get(window.tePrefsLibStore.getState(), ['te', 'extIdProps', 'fields', id, 'label'], id)}: ${values}`).join(', ');
 const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
 const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
@@ -74,10 +73,9 @@ const renderFilterValues = ({ categories, searchString, searchFields }) => categ
  * @returns {Array} formattedSubmissionValues
  */
 export const formatSubmissionValue = (submissionValue, submissionValueType) => {
-  if (submissionValueType === submissionValueTypes.FILTER)
-    return submissionValue.map(
-      el => renderFilterValues(el)
-    );
+  if (submissionValueType === submissionValueTypes.FILTER) {
+    return renderFilterValues(submissionValue);
+  }
   return submissionValue;
 };
 
@@ -234,7 +232,6 @@ export const getRenderPayloadForActivityValue = (
   // TODO: Workaround for unhandled object request/empty activity value
   if (activityValue.type === 'object' && _.isEmpty(activityValue.value) )
     formatFn = _ => 'No values';
-    
 
   // General case
   if (!renderPayload) {
