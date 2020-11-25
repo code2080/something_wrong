@@ -32,6 +32,7 @@ import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.mo
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
+import { useHistory } from 'react-router-dom';
 
 const resetMenuOptions = {
   RESET_EMPTY: 'RESET_EMPTY',
@@ -138,6 +139,8 @@ const ActivityDesignerPage = ({
   findFieldsOnReservationMode,
   teCoreAPI,
 }) => {
+  const history = useHistory();
+
   useEffect(() => {
     if (form && form.reservationMode) {
       findTypesOnReservationMode(form.reservationMode);
@@ -213,7 +216,11 @@ const ActivityDesignerPage = ({
 
   // Callback to delete any existing activities
   const onDeleteReservationsCallback = useCallback(() => {
-    deleteActivities(formId);
+    const doDelete = async () => {
+      await deleteActivities(formId);
+      history.goBack();
+    }
+    doDelete();
   }, [formId, deleteActivities]);
 
   // Callback to update the timing section of the mapping
