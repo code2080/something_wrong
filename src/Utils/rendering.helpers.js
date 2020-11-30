@@ -29,6 +29,8 @@ import {
 } from '../Constants/sectionTypes.constants';
 import DateTime from '../Components/Common/DateTime';
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
+import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
+import { sortByElementHtml } from './sorting.helpers';
 
 const unformattedValue = value => (
   <div
@@ -48,14 +50,28 @@ const connectedSectionColumns = {
       key: 'startTime',
       dataIndex: 'startTime',
       fixedWidth: 130,
-      render: val => <DateTime value={val} format={DATE_TIME_FORMAT} />
+      render: (val, item = {}) => (
+        <SortableTableCell className={`startTime_${item.rowKey}`}>
+          <DateTime value={val} format={DATE_TIME_FORMAT} />
+        </SortableTableCell>
+      ),
+      sorter: (a, b) => {
+        return sortByElementHtml(`.startTime_${a.rowKey}`, `.startTime_${b.rowKey}`);
+      },
     },
     {
       title: 'End',
       key: 'endTime',
       dataIndex: 'endTime',
       fixedWidth: 80,
-      render: val => <DateTime value={val} format={TIME_FORMAT} />
+      render: (val, item = {}) => (
+        <SortableTableCell className={`endTime_${item.rowKey}`}>
+          <DateTime value={val} format={TIME_FORMAT} />
+        </SortableTableCell>
+      ),
+      sorter: (a, b) => {
+        return sortByElementHtml(`.endTime_${a.rowKey}`, `.endTime_${b.rowKey}`);
+      },
     },
   ],
   WITH_TIMESLOTS: timeslots => [
@@ -64,7 +80,14 @@ const connectedSectionColumns = {
       key: 'startTime',
       dataIndex: 'startTime',
       fixedWidth: 90,
-      render: val => <DateTime value={val} format={DATE_FORMAT} />
+      render: (val, item = {}) => (
+        <SortableTableCell className={`startTime_${item.rowKey}`}>
+          <DateTime value={val} format={DATE_FORMAT} />
+        </SortableTableCell>
+      ),
+      sorter: (a, b) => {
+        return sortByElementHtml(`.startTime_${a.rowKey}`, `.startTime_${b.rowKey}`);
+      },
     },
     {
       title: 'Timeslot',
@@ -162,8 +185,16 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
           title: el.label,
           key: el._id,
           dataIndex: el._id,
-          render: value => renderElementValue(value, el),
-        }
+          render: (value, item = {}) => (
+            <SortableTableCell className={`element_${el._id}_${item.rowKey}`}>
+              {renderElementValue(value, el)}
+            </SortableTableCell>  
+          ),
+          sorter: (a, b) => {
+            return sortByElementHtml(`.element_${el._id}_${a.rowKey}`, `.element_${el._id}_${b.rowKey}`);
+          },
+
+        },
       ]
     , []);
 
