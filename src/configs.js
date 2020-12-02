@@ -21,12 +21,12 @@ const envVarMap = {
     AE_OL_URL: `http://34.120.138.176/${apiVersion}/`,
   },
   beta: {
-    API_URL: `http://preferences-beta.timeedit.io/${apiVersion}/`,
-    AUTH_URL: `http://auth-beta.timeedit.io/${apiVersion}/`,
-    ADMIN_URL: `http://admin-beta.timeedit.io/${apiVersion}/`,
+    API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://auth-beta.timeedit.io/${apiVersion}/`,
+    ADMIN_URL: `https://admin-beta.timeedit.io/${apiVersion}/`,
     APP_ID: '5e35700bdb7664942c406b9d ',
     APP_NAME: 'tePIC',
-    VIEWS_URL: `http://views-beta.timeedit.io/${apiVersion}/`,
+    VIEWS_URL: `https://views-beta.timeedit.io/${apiVersion}/`,
     AE_OL_URL: `http://34.120.57.209/${apiVersion}/`,
   },
   localhost: {
