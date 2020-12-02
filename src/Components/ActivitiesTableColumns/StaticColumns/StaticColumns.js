@@ -1,4 +1,6 @@
 import React from 'react';
+import { sortByElementHtml } from '../../../Utils/sorting.helpers';
+import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import ActivityActionsDropdown from '../ActivityActionsDropdown';
 import ActivityStatusCol from './ActivityStatusCol';
 
@@ -8,14 +10,28 @@ export const StaticColumns = [
     key: 'activityStatus',
     dataIndex: null,
     fixedWidth: 150,
-    render: activity => <ActivityStatusCol activity={activity} />,
+    render: activity => (
+      <SortableTableCell className={`activityStatus_${activity._id}`}>
+        <ActivityStatusCol activity={activity} />
+      </SortableTableCell>
+    ),
+    sorter: (a, b) => {
+      return sortByElementHtml(`.activityStatus_${a._id}`, `.activityStatus_${b._id}`);
+    },
   },
   {
     title: 'Id',
     key: 'reservationId',
     dataIndex: 'reservationId',
     fixedWidth: 75,
-    render: reservationId => reservationId || 'N/A',
+    render: (reservationId, item = {}) => (
+      <SortableTableCell className={`reservationId_${item._id}`}>
+        {reservationId || 'N/A'}
+      </SortableTableCell>
+    ),
+    sorter: (a, b) => {
+      return sortByElementHtml(`.reservationId_${a._id}`, `.reservationId_${b._id}`);
+    },
   },
   {
     title: '',
