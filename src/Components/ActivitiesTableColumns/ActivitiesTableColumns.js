@@ -8,6 +8,8 @@ import BaseActivityColOuter from './BaseColumn/BaseActivityColOuter';
 import { StaticColumns } from './StaticColumns/StaticColumns';
 import { TimingColumns } from './TimingColumns/TimingColumns';
 import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+import SortableTableCell from '../DynamicTable/SortableTableCell';
+import { sortByElementDeepHtml } from '../../Utils/sorting.helpers';
 
 export const createActivitiesTableColumnsFromMapping = mapping => [
   ...TimingColumns[mapping.timing.mode](mapping),
@@ -20,13 +22,21 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
       title: useSelector(state => selectExtIdLabel(state)(field, extId)),
       key: extId,
       render: activity => (
-        <BaseActivityColOuter
-          activity={activity}
-          type="VALUE"
-          prop={extId}
-          mapping={mapping}
-        />
-      )
+        <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
+          <BaseActivityColOuter
+            activity={activity}
+            type="VALUE"
+            prop={extId}
+            mapping={mapping}
+          />
+        </SortableTableCell>
+      ),
+      sorter: (a, b) => {
+        return sortByElementDeepHtml(
+          `.extId_${extId.replace(/\./g, '-')}_${a._id} .base-activity-col--wrapper`,
+          `.extId_${extId.replace(/\./g, '-')}_${b._id} .base-activity-col--wrapper`
+        );
+      },
     }
   ],
   []
