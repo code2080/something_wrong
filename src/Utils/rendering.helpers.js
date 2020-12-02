@@ -93,7 +93,14 @@ const connectedSectionColumns = {
       title: 'Timeslot',
       key: 'timeslot',
       dataIndex: null,
-      render: event => <TimeSlotColumn event={event} timeslots={timeslots} />,
+      render: (event, item = {}) => (
+        <SortableTableCell className={`timeslot_${item.rowKey}`}>
+          <TimeSlotColumn event={event} timeslots={timeslots} />
+        </SortableTableCell>
+      ),
+      sorter: (a, b) => {
+        return sortByElementHtml(`.timeslot_${a.rowKey} .value--wrapper`, `.timeslot_${b.rowKey} .value--wrapper`);
+      }
     },
   ],
   SCHEDULING: (sectionId, formInstanceId, formId) => [
