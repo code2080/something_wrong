@@ -43,11 +43,10 @@ const fetchDataForDataSourceFlow = {
 export const fetchDataForDataSource = (datasource) => (dispatch, getState) => {
   const storeState = getState();
   const organizationId = _.get(storeState, 'auth.user.organizationId', null);
-  const datasourceNoSlash = [...datasource].map(c => c === '/' ? '%2F' : c).join('');
   return dispatch(
     asyncAction.GET({
       flow: fetchDataForDataSourceFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/object/types/${datasourceNoSlash}?applyOutputObjectMapping=true`,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/object/types/${encodeURIComponent(datasource)}?applyOutputObjectMapping=true`,
       params: { datasource },
     })
   );
