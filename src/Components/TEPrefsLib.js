@@ -25,7 +25,7 @@ window.tePrefsHeight = 0;
 Promise.resolve();
 
 
-const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
+const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
   const prefsRef = useRef(null);
   useEffect(() => {
@@ -43,7 +43,7 @@ const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
 
   return (
     <Provider store={store}>
-      <TECoreAPIProvider api={teCoreAPI}>
+      <TECoreAPIProvider api={teCoreAPI} mixpanel={mixpanel} >
         <div
           className='te-prefs-lib'
           id="te-prefs-lib"

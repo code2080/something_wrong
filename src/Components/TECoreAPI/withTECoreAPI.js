@@ -6,7 +6,7 @@ const withTECoreAPI = WrappedComponent => props => {
   return (
     <WrappedComponent
       {...props}
-      teCoreAPI={teCoreAPI}
+      teCoreAPI={teCoreAPI.api}
     />
   );
 }
