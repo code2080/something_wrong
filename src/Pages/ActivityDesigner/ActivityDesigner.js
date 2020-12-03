@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Alert, Button, Modal, Menu, Dropdown } from 'antd';
+import { Alert, Button, Modal, Menu, Dropdown, Spin, Icon } from 'antd';
 import ReactRouterPause from '@allpro/react-router-pause';
 
 // COMPONENTS
@@ -16,6 +16,9 @@ import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { updateMapping } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { deleteActivities } from '../../Redux/Activities/activities.actions';
 import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../Redux/Integration/integration.actions';
+
+// SELECTORS
+import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
 // MODELS
 import { ActivityTiming } from '../../Models/ActivityTiming.model';
@@ -33,6 +36,7 @@ import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.mo
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { useHistory } from 'react-router-dom';
+import { themeColors } from '../../Constants/themeColors.constants';
 
 const resetMenuOptions = {
   RESET_EMPTY: 'RESET_EMPTY',
@@ -105,6 +109,7 @@ const mapStateToProps = (state, ownProps) => {
     hasReservations: noOfReservations > 0,
     validTypes,
     validFields,
+    saving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state),
   };
 };
 
@@ -138,6 +143,7 @@ const ActivityDesignerPage = ({
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
   teCoreAPI,
+  saving,
 }) => {
   const history = useHistory();
 
@@ -341,6 +347,19 @@ const ActivityDesignerPage = ({
               Reset configuration...
             </Button>
           </Dropdown>
+          <span style={{ marginLeft: 'auto', color: themeColors.deepSeaGreen }}>
+            {saving ? (
+              <span>
+                <Spin size="small" spinning={saving} />
+                &nbsp;Saving
+              </span>
+            ) : (
+              <span>
+                <Icon type="check-circle" />
+                &nbsp;Saved
+              </span>
+            )}
+          </span>
         </div>
         <div className="activity-designer--type-header">
           <div>Timing</div>
@@ -380,7 +399,13 @@ const ActivityDesignerPage = ({
             disabled={hasReservations}
           />
         </div>
+        <div className="activity-designer--list" style={{ textAlign: 'right' }}>
+          <Button type="link" size="small" onClick={() => history.goBack()}>
+            Close
+          </Button>
+        </div>
       </div>
+      
     </React.Fragment>
   );
 };
