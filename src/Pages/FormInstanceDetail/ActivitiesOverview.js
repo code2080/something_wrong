@@ -58,14 +58,14 @@ const FormInstanceReservationOverview = ({
   const dispatch = useDispatch();
   const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance))
   const onCreateActivities = useCallback(() => {
-    mixpanel.track("PrefsInCore, onCreateActivities", {});
     const activities = createActivitiesFromFormInstance(
       formInstance,
       form.sections,
       mapping,
       formInstanceObjReqs,
-    );
-    saveActivities(formInstance.formId, formInstance._id, activities);
+      );
+      mixpanel.track("PrefsInCore, onCreateActivities", { numberOfActivities: activities.length });
+      saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
   const onCreateActivityDesign = () => history.push(`/forms/${form._id}/activity-designer`);
