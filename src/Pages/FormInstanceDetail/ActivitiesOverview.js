@@ -22,6 +22,9 @@ import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 
+//HOOKS
+import { useMixpanel } from '../../Hooks/TECoreApiHooks';
+
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
@@ -51,9 +54,11 @@ const FormInstanceReservationOverview = ({
   history,
   teCoreAPI,
 }) => {
+  const mixpanel = useMixpanel();
   const dispatch = useDispatch();
   const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance))
   const onCreateActivities = useCallback(() => {
+    mixpanel.track("PrefsInCore, onCreateActivities", {});
     const activities = createActivitiesFromFormInstance(
       formInstance,
       form.sections,
