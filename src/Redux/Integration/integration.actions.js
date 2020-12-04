@@ -46,7 +46,7 @@ export const fetchDataForDataSource = (datasource) => (dispatch, getState) => {
   return dispatch(
     asyncAction.GET({
       flow: fetchDataForDataSourceFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/object/types/${datasource}?applyOutputObjectMapping=true`,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/object/types/${encodeURIComponent(datasource)}?applyOutputObjectMapping=true`,
       params: { datasource },
     })
   );
