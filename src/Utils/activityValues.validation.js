@@ -1,4 +1,5 @@
-import { getTimingModeForActivity } from './activities.helpers'
+import { getTimingModeForActivity } from './activities.helpers';
+import { determineContentOfValue } from './activityValues.helpers';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
 import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
@@ -7,13 +8,13 @@ import { submissionValueTypes } from '../Constants/submissionValueTypes.constant
 
 export const validateGeneralValue = activityValue => {
   if (
-      activityValue.value !== null &&
-      activityValue.value !== undefined
-  )
+    activityValue.value !== null &&
+    activityValue.value !== undefined
+  ) {
     return new ActivityValueValidation({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
     });
-
+  }
   return new ActivityValueValidation({
     status: activityValueStatuses.MISSING_DATA,
     errorCode: activityValueValidations.MISSING_VALUE,
@@ -26,13 +27,13 @@ export const validateFilterValue = activityValue => {
     !activityValue.value ||
     !activityValue.value.type ||
     (activityValue.value.categories == null && activityValue.value.searchFields == null)
-  )
+  ) {
     return new ActivityValueValidation({
       status: activityValueStatuses.MISSING_DATA,
       errorCode: activityValueValidations.MISSING_VALUE,
       errorMessage: 'The value has an incorrect format, please update it manually',
     });
-
+  }
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
   });
@@ -83,10 +84,8 @@ export const validateTiming = activity => {
 };
 
 export const validateValue = activityValue => {
-  switch (activityValue.submissionValueType) {
-    case submissionValueTypes.FILTER:
-      return validateFilterValue(activityValue);
-    default:
-      return validateGeneralValue(activityValue);
+  if (determineContentOfValue(activityValue) === submissionValueTypes.FILTER) {
+    return validateFilterValue(activityValue);
   }
+  return validateGeneralValue(activityValue);
 };

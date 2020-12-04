@@ -15,7 +15,7 @@ const App = () => {
         coreAPI={{
           setToolbarContent: content => setToolbarContent(content),
         }}
-        env="production"
+        env="staging"
       />
     </div>
   );

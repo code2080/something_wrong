@@ -8,7 +8,12 @@ import _ from 'lodash'
 
 export const useTECoreAPI = () => {
   const teCoreAPI = useContext(TECoreAPIContext);
-  return teCoreAPI;
+  return teCoreAPI.api;
+}
+
+export const useMixpanel = () => {
+  const teCoreAPI = useContext(TECoreAPIContext);
+  return teCoreAPI.mixpanel;
 }
 
 export const useFetchLabelsFromExtIds = (payload) => {

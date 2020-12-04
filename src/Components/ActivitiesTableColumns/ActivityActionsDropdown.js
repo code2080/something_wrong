@@ -15,6 +15,7 @@ import {
   updateActivity,
   updateActivities
 } from '../../Redux/Activities/activities.actions';
+import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
@@ -22,14 +23,22 @@ import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 // CONSTANTS
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { teCoreSchedulingProgress } from '../../Constants/teCoreProps.constants';
+import { manualSchedulingFormStatuses } from '../../Constants/manualSchedulingConstants';
+
+// SELECTORS
+import { selectManualSchedulingStatus } from '../../Redux/ManualSchedulings/manualSchedulings.selectors';
 
 const mapStateToProps = (state, { activity }) => ({
-  activities: state.activities[activity.formId][activity.formInstanceId]
+  activities: state.activities[activity.formId][activity.formInstanceId],
+  mSStatus: selectManualSchedulingStatus(state)(activity.formInstanceId, activity.formId),
+  formInstance: state.submissions[activity.formId][activity.formInstanceId],
 });
 
 const mapActionsToProps = {
   updateActivity,
-  updateActivities
+  updateActivities,
+  setFormInstanceSchedulingProgress,
 };
 
 const activityActions = {
@@ -66,11 +75,15 @@ const activityActions = {
 const ActivityActionsDropdown = ({
   buttonType,
   activity,
+  mSStatus,
   activities,
   updateActivity,
   updateActivities,
-  teCoreAPI
+  teCoreAPI,
+  formInstance,
+  setFormInstanceSchedulingProgress,
 }) => {
+  const { formInstanceId, formId } = activity;
   const [formType, reservationMode] = useSelector(state => {
     const form = state.forms[activity.formId];
     return [form.formType, form.reservationMode];
@@ -99,45 +112,50 @@ const ActivityActionsDropdown = ({
     }
   };
 
+  const updateSchedulingProgress = () => {
+    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED)
+      Modal.confirm({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        title: 'Do you want to update the scheduling progress?',
+        content: 'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
+        onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.IN_PROGRESS }),
+        onCancel: () => { },
+      });
+    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED)
+      Modal.confirm({
+        getContainer: () => document.getElementById('te-prefs-lib'),
+        title: 'Do you want to update the scheduling progress?',
+        content: 'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
+        onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.SCHEDULING_FINISHED }),
+        onCancel: () => { },
+      });
+  };
+
   const handleMenuClick = useCallback(
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
-          Modal.confirm({
-            getContainer: () => document.getElementById('te-prefs-lib'),
-            title: 'Do you want to update the scheduling progress?',
-            content: 'You just started to schedule one or several activities for this submission. Do you wish to update the scheduling status to in progress?',
-            onOk: () => {
-              scheduleActivities(
-                activities.filter(
-                  a => a.activityStatus !== activityStatuses.SCHEDULED
-                ),
-                formType,
-                reservationMode,
-                teCoreAPI[activityActions[key].callname],
-                onFinishScheduleMultiple
-              );
-            },
-            onCancel: () => { },
-          });
-            break;
+          scheduleActivities(
+            activities.filter(
+              a => a.activityStatus !== activityStatuses.SCHEDULED
+            ),
+            formType,
+            reservationMode,
+            teCoreAPI[activityActions[key].callname],
+            onFinishScheduleMultiple
+          );
+          updateSchedulingProgress();
+          break;
         case 'SCHEDULE':
-          Modal.confirm({
-            getContainer: () => document.getElementById('te-prefs-lib'),
-            title: 'Do you want to update the scheduling progress?',
-            content: 'You just started to schedule one or several activities for this submission. Do you wish to update the scheduling status to in progress?',
-            onOk: () => {
-              scheduleActivities(
-                [activity],
-                formType,
-                reservationMode,
-                teCoreAPI[activityActions[key].callname],
-                onFinishScheduleMultiple
-              );
-            },
-            onCancel: () => { },
-          });
+          scheduleActivities(
+            [activity],
+            formType,
+            reservationMode,
+            teCoreAPI[activityActions[key].callname],
+            onFinishScheduleMultiple
+          );
+          updateSchedulingProgress();
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
@@ -193,7 +211,10 @@ ActivityActionsDropdown.propTypes = {
   activities: PropTypes.array.isRequired,
   updateActivity: PropTypes.func.isRequired,
   updateActivities: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired
+  teCoreAPI: PropTypes.object.isRequired,
+  formInstance: PropTypes.object.isRequired,
+  mSStatus: PropTypes.object.isRequired,
+  setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
 };
 
 ActivityActionsDropdown.defaultProps = {
