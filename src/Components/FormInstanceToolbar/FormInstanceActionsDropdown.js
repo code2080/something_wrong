@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import { Menu, Button, Dropdown } from 'antd';
+import { Menu, Dropdown } from 'antd';
 import { sendReviewerLink } from '../../Redux/FormSubmissions/formSubmissions.actions';
 
 const FormInstanceActionsDropdown = ({ formInstance }) => {
