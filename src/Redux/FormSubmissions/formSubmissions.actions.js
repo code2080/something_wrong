@@ -168,10 +168,13 @@ const sendReviewerLinkFlow = {
 };
 
 export const sendReviewerLink = ({
-  formInstanceId,
+  formInstanceIds,
 }) =>
   asyncAction.POST({
     flow: sendReviewerLinkFlow,
-    endpoint: `form-instances/${formInstanceId}/viewer-link`,
-    successNotification: 'The review link has been sent to user',
+    endpoint: 'form-instances/notify/viewer-link',
+    params: {
+      formInstanceIds,
+    },
+    successNotification: 'The review link has been sent to user(s)',
   });
