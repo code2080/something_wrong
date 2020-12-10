@@ -41,7 +41,7 @@ export const teCoreSchedulingProgressProps = {
   },
   [teCoreSchedulingProgress.SCHEDULING_FINISHED]: {
     key: teCoreSchedulingProgress.SCHEDULING_FINISHED,
-    label: 'Finished',
+    label: 'Scheduled',
     color: 'success',
   },
 };
@@ -64,7 +64,7 @@ export const toProgressLabel = progress => {
     return 'In progress';
   }
   if (progress === teCoreSchedulingProgress.SCHEDULING_FINISHED) {
-    return 'Finished';
+    return 'Scheduled';
   }
   return 'Not set';
 }
