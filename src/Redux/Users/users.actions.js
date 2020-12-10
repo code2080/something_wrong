@@ -11,7 +11,7 @@ const fetchUserFlow = {
 export const fetchUser = (organizationId, userId) =>
   asyncAction.GET({
     flow: fetchUserFlow,
-    endpoint: `${getEnvParams().ADMIN_URL}organizations/${organizationId}/users/${userId}`,
+    endpoint: `${getEnvParams().ADMIN_URL}organizations/${encodeURIComponent(organizationId)}/users/${encodeURIComponent(userId)}`,
   });
 
 const fetchUsersFlow = {
@@ -23,5 +23,5 @@ const fetchUsersFlow = {
 export const fetchUsers = organizationId =>
   asyncAction.GET({
     flow: fetchUsersFlow,
-    endpoint: `${getEnvParams().ADMIN_URL}organizations/${organizationId}/users`,
+    endpoint: `${getEnvParams().ADMIN_URL}organizations/${encodeURIComponent(organizationId)}/users`,
   });

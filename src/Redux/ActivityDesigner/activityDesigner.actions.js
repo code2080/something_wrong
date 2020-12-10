@@ -17,7 +17,7 @@ const fetchMappingsFlow = {
 export const fetchMappings = formId =>
   asyncAction.GET({
     flow: fetchMappingsFlow,
-    endpoint: `forms/${formId}/mappings`,
+    endpoint: `forms/${encodeURIComponent(formId)}/mappings`,
     params: { formId },
   });
 
@@ -30,6 +30,6 @@ const updateMappingFlow = {
 export const updateMapping = mapping =>
   asyncAction.POST({
     flow: updateMappingFlow,
-    endpoint: `forms/${mapping.formId}/mappings`,
+    endpoint: `forms/${encodeURIComponent(mapping.formId)}/mappings`,
     params: { mapping },
   });

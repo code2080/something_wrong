@@ -57,7 +57,7 @@ export const fetchIntegrationSettingsFlow = {
 
 export const fetchIntegrationSettings = organizationId => asyncAction.GET({
   flow: fetchIntegrationSettingsFlow,
-  endpoint: `integration-service/connection-setting/${organizationId}`,
+  endpoint: `integration-service/connection-setting/${encodeURIComponent(organizationId)}`,
 });
 
 export const validateLogin = () => async dispatch => {
@@ -82,7 +82,7 @@ const loginFlow = {
 export const login = ({ account, password }) =>
   asyncAction.POST({
     flow: loginFlow,
-    endpoint: `${getEnvParams().AUTH_URL}auth/validate-login`,
+    endpoint: `${encodeURIComponent(getEnvParams().AUTH_URL)}auth/validate-login`,
     params: { account, password, },
     requiresAuth: false,
   });
@@ -96,7 +96,7 @@ const fetchOrgsForUserFlow = {
 export const fetchOrgsForUser = () =>
   asyncAction.GET({
     flow: fetchOrgsForUserFlow,
-    endpoint: `${getEnvParams().AUTH_URL}apps/${getEnvParams().APP_ID}/organizations/`,
+    endpoint: `${getEnvParams().AUTH_URL}apps/${encodeURIComponent(getEnvParams().APP_ID)}/organizations/`,
   });
 
 const selectOrgForUserFlow = {
@@ -108,7 +108,7 @@ const selectOrgForUserFlow = {
 export const selectOrgForUser = ({ organizationId }) =>
   asyncAction.POST({
     flow: selectOrgForUserFlow,
-    endpoint: `${getEnvParams().AUTH_URL}auth/change-organization`,
+    endpoint: `${encodeURIComponent(getEnvParams().AUTH_URL)}auth/change-organization`,
     params: { organizationId },
   });
 

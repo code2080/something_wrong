@@ -35,7 +35,7 @@ const fetchFormSubmissionsFlow = {
 export const fetchFormSubmissions = formId =>
   asyncAction.GET({
     flow: fetchFormSubmissionsFlow,
-    endpoint: `forms/${formId}/submissions`
+    endpoint: `forms/${encodeURIComponent(formId)}/submissions`
   });
 
 const setFormInstanceAcceptanceStatusFlow = {
@@ -57,7 +57,7 @@ export const setFormInstanceAcceptanceStatus = ({
 }) =>
   asyncAction.PUT({
     flow: setFormInstanceAcceptanceStatusFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/acceptance-status`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/acceptance-status`,
     params: { acceptanceStatus, acceptanceComment }
   });
 
@@ -79,7 +79,7 @@ export const setFormInstanceSchedulingProgress = ({
 }) =>
   asyncAction.PUT({
     flow: setFormInstanceSchedulingProgressFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/scheduling-progress`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/scheduling-progress`,
     params: { schedulingProgress }
   });
 
@@ -122,7 +122,7 @@ export const toggleUserForFormInstance = ({
 }) =>
   asyncAction.PUT({
     flow: toggleUserForFormInstanceFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/assign`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/assign`,
     params: { userId }
   });
 
@@ -146,7 +146,7 @@ export const updateSelectionSettings = ({
 }) =>
   asyncAction.PUT({
     flow: updateSelectionSettingsFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/selection-settings`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/selection-settings`,
     params: {
       formId,
       formInstanceId,
@@ -172,6 +172,6 @@ export const sendReviewerLink = ({
 }) =>
   asyncAction.POST({
     flow: sendReviewerLinkFlow,
-    endpoint: `form-instances/${formInstanceId}/viewer-link`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/viewer-link`,
     successNotification: 'The review link has been sent to user',
   });

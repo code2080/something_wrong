@@ -20,7 +20,7 @@ export const toggleRowSchedulingStatus = ({
 }) =>
   asyncAction.PUT({
     flow: toggleRowSchedulingStatusFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/manual-scheduling/${sectionId}/${rowKey}`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/manual-scheduling/${encodeURIComponent(sectionId)}/${encodeURIComponent(rowKey)}`,
   });
 
 const fetchManualSchedulingsForFormInstanceFlow = {
@@ -40,5 +40,5 @@ export const fetchManualSchedulingsForFormInstance = ({
 }) =>
   asyncAction.GET({
     flow: fetchManualSchedulingsForFormInstanceFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/manual-scheduling`,
+    endpoint: `form-instances/${encodeURIComponent(formInstanceId)}/te-core/manual-scheduling`,
   });
