@@ -80,9 +80,6 @@ const resetTypes = (mapping, typeOptions) => ({
   },
 });
 
-const createValidTypesArray = (mappedTypes, validTypes) =>
-  mappedTypes.filter(typeExtId => validTypes.includes(typeExtId));
-
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;
   const activities = state.activities[formId];
@@ -95,9 +92,7 @@ const mapStateToProps = (state, ownProps) => {
   let validFields = [];
   const { reservationMode } = form;
   if (reservationMode) {
-    const mappedTypes = Object.keys(_.get(state, 'integration.mappedObjectTypes', {}));
-    const availableTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []);
-    validTypes = createValidTypesArray(mappedTypes, availableTypes);
+    validTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []); 
     validFields = _.get(state, `integration.reservationModes.${reservationMode}.fields`, []);
   }
 
