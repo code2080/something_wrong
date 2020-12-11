@@ -143,7 +143,7 @@ export const abortJob = ({
   activities,
 }) => async (dispatch, getState) => dispatch(asyncAction.POST({
   flow: abortJobFlow,
-  endpoint: `${getEnvParams().AE_OL_URL}jobs/${encodeURIComponent(jobId)}/stop`,
+  endpoint: `${getEnvParams().AE_OL_URL}jobs/${jobId}/stop`,
   postAction: { formId, formInstanceId, activities, dispatch, getState },
   permission: AEBETA_PERMISSIION,
 }));

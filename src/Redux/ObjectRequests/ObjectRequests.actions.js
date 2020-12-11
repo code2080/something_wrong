@@ -34,7 +34,7 @@ const updateObjectRequestFlow = {
 export const updateObjectRequest = objectRequest =>
   asyncAction.PUT({
     flow: updateObjectRequestFlow,
-    endpoint: `object-request/${encodeURIComponent(objectRequest._id)}`,
+    endpoint: `object-request/${objectRequest._id}`,
     params: {
       ...objectRequest,
     },

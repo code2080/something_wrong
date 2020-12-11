@@ -43,7 +43,7 @@ export const getView = datasourceId => (dispatch, getState) => {
   const { auth: { user: { id, organizationId } } } = storeState;
   dispatch(asyncAction.GET({
     flow: getViewFlow,
-    endpoint: `${VIEWS_URL}tables/${encodeURIComponent(APP_NAME)}/${encodeURIComponent(datasourceId)}/${encodeURIComponent(organizationId)}/${encodeURIComponent(id)}`,
+    endpoint: `${VIEWS_URL}tables/${APP_NAME}/${datasourceId}/${organizationId}/${id}`,
     requiresAuth: false,
   }));
 };
@@ -60,7 +60,7 @@ export const updateView = (datasourceId, visibleCols) => (dispatch, getState) =>
   const { auth: { user: { id, organizationId } } } = storeState;
   dispatch(asyncAction.PUT({
     flow: updateViewFlow,
-    endpoint: `${VIEWS_URL}tables/${encodeURIComponent(APP_NAME)}/${encodeURIComponent(datasourceId)}/${encodeURIComponent(organizationId)}/${encodeURIComponent(id)}`,
+    endpoint: `${VIEWS_URL}tables/${APP_NAME}/${datasourceId}/${organizationId}/${id}`,
     params: { columns: visibleCols, datasourceId, pageSize: 100 },
     requiresAuth: false,
   }));
