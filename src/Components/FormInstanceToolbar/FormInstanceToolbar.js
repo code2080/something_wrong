@@ -14,8 +14,9 @@ import {
   teCoreSchedulingProgressProps,
   teCoreAcceptanceStatusProps
 } from '../../Constants/teCoreProps.constants';
-import { Button } from 'antd';
 import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
+import useFormInstanceSchedulingProcessModal from '../Modals/useFormInstanceSchedulingProcessModal';
+import useFormInstanceAcceptanceStatusModal from '../Modals/useFormInstanceAcceptanceStatusModal';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
@@ -30,6 +31,8 @@ const FormInstanceToolbar = ({
   formType,
   onClickMore,
 }) => {
+  const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] = useFormInstanceSchedulingProcessModal();
+  const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] = useFormInstanceAcceptanceStatusModal();
   return (
     <div className="toolbar--wrapper">
       <div className="toolbar--section-flex">
@@ -50,6 +53,10 @@ const FormInstanceToolbar = ({
           <StatusLabel
             color={teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].color}
             className="no-margin"
+            onClick={() => openAcceptanceStatusProcessModal({
+              formId: formInstance.formId,
+              formInstanceId: formInstance._id,
+            })}
           >
             {teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].label}
           </StatusLabel>
@@ -61,6 +68,10 @@ const FormInstanceToolbar = ({
           <StatusLabel
             color={teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].color}
             className="no-margin"
+            onClick={() => openSchedulingStatusProcessModal({
+              schedulingProgress: formInstance.teCoreProps.schedulingProgress,
+              formInstanceId: formInstance._id,
+            })}
           >
             {teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].label}
           </StatusLabel>
@@ -72,6 +83,10 @@ const FormInstanceToolbar = ({
       <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
         <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
+
+      {/* MODALS */}
+      <SchedulingStatusProcessModal />
+      <AcceptanceStatusProcessModal />
     </div>
   );
 };

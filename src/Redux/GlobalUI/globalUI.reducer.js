@@ -64,6 +64,33 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.OPEN_MODAL: {
+      return {
+        ...state,
+        openedModal: {
+          ...state.openedModals,
+          [action.payload.modalKey]: true,
+        },
+      };
+    }
+
+    case types.CLOSE_MODAL: {
+      return {
+        ...state,
+        openedModal: {
+          ...state.openedModals,
+          [action.payload.modalKey]: false,
+        },
+      };
+    }
+
+    case types.CLOSE_ALL_MODALS: {
+      return {
+        ...state,
+        openedModal: {},
+      };
+    }
+
     default:
       return state;
   }
