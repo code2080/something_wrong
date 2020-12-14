@@ -44,7 +44,7 @@ const unformattedValue = value => (
 );
 
 const connectedSectionColumns = {
-  NO_TIMESLOTS: [
+  TIMEINFO: [
     {
       title: 'Start',
       key: 'startTime',
@@ -74,21 +74,7 @@ const connectedSectionColumns = {
       },
     },
   ],
-  WITH_TIMESLOTS: timeslots => [
-    {
-      title: 'Date',
-      key: 'startTime',
-      dataIndex: 'startTime',
-      fixedWidth: 90,
-      render: (val, item = {}) => (
-        <SortableTableCell className={`startTime_${item.rowKey}`}>
-          <DateTime value={val} format={DATE_FORMAT} />
-        </SortableTableCell>
-      ),
-      sorter: (a, b) => {
-        return sortByElementHtml(`.startTime_${a.rowKey}`, `.startTime_${b.rowKey}`);
-      },
-    },
+  TIMESLOT: timeslots => [
     {
       title: 'Timeslot',
       key: 'timeslot',
@@ -210,13 +196,14 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
       if (section.calendarSettings && section.calendarSettings.useTimeslots) {
         return [
           ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-          ...connectedSectionColumns.WITH_TIMESLOTS(section.calendarSettings.timeslots),
+          ...connectedSectionColumns.TIMEINFO,
+          ...connectedSectionColumns.TIMESLOT(section.calendarSettings.timeslots),
           ..._elementColumns,
         ];
       }
       return [
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-        ...connectedSectionColumns.NO_TIMESLOTS,
+        ...connectedSectionColumns.TIMEINFO,
         ..._elementColumns,
       ];
     }
