@@ -145,7 +145,11 @@ export const renderElementValue = (value, element) => {
        */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
-      return <Datasource value={value} element={element} />;
+      return (
+        <div className="preline">
+          <Datasource value={value} element={element} />
+        </div>
+      );
     case elementTypes.ELEMENT_TYPE_INPUT_DATASOURCE:
       return <FreeTextFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
@@ -153,8 +157,15 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_DURATION:
       const duration = moment.duration(value, 'minutes');
       return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
-    case elementTypes.ELEMENT_TYPE_UUID:
+
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
+      return (
+        <div className="preline">
+          {unformattedValue(value.toString())}
+        </div>
+      );
+
+    case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER:
     default:

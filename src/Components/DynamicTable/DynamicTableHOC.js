@@ -29,6 +29,7 @@ const mapActionsToProps = {
 };
 
 const DynamicTableHOC = ({
+  className,
   columns,
   dataSource,
   rowKey,
@@ -158,7 +159,7 @@ const DynamicTableHOC = ({
 
   return (
     <div
-      className="dynamic-table--wrapper"
+      className={`${className || ''} dynamic-table--wrapper`}
     >
       {showColumnSelection ? (
         <ColumnSelector
