@@ -28,4 +28,12 @@
       width: 1px;
     }
   }
+
+  &.table--values {
+    .ant-table-expanded-row {
+      .value .preline {
+        white-space: pre-line;
+      }
+    }
+  }
 }
