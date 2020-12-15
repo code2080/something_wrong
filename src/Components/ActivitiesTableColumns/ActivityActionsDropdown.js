@@ -69,6 +69,13 @@ const activityActions = {
       activity.reservationId &&
       activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
     callname: teCoreCallnames.DELETE_RESERVATION
+  },
+  DELETE_ALL: {
+    label: 'Delete all reservations',
+    filterFn: activity => // Should filter look at activities instead?
+      activity.reservationId &&
+      activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
+    callname: teCoreCallnames.DELETE_RESERVATIONS
   }
 };
 
@@ -110,6 +117,21 @@ const ActivityActionsDropdown = ({
       };
       updateActivity(updatedActivity);
     }
+  };
+
+  const onDeleteActivities = response => {
+    // Check result parameter to see if everything went well or not
+    response.forEach(res => {
+      if (!res.result.details) {
+        const updatedActivity = {
+          ...res.activity,
+          schedulingDate: null,
+          activityStatus: activityStatuses.NOT_SCHEDULED,
+          reservationId: null,
+        };
+        updateActivity(updatedActivity);
+      }
+    })
   };
 
   const updateSchedulingProgress = () => {
@@ -161,6 +183,12 @@ const ActivityActionsDropdown = ({
           teCoreAPI[activityActions[key].callname]({
             activity,
             callback: onDeleteActivity
+          });
+          break;
+        case 'DELETE_ALL':
+          teCoreAPI[activityActions[key].callname]({
+            activities,
+            callback: onDeleteActivities
           });
           break;
         default:
