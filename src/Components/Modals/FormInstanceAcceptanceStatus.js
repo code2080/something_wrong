@@ -72,7 +72,6 @@ const FormInstanceAcceptanceStatus = ({
   return (
     <Modal
       title="Set acceptance status"
-      destroyOnClose={true}
       visible={isVisible}
       onOk={onSubmitAcceptanceStatusCallback}
       onCancel={onClose}

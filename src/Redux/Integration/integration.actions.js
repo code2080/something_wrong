@@ -70,7 +70,7 @@ export const findTypesOnReservationMode = reservationMode => (dispatch, getState
   return dispatch(
     asyncAction.GET({
       flow: findTypesOnReservationModeFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/types/${reservationMode}`,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/types/${encodeURIComponent(reservationMode)}`,
       params: { reservationMode },
     })
   );
@@ -94,7 +94,7 @@ export const findFieldsOnReservationMode = reservationMode => (dispatch, getStat
   return dispatch(
     asyncAction.GET({
       flow: findFieldsOnReservationModeFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/fields/${reservationMode}`,
+      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/fields/${encodeURIComponent(reservationMode)}`,
       params: { reservationMode: reservationMode },
     })
   );
