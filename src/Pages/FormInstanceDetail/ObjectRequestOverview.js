@@ -85,7 +85,7 @@ const objReqColumns = [
     render: request => (
       <ObjectRequestDropdown request={request} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }} >
-          <ObjectRequestLabel request={request} />
+          <ObjectRequestLabel request={request} onlyShowRequest />
           <Button type="link" size="small">
             <Icon type="more" />
           </Button>
