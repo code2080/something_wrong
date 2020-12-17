@@ -106,7 +106,7 @@ const ActivityActionsDropdown = ({
     );
   };
 
-  const onDeleteActivity = response => {
+  const onDeleteReservation = response => {
     // Check result parameter to see if everything went well or not
     if (!response.result.details) {
       const updatedActivity = {
@@ -119,7 +119,7 @@ const ActivityActionsDropdown = ({
     }
   };
 
-  const onDeleteActivities = response => {
+  const onDeleteReservations = response => {
     // Check result parameter to see if everything went well or not
     response.forEach(res => {
       if (!res.result.details) {
@@ -182,13 +182,13 @@ const ActivityActionsDropdown = ({
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
             activity,
-            callback: onDeleteActivity
+            callback: onDeleteReservation
           });
           break;
         case 'DELETE_ALL':
           teCoreAPI[activityActions[key].callname]({
             activities,
-            callback: onDeleteActivities
+            callback: onDeleteReservations
           });
           break;
         default:
