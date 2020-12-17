@@ -19,6 +19,7 @@ export const transformPayloadForDatasourceFiltering = payload => {
   const searchString = payload.filter(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
   const categories = (searchString || []).reduce((prev, curr) => [...prev, { id: curr.extId, values: curr.value }], []);
   return {
+    type: type.extId,
     categories,
     searchString: null,
     searchFields: null,
@@ -40,6 +41,7 @@ export const transformPayloadForFreeTextFiltering = (payload, searchCriteria = s
   const searchField = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
   if (!type || !searchString || !searchField) return null;
   return {
+    type: type.extId,
     categories: [],
     exactSearch: searchCriteria !== searchCriteriaFreeText.CONTAINS,
     searchString: searchString.value,
@@ -68,6 +70,7 @@ export const transformPayloadForNumberFiltering = (payload, searchCriteria = sea
   if (!searchStrings || !searchStrings.length) return null;
 
   return {
+    type: type.extId,
     categories: [],
     searchString: `${searchCriteriaNumberProps[searchCriteria].label}${searchStrings[0].value}`,
     searchFields: [searchStrings[0].extId],
