@@ -180,12 +180,12 @@ const getSchedulingPayloadForTimeSlotEndTime = (
  */
 const getRenderPayloadForObjectFilter = activityValue => {
   const validationResult = validateFilterValue(activityValue);
-  const submissionValue = Array.isArray(activityValue.submissionValue) ? activityValue.submissionValue : [activityValue.submissionValue];
+  const value = Array.isArray(activityValue.value) ? activityValue.value : [activityValue.value];
   if (!validationResult.errorCode)
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
-      value: activityValue.submissionValue,
-      formattedValue: submissionValue
+      value,
+      formattedValue: value
         .map(el => renderFilterValues(el)).join(', ')
     });
 

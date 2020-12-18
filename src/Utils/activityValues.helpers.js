@@ -54,7 +54,6 @@ export const determineContentOfValue = activityValue => {
 
 const transformFieldSearchToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
     categories: [],
     exactSearch: rawValue.matchWholeWord,
     searchString: rawValue.value,
@@ -64,7 +63,6 @@ const transformFieldSearchToFilter = (datasource, rawValue) => {
 
 const transformNumberSearchToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
     categories: [],
     searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
     searchFields: [datasource[1]],
@@ -73,7 +71,6 @@ const transformNumberSearchToFilter = (datasource, rawValue) => {
 
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
     categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []), 
     searchString: null,
     searchFields: null,

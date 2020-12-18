@@ -38,6 +38,7 @@ import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { themeColors } from '../../Constants/themeColors.constants';
+import { formatElementValue } from '../../Utils/elements.helpers';
 
 const applyScopedObjectFilters = (el, objs, filters) => {
   const { scopedObject } = el;
@@ -91,7 +92,7 @@ const mapActionsToProps = {
 };
 
 const traversedClassList = element => {
-  if(!element) return [];
+  if (!element) return [];
   let currentNode = element;
   const classes = [];
   do {
@@ -142,13 +143,12 @@ const FormPage = ({
     form.objectScope && fetchDataForDataSource(form.objectScope);
   }, [form.objectScope]);
 
-
   const payload = useMemo(() => {
     const sections = form.sections;
     const submissionValues = submissions.reduce((acc, submission) => ({
-        ...acc,
-        ...submission.values
-      }), {});
+      ...acc,
+      ...submission.values
+    }), {});
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({ sections, submissionValues, objectScope: form.objectScope });
@@ -176,7 +176,7 @@ const FormPage = ({
         ..._elementTableData[submission._id],
       };
     }),
-    [submissions, _elementTableData]);
+  [submissions, _elementTableData]);
 
   const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
@@ -234,7 +234,8 @@ const FormPage = ({
             ? columns.some(
               col => {
                 if (!el[col.dataIndex]) return false;
-                return el[col.dataIndex]
+                const formattedValue = formatElementValue(el[col.dataIndex]);
+                return formattedValue
                   .toString()
                   .toLowerCase()
                   .indexOf(query) > -1
