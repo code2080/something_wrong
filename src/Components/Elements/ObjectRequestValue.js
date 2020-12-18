@@ -16,11 +16,12 @@ import {
 
 export const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
-export const ObjectRequestLabel = ({ request }) => {
+export const ObjectRequestLabel = ({ request, onlyShowRequest = false }) => {
   const labelField = useSelector(selectLabelField(request.datasource));
-  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', request.replacementObjectExtId || request.objectExtId));
+  const editExtId =  request.replacementObjectExtId || request.objectExtId;
+  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', editExtId));
   const firstFieldLabel = request.objectRequest[labelField] || _.head(Object.values(request.objectRequest));
-  return extIdLabel || firstFieldLabel || 'N/A';
+  return (!onlyShowRequest && extIdLabel != editExtId && extIdLabel) || firstFieldLabel || 'N/A';
 }
 export const ObjectRequestType = ({ type }) => <span className={`requestType`} style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }} >{objectRequestTypeToText[type] || 'N/A'}</span>;
 
