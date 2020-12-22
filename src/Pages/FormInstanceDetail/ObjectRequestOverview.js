@@ -25,6 +25,7 @@ import { selectSectionDesign } from '../../Redux/Forms/forms.selectors';
 
 // STYLES
 import '../../Components/TableColumns/Components/ExpandedPane.scss';
+import { anyIncludes, stringIncludes } from '../../Utils/validation';
 
 const ObjectRequestSection = ({ request }) => {
   const { formId } = useParams();
@@ -101,17 +102,26 @@ const fieldColumns = request => Object.entries(request.objectRequest).map(([fiel
   render: () => value,
 }));
 
-const ObjectRequestOverview = ({ formInstanceId, requests }) => { 
-  return (<DynamicTable
-    resizable
-    columns={objReqColumns}
-    dataSource={requests}
-    showFilter={false}
-    rowKey="_id"
-    pagination={false}
-    expandedRowRender={request => <ExpandedPane columns={fieldColumns(request)} row={request} />}
-    datasourceId={`${tableViews.OBJECTREQUESTS}-${formInstanceId}`}
-  />);
+const ObjectRequestOverview = ({ formInstanceId, requests }) => {
+  const onSearch = (objectRequest, query) => {
+    if (anyIncludes([objectRequest.status, objectRequest.type], query)) return true;
+    if (objectRequest.objectRequest) {
+      if (anyIncludes(Object.values(objectRequest.objectRequest), query)) return true;
+    }
+    return false;
+  };
+  return (
+    <DynamicTable
+      resizable
+      columns={objReqColumns}
+      dataSource={requests}
+      rowKey="_id"
+      pagination={false}
+      expandedRowRender={request => <ExpandedPane columns={fieldColumns(request)} row={request} />}
+      datasourceId={`${tableViews.OBJECTREQUESTS}-${formInstanceId}`}
+      onSearch={onSearch}
+    />
+  );
 };
 
 ObjectRequestOverview.defaultProps = {
