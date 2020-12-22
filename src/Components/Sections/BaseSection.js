@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
@@ -11,13 +11,19 @@ import SectionExtra from './SectionExtra';
 
 // HELPERS
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
-import { transformSectionToTableColumns, transformSectionValuesToTableRows } from '../../Utils/rendering.helpers';
+import {
+  transformSectionToTableColumns,
+  transformSectionValuesToTableRows,
+  availabilityCalendarColumns,
+  transformAvailabilityCalendarToTableRows
+} from '../../Utils/rendering.helpers';
 
 // STYLES
 import './BaseSection.scss';
 
 // CONSTANTS
 import { SECTION_CONNECTED, SECTION_TABLE } from '../../Constants/sectionTypes.constants';
+import { selectSectionHasAvailabilityCalendar } from '../../Redux/Forms/forms.selectors';
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId, formInstanceId } }, section } = ownProps;
@@ -36,22 +42,38 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
   // State var to hold if we should show extra or not
   const [showExtra, setShowExtra] = useState(false);
 
+  const hasAvailabilityCalendar = useSelector(selectSectionHasAvailabilityCalendar(section.elements));
+
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
+
   // Memoized var holding the columns
-  const _columns = useMemo(() => transformSectionToTableColumns(section, sectionType, formInstanceId, formId), [section]);
+  const _columns = useMemo(() => {
+    if (hasAvailabilityCalendar) {
+      return availabilityCalendarColumns;
+    }
+    return transformSectionToTableColumns(section, sectionType, formInstanceId, formId)
+  },
+  [section, hasAvailabilityCalendar]
+  );
 
   // Memoized var holding the transformed section values
   const _data = useMemo(
-    () => transformSectionValuesToTableRows(
-      values,
-      _columns,
-      section._id,
-      sectionType
-    ),
-    [section, values]
+    () => {
+      if (hasAvailabilityCalendar) {
+        return transformAvailabilityCalendarToTableRows(values)
+      }
+      return transformSectionValuesToTableRows(
+        values,
+        _columns,
+        section._id,
+        sectionType
+      )
+    },
+    [section, values, hasAvailabilityCalendar]
   );
-  return !_.isEmpty(_columns) && (
+  if (_.isEmpty(_columns)) return null;
+  return (
     <div className="base-section--wrapper">
       <div className={`base-section--name__wrapper ${sectionType}`}>
         {section.name}
