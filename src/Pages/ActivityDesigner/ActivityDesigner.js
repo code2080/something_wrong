@@ -38,6 +38,16 @@ import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { useHistory } from 'react-router-dom';
 import { themeColors } from '../../Constants/themeColors.constants';
 
+const checkObjectIsInvalid = object => {
+  if (_.isEmpty(object)) return false;
+  return Object.keys(object).some(key => {
+    const item = object[key];
+    if (!item || _.isEmpty(item)) return true;
+    if (Array.isArray(item)) return item.some(subItem => !subItem || _.isEmpty(subItem));
+    return false;
+  });
+};
+
 const resetMenuOptions = {
   RESET_EMPTY: 'RESET_EMPTY',
   RESET_TYPES: 'RESET_TYPES',
@@ -100,7 +110,7 @@ const mapStateToProps = (state, ownProps) => {
     form,
     formId,
     mappings: state.activityDesigner,
-    mapping: state.activityDesigner[formId],
+    mappingOriginal: state.activityDesigner[formId],
     hasReservations: noOfReservations > 0,
     validTypes,
     validFields,
@@ -127,7 +137,7 @@ const extractReservationFields = payload =>
 const ActivityDesignerPage = ({
   form,
   formId,
-  mapping,
+  mappingOriginal,
   mappings,
   hasReservations,
   validTypes,
@@ -141,6 +151,8 @@ const ActivityDesignerPage = ({
   saving,
 }) => {
   const history = useHistory();
+
+  const [mapping, setMapping] = useState(mappingOriginal);
 
   useEffect(() => {
     if (form && form.reservationMode) {
@@ -235,8 +247,8 @@ const ActivityDesignerPage = ({
         [timingProp]: value,
       },
     });
-    updateMapping(updatedMapping);
-  }, [formId, form, updateMapping, mapping]);
+    setMapping(updatedMapping);
+  }, [formId, form, setMapping, mapping]);
 
   // Callback to update the object section of the mapping
   const updateObjectMappingCallback = useCallback(_mapping => {
@@ -251,8 +263,8 @@ const ActivityDesignerPage = ({
         ..._mapping.propSettings,
       },
     };
-    updateMapping(updatedMapping);
-  }, [updateMapping, mapping, formId, form]);
+    setMapping(updatedMapping);
+  }, [setMapping, mapping, formId, form]);
 
   // Callback to update the field section of the mapping
   const updateFieldMappingCallback = useCallback(_mapping => {
@@ -267,17 +279,36 @@ const ActivityDesignerPage = ({
         ..._mapping.propSettings,
       },
     };
-    updateMapping(updatedMapping);
-  }, [updateMapping, mapping, formId, form]);
+    setMapping(updatedMapping);
+  }, [setMapping, mapping, formId, form]);
 
   // Callback for reset mapping update
   const onResetMapping = resetMapping => {
-    updateMapping({
+    setMapping({
       ...resetMapping,
       formId: formId,
       name: `Mapping for ${form.name}`,
     });
   };
+
+  const mappingIsValid = useMemo(() => {
+    const { fields, objects, timing } = mapping;
+    const { startTime, endTime } = timing;
+    if (_.isEmpty(startTime) || _.isEmpty(endTime)) return false;
+    if (checkObjectIsInvalid(fields)) {
+      return false;
+    }
+    if (checkObjectIsInvalid(objects)) {
+      return false;
+    }
+    return true;
+  }, [mapping]);
+
+  useEffect(() => {
+    if (mappingIsValid) {
+      updateMapping(mapping);
+    }
+  }, [mappingIsValid, mapping]);
 
   // Callback for reset meun clicks
   const onResetMenuClick = useCallback(({ key }) => {
@@ -400,7 +431,6 @@ const ActivityDesignerPage = ({
           </Button>
         </div>
       </div>
-      
     </React.Fragment>
   );
 };
@@ -408,7 +438,7 @@ const ActivityDesignerPage = ({
 ActivityDesignerPage.propTypes = {
   form: PropTypes.object.isRequired,
   formId: PropTypes.string.isRequired,
-  mapping: PropTypes.object,
+  mappingOriginal: PropTypes.object,
   mappings: PropTypes.object,
   hasReservations: PropTypes.bool.isRequired,
   validFields: PropTypes.array,
@@ -419,13 +449,15 @@ ActivityDesignerPage.propTypes = {
   findTypesOnReservationMode: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
+  saving: PropTypes.bool,
 };
 
 ActivityDesignerPage.defaultProps = {
-  mapping: {},
+  mappingOriginal: {},
   mappings: {},
   validFields: [],
   validTypes: [],
+  saving: false,
 };
 
 export default withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(ActivityDesignerPage));
