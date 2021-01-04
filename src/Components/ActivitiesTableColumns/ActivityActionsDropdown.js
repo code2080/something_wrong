@@ -92,7 +92,7 @@ const ActivityActionsDropdown = ({
 }) => {
   const { formInstanceId, formId } = activity;
   const [formType, reservationMode] = useSelector(state => {
-    const form = state.forms[activity.formId];
+    const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
   const onFinishSchedule =
