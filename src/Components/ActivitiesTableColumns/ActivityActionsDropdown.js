@@ -168,7 +168,7 @@ const ActivityActionsDropdown = ({
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
-            activites: [activity],
+            activities: [activity],
             callback: onDeleteActivities
           });
           break;
