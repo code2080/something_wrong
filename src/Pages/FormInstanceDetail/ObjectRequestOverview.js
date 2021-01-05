@@ -104,8 +104,8 @@ const fieldColumns = request => Object.entries(request.objectRequest).map(([fiel
 
 const ObjectRequestOverview = ({ formInstanceId, requests }) => {
   const onSearch = (objReq, query) => {
-    const { status, type, objectRequest } = objReq;
-    return anyIncludes([status, type, objectRequest && Object.values(objectRequest)], query);
+    const { status, type, objectRequest, objectExtId, replacementObjectExtId } = objReq;
+    return anyIncludes([status, type, objectExtId, replacementObjectExtId, objectRequest && Object.values(objectRequest)], query);
   };
   return (
     <DynamicTable
