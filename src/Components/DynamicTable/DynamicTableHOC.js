@@ -133,7 +133,7 @@ const DynamicTableHOC = ({
 
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
-    if (filterQuery === '' || filterQuery.length < 3) return dataSource;
+    if (filterQuery === '') return dataSource;
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return dataSource.filter(
       el => {
