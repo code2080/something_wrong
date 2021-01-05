@@ -25,7 +25,7 @@ import { selectSectionDesign } from '../../Redux/Forms/forms.selectors';
 
 // STYLES
 import '../../Components/TableColumns/Components/ExpandedPane.scss';
-import { anyIncludes, stringIncludes } from '../../Utils/validation';
+import { anyIncludes } from '../../Utils/validation';
 
 const ObjectRequestSection = ({ request }) => {
   const { formId } = useParams();
@@ -103,12 +103,9 @@ const fieldColumns = request => Object.entries(request.objectRequest).map(([fiel
 }));
 
 const ObjectRequestOverview = ({ formInstanceId, requests }) => {
-  const onSearch = (objectRequest, query) => {
-    if (anyIncludes([objectRequest.status, objectRequest.type], query)) return true;
-    if (objectRequest.objectRequest) {
-      if (anyIncludes(Object.values(objectRequest.objectRequest), query)) return true;
-    }
-    return false;
+  const onSearch = (objReq, query) => {
+    const { status, type, objectRequest } = objReq;
+    return anyIncludes([status, type, objectRequest && Object.values(objectRequest)], query);
   };
   return (
     <DynamicTable
