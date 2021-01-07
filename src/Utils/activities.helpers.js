@@ -231,3 +231,5 @@ export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => 
       console.log('Found these invalid activities:', invalidActivityIds);
   }})
 }
+
+export const activityIsReadOnly = status => [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);

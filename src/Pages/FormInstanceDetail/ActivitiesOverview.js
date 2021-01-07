@@ -11,9 +11,8 @@ import { deleteActivitiesInFormInstance, saveActivities } from '../../Redux/Acti
 import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // HELPERS
-import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
+import { validateScheduledActivities, createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
 import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
-import { validateScheduledActivities } from '../../Utils/activities.helpers';
 
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
@@ -22,8 +21,10 @@ import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 
-//HOOKS
+// HOOKS
 import { useMixpanel } from '../../Hooks/TECoreApiHooks';
+import { abortJob } from '../../Redux/Jobs/jobs.actions';
+import { selectJobForActivities } from '../../Redux/Jobs/jobs.selectors';
 
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
@@ -40,7 +41,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   saveActivities,
-  deleteActivitiesInFormInstance,
 };
 
 const FormInstanceReservationOverview = ({
@@ -50,12 +50,13 @@ const FormInstanceReservationOverview = ({
   mapping,
   mappings,
   saveActivities,
-  deleteActivitiesInFormInstance,
   history,
   teCoreAPI,
 }) => {
   const mixpanel = useMixpanel();
   const dispatch = useDispatch();
+  const jobs = useSelector(selectJobForActivities(formInstance.formId, activities.map(item => item._id)));
+
   const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance))
   const onCreateActivities = useCallback(() => {
     const activities = createActivitiesFromFormInstance(
@@ -63,9 +64,9 @@ const FormInstanceReservationOverview = ({
       form.sections,
       mapping,
       formInstanceObjReqs,
-      );
-      mixpanel.track("PrefsInCore, onCreateActivities", { numberOfActivities: activities.length });
-      saveActivities(formInstance.formId, formInstance._id, activities);
+    );
+    mixpanel.track('PrefsInCore, onCreateActivities', { numberOfActivities: activities.length });
+    saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
   const onCreateActivityDesign = () => history.push(`/forms/${form._id}/activity-designer`);
@@ -78,12 +79,25 @@ const FormInstanceReservationOverview = ({
     Modal.confirm({
       getContainer: () => document.getElementById('te-prefs-lib'),
       title: 'Do you want to delete all activities?',
-      onOk: () => {
-        deleteActivitiesInFormInstance(form._id, formInstance._id);
+      onOk: async () => {
+        const res = await dispatch(deleteActivitiesInFormInstance(form._id, formInstance._id));
+        // STOP JOBS AFTER REMOVED ALL ACTIVITIES
+        if (res.status === 200) {
+          if (jobs && jobs.length) {
+            jobs.forEach(job => {
+              dispatch(abortJob({
+                jobId: job.id,
+                formId: formInstance.formId,
+                formInstanceId: formInstance._id,
+                activities: job.activities,
+              }));
+            })
+          }
+        }
       },
     });
   };
-  
+
   const renderedState = useMemo(() => {
     /**
      * Case 1: Activities exist
@@ -164,7 +178,6 @@ FormInstanceReservationOverview.propTypes = {
   mapping: PropTypes.object,
   mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
-  deleteActivitiesInFormInstance: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 

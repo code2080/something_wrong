@@ -15,6 +15,7 @@ export const teCoreCallnames = {
   GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
   GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
   SELECT_RESERVATION: 'selectReservation',
+  STOP_SCHEDULING: 'stopScheduling',
   DELETE_RESERVATIONS: 'deleteReservations',
   POPULATE_SELECTION: 'populateSelection', // WHERE IS THIS ONE USED?
   GET_RESERVATION_TYPES: 'getReservationTypes',

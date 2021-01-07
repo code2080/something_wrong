@@ -36,6 +36,8 @@ import {
   activityActionLabels
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
+import { activityStatuses } from '../../../Constants/activityStatuses.constants';
+import { activityIsReadOnly } from '../../../Utils/activities.helpers';
 
 const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
@@ -204,10 +206,12 @@ const BaseActivityCol = ({
   );
 
   const activityValueActions = useMemo(
-    () =>
-      Object.keys(activityActions).filter(activityAction =>
+    () => {
+      const actions = activityIsReadOnly(activity.activityStatus) ? [activityActions.SHOW_INFO] : Object.keys(activityActions);
+      return actions.filter(activityAction =>
         activityActionFilters[activityAction](_activityValue, activity, mapping)
-      ),
+      );
+    },
     [_activityValue, activity, mapping]
   );
 
