@@ -19,7 +19,7 @@ const panels = {
 
 const SectionExtra = ({ formId, formInstanceId, section, sectionType }) => {
   const defaultActiveKey = useMemo(() => {
-    if (sectionType === SECTION_CONNECTED || sectionType === SECTION_CONNECTED)
+    if (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE)
       return [panels.SELECT_SETTINGS];
     if (section.calendarSettings)
       return [panels.CALENDAR_SETTINGS];
@@ -29,7 +29,6 @@ const SectionExtra = ({ formId, formInstanceId, section, sectionType }) => {
   return (
     <div className="base-section__extra--wrapper">
       <Collapse
-        bordered={false}
         defaultActiveKey={defaultActiveKey}
       >
         {(sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) && (

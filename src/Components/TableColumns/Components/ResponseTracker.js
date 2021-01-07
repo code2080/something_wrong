@@ -6,28 +6,28 @@ import { Progress, Tooltip } from 'antd';
 import { formInstanceStatusTypes } from '../../../Constants/formInstanceStatuses.constants';
 
 const ResponseTracker = ({ responses }) => {
-  const total = responses[formInstanceStatusTypes.SENT] || 0;
-  const drafts = responses[formInstanceStatusTypes.DRAFT] || 0;
   const submissions = responses[formInstanceStatusTypes.SUBMITTED] || 0;
+  const declined = responses[formInstanceStatusTypes.DECLINED] || 0;
+  const totalCount = Object.values(responses).reduce((tot, value) => tot + value) - declined;
   return (
-    <Tooltip
-      title={
-        total
-          ? `${submissions} submitted and ${drafts} saved as drafts of ${total} forms sent`
-          : 'Form has not been assigned to any recipients'
-      }
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    >
-      <Progress
-        percent={total ? (drafts / total) * 100 : 0}
-        successPercent={total ? (submissions / total) * 100 : 0}
-        size="small"
-        format={() => {
-          if (total) return `${total}/${drafts}/${submissions}`;
-          return 'N/A';
-        }}
-      />
-    </Tooltip>
+    <div style={{ marginRight: '8px' }}>
+      <Tooltip
+        title={
+          totalCount > 0
+            ? `${submissions} submitted, ${declined} rejected, out of ${totalCount} forms sent or created`
+            : 'Form has not been assigned to any recipients'
+        }
+        getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      >
+        <Progress
+          successPercent={((submissions - declined) / totalCount) * 100}
+          percent={(submissions / totalCount) * 100}
+          size='small'
+          strokeColor='red'
+          format={() =>`${submissions}/${declined}/${totalCount}`}
+        />
+      </Tooltip>
+    </div>
   );
 };
 

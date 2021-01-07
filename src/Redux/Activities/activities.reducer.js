@@ -81,6 +81,24 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS: {
+      const { payload: { actionMeta: { formId, formInstanceId } } } = action;
+      return {
+        ...state,
+        [formId]: Object.values(state[formId]).reduce((results, activity) => {
+          if (activity.formInstanceId === formInstanceId) {
+            return {
+              ...results,
+            };
+          }
+          return {
+            ...results,
+            [activity]: activity,
+          };
+        }, {})
+      }
+    }
+
     default:
       return state;
   }

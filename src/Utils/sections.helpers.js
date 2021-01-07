@@ -4,6 +4,7 @@ import { SelectionSettings } from '../Models/SelectionSettings.model';
 import { getElementTypeFromId } from './elements.helpers';
 import { elementTypes } from '../Constants/elementTypes.constants';
 import { determineSectionType } from './determineSectionType.helpers';
+import { TIME_FORMAT } from '../Constants/common.constants';
 
 /**
  * @function getSectionTypeFromId
@@ -38,24 +39,29 @@ export const getElementFromSection = (elementId, section) => section.elements.fi
 
 /**
  * @function getSectionsToUseInActivities
- * @description based on the reservation template mapping, determines the sections that should be used in the activities
+ * @description based on the activity design, determines the sections that should be used in the activities
  * @param {*} sections all sections in the form
- * @param {*} mapping the reservation template mapping
+ * @param {*} activityDesign the activity design
  * @returns {Array<Object>} sectionsToUse
  */
-
-export const getSectionsToUseInActivities = (sections, mapping) => {
+export const getSectionsToUseInActivities = (sections, activityDesign) => {
   // Loop through objects, fields and get the sectionIds
   const sectionIds = [
-    ...(Object.keys(mapping.objects) || []).reduce((objects, objectKey) => {
-      const object = mapping.objects[objectKey];
-      if (object && object[0]) return [...objects, object[0]];
-      return objects;
+    ...(Object.keys(activityDesign.objects) || []).reduce((objects, objectKey) => {
+      const elementsForType = activityDesign.objects[objectKey];
+      const newPaths = (elementsForType || []).reduce((newPaths, element) => {
+        if (element && element[0]) return [...newPaths, element[0]];
+        return newPaths;
+      }, []);
+      return [objects, ...newPaths];
     }, []),
-    ...(Object.keys(mapping.fields) || []).reduce((fields, fieldKey) => {
-      const field = mapping.fields[fieldKey];
-      if (field && field[0]) return [...fields, field[0]];
-      return fields;
+    ...(Object.keys(activityDesign.fields) || []).reduce((fields, fieldKey) => {
+      const elementsForField = activityDesign.fields[fieldKey];
+      const newPaths = (elementsForField || []).reduce((newPaths, element) => {
+        if (element && element[0]) return [...newPaths, element[0]];
+        return newPaths;
+      }, []);
+      return [fields, ...newPaths];
     }, []),
   ];
   return sectionIds.reduce((foundSections, sectionId) => {
@@ -75,15 +81,13 @@ export const getSectionsToUseInActivities = (sections, mapping) => {
  */
 
 export const findTimeSlot = (startTime, endTime, timeslots) => {
-  const _startTime = moment(startTime).format('HH:mm');
-  const _endTime = moment(endTime).format('HH:mm');
-  const timeslotIdx = (timeslots || []).findIndex(
-    el =>
-      moment(el.startTime).format('HH:mm') === _startTime &&
-        moment(el.endTime).format('HH:mm') === _endTime
-  );
-  if (timeslotIdx > -1) return timeslots[timeslotIdx];
-  return null;
+  const _startTime = moment.utc(startTime).format(TIME_FORMAT);
+  const _endTime = moment.utc(endTime).format(TIME_FORMAT);
+  return timeslots.find(timeslot => {
+    const slotStart = moment.utc(timeslot.startTime).format(TIME_FORMAT);
+    const slotEnd = moment.utc(timeslot.endTime).format(TIME_FORMAT);
+    return slotStart === _startTime && slotEnd === _endTime;
+  })
 };
 
 /**

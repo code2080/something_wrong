@@ -1,0 +1,7 @@
+export const jobStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  STARTED: 'STARTED',
+  FAILED: 'FAILED',
+  FINISHED: 'FINISHED',
+  ABORTED: 'ABORTED',
+};

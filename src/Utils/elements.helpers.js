@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { determineSectionType } from './determineSectionType.helpers';
 import {
@@ -5,6 +6,7 @@ import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
+import { DATE_FORMAT } from '../Constants/common.constants';
 
 /**
  * @function pickElement
@@ -140,4 +142,40 @@ export const extractOptionFromValue = (value, options) => {
   const optionIdx = (options || []).findIndex(opt => opt.value === value);
   if (optionIdx === -1) return { value, label: 'N/A' };
   return options[optionIdx];
+};
+
+const arrayToString = (value, divider) => {
+  return value.map(item => formatElementValue(item, divider));
+};
+
+const objectToString = (value, divider) => {
+  return arrayToString(
+    Object.keys(value)
+      .map(key => `${formatElementValue(value[key], divider)}`),
+    divider
+  )
+};
+
+/**
+ * @function formatElementValue
+ * @description convert element value to readable text
+ * @param {any} value the element raw value
+ */
+export const formatElementValue = (value, divider) => {
+  if (value === null || value === undefined) return value;
+  if (Array.isArray(value)) {
+    return arrayToString(value, divider);
+  }
+  if (typeof value === 'object') {
+    if (!Object.keys(value).length) return '';
+    if (value instanceof Date) return value;
+    if (moment.isMoment(value)) {
+      const momentValue = moment(value);
+      if (value._f) return momentValue.format((value._f || '').replace(':ss', ''));
+      return momentValue.format(DATE_FORMAT);
+    }
+    return objectToString(value, divider);
+  }
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  return value;
 };

@@ -56,6 +56,22 @@
 }
 
 .assignment__popover--wrapper {
+  .ant-popover-inner{
+    padding: 0 4px;
+  }
+  
+  .ant-list-pagination{
+    margin:4px;
+  }
+  
+  .ant-list-empty-text {
+    padding: 4px 16px;
+  }
+
+  .ant-list-header {
+    padding: 4px 0;
+  }
+
   .ant-popover-title {
     padding: 4px;
     min-height: auto;
@@ -64,7 +80,7 @@
   }
 
   .ant-popover-inner-content {
-    padding: 4px;
+    padding: 0 4px;
 
     .ant-input.ant-input-sm {
       border-radius: 0;
@@ -89,11 +105,12 @@
       padding: 2px 4px; 
       display: flex;
       align-items: center;
+      cursor: default;
 
       &.empty {
         font-style: italic;
       }
-
+    
       .assignment__popover__item__avatar {
         width: 20px;
         height: 20px;
@@ -103,7 +120,6 @@
         border-radius: 50%;
         font-size: 0.6rem;
         margin-right: 4px;
-
       }
 
       .assignment__popover__item__remove {

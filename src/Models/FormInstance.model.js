@@ -23,6 +23,8 @@ export default class FormInstance {
 
   teCoreProps;
 
+  reviewLink;
+
   values;
 
   createdAt;
@@ -40,9 +42,11 @@ export default class FormInstance {
     firstName,
     lastName,
     teCoreProps,
-    values,
+    reviewLink,
+    values = [],
     createdAt,
     updatedAt,
+    index,
   }) {
     this._id = _id;
     this.scopedObject = scopedObject;
@@ -54,9 +58,11 @@ export default class FormInstance {
     this.firstName = firstName;
     this.lastName = lastName;
     this.submitter = `${firstName} ${lastName}`;
-    this.teCoreProps = new FormInstanceTECoreProps(teCoreProps);
+    this.teCoreProps = new FormInstanceTECoreProps(teCoreProps || {});
+    this.reviewLink = reviewLink;
     this.values = values;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.index = index;
   }
 }

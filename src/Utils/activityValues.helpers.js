@@ -54,7 +54,6 @@ export const determineContentOfValue = activityValue => {
 
 const transformFieldSearchToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
     categories: [],
     exactSearch: rawValue.matchWholeWord,
     searchString: rawValue.value,
@@ -64,7 +63,6 @@ const transformFieldSearchToFilter = (datasource, rawValue) => {
 
 const transformNumberSearchToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
     categories: [],
     searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
     searchFields: [datasource[1]],
@@ -73,8 +71,7 @@ const transformNumberSearchToFilter = (datasource, rawValue) => {
 
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
-    type: datasource[0],
-    categories: [{ id: datasource[1], values: [...rawValue] }],
+    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []), 
     searchString: null,
     searchFields: null,
   };
@@ -98,7 +95,7 @@ const createActivityValueFilterPayload = (element, datasource, rawValue) => {
       break;
   }
   return {
-    submissionValue: [value],
+    submissionValue: value,
     submissionValueType: submissionValueTypes.FILTER,
     valueMode: activityValueModes.FROM_SUBMISSION,
     value,
@@ -164,11 +161,17 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
  * @param {Array} sections all sections in the form
  * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType) => {
+const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs = []) => {
   if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
-  const eventValues = formInstance.values[sectionId][eventId].values;
+  const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
+    const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
+    if(objReq) {
+      return  [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
+    }
+    return [...values, val]
+  }, []);
   if (!eventValues) return null;
   const elementIdx = eventValues.findIndex(el => el.elementId === elementId);
   if (elementIdx === -1) return null;
@@ -286,7 +289,6 @@ const createScopedObjectActivityValue = (formInstance, valueType, extId) => new 
  * @function createActivityValueForConnectedSectionSpecialProp
  * @description special case helper for creating the activity value for when it's mapped to one of the special props on a connected section
  * @param {Object} formInstance the form instance
- * @param {Object} reservationTemplateMapping the reservation template mapping of the form
  * @param {String} valueType the value type of the activity value
  * @param {String} extId the ext id of the prop that's mapped to the scoped object
  * @param {String} sectionId the section id
@@ -295,7 +297,6 @@ const createScopedObjectActivityValue = (formInstance, valueType, extId) => new 
  */
 const createActivityValueForConnectedSectionSpecialProp = (
   formInstance,
-  reservationTemplateMapping,
   valueType,
   extId,
   sectionId,
@@ -303,16 +304,12 @@ const createActivityValueForConnectedSectionSpecialProp = (
   elementId,
 ) => {
   const submissionValue = [getEventValue(elementId, formInstance, sectionId, eventId)];
-  const submissionValueType = elementId === 'title'
-    ? submissionValueTypes.FREE_TEXT
-    : submissionValueTypes.TIMING;
   const value = ensureValueTypeFormat(submissionValue, valueType);
-
   return new ActivityValue({
     type: valueType,
-    extId: extId,
+    extId,
     submissionValue,
-    submissionValueType,
+    submissionValueType: submissionValueTypes.TIMING,
     valueMode: activityValueModes.FROM_SUBMISSION,
     value,
     sectionId: null,
@@ -322,110 +319,140 @@ const createActivityValueForConnectedSectionSpecialProp = (
   });
 };
 
+const extractActivityValue = (
+  elementValue,
+  extId,
+  valueType,
+  formInstance,
+  sections,
+  eventId,
+  rowIdx, 
+  formInstanceObjReqs = []
+) => {
+  /**
+   * Extraction logic:
+   * Cases:
+   *  a. ExtId is only an extid for valueType === OBJECT || FIELD;
+   *  b. For valueType === TIMING, extId equals one of mode, startDate, endDate, startTime, endTime, length
+   *  c. Additionally, for scopedObject, el is simply ['scopedObject']
+   *  d. For connected sections, the elementId could also be one of the event properties:
+   *    eventTitle DEPRECATED
+   *    startTime
+   *    endTime
+   * This means there are four cases we need to check for
+   * 1) If we're extracting the value for the TIMING.mode parameter
+   * 2) If we're extracting the value of the form instance's scoped object
+   * 3) If we're extracting the value of one of the special properties of a connected section's event model
+   * 4) The general case; elementPath[0] === sectionId, elementPath[1] === elementId
+  */
+  /**
+   * CASE 1: TIMING MODE
+   */
+  if (Object.keys(mappingTimingModes).indexOf(elementValue) > -1)
+    return createTimingModeActivityValue(elementValue);
+
+  // Get the section id, the elementId
+  const sectionId = elementValue[0];
+  const elementId = elementValue[1];
+  /**
+   * CASE 2: SCOPED OBJECT
+   */
+  if (sectionId === 'scopedObject')
+    return createScopedObjectActivityValue(formInstance, valueType, extId);
+  /**
+   * CASE 3: CONNECTED SECTION SPECIAL PROPERTIES
+   */
+  if (['startTime', 'endTime'].indexOf(elementId) > -1 && eventId)
+    return createActivityValueForConnectedSectionSpecialProp(
+      formInstance,
+      valueType,
+      extId,
+      sectionId,
+      eventId,
+      elementId
+    );
+  /**
+   * CASE 4: GENERAL CASE
+   */
+  const sectionType = getSectionTypeFromId(sectionId, sections);
+  let props = {};
+  switch (sectionType) {
+    case SECTION_CONNECTED:
+      props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs);
+      break;
+    case SECTION_TABLE:
+      props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections, valueType);
+      break;
+    default:
+      props = getActivityValuePayloadFromRegularSection(formInstance, sectionId, elementId, sections, valueType);
+      break;
+  }
+
+  return (props || valueType != 'object') ? new ActivityValue({
+    type: valueType,
+    extId,
+    ...props,
+    sectionId: sectionId,
+    elementId: elementId,
+    eventId: eventId,
+    rowIdx: rowIdx,
+  }) : null;
+}
 /**
  * @function createActivityValueForProp
  * @description create an activity value for a property
  * @param {String} valueType object, field, timing
- * @param {Object} reservationTemplateMapping the form's reservation template mapping
+ * @param {Object} activityDesign the form's activity design
  * @param {*} formInstance the form instance
  * @param {*} sections the form's sections
  * @param {*} eventId the event id (in the case controlling section === SECTION_CONNECTED)
  * @param {*} rowIdx the event id (in the case controlling section === SECTION_TABLE)
  */
-export const createActivityValueForProp = (valueType, reservationTemplateMapping, formInstance, sections, eventId, rowIdx) => {
+export const createActivityValueForProp = (valueType, activityDesign, formInstance, sections, eventId, rowIdx, formInstanceObjReqs = []) => {
   /**
    * Based on the valueType (objects, fields, timing)
-   * we reduce over all the items that in the reservationTemplateMapping have been mapped onto this valueType
+   * we reduce over all the items that in the activity design have been mapped onto this valueType
    */
-  return (Object.keys(reservationTemplateMapping[activityValueTypeProps[valueType].path]) || []).reduce((retVal, extId) => {
+  return (Object.keys(activityDesign[activityValueTypeProps[valueType].path]) || []).reduce((retVal, extId) => {
     /**
-     * Get the element path of the element for an extId from the reservation template mapping
-     * 1. element path structure: [sectionIdInWhichThisElementIsFrom, elementId]
-     * 2. There are a couple of important edge cases to this:
-     *  2a. ExtId is only an extid for valueType === OBJECT || FIELD;
-     *  2b. For valueType === TIMING it's one of mode, startDate, endDate, startTime, endTime, length
-     *  2c. Additionally, for scopedObject, the element path is simply ['scopedObject']
-     *  2d. For connected sections, the elementId could also be one of the event propertieis, eventTitle, startTime, or endTime
-     */
+     * General structure of the content of extId :
+     *  a. for valueType === TIMING [sectionIdInWhichThisElementIsFrom, elementId]
+     *  b. for valueType !== TIMING [[sectionIdInWhichThisElementIsFrom, elementId]]
+     **/
+    const mappedElements = activityDesign[activityValueTypeProps[valueType].path][extId];
 
-    const elementPath = reservationTemplateMapping[activityValueTypeProps[valueType].path][extId];
-
-    /**
-     * There are four cases we need to check for:
-     * 1) If we're extracting the value for the TIMING.mode parameter
-     * 2) If we're extracting the value of the form instance's scoped object
-     * 3) If we're extracting the value of one of the special properties of a connected section's event model
-     * 4) The general case; elementPath[0] === sectionId, elementPath[1] === elementId
-     */
-
-    /**
-     * Special case 1: if the "extId" we are currently on is TIMING.mode
-     * then elementPath will contain one of the timing modes
-     */
-    if (Object.keys(mappingTimingModes).indexOf(elementPath) > -1)
+    if (valueType === activityValueTypes.TIMING) {
       return [
         ...retVal,
-        createTimingModeActivityValue(elementPath),
-      ];
-
-    // Get the section id, the elementId
-    const sectionId = elementPath[0];
-    const elementId = elementPath[1];
-
-    /**
-     * Special case 2: if the sectionId === 'scopedObject'
-     */
-    if (sectionId === 'scopedObject')
-      return [
-        ...retVal,
-        createScopedObjectActivityValue(formInstance, valueType, extId),
-      ];
-
-    /**
-     * Special case 3: if the elementId value matches one of the special properties on a connected section
-     * (and we also have a connected section eventId)
-     */
-    if (['title', 'startTime', 'endTime'].indexOf(elementId) > -1 && eventId)
-      return [
-        ...retVal,
-        createActivityValueForConnectedSectionSpecialProp(
-          formInstance,
-          reservationTemplateMapping,
-          valueType,
+        extractActivityValue(
+          mappedElements,
           extId,
-          sectionId,
+          valueType,
+          formInstance,
+          sections,
           eventId,
-          elementId
+          rowIdx
         ),
-      ];
-
-    /**
-     * The general case
-     */
-    const sectionType = getSectionTypeFromId(sectionId, sections);
-    let props = {};
-    switch (sectionType) {
-      case SECTION_CONNECTED:
-        props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType);
-        break;
-      case SECTION_TABLE:
-        props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections, valueType);
-        break;
-      default:
-        props = getActivityValuePayloadFromRegularSection(formInstance, sectionId, elementId, sections, valueType);
-        break;
+      ]
+    } else {
+      // Create the activity values based on the mapped elements
+      const activityValues = (mappedElements || []).reduce((activityValues, el) => {
+        const extractedActivityValue = extractActivityValue(
+          el,
+          extId,
+          valueType,
+          formInstance,
+          sections,
+          eventId,
+          rowIdx,
+          formInstanceObjReqs
+        ); 
+        return extractedActivityValue ? [
+          ...activityValues,
+          extractedActivityValue
+        ] : activityValues;
+      }, []);
+      return [...retVal, ...activityValues];
     }
-    return [
-      ...retVal,
-      new ActivityValue({
-        type: valueType,
-        extId,
-        ...props,
-        sectionId: sectionId,
-        elementId: elementId,
-        eventId: eventId,
-        rowIdx: rowIdx,
-      })
-    ];
   }, []);
 };

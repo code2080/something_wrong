@@ -7,6 +7,8 @@ import CalendarTimeslots from './CalendarTimeslots';
 
 // STYLES
 import './CalendarSettings.scss';
+import { DATE_FORMAT, TIME_FORMAT } from '../../Constants/common.constants';
+import DateTime from '../Common/DateTime';
 
 const CalendarSettings = ({ calendarSettings }) => (
   <div
@@ -15,7 +17,7 @@ const CalendarSettings = ({ calendarSettings }) => (
     <div className="setting--wrapper">
       <div className="setting--label">Date range:</div>
       <div className="setting--value">
-        {`${moment.utc(calendarSettings.startDate).format('YYYY-MM-DD')} - ${moment.utc(calendarSettings.endDate).format('YYYY-MM-DD')}`}
+        <DateTime value={[calendarSettings.startDate, calendarSettings.endDate]} />
       </div>
     </div>
     <div className="setting--wrapper">
@@ -35,11 +37,11 @@ const CalendarSettings = ({ calendarSettings }) => (
             className="setting--value"
             style={{ marginRight: '1.2rem' }}
           >
-            {moment(calendarSettings.disabledUntil).format('HH:mm')}
+            <DateTime value={calendarSettings.disabledUntil} format={TIME_FORMAT} />
           </div>
           <div className="setting__label--right">Until:</div>
           <div className="setting--value">
-            {moment(calendarSettings.disabledFrom).format('HH:mm')}
+            <DateTime value={calendarSettings.disabledFrom} format={TIME_FORMAT} />
           </div>
         </div>
         <div className="setting--wrapper">

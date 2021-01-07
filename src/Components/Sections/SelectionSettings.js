@@ -78,7 +78,7 @@ const mapStateToProps = (state, { section, formInstanceId, formId }) => {
   const { reservationMode } = state.forms[formId];
   return {
     reservationMode,
-    validFields: reservationMode ? _.get(state, `integration.reservationModes.${reservationMode}.fields`, []) : [],
+    reservationModeFields: reservationMode ? _.get(state, `integration.reservationModes.${reservationMode}.fields`, []) : [],
     formSections: state.forms[formId] ? state.forms[formId].sections : [],
     sectionId: section._id,
     selectionSettings: getSelectionSettings(section._id, formInstance),
@@ -98,34 +98,34 @@ const SelectionSettings = ({
   sectionId,
   formSections,
   reservationMode,
-  validFields,
+  reservationModeFields,
   updateSelectionSettings,
   findFieldsOnReservationMode,
   teCoreAPI,
 }) => {
-  const [availableFields, setAvailableFields] = useState([]);
+  const [typeTree, setAvailableFields] = useState([]);
   // Effect to set activity fields
   useEffect(() => {
     if (reservationMode) {
       findFieldsOnReservationMode(reservationMode);
     }
     async function exec() {
-      const _availableFields = await teCoreAPI.getReservationFields();
-      setAvailableFields(_availableFields.map(el => ({ label: el.name, value: el.extid })));
+      const typeTree = await teCoreAPI.getReservationFields();
+      setAvailableFields(typeTree.map(el => ({ label: el.name, value: el.extid })));
     }
     exec();
   }, []);
 
   const fieldOptions = useMemo(() => {
-    if (validFields.length > 0)
-      return validFields.map(
+    if (reservationModeFields.length > 0)
+      return reservationModeFields.map(
         value => ({
           value,
-          label: (availableFields.find(el => el.value === value) || { label: value }).label,
+          label: (typeTree.find(el => el.value === value) || { label: value }).label,
         })
       );
-    return availableFields;
-  }, [validFields, availableFields]);
+    return typeTree;
+  }, [reservationModeFields, typeTree]);
 
   const availableObjectElements = useMemo(() => getExtraObjectElementsInForm(formSections), [formSections]);
   const availableFieldElements = useMemo(() => getSelectionFieldElements(section), [section]);
@@ -134,10 +134,12 @@ const SelectionSettings = ({
     () =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeAddField(selectionSettings) }),
     [formId, formInstanceId, sectionId, selectionSettings]);
+
   const onDeleteField = useCallback(
     rowIdx =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeDeleteField(selectionSettings, rowIdx) }),
     [formId, formInstanceId, sectionId, selectionSettings]);
+
   const onChangeField = useCallback(
     (rowIdx, val) =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeChangeField(selectionSettings, rowIdx, val) }),
@@ -147,10 +149,12 @@ const SelectionSettings = ({
     (rowIdx, val) =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeChangeObject(selectionSettings, rowIdx, val) }),
     [formId, formInstanceId, sectionId, selectionSettings]);
+
   const onDeleteExtraObject = useCallback(
     rowIdx =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeDeleteObject(selectionSettings, rowIdx) }),
     [formId, formInstanceId, sectionId, selectionSettings]);
+
   const onAddExtraObject = useCallback(
     () =>
       updateSelectionSettings({ formId, formInstanceId, sectionId, selectionSettings: mergeAddObject(selectionSettings) }),
@@ -214,7 +218,7 @@ SelectionSettings.propTypes = {
   sectionId: PropTypes.string.isRequired,
   selectionSettings: PropTypes.object.isRequired,
   formSections: PropTypes.array.isRequired,
-  reservationMode: PropTypes.string.isRequired,
+  reservationMode: PropTypes.string,
   validFields: PropTypes.array.isRequired,
   updateSelectionSettings: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,

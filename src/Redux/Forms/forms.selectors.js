@@ -1,11 +1,19 @@
+import moment from 'moment';
 import { createSelector } from 'reselect';
 
-const formState = state => state.forms;
+import { formStatus } from '../../Constants/formStatuses.constants';
 
-export const selectForm = createSelector(
+const formState = state => state.forms;
+export const selectForm = formId => state => formState(state)[formId];
+
+export const selectAllForms = createSelector(
   formState,
-  forms => formId => forms[formId],
-);
+  forms =>
+    (Object.keys(forms) || [])
+      .map(key => forms[key])
+      .filter(form => form.status !== formStatus.ARCHIVED)
+      .sort((a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
+)
 
 export const selectTimeslotsForSection = createSelector(
   formState,
@@ -19,5 +27,14 @@ export const selectTimeslotsForSection = createSelector(
     } catch (error) {
       return [];
     }
+  }
+);
+
+
+export const selectSectionDesign = createSelector(
+  formState,
+  forms => (formId, sectionId) => {
+    const form = forms[formId];
+    return form && form.sections.find(section => section._id === sectionId);
   }
 );

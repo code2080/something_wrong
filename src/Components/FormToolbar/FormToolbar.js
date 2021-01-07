@@ -13,7 +13,7 @@ const mapStateToProps = (state, ownProps) => ({
   form: state.forms[ownProps.formId],
 });
 
-const FormToolbar = ({ form }) => (
+const FormToolbar = ({ form, onClickMore }) => (
   <React.Fragment>
     <div className="toolbar--wrapper">
       <div className="toolbar--section-flex">
@@ -28,12 +28,21 @@ const FormToolbar = ({ form }) => (
         <span className="label">Description:</span>
         <span className="value">{form.description}</span>
       </div>
+      <div className="toolbar--section-flex">
+        <span className="label">Form type:</span>
+        <span className="value">{form.formType.toLowerCase()}</span>
+      </div>
+      <div className="toolbar--section-flex">
+        <a onClick={() => onClickMore()}>Form info...</a>
+      </div>
+
     </div>
   </React.Fragment>
 );
 
 FormToolbar.propTypes = {
   form: PropTypes.object.isRequired,
+  onClickMore: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, null)(FormToolbar);

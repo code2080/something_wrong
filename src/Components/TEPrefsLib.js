@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
@@ -17,20 +17,39 @@ import './TEPrefsLib.scss';
 // Configure store and attach to window object
 const store = configureStore();
 window.tePrefsLibStore = store;
+window.tePrefsScroll = [0, 0];
+window.tePrefsOffset = [0, 0];
+window.tePrefsHeight = 0;
 
 // Hack to get babel's async runtime generators to work
 Promise.resolve();
 
-// Validate token presence
-store.dispatch(validateLogin());
 
-const TEPrefsLib = ({ coreAPI: _teCoreAPI, env }) => {
+const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
-  window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
+  const prefsRef = useRef(null);
+  useEffect(() => {
+    window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
+
+    // Validate token presence
+    store.dispatch(validateLogin());
+  }, []);
+
+  useEffect(() => {
+    const { x, y, height} = prefsRef.current && prefsRef.current.getBoundingClientRect();
+    window.tePrefsOffset = [x, y];
+    window.tePrefsHeight = height;
+  }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
+
   return (
     <Provider store={store}>
-      <TECoreAPIProvider api={teCoreAPI}>
-        <div className='te-prefs-lib' id="te-prefs-lib">
+      <TECoreAPIProvider api={teCoreAPI} mixpanel={mixpanel} >
+        <div
+          className='te-prefs-lib'
+          id="te-prefs-lib"
+          ref={prefsRef}
+          onScroll={() => window.tePrefsScroll = prefsRef.current && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]}
+        >
           <TEPrefsLibRouter />
         </div>
       </TECoreAPIProvider>

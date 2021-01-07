@@ -1,14 +1,16 @@
 import React from 'react';
-import moment from 'moment';
 
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
+import ScopedObject from '../FormToolbar/ScopedObject';
+import DateTime from '../Common/DateTime';
+import { Icon } from 'antd';
 
 // SORTERS
-import { sortAlpha } from './Helpers/sorters';
+import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
 
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
@@ -18,22 +20,21 @@ export const formSubmission = {
     title: 'Submitter',
     key: 'submitter',
     dataIndex: 'submitter',
-    sorter: (a, b) => a.localeCompare(b)
+    sorter: (a, b) => a.submitter.localeCompare(b.submitter)
   },
   SUBMISSION_DATE: {
     title: 'Submitted',
-    key: 'updatedAt',
-    dataIndex: 'updatedAt',
-    render: val => moment(val).format('YYYY-MM-DD'),
-    sorter: (a, b) =>
-      moment(a.updatedAt).valueOf() - moment(b.updatedAt).valueOf()
+    key: 'createdAt',
+    dataIndex: 'createdAt',
+    render: val => <DateTime value={val} />,
+    sorter: (a, b) => sortTime(a.createdAt, b.createdAt)
   },
   SCOPED_OBJECT: {
     title: 'Scoped object',
     key: 'scopedObject',
     dataIndex: 'scopedObject',
-    render: val => val || 'Not scoped',
-    sorter: (a, b) => a.scopedObject - b.scopedObject
+    render: val => <ScopedObject objectExtId={val} />,
+    sorter: (a, b) => sortAlpha(a.scopedObject, b.scopedObject)
   },
   ACTION_BUTTON: {
     title: '',
@@ -72,5 +73,20 @@ export const formSubmission = {
     fixedWidth: 85,
     render: (assignedTo, formInstance) =>
       <FormInstanceAssignment assignedTo={assignedTo} formId={formInstance.formId} formInstanceId={formInstance._id} />,
+  },
+  SCHEDULE_LINK: {
+    title: 'Schedule link',
+    key: 'scheduleLink',
+    dataIndex: 'reviewLink',
+    fixedWidth: 185,
+    render: reviewLink => reviewLink ? <a href={reviewLink} target="_blank">Link</a> : 'N/A',
+  },
+  IS_STARRED: {
+    title: 'Is starred',
+    key: 'isStarred',
+    dataIndex: 'teCoreProps.isStarred',
+    sorter: (a, b) => sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
+    align: 'center',
+    fixedWidth: 100,
   }
 };

@@ -8,6 +8,7 @@ import { findTimeSlot } from '../../Utils/sections.helpers';
 
 // STYLES
 import './Pickers.scss';
+import { TIME_FORMAT } from '../../Constants/common.constants';
 
 const TimeSlotColumn = ({ event, timeslots }) => {
   const timeslot = useMemo(
@@ -16,7 +17,7 @@ const TimeSlotColumn = ({ event, timeslots }) => {
   );
   const tooltipTitle = useMemo(() => {
     if (timeslot)
-      return `Timeslot ${timeslot.label}; Start time: ${moment(timeslot.startTime).format('HH:mm')}, end time: ${moment(timeslot.endTime).format('HH:mm')}`;
+      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(TIME_FORMAT)} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`;
     return `Timeslot could not be found`;
   }, [timeslot]);
 
@@ -24,6 +25,7 @@ const TimeSlotColumn = ({ event, timeslots }) => {
     <Tooltip
       title={tooltipTitle}
       mouseEnterDelay={0.8}
+      placement='topLeft'
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
       <div className="picker--wrapper">

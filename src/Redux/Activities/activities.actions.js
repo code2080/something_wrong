@@ -28,6 +28,9 @@ import {
   UPDATE_ACTIVITIES_REQUEST,
   UPDATE_ACTIVITIES_SUCCESS,
   UPDATE_ACTIVITIES_FAILURE,
+  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
+  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
+  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
 } from './activities.actionTypes';
 
 import { manuallyOverrideActivityValue, revertActivityValueToSubmission } from './activities.helpers';
@@ -121,6 +124,20 @@ export const deleteActivities = formId =>
     endpoint: `forms/${formId}/activities`,
     params: { formId }
   });
+
+const deleteActivitiesInFormInstanceFlow = {
+  request: () => ({ type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST }),
+  success: response => ({ type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE, payload: { ...err } }),
+};
+
+export const deleteActivitiesInFormInstance = (formId, formInstanceId) =>
+  asyncAction.DELETE({
+    flow: deleteActivitiesInFormInstanceFlow,
+    endpoint: `form-instances/${formInstanceId}/activities`,
+    params: { formId, formInstanceId }
+  });
+
 
 const updateActivityFlow = {
   request: () => ({ type: UPDATE_ACTIVITY_REQUEST }),

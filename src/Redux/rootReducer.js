@@ -8,11 +8,13 @@ import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
+import jobs from './Jobs/jobs.reducer';
 import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
+import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 
 const rootReducer = combineReducers({
   apiStatus,
@@ -22,11 +24,13 @@ const rootReducer = combineReducers({
   filters,
   submissions,
   activities,
+  jobs,
   manualSchedulings,
   activityDesigner,
   users,
   te,
   integration,
+  objectRequests,
 });
 
 export default rootReducer;

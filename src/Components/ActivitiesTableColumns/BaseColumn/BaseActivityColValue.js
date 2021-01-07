@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'antd';
+import _ from 'lodash';
 
 // HELPERS
 import { determineContentOfValue } from '../../../Utils/activityValues.helpers';
@@ -11,12 +12,20 @@ import { getRenderPayloadForActivityValue } from '../../../Utils/activityValues.
 import { activityValueTypes } from '../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../Constants/submissionValueTypes.constants';
 
+// COMPONENTS
+import ArrayIterator from '../../TableColumns/Components/ArrayIterator';
+
 // CONSTANTS
 const mapStateToProps = state => ({
-  extIdProps: state.te.extIdProps,
+  extIdProps: state.te.extIdProps
 });
 
-const BaseActivityColValue = ({ activityValue, activity, formatFn, extIdProps }) => {
+const BaseActivityColValue = ({
+  activityValue,
+  activity,
+  formatFn,
+  extIdProps,
+}) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
       case activityValueTypes.OBJECT: {
@@ -25,28 +34,45 @@ const BaseActivityColValue = ({ activityValue, activity, formatFn, extIdProps })
           return getRenderPayloadForActivityValue(
             activityValue,
             activity,
-            extId => extIdProps.objects[extId] ? extIdProps.objects[extId].label : extId
+            extId =>
+              extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
+                ? [extIdProps.objects[extId].label]
+                : extId
           );
-        return getRenderPayloadForActivityValue(activityValue, activity, formatFn);
+        return getRenderPayloadForActivityValue(
+          activityValue,
+          activity,
+          formatFn
+        );
       }
       case activityValueTypes.FIELD:
       case activityValueTypes.TIMING:
       default:
-        return getRenderPayloadForActivityValue(activityValue, activity, formatFn);
+        return getRenderPayloadForActivityValue(
+          activityValue,
+          activity,
+          formatFn
+        );
     }
   }, [activityValue, activity, formatFn, extIdProps]);
+
   if (schedulingPayload.tooltip)
     return (
       <Tooltip
         title={schedulingPayload.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <span>{schedulingPayload.formattedValue}</span>
+        <span>{schedulingPayload.formattedValue || 'N/A'}</span>
       </Tooltip>
     );
 
   return (
-    <span>{schedulingPayload.formattedValue}</span>
+    <span style={{ overflow: 'hidden' }}>
+      {Array.isArray(schedulingPayload.formattedValue)
+        ? (<ArrayIterator arr={schedulingPayload.formattedValue} />)
+        : (schedulingPayload.formattedValue || 'N/A')
+      }
+    </span>
   );
 };
 

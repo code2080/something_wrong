@@ -1,25 +1,41 @@
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useMemo, useEffect } from 'react';
+import { connect, useSelector, useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Empty, Button } from 'antd';
+import { Empty, Button, Modal } from 'antd';
 
 // ACTIONS
-import { saveActivities } from '../../Redux/Activities/activities.actions';
+import { deleteActivitiesInFormInstance, saveActivities } from '../../Redux/Activities/activities.actions';
+
+// SELECTORS
+import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
 
 // HELPERS
-import { createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
+import { validateScheduledActivities, createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
+import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
+import withTeCoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
+import { mappingStatuses } from '../../Constants/mappingStatus.constants';
+
+// HOOKS
+import { useMixpanel } from '../../Hooks/TECoreApiHooks';
+import { abortJob } from '../../Redux/Jobs/jobs.actions';
+import { selectJobForActivities } from '../../Redux/Jobs/jobs.selectors';
+
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
   return {
     form: state.forms[formId],
     formInstance: state.submissions[formId][formInstanceId],
+    mappings: state.activityDesigner,
     mapping: state.activityDesigner[formId],
-    activities: state.activities[formId] ? (state.activities[formId][formInstanceId] || []) : [],
+    activities: state.activities[formId]
+      ? state.activities[formId][formInstanceId] || []
+      : [],
   };
 };
 
@@ -32,32 +48,125 @@ const FormInstanceReservationOverview = ({
   form,
   activities,
   mapping,
+  mappings,
   saveActivities,
+  history,
+  teCoreAPI,
 }) => {
+  const mixpanel = useMixpanel();
+  const dispatch = useDispatch();
+  const jobs = useSelector(selectJobForActivities(formInstance.formId, activities.map(item => item._id)));
+
+  const formInstanceObjReqs = useSelector(selectFormInstanceObjectRequests(formInstance))
   const onCreateActivities = useCallback(() => {
-    const activities = createActivitiesFromFormInstance(formInstance, form.sections, mapping);
+    const activities = createActivitiesFromFormInstance(
+      formInstance,
+      form.sections,
+      mapping,
+      formInstanceObjReqs,
+    );
+    mixpanel.track('PrefsInCore, onCreateActivities', { numberOfActivities: activities.length });
     saveActivities(formInstance.formId, formInstance._id, activities);
   }, [mapping, formInstance, form, saveActivities]);
 
-  return (
-    <div className="form-instance-automatic-scheduling--wrapper">
+  const onCreateActivityDesign = () => history.push(`/forms/${form._id}/activity-designer`);
 
-      {activities && activities.length ? (
-        <ActivitiesTable mapping={mapping} activities={activities} />
-      ) : (
+  useEffect(() => {
+    validateScheduledActivities(activities, teCoreAPI, dispatch);
+  }, [activities, teCoreAPI, dispatch]);
+
+  const onDeleteAll = () => {
+    Modal.confirm({
+      getContainer: () => document.getElementById('te-prefs-lib'),
+      title: 'Do you want to delete all activities?',
+      onOk: async () => {
+        const res = await dispatch(deleteActivitiesInFormInstance(form._id, formInstance._id));
+        // STOP JOBS AFTER REMOVED ALL ACTIVITIES
+        if (res.status === 200) {
+          if (jobs && jobs.length) {
+            jobs.forEach(job => {
+              dispatch(abortJob({
+                jobId: job.id,
+                formId: formInstance.formId,
+                formInstanceId: formInstance._id,
+                activities: job.activities,
+              }));
+            })
+          }
+        }
+      },
+    });
+  };
+
+  const renderedState = useMemo(() => {
+    /**
+     * Case 1: Activities exist
+     */
+    if (activities && activities.length > 0)
+      return (
+        <React.Fragment>
+          <Button size="small" onClick={onDeleteAll} type="link" style={{ fontSize: '12px' }}>
+            Delete all activities for this submission
+          </Button>
+          <ActivitiesTable
+            mapping={mapping}
+            activities={activities}
+            formInstanceId={formInstance._id}
+          />
+        </React.Fragment>
+      );
+    // Calculate mapping status
+    const mappingStatus = validateMapping(form._id, mappings);
+
+    /**
+     * Case 2: Activities don't exist, but mapping does and is valid
+     */
+    if ((!activities || !activities.length) && mapping && mappingStatus === mappingStatuses.COMPLETE)
+      return (
+        <div style={{ marginTop: '60px' }}>
+          <Empty
+            imageStyle={{
+              height: 60
+            }}
+            description={
+              <span>
+                This submission has not been converted into activities yet.
+              </span>
+            }
+          >
+            <Button type="primary" onClick={onCreateActivities}>
+              Convert it now
+            </Button>
+          </Empty>
+        </div>
+      );
+
+    /**
+     * Case 3: Activities don't exist, and mapping either doesn't exist or is invalid
+     */
+    return (
+      <div style={{ marginTop: '60px' }}>
         <Empty
           imageStyle={{
-            height: 60,
+            height: 60
           }}
-          description={(
+          description={
             <span>
-              This submission has not been converted into activities yet.
+              This form does not have a completed activity design yet.
             </span>
-          )}
+          }
         >
-          <Button type="primary" onClick={onCreateActivities}>Convert it now</Button>
+          <Button type="primary" onClick={onCreateActivityDesign}>
+            Create one now
+          </Button>
         </Empty>
-      )}
+      </div>
+    );
+  }, [activities, mapping, onCreateActivities, onCreateActivityDesign]);
+
+  return (
+    <div className="form-instance-activities--wrapper">
+      {renderedState}
     </div>
   );
 };
@@ -67,12 +176,17 @@ FormInstanceReservationOverview.propTypes = {
   form: PropTypes.object.isRequired,
   activities: PropTypes.array,
   mapping: PropTypes.object,
+  mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {
   activities: [],
-  mapping: {},
+  mapping: {}
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(FormInstanceReservationOverview);
+export default withRouter(connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withTeCoreAPI(FormInstanceReservationOverview)));

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // HELPERS
 import { determineSectionTypes } from './determineSectionType.helpers';
 import { getSectionsToUseInActivities } from './sections.helpers';
@@ -9,10 +11,14 @@ import { Activity } from '../Models/Activity.model';
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
+
+// ACTIONS
+import { updateActivities } from '../Redux/Activities/activities.actions';
 
 const determiningSectionInterface = ({
   validation: 'VALID',
@@ -22,6 +28,32 @@ const determiningSectionInterface = ({
 });
 
 // FUNCTIONS
+/**
+ * @function ensureBackwardsCompatibleActivityDesign
+ * @description ensures all activity design is backwards compatible and coered to look lik [[elementPath], [elementPath]]
+ * @param {*} activityDesign the activity design to assert
+ */
+export const ensureBackwardsCompatibleValueRow = valueRow => {
+  /**
+   * Updating object format to require double arrays to store multiple mappings for each type
+   * To ensure compatibility with old forms, we coerce non-double arrays
+   */
+  if (!valueRow || valueRow == null || !Array.isArray(valueRow)) return [[]];
+  if (!valueRow[0] || !Array.isArray(valueRow[0])) return [valueRow];
+  return valueRow;
+};
+
+export const ensureBackwardsCompatibleActivityDesign = activityDesign => ({
+  ...activityDesign,
+  objects: (Object.keys(activityDesign.objects) || []).reduce((keys, key) => ({
+    ...keys,
+    [key]: ensureBackwardsCompatibleValueRow(activityDesign.objects[key]),
+  }), {}),
+  fields: (Object.keys(activityDesign.fields) || []).reduce((keys, key) => ({
+    ...keys,
+    [key]: ensureBackwardsCompatibleValueRow(activityDesign.fields[key]),
+  }), {}),
+});
 
 export const getTimingModeForActivity = activity => {
   try {
@@ -51,17 +83,17 @@ export const findObjectPathForActivityValue = (valueExtId, activity) => {
  * @function determineControllingSectionForActivityConversion
  * @description For converting to activities; determines which section is "controlling", i.e., determines the basis for how many activities should be created
  * @param {*} sections the sections in the form
- * @param {*} mapping the reservation template mapping
+ * @param {*} activityDesign the activity design
  */
-const determineControllingSectionForActivityConversion = (sections, mapping) => {
+const determineControllingSectionForActivityConversion = (sections, activityDesign) => {
   /**
    * Calculate number of activities
    * Logic:
-   * 1) If no repeating sections in mapping -> form instance turns into 1 activity
+   * 1) If no repeating sections in design -> form instance turns into 1 activity
    * 2) If we have a repeating section -> form instance turns into values.length activities from the repeating sectionn
    */
   // Get all mapped sections
-  const sectionsMapped = getSectionsToUseInActivities(sections, mapping);
+  const sectionsMapped = getSectionsToUseInActivities(sections, activityDesign);
   // Get the section types
   const sectionTypes = determineSectionTypes(sectionsMapped);
   return sectionTypes.reduce((retVal, section) => {
@@ -91,8 +123,8 @@ const determineControllingSectionForActivityConversion = (sections, mapping) => 
 
 /**
  * @function createActivity
- * @description creates an activity based on a form instance's reservation template mapping, the controlling section and in the case of a repeating section, the eventId or rowIdx
- * @param {*} reservationTemplateMapping the form's reservation template mapping
+ * @description creates an activity based on a form instance's activity design, the controlling section and in the case of a repeating section, the eventId or rowIdx
+ * @param {*} activityDesign the form's activity design
  * @param {*} formInstance the form instance
  * @param {*} controllingSectionId the controlling section id
  * @param {*} eventId the event id (in case controlling section's section type === SECTION_CONNECTED)
@@ -100,12 +132,13 @@ const determineControllingSectionForActivityConversion = (sections, mapping) => 
  * @param {*} sections the sections in the form
  */
 const createActivity = (
-  reservationTemplateMapping,
+  activityDesign,
   formInstance,
   controllingSectionId,
   eventId = null,
   rowIdx = null,
-  sections
+  sections,
+  formInstanceObjReqs = []
 ) => {
   /**
    * An activity connsists of
@@ -115,11 +148,11 @@ const createActivity = (
    * 4) objects and field values in the values property
    */
   // Grab the object values
-  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, reservationTemplateMapping, formInstance, sections, eventId, rowIdx, 'object');
+  const objectValues = createActivityValueForProp(activityValueTypes.OBJECT, activityDesign, formInstance, sections, eventId, rowIdx, formInstanceObjReqs);
   // Grab the field values
-  const fieldValues = createActivityValueForProp(activityValueTypes.FIELD, reservationTemplateMapping, formInstance, sections, eventId, rowIdx);
+  const fieldValues = createActivityValueForProp(activityValueTypes.FIELD, activityDesign, formInstance, sections, eventId, rowIdx);
   // Grab the timing values
-  const timingValues = createActivityValueForProp(activityValueTypes.TIMING, reservationTemplateMapping, formInstance, sections, eventId, rowIdx);
+  const timingValues = createActivityValueForProp(activityValueTypes.TIMING, activityDesign, formInstance, sections, eventId, rowIdx);
 
   // Create the activity
   return new Activity({
@@ -137,23 +170,25 @@ const createActivity = (
 
 /**
  * @function createActivitiesFromFormInstance
- * @description converts a form instance into a set of activities based on the forms mapping
+ * @description converts a form instance into a set of activities based on the form's activity design
  * @param {*} formInstance the form instance to be converted
  * @param {*} sections the sections of the form
- * @param {*} mapping the form's mapping to a reservation template
+ * @param {*} activityDesign the form's activity design
  * @returns {Array<Object>} activities
  */
-export const createActivitiesFromFormInstance = (formInstance, sections, mapping) => {
+export const createActivitiesFromFormInstance = (formInstance, sections, _activityDesign, formInstanceObjReqs = []) => {
   // Make sure we have all that we need
-  if (!mapping || !sections || !sections.length || !mapping) return [];
+  if (!_activityDesign || !sections || !sections.length || !_activityDesign) return [];
+  // Assert activity design format
+  const activityDesign = ensureBackwardsCompatibleActivityDesign(_activityDesign);
 
   // Grab the controlling section
-  const controllingSectionInfo = determineControllingSectionForActivityConversion(sections, mapping);
+  const controllingSectionInfo = determineControllingSectionForActivityConversion(sections, activityDesign);
 
   // If we don't have a determining section we know the form instance will only be converted into one activity
   if (!controllingSectionInfo.determiningSectionId)
     // Create the one activity and return it
-    return [createActivity(mapping, formInstance, null, null, null, sections)];
+    return [createActivity(activityDesign, formInstance, null, null, null, sections, formInstanceObjReqs)];
 
   /**
    * If we have a determining section; each value of that determining section represents 1 activity
@@ -164,12 +199,37 @@ export const createActivitiesFromFormInstance = (formInstance, sections, mapping
   const repeatingSectionValues = formInstance.values[controllingSectionInfo.determiningSectionId];
   return (Object.keys(repeatingSectionValues) || []).map(
     key => createActivity(
-      mapping,
+      activityDesign,
       formInstance,
       controllingSectionInfo.determiningSectionId,
       controllingSectionInfo.sectionType === SECTION_CONNECTED ? key : null,
       controllingSectionInfo.sectionType === SECTION_TABLE ? key : null,
-      sections
+      sections, 
+      formInstanceObjReqs
     )
   );
 };
+
+/**
+ * Validates that all activities that is scheduled has existing reservation in core,
+ * and sets NOT_SCHEDULED if reservation not found
+ * @param {array} activities Activities to validate
+ * @param {object} teCoreAPI 
+ * @param {object} dispatch 
+ */
+export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => {
+  const reservationIds = activities
+  .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
+  .map(activity => activity.reservationId);
+
+  teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
+    reservationIds, callback: ({ res: { invalidReservations } }) => {
+      const invalidActivityIds = invalidReservations.map(resId => {
+        const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
+        return activityWithInvalidReservation._id;
+      })
+      console.log('Found these invalid activities:', invalidActivityIds);
+  }})
+}
+
+export const activityIsReadOnly = status => [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);

@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import _ from 'lodash';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
-import { fetchProfile } from '../../Redux/Auth/auth.actions';
+import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
+import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
+import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
@@ -19,24 +21,26 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
-import { formStatus } from '../../Constants/formStatuses.constants';
+import { tableViews } from '../../Constants/tableViews.constants';
+import { selectAllForms } from '../../Redux/Forms/forms.selectors';
+import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
   isLoading: loadingSelector(state),
-  forms: (Object.keys(state.forms) || [])
-    .map(key => state.forms[key])
-    .filter(form => form.status !== formStatus.ARCHIVED)
-    .sort((a, b) => moment(b.updatedAt).valueOf() - moment(a.updatedAt).valueOf()),
+  forms: selectAllForms(state),
   user: state.auth.user,
 });
 
 const mapActionsToProps = {
   fetchForms,
-  fetchProfile,
   fetchUsers,
+  fetchObjectRequests,
   setBreadcrumbs,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
 };
 
 const FormList = ({
@@ -44,28 +48,50 @@ const FormList = ({
   user,
   isLoading,
   fetchForms,
-  fetchProfile,
   fetchUsers,
   fetchMapping,
+  fetchAllJobs,
+  fetchOrg,
+  fetchIntegrationSettings,
+  fetchObjectRequests,
   setBreadcrumbs,
   history
 }) => {
+  const objectScopes = useMemo(() => ({
+    types: _.uniq(forms.reduce((objScopes, form) =>
+      form.objectScope
+        ? [...objScopes, form.objectScope]
+        : objScopes, [])
+    )
+  }), [forms]);
+
+  useFetchLabelsFromExtIds(objectScopes);
+
   useEffect(() => {
     fetchForms();
-    fetchProfile();
-    fetchUsers();
+    fetchOrg();
+    fetchAllJobs();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
   useEffect(() => {
-    if (user && user.organizationId)
+    if (user && user.organizationId) {
       fetchMapping();
+      fetchUsers(user.organizationId);
+      fetchIntegrationSettings(user.organizationId);
+    }
   }, [user]);
+
+  useEffect(() => {
+    fetchObjectRequests();
+  }, []);
 
   return (
     <div className="form-list--wrapper">
       <DynamicTable
         columns={[
+          tableColumns.form.CREATEDAT,
+          tableColumns.form.TYPE,
           tableColumns.form.NAME,
           tableColumns.form.DESCRIPTION,
           tableColumns.form.OWNER,
@@ -81,6 +107,8 @@ const FormList = ({
           onClick: () => history.push(`/forms/${form._id}`)
         })}
         pagination={false}
+        datasourceId={tableViews.FORM_OVERVIEW}
+        resizable
       />
     </div>
   );
@@ -92,9 +120,12 @@ FormList.propTypes = {
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
-  fetchProfile: PropTypes.func.isRequired,
+  fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  fetchAllJobs: PropTypes.func.isRequired,
+  fetchOrg: PropTypes.func.isRequired,
+  fetchIntegrationSettings: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
 

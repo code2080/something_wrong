@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Typography } from 'antd';
 
 // ACTIONS
-import { login, fetchOrgsForUser, selectOrgForUser } from '../../Redux/Auth/auth.actions';
+import { login, fetchOrgsForUser, selectOrgForUser, fetchProfile } from '../../Redux/Auth/auth.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 
 // COMPONENTS
@@ -20,6 +20,7 @@ import { authenticationStatuses } from '../../Constants/auth.constants';
 
 const mapStateToProps = state => ({
   authenticationStatus: state.auth.authenticationStatus,
+  userStatus: state.auth.user && state.auth.user.id && state.auth.user.organizationId,
 });
 
 const mapActionsToProps = {
@@ -27,6 +28,7 @@ const mapActionsToProps = {
   fetchOrgsForUser,
   selectOrgForUser,
   setBreadcrumbs,
+  fetchProfile,
 };
 
 const LoginPage = ({
@@ -34,20 +36,24 @@ const LoginPage = ({
   fetchOrgsForUser,
   selectOrgForUser,
   authenticationStatus,
+  userStatus,
   setBreadcrumbs,
+  fetchProfile,
   history,
 }) => {
-  useEffect(() => {
-    if (authenticationStatus === authenticationStatuses.AUTHENTICATED)
-      history.push('/forms');
-    if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
-  }, [authenticationStatus]);
-
   useEffect(() => {
     setBreadcrumbs([
       { path: '/', label: 'Login' }
     ]);
   }, [])
+
+  useEffect(() => {
+    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null)
+      fetchProfile();
+    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null)
+      history.push('/forms');
+    if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
+  }, [authenticationStatus, userStatus]);
 
   const handleLogin = useCallback(({ account, password }) => {
     login({ account, password });
@@ -76,12 +82,15 @@ LoginPage.propTypes = {
   fetchOrgsForUser: PropTypes.func.isRequired,
   selectOrgForUser: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
+  fetchProfile: PropTypes.func.isRequired,
   authenticationStatus: PropTypes.string,
+  userStatus: PropTypes.string,
   history: PropTypes.object.isRequired,
 };
 
 LoginPage.defaultProps = {
   authenticationStatus: authenticationStatuses.NOT_AUTHENTICATED,
+  userStatus: null,
 };
 
 export default withRouter(connect(

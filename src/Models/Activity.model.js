@@ -1,4 +1,5 @@
 import { ActivityValue } from './ActivityValue.model';
+import { SchedulingError } from './SchedulingError.model';
 import moment from 'moment';
 
 /**
@@ -34,10 +35,9 @@ export class Activity {
 
   reservationId; //  If actvitiyStatus indicates the activity has been scheduled, this prop holds the reservation id
 
-  /**
-   * @todo change name to schedulingTimestamp ?
-   */
-  schedulingDate; // Timestamp for when the activity was scheduled
+  schedulingTimestamp; // Timestamp for when the activity was scheduled
+
+  errorDetails; // Instance of scheduling error
 
   /**
    * Timing information
@@ -47,7 +47,7 @@ export class Activity {
   /**
    * Object and Field values
    */
-  values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's ReservationTemplateMapping
+  values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
 
   constructor({
     _id,
@@ -56,10 +56,11 @@ export class Activity {
     sectionId,
     eventId,
     rowIdx,
-    reservationTemplateExtId,
+    // reservationTemplateExtId,
     activityStatus,
     reservationId,
-    schedulingDate,
+    errorDetails,
+    schedulingTimestamp,
     timing,
     values
   }) {
@@ -69,10 +70,11 @@ export class Activity {
     this.sectionId = sectionId;
     this.eventId = eventId;
     this.rowIdx = rowIdx;
-    this.reservationTemplateExtId = reservationTemplateExtId;
+    // this.reservationTemplateExtId = reservationTemplateExtId; DEPRECATED
     this.activityStatus = activityStatus;
+    this.errorDetails = new SchedulingError(errorDetails || {});
     this.reservationId = reservationId;
-    this.schedulingDate = schedulingDate ? moment.utc(schedulingDate) : null;
+    this.schedulingTimestamp = schedulingTimestamp ? moment.utc(schedulingTimestamp) : null;
     this.timing = timing;
     this.values = values.map(el => new ActivityValue(el));
   }

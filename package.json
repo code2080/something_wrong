@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.5.44",
+  "version": "0.8.4",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -72,7 +72,7 @@
     "moment": "^2.24.0",
     "prop-types": "^15.5.4",
     "react-redux": "^7.1.3",
-    "react-resizable": "^1.10.1",
+    "react-resizable": "^1.11.0",
     "react-resize-detector": "^4.2.3",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",

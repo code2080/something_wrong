@@ -1,29 +1,43 @@
 import React from 'react';
-import { activityStatusProps } from '../../../Constants/activityStatuses.constants';
-import StatusTag from '../../StatusTag';
+import { sortByElementHtml } from '../../../Utils/sorting.helpers';
+import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import ActivityActionsDropdown from '../ActivityActionsDropdown';
+import ActivityStatusCol from './ActivityStatusCol';
 
 export const StaticColumns = [
   {
     title: 'Status',
     key: 'activityStatus',
-    dataIndex: 'activityStatus',
-    render: activityStatus => (
-      <StatusTag color={activityStatusProps[activityStatus].color}>
-        {activityStatusProps[activityStatus].label}
-      </StatusTag>
-    )
+    dataIndex: null,
+    fixedWidth: 150,
+    render: activity => (
+      <SortableTableCell className={`activityStatus_${activity._id}`}>
+        <ActivityStatusCol activity={activity} />
+      </SortableTableCell>
+    ),
+    sorter: (a, b) => {
+      return sortByElementHtml(`.activityStatus_${a._id}`, `.activityStatus_${b._id}`);
+    },
   },
   {
-    title: 'Reservation Id',
+    title: 'Id',
     key: 'reservationId',
     dataIndex: 'reservationId',
-    render: reservationId => reservationId || 'N/A',
+    fixedWidth: 75,
+    render: (reservationId, item = {}) => (
+      <SortableTableCell className={`reservationId_${item._id}`}>
+        {reservationId || 'N/A'}
+      </SortableTableCell>
+    ),
+    sorter: (a, b) => {
+      return sortByElementHtml(`.reservationId_${a._id}`, `.reservationId_${b._id}`);
+    },
   },
   {
-    title: 'Actions',
+    title: '',
     key: 'actions',
     dataIndex: null,
-    render: (_, activity) => <ActivityActionsDropdown buttonType="more" activity={activity} />,
+    fixedWidth: 40,
+    render: activity => <ActivityActionsDropdown buttonType="more" activity={activity} />,
   },
 ];

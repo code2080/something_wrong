@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
+import _ from 'lodash';
 
 // COMPONENTS
 import BaseSectionTableView from './BaseSectionTableView';
@@ -50,11 +51,11 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
     ),
     [section, values]
   );
-  return (
+  return !_.isEmpty(_columns) && (
     <div className="base-section--wrapper">
       <div className={`base-section--name__wrapper ${sectionType}`}>
         {section.name}
-        {sectionType === SECTION_CONNECTED && (
+        {(sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE) && (
           <div
             className="base-section--extra__btn"
             onClick={() => setShowExtra(!showExtra)}
@@ -71,7 +72,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
           sectionType={sectionType}
         />
       )}
-      <BaseSectionTableView columns={_columns} dataSource={_data} />
+      <BaseSectionTableView columns={_columns} dataSource={_data} sectionId={section._id} />
     </div>
   );
 };

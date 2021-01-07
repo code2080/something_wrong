@@ -8,7 +8,7 @@ import { Menu, Dropdown, Icon, Button } from 'antd';
 import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
 
 // ACTIONS
-import { setFormInstanceSchedulingProgress } from '../../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormInstanceSchedulingProgress, fetchFormSubmissions, sendReviewerLink } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
@@ -18,16 +18,32 @@ const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
 const SET_PROGRESS_IN_PROGRESS = 'SET_PROGRESS_IN_PROGRESS';
 const SET_PROGRESS_SCHEDULED = 'SET_PROGRESS_SCHEDULED';
 const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
+const NOTIFY_USER_WITH_REVIEW_LINK = 'NOTIFY_USER_WITH_REVIEW_LINK';
+const NOTIFY_ALL_USERS_WITH_REVIEW_LINK = 'NOTIFY_ALL_USERS_WITH_REVIEW_LINK';
 
-const mapActionsToProps = {
-  setFormInstanceSchedulingProgress,
-};
+const mapStateToProps = (state, ownProps) => ({
+  submissions: state.submissions[ownProps.formInstance.formId] || [],
+});
+
+const mapActionsToProps = dispatch => ({
+  setFormInstanceSchedulingProgress: async ({ formInstanceId, schedulingProgress, formId }) => {
+    await dispatch(setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }));
+    // fetch submissions for getting all reviewLink
+    dispatch(fetchFormSubmissions(formId));
+  },
+  remindUser(data) {
+    dispatch(sendReviewerLink(data));
+  },
+});
 
 const SubmissionActionButton = ({
   formInstance,
   setFormInstanceSchedulingProgress,
+  remindUser,
   history,
+  submissions,
 }) => {
+  const haveReviewLinkSubmissions = Object.values(submissions).filter(submission => submission.reviewLink);
   // State var to hold modal's visibility
   const [isAcceptanceStatusModalOpen, setIsAcceptanceStatusModalOpen] = useState(false);
 
@@ -35,6 +51,7 @@ const SubmissionActionButton = ({
     setFormInstanceSchedulingProgress({
       formInstanceId: formInstance._id,
       schedulingProgress,
+      formId: formInstance.formId,
     });
   }, [setFormInstanceSchedulingProgress]);
 
@@ -57,10 +74,16 @@ const SubmissionActionButton = ({
       case SET_PROGRESS_SCHEDULED:
         setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
         break;
+      case NOTIFY_USER_WITH_REVIEW_LINK:
+        remindUser({ formInstanceIds: [ formInstance._id ] });
+        break;
+      case NOTIFY_ALL_USERS_WITH_REVIEW_LINK:
+        remindUser({ formInstanceIds: haveReviewLinkSubmissions.map(submission => submission._id) });
+        break;
       default:
         break;
     }
-  }, [setFormInstanceSchedulingProgressCallback]);
+  }, [setFormInstanceSchedulingProgressCallback, formInstance, haveReviewLinkSubmissions]);
 
   const actionMenu = useMemo(() => (
     <Menu
@@ -68,6 +91,12 @@ const SubmissionActionButton = ({
       onClick={onClick}
     >
       <Menu.Item key={EDIT_FORM_INSTANCE}>View</Menu.Item>
+      {formInstance.reviewLink && (
+        <Menu.Item key={NOTIFY_USER_WITH_REVIEW_LINK}>Notify user with review link</Menu.Item>
+      )}
+      <Menu.Item key={NOTIFY_ALL_USERS_WITH_REVIEW_LINK}>
+        Notify all users with review link
+      </Menu.Item>
       <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
       <Menu.SubMenu title="Set scheduling progress">
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>
@@ -81,7 +110,7 @@ const SubmissionActionButton = ({
         </Menu.Item>
       </Menu.SubMenu>
     </Menu>
-  ), []);
+  ), [formInstance]);
 
   return (
     <React.Fragment>
@@ -107,7 +136,9 @@ const SubmissionActionButton = ({
 SubmissionActionButton.propTypes = {
   formInstance: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
+  remindUser: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  submissions: PropTypes.array.isRequired,
 };
 
-export default withRouter(connect(null, mapActionsToProps)(SubmissionActionButton));
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(SubmissionActionButton));

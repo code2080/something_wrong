@@ -16,6 +16,9 @@ import './FilterElements.scss';
 import { teCoreActions, teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { searchCriteriaFreeText, searchCriteriaFreeTextProps } from '../../Constants/searchCriteria.constants';
 
+// SELECTORS
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+
 const getSearchCriteria = value => {
   if (!value.matchWholeWord) return searchCriteriaFreeText.CONTAINS;
   return searchCriteriaFreeText.IS_EQUAL_TO;
@@ -24,23 +27,27 @@ const getSearchCriteria = value => {
 const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value || !ownProps.value.value) return { label: null, payload: null };
   const { value, element } = ownProps;
-  const payload = getTECoreAPIPayload(value.value, element.datasource, state);
+  const payload = getTECoreAPIPayload(value.value, element.datasource);
   const typeEl = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
   const fieldEl = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
   return {
     searchValue: value.value,
     searchCriteria: getSearchCriteria(value),
-    fieldLabel: fieldEl && state.te.extIdProps.fields[fieldEl.extId]
-      ? state.te.extIdProps.fields[fieldEl.extId].label
-      : fieldEl.extId,
-    typeLabel: typeEl && state.te.extIdProps.types[typeEl.extId]
-      ? state.te.extIdProps.types[typeEl.extId].label
-      : typeEl.extId,
+    fieldLabel: fieldEl && selectExtIdLabel(state)('fields', fieldEl.extId),
+    typeLabel: typeEl && selectExtIdLabel(state)('types', typeEl.extId),
     payload,
   };
 };
 
-const FreeTextFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, element, payload, teCoreAPI }) => {
+const FreeTextFilter = ({
+  searchValue,
+  searchCriteria,
+  fieldLabel,
+  typeLabel,
+  element,
+  payload,
+  teCoreAPI,
+}) => {
   // Callback on menu click
   const onClickCallback = useCallback(({ key }) => {
     const { callname } = teCoreActions[key];
@@ -82,7 +89,7 @@ const FreeTextFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, el
       >
         <div className="element__filter--inner">
           <Icon type="filter" />
-          {`${fieldLabel} on type ${typeLabel} ${searchCriteriaFreeTextProps[searchCriteria].label} ${searchValue}`}
+          {`${typeLabel}/${fieldLabel}: ${searchValue}`}
           <Icon type="down" />
         </div>
       </Dropdown>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Alert, Button, Modal, Menu, Dropdown } from 'antd';
+import { Alert, Button, Modal, Menu, Dropdown, Spin, Icon } from 'antd';
 import ReactRouterPause from '@allpro/react-router-pause';
 
 // COMPONENTS
@@ -17,6 +17,9 @@ import { updateMapping } from '../../Redux/ActivityDesigner/activityDesigner.act
 import { deleteActivities } from '../../Redux/Activities/activities.actions';
 import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../Redux/Integration/integration.actions';
 
+// SELECTORS
+import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
+
 // MODELS
 import { ActivityTiming } from '../../Models/ActivityTiming.model';
 
@@ -28,10 +31,22 @@ import {
 
 // STYLES
 import './ActivityDesigner.scss';
-import { ReservationTemplateMapping } from '../../Models/ReservationTemplateMapping.model';
+import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.model';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
+import { useHistory } from 'react-router-dom';
+import { themeColors } from '../../Constants/themeColors.constants';
+
+const checkObjectIsInvalid = object => {
+  if (_.isEmpty(object)) return false;
+  return Object.keys(object).some(key => {
+    const item = object[key];
+    if (!item || _.isEmpty(item)) return true;
+    if (Array.isArray(item)) return item.some(subItem => !subItem || _.isEmpty(subItem));
+    return false;
+  });
+};
 
 const resetMenuOptions = {
   RESET_EMPTY: 'RESET_EMPTY',
@@ -75,9 +90,6 @@ const resetTypes = (mapping, typeOptions) => ({
   },
 });
 
-const createValidTypesArray = (mappedTypes, validTypes) =>
-  mappedTypes.filter(typeExtId => validTypes.includes(typeExtId));
-
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;
   const activities = state.activities[formId];
@@ -90,9 +102,7 @@ const mapStateToProps = (state, ownProps) => {
   let validFields = [];
   const { reservationMode } = form;
   if (reservationMode) {
-    const mappedTypes = Object.keys(_.get(state, 'integration.mappedObjectTypes', {}));
-    const availableTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []);
-    validTypes = createValidTypesArray(mappedTypes, availableTypes);
+    validTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []); 
     validFields = _.get(state, `integration.reservationModes.${reservationMode}.fields`, []);
   }
 
@@ -100,10 +110,11 @@ const mapStateToProps = (state, ownProps) => {
     form,
     formId,
     mappings: state.activityDesigner,
-    mapping: state.activityDesigner[formId],
+    mappingOriginal: state.activityDesigner[formId],
     hasReservations: noOfReservations > 0,
     validTypes,
     validFields,
+    saving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state),
   };
 };
 
@@ -123,10 +134,10 @@ const extractReservationTypes = payload => {
 const extractReservationFields = payload =>
   payload.map(el => ({ label: el.name, value: el.extid }));
 
-const FormReservationTemplateMapping = ({
+const ActivityDesignerPage = ({
   form,
   formId,
-  mapping,
+  mappingOriginal,
   mappings,
   hasReservations,
   validTypes,
@@ -137,7 +148,12 @@ const FormReservationTemplateMapping = ({
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
   teCoreAPI,
+  saving,
 }) => {
+  const history = useHistory();
+
+  const [mapping, setMapping] = useState(mappingOriginal);
+
   useEffect(() => {
     if (form && form.reservationMode) {
       findTypesOnReservationMode(form.reservationMode);
@@ -145,7 +161,7 @@ const FormReservationTemplateMapping = ({
     }
   }, []);
 
-  const navigationHandler = (navigation, location, action) => {
+  const navigationHandler = (navigation) => {
     Modal.confirm({
       getContainer: () => document.getElementById('te-prefs-lib'),
       title: 'The activity design is incomplete',
@@ -213,12 +229,16 @@ const FormReservationTemplateMapping = ({
 
   // Callback to delete any existing activities
   const onDeleteReservationsCallback = useCallback(() => {
-    deleteActivities(formId);
+    const doDelete = async () => {
+      await deleteActivities(formId);
+      history.goBack();
+    }
+    doDelete();
   }, [formId, deleteActivities]);
 
   // Callback to update the timing section of the mapping
   const updateTimingMappingCallback = useCallback((timingProp, value) => {
-    const updatedMapping = new ReservationTemplateMapping({
+    const updatedMapping = new ActivityDesignerMapping({
       ...mapping,
       formId: formId,
       name: `Mapping for ${form.name}`,
@@ -227,8 +247,8 @@ const FormReservationTemplateMapping = ({
         [timingProp]: value,
       },
     });
-    updateMapping(updatedMapping);
-  }, [formId, form, updateMapping, mapping]);
+    setMapping(updatedMapping);
+  }, [formId, form, setMapping, mapping]);
 
   // Callback to update the object section of the mapping
   const updateObjectMappingCallback = useCallback(_mapping => {
@@ -243,8 +263,8 @@ const FormReservationTemplateMapping = ({
         ..._mapping.propSettings,
       },
     };
-    updateMapping(updatedMapping);
-  }, [updateMapping, mapping, formId, form]);
+    setMapping(updatedMapping);
+  }, [setMapping, mapping, formId, form]);
 
   // Callback to update the field section of the mapping
   const updateFieldMappingCallback = useCallback(_mapping => {
@@ -259,17 +279,36 @@ const FormReservationTemplateMapping = ({
         ..._mapping.propSettings,
       },
     };
-    updateMapping(updatedMapping);
-  }, [updateMapping, mapping, formId, form]);
+    setMapping(updatedMapping);
+  }, [setMapping, mapping, formId, form]);
 
   // Callback for reset mapping update
   const onResetMapping = resetMapping => {
-    updateMapping({
+    setMapping({
       ...resetMapping,
       formId: formId,
       name: `Mapping for ${form.name}`,
     });
   };
+
+  const mappingIsValid = useMemo(() => {
+    const { fields, objects, timing } = mapping;
+    const { startTime, endTime } = timing;
+    if (_.isEmpty(startTime) || _.isEmpty(endTime)) return false;
+    if (checkObjectIsInvalid(fields)) {
+      return false;
+    }
+    if (checkObjectIsInvalid(objects)) {
+      return false;
+    }
+    return true;
+  }, [mapping]);
+
+  useEffect(() => {
+    if (mappingIsValid) {
+      updateMapping(mapping);
+    }
+  }, [mappingIsValid, mapping]);
 
   // Callback for reset meun clicks
   const onResetMenuClick = useCallback(({ key }) => {
@@ -334,6 +373,19 @@ const FormReservationTemplateMapping = ({
               Reset configuration...
             </Button>
           </Dropdown>
+          <span style={{ marginLeft: 'auto', color: themeColors.deepSeaGreen }}>
+            {saving ? (
+              <span>
+                <Spin size="small" spinning={saving} />
+                &nbsp;Saving
+              </span>
+            ) : (
+              <span>
+                <Icon type="check-circle" />
+                &nbsp;Saved
+              </span>
+            )}
+          </span>
         </div>
         <div className="activity-designer--type-header">
           <div>Timing</div>
@@ -373,15 +425,20 @@ const FormReservationTemplateMapping = ({
             disabled={hasReservations}
           />
         </div>
+        <div className="activity-designer--list" style={{ textAlign: 'right' }}>
+          <Button type="link" size="small" onClick={() => history.goBack()}>
+            Close
+          </Button>
+        </div>
       </div>
     </React.Fragment>
   );
 };
 
-FormReservationTemplateMapping.propTypes = {
+ActivityDesignerPage.propTypes = {
   form: PropTypes.object.isRequired,
   formId: PropTypes.string.isRequired,
-  mapping: PropTypes.object,
+  mappingOriginal: PropTypes.object,
   mappings: PropTypes.object,
   hasReservations: PropTypes.bool.isRequired,
   validFields: PropTypes.array,
@@ -392,13 +449,15 @@ FormReservationTemplateMapping.propTypes = {
   findTypesOnReservationMode: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
+  saving: PropTypes.bool,
 };
 
-FormReservationTemplateMapping.defaultProps = {
-  mapping: {},
+ActivityDesignerPage.defaultProps = {
+  mappingOriginal: {},
   mappings: {},
   validFields: [],
   validTypes: [],
+  saving: false,
 };
 
-export default withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormReservationTemplateMapping));
+export default withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(ActivityDesignerPage));

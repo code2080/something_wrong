@@ -15,6 +15,9 @@ import {
   UPDATE_SELECTION_SETTINGS_REQUEST,
   UPDATE_SELECTION_SETTINGS_SUCCESS,
   UPDATE_SELECTION_SETTINGS_FAILURE,
+  SEND_REVIEWER_LINK_REQUEST,
+  SEND_REVIEWER_LINK_SUCCESS,
+  SEND_REVIEWER_LINK_FAILURE,
 } from './formSubmissions.actionTypes';
 
 const fetchFormSubmissionsFlow = {
@@ -80,6 +83,27 @@ export const setFormInstanceSchedulingProgress = ({
     params: { schedulingProgress }
   });
 
+const toggleFormInstanceStarringStatusFlow = {
+  request: () => ({ type: SET_SCHEDULING_PROGRESS_REQUEST }),
+  success: response => ({
+    type: SET_SCHEDULING_PROGRESS_SUCCESS,
+    payload: { ...response }
+  }),
+  failure: err => ({
+    type: SET_SCHEDULING_PROGRESS_FAILURE,
+    payload: { ...err }
+  })
+};
+
+export const toggleFormInstanceStarringStatus = ({
+  formInstanceId,
+  isStarred,
+}) =>
+  asyncAction.POST({
+    flow: toggleFormInstanceStarringStatusFlow,
+    endpoint: `form-instances/${formInstanceId}/te-core/${isStarred ? 'unstar' : 'star'}`,
+  });
+
 const toggleUserForFormInstanceFlow = {
   request: () => ({ type: ASSIGN_USER_TO_FORM_INSTANCE_REQUEST }),
   success: response => ({
@@ -129,4 +153,28 @@ export const updateSelectionSettings = ({
       sectionId,
       selectionSettings,
     },
+  });
+
+const sendReviewerLinkFlow = {
+  request: () => ({ type: SEND_REVIEWER_LINK_REQUEST }),
+  success: response => ({
+    type: SEND_REVIEWER_LINK_SUCCESS,
+    payload: { ...response }
+  }),
+  failure: err => ({
+    type: SEND_REVIEWER_LINK_FAILURE,
+    payload: { ...err }
+  })
+};
+
+export const sendReviewerLink = ({
+  formInstanceIds,
+}) =>
+  asyncAction.POST({
+    flow: sendReviewerLinkFlow,
+    endpoint: 'form-instances/notify/viewer-link',
+    params: {
+      formInstanceIds,
+    },
+    successNotification: 'The review link has been sent to user(s)',
   });

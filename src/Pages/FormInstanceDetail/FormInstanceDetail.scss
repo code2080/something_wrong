@@ -2,35 +2,37 @@
 
 .form-instance--wrapper {
   padding: 0;
-
-  .ant-tabs-bar {
-    margin-bottom: 0;
-  }
-
-  .ant-tabs-nav .ant-tabs-tab-active {
-    color: $jungleGreen !important;
-  }
-
-  .ant-tabs-ink-bar {
-    background-color: $jungleGreen !important;
-  }
+  position: relative;
 
   .form-instance--tabs {
     background: #333;
     display: flex;
     padding: 0 8px;
-
-    .form-instance--tabs__tab {
-      padding: 2px 6px;
+    .ant-tabs-tab {
+      font-size: 0.7rem;
+      padding: 5px 6px;
       color: #fff;
-      border-bottom: 2px solid #333;
+      margin:0;
       cursor: pointer;
       
-      &.is-active {
+      &.ant-tabs-tab-active{
         color: $candlelight;
         background-color: rgba(255, 255, 255, 0.15);
-        border-bottom-color: $candlelight;
+      }
+      &:hover {
+        color: $jungleGreen;
       }
     }
+    .ant-tabs-ink-bar {
+      background-color: $candlelight;
+    }
+  }
+
+  & > .mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 99;
+    top: 0;
   }
 }

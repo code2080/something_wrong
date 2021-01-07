@@ -1,17 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+
+const mapStateToProps = (state, { objectExtId }) => ({
+  label: selectExtIdLabel(state)('objects', objectExtId)
+});
 
 /**
  * @todo should use redux to get extId props (label) for the object
  */
-const ScopedObject = ({ scopedObjectExtId }) => (
+const ScopedObject = ({ label }) => (
   <div className="scoped-object--wrapper">
-    {scopedObjectExtId || 'N/A' }
+    { label || 'Not scoped' }
   </div>
 );
 
 ScopedObject.propTypes = {
-  scopedObjectExtId: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  //objectExtId: PropTypes.string.isRequired
 };
 
-export default ScopedObject;
+export default connect(mapStateToProps, null)(ScopedObject);

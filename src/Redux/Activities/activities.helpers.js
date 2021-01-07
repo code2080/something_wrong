@@ -30,7 +30,7 @@ export const getActivitiesForFormInstance = (state, formId, formInstanceId) => {
  */
 const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
   const valueIdx = activity[objPath].findIndex(
-    el => el.extId === newActivityValue.extId
+    el => el.extId === newActivityValue.extId && el.submissionValue === newActivityValue.submissionValue
   );
   if (valueIdx === -1) return null;
   return {
@@ -152,11 +152,11 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
    * most reverts only affect the activity value itself
    * but reverting timeslots needs to happen on both start and endtime properties
    */
-  const { submissionValue } = activityValue;
+  const { extId, submissionValue } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
   if (
     timingMode !== mappingTimingModes.EXACT &&
-    (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
+    (extId === 'startTime' || extId === 'endTime')
   ) {
     return revertMultipleActivityValues(['startTime', 'endTime'], activity);
   } else {
@@ -164,10 +164,10 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
       {
         ...activityValue,
         valueMode: activityValueModes.FROM_SUBMISSION,
-        value: submissionValue[0]
+        value: submissionValue,
       },
       activity,
-      findObjectPathForActivityValue(activityValue.extId, activity)
+      findObjectPathForActivityValue(extId, activity)
     );
   }
 };

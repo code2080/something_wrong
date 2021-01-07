@@ -1,45 +1,45 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import BaseActivityCol from './BaseColumn/BaseActivityCol';
+import BaseActivityColOuter from './BaseColumn/BaseActivityColOuter';
 
 // CONSTANTS
 import { StaticColumns } from './StaticColumns/StaticColumns';
 import { TimingColumns } from './TimingColumns/TimingColumns';
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+import SortableTableCell from '../DynamicTable/SortableTableCell';
+import { sortByElementDeepHtml } from '../../Utils/sorting.helpers';
 
 export const createActivitiesTableColumnsFromMapping = mapping => [
   ...TimingColumns[mapping.timing.mode](mapping),
-  ...(Object.keys(mapping.objects) || []).reduce((objects, objectKey) => [
-    ...objects,
+  ...[
+    ...Object.keys(mapping.objects).map(objKey => ['types', objKey]),
+    ...Object.keys(mapping.fields).map(fieldKey => ['fields', fieldKey])
+  ].reduce((values, [field, extId]) => [
+    ...values,
     {
-      title: objectKey,
-      key: objectKey,
-      dataIndex: null,
-      render: (_, activity) => (
-        <BaseActivityCol
-          activity={activity}
-          type="VALUE"
-          prop={objectKey}
-          mapping={mapping}
-        />
+      title: useSelector(state => selectExtIdLabel(state)(field, extId)),
+      key: extId,
+      render: activity => (
+        <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
+          <BaseActivityColOuter
+            activity={activity}
+            type="VALUE"
+            prop={extId}
+            mapping={mapping}
+          />
+        </SortableTableCell>
       ),
-    },
-  ], []),
-  ...(Object.keys(mapping.fields) || []).reduce((fields, fieldKey) => [
-    ...fields,
-    {
-      title: fieldKey,
-      key: fieldKey,
-      dataIndex: null,
-      render: (_, activity) => (
-        <BaseActivityCol
-          activity={activity}
-          type="VALUE"
-          prop={fieldKey}
-          mapping={mapping}
-        />
-      ),
-    },
-  ], []),
-  ...StaticColumns,
+      sorter: (a, b) => {
+        return sortByElementDeepHtml(
+          `.extId_${extId.replace(/\./g, '-')}_${a._id} .base-activity-col--wrapper`,
+          `.extId_${extId.replace(/\./g, '-')}_${b._id} .base-activity-col--wrapper`
+        );
+      },
+    }
+  ],
+  []
+  ),
+  ...StaticColumns
 ];

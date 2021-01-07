@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as types from './auth.actionTypes';
 import { setToken } from '../../Utils/tokenHelpers';
 import { authenticationStatuses } from '../../Constants/auth.constants';
@@ -44,9 +45,25 @@ const reducer = (state = initialState, action) => {
     case types.FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        authenticationStatus: authenticationStatuses.AUTHENTICATED,
+        authenticationStatus: action.payload.organizationId ? authenticationStatuses.AUTHENTICATED : authenticationStatuses.MULTIPLE_ORGS,
         user: action.payload,
       };
+
+    case types.GET_ORG_FOR_USER_SUCCESS: {
+      const { payload: { organization: org } } = action;
+      return {
+        ...state,
+        org,
+      };
+    }
+
+    case types.GET_INTEGRATION_SETTINGS_SUCCESS: {
+      const { payload: { connectionSetting } } = action;
+      return {
+        ...state,
+        integrationSettings: connectionSetting,
+      };
+    }
 
     case types.LOGIN_MULTIPLE_ORGS: {
       // If payload doesn't contain token
@@ -84,7 +101,10 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.LOGOUT:
-      return initialState;
+      return {
+        ...initialState,
+        env: state.env
+      };
 
     case types.LOGIN_FAILURE:
       setToken(null);

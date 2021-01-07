@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 // VALIDATION HELPERS
 import { validateTimeslotTimingMode, validateFilterValue, validateGeneralValue } from './activityValues.validation';
@@ -15,6 +16,7 @@ import { mappingTypes } from '../Constants/mappingTypes.constants';
 import { schedulingAlgorithmProps } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes, submissionValueTypeProps } from '../Constants/submissionValueTypes.constants';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { DATE_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 
 /**
  * @function getSchedulingAlgorithmForActivityValue
@@ -59,6 +61,10 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
   };
 };
 
+const renderCategories = categories => categories.map(({ id, values }) => `${_.get(window.tePrefsLibStore.getState(), ['te', 'extIdProps', 'fields', id, 'label'], id)}: ${values}`).join(', ');
+const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
+const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
+
 /**
  * @function formatSubmissionValue
  * @description returns a formatted submission value for html output
@@ -67,10 +73,9 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
  * @returns {Array} formattedSubmissionValues
  */
 export const formatSubmissionValue = (submissionValue, submissionValueType) => {
-  if (submissionValueType === submissionValueTypes.FILTER)
-    return submissionValue.map(
-      el => `Field: ${el.field}, value: ${el.value[0]}`
-    );
+  if (submissionValueType === submissionValueTypes.FILTER) {
+    return renderFilterValues(submissionValue);
+  }
   return submissionValue;
 };
 
@@ -85,7 +90,7 @@ export const formatSubmissionValue = (submissionValue, submissionValueType) => {
  */
 const createRenderPayload = ({
   status,
-  rawValue,
+  value,
   formattedValue,
   errorMessage
 }) => ({
@@ -93,7 +98,7 @@ const createRenderPayload = ({
   rawValue:
     status === activityValueStatuses.MISSING_DATA
       ? activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
-      : rawValue,
+      : value,
   formattedValue:
     status === activityValueStatuses.MISSING_DATA
       ? activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
@@ -124,11 +129,11 @@ const getRenderPayloadForTimeSlotStartTime = (
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [activityValue.value, moment(endTime.value).subtract(length.value, 'hours')],
-      formattedValue: `${moment(activityValue.value).format('YYYY-MM-DD')} ${moment(
+      formattedValue: `${moment(activityValue.value).format(DATE_FORMAT)} ${moment(
         activityValue.value
-      ).format('HH:mm')} - ${moment(endTime.value)
+      ).format(TIME_FORMAT)} - ${moment(endTime.value)
         .subtract(length.value, 'hours')
-        .format('HH:mm')}`
+        .format(TIME_FORMAT)}`
     });
 
   return createRenderPayload({
@@ -155,11 +160,11 @@ const getSchedulingPayloadForTimeSlotEndTime = (
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [moment(startTime.value).add(length.value, 'hours'), moment(activityValue.value)],
-      formattedValue: `${moment(startTime.value).format('YYYY-MM-DD')} ${moment(
+      formattedValue: `${moment(startTime.value).format(DATE_FORMAT)} ${moment(
         startTime.value
       )
         .add(length.value, 'hours')
-        .format('HH:mm')} - ${moment(activityValue.value).format('HH:mm')}`
+        .format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}`
     });
 
   return createRenderPayload({
@@ -175,13 +180,13 @@ const getSchedulingPayloadForTimeSlotEndTime = (
  */
 const getRenderPayloadForObjectFilter = activityValue => {
   const validationResult = validateFilterValue(activityValue);
+  const value = Array.isArray(activityValue.value) ? activityValue.value : [activityValue.value];
   if (!validationResult.errorCode)
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
-      value: activityValue.submissionValue,
-      formattedValue: activityValue.submissionValue
-        .map(el => `Field: ${el.categories.length ? el.categories[0].id : el.searchFields}, value: ${el.categories.length ? el.categories[0].values[0] : el.searchString}`)
-        .toString()
+      value,
+      formattedValue: value
+        .map(el => renderFilterValues(el)).join(', ')
     });
 
   return createRenderPayload({
@@ -223,6 +228,10 @@ export const getRenderPayloadForActivityValue = (
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object
   if (activityValue.type === 'object' && activityValue.value && activityValue.value.extid)
     formatFn = teObject => teObject.extid;
+    
+  // TODO: Workaround for unhandled object request/empty activity value
+  if (activityValue.type === 'object' && _.isEmpty(activityValue.value) )
+    formatFn = _ => 'No values';
 
   // General case
   if (!renderPayload) {
@@ -231,7 +240,7 @@ export const getRenderPayloadForActivityValue = (
       renderPayload = createRenderPayload({
         status: activityValueStatuses.READY_FOR_SCHEDULING,
         value: activityValue.value,
-        formattedValue: formatFn(activityValue.value),
+        formattedValue: Array.isArray(activityValue.value) ? activityValue.value.map(formatFn) : formatFn(activityValue.value),
       });
     } else {
       renderPayload = createRenderPayload({

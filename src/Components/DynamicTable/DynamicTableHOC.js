@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import { withResizeDetector } from 'react-resize-detector';
@@ -7,10 +8,28 @@ import { withResizeDetector } from 'react-resize-detector';
 import { columnModifierColumn } from './ColumnModifierColumn';
 import ColumnSelector from './ColumnSelector';
 import FilterBar from './FilterBar';
-import ResizableColumnHeader from './ResizableColumnHeader';
+import ResizableHeaderCell from './ResizableHeaderCell';
 import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 
+// ACTIONS
+import { initView, getView, updateView } from '../../Redux/GlobalUI/globalUI.actions';
+
+// STYLES
+import './DynamicTable.scss';
+
+// CONSTANTS
+const mapStateToProps = (state, { datasourceId }) => ({
+  visibleCols: state.globalUI.tableViews[datasourceId] || {},
+});
+
+const mapActionsToProps = {
+  initView,
+  getView,
+  updateView,
+};
+
 const DynamicTableHOC = ({
+  className,
   columns,
   dataSource,
   rowKey,
@@ -20,28 +39,54 @@ const DynamicTableHOC = ({
   isLoading,
   width,
   showFilter,
+  datasourceId,
+  visibleCols,
+  initView,
+  getView,
+  updateView,
+  resizable,
+  onSearch,
 }) => {
-  // State var to hold the columns
-  const [cols, setCols] = useState([]);
+  // Assuming that the key is most likely to be persistent, if not defined, fallback on title
+  const visibilityIndexor = column => column.key || column.title;
+  const isVisibleCol = column => {
+    const visibleByIndexor = visibleCols[visibilityIndexor(column)];
+    const visibleByTitle = visibleCols[column.title];
 
-  // Effect to update cols everytime columnns change
+    if (visibleByIndexor !== undefined) return visibleByIndexor;
+    return visibleByTitle === undefined ? true : visibleByTitle;
+  };
+
+  // Effect to load stored views
   useEffect(() => {
-    setCols(columns);
-  }, [columns]);
+    getView(datasourceId);
+  }, []);
+
+  // Effect to update cols everytime columns change
+  useEffect(() => {
+    initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [visibilityIndexor(col)]: true }), {}));
+  }, []);
 
   // State to hold whether column selection should be visible or not
   const [showColumnSelection, setShowColumnSelection] = useState(false);
 
-  // State variable to hold which columns should be shown
-  const [visibleColumns, setVisibleColumns] = useState(
-    columns.reduce((colState, col) => ({ ...colState, [col.title]: true }), {})
-  );
+  // State to hold columns width
+  const [columnWidth, setColumnWidth] = useState([]);
+
+  // Initial columnWidth
+  useEffect(() => {
+    setColumnWidth(
+      columns
+        .filter(col => isVisibleCol(col))
+        .map(col => col.fixedWidth || col.width)
+    )
+  }, [columns, visibleCols])
 
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
 
   // Memoized calculated width
-  const fixedWidthCols = useMemo(() => cols.filter(col => visibleColumns[col.title] && col.fixedWidth), [cols, visibleColumns]);
+  const fixedWidthCols = useMemo(() => columns.filter(col => isVisibleCol(col) && col.fixedWidth), [columns, visibleCols]);
 
   const _width = useMemo(() => {
     // Get the visible columns
@@ -54,70 +99,94 @@ const DynamicTableHOC = ({
   // Memoized variable with the visible column definitions
   const _cols = useMemo(
     () =>
-      cols
-        .filter(col => visibleColumns[col.title])
+      columns
+        .filter(col => isVisibleCol(col))
         .map((col, idx, arr) => ({
           ...col,
-          width: col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length)),
+          width: columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length)),
           onHeaderCell: column => ({
-            width: column.width,
+            resizable: resizable && col.resizable !== false,
+            width: columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length)),
             title: col.title,
+            index: idx,
+            expandable: !!expandedRowRender,
+            onResized: (changedWidth) => {
+              setColumnWidth([
+                ...columnWidth.slice(0, idx),
+                changedWidth ,
+                ...columnWidth.slice(idx + 1),
+              ]);
+            }
           }),
           render:
             (val, el) =>
               col.render
-                ? <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
-                : <EllipsisTruncater width={col.fixedWidth ? col.fixedWidth : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
+                ? <EllipsisTruncater width={columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length))}>{col.render(val, el)}</EllipsisTruncater>
+                : <EllipsisTruncater width={columnWidth[idx] ? columnWidth[idx] : (_width / (arr.length - fixedWidthCols.length))}>{val}</EllipsisTruncater>,
         })),
-    [cols, visibleColumns, _width]
+    [columns, visibleCols, _width, columnWidth, expandedRowRender]
   );
+
+  // If there are no accessors defined for the filter, we do not want to show filter bar at all
+  const _showFilter = showFilter &&
+    (typeof onSearch === 'function' ||  _cols.some(({ dataIndex, filterFn }) => dataIndex || filterFn));
 
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
-    if (filterQuery === '' || filterQuery.length < 3) return dataSource;
+    if (filterQuery === '') return dataSource;
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return dataSource.filter(
-      el => _cols
-        .some(
-          col => {
-            if (!el[col.dataIndex]) return false;
-            return el[col.dataIndex]
-              .toString()
-              .toLowerCase()
-              .indexOf(
-                filterQuery
-                  .toString()
-                  .toLowerCase()
-              ) > -1
-          })
+      el => {
+        if (typeof onSearch === 'function') return onSearch(el, filterQuery);
+        return _cols
+          .some(
+            col => {
+              const { dataIndex, filterFn } = col;
+              const filterVal = (filterFn && filterFn(el, filterQuery)) || el[dataIndex];
+              if (!filterVal) return false;
+              return filterVal
+                .toString()
+                .toLowerCase()
+                .includes(
+                  filterQuery
+                    .toString()
+                    .toLowerCase()
+                )
+            });
+      }
     );
   }, [filterQuery, dataSource, _cols]);
 
   return (
     <div
-      className="dynamic-table--wrapper"
+      className={`${className || ''} dynamic-table--wrapper`}
     >
       {showColumnSelection ? (
         <ColumnSelector
-          columnState={visibleColumns}
-          onColumnStateChange={newColState => setVisibleColumns(newColState)}
+          columns={columns.map(col => [
+            visibilityIndexor(col),
+            isVisibleCol(col),
+            col.title
+          ])}
+          onColumnStateChange={({ colIndex, newVisibility }) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
         <React.Fragment>
-          {showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
+          {_showFilter && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
           <Table
             components={{
               header: {
-                cell: ResizableColumnHeader,
+                cell: ResizableHeaderCell,
               },
             }}
-            columns={[ ..._cols, columnModifierColumn(() => setShowColumnSelection(true)) ]}
+            columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
             dataSource={_dataSource}
             rowKey={rowKey}
             expandedRowRender={expandedRowRender || null}
             pagination={pagination}
             loading={isLoading}
+            sortDirections={['descend', 'ascend']}
             onRow={onRow || null}
           />
         </React.Fragment>
@@ -136,6 +205,13 @@ DynamicTableHOC.propTypes = {
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.number,
   showFilter: PropTypes.bool,
+  datasourceId: PropTypes.string.isRequired,
+  visibleCols: PropTypes.object,
+  initView: PropTypes.func.isRequired,
+  getView: PropTypes.func.isRequired,
+  updateView: PropTypes.func.isRequired,
+  resizable: PropTypes.bool,
+  onSearch: PropTypes.func,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -151,6 +227,9 @@ DynamicTableHOC.defaultProps = {
   },
   width: null,
   showFilter: true,
+  visibleCols: {},
+  resizable: false,
+  onSearch: null,
 };
 
-export default withResizeDetector(DynamicTableHOC);
+export default withResizeDetector(connect(mapStateToProps, mapActionsToProps)(DynamicTableHOC));

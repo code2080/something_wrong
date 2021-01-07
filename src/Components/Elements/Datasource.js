@@ -1,13 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Menu, Dropdown, Icon } from 'antd';
+import { Menu } from 'antd';
+import _ from 'lodash';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 
 // SELECTORS
-import { getTECoreAPIPayload } from '../../Redux/Integration/integration.selectors';
+import { getTECoreAPIPayload, getLabelsForDatasource } from '../../Redux/Integration/integration.selectors';
 
 // HELPERS
 import { transformPayloadForDatasourceFiltering } from '../../Utils/teCoreAPIHelpers';
@@ -21,21 +22,34 @@ import {
   teCoreCallnames
 } from '../../Constants/teCoreActions.constants';
 
+import DatasourceInner from './DatasourceInner/DatasourceInner';
+
+const elTypes = {
+  EMPTY: 'EMPTY',
+  OBJECT: 'OBJECT',
+  FILTER: 'FILTER',
+};
+
 const mapStateToProps = (state, ownProps) => {
   if (!ownProps.value && ownProps.value[0])
-    return { label: null, payload: null };
+    return { labels: null, payload: null };
   const { value, element } = ownProps;
-  const extId = value[0];
-  const payload = getTECoreAPIPayload(value[0], element.datasource, state);
+  const payload = getTECoreAPIPayload(value, element.datasource);
+  const labels = getLabelsForDatasource(payload, state);
   return {
-    label: state.te.extIdProps.objects[extId]
-      ? state.te.extIdProps.objects[extId].label
-      : null,
-    payload
+    payload,
+    labels,
   };
 };
 
-const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
+const Datasource = ({ payload, labels, element, teCoreAPI }) => {
+  const elType = useMemo(() => {
+    if (payload == null) return elTypes.EMPTY;
+    const datasourceSplit = (element.datasource || []).split(',');
+    if (datasourceSplit && datasourceSplit[1] && datasourceSplit[1] === 'object') return elTypes.OBJECT;
+    return elTypes.FILTER;
+  }, [payload]);
+
   // Callback on menu click
   const onClickCallback = useCallback(
     ({ key }) => {
@@ -59,17 +73,17 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
       teCoreAPI
         .getCompatibleFunctionsForElement(element.elementId)
         .filter(action => {
-          const src = element.datasource.split(',')[1];
-          if (src === 'object' && action === 'FILTER_OBJECTS') {
-            return false;
-          }
-          if (src !== 'object' && action === 'SELECT_OBJECT') {
-            return false;
-          }
-          return true;
+          const isObject = element.datasource.split(',')[1] === 'object';
+          const isSingleLabel = Object.keys(labels).length === 1;
+          return !(
+            (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
+            ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
+            (isObject && action === 'FILTER_OBJECTS')
+          ); 
         }),
     [teCoreAPI, element]
   );
+
   // Memoized menu
   const menu = useMemo(
     () => (
@@ -85,33 +99,14 @@ const Datasource = ({ payload, label, value, element, teCoreAPI }) => {
     [onClickCallback, supportedActions]
   );
 
-  if (payload == null)
-    return (
-      <div className="element__datasource--wrapper">
-        <div className="element__datasource--inner">
-          N/A
-        </div>
-      </div>
-    );
-
-  return (
-    <div className="element__datasource--wrapper">
-      <Dropdown
-        getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        overlay={menu}
-      >
-        <div className="element__datasource--inner">
-          {label || value.toString() || 'N/A'}
-          <Icon type="down" />
-        </div>
-      </Dropdown>
-    </div>
-  );
-};
+  return <div className="element__datasource--wrapper">
+    <DatasourceInner elType={elType} labels={labels} menu={menu} payload={payload} />
+  </div>
+}
 
 Datasource.propTypes = {
   payload: PropTypes.array,
-  label: PropTypes.string,
+  labels: PropTypes.object,
   value: PropTypes.array,
   element: PropTypes.object,
   teCoreAPI: PropTypes.object.isRequired
@@ -119,7 +114,7 @@ Datasource.propTypes = {
 
 Datasource.defaultProps = {
   payload: null,
-  label: null,
+  label: {},
   value: null,
   element: {}
 };

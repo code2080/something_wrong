@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const ResizeableColumnHeader = props => {
+const ResizableColumnHeader = props => {
   const { width, children, title, ...restProps } = props;
   if (!title)
     return (
@@ -41,16 +41,16 @@ const ResizeableColumnHeader = props => {
   );
 };
 
-ResizeableColumnHeader.propTypes = {
+ResizableColumnHeader.propTypes = {
   width: PropTypes.number,
   children: PropTypes.node,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
-ResizeableColumnHeader.defaultProps = {
+ResizableColumnHeader.defaultProps = {
   width: 0,
   title: null,
   children: null,
 };
 
-export default ResizeableColumnHeader;
+export default ResizableColumnHeader;
