@@ -26,7 +26,8 @@ import { elementTypes } from '../Constants/elementTypes.constants';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
-  SECTION_CONNECTED
+  SECTION_CONNECTED,
+  SECTION_AVAILABILITY 
 } from '../Constants/sectionTypes.constants';
 import DateTime from '../Components/Common/DateTime';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
@@ -174,6 +175,27 @@ export const renderElementValue = (value, element) => {
   }
 };
 
+const availabilityCalendarColumns = [
+  {
+    title: 'Start time',
+    key: 'start',
+    dataIndex: 'start',
+    render: start => <DateTime value={start} format={DATE_TIME_FORMAT} />
+  },
+  {
+    title: 'End time',
+    key: 'end',
+    dataIndex: 'end',
+    render: end => <DateTime value={end} format={DATE_TIME_FORMAT} />
+  },
+  {
+    title: 'Comment',
+    key: 'comment',
+    dataIndex: 'comment',
+    render: comment => <span>{comment}</span>,
+  },
+];
+
 /**
  * @function transformSectionToTableColumns
  * @description transform the various elements in a section into table columns
@@ -225,9 +247,13 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ..._elementColumns
       ];
-
+    case SECTION_AVAILABILITY:
+      return [
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ...availabilityCalendarColumns,
+      ]
     default:
-      return [ ..._elementColumns ];
+      return [..._elementColumns];
   };
 };
 
@@ -298,37 +324,18 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
   return _data;
 };
 
-export const availabilityCalendarColumns = [
-  {
-    title: 'Start time',
-    key: 'start',
-    dataIndex: 'start',
-    render: start => <DateTime value={start} format={DATE_TIME_FORMAT} />
-  },
-  {
-    title: 'End time',
-    key: 'end',
-    dataIndex: 'end',
-    render: end => <DateTime value={end} format={DATE_TIME_FORMAT} />
-  },
-  {
-    title: 'Comment',
-    key: 'comment',
-    dataIndex: 'comment',
-    render: comment => <span>{comment}</span>,
-  },
-];
-
 /**
  * @function transformAvailabilityCalendarToTableRows
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-export const transformAvailabilityCalendarToTableRows = (values) =>
-  _.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
+const transformAvailabilityCalendarToTableRows = (values) =>
+([
+  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
     ...item,
     rowKey: item.eventId,
-  }));
+  }))
+]);
 
 /**
  * @function transformSectionValuesToTableRows
@@ -346,6 +353,8 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
       return transformTableSectionValuesToTableRows(values, columns);
     case SECTION_CONNECTED:
       return transformConnectedSectionValuesToTableRows(values, columns);
+    case SECTION_AVAILABILITY:
+      return transformAvailabilityCalendarToTableRows(values);
     default:
       return [];
   }

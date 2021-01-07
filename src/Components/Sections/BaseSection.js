@@ -14,15 +14,13 @@ import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   transformSectionToTableColumns,
   transformSectionValuesToTableRows,
-  availabilityCalendarColumns,
-  transformAvailabilityCalendarToTableRows
 } from '../../Utils/rendering.helpers';
 
 // STYLES
 import './BaseSection.scss';
 
 // CONSTANTS
-import { SECTION_CONNECTED, SECTION_TABLE } from '../../Constants/sectionTypes.constants';
+import { SECTION_AVAILABILITY, SECTION_CONNECTED, SECTION_TABLE } from '../../Constants/sectionTypes.constants';
 import { selectSectionHasAvailabilityCalendar } from '../../Redux/Forms/forms.selectors';
 
 const mapStateToProps = (state, ownProps) => {
@@ -45,24 +43,18 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
   const hasAvailabilityCalendar = useSelector(selectSectionHasAvailabilityCalendar(section.elements));
 
   // Memoized value of the section type
-  const sectionType = determineSectionType(section);
+  const sectionType = hasAvailabilityCalendar ? SECTION_AVAILABILITY : determineSectionType(section);
 
   // Memoized var holding the columns
   const _columns = useMemo(() => {
-    if (hasAvailabilityCalendar) {
-      return availabilityCalendarColumns;
-    }
     return transformSectionToTableColumns(section, sectionType, formInstanceId, formId)
   },
-  [section, hasAvailabilityCalendar]
+  [section]
   );
 
   // Memoized var holding the transformed section values
   const _data = useMemo(
     () => {
-      if (hasAvailabilityCalendar) {
-        return transformAvailabilityCalendarToTableRows(values)
-      }
       return transformSectionValuesToTableRows(
         values,
         _columns,
@@ -70,7 +62,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
         sectionType
       )
     },
-    [section, values, hasAvailabilityCalendar]
+    [section, values]
   );
   if (_.isEmpty(_columns)) return null;
   return (
