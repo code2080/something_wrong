@@ -24,6 +24,7 @@ import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
+import { fetchElements } from '../../Redux/Elements/elements.actions';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = state => ({
@@ -34,6 +35,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   fetchForms,
+  fetchElements,
   fetchUsers,
   fetchObjectRequests,
   setBreadcrumbs,
@@ -48,6 +50,7 @@ const FormList = ({
   user,
   isLoading,
   fetchForms,
+  fetchElements,
   fetchUsers,
   fetchMapping,
   fetchAllJobs,
@@ -71,6 +74,7 @@ const FormList = ({
     fetchForms();
     fetchOrg();
     fetchAllJobs();
+    fetchElements();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
   }, []);
 
@@ -119,6 +123,7 @@ FormList.propTypes = {
   forms: PropTypes.array,
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
+  fetchElements: PropTypes.func.isRequired,
   fetchUsers: PropTypes.func.isRequired,
   fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
