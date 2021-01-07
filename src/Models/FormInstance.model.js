@@ -31,6 +31,8 @@ export default class FormInstance {
 
   updatedAt;
 
+  submittedAt;
+
   constructor({
     _id,
     scopedObject,
@@ -46,6 +48,7 @@ export default class FormInstance {
     values = [],
     createdAt,
     updatedAt,
+    submittedAt,
     index,
   }) {
     this._id = _id;
@@ -63,6 +66,7 @@ export default class FormInstance {
     this.values = values;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.submittedAt = submittedAt || updatedAt;
     this.index = index;
   }
 }
