@@ -77,13 +77,20 @@ const activityActions = {
     filterFn: activity =>
       activity.reservationId &&
       activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
-    callname: teCoreCallnames.DELETE_RESERVATION
+    callname: teCoreCallnames.DELETE_RESERVATIONS
   },
   STOP_SCHEDULING: {
     label: 'Stop scheduling',
     filterFn: activity => activity.activityStatus === activityStatuses.QUEUED,
     callname: teCoreCallnames.STOP_SCHEDULING
   },
+  DELETE_ALL: {
+    label: 'Delete all reservations',
+    filterFn: activity => // Should filter look at activities instead?
+      activity.reservationId &&
+      activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
+    callname: teCoreCallnames.DELETE_RESERVATIONS
+  }
 };
 
 const ActivityActionsDropdown = ({
@@ -101,7 +108,7 @@ const ActivityActionsDropdown = ({
 }) => {
   const { formInstanceId, formId } = activity;
   const [formType, reservationMode] = useSelector(state => {
-    const form = state.forms[activity.formId];
+    const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
   const onFinishSchedule =
@@ -115,17 +122,19 @@ const ActivityActionsDropdown = ({
     );
   };
 
-  const onDeleteActivity = response => {
+  const onDeleteActivities = responses => {
     // Check result parameter to see if everything went well or not
-    if (!response.result.details) {
-      const updatedActivity = {
-        ...activity,
-        schedulingDate: null,
-        activityStatus: activityStatuses.NOT_SCHEDULED,
-        reservationId: null,
-      };
-      updateActivity(updatedActivity);
-    }
+    responses.forEach(res => {
+      if (!res.result.details) {
+        const updatedActivity = {
+          ...res.activity,
+          schedulingDate: null,
+          activityStatus: activityStatuses.NOT_SCHEDULED,
+          reservationId: null,
+        };
+        updateActivity(updatedActivity);
+      }
+    })
   };
 
   const updateSchedulingProgress = () => {
@@ -175,8 +184,14 @@ const ActivityActionsDropdown = ({
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
-            activity,
-            callback: onDeleteActivity
+            activities: [activity],
+            callback: onDeleteActivities
+          });
+          break;
+        case 'DELETE_ALL':
+          teCoreAPI[activityActions[key].callname]({
+            activities,
+            callback: onDeleteActivities
           });
           break;
         case 'STOP_SCHEDULING':

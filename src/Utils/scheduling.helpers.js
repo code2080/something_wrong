@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 // HELPERS
 import { formatActivityForExactScheduling } from './exactScheduling.helpers';
@@ -136,15 +137,15 @@ const parseTECoreResultsToScheduleReturns = teCoreReturns =>
   });
 
 export const validateActivity = activity => {
+  if(_.isEmpty(activity.values)) return false;
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map(activityValue => validateValue(activityValue))
   ];
   const hasValidationErrors = validationResults.some(
-    el => el.status !== activityValueStatuses.READY_FOR_SCHEDULING
+    valResult => valResult.status !== activityValueStatuses.READY_FOR_SCHEDULING
   );
-  if (hasValidationErrors) return false;
-  return true;
+  return !hasValidationErrors;
 };
 
 export const determineSchedulingAlgorithmForActivity = activity => {

@@ -29,6 +29,7 @@ const mapActionsToProps = {
 };
 
 const DynamicTableHOC = ({
+  className,
   columns,
   dataSource,
   rowKey,
@@ -132,7 +133,7 @@ const DynamicTableHOC = ({
 
   // Memoized datasource filtered on filter query
   const _dataSource = useMemo(() => {
-    if (filterQuery === '' || filterQuery.length < 3) return dataSource;
+    if (filterQuery === '') return dataSource;
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return dataSource.filter(
       el => {
@@ -158,7 +159,7 @@ const DynamicTableHOC = ({
 
   return (
     <div
-      className="dynamic-table--wrapper"
+      className={`${className || ''} dynamic-table--wrapper`}
     >
       {showColumnSelection ? (
         <ColumnSelector

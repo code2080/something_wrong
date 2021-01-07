@@ -7,7 +7,7 @@ import './StatusLabel.scss';
 const StatusLabel = ({ label, color, className, children, ...rest }) => {
   const statusLabel = (
     <div
-      className={`status-label--wrapper ${color} ${className}`}
+      className={`status-label--wrapper ${color} ${className} ${typeof rest.onClick === 'function' ? 'clickable' : ''}`}
       {...rest}
     >
       {children}

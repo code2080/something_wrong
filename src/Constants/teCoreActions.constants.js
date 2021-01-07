@@ -15,8 +15,8 @@ export const teCoreCallnames = {
   GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
   GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
   SELECT_RESERVATION: 'selectReservation',
-  DELETE_RESERVATION: 'deleteReservation',
   STOP_SCHEDULING: 'stopScheduling',
+  DELETE_RESERVATIONS: 'deleteReservations',
   POPULATE_SELECTION: 'populateSelection', // WHERE IS THIS ONE USED?
   GET_RESERVATION_TYPES: 'getReservationTypes',
   GET_RESERVATION_FIELDS: 'getReservationFields',
@@ -72,9 +72,9 @@ export const teCoreActions = {
   SELECT_RESERVATION: {
     callname: teCoreCallnames.SELECT_RESERVATION
   },
-  DELETE_RESERVATION: {
-    callname: teCoreCallnames.DELETE_RESERVATION,
-    mock: ({ activity, callback: cbFn }) => cbFn({ activityId: activity._id, result: true })
+  DELETE_RESERVATIONS: {
+    callname: teCoreCallnames.DELETE_RESERVATIONS,
+    mock: ({ activities, callback: cbFn }) => cbFn({ activityIds: activities.map(activity => activity.id), result: true })
   },
   SCHEDULE_ACTIVITY: {
     callname: teCoreCallnames.SCHEDULE_ACTIVITY
