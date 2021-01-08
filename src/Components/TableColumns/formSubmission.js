@@ -24,10 +24,10 @@ export const formSubmission = {
   },
   SUBMISSION_DATE: {
     title: 'Submitted',
-    key: 'createdAt',
-    dataIndex: 'createdAt',
+    key: 'submittedAt',
+    dataIndex: 'submittedAt',
     render: val => <DateTime value={val} />,
-    sorter: (a, b) => sortTime(a.createdAt, b.createdAt)
+    sorter: (a, b) => sortTime(a.submittedAt, b.submittedAt)
   },
   SCOPED_OBJECT: {
     title: 'Scoped object',
