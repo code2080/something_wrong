@@ -15,6 +15,7 @@ import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
+import elements from './Elements/elements.reducer';
 
 const rootReducer = combineReducers({
   apiStatus,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   te,
   integration,
   objectRequests,
+  elements,
 });
 
 export default rootReducer;

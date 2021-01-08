@@ -142,6 +142,7 @@ function createThunkAction({
             message: 'Operation completed',
             description: successNotification
           });
+        return response.data;
       })
       .catch(error => {
         allApis[endpoint].inprogress = false;
@@ -213,7 +214,7 @@ function createThunkAction({
           });
           dispatch(failure({ ...data, actionMeta: { ...params } }, option.params, postAction));
         }
-        return null;
+        return error;
       });
   };
 }

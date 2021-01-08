@@ -124,13 +124,14 @@ const abortJobFlow = {
         return activities[aIdx];
       return a;
     });
-    const payload = updateActivitiesWithSchedulingResults(updatedActivities, schedulingReturns);
-    console.log(payload);
-    dispatch(updateActivities(
-      formId,
-      formInstanceId,
-      payload
-    ));
+    if (updatedActivities && updatedActivities.length) {
+      const payload = updateActivitiesWithSchedulingResults(updatedActivities, schedulingReturns);
+      dispatch(updateActivities(
+        formId,
+        formInstanceId,
+        payload
+      ));
+    }
     return ({ type: types.ABORT_JOB_SUCCESS, payload: { ...response } });
   },
   failure: (err) => ({ type: types.CREATE_JOB_FAILURE, payload: { ...err } }),

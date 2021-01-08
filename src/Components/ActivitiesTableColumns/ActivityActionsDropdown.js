@@ -16,6 +16,7 @@ import {
   updateActivities
 } from '../../Redux/Activities/activities.actions';
 import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
+import { abortJob } from '../../Redux/Jobs/jobs.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
@@ -28,17 +29,25 @@ import { manualSchedulingFormStatuses } from '../../Constants/manualSchedulingCo
 
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../Redux/ManualSchedulings/manualSchedulings.selectors';
+import { selectJobForActivities } from '../../Redux/Jobs/jobs.selectors';
+import { activityIsReadOnly } from '../../Utils/activities.helpers';
 
-const mapStateToProps = (state, { activity }) => ({
-  activities: state.activities[activity.formId][activity.formInstanceId],
-  mSStatus: selectManualSchedulingStatus(state)(activity.formInstanceId, activity.formId),
-  formInstance: state.submissions[activity.formId][activity.formInstanceId],
-});
+const mapStateToProps = (state, { activity }) => {
+  const activities = state.activities[activity.formId][activity.formInstanceId];
+  const jobs = selectJobForActivities(activity.formId, [activity._id])(state);
+  return {
+    activities,
+    jobs,
+    mSStatus: selectManualSchedulingStatus(state)(activity.formInstanceId, activity.formId),
+    formInstance: state.submissions[activity.formId][activity.formInstanceId],
+  };
+}
 
 const mapActionsToProps = {
   updateActivity,
   updateActivities,
   setFormInstanceSchedulingProgress,
+  abortJob,
 };
 
 const activityActions = {
@@ -46,14 +55,14 @@ const activityActions = {
     label: 'Schedule all activities',
     filterFn: activity =>
       !activity.reservationId &&
-      activity.activityStatus !== activityStatuses.SCHEDULED,
+      !activityIsReadOnly(activity.activityStatus),
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES
   },
   SCHEDULE: {
     label: 'Schedule activity',
     filterFn: activity =>
       !activity.reservationId &&
-      activity.activityStatus !== activityStatuses.SCHEDULED,
+      !activityIsReadOnly(activity.activityStatus),
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES
   },
   SELECT: {
@@ -68,7 +77,12 @@ const activityActions = {
     filterFn: activity =>
       activity.reservationId &&
       activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
-    callname: teCoreCallnames.DELETE_RESERVATION
+    callname: teCoreCallnames.DELETE_RESERVATIONS
+  },
+  STOP_SCHEDULING: {
+    label: 'Stop scheduling',
+    filterFn: activity => activity.activityStatus === activityStatuses.QUEUED,
+    callname: teCoreCallnames.STOP_SCHEDULING
   },
   DELETE_ALL: {
     label: 'Delete all reservations',
@@ -82,6 +96,7 @@ const activityActions = {
 const ActivityActionsDropdown = ({
   buttonType,
   activity,
+  jobs,
   mSStatus,
   activities,
   updateActivity,
@@ -89,10 +104,11 @@ const ActivityActionsDropdown = ({
   teCoreAPI,
   formInstance,
   setFormInstanceSchedulingProgress,
+  abortJob,
 }) => {
   const { formInstanceId, formId } = activity;
   const [formType, reservationMode] = useSelector(state => {
-    const form = state.forms[activity.formId];
+    const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
   const onFinishSchedule =
@@ -106,22 +122,9 @@ const ActivityActionsDropdown = ({
     );
   };
 
-  const onDeleteReservation = response => {
+  const onDeleteActivities = responses => {
     // Check result parameter to see if everything went well or not
-    if (!response.result.details) {
-      const updatedActivity = {
-        ...activity,
-        schedulingDate: null,
-        activityStatus: activityStatuses.NOT_SCHEDULED,
-        reservationId: null,
-      };
-      updateActivity(updatedActivity);
-    }
-  };
-
-  const onDeleteReservations = response => {
-    // Check result parameter to see if everything went well or not
-    response.forEach(res => {
+    responses.forEach(res => {
       if (!res.result.details) {
         const updatedActivity = {
           ...res.activity,
@@ -181,14 +184,24 @@ const ActivityActionsDropdown = ({
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
-            activity,
-            callback: onDeleteReservation
+            activities: [activity],
+            callback: onDeleteActivities
           });
           break;
         case 'DELETE_ALL':
           teCoreAPI[activityActions[key].callname]({
             activities,
-            callback: onDeleteReservations
+            callback: onDeleteActivities
+          });
+          break;
+        case 'STOP_SCHEDULING':
+          jobs.forEach(job => {
+            abortJob({
+              jobId: job.id,
+              formId,
+              formInstanceId,
+              activities: [activity],
+            });
           });
           break;
         default:
@@ -237,12 +250,14 @@ ActivityActionsDropdown.propTypes = {
   buttonType: PropTypes.string,
   activity: PropTypes.object.isRequired,
   activities: PropTypes.array.isRequired,
+  jobs: PropTypes.array.isRequired,
   updateActivity: PropTypes.func.isRequired,
   updateActivities: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
   formInstance: PropTypes.object.isRequired,
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
+  abortJob: PropTypes.func.isRequired,
 };
 
 ActivityActionsDropdown.defaultProps = {

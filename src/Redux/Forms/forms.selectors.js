@@ -4,6 +4,8 @@ import { createSelector } from 'reselect';
 import { formStatus } from '../../Constants/formStatuses.constants';
 
 const formState = state => state.forms;
+const elementState = state => state.elements;
+
 export const selectForm = formId => state => formState(state)[formId];
 
 export const selectAllForms = createSelector(
@@ -30,11 +32,15 @@ export const selectTimeslotsForSection = createSelector(
   }
 );
 
-
 export const selectSectionDesign = createSelector(
   formState,
   forms => (formId, sectionId) => {
     const form = forms[formId];
     return form && form.sections.find(section => section._id === sectionId);
   }
+);
+
+export const selectSectionHasAvailabilityCalendar = (sectionElements) => createSelector(
+  elementState,
+  elements => sectionElements.some(elem => elements.map[elem.elementId] && elements.map[elem.elementId].type === 'ELEMENT_TYPE_CALENDAR')
 );

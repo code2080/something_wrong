@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import _ from 'lodash';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
@@ -25,10 +26,11 @@ import { elementTypes } from '../Constants/elementTypes.constants';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
-  SECTION_CONNECTED
+  SECTION_CONNECTED,
+  SECTION_AVAILABILITY 
 } from '../Constants/sectionTypes.constants';
 import DateTime from '../Components/Common/DateTime';
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
+import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import { sortByElementHtml } from './sorting.helpers';
 
@@ -173,6 +175,27 @@ export const renderElementValue = (value, element) => {
   }
 };
 
+const availabilityCalendarColumns = [
+  {
+    title: 'Start time',
+    key: 'start',
+    dataIndex: 'start',
+    render: start => <DateTime value={start} format={DATE_TIME_FORMAT} />
+  },
+  {
+    title: 'End time',
+    key: 'end',
+    dataIndex: 'end',
+    render: end => <DateTime value={end} format={DATE_TIME_FORMAT} />
+  },
+  {
+    title: 'Comment',
+    key: 'comment',
+    dataIndex: 'comment',
+    render: comment => <span>{comment}</span>,
+  },
+];
+
 /**
  * @function transformSectionToTableColumns
  * @description transform the various elements in a section into table columns
@@ -192,7 +215,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
           render: (value, item = {}) => (
             <SortableTableCell className={`element_${el._id}_${item.rowKey}`}>
               {renderElementValue(value, el)}
-            </SortableTableCell>  
+            </SortableTableCell>
           ),
           sorter: (a, b) => {
             return sortByElementHtml(`.element_${el._id}_${a.rowKey}`, `.element_${el._id}_${b.rowKey}`);
@@ -200,7 +223,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
 
         },
       ]
-    , []);
+  , []);
 
   switch (sectionType) {
     case SECTION_CONNECTED: {
@@ -224,9 +247,13 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ..._elementColumns
       ];
-
+    case SECTION_AVAILABILITY:
+      return [
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ...availabilityCalendarColumns,
+      ]
     default:
-      return [ ..._elementColumns ];
+      return [..._elementColumns];
   };
 };
 
@@ -298,6 +325,19 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
 };
 
 /**
+ * @function transformAvailabilityCalendarToTableRows
+ * @description transform Availability Calendar events to table rows
+ * @param {Array} values the values object to transform the data from
+ */
+const transformAvailabilityCalendarToTableRows = (values) =>
+([
+  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
+    ...item,
+    rowKey: item.eventId,
+  }))
+]);
+
+/**
  * @function transformSectionValuesToTableRows
  * @description takes section value from a section of any type, and maps the values to each respective column
  * @param {Array || Object} values the values object to transform the data from
@@ -313,11 +353,12 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
       return transformTableSectionValuesToTableRows(values, columns);
     case SECTION_CONNECTED:
       return transformConnectedSectionValuesToTableRows(values, columns);
+    case SECTION_AVAILABILITY:
+      return transformAvailabilityCalendarToTableRows(values);
     default:
       return [];
   }
 };
-
 
 export const LabelRenderer = ({ type, extId }) => {
 
