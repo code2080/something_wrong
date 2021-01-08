@@ -5,13 +5,13 @@ const jobStateSelector = state => state.jobs;
 
 export const selectJobsForForm = formId => createSelector(
   jobStateSelector,
-  jobs => jobs[formId]
+  jobs => jobs[formId] || {}
 );
 
 export const selectJobForActivities = (formId, activityIds = []) => createSelector(
   selectJobsForForm(formId),
   formJobs => {
-    const jobIds = (Object.keys(formJobs) || [])
+    const jobIds = Object.keys(formJobs)
       .filter(jobId => {
         if (!formJobs[jobId].activities || !formJobs[jobId].activities.length)
           return false;
