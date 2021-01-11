@@ -8,7 +8,7 @@ const envVarMap = {
     APP_ID: '5d08ae441dcbc63d30dd3e44',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`,
-    AE_OL_URL: `http://34.120.155.150/${apiVersion}/`,
+    AE_OL_URL: `https://activity-manager.timeedit.com/${apiVersion}/`,
     // AE_OL_URL: `http://localhost:3000/${apiVersion}/`,
   },
   staging: {
@@ -18,7 +18,7 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`,
-    AE_OL_URL: `http://34.120.138.176/${apiVersion}/`,
+    AE_OL_URL: `https://activity-manager.timeedit.io/${apiVersion}/`,
   },
   beta: {
     API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
@@ -27,7 +27,7 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views-beta.timeedit.io/${apiVersion}/`,
-    AE_OL_URL: `http://34.120.57.209/${apiVersion}/`,
+    AE_OL_URL: `https://beta-activity-manager.timeedit.io/${apiVersion}/`,
   },
   localhost: {
     API_URL: `http://localhost:3002/${apiVersion}/`,
