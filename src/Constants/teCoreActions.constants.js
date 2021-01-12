@@ -47,6 +47,9 @@ export const teCoreActions = {
     label: 'Select type',
     compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
   },
+  GET_OBJECTS_BY_EXTID: {
+    callname: teCoreCallnames.GET_OBJECTS_BY_EXTID,
+  },
   FILTER_OBJECTS: {
     callname: teCoreCallnames.FILTER_OBJECTS,
     label: 'Filter objects',
