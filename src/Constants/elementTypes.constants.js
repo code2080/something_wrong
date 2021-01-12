@@ -78,6 +78,7 @@ export const elementTypeMapping = {
     label: 'Static text',
     valueType: valueTypes.SINGLE,
     elementId: '5c3248b3e3ae55831d79a27f',
+    isStatic: true,
   },
   ELEMENT_TYPE_CALENDAR: {
     label: 'Calendar',
