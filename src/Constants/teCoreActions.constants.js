@@ -11,6 +11,7 @@ export const teCoreCallnames = {
   SELECT_OBJECT: 'selectObject',
   SELECT_TYPE: 'selectType',
   FILTER_OBJECTS: 'filterObjects',
+  GET_OBJECTS_BY_EXTID: 'getObjectsByExtid',
   GET_EXTID_PROPS: 'getExtIdProps',
   GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
   GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
