@@ -5,7 +5,7 @@ const jobStateSelector = state => state.jobs;
 
 export const selectJobsForForm = formId => createSelector(
   jobStateSelector,
-  jobs => jobs[formId]
+  jobs => jobs[formId] || []
 );
 
 export const selectJobForActivities = (formId, activityIds = []) => createSelector(
@@ -19,6 +19,7 @@ export const selectJobForActivities = (formId, activityIds = []) => createSelect
         return activities.some(a => activityIds.includes(a._id));
       }
       );
+
     return (jobIds || []).map(jobId => formJobs[jobId]);
   }
 );
