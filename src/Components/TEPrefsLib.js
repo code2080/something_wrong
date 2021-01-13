@@ -6,7 +6,7 @@ import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
 // REDUX
 import configureStore from '../Redux/store';
 import { validateLogin } from '../Redux/Auth/auth.actions';
-import { SET_ENVIRONMENT } from '../Redux/Auth/auth.actionTypes';
+import { SET_ENVIRONMENT, SET_CORE_USER } from '../Redux/Auth/auth.actionTypes';
 
 // COMPONENTS
 import TEPrefsLibRouter from './TEPrefsLibRouter';
@@ -28,6 +28,13 @@ Promise.resolve();
 const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
   const prefsRef = useRef(null);
+  
+  useEffect(() => {
+    teCoreAPI.getCurrentUser({ callback: (user) =>
+      window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { user } })
+    });
+  }, [teCoreAPI]);
+
   useEffect(() => {
     window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
 
