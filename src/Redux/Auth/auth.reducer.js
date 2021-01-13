@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
     case types.SET_CORE_USER: {
       return {
         ...state,
-        coreUser: action.payload.user,
+        coreUserId: action.payload.userId,
       }
     }
 

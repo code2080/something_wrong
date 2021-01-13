@@ -31,7 +31,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   
   useEffect(() => {
     teCoreAPI.getCurrentUser({ callback: (user) =>
-      window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { user } })
+      window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { userId: user.userId } })
     });
   }, [teCoreAPI]);
 
