@@ -6,6 +6,7 @@ export class Job {
   activities;
   type;
   organizationId;
+  userId;
   formId;
   formPeriod;
   formInstanceIds;
@@ -19,6 +20,7 @@ export class Job {
     activities = [],
     type = schedulingAlgorithms.UNKNOWN,
     organizationId,
+    userId = -1,
     formId,
     formPeriod,
     formInstanceIds = [],
@@ -31,6 +33,7 @@ export class Job {
     this.activities = activities;
     this.type = type;
     this.organizationId = organizationId;
+    this.userId = userId;
     this.formId = formId;
     this.formPeriod = formPeriod;
     this.formInstanceIds = formInstanceIds;

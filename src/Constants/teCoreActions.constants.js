@@ -13,6 +13,7 @@ export const teCoreCallnames = {
   FILTER_OBJECTS: 'filterObjects',
   GET_OBJECTS_BY_EXTID: 'getObjectsByExtid',
   GET_EXTID_PROPS: 'getExtIdProps',
+  GET_CURRENT_USER: 'getCurrentUser',
   GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
   GET_SELECTED_RESERVATION_TEMPLATE: 'getSelectedReservationTemplate', // DEPRECATED
   SELECT_RESERVATION: 'selectReservation',
@@ -50,6 +51,9 @@ export const teCoreActions = {
   },
   GET_OBJECTS_BY_EXTID: {
     callname: teCoreCallnames.GET_OBJECTS_BY_EXTID,
+  },
+  GET_CURRENT_USER: {
+    callname: teCoreCallnames.GET_CURRENT_USER,
   },
   FILTER_OBJECTS: {
     callname: teCoreCallnames.FILTER_OBJECTS,
@@ -133,6 +137,12 @@ export const teCoreActions = {
           r => ({
             activityId: r.activityId,
             result: coreReservationResult,
+            failedObject: {
+              extId: 'course_activity_examination',
+              id: 4583,
+              type: {class: 'typename', description: 'Samlingsbegrepp för olika sorters aktiviteter', extid: 'activity', id: 8, name: 'Activity'},
+              typeExtId: 'activity',
+            }, // Will be present if an invalid object combination was created - this is the object which couldn´t be added
           })))
   },
   REQUEST_HANDLE_OBJECT_REQUEST: {
