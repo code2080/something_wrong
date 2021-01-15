@@ -25,6 +25,7 @@ export const extractSubmissionColumns = form => {
     .map(elType => elementTypeMapping[elType].elementId);
 
   // Grab all safe elements and transform to columns
+  console.log(regularSections);
   return regularSections.reduce((_safeEls, section) =>
     [
       ..._safeEls,
@@ -33,7 +34,7 @@ export const extractSubmissionColumns = form => {
         .map(el => ({
           title: el.label,
           dataIndex: el._id,
-          key: el.label,
+          key: el._id,
           sectionId: section._id,
           sorter: (a, b) => a[el._id] - b[el._id],
           render: value => renderElementValue(value, el),
