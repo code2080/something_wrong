@@ -11,6 +11,7 @@ export const teCoreCallnames = {
   SELECT_OBJECT: 'selectObject',
   SELECT_TYPE: 'selectType',
   FILTER_OBJECTS: 'filterObjects',
+  GET_OBJECTS_BY_EXTID: 'getObjectsByExtid',
   GET_EXTID_PROPS: 'getExtIdProps',
   GET_CURRENT_USER: 'getCurrentUser',
   GET_RESERVATION_TEMPLATES: 'getReservationTemplates', // DEPRECATED
@@ -47,6 +48,9 @@ export const teCoreActions = {
     callname: teCoreCallnames.SELECT_TYPE,
     label: 'Select type',
     compatibleWith: [elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId]
+  },
+  GET_OBJECTS_BY_EXTID: {
+    callname: teCoreCallnames.GET_OBJECTS_BY_EXTID,
   },
   GET_CURRENT_USER: {
     callname: teCoreCallnames.GET_CURRENT_USER,
