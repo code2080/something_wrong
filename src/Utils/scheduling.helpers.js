@@ -236,17 +236,21 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
       };
     });
 
+  // filter invalidate activities
+  const failedActivities = preprocessingMap
+      .filter(a => a.result != null)
+      .map(a => ({ activityId: a.activityId, result: a.result }));
+
+  if ((failedActivities || []).length > 0) cFn(failedActivities)
+
   // Edge case: all activities have schedulingAlgorithm EXACT
   if (preprocessingMap.every(el => el.schedulingAlgorithm === schedulingAlgorithms.EXACT)) {
     // Get the ones we're able to schedule
     const toSchedule = preprocessingMap
       .filter(a => a.result == null)
       .map(a => ({ activityId: a.activityId, reservation: a.reservation }));
-    const failedActivities = preprocessingMap
-      .filter(a => a.result != null)
-      .map(a => ({ activityId: a.activityId, result: a.result }));
 
-    if (toSchedule.length === 0) return cFn(failedActivities);
+    if (toSchedule.length === 0) return;
 
     return teCoreScheduleFn({
       reservations: toSchedule,
@@ -256,7 +260,6 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
       },
       callback: teCoreResults =>
         cFn([
-          ...failedActivities,
           ...parseTECoreResultsToScheduleReturns(teCoreResults)
         ])
     });
