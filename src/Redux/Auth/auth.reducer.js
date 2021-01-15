@@ -20,6 +20,12 @@ const reducer = (state = initialState, action) => {
         env,
       };
     }
+    case types.SET_CORE_USER: {
+      return {
+        ...state,
+        coreUserId: action.payload.userId,
+      }
+    }
 
     case types.VALIDATE_LOGIN:
       if (!action || !action.payload || !action.payload.token)

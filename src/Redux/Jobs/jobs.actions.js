@@ -91,6 +91,7 @@ export const createJob = ({
     customerSignature: org.customerSignature || '',
     username: integrationSettings.username,
     password: integrationSettings.password,
+    userId: storeState.auth.coreUserId,
   });
   dispatch(asyncAction.POST({
     flow: createJobFlow,
