@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { asyncAction } from '../../Utils/actionHelpers';
+import { getEnvParams } from '../../configs';
 import {
   FETCH_ACTIVITIES_FOR_FORM_REQUEST,
   FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
@@ -44,7 +45,7 @@ const fetchActivitiesForFormFlow = {
 export const fetchActivitiesForForm = formId =>
   asyncAction.GET({
     flow: fetchActivitiesForFormFlow,
-    endpoint: `forms/${formId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity`,
     params: { formId },
   });
 
@@ -57,7 +58,7 @@ const fetchActivitiesForFormInstanceFlow = {
 export const fetchActivitiesForFormInstance = (formId, formInstanceId) =>
   asyncAction.GET({
     flow: fetchActivitiesForFormInstanceFlow,
-    endpoint: `form-instances/${formInstanceId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity`,
     params: { formInstanceId, formId },
   });
 
@@ -70,7 +71,7 @@ const saveActivitiesFlow = {
 export const saveActivities = (formId, formInstanceId, activities) =>
   asyncAction.POST({
     flow: saveActivitiesFlow,
-    endpoint: `form-instances/${formInstanceId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity?formInstanceId=${formInstanceId}`,
     params: {
       formId,
       formInstanceId,
@@ -88,7 +89,7 @@ export const overrideActivityValue = (newValue, activityValue, activity) => {
   const updatedActivity = manuallyOverrideActivityValue(newValue, activityValue, activity);
   return asyncAction.PUT({
     flow: manuallyOverrideActivityValueFlow,
-    endpoint: `form-instances/${activity.formInstanceId}/activities/${activity._id}`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
     params: {
       activity: updatedActivity,
     },
@@ -105,7 +106,7 @@ export const revertToSubmissionValue = (activityValue, activity) => {
   const updatedActivity = revertActivityValueToSubmission(activityValue, activity);
   return asyncAction.PUT({
     flow: revertToSubmissionValueFlow,
-    endpoint: `form-instances/${activity.formInstanceId}/activities/${activity._id}`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
     params: {
       activity: updatedActivity,
     },
@@ -121,7 +122,7 @@ const deleteActivitiesFlow = {
 export const deleteActivities = formId =>
   asyncAction.DELETE({
     flow: deleteActivitiesFlow,
-    endpoint: `forms/${formId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity?formId=${formId}`,
     params: { formId }
   });
 
@@ -134,7 +135,7 @@ const deleteActivitiesInFormInstanceFlow = {
 export const deleteActivitiesInFormInstance = (formId, formInstanceId) =>
   asyncAction.DELETE({
     flow: deleteActivitiesInFormInstanceFlow,
-    endpoint: `form-instances/${formInstanceId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity?formInstanceId=${formInstanceId}`,
     params: { formId, formInstanceId }
   });
 
@@ -148,7 +149,7 @@ const updateActivityFlow = {
 export const updateActivity = activity =>
   asyncAction.PUT({
     flow: updateActivityFlow,
-    endpoint: `form-instances/${activity.formInstanceId}/activities/${activity._id}`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
     params: { activity }
   });
 
@@ -161,7 +162,7 @@ const updateActivitiesFlow = {
 export const updateActivities = (formId, formInstanceId, activities) =>
   asyncAction.PUT({
     flow: updateActivitiesFlow,
-    endpoint: `form-instances/${formInstanceId}/activities`,
+    endpoint: `${getEnvParams().AE_OL_URL}activity`,
     params: {
       formId,
       formInstanceId,
