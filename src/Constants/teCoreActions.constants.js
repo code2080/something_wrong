@@ -129,7 +129,12 @@ export const teCoreActions = {
           r => ({
             activityId: r.activityId,
             result: coreReservationResult,
-            failedObject: null, // Will be present if an invalid object combination was created - this is the object which couldn´t be added
+            failedObject: {
+              extId: 'course_activity_examination',
+              id: 4583,
+              type: {class: 'typename', description: 'Samlingsbegrepp för olika sorters aktiviteter', extid: 'activity', id: 8, name: 'Activity'},
+              typeExtId: 'activity',
+            }, // Will be present if an invalid object combination was created - this is the object which couldn´t be added
           })))
   },
   REQUEST_HANDLE_OBJECT_REQUEST: {
