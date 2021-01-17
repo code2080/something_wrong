@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import { Modal, Dropdown, Menu, Button, Icon } from 'antd';
@@ -125,7 +126,7 @@ const ActivityActionsDropdown = ({
   const onDeleteActivities = responses => {
     // Check result parameter to see if everything went well or not
     responses.forEach(res => {
-      if (!res.result.details) {
+      if (!_.get(res, 'result.details')) {
         const updatedActivity = {
           ...res.activity,
           schedulingDate: null,
