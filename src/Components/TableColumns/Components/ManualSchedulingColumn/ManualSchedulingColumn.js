@@ -50,14 +50,14 @@ const mapStateToProps = (state, ownProps) => {
   const teCorePayload = {
     startTime: event.startTime || event.start || null,
     endTime: event.endTime || event.end || null,
-    typedObjects: [
+    typedObjects: _.compact([
       ...elements.reduce((prev, el) => {
         const value = event[el._id];
         const p = (value || []).map(v => getTECoreAPIPayload(v, el.datasource, formInstanceObjectRequests));
         return [...prev, ...p];
       }, []),
       ...getSelectionSettingsTECorePayload(selectionSettings, form, formInstance, event),
-    ],
+    ]),
     formType: form.formType,
     reservationMode: form.reservationMode,
   };
