@@ -7,11 +7,8 @@ import { Empty, Button, Modal } from 'antd';
 // ACTIONS
 import { deleteActivitiesInFormInstance, saveActivities } from '../../Redux/Activities/activities.actions';
 
-// SELECTORS
-import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
-
 // HELPERS
-import { validateScheduledActivities, createActivitiesFromFormInstance } from '../../Utils/activities.helpers';
+import { validateScheduledActivities } from '../../Utils/activities.helpers';
 import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // COMPONENTS
