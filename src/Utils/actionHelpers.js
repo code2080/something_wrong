@@ -98,6 +98,7 @@ function createThunkAction({
   successNotification = null,
   postAction = {},
   permission = null,
+  callback = null
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
@@ -142,6 +143,7 @@ function createThunkAction({
             message: 'Operation completed',
             description: successNotification
           });
+        if (callback) callback(response.data);
         return response.data;
       })
       .catch(error => {
@@ -292,6 +294,7 @@ export const asyncAction = {
     successNotification,
     postAction,
     permission = '',
+    callback,
   }) =>
     createThunkAction({
       method: 'POST',
@@ -303,6 +306,7 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
+      callback
     }),
   DELETE: ({
     flow,

@@ -49,7 +49,6 @@ export const createSchedulingReturns = protoReturns => {
  * @returns schedulingAlgorithm: String
  */
 const getBindingSchedulingAlgorithm = activities => {
-  console.log(activities);
   const schedA = activities.map(a => determineSchedulingAlgorithmForActivity(a));
   if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME))
     return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
