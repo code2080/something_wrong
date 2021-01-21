@@ -52,7 +52,7 @@ const applyScopedObjectFilters = (formInstance, scopedObjects, filters) => {
     const field = scopedObject.fields.find(field => field.extid === fieldExtid);
     if (!field) return false;
     const fieldQuery = filters[fieldExtid].toString().toLowerCase();
-    return field.values.some(value => value.includes(fieldQuery));
+    return field.values.some(value => value.toLowerCase().includes(fieldQuery));
   })
 };
 
