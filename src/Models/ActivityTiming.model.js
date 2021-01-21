@@ -15,11 +15,11 @@ export class ActivityTiming {
 
   constructor({
     mode,
-    startDate,
-    endDate,
-    startTime,
-    endTime,
-    length,
+    startDate = [],
+    endDate = [],
+    startTime =[],
+    endTime = [],
+    length = [],
   }) {
     this.mode = mode || mappingTimingModes.EXACT;
     this.startDate = startDate;
