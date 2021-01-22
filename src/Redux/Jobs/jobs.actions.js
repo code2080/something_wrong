@@ -78,11 +78,14 @@ export const createJob = ({
   callback = null,
   meta = {},
 }) => async (dispatch, getState) => {
+  const storeState = await getState();
+  const { auth: { coreUserId }} = storeState;
   const job = new Job({
     activities,
     type,
     formId,
     formInstanceIds,
+    userId: coreUserId,
   });
   dispatch(asyncAction.POST({
     flow: createJobFlow,
