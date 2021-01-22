@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
+// HOOKS
+import { useFetchLabelsFromExtIds, useTECoreAPI } from '../../Hooks/TECoreApiHooks';
+
 // ACTIONS
 import { fetchFormSubmissions, toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
@@ -19,7 +22,6 @@ import { selectFilter } from '../../Redux/Filters/filters.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 
 // COMPONENTS
-import { withTECoreAPI } from '../../Components/TECoreAPI';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import FormToolbar from '../../Components/FormToolbar/FormToolbar';
 import FormSubmissionFilterBar from '../../Components/FormSubmissionFilters/FormSubmissionFilterBar';
@@ -34,24 +36,23 @@ import { extractSubmissionColumns, extractSubmissionData } from '../../Utils/for
 import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
-import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { themeColors } from '../../Constants/themeColors.constants';
 import { formatElementValue } from '../../Utils/elements.helpers';
 
-const applyScopedObjectFilters = (el, objs, filters) => {
-  const { scopedObject } = el;
+const applyScopedObjectFilters = (formInstance, scopedObjects, filters) => {
+  const { scopedObject: scopedObjectExtId } = formInstance;
+  if (!scopedObjectExtId) return false;
+  const scopedObject = scopedObjects.find(obj => obj.extid === scopedObjectExtId);
   if (!scopedObject) return false;
-  const obj = objs[el.scopedObject];
-  if (!obj) return false;
-  const filterKeys = Object.keys(filters)
-    .filter(key => filters[key].length > 0);
-  return filterKeys.some(key => {
-    if (!obj[key]) return false;
-    const nC = obj[key].toString().toLowerCase();
-    const nVal = filters[key].toString().toLowerCase();
-    return nC.indexOf(nVal) > -1;
+
+  const filterFieldExtids = Object.keys(filters).filter(fieldExtid => filters[fieldExtid].length > 0);
+  return filterFieldExtids.some(fieldExtid => {
+    const field = scopedObject.fields.find(field => field.extid === fieldExtid);
+    if (!field) return false;
+    const fieldQuery = filters[fieldExtid].toString().toLowerCase();
+    return field.values.some(value => value.toLowerCase().includes(fieldQuery));
   })
 };
 
@@ -65,9 +66,6 @@ const mapStateToProps = (state, ownProps) => {
   const form = state.forms[formId];
   const submissions = selectSubmissions(state, formId);
   const scopedObjectIds = form.objectScope ? _.uniq(submissions.map(el => el.scopedObject)) : [];
-  const scopedObjects = form.objectScope && state.integration.objects[form.objectScope]
-    ? _.keyBy(scopedObjectIds.map(id => state.integration.objects[form.objectScope][id]), 'te_extid')
-    : {};
 
   return {
     userId: _.get(state, 'auth.user.id', null),
@@ -77,7 +75,7 @@ const mapStateToProps = (state, ownProps) => {
     formId,
     form,
     submissions,
-    scopedObjects,
+    scopedObjectIds,
   };
 };
 
@@ -107,23 +105,42 @@ const FormPage = ({
   formId,
   filters,
   form,
-  teCoreAPI,
   submissions,
-  scopedObjects,
+  scopedObjectIds,
   isLoadingSubmissions,
   isSaving,
   fetchFormSubmissions,
   fetchActivitiesForForm,
   setBreadcrumbs,
   fetchMappings,
-  fetchDataForDataSource,
   toggleFormInstanceStarringStatus,
   loadFilter,
   history,
 }) => {
+  const teCoreAPI = useTECoreAPI();
+  
   // Show scoped object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [scopedObjects, setScopedObjects] = useState([]);
   const [showFormInfo, setShowFormInfo] = useState(false);
+  
+  const onFetchedScopedObjects = result => {
+    setScopedObjects(
+      result.map(
+        obj => ({
+          extid: obj.extid,
+          fields: obj.fields.map(field => ({ extid: field.extid, values: field.values }))
+        })
+      )
+    )
+  }
+
+  useEffect(() => {
+    scopedObjectIds && scopedObjectIds.length > 0 && teCoreAPI[teCoreCallnames.GET_OBJECTS_BY_EXTID]({
+      extids: scopedObjectIds,
+      callback: onFetchedScopedObjects
+    })
+  }, [scopedObjectIds]);
 
   useEffect(() => {
     fetchFormSubmissions(formId);
@@ -137,11 +154,6 @@ const FormPage = ({
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
     form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({res}) => {} });
   }, [formId]);
-
-  // Fetch scoped objects
-  useEffect(() => {
-    form.objectScope && fetchDataForDataSource(form.objectScope);
-  }, [form.objectScope]);
 
   const payload = useMemo(() => {
     const sections = form.sections;
@@ -292,10 +304,8 @@ FormPage.propTypes = {
   fetchActivitiesForForm: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchMappings: PropTypes.func.isRequired,
-  fetchDataForDataSource: PropTypes.func.isRequired,
   loadFilter: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
 };
 
 FormPage.defaultProps = {
@@ -305,4 +315,4 @@ FormPage.defaultProps = {
   scopedObjects: {},
 };
 
-export default withRouter(withTECoreAPI(connect(mapStateToProps, mapActionsToProps)(FormPage)));
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(FormPage));

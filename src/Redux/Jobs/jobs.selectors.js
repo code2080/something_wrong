@@ -11,7 +11,7 @@ export const selectJobsForForm = formId => createSelector(
 export const selectJobForActivities = (formId, activityIds = []) => createSelector(
   selectJobsForForm(formId),
   formJobs => {
-    const jobIds = (Object.keys(formJobs) || [])
+    const jobIds = Object.keys(formJobs)
       .filter(jobId => {
         if (!formJobs[jobId].activities || !formJobs[jobId].activities.length)
           return false;
