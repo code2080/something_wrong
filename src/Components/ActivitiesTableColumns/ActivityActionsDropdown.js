@@ -197,7 +197,7 @@ const ActivityActionsDropdown = ({
         case 'STOP_SCHEDULING':
           jobs.forEach(job => {
             abortJob({
-              jobId: job.id,
+              jobId: job._id,
               formId,
               formInstanceId,
               activities: [activity],

@@ -19,7 +19,7 @@ const JobToolbar = () => {
     if (activeJobs && activeJobs.length && activeJobs[0]) {
       const job = activeJobs[0];
       dispatch(abortJob({
-        jobId: job.id,
+        jobId: job._id,
         formId,
         formInstanceId,
         activities: job.activities,
