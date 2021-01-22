@@ -14,7 +14,7 @@ const reducer = (state = initialState, action) => {
           ...tot,
           [curr.formId]: {
             ..._.get(tot, `${curr.formId}`, {}),
-            [curr.id]: curr,
+            [curr._id]: curr,
           }
         }), {});
     }
@@ -31,8 +31,8 @@ const reducer = (state = initialState, action) => {
         return {
           ...state,
           [job.formId]: {
-            ...(formJobs || {}),
-            [job.id]: job,
+            ...formJobs,
+            [job._id]: job,
           },
         };
       } catch (error) {
@@ -49,7 +49,7 @@ const reducer = (state = initialState, action) => {
           ...state,
           [job.formId]: {
             ...state[job.formId],
-            [job.id]: job,
+            [job._id]: job,
           },
         };
       } catch (error) {

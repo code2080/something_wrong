@@ -2,7 +2,7 @@ import { jobStatus } from '../Constants/jobStatuses.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 
 export class Job {
-  id;
+  _id;
   activities;
   type;
   organizationId;
@@ -16,7 +16,7 @@ export class Job {
   status;
 
   constructor({
-    id,
+    _id,
     activities = [],
     type = schedulingAlgorithms.UNKNOWN,
     organizationId,
@@ -29,7 +29,7 @@ export class Job {
     password,
     status = jobStatus.NOT_STARTED,
   }) {
-    this.id = id;
+    this._id = _id;
     this.activities = activities;
     this.type = type;
     this.organizationId = organizationId;

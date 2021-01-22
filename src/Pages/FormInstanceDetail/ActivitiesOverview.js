@@ -86,7 +86,7 @@ const FormInstanceReservationOverview = ({
           if (jobs && jobs.length) {
             jobs.forEach(job => {
               dispatch(abortJob({
-                jobId: job.id,
+                jobId: job._id,
                 formId: formInstance.formId,
                 formInstanceId: formInstance._id,
                 activities: job.activities,
