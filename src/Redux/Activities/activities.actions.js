@@ -68,15 +68,15 @@ const saveActivitiesFlow = {
   failure: err => ({ type: SAVE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE, payload: { ...err } }),
 };
 
-export const saveActivities = (formId, formInstanceId, activities) =>
+export const saveActivities = (formId, formInstanceId, callback) =>
   asyncAction.POST({
     flow: saveActivitiesFlow,
     endpoint: `${getEnvParams().AE_OL_URL}activity?formInstanceId=${formInstanceId}`,
     params: {
       formId,
       formInstanceId,
-      activities,
     },
+    callback,
   });
 
 const manuallyOverrideActivityValueFlow = {
