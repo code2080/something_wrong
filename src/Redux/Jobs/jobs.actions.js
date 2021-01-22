@@ -79,7 +79,7 @@ export const createJob = ({
   meta = {},
 }) => async (dispatch, getState) => {
   const storeState = await getState();
-  const { auth: { org, integrationSettings } } = storeState;
+  const { auth: { org, integrationSettings, coreUserId } } = storeState;
   const { formPeriod } = storeState.forms[formId];
   const job = new Job({
     activities,
@@ -91,7 +91,7 @@ export const createJob = ({
     customerSignature: org.customerSignature || '',
     username: integrationSettings.username,
     password: integrationSettings.password,
-    userId: storeState.auth.coreUserId,
+    userId: coreUserId,
   });
   dispatch(asyncAction.POST({
     flow: createJobFlow,
