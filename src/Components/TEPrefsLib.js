@@ -43,7 +43,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   }, []);
 
   useEffect(() => {
-    const { x, y, height} = prefsRef.current && prefsRef.current.getBoundingClientRect();
+    const { x, y, height } = prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
     window.tePrefsHeight = height;
   }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
