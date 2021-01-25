@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import _ from 'lodash';
 
 // REDUCERS
 import { apiStatus } from './APIStatus/apiStatus.reducer';
@@ -39,7 +40,14 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   // Clear all data in redux store to initial.
-  if (action.type === LOGOUT) state = undefined;
+  if (action.type === LOGOUT) {
+    const tmpEnv = _.get(state, 'auth.env');
+    state = Object.assign({
+      auth: {
+        env: tmpEnv
+      }
+    });
+  }
   return appReducer(state, action);
 };
 
