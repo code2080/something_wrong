@@ -17,7 +17,9 @@ import integration from './Integration/integration.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import elements from './Elements/elements.reducer';
 
-const rootReducer = combineReducers({
+import { LOGOUT } from './Auth/auth.actionTypes';
+
+const appReducer = combineReducers({
   apiStatus,
   globalUI,
   auth,
@@ -34,5 +36,11 @@ const rootReducer = combineReducers({
   objectRequests,
   elements,
 });
+
+const rootReducer = (state, action) => {
+  // Clear all data in redux store to initial.
+  if (action.type === LOGOUT) state = undefined;
+  return appReducer(state, action);
+};
 
 export default rootReducer;
