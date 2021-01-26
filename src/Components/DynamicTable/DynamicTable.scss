@@ -37,3 +37,13 @@
     }
   }
 }
+
+.table__wrapper {
+  position: relative;
+  .dynamic-table__columns-setting-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background-color: #fafafa;
+  }
+}
