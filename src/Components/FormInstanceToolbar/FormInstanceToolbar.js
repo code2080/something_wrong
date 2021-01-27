@@ -40,7 +40,7 @@ const FormInstanceToolbar = ({
         <span className="value">{`${formInstance.firstName} ${formInstance.lastName}`}</span>
       </div>
       <div className="toolbar--section-flex">
-        <span className="label">Scoped object:</span>
+        <span className="label">Primary object:</span>
         <ScopedObject objectExtId={formInstance.scopedObject} />
       </div>
       <div className="toolbar--section-flex">
