@@ -56,7 +56,7 @@ const formToFieldInfo = form => {
     formatValueFn: value => <b><DateTime value={[value.startDate, value.endDate]} /></b>,
   }, {
     key: 'objectScope',
-    label: 'Object scope',
+    label: 'Primary object',
     formatValueFn: value => <ObjectScopeCol objectScope={value} />,
   }, {
     key: 'reservationMode',
