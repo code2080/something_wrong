@@ -29,7 +29,7 @@ export class Job {
     username,
     password,
     status = jobStatus.NOT_STARTED,
-    score = {}
+    score = { initial: null, current: null }
   }) {
     this._id = _id;
     this.activities = activities;
