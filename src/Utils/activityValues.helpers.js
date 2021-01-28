@@ -241,7 +241,7 @@ const getEventValue = (prop, formInstance, sectionId, eventId) => formInstance.v
 
 /**
  * @function getScopedObjectValue
- * @description gets the extId of the scoped object for a form instance
+ * @description gets the extId of the primary object for a form instance
  * @param {Object} formInstance the form instance to fetch the value from
  * @returns {String} scopedObjectExtId
  */
@@ -267,10 +267,10 @@ const createTimingModeActivityValue = selectedTimingMode => new ActivityValue({
 
 /**
  * @function createActivityValueForScopedObjectProp
- * @description special case helper for creating the activity value for when the value should be that of the form instance's scoped object
+ * @description special case helper for creating the activity value for when the value should be that of the form instance's primary object
  * @param {Object} formInstance the form instance
  * @param {String} valueType the value type of the activity value
- * @param {String} extId the ext id of the prop that's mapped to the scoped object
+ * @param {String} extId the ext id of the prop that's mapped to the primary object
  */
 const createScopedObjectActivityValue = (formInstance, valueType, extId) => new ActivityValue({
   type: valueType,
@@ -290,7 +290,7 @@ const createScopedObjectActivityValue = (formInstance, valueType, extId) => new 
  * @description special case helper for creating the activity value for when it's mapped to one of the special props on a connected section
  * @param {Object} formInstance the form instance
  * @param {String} valueType the value type of the activity value
- * @param {String} extId the ext id of the prop that's mapped to the scoped object
+ * @param {String} extId the ext id of the prop that's mapped to the primary object
  * @param {String} sectionId the section id
  * @param {String} eventId the event id
  * @param {elementId} the element id
@@ -341,7 +341,7 @@ const extractActivityValue = (
    *    endTime
    * This means there are four cases we need to check for
    * 1) If we're extracting the value for the TIMING.mode parameter
-   * 2) If we're extracting the value of the form instance's scoped object
+   * 2) If we're extracting the value of the form instance's primary object
    * 3) If we're extracting the value of one of the special properties of a connected section's event model
    * 4) The general case; elementPath[0] === sectionId, elementPath[1] === elementId
   */

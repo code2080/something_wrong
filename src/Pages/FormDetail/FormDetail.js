@@ -119,7 +119,7 @@ const FormPage = ({
 }) => {
   const teCoreAPI = useTECoreAPI();
 
-  // Show scoped object filters
+  // Show primary object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [scopedObjects, setScopedObjects] = useState([]);
   const [showFormInfo, setShowFormInfo] = useState(false);

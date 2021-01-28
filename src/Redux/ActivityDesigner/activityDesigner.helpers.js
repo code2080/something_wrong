@@ -131,7 +131,7 @@ export const getElementsForMapping = (formSections, mapping) => {
   return [
     {
       value: 'scopedObject',
-      label: 'Scoped object',
+      label: 'Primary object',
     },
     ...formSections.map(section => {
       const sectionType = determineSectionType(section);

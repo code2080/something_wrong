@@ -30,7 +30,7 @@ export const formSubmission = {
     sorter: (a, b) => sortTime(a.submittedAt, b.submittedAt)
   },
   SCOPED_OBJECT: {
-    title: 'Scoped object',
+    title: 'Primary object',
     key: 'scopedObject',
     dataIndex: 'scopedObject',
     render: val => <ScopedObject objectExtId={val} />,

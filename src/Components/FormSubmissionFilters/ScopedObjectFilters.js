@@ -66,7 +66,7 @@ const ScopedObjectFilters = ({
   return (
     <div className="scoped-object-filters--wrapper">
       <div className="scoped-object-filters--header">
-        {`Filter scoped object ${label ? `(${label})` : ''}`}
+        {`Filter primary object ${label ? `(${label})` : ''}`}
       </div>
       <div className="scoped-object-filters--body">
         {(fields || []).map(field => (

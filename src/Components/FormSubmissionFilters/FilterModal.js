@@ -96,7 +96,7 @@ const FilterModal = ({
         </Form.Item>
       </div>
       <div className="filter-modal--pane">
-        <div className="filter-modal__pane--title">{`Scoped object filters ${objectScopeLabel ? `(${objectScopeLabel})` : ''}`}</div>
+        <div className="filter-modal__pane--title">{`Primary object filters ${objectScopeLabel ? `(${objectScopeLabel})` : ''}`}</div>
         {(fields || []).map(field => (
           <Form.Item label={field.fieldLabel} key={field.fieldExtId}>
             <Input
