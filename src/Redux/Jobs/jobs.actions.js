@@ -79,7 +79,8 @@ export const createJob = ({
   meta = {},
 }) => async (dispatch, getState) => {
   const storeState = await getState();
-  const { auth: { coreUserId }} = storeState;
+  const { auth: { org, integrationSettings, coreUserId } } = storeState;
+  const { formPeriod } = storeState.forms[formId];
   const job = new Job({
     activities,
     type,

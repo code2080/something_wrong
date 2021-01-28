@@ -1,19 +1,35 @@
+import React, { useEffect } from 'react';
 import { Button } from 'antd';
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { abortJob } from '../../Redux/Jobs/jobs.actions';
 
+// ACTIONS
+import { abortJob, fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
+
+// SELECTORS
 import { selectActiveJobsForFormInstance } from '../../Redux/Jobs/jobs.selectors';
 
 // STYLES
 import './JobToolbar.scss';
+import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activities.actions';
 
 const JobToolbar = () => {
   const dispatch = useDispatch();
+  const pollInterval = 10000;
 
   const { formId, formInstanceId } = useParams();
   const activeJobs = useSelector(selectActiveJobsForFormInstance(formId, formInstanceId));
+
+  const pollJobs = () => {
+    dispatch(fetchAllJobs());
+    dispatch(fetchActivitiesForFormInstance(formId, formInstanceId));
+    setTimeout(pollJobs, pollInterval)
+  }
+
+  useEffect(() => {
+    pollJobs();
+  }, []);
+
 
   const stopJob = () => {
     if (activeJobs && activeJobs.length && activeJobs[0]) {
