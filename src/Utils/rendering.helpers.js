@@ -19,6 +19,7 @@ import OptionSelection from '../Components/Elements/OptionSelection';
 import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
+import Padding from '../Components/Elements/Padding';
 import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
 
 // CONSTANTS
@@ -166,6 +167,14 @@ export const renderElementValue = (value, element) => {
           {unformattedValue(value.toString())}
         </div>
       );
+    case elementTypes.ELEMENT_TYPE_DAY_PICKER:
+      return moment(value).format('ddd');
+
+    case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
+      return moment(value).format('[Week] w / gggg');
+
+    case elementTypes.ELEMENT_TYPE_PADDING:
+      return <Padding value={value} />
 
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:

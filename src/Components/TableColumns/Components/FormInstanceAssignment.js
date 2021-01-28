@@ -67,13 +67,13 @@ AssignedAvatar.propTypes = {
 };
 
 const AssignedAvatars = ({ assignees, selfUID, show }) => (
-    assignees.length
-      ? <React.Fragment>
-        {_.take(assignees, show).map(assignee => <AssignedAvatar user={assignee} isSelf={assignee._id === selfUID} key={assignee._id} />)}
-        {assignees.length > show && <AddlUsers n={assignees.length - show } />}
-      </React.Fragment>
-      : <EmptyAssignment />
-  );
+  assignees.length
+    ? <React.Fragment>
+      {_.take(assignees, show).map(assignee => <AssignedAvatar user={assignee} isSelf={assignee._id === selfUID} key={assignee._id} />)}
+      {assignees.length > show && <AddlUsers n={assignees.length - show} />}
+    </React.Fragment>
+    : <EmptyAssignment />
+);
 
 AssignedAvatars.propTypes = {
   assignees: PropTypes.array,
@@ -87,7 +87,7 @@ AssignedAvatars.defaultProps = {
   show: 3
 };
 
-const AssignmentPopoverTitle= ({ onAssignSelf, isSelf }) => (
+const AssignmentPopoverTitle = ({ onAssignSelf, isSelf }) => (
   <div className="assignment__popover--header">
     <span className="assignment__popover__header--title">Assign submission</span>
     {!isSelf && <Button
@@ -129,13 +129,13 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
     const sortedAssignees = _.sortBy(assignedTo
       .filter(uid => _.find(_users, u => u._id === uid))
       .map(uid => _.find(_users, u => u._id === uid)),
-      ['firstName', 'lastName']);
+    ['firstName', 'lastName']);
 
     return withKeyMovedToHead(
       sortedAssignees,
       selfUID, user => user._id)
   },
-    [_users, assignedTo]
+  [_users, assignedTo]
   );
 
   const filteredUsers = useMemo(() => {
@@ -144,7 +144,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
       .filter(u => !assignedTo.includes(u._id))
       .filter(u => !normalizedQuery || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.includes(normalizedQuery))
   },
-    [_users, assignedTo, filterQuery]
+  [_users, assignedTo, filterQuery]
   );
 
   const userLists = [{ users: assignees, isAssigned: true }, { users: filteredUsers, isAssigned: false }];
@@ -182,7 +182,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
       placement="rightTop"
     >
       <div className="assignment--wrapper">
-        <AssignedAvatars assignees={assignees} selfUID={selfUID}/>
+        <AssignedAvatars assignees={assignees} selfUID={selfUID} />
       </div>
     </Popover>
   );
@@ -192,6 +192,7 @@ FormInstanceAssignment.propTypes = {
   selfUID: PropTypes.string.isRequired,
   assignedTo: PropTypes.array,
   formInstanceId: PropTypes.string.isRequired,
+  toggleUserForFormInstance: PropTypes.func.isRequired,
 };
 
 FormInstanceAssignment.defaultProps = {

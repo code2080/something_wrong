@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
 
 const selectAuthUserPermissions = state => state.auth.user.permissions;
 
