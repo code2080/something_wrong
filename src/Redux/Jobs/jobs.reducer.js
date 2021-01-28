@@ -10,13 +10,13 @@ const reducer = (state = initialState, action) => {
     case types.FETCH_ALL_JOBS_SUCCESS: {
       const { results = [] } = action.payload;
       return results.reduce(
-        (tot, curr) => ({
-          ...tot,
+        (state, curr) => ({
+          ...state,
           [curr.formId]: {
-            ..._.get(tot, `${curr.formId}`, {}),
-            [curr._id]: curr,
+            ..._.get(state, `${curr.formId}`, {}),
+            [curr._id]: new Job(curr),
           }
-        }), {});
+        }), state);
     }
 
     case types.CREATE_JOB_FAILURE: {
