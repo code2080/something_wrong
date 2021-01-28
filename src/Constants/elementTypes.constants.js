@@ -20,6 +20,9 @@ export const elementTypes = {
   ELEMENT_TYPE_INPUT_DATASOURCE: 'ELEMENT_TYPE_INPUT_DATASOURCE',
   ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE: 'ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE',
   ELEMENT_TYPE_DURATION: 'ELEMENT_TYPE_DURATION',
+  ELEMENT_TYPE_DAY_PICKER: 'ELEMENT_TYPE_DAY_PICKER',
+  ELEMENT_TYPE_WEEK_PICKER: 'ELEMENT_TYPE_WEEK_PICKER',
+  ELEMENT_TYPE_PADDING: 'ELEMENT_TYPE_PADDING',
 };
 
 // TYPE DEFINITIONS
@@ -114,5 +117,20 @@ export const elementTypeMapping = {
     label: 'Duration',
     valueType: valueTypes.SINGLE,
     elementId: '5ef38b9915047a5cc681a7fa',
-  }
+  },
+  ELEMENT_TYPE_DAY_PICKER: {
+    label: 'Day picker',
+    valueType: valueTypes.SINGLE,
+    elementId: '5ff04b6301a271136b76b60b',
+  },
+  ELEMENT_TYPE_WEEK_PICKER: {
+    label: 'Week picker',
+    valueType: valueTypes.SINGLE,
+    elementId: '5ff286d801a271136b76b60c',
+  },
+  ELEMENT_TYPE_PADDING: {
+    label: 'Padding',
+    valueType: valueTypes.SINGLE,
+    elementId: '5ff3fdb82251fc05196c59d2',
+  },
 };

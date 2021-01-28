@@ -1,0 +1,13 @@
+.element--padding {
+  display: flex;
+  align-items: flex-start;
+  & > div {
+    font-size: 12px;
+    display: flex;
+    flex-flow: column;
+    margin-left: 12px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

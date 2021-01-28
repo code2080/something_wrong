@@ -118,12 +118,12 @@ const FormPage = ({
   history,
 }) => {
   const teCoreAPI = useTECoreAPI();
-  
+
   // Show scoped object filters
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [scopedObjects, setScopedObjects] = useState([]);
   const [showFormInfo, setShowFormInfo] = useState(false);
-  
+
   const onFetchedScopedObjects = result => {
     setScopedObjects(
       result.map(
@@ -298,7 +298,6 @@ FormPage.propTypes = {
   form: PropTypes.object,
   filters: PropTypes.object,
   submissions: PropTypes.array,
-  scopedObjects: PropTypes.object,
   isLoadingSubmissions: PropTypes.bool,
   fetchFormSubmissions: PropTypes.func.isRequired,
   fetchActivitiesForForm: PropTypes.func.isRequired,
@@ -306,13 +305,17 @@ FormPage.propTypes = {
   fetchMappings: PropTypes.func.isRequired,
   loadFilter: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  toggleFormInstanceStarringStatus: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool,
+  scopedObjectIds: PropTypes.array,
 };
 
 FormPage.defaultProps = {
   form: {},
   submissions: [],
   isLoadingSubmissions: false,
-  scopedObjects: {},
+  isSaving: false,
+  scopedObjectIds: [],
 };
 
 export default withRouter(connect(mapStateToProps, mapActionsToProps)(FormPage));
