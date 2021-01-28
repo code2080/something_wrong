@@ -15,7 +15,7 @@ import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activitie
 
 const JobToolbar = () => {
   const dispatch = useDispatch();
-  const pollInterval = 10000;
+  const pollInterval = 1000;
 
   const { formId, formInstanceId } = useParams();
   const activeJobs = useSelector(selectActiveJobsForFormInstance(formId, formInstanceId));
