@@ -34,6 +34,7 @@ import DateTime from '../Components/Common/DateTime';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import { sortByElementHtml } from './sorting.helpers';
+import { getLocalDate } from './moment.helpers';
 
 const unformattedValue = value => (
   <div
@@ -126,7 +127,7 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_INPUT_TIME:
       return <TimePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE:
-      return <DatePicker value={value} />;
+      return <DatePicker value={getLocalDate(value)} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE:
       return <DateRangePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_RADIO_GROUP:
@@ -168,10 +169,11 @@ export const renderElementValue = (value, element) => {
         </div>
       );
     case elementTypes.ELEMENT_TYPE_DAY_PICKER:
-      return moment(value).format('ddd');
+      return moment(value, 'ddd').format('dddd');
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
-      return moment(value).format('[Week] w / gggg');
+      if (!value || !value.startTime) return null;
+      return getLocalDate(value).format('[Week] w / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} />
