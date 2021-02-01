@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button } from 'antd';
+import { Button, Progress, Tooltip } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -7,9 +7,6 @@ import _ from 'lodash';
 // ACTIONS
 import { abortJob, fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
 import { fetchActivitiesForFormInstance } from '../../Redux/Activities/activities.actions';
-
-// COMPONENTS
-import { Progress, Tooltip } from 'antd';
 
 // SELECTORS
 import { selectActiveJobsForFormInstance } from '../../Redux/Jobs/jobs.selectors';
@@ -29,10 +26,10 @@ const JobToolbar = () => {
   const initHard = initial && initial.hard;
   const currSoft = current && current.soft;
   const initSoft = initial && initial.soft;
-  const percentageDone = _.get(currentJob, "status") === 'STARTED'
+  const percentageDone = _.get(currentJob, 'status') === 'STARTED'
     ? Math.round(Math.abs((initHard - currHard + initSoft - currSoft) / (initHard + initSoft)) * 100)
     : 0;
-  const statusText = _.get(currentJob, "status") === 'STARTED'
+  const statusText = _.get(currentJob, 'status') === 'STARTED'
     ? `${Math.abs(currHard)} hard/${Math.abs(currSoft)} soft left of initially ${Math.abs(initHard)} hard/${Math.abs(initSoft)} soft`
     : `Job not started yet`;
   const pollJobs = () => {
@@ -44,7 +41,6 @@ const JobToolbar = () => {
   useEffect(() => {
     pollJobs();
   }, []);
-
 
   const stopJob = () => {
     if (currentJob) {
@@ -67,7 +63,7 @@ const JobToolbar = () => {
             size="small"
             onClick={stopJob}
           >
-            Stop
+          Stop
           </Button>
           <Tooltip
             title={statusText}
@@ -79,9 +75,9 @@ const JobToolbar = () => {
             />
           </Tooltip>
           {
-            // <div className="meter">
-            //   <span />
-            // </div>
+          // <div className="meter">
+          //   <span />
+          // </div>
           }
         </div>
       )}

@@ -8,7 +8,7 @@ import { getTimingModeForActivity } from './activities.helpers';
 
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-import { SchedulingError } from '../Models/SchedulingError.model';
+import { SchedulingError } from '../shared/src/models';
 
 // CONSTANTS
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
@@ -136,7 +136,7 @@ const parseTECoreResultsToScheduleReturns = teCoreReturns =>
   });
 
 export const validateActivity = activity => {
-  if(_.isEmpty(activity.values)) return false;
+  if (_.isEmpty(activity.values)) return false;
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map(activityValue => validateValue(activityValue))
@@ -237,8 +237,8 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
 
   // filter invalidate activities
   const failedActivities = preprocessingMap
-      .filter(a => a.result != null)
-      .map(a => ({ activityId: a.activityId, result: a.result }));
+    .filter(a => a.result != null)
+    .map(a => ({ activityId: a.activityId, result: a.result }));
 
   if ((failedActivities || []).length > 0) cFn(failedActivities)
 

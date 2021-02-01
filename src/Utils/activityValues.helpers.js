@@ -2,10 +2,10 @@
 import { getSectionFromId, getElementFromSection, getSectionTypeFromId } from './sections.helpers';
 
 // MODELS
-import { ActivityValue } from '../Models/ActivityValue.model';
+import { ActivityValue } from '../shared/src/models';
 
 // CONSTANTS
-import { activityValueTypeProps, activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { activityValueTypes } from '../Constants/activityValueTypes.constants';
 import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
 import {
   SECTION_TABLE,
@@ -71,7 +71,7 @@ const transformNumberSearchToFilter = (datasource, rawValue) => {
 
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
-    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []), 
+    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []),
     searchString: null,
     searchFields: null,
   };
@@ -167,8 +167,8 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
   if (!section) return null;
   const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
     const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
-    if(objReq) {
-      return  [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
+    if (objReq) {
+      return [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
     }
     return [...values, val]
   }, []);
@@ -319,14 +319,14 @@ const createActivityValueForConnectedSectionSpecialProp = (
   });
 };
 
-const extractActivityValue = (
+export const extractActivityValue = (
   elementValue,
   extId,
   valueType,
   formInstance,
   sections,
   eventId,
-  rowIdx, 
+  rowIdx,
   formInstanceObjReqs = []
 ) => {
   /**
@@ -388,7 +388,7 @@ const extractActivityValue = (
       break;
   }
 
-  return (props || valueType != 'object') ? new ActivityValue({
+  return (props || valueType !== 'object') ? new ActivityValue({
     type: valueType,
     extId,
     ...props,
