@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
+import { sortByElementHtml } from './sorting.helpers';
 
 // HOOKS
 import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
@@ -21,6 +22,8 @@ import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import Padding from '../Components/Elements/Padding';
 import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
+import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
+import DateTime from '../Components/Common/DateTime';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -28,12 +31,10 @@ import {
   SECTION_VERTICAL,
   SECTION_TABLE,
   SECTION_CONNECTED,
-  SECTION_AVAILABILITY 
+  SECTION_AVAILABILITY
 } from '../Constants/sectionTypes.constants';
-import DateTime from '../Components/Common/DateTime';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
-import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
-import { sortByElementHtml } from './sorting.helpers';
+import { WEEKDAYNAMES } from '../Constants/elementTypes.constants';
 
 const unformattedValue = value => (
   <div
@@ -167,11 +168,12 @@ export const renderElementValue = (value, element) => {
           {unformattedValue(value.toString())}
         </div>
       );
-    case elementTypes.ELEMENT_TYPE_DAY_PICKER:
-      return moment(value).format('ddd');
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
       return moment(value).format('[Week] w / gggg');
+
+    case elementTypes.ELEMENT_TYPE_DAY_PICKER:
+      return WEEKDAYNAMES[value] || 'N/A';
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} />
@@ -232,7 +234,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
 
         },
       ]
-  , []);
+    , []);
 
   switch (sectionType) {
     case SECTION_CONNECTED: {
@@ -280,7 +282,7 @@ const transformVerticalSectionValuesToTableRows = (values, columns, sectionId) =
     if (elementIdx === -1) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
-  return [ { ..._data, rowKey: sectionId } ];
+  return [{ ..._data, rowKey: sectionId }];
 };
 
 /**
