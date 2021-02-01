@@ -21,9 +21,9 @@ const selectIntegration = state => state.integration;
 
 export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
   /**
-   * No value is a no-op
+   * No value or datasource is a no-op
    */
-  if (!value) return null;
+  if (!value || !datasource) return null;
   /**
    * Datasource is stored as a string
    */
@@ -54,9 +54,10 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
       ...(_value || []).map(v => {
         const objReq = objectRequests.find(req => req._id === v);
         return {
-        valueType: datasourceValueTypes.OBJECT_EXTID,
-        extId:  objReq ? objReq.replacementObjectExtId : v
-      }}),
+          valueType: datasourceValueTypes.OBJECT_EXTID,
+          extId: objReq ? objReq.replacementObjectExtId : v
+        }
+      }),
     ];
   }
   /**
@@ -142,7 +143,7 @@ const extractPayloadFromActivities = activities => {
         extId
       ]
     }
-    return type === 'types' 
+    return type === 'types'
       ? {
         ...newPayloadWithExtId,
         objects: [
@@ -154,41 +155,41 @@ const extractPayloadFromActivities = activities => {
   }, initialState);
 };
 
-const extractPayloadFromObjectRequests = requests => requests.reduce((payload, req) => ({ 
+const extractPayloadFromObjectRequests = requests => requests.reduce((payload, req) => ({
   ...payload, objects: [
-    ...payload.objects, 
-    req.objectExtId, 
+    ...payload.objects,
+    req.objectExtId,
     req.replacementObjectExtId,
-  ].filter(_.identity) 
+  ].filter(_.identity)
 }), { objects: [] });
 
-  const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => {
-    const payloadWithCorrectFields = { ...initialState, ...payload }
-    return {
-      ...combinedPayload,
-      fields: _.uniq([
-        ...combinedPayload.fields,
-        ...payloadWithCorrectFields.fields
-      ]),
-      objects: _.uniq([
-        ...combinedPayload.objects,
-        ...payloadWithCorrectFields.objects
-      ]),
-      types: _.uniq([
-        ...combinedPayload.types,
-        ...payloadWithCorrectFields.types
-      ]),
-    }
-  }, initialState)
+const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => {
+  const payloadWithCorrectFields = { ...initialState, ...payload }
+  return {
+    ...combinedPayload,
+    fields: _.uniq([
+      ...combinedPayload.fields,
+      ...payloadWithCorrectFields.fields
+    ]),
+    objects: _.uniq([
+      ...combinedPayload.objects,
+      ...payloadWithCorrectFields.objects
+    ]),
+    types: _.uniq([
+      ...combinedPayload.types,
+      ...payloadWithCorrectFields.types
+    ]),
+  }
+}, initialState)
 
-  export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectRequests = [], objectScope = null }) => {
-    const elements = getAllElementsFromSections(sections, submissionValues);
-    const submissionPayload = extractPayloadFromElements(elements);
-    const activitiesPayload = extractPayloadFromActivities(activities);
-    const objectScopePayload = objectScope ? { types: [objectScope] } : {};
-    const objectRequestsPayload = extractPayloadFromObjectRequests(objectRequests);
-    return mergePayloads([submissionPayload, activitiesPayload, objectScopePayload, objectRequestsPayload]);
-  };
+export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectRequests = [], objectScope = null }) => {
+  const elements = getAllElementsFromSections(sections, submissionValues);
+  const submissionPayload = extractPayloadFromElements(elements);
+  const activitiesPayload = extractPayloadFromActivities(activities);
+  const objectScopePayload = objectScope ? { types: [objectScope] } : {};
+  const objectRequestsPayload = extractPayloadFromObjectRequests(objectRequests);
+  return mergePayloads([submissionPayload, activitiesPayload, objectScopePayload, objectRequestsPayload]);
+};
 
 
 const getPayloadForSection = (element, section, values, state) => {
@@ -255,10 +256,10 @@ export const getLabelsForDatasource = (payload, state) => payload
   );
 
 
-  export const selectLabelField = type => 
-  createSelector(selectIntegration, 
+export const selectLabelField = type =>
+  createSelector(selectIntegration,
     integration => {
-      if(!(type && integration.mappedObjectTypes[type])) return null;
+      if (!(type && integration.mappedObjectTypes[type])) return null;
       const mappedObjectType = integration.mappedObjectTypes[type];
       const { fields } = mappedObjectType;
       const labelField = fields && fields.find(field => field.appProperty === 'LABEL');

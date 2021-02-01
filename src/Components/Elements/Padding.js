@@ -33,11 +33,11 @@ const PaddingElement = ({ value }) => {
   return (
     <div className="element--padding">
       <div>
-        <span>Start padding:</span>
+        <span>Padding before:</span>
         <PaddingDisplay value={value.before} />
       </div>
       <div>
-        <span>Start padding:</span>
+        <span>Padding after:</span>
         <PaddingDisplay value={value.after} />
       </div>
     </div>

@@ -24,15 +24,15 @@ const JobToolbar = () => {
   const { formId, formInstanceId } = useParams();
   const activeJobs = useSelector(selectActiveJobsForFormInstance(formId, formInstanceId));
   const currentJob = _.head(activeJobs);
-  const { score: { current, initial } } = currentJob;
+  const { score: { current, initial } } = currentJob || { score: { current: null, initial: null } };
   const currHard = current && current.hard;
   const initHard = initial && initial.hard;
   const currSoft = current && current.soft;
   const initSoft = initial && initial.soft;
-  const percentageDone = currentJob.status !== 'STARTED'
+  const percentageDone = _.get(currentJob, "status") === 'STARTED'
     ? Math.round(Math.abs((initHard - currHard + initSoft - currSoft) / (initHard + initSoft)) * 100)
     : 0;
-  const statusText = currentJob.status === 'STARTED'
+  const statusText = _.get(currentJob, "status") === 'STARTED'
     ? `${Math.abs(currHard)} hard/${Math.abs(currSoft)} soft left of initially ${Math.abs(initHard)} hard/${Math.abs(initSoft)} soft`
     : `Job not started yet`;
   const pollJobs = () => {
@@ -47,13 +47,12 @@ const JobToolbar = () => {
 
 
   const stopJob = () => {
-    if (activeJobs && activeJobs.length && activeJobs[0]) {
-      const job = activeJobs[0];
+    if (currentJob) {
       dispatch(abortJob({
-        jobId: job._id,
+        jobId: currentJob._id,
         formId,
         formInstanceId,
-        activities: job.activities,
+        activities: currentJob.activities,
       }));
     }
   }
