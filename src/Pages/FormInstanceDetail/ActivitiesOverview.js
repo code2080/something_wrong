@@ -170,6 +170,7 @@ FormInstanceReservationOverview.propTypes = {
   mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {
