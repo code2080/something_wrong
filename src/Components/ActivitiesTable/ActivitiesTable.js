@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 // COMPONENtS
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
@@ -13,6 +14,8 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 import { tableViews } from '../../Constants/tableViews.constants';
 import { DATE_TIME_FORMAT } from '../../Constants/common.constants';
 import { stringIncludes, anyIncludes } from '../../Utils/validation';
+import { useDispatch } from 'react-redux';
+import { reorderActivities } from '../../Redux/Activities/activities.actions';
 
 const filterFn = (activity, query) => {
   // Search activities by [extId, activityStatus, submissionValues[], value[], timing[].value]
@@ -29,17 +32,27 @@ const filterFn = (activity, query) => {
   return false;
 };
 
+const getActivityDataSource = (activities = []) => {
+  const hasActivityOrdering = activities.every(a => a.sequenceIdx != null);
+  if (!hasActivityOrdering) return activities;
+  return _.orderBy(activities, ['sequenceIdx'], ['asc']);
+};
+
 const ActivitiesTable = ({
   formInstanceId,
+  formId,
   mapping,
   activities,
 }) => {
+  const dispatch = useDispatch();
   const onMove = (sourceIdx, destinationIdx) => {
-    console.log(`Should move ${sourceIdx} to ${destinationIdx}`);
+    if (sourceIdx !== destinationIdx)
+      dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx));
   }
 
   const columns = mapping ? createActivitiesTableColumnsFromMapping(mapping) : [];
-  const dataSource = activities && activities.length ? activities : [];
+  const dataSource = getActivityDataSource(activities);
+
   return (
     <DynamicTable
       columns={columns}
@@ -57,6 +70,7 @@ const ActivitiesTable = ({
 
 ActivitiesTable.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
+  formId: PropTypes.string.isRequired,
   mapping: PropTypes.object,
   activities: PropTypes.array
 };

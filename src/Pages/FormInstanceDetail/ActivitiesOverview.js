@@ -103,6 +103,7 @@ const FormInstanceReservationOverview = ({
             mapping={mapping}
             activities={activities}
             formInstanceId={formInstance._id}
+            formId={form._id}
           />
         </React.Fragment>
       );

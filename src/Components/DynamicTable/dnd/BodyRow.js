@@ -30,8 +30,8 @@ const BodyRow = ({
 
 BodyRow.propTypes = {
   isOver: PropTypes.bool,
-  connectDragSource: PropTypes.object,
-  connectDropTarget: PropTypes.object,
+  connectDragSource: PropTypes.func,
+  connectDropTarget: PropTypes.func,
   moveRow: PropTypes.func,
   currentDraggingIndex: PropTypes.number,
 };

@@ -20,7 +20,7 @@ const fetchAllJobsFlow = {
 export const fetchAllJobs = () =>
   asyncAction.GET({
     flow: fetchAllJobsFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}jobs?limit=200`,
+    endpoint: `${getEnvParams().AM_BE_URL}jobs?limit=200`,
     permission: AEBETA_PERMISSIION,
   });
 
@@ -90,7 +90,7 @@ export const createJob = ({
   });
   dispatch(asyncAction.POST({
     flow: createJobFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}jobs`,
+    endpoint: `${getEnvParams().AM_BE_URL}jobs`,
     params: job,
     postAction: { callback, meta, activities },
     permission: AEBETA_PERMISSIION,
@@ -140,7 +140,7 @@ export const abortJob = ({
   activities,
 }) => async (dispatch, getState) => dispatch(asyncAction.POST({
   flow: abortJobFlow,
-  endpoint: `${getEnvParams().AE_OL_URL}jobs/${jobId}/stop`,
+  endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
   postAction: { formId, formInstanceId, activities, dispatch, getState },
   permission: AEBETA_PERMISSIION,
 }));
