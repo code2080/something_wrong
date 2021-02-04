@@ -22,7 +22,6 @@ const BaseActivityColOuter = ({
   mapping,
 }) => {
   const activityValues = getActivityValues(activity, type, prop);
-
   const activityValueCols = activityValues && activityValues.length && (activityValues || []).reduce((activityCols, activityValue, idx) => (
     !_.isEmpty(activityValue.value) ? [...activityCols, <BaseActivityCol
       key={`av-${idx}`}

@@ -10,7 +10,7 @@ import {
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
 
-const getMandatoryPropsForTimingMode = mode => mappingTimingModeProps[mode].mandatoryProperties;
+export const getMandatoryPropsForTimingMode = mode => mappingTimingModeProps[mode].mandatoryProperties;
 
 export const getMappingSettingsForProp = (prop, mapping) => _.get(mapping, `propSettings[${prop}]`, null);
 export const getMappingTypeForProp = (prop, mapping) => {
@@ -76,6 +76,9 @@ export const validateMapping = (formId, mappingState) => {
   const { objects, fields } = mapping;
   const objectsValid = validateAllKeysOnProp(objects, 1);
   const fieldsValid = validateAllKeysOnProp(fields, 0);
+  console.log('timing valid: ' + timingValid);
+  console.log('objects valid: ' + objectsValid);
+  console.log('fields valid: ' + fieldsValid);
   return timingValid && objectsValid && fieldsValid ? mappingStatuses.COMPLETE : mappingStatuses.NOT_SET;
 };
 
@@ -195,5 +198,5 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
 export const getElementsForTimingMapping = ({
   [mappingTimingModes.EXACT]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
   [mappingTimingModes.TIMESLOTS]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
-  [mappingTimingModes.SEQUENCE]: () => {},
+  [mappingTimingModes.SEQUENCE]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
 });

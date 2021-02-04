@@ -4,7 +4,7 @@ export const minToHourMinDisplay = totalMin => {
   const days = Math.max(Math.ceil(totalHours / 24) - 1, 0);
   const hours = totalHours - days * 24;
   return {
-    minutes,
+    minutes: minutes < 10 ? `0${minutes}` : minutes,
     hours,
     days,
   };

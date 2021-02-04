@@ -15,6 +15,6 @@ export const mappingTimingModeProps = {
   },
   [mappingTimingModes.SEQUENCE]: {
     label: 'Sequence',
-    mandatoryProperties: ['startDate', 'endDate', 'length'],
+    mandatoryProperties: ['length'],
   },
 };
