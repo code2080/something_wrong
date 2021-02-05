@@ -29,22 +29,21 @@ const JobToolbar = () => {
   const initHard = initial && initial.hard;
   const currSoft = current && current.soft;
   const initSoft = initial && initial.soft;
-  const percentageDone = _.get(currentJob, "status") === 'STARTED'
+  const percentageDone = _.get(currentJob, 'status') === 'STARTED'
     ? Math.round(Math.abs((initHard - currHard + initSoft - currSoft) / (initHard + initSoft)) * 100)
     : 0;
-  const statusText = _.get(currentJob, "status") === 'STARTED'
+  const statusText = _.get(currentJob, 'status') === 'STARTED'
     ? `${Math.abs(currHard)} hard/${Math.abs(currSoft)} soft left of initially ${Math.abs(initHard)} hard/${Math.abs(initSoft)} soft`
     : `Job not started yet`;
-  const pollJobs = () => {
-    dispatch(fetchAllJobs());
-    dispatch(fetchActivitiesForFormInstance(formId, formInstanceId));
-    setTimeout(pollJobs, pollInterval)
-  }
+  const pollJobs = async () => {
+    await dispatch(fetchAllJobs());
+    await dispatch(fetchActivitiesForFormInstance(formId, formInstanceId));
+    setTimeout(pollJobs, pollInterval);
+  };
 
   useEffect(() => {
     pollJobs();
   }, []);
-
 
   const stopJob = () => {
     if (currentJob) {
@@ -55,7 +54,7 @@ const JobToolbar = () => {
         activities: currentJob.activities,
       }));
     }
-  }
+  };
 
   return (
     <div className="job-toolbar--wrapper">
