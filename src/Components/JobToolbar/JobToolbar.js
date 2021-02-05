@@ -19,7 +19,7 @@ import './JobToolbar.scss';
 
 const JobToolbar = () => {
   const dispatch = useDispatch();
-  const pollInterval = 1000;
+  const pollInterval = 2500;
 
   const { formId, formInstanceId } = useParams();
   const activeJobs = useSelector(selectActiveJobsForFormInstance(formId, formInstanceId));
