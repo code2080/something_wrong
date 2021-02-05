@@ -25,3 +25,4 @@ workflows:
             - run: yarn build
           publish-token-variable: NPM_TOKEN
           push-git-tag: true
+  # npm token: 57ef72bf-ac6b-4366-9386-d5ce44ba3882
