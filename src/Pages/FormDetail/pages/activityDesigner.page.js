@@ -111,7 +111,7 @@ const ActivityDesignPage = () => {
    * MEMOIZED VARS
    */
   const hasReservations = useMemo(
-    () => (Object.keys(activities) || []).reduce(
+    () => (Object.keys(activities || {}) || []).reduce(
       (number, formInstanceId) => number + (activities[formInstanceId].length || 0),
       0
     ) > 0,

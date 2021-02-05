@@ -1,4 +1,5 @@
 import * as types from './activities.actionTypes';
+import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
@@ -67,8 +68,6 @@ const reducer = (state = initialState, action) => {
     case types.UPDATE_ACTIVITIES_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       const activitityObjs = action.payload.activities || [];
-      const hasSequenceIdx = activitityObjs.every(a => a.sequenceIdx != null);
-      console.log('Fetched activities have sequenceIdx: ' + hasSequenceIdx);
       const activities = activitityObjs
         .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
         .reduce(
@@ -84,6 +83,22 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         [formId]: activities,
+      };
+    }
+
+    case activityDesignerTypes.UPDATE_MAPPING_FOR_FORM_SUCCESS: {
+      const { payload: { design, activities } } = action;
+      const activityFormState = (Object.keys(activities) || []).reduce((fIState, formInstanceId) => {
+        const activityObjs = activities[formInstanceId];
+        const as = activityObjs.map((a, idx) => new Activity({ ...a, sequenceIdx: a.sequenceIdx ? a.sequenceIdx : idx }));
+        return {
+          ...fIState,
+          [formInstanceId]: as,
+        }
+      }, {});
+      return {
+        ...state,
+        [design.formId]: activityFormState,
       };
     }
 

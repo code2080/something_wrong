@@ -17,11 +17,11 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.UPDATE_MAPPING_FOR_FORM_SUCCESS: {
-      const { payload: { actionMeta: _, ...mapping } } = action;
+      const { payload: { design } } = action;
       return {
         ...state,
-        [mapping.formId]: {
-          ...mapping,
+        [design.formId]: {
+          ...design,
         },
       };
     }
