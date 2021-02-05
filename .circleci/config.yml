@@ -5,6 +5,7 @@ workflows:
   build_publish:
     jobs:
       - npm-publisher/publish-from-package-version:
+          ssh-fingerprints: 99:08:72:d3:c2:90:6d:7e:c1:3b:48:e5:99:85:7b:d2
           filters:
             branches:
               only:
