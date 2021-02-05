@@ -27,6 +27,6 @@ workflows:
                   - 'v1-node-cache-{{ .Branch }}'
                   - v1-node-cache-
             - run: yarn install
-            - run: yarn build
+          #            - run: yarn build
           publish-token-variable: NPM_TOKEN
           push-git-tag: true
