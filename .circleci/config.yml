@@ -1,59 +1,27 @@
-version: 2.1
 orbs:
-  node: circleci/node@1.1.6
-jobs:
-  build-and-persist:
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - node/with-cache: # build the dist files
-          steps:
+  npm-publisher: uraway/npm-publisher@0.2.0
+version: 2.1
+workflows:
+  build_publish:
+    jobs:
+      - npm-publisher/publish-from-package-version:
+          filters:
+            branches:
+              only: master
+          post-publish-steps:
+            - save_cache:
+                key: 'v1-node-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}'
+                paths:
+                  - node_modules
+          pre-publish-steps:
+            - restore_cache:
+                keys:
+                  - >-
+                    v1-node-cache-{{ .Branch }}-{{ checksum "package-lock.json"
+                    }}
+                  - 'v1-node-cache-{{ .Branch }}'
+                  - v1-node-cache-
             - run: yarn install
             - run: yarn build
-            - persist_to_workspace:
-                root: .
-                paths:
-                  - dist
-
-  deploy:
-    docker:
-      - image: google/cloud-sdk
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Init gcloud
-          command: |
-            echo ${GCLOUD_SERVICE_KEY} > ${HOME}/gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
-      - run:
-          name: Rename files
-          command: |
-            cd dist
-            mv index.es.js index@${CIRCLE_BRANCH}.es.js
-            mv index.js index@${CIRCLE_BRANCH}.js
-            mv te-prefs-lib.css te-prefs-lib@${CIRCLE_BRANCH}.css
-      - run:
-          name: Copy files to storage bucket
-          command: |
-            gsutil defacl ch -u AllUsers:READER gs://${GCLOUD_STORAGE_BUCKET}
-            gsutil rsync -R ./dist gs://${GCLOUD_STORAGE_BUCKET}
-            gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" \
-              gs://${GCLOUD_STORAGE_BUCKET}/*@${CIRCLE_BRANCH}.*
-workflows:
-  build_deploy:
-    jobs:
-      - build-and-persist
-      - deploy:
-          requires:
-            - build-and-persist
-
-
-  # install_and_configure_cli:
-    # jobs: asdg
-      # - gcp-cli/install_and_initialize_cli:
-          # gcloud-service-key: GCLOUD_SERVICE_KEY
-          # google-compute-zone: GCLOUD_COMPUTE_ZONE
-          # google-project-id: GCLOUD_PROJECT_ID
+          publish-token-variable: NPM_TOKEN
+          push-git-tag: true
