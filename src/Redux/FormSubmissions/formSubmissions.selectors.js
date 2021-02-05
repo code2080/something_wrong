@@ -2,13 +2,15 @@ import { createSelector } from 'reselect';
 import _ from 'lodash';
 import { sortTime } from '../../Components/TableColumns/Helpers/sorters';
 
-const getSubmissions = (state, formId) => state.submissions[formId];
+const submissionsState = state => state.submissions;
 
 export const selectSubmissions = createSelector(
-    [getSubmissions],
-    // Fix this sorted
-    submissions => _.flatMap(submissions)
-    .sort((a, b) => sortTime(a.updatedAt, b.updatedAt))
+  submissionsState,
+  submissions => formId => {
+    const submissionsForForm = submissions[formId] || [];
+    return _.flatMap(submissionsForForm)
+      .sort((a, b) => sortTime(a.updatedAt, b.updatedAt))
+  }
 );
 
 const sectionType = {
@@ -52,8 +54,8 @@ const extractValuesFromSectionData = sectionData => {
       ], []);
     default:
       return [];
-    }  
   }
+}
 
 export const getSubmissionValues = formInstance =>
   formInstance

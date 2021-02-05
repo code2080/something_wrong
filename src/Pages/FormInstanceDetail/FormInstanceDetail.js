@@ -17,6 +17,7 @@ import ObjectRequestOverview from './ObjectRequestOverview';
 import { Tabs } from 'antd';
 import FormInfo from '../../Components/Sections/FormInfo';
 import SpotlightMask from '../../Components/SpotlightMask';
+import TEAntdTabBar from '../../Components/TEAntdTabBar';
 
 // HELPERS
 import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
@@ -78,7 +79,7 @@ const FormInstancePage = ({
   useEffect(() => {
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
-  
+
   const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   // Effect to get all TE values into redux state
@@ -101,10 +102,6 @@ const FormInstancePage = ({
     </Tabs.TabPane>,
   ].filter(_.identity);
 
-  const renderTabBar = (props, DefaultTabBar) => (
-    <DefaultTabBar {...props} className={`${props.className} form-instance--tabs`} />
-  );
-
   return (
     <div className="form-instance--wrapper">
       <SpotlightMask spotlightPositionInfo={externalActionRef} />
@@ -117,9 +114,7 @@ const FormInstancePage = ({
       {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {
         tabPanes.length > 1
-          ? <Tabs defaultActiveKey='OVERVIEW' renderTabBar={renderTabBar} animated={false} >
-            {tabPanes}
-          </Tabs>
+          ? <TEAntdTabBar defaultActiveKey="OVERVIEW">{tabPanes}</TEAntdTabBar>
           : baseSections
       }
     </div>
@@ -133,6 +128,7 @@ FormInstancePage.propTypes = {
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
   fetchActivitiesForFormInstance: PropTypes.func.isRequired,
+  activities: PropTypes.array,
 };
 
 FormInstancePage.defaultProps = {

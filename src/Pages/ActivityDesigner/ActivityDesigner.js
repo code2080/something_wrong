@@ -15,13 +15,13 @@ import MappingStatus from '../../Components/ActivityDesigner/MappingStatus';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
-import { updateMapping } from '../../Redux/ActivityDesigner/activityDesigner.actions';
+import { updateDesign } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { deleteActivities } from '../../Redux/Activities/activities.actions';
 import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../Redux/Integration/integration.actions';
 
 // HELPERS
 import {
-  validateMapping,
+  validateDesign,
   getElementsForMapping,
   getMandatoryPropsForTimingMode,
 } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -38,7 +38,7 @@ import {
 
 // STYLES
 import './ActivityDesigner.scss';
-import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.model';
+import { ActivityDesign } from '../../Models/ActivityDesign.model';
 
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -73,7 +73,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapActionsToProps = {
   setBreadcrumbs,
-  updateMapping,
+  updateDesign,
   deleteActivities,
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
@@ -88,7 +88,7 @@ const ActivityDesignerPage = ({
   validTypes,
   validFields,
   setBreadcrumbs,
-  updateMapping,
+  updateDesign,
   deleteActivities,
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
@@ -111,17 +111,6 @@ const ActivityDesignerPage = ({
       findFieldsOnReservationMode(form.reservationMode);
     }
   }, []);
-
-  const navigationHandler = (navigation) => {
-    Modal.confirm({
-      getContainer: () => document.getElementById('te-prefs-lib'),
-      title: 'The activity design is incomplete',
-      content: 'Are you sure you want to leave the page?',
-      onOk: () => navigation.resume(),
-      onCancel: () => navigation.cancel(),
-    })
-    return null;
-  };
 
   // State vars
   const [availableTypes, setAvailableTypes] = useState([]);
@@ -154,7 +143,7 @@ const ActivityDesignerPage = ({
    * MEMOIZED VARS
    */
   const mappingOptions = useMemo(() => getElementsForMapping(form.sections, mapping), [form, mapping]);
-  const mappingStatus = useMemo(() => validateMapping(form._id, mappings), [form, mappings]);
+  const mappingStatus = useMemo(() => validateDesign(form._id, mappings), [form, mappings]);
   const typeOptions = useMemo(() => {
     if (validTypes.length > 0)
       return validTypes.map(
@@ -191,7 +180,7 @@ const ActivityDesignerPage = ({
 
   // Callback to update the timing section of the mapping
   const updateTimingMappingCallback = useCallback((timingProp, value) => {
-    const updatedMapping = new ActivityDesignerMapping({
+    const updatedMapping = new ActivityDesign({
       ...mapping,
       formId: formId,
       name: `Mapping for ${form.name}`,
@@ -265,7 +254,7 @@ const ActivityDesignerPage = ({
 
   useEffect(() => {
     if (mappingIsValid) {
-      updateMapping(mapping);
+      updateDesign(mapping);
     }
   }, [mappingIsValid, mapping]);
 
@@ -394,7 +383,7 @@ ActivityDesignerPage.propTypes = {
   validFields: PropTypes.array,
   validTypes: PropTypes.array,
   setBreadcrumbs: PropTypes.func.isRequired,
-  updateMapping: PropTypes.func.isRequired,
+  updateDesign: PropTypes.func.isRequired,
   deleteActivities: PropTypes.func.isRequired,
   findTypesOnReservationMode: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,

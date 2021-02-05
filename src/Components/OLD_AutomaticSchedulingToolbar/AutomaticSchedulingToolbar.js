@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button } from 'antd';
 
 // HELPERS
-import { validateMapping } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
+import { validateDesign } from '../../Redux/ReservationTemplateMapping/reservationTemplateMapping.helpers';
 import { getActivitiesForFormInstance } from '../../Redux/Activities/activities.helpers';
 
 // COMPONENTS
@@ -33,7 +33,7 @@ const AutomaticSchedulingToolbar = ({
   activities,
   history,
 }) => {
-  const mappingStatus = useMemo(() => validateMapping(formId, mappings), [formId, mappings]);
+  const mappingStatus = useMemo(() => validateDesign(formId, mappings), [formId, mappings]);
 
   const onConfigureMappingCallback = useCallback(() => {
     history.push(`/forms/${formInstance.formId}/mapping`);

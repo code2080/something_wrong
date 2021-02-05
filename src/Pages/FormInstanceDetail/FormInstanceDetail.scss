@@ -4,30 +4,6 @@
   padding: 0;
   position: relative;
 
-  .form-instance--tabs {
-    background: #333;
-    display: flex;
-    padding: 0 8px;
-    .ant-tabs-tab {
-      font-size: 0.7rem;
-      padding: 5px 6px;
-      color: #fff;
-      margin:0;
-      cursor: pointer;
-      
-      &.ant-tabs-tab-active{
-        color: $candlelight;
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-      &:hover {
-        color: $jungleGreen;
-      }
-    }
-    .ant-tabs-ink-bar {
-      background-color: $candlelight;
-    }
-  }
-
   & > .mask {
     width: 100%;
     height: 100%;

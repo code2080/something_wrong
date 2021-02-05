@@ -22,15 +22,15 @@ export const fetchMappings = formId =>
     params: { formId },
   });
 
-const updateMappingFlow = {
+const updateDesignFlow = {
   request: () => ({ type: UPDATE_MAPPING_FOR_FORM_REQUEST }),
   success: response => ({ type: UPDATE_MAPPING_FOR_FORM_SUCCESS, payload: { ...response } }),
   failure: err => ({ type: UPDATE_MAPPING_FOR_FORM_FAILURE, payload: { ...err } }),
 };
 
-export const updateMapping = mapping =>
+export const updateDesign = mapping =>
   asyncAction.POST({
-    flow: updateMappingFlow,
+    flow: updateDesignFlow,
     endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
     params: { mapping },
   });

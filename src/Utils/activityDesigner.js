@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { ActivityTiming } from '../Models/ActivityTiming.model';
+import { ActivityDesign } from '../Models/ActivityDesign.model';
 
 export const checkObjectIsInvalid = object => {
   if (_.isEmpty(object)) return false;
@@ -60,3 +61,59 @@ export const extractReservationTypes = payload => {
 
 export const extractReservationFields = payload =>
   payload.map(el => ({ label: el.name, value: el.extid }));
+
+export const parseTypeOptions = (validTypes, availableTypes) => {
+  if (validTypes.length > 0)
+    return validTypes.map(
+      value => ({
+        value,
+        label: (availableTypes.find(el => el.value === value) || { label: value }).label,
+      })
+    );
+  return availableTypes;
+};
+
+export const parseFieldOptions = (validFields, availableFields) => {
+  if (validFields.length > 0)
+    return validFields.map(
+      value => ({
+        value,
+        label: (availableFields.find(el => el.value === value) || { label: value }).label,
+      })
+    );
+  return availableFields;
+};
+
+export const updateTimingPropOnActivityDesign = (design, formId, prop, value) => new ActivityDesign({
+  ...design,
+  formId: formId,
+  name: `Mapping for ${formId}`,
+  timing: {
+    ...design.timing,
+    [prop]: value,
+  },
+});
+
+export const updateObjectPropOnActivityDesign = (design, formId, objectDesign) => ({
+  ...design,
+  formId: formId,
+  name: `Mapping for ${formId}`,
+  objects: {
+    ...objectDesign.objects,
+  },
+  propSettings: {
+    ...objectDesign.propSettings,
+  },
+});
+
+export const updateFieldPropOnActivityDesign = (design, formId, fieldDesign) => ({
+  ...design,
+  formId: formId,
+  name: `Mapping for ${formId}`,
+  fields: {
+    ...fieldDesign.fields,
+  },
+  propSettings: {
+    ...fieldDesign.propSettings,
+  },
+});

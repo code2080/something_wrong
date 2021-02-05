@@ -6,7 +6,10 @@ import { formStatus } from '../../Constants/formStatuses.constants';
 const formState = state => state.forms;
 const elementState = state => state.elements;
 
-export const selectForm = formId => state => formState(state)[formId];
+export const selectForm = createSelector(
+  formState,
+  forms => formId => forms[formId]
+);
 
 export const selectAllForms = createSelector(
   formState,

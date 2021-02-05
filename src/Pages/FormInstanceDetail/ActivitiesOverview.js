@@ -9,7 +9,7 @@ import { deleteActivitiesInFormInstance, saveActivities } from '../../Redux/Acti
 
 // HELPERS
 import { validateScheduledActivities } from '../../Utils/activities.helpers';
-import { validateMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
+import { validateDesign } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // COMPONENTS
 import ActivitiesTable from '../../Components/ActivitiesTable/ActivitiesTable';
@@ -108,7 +108,7 @@ const FormInstanceReservationOverview = ({
         </React.Fragment>
       );
     // Calculate mapping status
-    const mappingStatus = validateMapping(form._id, mappings);
+    const mappingStatus = validateDesign(form._id, mappings);
 
     /**
      * Case 2: Activities don't exist, but mapping does and is valid

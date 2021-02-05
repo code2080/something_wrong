@@ -1,4 +1,4 @@
-import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.model';
+import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
@@ -34,7 +34,7 @@ export const validateTemplateAgainstMapping = (template, mapping) => {
 };
 
 export const createNewMappingFromTemplate = (template, extId, formId) =>
-  new ActivityDesignerMapping({
+  new ActivityDesign({
     name: template.name,
     reservationTemplateExtId: extId,
     formId,
@@ -58,27 +58,24 @@ const validateAllKeysOnProp = (prop, minLength = 1) => {
 };
 
 /**
- * @function validateMapping
- * @description validates whether a mapping exists and is valid
- * @param {*} formId the form for which to validate the mapping
- * @param {*} mappingState the current mapping state
+ * @function validateDesign
+ * @description validates whether a design exists and is valid
+ * @param {*} formId the form for which to validate the design
+ * @param {*} designState the current design state
  */
-export const validateMapping = (formId, mappingState) => {
-  const mapping = _.get(mappingState, `${formId}`, {});
+export const validateDesign = (formId, designState) => {
+  const design = _.get(designState, `${formId}`, {});
   // Validate we have an object for the form
-  if (!mapping || !mapping.formId) return mappingStatuses.NOT_SET;
+  if (!design || !design.formId) return mappingStatuses.NOT_SET;
   // Validate timing
-  const timingMode = mapping.timing.mode;
+  const timingMode = design.timing.mode;
   if (!timingMode) return mappingStatuses.NOT_SET;
   const mandatoryTimingProps = getMandatoryPropsForTimingMode(timingMode);
-  const timingValid = mandatoryTimingProps.every(key => mapping.timing[key] != null && mapping.timing[key].length > 0);
+  const timingValid = mandatoryTimingProps.every(key => design.timing[key] != null && design.timing[key].length > 0);
   // Validate objects and fields
-  const { objects, fields } = mapping;
+  const { objects, fields } = design;
   const objectsValid = validateAllKeysOnProp(objects, 1);
   const fieldsValid = validateAllKeysOnProp(fields, 0);
-  console.log('timing valid: ' + timingValid);
-  console.log('objects valid: ' + objectsValid);
-  console.log('fields valid: ' + fieldsValid);
   return timingValid && objectsValid && fieldsValid ? mappingStatuses.COMPLETE : mappingStatuses.NOT_SET;
 };
 

@@ -1,25 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Table } from 'antd';
 import _ from 'lodash';
 
-import './OLD_FormInfo.scss';
-
 // COMPONENTS
-import OwnerCol from '../TableColumns/Components/OwnerCol';
-import ObjectScopeCol from '../TableColumns/Components/ObjectScopeCol';
+import DateTime from '../../../Components/Common/DateTime';
+import OwnerCol from '../../../Components/TableColumns/Components/OwnerCol';
+import ObjectScopeCol from '../../../Components/TableColumns/Components/ObjectScopeCol';
 
 // SELECTORS
-import { selectForm } from '../../Redux/Forms/forms.selectors';
-import DateTime from '../Common/DateTime';
-
-// Include these fields?
-//     assigners = [],
-//     excludedObjects = [],
-//     status,
-//     responses,
-//     responseCount,
+import { selectForm } from '../../../Redux/Forms/forms.selectors';
 
 const formToFieldInfo = form => {
   const formFieldMapping = [{
@@ -73,8 +64,9 @@ const formToFieldInfo = form => {
   }));
 };
 
-const FormInfo = ({ formId }) => {
-  const form = useSelector(selectForm(formId));
+const FormInfoPage = () => {
+  const { formId } = useParams();
+  const form = useSelector(selectForm)(formId);
   const formInfoFields = formToFieldInfo(form);
 
   const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
@@ -97,7 +89,7 @@ const FormInfo = ({ formId }) => {
           title='Field'
           dataIndex='field'
           key='field'
-          width='125px'
+          width='200px'
           render={field => <b>{field}:</b>}
         />
         <Table.Column
@@ -110,8 +102,4 @@ const FormInfo = ({ formId }) => {
   );
 };
 
-FormInfo.propTypes = {
-  formId: PropTypes.string.isRequired,
-};
-
-export default FormInfo;
+export default FormInfoPage;

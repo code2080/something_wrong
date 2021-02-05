@@ -148,3 +148,65 @@ export const getSelectionSettingsTECorePayload = (selectionSettings, form, formI
     ])
   return [...extraObjectsPayload, ...includedFieldsPaylod];
 }
+
+/**
+ * @function applyScopedObjectFilters
+ * @description filter submissions based on a primary object extid filter
+ * @param {FormInstance} formInstance
+ * @param {Array<ScopedObject>} scopedObjects
+ * @param {Array<Filter>} filters
+ */
+export const applyScopedObjectFilters = (formInstance, scopedObjects, filters) => {
+  const { scopedObject: scopedObjectExtId } = formInstance;
+  if (!scopedObjectExtId) return false;
+  const scopedObject = scopedObjects.find(obj => obj.extid === scopedObjectExtId);
+  if (!scopedObject) return false;
+
+  const filterFieldExtids = Object.keys(filters).filter(fieldExtid => filters[fieldExtid].length > 0);
+  return filterFieldExtids.some(fieldExtid => {
+    const field = scopedObject.fields.find(field => field.extid === fieldExtid);
+    if (!field) return false;
+    const fieldQuery = filters[fieldExtid].toString().toLowerCase();
+    return field.values.some(value => value.toLowerCase().includes(fieldQuery));
+  })
+};
+
+/**
+ * @function filterFormInstancesOnAuthedUser
+ * @description filter form instances on assigned to authenticated user
+ * @param {FormInstance} formInstance
+ * @param {String} userId
+ * @returns Bool
+ */
+export const filterFormInstancesOnAuthedUser = (formInstance, userId) => (formInstance.teCoreProps.assignedTo || []).includes(userId);
+
+/**
+ * @function parseTECoreGetObjectsReturn
+ * @description parses the return value from TE Core when fetching objects from extIds
+ * @param {Array<TECoreObject>} results
+ * @returns Array
+ */
+export const parseTECoreGetObjectsReturn = results => results.map(
+  obj => ({
+    extid: obj.extid,
+    fields: obj.fields.map(field => ({ extid: field.extid, values: field.values }))
+  })
+);
+
+/**
+ * @function traversedClassList
+ * @description traverses the class list of a node to get all parent classes
+ * @param {DOMNode} element
+ * @returns Array
+ */
+
+export const traversedClassList = element => {
+  if (!element) return [];
+  let currentNode = element;
+  const classes = [];
+  do {
+    classes.push(...currentNode.classList);
+    currentNode = currentNode.parentNode;
+  } while (currentNode.parentNode);
+  return classes;
+}

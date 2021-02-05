@@ -12,8 +12,12 @@ import { Icon } from 'antd';
 // SORTERS
 import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
 
+// ACTIONS
+import { toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/formSubmissions.actions';
+
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
+import { themeColors } from '../../Constants/themeColors.constants';
 
 export const formSubmission = {
   NAME: {
@@ -81,12 +85,29 @@ export const formSubmission = {
     fixedWidth: 185,
     render: reviewLink => reviewLink ? <a href={reviewLink} target="_blank">Link</a> : 'N/A',
   },
-  IS_STARRED: {
+  IS_STARRED: (dispatch, disabled) => ({
     title: 'Is starred',
     key: 'isStarred',
     dataIndex: 'teCoreProps.isStarred',
     sorter: (a, b) => sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
     align: 'center',
     fixedWidth: 100,
-  }
+    render: (isStarred, item) => (
+      <Icon
+        style={{ fontSize: '0.9rem', color: themeColors.jungleGreen }}
+        type="star"
+        theme={isStarred ? 'filled' : 'outlined'}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!disabled) {
+            dispatch(toggleFormInstanceStarringStatus({
+              formInstanceId: item._id,
+              isStarred,
+            }));
+          }
+        }}
+      />
+    )
+  })
 };

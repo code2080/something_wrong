@@ -11,6 +11,27 @@ import {
 import { initialState } from '../TE/te.helpers';
 
 const selectIntegration = state => state.integration;
+const selectReservationModes = state => state.integration.reservationModes;
+
+export const selectValidTypesOnReservationMode = createSelector(
+  selectReservationModes,
+  reservationModes => reservationMode => {
+    if (!reservationModes[reservationMode]) return [];
+    const types = reservationModes[reservationMode].types;
+    if (!Array.isArray(types)) return [];
+    return types;
+  }
+);
+
+export const selectValidFieldsOnReservationMode = createSelector(
+  selectReservationModes,
+  reservationModes => reservationMode => {
+    if (!reservationModes[reservationMode]) return [];
+    const fields = reservationModes[reservationMode].fields;
+    if (!Array.isArray(fields)) return [];
+    return fields;
+  }
+);
 
 /**
  * @function getTECoreAPIPayload
@@ -96,13 +117,11 @@ const getAllElementsFromSections = (sections, submissionValues) => sections.redu
   ...getElementsFromSection(section, submissionValues)
 ], []);
 
-
-
 const extractPayloadFromElements = (elements) => elements.reduce((elementsPayload, element) => {
   if (!element) return elementsPayload;
   const { valueType } = element;
   // We don't care about field values
-  if (valueType == datasourceValueTypes.FIELD_VALUE) return elementsPayload;
+  if (valueType === datasourceValueTypes.FIELD_VALUE) return elementsPayload;
 
   const fieldName = mapValueTypeToFieldName(valueType);
 
@@ -128,7 +147,7 @@ const getExtIdPairsForActivity = values => {
         value.extId
       ]
     ] : typeExtidPairs
-    , []);
+  , []);
   return typeExtidPairs;
 };
 
@@ -156,7 +175,8 @@ const extractPayloadFromActivities = activities => {
 };
 
 const extractPayloadFromObjectRequests = requests => requests.reduce((payload, req) => ({
-  ...payload, objects: [
+  ...payload,
+  objects: [
     ...payload.objects,
     req.objectExtId,
     req.replacementObjectExtId,
@@ -190,7 +210,6 @@ export const getExtIdPropsPayload = ({ sections, submissionValues, activities = 
   const objectRequestsPayload = extractPayloadFromObjectRequests(objectRequests);
   return mergePayloads([submissionPayload, activitiesPayload, objectScopePayload, objectRequestsPayload]);
 };
-
 
 const getPayloadForSection = (element, section, values, state) => {
   if (!values[section._id] && process.env.NODE_ENV === 'development') {
@@ -255,7 +274,6 @@ export const getLabelsForDatasource = (payload, state) => payload
     {}
   );
 
-
 export const selectLabelField = type =>
   createSelector(selectIntegration,
     integration => {
@@ -265,4 +283,4 @@ export const selectLabelField = type =>
       const labelField = fields && fields.find(field => field.appProperty === 'LABEL');
       return labelField ? labelField.fieldExtId : null;
     }
-  )
+  );
