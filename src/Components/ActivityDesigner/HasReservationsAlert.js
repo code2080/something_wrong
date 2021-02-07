@@ -18,7 +18,7 @@ const HasReservationsAlert = ({ formId }) => {
       description={(
         <React.Fragment>
           <div>
-            One or many submissions have already been converted to activities with the current configuration. To edit the mapping you must first delete the activities.
+            The form has already been converted to activities with the current design. To edit the design, you must first delete the activities.
           </div>
           <Button size="small" type="link" onClick={() => dispatch(deleteActivities(formId))}>Delete activities now</Button>
         </React.Fragment>

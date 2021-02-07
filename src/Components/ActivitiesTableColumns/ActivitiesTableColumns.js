@@ -11,11 +11,11 @@ import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
 import SortableTableCell from '../DynamicTable/SortableTableCell';
 import { sortByElementDeepHtml } from '../../Utils/sorting.helpers';
 
-export const createActivitiesTableColumnsFromMapping = mapping => [
-  ...TimingColumns[mapping.timing.mode](mapping),
+export const createActivitiesTableColumnsFromMapping = (design, includeSubmissionInfo = false) => [
+  ...TimingColumns[design.timing.mode](design),
   ...[
-    ...Object.keys(mapping.objects).map(objKey => ['types', objKey]),
-    ...Object.keys(mapping.fields).map(fieldKey => ['fields', fieldKey])
+    ...Object.keys(design.objects).map(objKey => ['types', objKey]),
+    ...Object.keys(design.fields).map(fieldKey => ['fields', fieldKey])
   ].reduce((values, [field, extId]) => [
     ...values,
     {
@@ -27,7 +27,7 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
             activity={activity}
             type="VALUE"
             prop={extId}
-            mapping={mapping}
+            mapping={design}
           />
         </SortableTableCell>
       ),
@@ -41,5 +41,5 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
   ],
   []
   ),
-  ...StaticColumns
+  ...StaticColumns(includeSubmissionInfo)
 ];

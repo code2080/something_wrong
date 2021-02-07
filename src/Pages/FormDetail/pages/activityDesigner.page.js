@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Modal, Menu, Dropdown, Button } from 'antd';
-import ReactRouterPause from '@allpro/react-router-pause';
+import { Menu, Dropdown, Button } from 'antd';
 import _ from 'lodash';
 
 // COMPONENTS
@@ -16,7 +15,7 @@ import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReserv
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectValidFieldsOnReservationMode, selectValidTypesOnReservationMode } from '../../../Redux/Integration/integration.selectors';
-import { selectAllDesigns, selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
+import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
 // HOOKS
@@ -28,7 +27,6 @@ import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../.
 
 // HELPERS
 import {
-  validateDesign,
   getElementsForMapping,
   getMandatoryPropsForTimingMode,
 } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -48,20 +46,6 @@ import {
   updateObjectPropOnActivityDesign,
 } from '../../../Utils/activityDesigner';
 
-// CONSTANTS
-import { mappingStatuses } from '../../../Constants/mappingStatus.constants';
-
-const navigationHandler = (navigation) => {
-  Modal.confirm({
-    getContainer: () => document.getElementById('te-prefs-lib'),
-    title: 'The activity design is incomplete',
-    content: 'Are you sure you want to leave the page?',
-    onOk: () => navigation.resume(),
-    onCancel: () => navigation.cancel(),
-  })
-  return null;
-};
-
 const ActivityDesignPage = () => {
   const { formId } = useParams();
   const teCoreAPI = useTECoreAPI();
@@ -74,7 +58,6 @@ const ActivityDesignPage = () => {
   const activities = useSelector(selectActivitiesForForm)(formId);
   const validTypes = useSelector(selectValidTypesOnReservationMode)(form.reservationMode);
   const validFields = useSelector(selectValidFieldsOnReservationMode)(form.reservationMode);
-  const allDesigns = useSelector(selectAllDesigns);
   const storeDesign = useSelector(selectDesignForForm)(formId);
   const isSaving = useSelector(createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']));
   /**
@@ -119,7 +102,6 @@ const ActivityDesignPage = () => {
   );
 
   const mappingOptions = useMemo(() => getElementsForMapping(form.sections, design), [form, design]);
-  const mappingStatus = useMemo(() => validateDesign(form._id, allDesigns), [form, allDesigns]);
   const typeOptions = useMemo(() => parseTypeOptions(validTypes, availableTypes), [validTypes, availableTypes]);
   const fieldOptions = useMemo(() => parseFieldOptions(validFields, availableFields), [validFields, availableFields]);
 
@@ -180,13 +162,7 @@ const ActivityDesignPage = () => {
 
   return (
     <React.Fragment>
-      <ReactRouterPause
-        handler={navigationHandler}
-        when={mappingStatus === mappingStatuses.NOT_SET}
-        config={{ allowBookmarks: false }}
-      />
       <div className="activity-designer--wrapper">
-        {hasReservations && <HasReservationsAlert formId={formId} />}
         <div className="activity-designer--toolbar">
           <div className="activity-designer__toolbar--label">Reservation mode:</div>
           <div className="activity-designer__toolbar--value">{form.reservationMode || 'Not selected'}</div>
@@ -212,6 +188,7 @@ const ActivityDesignPage = () => {
             </Button>
           </div>
         </div>
+        {hasReservations && <HasReservationsAlert formId={formId} />}
         <div className="activity-designer--type-header">
           <div>Timing</div>
           <div>Mapping</div>
