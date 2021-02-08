@@ -31,7 +31,8 @@
     "react-resizable": "^1.10.1",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^3.1.1"
   },
   "devDependencies": {
     "@svgr/rollup": "^2.4.1",
@@ -81,6 +82,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-less": "^1.1.2"
+    "rollup-plugin-less": "^1.1.2",
+    "socket.io-client": "^3.1.1"
   }
 }
