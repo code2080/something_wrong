@@ -15,7 +15,7 @@ import './JobToolbar.scss';
 const JobToolbar = () => {
   const orgId = useSelector(selectOrgId);
   const { activeJobId, activeJobFormId, stopJob } = useJobWSAPI(orgId);
-  const job = useSelector(selectJobFromForm(activeJobId, activeJobFormId));
+  const job = useSelector(selectJobFromForm)(activeJobId, activeJobFormId);
 
   const onStopJob = () => {
     if (activeJobId)
