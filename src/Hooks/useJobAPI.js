@@ -35,8 +35,7 @@ export const useJobWSAPI = () => {
     socket.current.on('jobUpdate', ({ job }) => {
       console.log(`Received job update: ${job._id}`);
       // Set the active job id and form id
-      setActiveJobId(job._id);
-      setActiveJobFormId(job.formId);
+      setActiveJobId(job ? job._id : null);
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
       dispatch(fetchActivitiesForForm(formId));
