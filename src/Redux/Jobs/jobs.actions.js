@@ -24,8 +24,7 @@ export const fetchAllJobs = () =>
 export const updateJobFromWS = job => ({ type: types.UPDATE_JOB_SUCCESS, payload: { job } });
 
 const createJobFlow = {
-  request: () => ({ type: types.CREATE_JOB_REQUEST }),
-  success: (response, params, postAction) => {
+  request: (params, postAction) => {
     const { callback, meta, activities } = postAction;
     if (meta.schedulingMode === schedulingModes.SINGLE) {
       callback(
@@ -41,8 +40,9 @@ const createJobFlow = {
         })
       })));
     }
-    return ({ type: types.CREATE_JOB_SUCCESS, payload: { ...response } });
+    return ({ type: types.CREATE_JOB_REQUEST });
   },
+  success: (response, params, postAction) => ({ type: types.CREATE_JOB_SUCCESS, payload: { ...response } }),
   failure: (err, params, postAction) => {
     const { callback, meta, activities } = postAction;
     if (meta.schedulingMode === schedulingModes.SINGLE) {
