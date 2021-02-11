@@ -1,4 +1,5 @@
 import * as types from './activities.actionTypes';
+import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
@@ -44,7 +45,7 @@ const reducer = (state = initialState, action) => {
     case types.REORDER_ACTIVITIES_SUCCESS:
     case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS:
     case types.UPDATE_ACTIVITIES_SUCCESS:
-    case types.ABORT_JOB_SUCCESS: {
+    case ABORT_JOB_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       const activitityObjs = action.payload.activities || [];
       const activities = updateActivitiesForForm(activitityObjs);
@@ -65,7 +66,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...activities ],
+          [formInstanceId]: [...activities],
         }
       };
     }
@@ -79,7 +80,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...activities ],
+          [formInstanceId]: [...activities],
         }
       };
     }
