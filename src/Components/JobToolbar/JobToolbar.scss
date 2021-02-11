@@ -2,6 +2,7 @@
 
 $progressBarHeight: 8px;
 $activeJobLabelWidth: 170px;
+$inactiveJobLabelWidth: 230px;
 
 .job-toolbar--wrapper {
   padding: 4px 8px;
@@ -9,8 +10,11 @@ $activeJobLabelWidth: 170px;
   .active-job--wrapper {
     display: flex;
     align-items: center;
-    .label {
+    .label.active {
       width: $activeJobLabelWidth;
+    }
+    .label.inactive {
+      width: $inactiveJobLabelWidth;
     }
 
     .meter {

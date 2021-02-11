@@ -26,7 +26,6 @@ export const extractSubmissionColumns = form => {
     .map(elType => elementTypeMapping[elType].elementId);
 
   // Grab all safe elements and transform to columns
-  console.log(regularSections);
   return regularSections.reduce((_safeEls, section) =>
     [
       ..._safeEls,

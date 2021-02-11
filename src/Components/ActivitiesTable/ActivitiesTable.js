@@ -12,31 +12,47 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
-import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../Constants/common.constants';
+import { DATE_TIME_FORMAT } from '../../Constants/common.constants';
 import { stringIncludes, anyIncludes } from '../../Utils/validation';
+import { useDispatch } from 'react-redux';
+import { reorderActivities } from '../../Redux/Activities/activities.actions';
+
+const filterFn = (activity, query) => {
+  // Search activities by [extId, activityStatus, submissionValues[], value[], timing[].value]
+  const validValue =
+    stringIncludes(activity.extId, query) ||
+    stringIncludes(activity.activityStatus, query) ||
+    (activity.values || []).some(item => anyIncludes(item.submissionValue, query) ||
+      anyIncludes(item.value, query)
+    ) ||
+    (activity.timing || []).some(item => item.value && stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query));
+  if (validValue) {
+    return true;
+  }
+  return false;
+};
+
+const getActivityDataSource = (activities = []) => {
+  const hasActivityOrdering = activities.every(a => a.sequenceIdx != null);
+  if (!hasActivityOrdering) return activities;
+  return _.orderBy(activities, ['sequenceIdx'], ['asc']);
+};
 
 const ActivitiesTable = ({
   formInstanceId,
+  formId,
   mapping,
   activities,
 }) => {
+  const dispatch = useDispatch();
+  const onMove = (sourceIdx, destinationIdx) => {
+    if (sourceIdx !== destinationIdx)
+      dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx));
+  }
 
-  const filterFn = (activity, query) => {
-    // Search activities by [extId, activityStatus, submissionValues[], value[], timing[].value]
-    const validValue =
-      stringIncludes(activity.extId, query) ||
-      stringIncludes(activity.activityStatus, query) ||
-      (activity.values || []).some(item => anyIncludes(item.submissionValue, query) ||
-        anyIncludes(item.value, query)
-      ) || 
-      (activity.timing || []).some(item => item.value && stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query));
-    if (validValue) {
-      return true;
-    }
-    return false;
-  };
   const columns = mapping ? createActivitiesTableColumnsFromMapping(mapping) : [];
-  const dataSource = activities && activities.length ? activities : [];
+  const dataSource = getActivityDataSource(activities);
+
   return (
     <DynamicTable
       columns={columns}
@@ -46,12 +62,15 @@ const ActivitiesTable = ({
       expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
       resizable
       onSearch={filterFn}
+      draggable={true}
+      onMove={onMove}
     />
   );
 };
 
 ActivitiesTable.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
+  formId: PropTypes.string.isRequired,
   mapping: PropTypes.object,
   activities: PropTypes.array
 };

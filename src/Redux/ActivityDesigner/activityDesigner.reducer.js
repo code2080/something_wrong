@@ -8,7 +8,7 @@ import initialState from './activityDesigner.initialState';
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_MAPPINGS_FOR_FORM_SUCCESS: {
-      const _mapping = _.get(action.payload.mappings, '0', {});
+      const _mapping = _.get(action.payload.activityDesigns, '0', {});
       const mapping = new ActivityDesignerMapping(_mapping);
       return {
         ...state,

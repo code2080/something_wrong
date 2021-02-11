@@ -19,7 +19,7 @@ export const useMixpanel = () => {
 export const useFetchLabelsFromExtIds = (payload) => {
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
-    const extIds = useSelector(state => selectExtIds(state));
+  const extIds = useSelector(state => selectExtIds(state));
 
   async function exec(payload) {
     const extIdProps = await teCoreAPI.getExtIdProps({ ...initialPayload, ...payload });
@@ -33,4 +33,3 @@ export const useFetchLabelsFromExtIds = (payload) => {
       exec(payload)
   }, [payload]);
 };
-

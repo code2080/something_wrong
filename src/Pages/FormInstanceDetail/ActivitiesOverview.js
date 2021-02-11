@@ -103,6 +103,7 @@ const FormInstanceReservationOverview = ({
             mapping={mapping}
             activities={activities}
             formInstanceId={formInstance._id}
+            formId={form._id}
           />
         </React.Fragment>
       );
@@ -170,6 +171,7 @@ FormInstanceReservationOverview.propTypes = {
   mappings: PropTypes.object,
   saveActivities: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  teCoreAPI: PropTypes.object.isRequired,
 };
 
 FormInstanceReservationOverview.defaultProps = {

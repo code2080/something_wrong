@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Alert, Button, Modal, Menu, Dropdown, Spin, Icon } from 'antd';
+import { Alert, Button, Modal, Menu, Dropdown } from 'antd';
 import ReactRouterPause from '@allpro/react-router-pause';
 
 // COMPONENTS
@@ -10,6 +10,8 @@ import withTECoreAPI from '../../Components/TECoreAPI/withTECoreAPI';
 import ObjectMapping from '../../Components/ActivityDesigner/ObjectMapping';
 import FieldMapping from '../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../Components/ActivityDesigner/TimingMapping';
+import SavingStatus from '../../Components/ActivityDesigner/SavingStatus';
+import MappingStatus from '../../Components/ActivityDesigner/MappingStatus';
 
 // ACTIONS
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -17,17 +19,22 @@ import { updateMapping } from '../../Redux/ActivityDesigner/activityDesigner.act
 import { deleteActivities } from '../../Redux/Activities/activities.actions';
 import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../Redux/Integration/integration.actions';
 
-// SELECTORS
-import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
-
-// MODELS
-import { ActivityTiming } from '../../Models/ActivityTiming.model';
-
 // HELPERS
 import {
   validateMapping,
   getElementsForMapping,
+  getMandatoryPropsForTimingMode,
 } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
+import {
+  extractReservationFields,
+  extractReservationTypes,
+  checkObjectIsInvalid,
+  resetMenuOptions,
+  resetEmpty,
+  resetAll,
+  resetTypes,
+  resetFields,
+} from '../../Utils/activityDesigner';
 
 // STYLES
 import './ActivityDesigner.scss';
@@ -36,59 +43,6 @@ import { ActivityDesignerMapping } from '../../Models/ActivityDesignerMapping.mo
 // CONSTANTS
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { useHistory } from 'react-router-dom';
-import { themeColors } from '../../Constants/themeColors.constants';
-
-const checkObjectIsInvalid = object => {
-  if (_.isEmpty(object)) return false;
-  return Object.keys(object).some(key => {
-    const item = object[key];
-    if (!item || _.isEmpty(item)) return true;
-    if (Array.isArray(item)) return item.some(subItem => !subItem || _.isEmpty(subItem));
-    return false;
-  });
-};
-
-const resetMenuOptions = {
-  RESET_EMPTY: 'RESET_EMPTY',
-  RESET_TYPES: 'RESET_TYPES',
-  RESET_FIELDS: 'RESET_FIELDS',
-  RESET_ALL: 'RESET_ALL',
-};
-
-const resetEmpty = () => ({
-  timing: new ActivityTiming({}),
-  objects: {},
-  fields: {},
-  propSettings: {},
-});
-
-const resetAll = (typeOptions, fieldOptions) => ({
-  timing: new ActivityTiming({}),
-  objects: typeOptions.reduce((prev, type) => ({ ...prev, [type.value]: null }), {}),
-  fields: fieldOptions.reduce((prev, field) => ({ ...prev, [field.value]: null }), {}),
-  propSettings: {
-    ...typeOptions.reduce((prev, type) => ({ ...prev, [type.value]: { mandatory: false } }), {}),
-    ...fieldOptions.reduce((prev, field) => ({ ...prev, [field.value]: { mandatory: false } }), {}),
-  },
-});
-
-const resetFields = (mapping, fieldOptions) => ({
-  ...mapping,
-  fields: fieldOptions.reduce((prev, field) => ({ ...prev, [field.value]: null }), {}),
-  propSettings: {
-    ...mapping.propSettings,
-    ...fieldOptions.reduce((prev, field) => ({ ...prev, [field.value]: { mandatory: false } }), {}),
-  },
-});
-
-const resetTypes = (mapping, typeOptions) => ({
-  ...mapping,
-  objects: typeOptions.reduce((prev, type) => ({ ...prev, [type.value]: null }), {}),
-  propSettings: {
-    ...mapping.propSettings,
-    ...typeOptions.reduce((prev, type) => ({ ...prev, [type.value]: { mandatory: false } }), {}),
-  },
-});
 
 const mapStateToProps = (state, ownProps) => {
   const { match: { params: { formId } } } = ownProps;
@@ -102,7 +56,7 @@ const mapStateToProps = (state, ownProps) => {
   let validFields = [];
   const { reservationMode } = form;
   if (reservationMode) {
-    validTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []); 
+    validTypes = _.get(state, `integration.reservationModes.${reservationMode}.types`, []);
     validFields = _.get(state, `integration.reservationModes.${reservationMode}.fields`, []);
   }
 
@@ -114,7 +68,6 @@ const mapStateToProps = (state, ownProps) => {
     hasReservations: noOfReservations > 0,
     validTypes,
     validFields,
-    saving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state),
   };
 };
 
@@ -125,14 +78,6 @@ const mapActionsToProps = {
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
 };
-
-const extractReservationTypes = payload => {
-  if (!payload.subtypes || !payload.subtypes.length) return [];
-  return payload.subtypes.map(el => ({ label: el.name, value: el.extid }));
-};
-
-const extractReservationFields = payload =>
-  payload.map(el => ({ label: el.name, value: el.extid }));
 
 const ActivityDesignerPage = ({
   form,
@@ -151,8 +96,14 @@ const ActivityDesignerPage = ({
   saving,
 }) => {
   const history = useHistory();
-
+  /**
+   * STATE VARS
+   */
   const [mapping, setMapping] = useState(mappingOriginal);
+
+  /**
+   * EFFECTS
+   */
 
   useEffect(() => {
     if (form && form.reservationMode) {
@@ -185,25 +136,23 @@ const ActivityDesignerPage = ({
     ]);
   }, []);
 
-  // Effect to set activity types
+  // Effect to set activity types & fields
   useEffect(() => {
-    async function exec() {
+    async function execTypes() {
       const _availableTypes = await teCoreAPI.getReservationTypes();
       setAvailableTypes(extractReservationTypes(_availableTypes));
     }
-    exec();
-  }, []);
-
-  // Effect to set activity fields
-  useEffect(() => {
-    async function exec() {
+    async function execFields() {
       const _availableFields = await teCoreAPI.getReservationFields();
       setAvailableFields(extractReservationFields(_availableFields));
     }
-    exec();
+    execTypes();
+    execFields();
   }, []);
 
-  // Memoized mapping options
+  /**
+   * MEMOIZED VARS
+   */
   const mappingOptions = useMemo(() => getElementsForMapping(form.sections, mapping), [form, mapping]);
   const mappingStatus = useMemo(() => validateMapping(form._id, mappings), [form, mappings]);
   const typeOptions = useMemo(() => {
@@ -216,6 +165,7 @@ const ActivityDesignerPage = ({
       );
     return availableTypes;
   }, [form, validTypes, availableTypes]);
+
   const fieldOptions = useMemo(() => {
     if (validFields.length > 0)
       return validFields.map(
@@ -227,6 +177,9 @@ const ActivityDesignerPage = ({
     return availableFields;
   }, [validFields, availableFields]);
 
+  /**
+   * EVENT HANDLERS
+   */
   // Callback to delete any existing activities
   const onDeleteReservationsCallback = useCallback(() => {
     const doDelete = async () => {
@@ -293,12 +246,18 @@ const ActivityDesignerPage = ({
 
   const mappingIsValid = useMemo(() => {
     const { fields, objects, timing } = mapping;
-    const { startTime, endTime } = timing;
-    if (_.isEmpty(startTime) || _.isEmpty(endTime)) return false;
+    const mandatoryTimingFields = getMandatoryPropsForTimingMode(timing.mode);
+    console.log(mandatoryTimingFields);
+    if (!mandatoryTimingFields || mandatoryTimingFields.some(field => _.isEmpty(timing[field]))) {
+      console.log('Timing invalid');
+      return false;
+    }
     if (checkObjectIsInvalid(fields)) {
+      console.log('Fields invalid');
       return false;
     }
     if (checkObjectIsInvalid(objects)) {
+      console.log('Objects invalid');
       return false;
     }
     return true;
@@ -373,19 +332,10 @@ const ActivityDesignerPage = ({
               Reset configuration...
             </Button>
           </Dropdown>
-          <span style={{ marginLeft: 'auto', color: themeColors.deepSeaGreen }}>
-            {saving ? (
-              <span>
-                <Spin size="small" spinning={saving} />
-                &nbsp;Saving
-              </span>
-            ) : (
-              <span>
-                <Icon type="check-circle" />
-                &nbsp;Saved
-              </span>
-            )}
-          </span>
+          <div style={{ marginLeft: 'auto', display: 'flex' }}>
+            <MappingStatus status={mappingIsValid} />
+            <SavingStatus />
+          </div>
         </div>
         <div className="activity-designer--type-header">
           <div>Timing</div>

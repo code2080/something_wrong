@@ -28,7 +28,7 @@ const executeAPICall = async (api, callname, args, actionKey) => {
   }
   console.info('Call is unsupported and can not be mocked');
   console.info(`Suppressing call to ${actionKey} with arguments:`, args);
-  return unsupportedFuncCall(callname);
+  // unsupportedFuncCall(callname);
 };
 
 const configureTECoreAPI = teCoreAPI => {
