@@ -125,8 +125,8 @@ function createThunkAction({
     if (
       typeof allApis[endpoint].cancel === 'function' &&
       allApis[endpoint].inprogress
-      ) {
-        allApis[endpoint].cancel('DUPLICATED_CANCELLED');
+    ) {
+      allApis[endpoint].cancel('DUPLICATED_CANCELLED');
       allApis[endpoint].inprogress = false;
     }
     option.cancelToken = new CancelToken(c => {

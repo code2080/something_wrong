@@ -27,6 +27,11 @@ import {
   getMappingTypeForProp
 } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
+import {
+  getActivityValue,
+  resetView,
+} from './helpers';
+
 // CONSTANTS
 import {
   activityActions,
@@ -36,21 +41,12 @@ import {
   activityActionLabels
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
-import { activityStatuses } from '../../../Constants/activityStatuses.constants';
 import { activityIsReadOnly } from '../../../Utils/activities.helpers';
-
-const resetView = () => ({ view: activityViews.VALUE_VIEW, action: null });
 
 const mapActionsToProps = {
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
-};
-
-const getActivityValue = (activityValue, activity, type, prop) => {
-  if (activityValue) return activityValue;
-  const payload = type === 'VALUE' ? activity.values : activity.timing;
-  return payload.find(el => el.extId === prop);
 };
 
 const BaseActivityCol = ({
@@ -195,7 +191,7 @@ const BaseActivityCol = ({
         teCoreAPI[callName]({
           activityValue: _activityValue,
           objectExtId: activityValue.value,
-          typeExtId: activityValue.extId,      
+          typeExtId: activityValue.extId,
           callback: res => onFinshExternalEdit(res, action)
         });
       } else {

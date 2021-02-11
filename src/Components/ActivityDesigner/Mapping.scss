@@ -57,3 +57,31 @@
     }
   }
 }
+
+.multi-row-parameter--wrapper {
+  background: $swedishSkies;
+  border-radius: 2px;
+  padding: 8px;
+
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .multi-row-parameter--empty {
+    font-size: 14px;
+    font-style: italic;
+    margin: 0.2rem 0;
+    color: $rustyGrey;
+  }
+
+  .timing-mapping__row--wrapper {
+    .label {
+      font-weight: normal;
+    }
+    .ant-btn {
+      color: $bittersweet;
+    }
+  }
+}

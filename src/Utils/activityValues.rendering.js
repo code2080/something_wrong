@@ -8,6 +8,7 @@ import { validateTimeslotTimingMode, validateFilterValue, validateGeneralValue }
 import { determineSchedulingAlgorithmForActivityValue } from './scheduling.helpers';
 import { determineContentOfValue } from './activityValues.helpers';
 import { getTimingModeForActivity } from './activities.helpers';
+import { minToHourMinDisplay } from './moment.helpers';
 
 // CONSTANTS
 import { activityValueModes, activityValueModeProps } from '../Constants/activityValueModes.constants';
@@ -174,6 +175,100 @@ const getSchedulingPayloadForTimeSlotEndTime = (
 };
 
 /**
+ * @function getRenderPayloadForDateRangesValue
+ * @description get the rendering payload for a value of extId === dateRanges
+ * @param {ActivityValue} activityValue
+ * @returns RenderPayload
+ */
+const getRenderPayloadForDateRangesValue = activityValue => {
+  const { value } = activityValue;
+  // Date ranges need to have a start time
+  if (!value || !value.startTime)
+    return createRenderPayload({
+      status: activityValueStatuses.READY_FOR_SCHEDULING, // Missing data range value is not a failed validation
+      value: null,
+      formattedValue: null,
+    });
+  // ... but end time is optional
+  if (!value.endTime)
+    return createRenderPayload({
+      status: activityValueStatuses.READY_FOR_SCHEDULING,
+      value: [value.startTime],
+      formattedValue: `On or after: ${value.startTime}`
+    });
+  // All data exists
+  return createRenderPayload({
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    value: [value.startTime, value.endTime],
+    formattedValue: `Start: ${value.startTime}, End: ${value.endTime}`
+  });
+};
+
+/**
+ * @function getRenderPayloadForPaddingValue
+ * @description get the rendering payload for a value of extId === padding
+ * @param {ActivityValue} activityValue
+ * @returns RenderPayload
+ */
+const getRenderPayloadForPaddingValue = activityValue => {
+  const { value } = activityValue;
+  // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
+  
+  if(!value)
+    return null
+
+    
+  if (!value.before && !value.after)
+    return createRenderPayload({
+      status: activityValueStatuses.READY_FOR_SCHEDULING,
+      value: null,
+      formattedValue: null,
+    });
+  // Only before is set
+  if (value.before && !value.after) {
+    const { days, hours, minutes } = minToHourMinDisplay(value.before);
+    return createRenderPayload({
+      status: activityValueStatuses.READY_FOR_SCHEDULING,
+      value: [value.before],
+      formattedValue: `Padding before: ${days ? `${days}d, ${hours}:${minutes}` : `${hours}:${minutes}`}`,
+    });
+  }
+
+  // Only before is set
+  if (!value.before && value.after) {
+    const { days, hours, minutes } = minToHourMinDisplay(value.after);
+    return createRenderPayload({
+      status: activityValueStatuses.READY_FOR_SCHEDULING,
+      value: [value.after],
+      formattedValue: `Padding after:  ${days ? `${days}d, ${hours}:${minutes}` : `${hours}:${minutes}`}`,
+    });
+  }
+  // Both are set
+  const { days: bD, hours: bH, minutes: bM } = minToHourMinDisplay(value.before);
+  const { days: aD, hours: aH, minutes: aM } = minToHourMinDisplay(value.after);
+  return createRenderPayload({
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    value: [value.before, value.after],
+    formattedValue: `Padding before: ${bD ? `${bD}d, ${bH}:${bM}` : `${bH}:${bM}`}, after: ${aD ? `${aD}d, ${aH}:${aM}` : `${aH}:${aM}`}`,
+  });
+}
+
+/**
+ * @function getRenderPayloadForOptionalTimingValues
+ * @description return a successful validation even for null values for optional timing parameters
+ * @param {ActivityValue} activityValue
+ * @returns RenderPayload
+ */
+const getRenderPayloadForOptionalTimingValues = activityValue => {
+  // Key here is that a null value is not a failed validation
+  return createRenderPayload({
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    value: activityValue.value,
+    formattedValue: activityValue.value,
+  });
+}
+
+/**
  * @function getRenderPayloadForObjectFilter
  * @param {Object} activityValue the activity value
  * @returns {Object} renderPayload
@@ -221,6 +316,18 @@ export const getRenderPayloadForActivityValue = (
   if (activityValue.extId === 'endTime' && timingMode === mappingTimingModes.TIMESLOTS)
     renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
 
+  // Special case: dateRanges for sequence scheduling
+  if (activityValue.extId === 'dateRanges')
+    renderPayload = getRenderPayloadForDateRangesValue(activityValue);
+
+  // Special case: padding
+  if (activityValue.extId === 'padding')
+    renderPayload = getRenderPayloadForPaddingValue(activityValue);
+
+  // For all optional timing elements
+  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === mappingTimingModes.SEQUENCE)
+    renderPayload = getRenderPayloadForOptionalTimingValues(activityValue);
+
   // Special case: filters
   if (activityValue.submissionValueType === submissionValueTypes.FILTER && determineContentOfValue(activityValue) === submissionValueTypes.FILTER)
     renderPayload = getRenderPayloadForObjectFilter(activityValue);
@@ -228,9 +335,9 @@ export const getRenderPayloadForActivityValue = (
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object
   if (activityValue.type === 'object' && activityValue.value && activityValue.value.extid)
     formatFn = teObject => teObject.extid;
-    
+
   // TODO: Workaround for unhandled object request/empty activity value
-  if (activityValue.type === 'object' && _.isEmpty(activityValue.value) )
+  if (activityValue.type === 'object' && _.isEmpty(activityValue.value))
     formatFn = _ => 'No values';
 
   // General case

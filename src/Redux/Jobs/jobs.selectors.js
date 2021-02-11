@@ -8,6 +8,17 @@ export const selectJobsForForm = formId => createSelector(
   jobs => jobs[formId] || []
 );
 
+export const selectJobFromForm = createSelector(
+  jobStateSelector,
+  jobs => (jobId, formId) => {
+    if (!jobId || !formId) return null;
+    if (!jobs[formId]) return null;
+    const job = jobs[formId][jobId];
+    if (!job) return null;
+    return job;
+  }
+);
+
 export const selectJobForActivities = (formId, activityIds = []) => createSelector(
   selectJobsForForm(formId),
   formJobs => {

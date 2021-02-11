@@ -26,11 +26,6 @@ export class Activity {
   /**
    * Scheduling informationn
    */
-  /**
-   * @todo remove
-   */
-  reservationTemplateExtId; // DEPRECATED
-
   activityStatus; // The status of the activity, one of the enum values in Constants/activityStatuses.constants.js
 
   reservationId; //  If actvitiyStatus indicates the activity has been scheduled, this prop holds the reservation id
@@ -62,7 +57,8 @@ export class Activity {
     errorDetails,
     schedulingTimestamp,
     timing,
-    values
+    values,
+    sequenceIdx,
   }) {
     this._id = _id;
     this.formId = formId;
@@ -70,12 +66,12 @@ export class Activity {
     this.sectionId = sectionId;
     this.eventId = eventId;
     this.rowIdx = rowIdx;
-    // this.reservationTemplateExtId = reservationTemplateExtId; DEPRECATED
     this.activityStatus = activityStatus;
     this.errorDetails = new SchedulingError(errorDetails || {});
     this.reservationId = reservationId;
     this.schedulingTimestamp = schedulingTimestamp ? moment.utc(schedulingTimestamp) : null;
     this.timing = timing;
     this.values = values.map(el => new ActivityValue(el));
+    this.sequenceIdx = sequenceIdx;
   }
 }
