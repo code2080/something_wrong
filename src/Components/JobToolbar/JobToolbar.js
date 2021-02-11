@@ -13,8 +13,7 @@ import { useJobWSAPI } from '../../Hooks/useJobAPI';
 import './JobToolbar.scss';
 
 const JobToolbar = () => {
-  const orgId = useSelector(selectOrgId);
-  const { activeJobId, activeJobFormId, stopJob } = useJobWSAPI(orgId);
+  const { activeJobId, activeJobFormId, stopJob } = useJobWSAPI();
   const job = useSelector(selectJobFromForm)(activeJobId, activeJobFormId);
 
   const onStopJob = () => {
