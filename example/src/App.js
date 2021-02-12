@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import TEPrefsLib from 'te-prefs-lib'
+import TEPrefsLib from 'te-prefs-lib';
 
 // STYLES
 import 'te-prefs-lib/dist/te-prefs-lib.css';

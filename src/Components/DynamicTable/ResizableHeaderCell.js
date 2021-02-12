@@ -29,7 +29,7 @@ const ResizableCell = props => {
   const onResizeStart = (e) => {
     ref.current.addEventListener('click', terminateClickEvent);
     start = e.pageX;
-  }
+  };
 
   const onResizeStop = (e) => {
     if (typeof onResized === 'function') {
@@ -38,7 +38,7 @@ const ResizableCell = props => {
     start = 0;
     changedWidth = 0;
     ref.current.removeEventListener('click', terminateClickEvent);
-  }
+  };
 
   const terminateClickEvent = e => {
     e.stopPropagation();
@@ -67,7 +67,9 @@ const ResizableCell = props => {
       onResizeStop={onResizeStop}
     >
       <th {...restProps} ref={ref}>
-        <ColumnHeader {...restProps} children={children} />
+        <ColumnHeader {...restProps} >
+          {children}
+        </ColumnHeader>
       </th>
     </Resizable>
   );
@@ -75,18 +77,26 @@ const ResizableCell = props => {
 
 ResizableCell.propTypes = {
   width: PropTypes.number,
+  children: PropTypes.object,
+  onResized: PropTypes.func,
+  expandable: PropTypes.bool,
+  index: PropTypes.number,
 };
+
 ResizableCell.defaultProps = {
   width: null,
 };
 
-const ResizableHeaderCell = ({ resizable, onResized, expandable,  ...restProps }) => {
+const ResizableHeaderCell = ({ resizable, onResized, expandable, ...restProps }) => {
   if (!resizable) return <BasicHeaderCell {...restProps} />;
   return <ResizableCell {...restProps} onResized={onResized} expandable={expandable} />;
 };
+
 ResizableHeaderCell.propTypes = {
+  children: PropTypes.object,
   resizable: PropTypes.bool,
   index: PropTypes.number,
+  onResized: PropTypes.func,
   expandable: PropTypes.bool,
 };
 ResizableHeaderCell.defaultProps = {

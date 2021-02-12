@@ -45,13 +45,11 @@ const LoginPage = ({
     setBreadcrumbs([
       { path: '/', label: 'Login' }
     ]);
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null)
-      fetchProfile();
-    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null)
-      history.push('/forms');
+    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null) { fetchProfile(); }
+    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null) { history.push('/forms'); }
     if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
   }, [authenticationStatus, userStatus]);
 
@@ -64,7 +62,7 @@ const LoginPage = ({
   }, [selectOrgForUser]);
 
   return (
-    <div className="login--wrapper">
+    <div className='login--wrapper'>
       <Typography.Title level={2}>Sign in.</Typography.Title>
       <Typography.Paragraph>Sign in with your TE Preferences credentials to get started.</Typography.Paragraph>
       {authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED && (
@@ -75,7 +73,7 @@ const LoginPage = ({
       )}
     </div>
   );
-}
+};
 
 LoginPage.propTypes = {
   login: PropTypes.func.isRequired,

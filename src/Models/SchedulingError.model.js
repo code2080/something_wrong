@@ -3,7 +3,7 @@ export class SchedulingError {
 
   code; // Machine readable code
 
-  constructor({
+  constructor ({
     message,
     details,
     code,

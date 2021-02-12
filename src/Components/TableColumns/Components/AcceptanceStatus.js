@@ -14,20 +14,20 @@ const AcceptanceStatus = ({ acceptanceStatus, acceptanceComment }) => {
   if (!acceptanceStatus) return 'N/A';
 
   return (
-    <div className="acceptance-status--wrapper">
+    <div className='acceptance-status--wrapper'>
       <StatusLabel
         color={teCoreAcceptanceStatusProps[acceptanceStatus].color}
-        className="no-margin"
+        className='no-margin'
       >
         {teCoreAcceptanceStatusProps[acceptanceStatus].label}
       </StatusLabel>
       <div
-        className="acceptance-status--comment"
+        className='acceptance-status--comment'
       >
         {acceptanceComment}
       </div>
     </div>
-  )
+  );
 };
 
 AcceptanceStatus.propTypes = {

@@ -37,7 +37,7 @@ BodyRow.propTypes = {
 };
 
 const rowSource = {
-  beginDrag(props) {
+  beginDrag (props) {
     currentDraggingIndex = props.index;
     return {
       index: props.index,
@@ -46,7 +46,7 @@ const rowSource = {
 };
 
 const rowTarget = {
-  drop(props, monitor) {
+  drop (props, monitor) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
 

@@ -42,12 +42,12 @@ const NumberFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, elem
     const { callname } = teCoreActions[key];
     let _payload;
     switch (callname) {
-      case teCoreCallnames.FILTER_OBJECTS:
-        _payload = transformPayloadForNumberFiltering(payload, searchCriteria);
-        break;
-      default:
-        _payload = payload;
-        break;
+    case teCoreCallnames.FILTER_OBJECTS:
+      _payload = transformPayloadForNumberFiltering(payload, searchCriteria);
+      break;
+    default:
+      _payload = payload;
+      break;
     }
     teCoreAPI[callname](_payload);
   }, [payload, teCoreAPI]);
@@ -72,15 +72,15 @@ const NumberFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, elem
   ), [onClickCallback, supportedActions]);
 
   return (
-    <div className="element__filter--wrapper">
+    <div className='element__filter--wrapper'>
       <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}
       >
-        <div className="element__filter--inner">
-          <Icon type="filter" />
+        <div className='element__filter--inner'>
+          <Icon type='filter' />
           {`${typeLabel}/${fieldLabel} ${searchCriteriaNumberProps[searchCriteria].label} ${searchValue}`}
-          <Icon type="down" />
+          <Icon type='down' />
         </div>
       </Dropdown>
     </div>

@@ -87,7 +87,7 @@ export const findTimeSlot = (startTime, endTime, timeslots) => {
     const slotStart = moment.utc(timeslot.startTime).format(TIME_FORMAT);
     const slotEnd = moment.utc(timeslot.endTime).format(TIME_FORMAT);
     return slotStart === _startTime && slotEnd === _endTime;
-  })
+  });
 };
 
 /**
@@ -112,6 +112,6 @@ export const getSelectionFieldElements = section =>
       const elementType = getElementTypeFromId(el.elementId);
       return elementType === elementTypes.ELEMENT_TYPE_INPUT_TEXT ||
         elementType === elementTypes.ELEMENT_TYPE_INPUT_NUMBER ||
-        elementType === elementTypes.ELEMENT_TYPE_TEXTAREA
+        elementType === elementTypes.ELEMENT_TYPE_TEXTAREA;
     })
-    .map(el => ({ value: el._id, label: el.label }))
+    .map(el => ({ value: el._id, label: el.label }));

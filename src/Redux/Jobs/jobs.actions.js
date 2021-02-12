@@ -65,7 +65,7 @@ const createJobFlow = {
         })
       })));
     }
-    return ({ type: types.CREATE_JOB_FAILURE, payload: { ...err } })
+    return ({ type: types.CREATE_JOB_FAILURE, payload: { ...err } });
   },
 };
 
@@ -94,7 +94,7 @@ export const createJob = ({
     postAction: { callback, meta, activities },
     permission: AEBETA_PERMISSIION,
   }));
-}
+};
 
 const abortJobFlow = {
   request: () => ({ type: types.ABORT_JOB_REQUEST }),

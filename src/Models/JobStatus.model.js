@@ -5,7 +5,7 @@ export class JobStatus {
   score;
   status;
 
-  constructor({
+  constructor ({
     _id = null,
     score = {},
     status = jobStatus.NOT_STARTED,

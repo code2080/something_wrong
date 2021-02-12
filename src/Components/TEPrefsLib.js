@@ -24,14 +24,14 @@ window.tePrefsHeight = 0;
 // Hack to get babel's async runtime generators to work
 Promise.resolve();
 
-
 const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   const teCoreAPI = configureTECoreAPI(_teCoreAPI);
   const prefsRef = useRef(null);
-  
+
   useEffect(() => {
-    teCoreAPI.getCurrentUser({ callback: (user) =>
-      window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { userId: user.userId } })
+    teCoreAPI.getCurrentUser({
+      callback: (user) =>
+        window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { userId: user.userId } })
     });
   }, [teCoreAPI]);
 
@@ -46,16 +46,16 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
     const { x, y, height } = prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
     window.tePrefsHeight = height;
-  }, [prefsRef.current && prefsRef.current.getBoundingClientRect()])
+  }, [prefsRef.current && prefsRef.current.getBoundingClientRect()]);
 
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI} mixpanel={mixpanel} >
         <div
           className='te-prefs-lib'
-          id="te-prefs-lib"
+          id='te-prefs-lib'
           ref={prefsRef}
-          onScroll={() => window.tePrefsScroll = prefsRef.current && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]}
+          onScroll={() => { window.tePrefsScroll = prefsRef.current && [prefsRef.current.scrollLeft, prefsRef.current.scrollTop]; }}
         >
           <TEPrefsLibRouter />
         </div>
@@ -67,6 +67,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
 TEPrefsLib.propTypes = {
   coreAPI: PropTypes.object,
   env: PropTypes.string,
+  mixpanel: PropTypes.object,
 };
 
 TEPrefsLib.defaultProps = {
@@ -74,4 +75,4 @@ TEPrefsLib.defaultProps = {
   env: 'production',
 };
 
-export default TEPrefsLib
+export default TEPrefsLib;

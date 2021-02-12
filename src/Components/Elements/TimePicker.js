@@ -8,11 +8,11 @@ import { TIME_FORMAT } from '../../Constants/common.constants';
 import './Pickers.scss';
 
 const TimePicker = ({ value }) => (
-  <div className="picker--wrapper">
-    <div className="icon--wrapper">
-      <Icon type="clock-circle" />
+  <div className='picker--wrapper'>
+    <div className='icon--wrapper'>
+      <Icon type='clock-circle' />
     </div>
-    <div className="value--wrapper">
+    <div className='value--wrapper'>
       {moment(value).format(TIME_FORMAT) || 'N/A'}
     </div>
   </div>

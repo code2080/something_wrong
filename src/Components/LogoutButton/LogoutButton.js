@@ -28,11 +28,11 @@ const LogoutButton = ({ isAuthenticated, logout, history }) => {
 
   return (
     <Button
-      size="small"
-      type="link"
+      size='small'
+      type='link'
       onClick={logOutCallback}
       disabled={!isAuthenticated}
-      className="logout--button"
+      className='logout--button'
     >
       Log out
     </Button>

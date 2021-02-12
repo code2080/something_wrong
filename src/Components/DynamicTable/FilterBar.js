@@ -6,13 +6,13 @@ import { Input, Icon } from 'antd';
 import './FilterBar.scss';
 
 const FilterBar = ({ query, onChange }) => (
-  <div className="filter-bar--wrapper">
+  <div className='filter-bar--wrapper'>
     <Input
-      placeholder="Filter..."
+      placeholder='Filter...'
       value={query}
       onChange={e => onChange(e.target.value)}
-      suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-      size="small"
+      suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+      size='small'
     />
   </div>
 );

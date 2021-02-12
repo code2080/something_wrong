@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectOrgId } from '../../Redux/Auth/auth.selectors';
 import { selectJobFromForm } from '../../Redux/Jobs/jobs.selectors';
 
 // HOOKS
@@ -17,14 +16,13 @@ const JobToolbar = () => {
   const job = useSelector(selectJobFromForm)(activeJobId, activeJobFormId);
 
   const onStopJob = () => {
-    if (activeJobId)
-      stopJob();
-  }
+    if (activeJobId) { stopJob(); }
+  };
 
   const hasActiveJob = job && job._id;
   return (
-    <div className="job-toolbar--wrapper">
-      <div className="active-job--wrapper">
+    <div className='job-toolbar--wrapper'>
+      <div className='active-job--wrapper'>
         <span className={`label ${hasActiveJob ? 'active' : 'inactive'}`}>
           {hasActiveJob
             ? 'Scheduling job in progress'
@@ -34,13 +32,13 @@ const JobToolbar = () => {
         {hasActiveJob && (
           <React.Fragment>
             <Button
-              type="link"
-              size="small"
+              type='link'
+              size='small'
               onClick={onStopJob}
             >
               Stop
             </Button>
-            <div className="meter">
+            <div className='meter'>
               <span />
             </div>
           </React.Fragment>

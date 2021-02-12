@@ -6,8 +6,8 @@ import { themeColors } from '../../Constants/themeColors.constants';
 
 const MappingStatus = ({ status }) => {
   return (
-    <div className="mapping-status--wrapper" style={{ marginRight: '0.4rem' }}>
-      <span className="label">Status:&nbsp;</span>
+    <div className='mapping-status--wrapper' style={{ marginRight: '0.4rem' }}>
+      <span className='label'>Status:&nbsp;</span>
       {!status && (
         <span style={{ color: themeColors.bittersweet }}>Invalid</span>
       )}

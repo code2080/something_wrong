@@ -18,13 +18,13 @@ const SavingStatus = ({ isSaving }) => {
     <div style={{ color: themeColors.deepSeaGreen }}>
       {isSaving && (
         <React.Fragment>
-          <Spin size="small" spinning={isSaving} />
+          <Spin size='small' spinning={isSaving} />
           &nbsp;Saving
         </React.Fragment>
       )}
       {!isSaving && (
         <React.Fragment>
-          <Icon type="check-circle" theme="filled" />
+          <Icon type='check-circle' theme='filled' />
           &nbsp;Saved
         </React.Fragment>
       )}

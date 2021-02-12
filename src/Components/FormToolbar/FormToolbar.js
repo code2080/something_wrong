@@ -15,24 +15,24 @@ const mapStateToProps = (state, ownProps) => ({
 
 const FormToolbar = ({ form, onClickMore }) => (
   <React.Fragment>
-    <div className="toolbar--wrapper">
-      <div className="toolbar--section-flex">
-        <span className="label">By:</span>
+    <div className='toolbar--wrapper'>
+      <div className='toolbar--section-flex'>
+        <span className='label'>By:</span>
         <UserLabel ownerId={form.ownerId} />
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Name:</span>
-        <span className="value">{form.name}</span>
+      <div className='toolbar--section-flex'>
+        <span className='label'>Name:</span>
+        <span className='value'>{form.name}</span>
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Description:</span>
-        <span className="value">{form.description}</span>
+      <div className='toolbar--section-flex'>
+        <span className='label'>Description:</span>
+        <span className='value'>{form.description}</span>
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Form type:</span>
-        <span className="value">{form.formType.toLowerCase()}</span>
+      <div className='toolbar--section-flex'>
+        <span className='label'>Form type:</span>
+        <span className='value'>{form.formType.toLowerCase()}</span>
       </div>
-      <div className="toolbar--section-flex">
+      <div className='toolbar--section-flex'>
         <a onClick={() => onClickMore()}>Form info...</a>
       </div>
 

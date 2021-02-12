@@ -28,35 +28,36 @@ const BaseActivityColValue = ({
 }) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
-      case activityValueTypes.OBJECT: {
-        const valueType = determineContentOfValue(activityValue);
-        if (valueType === submissionValueTypes.OBJECT)
-          return getRenderPayloadForActivityValue(
-            activityValue,
-            activity,
-            extId =>
-              extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
-                ? [extIdProps.objects[extId].label]
-                : extId
-          );
+    case activityValueTypes.OBJECT: {
+      const valueType = determineContentOfValue(activityValue);
+      if (valueType === submissionValueTypes.OBJECT) {
         return getRenderPayloadForActivityValue(
           activityValue,
           activity,
-          formatFn
+          extId =>
+            extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
+              ? [extIdProps.objects[extId].label]
+              : extId
         );
       }
-      case activityValueTypes.FIELD:
-      case activityValueTypes.TIMING:
-      default:
-        return getRenderPayloadForActivityValue(
-          activityValue,
-          activity,
-          formatFn
-        );
+      return getRenderPayloadForActivityValue(
+        activityValue,
+        activity,
+        formatFn
+      );
+    }
+    case activityValueTypes.FIELD:
+    case activityValueTypes.TIMING:
+    default:
+      return getRenderPayloadForActivityValue(
+        activityValue,
+        activity,
+        formatFn
+      );
     }
   }, [activityValue, activity, formatFn, extIdProps]);
 
-  if (schedulingPayload.tooltip)
+  if (schedulingPayload.tooltip) {
     return (
       <Tooltip
         title={schedulingPayload.tooltip}
@@ -65,6 +66,7 @@ const BaseActivityColValue = ({
         <span>{schedulingPayload.formattedValue || 'N/A'}</span>
       </Tooltip>
     );
+  }
 
   return (
     <span style={{ overflow: 'hidden' }}>

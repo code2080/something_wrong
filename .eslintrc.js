@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
   },
+  parser: "@babel/eslint-parser",
   extends: [
     'plugin:react/recommended',
     'standard',
@@ -11,36 +12,48 @@ module.exports = {
       jsx: true
     },
     ecmaVersion: 2021,
+    requireConfigFile: false,
   },
   plugins: [
     'react',
+    '@babel'
   ],
+  settings: {
+    react: {
+      version: 'detect',
+    }
+  },
 
   rules: {
     // don't force es6 functions to include space before paren
-    "space-before-function-paren": ['error'],
+    'space-before-function-paren': ['error'],
 
     // allow specifying true explicitly for boolean props
-    "react/jsx-boolean-value": ['error'],
+    'react/jsx-boolean-value': ['error'],
 
     // allow double quotes
-    "jsx-quotes": ['error', 'always'],
+    'jsx-quotes': ['error', 'prefer-single'],
 
     // allow trailing commas
-    "comma-dangle": 0,
+    'comma-dangle': 0,
 
     // we want to force semicolons
-    'semi': ['error', 'always'],
+    semi: ['error', 'always'],
     // we use 2 spaces to indent our code
-    'indent': ['error', 2],
+    indent: ['error', 2],
     // we want to avoid useless spaces
     'no-multi-spaces': ['error'],
+
+    "react/display-name": 0,
+
+    "@babel/semi": ['error'],
+
+    "node/no-callback-literal": 0,
 
     // // Allow free standing if clauses
     // "curly": 0
   }
-}
-
+};
 
 /*
 {

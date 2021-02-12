@@ -38,25 +38,25 @@ export const activityStatusProps = {
     color: 'attention',
     label: 'No availability',
     icon: 'warning',
-    tooltip: () => `There's no availability to schedule this combination of objects within the given time constraints`,
+    tooltip: () => 'There\'s no availability to schedule this combination of objects within the given time constraints',
   },
   [activityStatuses.VALIDATION_ERROR]: {
     color: 'attention',
     label: 'Validation error',
     icon: 'warning',
-    tooltip: () => `One or many acitivty values have validations errors`,
+    tooltip: () => 'One or many acitivty values have validations errors',
   },
   [activityStatuses.FAILED]: {
     color: 'attention',
     label: 'Failed',
     icon: 'warning',
-    tooltip: () => `An attempt to schedule this activity was made, but it failed`,
+    tooltip: () => 'An attempt to schedule this activity was made, but it failed',
   },
   [activityStatuses.QUEUED]: {
     color: 'default',
     label: 'Queued',
     icon: 'warning',
-    tooltip: () => `The activity is waiting to be scheduled`,
+    tooltip: () => 'The activity is waiting to be scheduled',
   }
 };
 

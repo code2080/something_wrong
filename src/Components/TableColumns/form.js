@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
@@ -84,14 +83,16 @@ export const form = {
     dataIndex: 'status',
     fixedWidth: 100,
     render: status =>
-      formStatusProps[status] != null ? (
-        <StatusLabel
-          color={formStatusProps[status].color}
-          className="no-margin"
-        >
-          {formStatusProps[status].label}
-        </StatusLabel>
-      ) : null,
+      formStatusProps[status] != null
+        ? (
+          <StatusLabel
+            color={formStatusProps[status].color}
+            className='no-margin'
+          >
+            {formStatusProps[status].label}
+          </StatusLabel>
+        )
+        : null,
     sorter: (a, b) => sortAlpha(a.status, b.status)
   }
 };

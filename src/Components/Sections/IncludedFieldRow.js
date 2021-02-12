@@ -14,12 +14,12 @@ const IncludedFieldRow = ({
   onDelete,
 }) => {
   return (
-    <div className="included-field--wrapper">
+    <div className='included-field--wrapper'>
       <Select
-        size="small"
+        size='small'
         value={value.fieldExtId || undefined}
         onChange={val => onChange(rowIdx, { ...value, fieldExtId: val })}
-        placeholder="Select a field"
+        placeholder='Select a field'
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         style={{ width: '200px' }}
       >
@@ -30,16 +30,16 @@ const IncludedFieldRow = ({
       <Select
         value={value.element}
         onChange={val => onChange(rowIdx, { ...value, element: val })}
-        placeholder="Select an element"
+        placeholder='Select an element'
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        size="small"
+        size='small'
         style={{ width: '200px' }}
       >
         {elementOptions.map(el => (
           <Select.Option key={el.value} value={el.value}>{el.label}</Select.Option>
         ))}
       </Select>
-      <Button type="danger" size="small" icon="delete" onClick={() => onDelete(rowIdx)} />
+      <Button type='danger' size='small' icon='delete' onClick={() => onDelete(rowIdx)} />
     </div>
   );
 };

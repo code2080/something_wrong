@@ -33,18 +33,18 @@ const MappingRow = ({
     checked => onChangeProps({ mandatory: checked }), [onChangeProps]
   );
   const addElementProp = useCallback(() => {
-    return onChangeMapping({ [teProp]: [..._mappedValues, []] })
+    return onChangeMapping({ [teProp]: [..._mappedValues, []] });
   }, [_mappedValues]);
 
   return (
-    <div className="object-mapping-row--wrapper">
-      <div className="object-mapping-row--type">
+    <div className='object-mapping-row--wrapper'>
+      <div className='object-mapping-row--type'>
         <Select
           disabled={disabled}
           value={teProp}
           onChange={onChangeTEPropCallback}
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
-          size="small"
+          size='small'
         >
           {(tePropOptions || []).map(el => (
             <Select.Option key={el.value} value={el.value}>{el.label}</Select.Option>
@@ -58,37 +58,37 @@ const MappingRow = ({
           options={mappingOptions}
           value={el}
           onChange={val => onChangeFormMapping(val, idx)}
-          placeholder="Select an element"
+          placeholder='Select an element'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
-          size="small"
+          size='small'
           style={{ width: '200px', marginRight: '8px' }}
         />
       ))}
-      <div className="object-mapping-row--add">
+      <div className='object-mapping-row--add'>
         <Button
-          size="small"
-          type="link"
+          size='small'
+          type='link'
           onClick={addElementProp}
           disabled={disabled}
         >
           + Add element
         </Button>
       </div>
-      <div className="object-mapping-row--props">
+      <div className='object-mapping-row--props'>
         <span>Is mandatory:&nbsp;</span>
         <Switch
           checked={tePropSettings.mandatory}
           onChange={onChangePropsCallback}
-          size="small"
+          size='small'
           disabled={disabled}
         />
       </div>
-      <div className="object-mapping-row--delete">
+      <div className='object-mapping-row--delete'>
         <Button
           disabled={disabled}
-          size="small"
-          type="link"
-          icon="delete"
+          size='small'
+          type='link'
+          icon='delete'
           onClick={onRemoveTEProp}
         />
       </div>

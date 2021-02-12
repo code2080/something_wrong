@@ -9,17 +9,17 @@ import CalendarTimeslot from './CalendarTimeslot';
 import './CalendarTimeslots.scss';
 
 const CalendarTimeslots = ({ timeslots }) => (
-  <div className="calendar-timeslots--wrapper">
-    <Card size="small" title="Timeslots">
+  <div className='calendar-timeslots--wrapper'>
+    <Card size='small' title='Timeslots'>
       {timeslots &&
         timeslots.map((el, timeslotIdx) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div className="calendar-timeslot--outer" key={timeslotIdx}>
+          <div className='calendar-timeslot--outer' key={timeslotIdx}>
             <CalendarTimeslot timeslot={el} />
           </div>
         ))}
       {timeslots && timeslots.length === 0 && (
-        <Empty description="No timeslots have been added" />
+        <Empty description='No timeslots have been added' />
       )}
     </Card>
   </div>

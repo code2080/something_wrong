@@ -16,11 +16,11 @@ import './FormSubmissionFilters.scss';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
 const PropSearchWrapper = ({ label, value, onChange, }) => (
-  <div className="prop-search--wrapper">
-    <div className="prop-search--label">{label}</div>
+  <div className='prop-search--wrapper'>
+    <div className='prop-search--label'>{label}</div>
     <Input
-      size="small"
-      placeholder="Enter filter value..."
+      size='small'
+      placeholder='Enter filter value...'
       value={value}
       onChange={e => onChange(e.target.value)}
     />
@@ -64,11 +64,11 @@ const ScopedObjectFilters = ({
   }, [formId, filters, updateFilter]);
 
   return (
-    <div className="scoped-object-filters--wrapper">
-      <div className="scoped-object-filters--header">
+    <div className='scoped-object-filters--wrapper'>
+      <div className='scoped-object-filters--header'>
         {`Filter primary object ${label ? `(${label})` : ''}`}
       </div>
-      <div className="scoped-object-filters--body">
+      <div className='scoped-object-filters--body'>
         {(fields || []).map(field => (
           <PropSearchWrapper
             key={field.fieldExtId}

@@ -19,10 +19,10 @@ const PaddingDisplay = ({ value }) => {
       {hours}h {minutes}m
     </span>
   );
-}
+};
 PaddingDisplay.propTypes = {
   value: PropTypes.number,
-}
+};
 PaddingDisplay.defaultProps = {
   value: null,
 };
@@ -31,7 +31,7 @@ const PaddingElement = ({ value }) => {
   if (!value) return null;
 
   return (
-    <div className="element--padding">
+    <div className='element--padding'>
       <div>
         <span>Padding before:</span>
         <PaddingDisplay value={value.before} />
@@ -41,7 +41,7 @@ const PaddingElement = ({ value }) => {
         <PaddingDisplay value={value.after} />
       </div>
     </div>
-  )
+  );
 };
 
 PaddingElement.propTypes = {

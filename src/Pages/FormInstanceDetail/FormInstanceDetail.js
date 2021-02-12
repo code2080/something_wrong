@@ -71,14 +71,14 @@ const FormInstancePage = ({
 
   // Effect to fetch all manual schedulings
   useEffect(() => {
-    fetchManualSchedulingsForFormInstance({ formInstanceId: formInstance._id })
+    fetchManualSchedulingsForFormInstance({ formInstanceId: formInstance._id });
   }, []);
 
   // Effect to fetch activities
   useEffect(() => {
     fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
   }, []);
-  
+
   const handleClickMore = () => setShowFormInfo(!showFormInfo);
 
   // Effect to get all TE values into redux state
@@ -101,12 +101,12 @@ const FormInstancePage = ({
     </Tabs.TabPane>,
   ].filter(_.identity);
 
-  const renderTabBar = (props, DefaultTabBar) => (
-    <DefaultTabBar {...props} className={`${props.className} form-instance--tabs`} />
+  const renderTabBar = ({ className, ...restProps }, DefaultTabBar) => (
+    <DefaultTabBar {...restProps} className={`${className} form-instance--tabs`} />
   );
 
   return (
-    <div className="form-instance--wrapper">
+    <div className='form-instance--wrapper'>
       <SpotlightMask spotlightPositionInfo={externalActionRef} />
       <FormInstanceToolbar
         formId={formInstance.formId}
@@ -133,6 +133,7 @@ FormInstancePage.propTypes = {
   setBreadcrumbs: PropTypes.func.isRequired,
   fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
   fetchActivitiesForFormInstance: PropTypes.func.isRequired,
+  activities: PropTypes.array.isRequired,
 };
 
 FormInstancePage.defaultProps = {

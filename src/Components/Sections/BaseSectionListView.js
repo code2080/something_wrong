@@ -10,9 +10,9 @@ const BaseSectionListView = ({ columns, dataSource }) =>
     <Card key={el.rowKey}>
       {(columns || []).map(col => {
         return (
-          <div className="base-section--list--item" key={col.dataIndex}>
-            <div className="title">{col.title}:</div>
-            <div className="value">{col.render(el[col.dataIndex])}</div>
+          <div className='base-section--list--item' key={col.dataIndex}>
+            <div className='title'>{col.title}:</div>
+            <div className='value'>{col.render(el[col.dataIndex])}</div>
           </div>
         );
       })}

@@ -91,8 +91,8 @@ const DynamicTableHOC = ({
       columns
         .filter(col => isColumnVisible(col, visibleCols))
         .map(col => col.fixedWidth || col.width)
-    )
-  }, [columns, visibleCols])
+    );
+  }, [columns, visibleCols]);
 
   /**
    * EVENT HANDLERS
@@ -104,9 +104,8 @@ const DynamicTableHOC = ({
   ]);
 
   const onMoveRow = (sourceIdx, destinationIdx) => {
-    if (onMove && typeof onMove === 'function')
-      onMove(sourceIdx, destinationIdx);
-  }
+    if (onMove && typeof onMove === 'function') { onMove(sourceIdx, destinationIdx); }
+  };
 
   const onRowHandler = draggable
     ? (record, index) => ({ index, moveRow: onMoveRow })
@@ -145,36 +144,38 @@ const DynamicTableHOC = ({
     <div
       className={`${className || ''} dynamic-table--wrapper`}
     >
-      {showColumnSelection ? (
-        <ColumnSelector
-          columns={columns.map(col => [
-            getVisibilityIndexor(col),
-            isColumnVisible(col, visibleCols),
-            col.title
-          ])}
-          onColumnStateChange={({ colIndex, newVisibility }) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
-          onHide={() => setShowColumnSelection(false)}
-        />
-      ) : (
-        <React.Fragment>
-          {_shouldShowFilterBar && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
-          <DndProvider backend={HTML5Backend}>
-            <Table
-              components={_tableComponents}
-              columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
-              dataSource={_dataSource}
-              rowKey={rowKey}
-              expandedRowRender={expandedRowRender || null}
-              pagination={pagination}
-              loading={isLoading}
-              sortDirections={['descend', 'ascend']}
-              onRow={onRowHandler}
-            />
-          </DndProvider>
-        </React.Fragment>
-      )}
+      {showColumnSelection
+        ? (
+          <ColumnSelector
+            columns={columns.map(col => [
+              getVisibilityIndexor(col),
+              isColumnVisible(col, visibleCols),
+              col.title
+            ])}
+            onColumnStateChange={({ colIndex, newVisibility }) => updateView(datasourceId, { ...visibleCols, [colIndex]: newVisibility })}
+            onHide={() => setShowColumnSelection(false)}
+          />
+        )
+        : (
+          <React.Fragment>
+            {_shouldShowFilterBar && <FilterBar query={filterQuery} onChange={newFilterQuery => setFilterQuery(newFilterQuery)} />}
+            <DndProvider backend={HTML5Backend}>
+              <Table
+                components={_tableComponents}
+                columns={[..._cols, columnModifierColumn(() => setShowColumnSelection(true))]}
+                dataSource={_dataSource}
+                rowKey={rowKey}
+                expandedRowRender={expandedRowRender || null}
+                pagination={pagination}
+                loading={isLoading}
+                sortDirections={['descend', 'ascend']}
+                onRow={onRowHandler}
+              />
+            </DndProvider>
+          </React.Fragment>
+        )}
     </div>
-  )
+  );
 };
 
 DynamicTableHOC.propTypes = {

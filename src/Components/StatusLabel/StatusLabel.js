@@ -14,13 +14,14 @@ const StatusLabel = ({ label, color, className, children, ...rest }) => {
     </div>
   );
 
-  if (label)
+  if (label) {
     return (
-      <div className="status-label--outer">
-        <span className="status-label--label">{label}</span>
+      <div className='status-label--outer'>
+        <span className='status-label--label'>{label}</span>
         {statusLabel}
       </div>
     );
+  }
   return statusLabel;
 };
 

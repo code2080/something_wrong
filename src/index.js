@@ -1,6 +1,6 @@
-import TEPrefsLib from './Components/TEPrefsLib'
+import TEPrefsLib from './Components/TEPrefsLib';
 
 // STYLES
-import './index.less'
+import './index.less';
 
-export default TEPrefsLib
+export default TEPrefsLib;

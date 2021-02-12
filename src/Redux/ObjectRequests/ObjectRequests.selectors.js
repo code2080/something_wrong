@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
-
 const selectObjectRequestsState = state => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) => objReqList.find(req => req._id === value || req.objectExtId === value);
 export const getFormInstanceForRequest = request => createSelector(state => Object.values(state.submissions), formsubmissions => {
@@ -27,8 +26,8 @@ export const selectFormInstanceObjectRequests = (formInstance) =>
   createSelector(selectObjectRequestsList(),
     requests =>
       requests.filter(req =>
-        req.formInstanceId === formInstance._id
-        && _.flatMap(getSubmissionValues(formInstance), sectionData => sectionData.sectionValues).includes(req._id)
+        req.formInstanceId === formInstance._id &&
+        _.flatMap(getSubmissionValues(formInstance), sectionData => sectionData.sectionValues).includes(req._id)
       )
   );
 
@@ -39,7 +38,7 @@ export const selectObjectRequestsByValues = values =>
 
 export const selectObjectRequestByValue = value =>
   createSelector(selectObjectRequestsState, objectRequests => {
-    getObjectRequestByValue(objectRequests.list, value)
+    getObjectRequestByValue(objectRequests.list, value);
   });
 
 export const getSectionsForObjectRequest = request => createSelector(
@@ -52,5 +51,5 @@ export const getSectionsForObjectRequest = request => createSelector(
           sectionData.sectionId
         ]
         : sectionIds
-      , [])
-)
+    , [])
+);

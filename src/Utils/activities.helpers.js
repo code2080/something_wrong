@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
@@ -48,22 +46,24 @@ export const findObjectPathForActivityValue = (valueExtId, activity) => {
  * Validates that all activities that is scheduled has existing reservation in core,
  * and sets NOT_SCHEDULED if reservation not found
  * @param {array} activities Activities to validate
- * @param {object} teCoreAPI 
- * @param {object} dispatch 
+ * @param {object} teCoreAPI
+ * @param {object} dispatch
  */
 export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => {
   const reservationIds = activities
-  .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
-  .map(activity => activity.reservationId);
+    .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
+    .map(activity => activity.reservationId);
 
   teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
-    reservationIds, callback: ({ res: { invalidReservations } }) => {
+    reservationIds,
+    callback: ({ res: { invalidReservations } }) => {
       const invalidActivityIds = invalidReservations.map(resId => {
         const activityWithInvalidReservation = activities.find(activity => activity.reservationId === resId);
         return activityWithInvalidReservation._id;
-      })
+      });
       console.log('Found these invalid activities:', invalidActivityIds);
-  }})
-}
+    }
+  });
+};
 
 export const activityIsReadOnly = status => [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);

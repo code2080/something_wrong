@@ -82,7 +82,7 @@ const FormInstanceReservationOverview = ({
                 formInstanceId: formInstance._id,
                 activities: job.activities,
               }));
-            })
+            });
           }
         }
       },
@@ -93,10 +93,10 @@ const FormInstanceReservationOverview = ({
     /**
      * Case 1: Activities exist
      */
-    if (activities && activities.length > 0)
+    if (activities && activities.length > 0) {
       return (
         <React.Fragment>
-          <Button size="small" onClick={onDeleteAll} type="link" style={{ fontSize: '12px' }}>
+          <Button size='small' onClick={onDeleteAll} type='link' style={{ fontSize: '12px' }}>
             Delete all activities for this submission
           </Button>
           <ActivitiesTable
@@ -107,13 +107,14 @@ const FormInstanceReservationOverview = ({
           />
         </React.Fragment>
       );
+    }
     // Calculate mapping status
     const mappingStatus = validateMapping(form._id, mappings);
 
     /**
      * Case 2: Activities don't exist, but mapping does and is valid
      */
-    if ((!activities || !activities.length) && mapping && mappingStatus === mappingStatuses.COMPLETE)
+    if ((!activities || !activities.length) && mapping && mappingStatus === mappingStatuses.COMPLETE) {
       return (
         <div style={{ marginTop: '60px' }}>
           <Empty
@@ -126,12 +127,13 @@ const FormInstanceReservationOverview = ({
               </span>
             }
           >
-            <Button type="primary" onClick={onCreateActivities}>
+            <Button type='primary' onClick={onCreateActivities}>
               Convert it now
             </Button>
           </Empty>
         </div>
       );
+    }
 
     /**
      * Case 3: Activities don't exist, and mapping either doesn't exist or is invalid
@@ -148,7 +150,7 @@ const FormInstanceReservationOverview = ({
             </span>
           }
         >
-          <Button type="primary" onClick={onCreateActivityDesign}>
+          <Button type='primary' onClick={onCreateActivityDesign}>
             Create one now
           </Button>
         </Empty>
@@ -157,7 +159,7 @@ const FormInstanceReservationOverview = ({
   }, [activities, mapping, onCreateActivities, onCreateActivityDesign]);
 
   return (
-    <div className="form-instance-activities--wrapper">
+    <div className='form-instance-activities--wrapper'>
       {renderedState}
     </div>
   );

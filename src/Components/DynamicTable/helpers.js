@@ -121,7 +121,7 @@ export const getColumnObjectArrayForTable = (
  * @returns Bool
  */
 export const shouldShowFilterBar = (showFilter, onSearch, columns) =>
-  showFilter && (typeof onSearch === 'function' || columns.some(({ dataIndex, filterFn }) => dataIndex || filterFn))
+  showFilter && (typeof onSearch === 'function' || columns.some(({ dataIndex, filterFn }) => dataIndex || filterFn));
 
 /**
  * @function filterDataSource
@@ -151,11 +151,11 @@ export const filterDataSource = (filterQuery, dataSource, columns, onSearch) => 
                 filterQuery
                   .toString()
                   .toLowerCase()
-              )
+              );
           });
     }
   );
-}
+};
 
 /**
  * @function getTableComponents
@@ -172,4 +172,4 @@ export const getTableComponents = isTableDraggable => ({
       ? { body: { row: DraggableBodyRow } }
       : {}
   ),
-})
+});

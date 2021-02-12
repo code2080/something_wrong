@@ -53,12 +53,12 @@ const FreeTextFilter = ({
     const { callname } = teCoreActions[key];
     let _payload;
     switch (callname) {
-      case teCoreCallnames.FILTER_OBJECTS:
-        _payload = transformPayloadForFreeTextFiltering(payload, searchCriteria);
-        break;
-      default:
-        _payload = payload;
-        break;
+    case teCoreCallnames.FILTER_OBJECTS:
+      _payload = transformPayloadForFreeTextFiltering(payload, searchCriteria);
+      break;
+    default:
+      _payload = payload;
+      break;
     }
     teCoreAPI[callname](_payload);
   }, [payload, teCoreAPI]);
@@ -82,15 +82,15 @@ const FreeTextFilter = ({
   ), [onClickCallback, supportedActions]);
 
   return (
-    <div className="element__filter--wrapper">
+    <div className='element__filter--wrapper'>
       <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}
       >
-        <div className="element__filter--inner">
-          <Icon type="filter" />
+        <div className='element__filter--inner'>
+          <Icon type='filter' />
           {`${typeLabel}/${fieldLabel}: ${searchValue}`}
-          <Icon type="down" />
+          <Icon type='down' />
         </div>
       </Dropdown>
     </div>
