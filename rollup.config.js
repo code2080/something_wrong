@@ -16,12 +16,14 @@ export default {
     {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: false
+      sourcemap: false,
+      exports: 'auto',
     },
     {
       file: pkg.module,
       format: 'es',
-      sourcemap: false
+      sourcemap: false,
+      exports: 'auto',
     }
   ],
   external: [
@@ -46,7 +48,10 @@ export default {
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
-      plugins: ['@babel/external-helpers', '@babel/transform-runtime', '@babel/proposal-object-rest-spread', '@babel/transform-spread']
+      plugins: ['@babel/external-helpers', '@babel/transform-runtime', '@babel/proposal-object-rest-spread', '@babel/transform-spread'],
+      presets: [
+        '@babel/react'
+      ],
     }),
     commonjs(),
     resolve(),

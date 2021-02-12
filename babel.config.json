@@ -6,8 +6,9 @@
         "modules": false
       }
     ],
-    "@babel/react"
+    "@babel/preset-react"
   ],
+  "ignore": ["./example"],
   "plugins": [
     "@babel/plugin-proposal-function-bind",
 

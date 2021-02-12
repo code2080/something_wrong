@@ -13,7 +13,7 @@ import {
   requestStatusToIcon,
   RequestStatus,
   RequestType,
-} from '../../Constants/objectRequest.constants';
+} from '../../Constants/ObjectRequest.constants';
 
 export const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 

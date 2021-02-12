@@ -18,7 +18,7 @@ import { LabelRenderer } from '../../Utils/rendering.helpers';
 import {
   RequestStatus,
   objectRequestTypeToPlainText,
-} from '../../Constants/objectRequest.constants';
+} from '../../Constants/ObjectRequest.constants';
 
 const ObjectRequestModal = ({ onClose, visible, request }) => {
   const fieldDatasource = Object.entries(request.objectRequest || {}).map(([field, value]) => ({

@@ -1,11 +1,14 @@
 module.exports = {
   env: {
     browser: true,
+    jest: true,
+    es6: true,
   },
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   extends: [
     'plugin:react/recommended',
     'standard',
+    'standard-react',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -13,6 +16,7 @@ module.exports = {
     },
     ecmaVersion: 2021,
     requireConfigFile: false,
+    sourceType: 'module',
   },
   plugins: [
     'react',
@@ -20,7 +24,7 @@ module.exports = {
   ],
   settings: {
     react: {
-      version: 'detect',
+      version: 'latest',
     }
   },
 
@@ -44,11 +48,11 @@ module.exports = {
     // we want to avoid useless spaces
     'no-multi-spaces': ['error'],
 
-    "react/display-name": 0,
+    'react/display-name': 0,
 
-    "@babel/semi": ['error'],
+    '@babel/semi': ['error'],
 
-    "node/no-callback-literal": 0,
+    'node/no-callback-literal': 0,
 
     // // Allow free standing if clauses
     // "curly": 0

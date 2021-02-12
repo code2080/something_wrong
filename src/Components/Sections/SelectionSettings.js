@@ -221,7 +221,6 @@ SelectionSettings.propTypes = {
   formSections: PropTypes.array.isRequired,
   reservationMode: PropTypes.string,
   reservationModeFields: PropTypes.array,
-  validFields: PropTypes.array.isRequired,
   updateSelectionSettings: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,

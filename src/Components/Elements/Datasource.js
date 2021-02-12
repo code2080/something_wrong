@@ -105,7 +105,6 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
 Datasource.propTypes = {
   payload: PropTypes.array,
   labels: PropTypes.object,
-  value: PropTypes.array,
   element: PropTypes.object,
   teCoreAPI: PropTypes.object.isRequired
 };
@@ -113,7 +112,6 @@ Datasource.propTypes = {
 Datasource.defaultProps = {
   payload: null,
   label: {},
-  value: null,
   element: {}
 };
 
