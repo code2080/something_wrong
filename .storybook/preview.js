@@ -1,1 +1,1 @@
-import '!style-loader!css-loader!sass-loader!../dist/te-prefs-lib.css';
+import '!style-loader!css-loader!sass-loader!../dist/dist/te-prefs-lib.css';

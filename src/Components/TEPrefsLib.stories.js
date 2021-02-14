@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import TEPrefsLib from './TEPrefsLib';
 
-import './TEPrefsLib.scss';
-
 export default {
   title: 'PrefsLib'
 };
