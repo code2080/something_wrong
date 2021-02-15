@@ -86,6 +86,7 @@
     "babel-preset-react-app": "^10.0.0",
     "bufferutil": "^4.0.3",
     "cross-env": "^7.0.3",
+    "css-loader": "^5.0.2",
     "eslint": "^7.19.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-config-standard-react": "^11.0.1",
@@ -111,8 +112,9 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
     "sass": "^1.32.7",
-    "sass-loader": "^11.0.1",
+    "sass-loader": "^10",
     "storybook": "^6.1.18",
+    "style-loader": "^2.0.0",
     "tslib": "^2.1.0",
     "utf-8-validate": "^5.0.4",
     "webpack": "^5.22.0"
