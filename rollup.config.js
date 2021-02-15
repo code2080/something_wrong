@@ -3,6 +3,7 @@ import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import url from '@rollup/plugin-url';
 import svgr from '@svgr/rollup';
@@ -45,6 +46,7 @@ export default {
     url(),
     svgr(),
     json(),
+    typescript(),
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
