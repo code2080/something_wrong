@@ -1,9 +1,11 @@
 import * as types from './activities.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
+import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
+import { updateActivitiesForForm } from './activities.helpers';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -41,33 +43,13 @@ const reducer = (state = initialState, action) => {
       }
     }
 
-    case types.REORDER_ACTIVITIES_SUCCESS: {
-      const { payload: { actionMeta: { formId } } } = action;
-      const activitityObjs = action.payload.activities || [];
-      const hasSequenceIdx = activitityObjs.every(a => a.sequenceIdx != null);
-      console.log('Fetched activities have sequenceIdx: ' + hasSequenceIdx);
-      const activities = activitityObjs
-        .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
-        .reduce(
-          (_activities, activity) => ({
-            ..._activities,
-            [activity.formInstanceId]: [
-              ...(_activities[activity.formInstanceId] || []),
-              activity
-            ]
-          }),
-          {}
-        );
-      return {
-        ...state,
-        [formId]: activities,
-      };
-    }
-
+    case types.REORDER_ACTIVITIES_SUCCESS:
     case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS:
-    case types.UPDATE_ACTIVITIES_SUCCESS: {
+    case types.UPDATE_ACTIVITIES_SUCCESS:
+    case ABORT_JOB_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       const activitityObjs = action.payload.activities || [];
+<<<<<<< HEAD
       const activities = activitityObjs
         .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
         .reduce(
@@ -80,6 +62,9 @@ const reducer = (state = initialState, action) => {
           }),
           {}
         );
+=======
+      const activities = updateActivitiesForForm(activitityObjs);
+>>>>>>> development
       return {
         ...state,
         [formId]: activities,
@@ -113,15 +98,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...activities ],
+          [formInstanceId]: [...activities],
         }
       };
     }
 
     case types.SAVE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS: {
       const activitityObjs = action.payload.activities || [];
-      const hasSequenceIdx = activitityObjs.every(a => a.sequenceIdx != null);
-      console.log('Fetched activities have sequenceIdx: ' + hasSequenceIdx);
       const activities = activitityObjs
         .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx || idx }));
       const { payload: { actionMeta: { formId, formInstanceId } } } = action;
@@ -129,7 +112,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         [formId]: {
           ...state[formId],
-          [formInstanceId]: [ ...activities ],
+          [formInstanceId]: [...activities],
         }
       };
     }

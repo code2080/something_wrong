@@ -76,7 +76,10 @@ export const validateTiming = activity => {
       return validateExactTimingMode(activity);
     case mappingTimingModes.TIMESLOTS:
       return validateTimeslotTimingMode(activity);
-    case mappingTimingModes.SEQUENCE:
+    case mappingTimingModes.SEQUENCE: 
+      return new ActivityValueValidation({
+        status: activityValueStatuses.READY_FOR_SCHEDULING,
+      })
     default:
       return false;
   }

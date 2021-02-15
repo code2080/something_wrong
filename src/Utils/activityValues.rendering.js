@@ -213,6 +213,11 @@ const getRenderPayloadForDateRangesValue = activityValue => {
 const getRenderPayloadForPaddingValue = activityValue => {
   const { value } = activityValue;
   // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
+  
+  if(!value)
+    return null
+
+    
   if (!value.before && !value.after)
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,

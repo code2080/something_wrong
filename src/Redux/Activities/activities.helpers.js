@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Activity } from '../../Models/Activity.model';
 
 // HELPERS
 import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../Utils/activities.helpers';
@@ -6,6 +7,25 @@ import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../
 // CONSTANTS
 import { activityValueModes } from '../../Constants/activityValueModes.constants';
 import { mappingTimingModes } from '../../Constants/mappingTimingModes.constants';
+
+/**
+ * @function updateActivitiesForForm
+ * @description creates an updated state for the formIds activities
+ * @param {Activity[]} activities
+ * @returns {Object} updatedFormState
+ */
+export const updateActivitiesForForm = (activities) => activities
+  .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
+  .reduce(
+    (_activities, activity) => ({
+      ..._activities,
+      [activity.formInstanceId]: [
+        ...(_activities[activity.formInstanceId] || []),
+        activity
+      ]
+    }),
+    {}
+  );
 
 /**
  * @function getActivitiesForFormInstance
