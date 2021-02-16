@@ -47,10 +47,10 @@ export default {
     url(),
     svgr(),
     json(),
-    // eslint({
-    //   throwOnError: true,
-    //   extensions: ['.js', '.jsx']
-    // }),
+    eslint({
+      throwOnError: true,
+      extensions: ['.js', '.jsx']
+    }),
     typescript(),
     babel({
       exclude: 'node_modules/**',
