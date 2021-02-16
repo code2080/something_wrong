@@ -6,13 +6,12 @@
   "private": true,
   "dependencies": {
     "@timeedit/te-prefs-lib": "^0.10.0",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.2",
     "antd": "^3.25.0",
     "axios": "^0.21.1",
     "cross-env": "^7.0.3",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
     "react-resizable": "^1.11.0",
     "react-router-dom": "^5.2.0",
@@ -20,9 +19,9 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -38,9 +37,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.12.13",
-    "@babel/runtime": "^7.12.13",
-    "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.1.8"
+    "react-scripts": "^4.0.2"
   }
 }
