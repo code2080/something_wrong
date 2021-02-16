@@ -2,9 +2,10 @@ import React from 'react';
 import FieldMapping from './FieldMapping';
 
 export default {
-  title: 'PrefsLib2'
+  title: 'Activity Manager Frontend/Components/ActivityDesigner/Field/Mapping',
+  component: FieldMapping,
 };
 
-export const FieldMappings = () => {
+export const Mapping = () => {
   return <FieldMapping onChange={(updatedMapping) => console.log({ updatedMapping })} />;
 };

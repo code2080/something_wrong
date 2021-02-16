@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import TEPrefsLib from './TEPrefsLib';
 
 export default {
-  title: 'PrefsLib'
+  title: 'Activity Manager Frontend/Components/Primary',
+  component: TEPrefsLib,
 };
 
 export const Primary = () => {
   const [toolbarContent, setToolbarContent] = useState(null);
   return (
-    <div>
+    <React.Fragment>
       {toolbarContent}
       <TEPrefsLib
         coreAPI={{
@@ -16,6 +17,6 @@ export const Primary = () => {
         }}
         env='amLocalhost'
       />
-    </div>
+    </React.Fragment>
   );
 };
