@@ -35,7 +35,7 @@ export default {
     external(),
     postcss({
       inject: false,
-      extract: 'dist/te-prefs-lib.css',
+      extract: 'te-prefs-lib.css',
       extensions: ['.css', '.scss', '.less'],
       use: [
         ['less', { javascriptEnabled: true }],
@@ -47,10 +47,10 @@ export default {
     url(),
     svgr(),
     json(),
-    eslint({
-      throwOnError: true,
-      extensions: ['.js', '.jsx']
-    }),
+    // eslint({
+    //   throwOnError: true,
+    //   extensions: ['.js', '.jsx']
+    // }),
     typescript(),
     babel({
       exclude: 'node_modules/**',
