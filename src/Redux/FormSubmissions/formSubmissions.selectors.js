@@ -31,27 +31,27 @@ const determineSectionTypeFromData = sectionData => {
 
 const extractValuesFromSectionData = sectionData => {
   switch (determineSectionTypeFromData(sectionData)) {
-  case sectionType.REGULAR:
-    return sectionData.reduce((values, element) => [...values, element.value], []);
-  case sectionType.TABLE:
-    return Object.values(sectionData).reduce((values, row) => [
-      ...values,
-      ...row.reduce((elVals, element) => [
-        ...elVals,
-        element.value
-      ], [])
-    ], []);
-  case sectionType.CONNECTED:
-    return Object.values(sectionData).reduce((values, event) => [
-      ...values,
-      ...event.values.reduce((elVals, element) =>
-        [
+    case sectionType.REGULAR:
+      return sectionData.reduce((values, element) => [...values, element.value], []);
+    case sectionType.TABLE:
+      return Object.values(sectionData).reduce((values, row) => [
+        ...values,
+        ...row.reduce((elVals, element) => [
           ...elVals,
-          ...element.value
+          element.value
         ], [])
-    ], []);
-  default:
-    return [];
+      ], []);
+    case sectionType.CONNECTED:
+      return Object.values(sectionData).reduce((values, event) => [
+        ...values,
+        ...event.values.reduce((elVals, element) =>
+          [
+            ...elVals,
+            ...element.value
+          ], [])
+      ], []);
+    default:
+      return [];
   }
 };
 

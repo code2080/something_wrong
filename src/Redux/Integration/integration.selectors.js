@@ -143,12 +143,12 @@ const extractPayloadFromActivities = activities => {
         extId
       ]
     };
-    return type === 'types'
+    return type === 'objects'
       ? {
         ...newPayloadWithExtId,
         objects: [
           ...newPayloadWithExtId.objects,
-          ...values
+          // ...values
         ]
       }
       : newPayloadWithExtId;

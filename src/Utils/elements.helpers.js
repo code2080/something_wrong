@@ -93,14 +93,14 @@ export const findElementValueInSubmission = (element, sections, values) => {
   const sectionValues = values[element.sectionId];
   const sectionType = determineSectionType(sections[sectionIdx]);
   switch (sectionType) {
-  case SECTION_VERTICAL:
-    return findElementValueInRegularSection(element.elementId, sectionValues);
-  case SECTION_TABLE:
-    return findElementValueInTableSection(element.elementId, sectionValues);
-  case SECTION_CONNECTED:
-    return findElementValueInConnectedSection(element.elementId, sectionValues);
-  default:
-    return null;
+    case SECTION_VERTICAL:
+      return findElementValueInRegularSection(element.elementId, sectionValues);
+    case SECTION_TABLE:
+      return findElementValueInTableSection(element.elementId, sectionValues);
+    case SECTION_CONNECTED:
+      return findElementValueInConnectedSection(element.elementId, sectionValues);
+    default:
+      return null;
   }
 };
 
@@ -120,14 +120,14 @@ export const findElementValueInSubmissionFromId = (elementId, sectionId, section
   const sectionValues = values[sectionId];
   const sectionType = determineSectionType(sections[sectionIdx]);
   switch (sectionType) {
-  case SECTION_VERTICAL:
-    return findElementValueInRegularSection(elementId, sectionValues);
-  case SECTION_TABLE:
-    return findElementValueInTableSection(elementId, sectionValues);
-  case SECTION_CONNECTED:
-    return findElementValueInConnectedSection(elementId, sectionValues);
-  default:
-    return null;
+    case SECTION_VERTICAL:
+      return findElementValueInRegularSection(elementId, sectionValues);
+    case SECTION_TABLE:
+      return findElementValueInTableSection(elementId, sectionValues);
+    case SECTION_CONNECTED:
+      return findElementValueInConnectedSection(elementId, sectionValues);
+    default:
+      return null;
   }
 };
 

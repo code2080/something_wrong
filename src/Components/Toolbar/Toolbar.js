@@ -70,14 +70,14 @@ const Toolbar = ({
 
   const onHandleActionClick = ({ key }) => {
     switch (key) {
-    case actionKeys.LOGOUT:
-      logOutCallback();
-      break;
-    case actionKeys.ACTIVITY_DESIGNER:
-      history.push(`/forms/${form._id}/activity-designer`);
-      break;
-    default:
-      break;
+      case actionKeys.LOGOUT:
+        logOutCallback();
+        break;
+      case actionKeys.ACTIVITY_DESIGNER:
+        history.push(`/forms/${form._id}/activity-designer`);
+        break;
+      default:
+        break;
     }
   };
   const onHandleBreadrumbsClick = path => history.push(path);

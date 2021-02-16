@@ -124,65 +124,65 @@ export const renderElementValue = (value, element) => {
   const elementType = getElementTypeFromId(element.elementId);
   if (!elementType || !elementTypes[elementType]) return value.toString();
   switch (elementType) {
-  case elementTypes.ELEMENT_TYPE_INPUT_TIME:
-    return <TimePicker value={value} />;
-  case elementTypes.ELEMENT_TYPE_INPUT_DATE:
-    return <DatePicker value={getLocalDate(value)} />;
-  case elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE:
-    return <DateRangePicker value={value} />;
-  case elementTypes.ELEMENT_TYPE_RADIO_GROUP:
-    return <OptionSelection value={value} element={element} />;
-  case elementTypes.ELEMENT_TYPE_DROPDOWN:
-    return <OptionSelection value={value} element={element} />;
-  case elementTypes.ELEMENT_TYPE_CHECKBOX:
-    return <Checkbox value={value} />;
-  case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
-    return <OptionSelection value={value} element={element} />;
-  case elementTypes.ELEMENT_TYPE_PLAINTEXT:
+    case elementTypes.ELEMENT_TYPE_INPUT_TIME:
+      return <TimePicker value={value} />;
+    case elementTypes.ELEMENT_TYPE_INPUT_DATE:
+      return <DatePicker value={getLocalDate(value)} />;
+    case elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE:
+      return <DateRangePicker value={value} />;
+    case elementTypes.ELEMENT_TYPE_RADIO_GROUP:
+      return <OptionSelection value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_DROPDOWN:
+      return <OptionSelection value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_CHECKBOX:
+      return <Checkbox value={value} />;
+    case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
+      return <OptionSelection value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_PLAINTEXT:
     /**
          * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
          */
-    return unformattedValue(value.toString());
-  case elementTypes.ELEMENT_TYPE_CALENDAR:
+      return unformattedValue(value.toString());
+    case elementTypes.ELEMENT_TYPE_CALENDAR:
     /**
          * @todo break into separate component
          */
-    return unformattedValue(value.toString());
-  case elementTypes.ELEMENT_TYPE_DATASOURCE:
-    return (
-      <div className='preline'>
-        <Datasource value={value} element={element} />
-      </div>
-    );
-  case elementTypes.ELEMENT_TYPE_INPUT_DATASOURCE:
-    return <FreeTextFilter value={value} element={element} />;
-  case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
-    return <NumberFilter value={value} element={element} />;
-  case elementTypes.ELEMENT_TYPE_DURATION: {
-    const duration = moment.duration(value, 'minutes');
-    return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
-  }
-  case elementTypes.ELEMENT_TYPE_TEXTAREA:
-    return (
-      <div className='preline'>
-        {unformattedValue(value.toString())}
-      </div>
-    );
-  case elementTypes.ELEMENT_TYPE_DAY_PICKER:
-    return moment(value, 'ddd').format('dddd');
+      return unformattedValue(value.toString());
+    case elementTypes.ELEMENT_TYPE_DATASOURCE:
+      return (
+        <div className='preline'>
+          <Datasource value={value} element={element} />
+        </div>
+      );
+    case elementTypes.ELEMENT_TYPE_INPUT_DATASOURCE:
+      return <FreeTextFilter value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
+      return <NumberFilter value={value} element={element} />;
+    case elementTypes.ELEMENT_TYPE_DURATION: {
+      const duration = moment.duration(value, 'minutes');
+      return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
+    }
+    case elementTypes.ELEMENT_TYPE_TEXTAREA:
+      return (
+        <div className='preline'>
+          {unformattedValue(value.toString())}
+        </div>
+      );
+    case elementTypes.ELEMENT_TYPE_DAY_PICKER:
+      return moment(value, 'ddd').format('dddd');
 
-  case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
-    if (!value || !value.startTime) return null;
-    return getLocalDate(value).format('[Week] w / gggg');
+    case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
+      if (!value || !value.startTime) return null;
+      return getLocalDate(value).format('[Week] w / gggg');
 
-  case elementTypes.ELEMENT_TYPE_PADDING:
-    return <Padding value={value} />;
+    case elementTypes.ELEMENT_TYPE_PADDING:
+      return <Padding value={value} />;
 
-  case elementTypes.ELEMENT_TYPE_UUID:
-  case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
-  case elementTypes.ELEMENT_TYPE_INPUT_NUMBER:
-  default:
-    return unformattedValue(value.toString());
+    case elementTypes.ELEMENT_TYPE_UUID:
+    case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
+    case elementTypes.ELEMENT_TYPE_INPUT_NUMBER:
+    default:
+      return unformattedValue(value.toString());
   }
 };
 
@@ -237,34 +237,34 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
   , []);
 
   switch (sectionType) {
-  case SECTION_CONNECTED: {
-    if (section.calendarSettings && section.calendarSettings.useTimeslots) {
+    case SECTION_CONNECTED: {
+      if (section.calendarSettings && section.calendarSettings.useTimeslots) {
+        return [
+          ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+          ...connectedSectionColumns.TIMEINFO,
+          ...connectedSectionColumns.TIMESLOT(section.calendarSettings.timeslots),
+          ..._elementColumns,
+        ];
+      }
       return [
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ...connectedSectionColumns.TIMEINFO,
-        ...connectedSectionColumns.TIMESLOT(section.calendarSettings.timeslots),
         ..._elementColumns,
       ];
     }
-    return [
-      ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-      ...connectedSectionColumns.TIMEINFO,
-      ..._elementColumns,
-    ];
-  }
 
-  case SECTION_TABLE:
-    return [
-      ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-      ..._elementColumns
-    ];
-  case SECTION_AVAILABILITY:
-    return [
-      ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-      ...availabilityCalendarColumns,
-    ];
-  default:
-    return [..._elementColumns];
+    case SECTION_TABLE:
+      return [
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ..._elementColumns
+      ];
+    case SECTION_AVAILABILITY:
+      return [
+        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ...availabilityCalendarColumns,
+      ];
+    default:
+      return [..._elementColumns];
   };
 };
 
@@ -357,16 +357,16 @@ const transformAvailabilityCalendarToTableRows = (values) => ([
  */
 export const transformSectionValuesToTableRows = (values, columns, sectionId, sectionType) => {
   switch (sectionType) {
-  case SECTION_VERTICAL:
-    return transformVerticalSectionValuesToTableRows(values, columns, sectionId);
-  case SECTION_TABLE:
-    return transformTableSectionValuesToTableRows(values, columns);
-  case SECTION_CONNECTED:
-    return transformConnectedSectionValuesToTableRows(values, columns);
-  case SECTION_AVAILABILITY:
-    return transformAvailabilityCalendarToTableRows(values);
-  default:
-    return [];
+    case SECTION_VERTICAL:
+      return transformVerticalSectionValuesToTableRows(values, columns, sectionId);
+    case SECTION_TABLE:
+      return transformTableSectionValuesToTableRows(values, columns);
+    case SECTION_CONNECTED:
+      return transformConnectedSectionValuesToTableRows(values, columns);
+    case SECTION_AVAILABILITY:
+      return transformAvailabilityCalendarToTableRows(values);
+    default:
+      return [];
   }
 };
 

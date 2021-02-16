@@ -31,12 +31,12 @@ const ReservationTemplateMapping = ({ form, mappings, history }) => {
 
   const label = useMemo(() => {
     switch (mappingStatus) {
-    case mappingStatuses.NOT_SET:
-      return 'Form has not been mapped to a reservation template';
-    case mappingStatuses.COMPLETE:
-      return 'Form is mapped to a reservation template';
-    default:
-      return 'N/A';
+      case mappingStatuses.NOT_SET:
+        return 'Form has not been mapped to a reservation template';
+      case mappingStatuses.COMPLETE:
+        return 'Form is mapped to a reservation template';
+      default:
+        return 'N/A';
     }
   }, [mappingStatus]);
 

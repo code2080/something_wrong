@@ -274,16 +274,16 @@ const ActivityDesignerPage = ({
   // Callback for reset meun clicks
   const onResetMenuClick = useCallback(({ key }) => {
     switch (key) {
-    case resetMenuOptions.RESET_EMPTY:
-      return onResetMapping(resetEmpty());
-    case resetMenuOptions.RESET_ALL:
-      return onResetMapping(resetAll(typeOptions, fieldOptions));
-    case resetMenuOptions.RESET_TYPES:
-      return onResetMapping(resetTypes(mapping, typeOptions));
-    case resetMenuOptions.RESET_FIELDS:
-      return onResetMapping(resetFields(mapping, fieldOptions));
-    default:
-      break;
+      case resetMenuOptions.RESET_EMPTY:
+        return onResetMapping(resetEmpty());
+      case resetMenuOptions.RESET_ALL:
+        return onResetMapping(resetAll(typeOptions, fieldOptions));
+      case resetMenuOptions.RESET_TYPES:
+        return onResetMapping(resetTypes(mapping, typeOptions));
+      case resetMenuOptions.RESET_FIELDS:
+        return onResetMapping(resetFields(mapping, fieldOptions));
+      default:
+        break;
     }
   }, [mapping, typeOptions, fieldOptions]);
 

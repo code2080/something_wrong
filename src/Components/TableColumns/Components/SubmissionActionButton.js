@@ -59,29 +59,29 @@ const SubmissionActionButton = ({
     domEvent.stopPropagation();
 
     switch (key) {
-    case SET_ACCEPTANCE_STATUS:
-      setIsAcceptanceStatusModalOpen(true);
-      break;
-    case EDIT_FORM_INSTANCE:
-      history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
-      break;
-    case SET_PROGRESS_NOT_SCHEDULED:
-      setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.NOT_SCHEDULED);
-      break;
-    case SET_PROGRESS_IN_PROGRESS:
-      setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.IN_PROGRESS);
-      break;
-    case SET_PROGRESS_SCHEDULED:
-      setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
-      break;
-    case NOTIFY_USER_WITH_REVIEW_LINK:
-      remindUser({ formInstanceIds: [formInstance._id] });
-      break;
-    case NOTIFY_ALL_USERS_WITH_REVIEW_LINK:
-      remindUser({ formInstanceIds: haveReviewLinkSubmissions.map(submission => submission._id) });
-      break;
-    default:
-      break;
+      case SET_ACCEPTANCE_STATUS:
+        setIsAcceptanceStatusModalOpen(true);
+        break;
+      case EDIT_FORM_INSTANCE:
+        history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);
+        break;
+      case SET_PROGRESS_NOT_SCHEDULED:
+        setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.NOT_SCHEDULED);
+        break;
+      case SET_PROGRESS_IN_PROGRESS:
+        setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.IN_PROGRESS);
+        break;
+      case SET_PROGRESS_SCHEDULED:
+        setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
+        break;
+      case NOTIFY_USER_WITH_REVIEW_LINK:
+        remindUser({ formInstanceIds: [formInstance._id] });
+        break;
+      case NOTIFY_ALL_USERS_WITH_REVIEW_LINK:
+        remindUser({ formInstanceIds: haveReviewLinkSubmissions.map(submission => submission._id) });
+        break;
+      default:
+        break;
     }
   }, [setFormInstanceSchedulingProgressCallback, formInstance, haveReviewLinkSubmissions]);
 

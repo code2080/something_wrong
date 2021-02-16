@@ -42,12 +42,12 @@ const NumberFilter = ({ searchValue, searchCriteria, fieldLabel, typeLabel, elem
     const { callname } = teCoreActions[key];
     let _payload;
     switch (callname) {
-    case teCoreCallnames.FILTER_OBJECTS:
-      _payload = transformPayloadForNumberFiltering(payload, searchCriteria);
-      break;
-    default:
-      _payload = payload;
-      break;
+      case teCoreCallnames.FILTER_OBJECTS:
+        _payload = transformPayloadForNumberFiltering(payload, searchCriteria);
+        break;
+      default:
+        _payload = payload;
+        break;
     }
     teCoreAPI[callname](_payload);
   }, [payload, teCoreAPI]);
