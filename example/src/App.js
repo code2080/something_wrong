@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import TEPrefsLib from 'te-prefs-lib';
+import TEPrefsLib from '@timeedit/te-prefs-lib';
 
 // STYLES
-import 'te-prefs-lib/dist/te-prefs-lib.css';
+import '@timeedit/te-prefs-lib/dist/te-prefs-lib.css';
 
 const App = () => {
   const [toolbarContent, setToolbarContent] = useState(null);
@@ -13,6 +13,7 @@ const App = () => {
       {toolbarContent}
       <TEPrefsLib
         coreAPI={{
+          // @ts-ignore
           setToolbarContent: content => setToolbarContent(content),
         }}
         env='amLocalhost'
