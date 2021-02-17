@@ -27,7 +27,7 @@ const SchedulingProgress = ({ activities }) => {
 
   return (
     <Progress
-      size="small"
+      size='small'
       style={{ width: '10rem' }}
       percent={percentCompleted}
       format={() => statusText}

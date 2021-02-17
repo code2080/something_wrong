@@ -40,7 +40,7 @@ export const createSchedulingReturns = protoReturns => {
       ...protoReturns[activityId]
     },
   }));
-}
+};
 
 /**
  * @function getBindingSchedulingAlgorithm
@@ -50,12 +50,10 @@ export const createSchedulingReturns = protoReturns => {
  */
 const getBindingSchedulingAlgorithm = activities => {
   const schedA = activities.map(a => determineSchedulingAlgorithmForActivity(a));
-  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME))
-    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
-  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT))
-    return schedulingAlgorithms.BEST_FIT_OBJECT;
+  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME)) { return schedulingAlgorithms.BEST_FIT_OBJECT_TIME; }
+  if (schedA.some(a => a === schedulingAlgorithms.BEST_FIT_OBJECT)) { return schedulingAlgorithms.BEST_FIT_OBJECT; }
   return schedulingAlgorithms.BEST_FIT_TIME;
-}
+};
 
 /**
  * @function determineSchedulingAlgorithmForActivityValue
@@ -74,8 +72,7 @@ export const determineSchedulingAlgorithmForActivityValue = (
    */
   if (activityValue.type === activityValueTypes.TIMING) {
     const timingMode = getTimingModeForActivity(activity);
-    if (timingMode === mappingTimingModes.EXACT)
-      return schedulingAlgorithms.EXACT;
+    if (timingMode === mappingTimingModes.EXACT) { return schedulingAlgorithms.EXACT; }
     return schedulingAlgorithms.BEST_FIT_TIME;
   }
   /**
@@ -83,9 +80,10 @@ export const determineSchedulingAlgorithmForActivityValue = (
    * in which case we need to validate if the value we have now is an object or still a filter
    */
   if (activityValue.submissionValueType === submissionValueTypes.FILTER) {
-    if (Array.isArray(activityValue.value))
+    if (Array.isArray(activityValue.value)) {
       // It's been converted to an object
       return schedulingAlgorithms.EXACT;
+    }
     return schedulingAlgorithms.BEST_FIT_OBJECT;
   }
 
@@ -136,7 +134,7 @@ const parseTECoreResultsToScheduleReturns = teCoreReturns =>
   });
 
 export const validateActivity = activity => {
-  if(_.isEmpty(activity.values)) return false;
+  if (_.isEmpty(activity.values)) return false;
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map(activityValue => validateValue(activityValue))
@@ -153,8 +151,7 @@ export const determineSchedulingAlgorithmForActivity = activity => {
     determineSchedulingAlgorithmForActivityValue(el, activity)
   );
   // Test for exact
-  if (allSchedulingAlgorithms.every(alg => alg === schedulingAlgorithms.EXACT))
-    return schedulingAlgorithms.EXACT;
+  if (allSchedulingAlgorithms.every(alg => alg === schedulingAlgorithms.EXACT)) { return schedulingAlgorithms.EXACT; }
   // Check if we have props of best fit time and object
   const hasBestFitTime = allSchedulingAlgorithms.some(
     alg => alg === schedulingAlgorithms.BEST_FIT_TIME
@@ -162,20 +159,20 @@ export const determineSchedulingAlgorithmForActivity = activity => {
   const hasBestFitObject = allSchedulingAlgorithms.some(
     alg => alg === schedulingAlgorithms.BEST_FIT_OBJECT
   );
-  if (hasBestFitObject && hasBestFitTime)
-    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
+  if (hasBestFitObject && hasBestFitTime) { return schedulingAlgorithms.BEST_FIT_OBJECT_TIME; }
   if (hasBestFitTime) return schedulingAlgorithms.BEST_FIT_TIME;
   if (hasBestFitObject) return schedulingAlgorithms.BEST_FIT_OBJECT;
 };
 
 export const scheduleActivity = async (activity, teCoreScheduleFn, callback) => {
   // Validate the activity
-  if (!validateActivity(activity))
+  if (!validateActivity(activity)) {
     return new SchedulingReturn({
       status: activityStatuses.VALIDATION_ERROR,
       errorCode: activityStatuses.VALIDATION_ERROR,
       errorMessage: activityStatusProps[activityStatuses.VALIDATION_ERROR].label
     });
+  }
   const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(activity);
 
   // Special case: EVERTHING is schedulingAlgorithms.EXACT
@@ -237,10 +234,10 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
 
   // filter invalidate activities
   const failedActivities = preprocessingMap
-      .filter(a => a.result != null)
-      .map(a => ({ activityId: a.activityId, result: a.result }));
+    .filter(a => a.result != null)
+    .map(a => ({ activityId: a.activityId, result: a.result }));
 
-  if ((failedActivities || []).length > 0) cFn(failedActivities)
+  if ((failedActivities || []).length > 0) cFn(failedActivities);
 
   // Edge case: all activities have schedulingAlgorithm EXACT
   if (preprocessingMap.every(el => el.schedulingAlgorithm === schedulingAlgorithms.EXACT)) {
@@ -298,11 +295,12 @@ export const updateActivityWithSchedulingResult = (
   } = schedulingReturn;
 
   let errorDetails = null;
-  if (activityStatus === activityStatuses.FAILED)
+  if (activityStatus === activityStatuses.FAILED) {
     errorDetails = new SchedulingError({
       message: errorMessage,
       code: errorCode
     });
+  }
 
   return {
     ...activity,
@@ -325,11 +323,12 @@ export const updateActivitiesWithSchedulingResults = (
     } = response;
 
     let errorDetails = null;
-    if (activityStatus === activityStatuses.FAILED)
+    if (activityStatus === activityStatuses.FAILED) {
       errorDetails = new SchedulingError({
         message: errorMessage,
         code: errorCode
       });
+    }
 
     return {
       ...a,

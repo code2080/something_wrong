@@ -15,14 +15,14 @@ const AcceptanceForm = ({ defaultStatus, defaultComment, onSubmit, form }) => {
         onSubmit(values.status, values.comment);
       }
     });
-  }
+  };
   return (
-    <Form key="acceptanceForm" onSubmit={handleSubmit}>
+    <Form key='acceptanceForm' onSubmit={handleSubmit}>
       <Form.Item>
         {form.getFieldDecorator('comment', {
           initialValue: defaultComment
         })(
-          <Input placeholder="Comment" />
+          <Input placeholder='Comment' />
         )}
       </Form.Item>
       <Form.Item>
@@ -38,7 +38,7 @@ const AcceptanceForm = ({ defaultStatus, defaultComment, onSubmit, form }) => {
         )}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" style={{float: 'right'}} htmlType="submit">
+        <Button type='primary' style={{ float: 'right' }} htmlType='submit'>
             Done
         </Button>
       </Form.Item>

@@ -4,11 +4,11 @@ import { Input } from 'antd';
 
 const TextEdit = ({ value, setValue, onFinish }) => (
   <Input
-    size="small"
+    size='small'
     allowClear
     onPressEnter={() => onFinish()}
     value={value}
-    placeholder="Type here"
+    placeholder='Type here'
     onChange={e => setValue(e.target.value)}
   />
 );

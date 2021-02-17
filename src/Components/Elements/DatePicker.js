@@ -8,11 +8,11 @@ import { DATE_FORMAT } from '../../Constants/common.constants';
 import './Pickers.scss';
 
 const DatePicker = ({ value }) => (
-  <div className="picker--wrapper">
-    <div className="icon--wrapper">
-      <Icon type="calendar" />
+  <div className='picker--wrapper'>
+    <div className='icon--wrapper'>
+      <Icon type='calendar' />
     </div>
-    <div className="value--wrapper">
+    <div className='value--wrapper'>
       {moment(value).format(DATE_FORMAT) || 'N/A'}
     </div>
   </div>

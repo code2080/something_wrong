@@ -16,7 +16,7 @@ export class Job {
   status;
   score;
 
-  constructor({
+  constructor ({
     _id,
     activities = [],
     type = schedulingAlgorithms.UNKNOWN,

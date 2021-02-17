@@ -33,7 +33,7 @@ export default class FormInstance {
 
   submittedAt;
 
-  constructor({
+  constructor ({
     _id,
     scopedObject,
     status,

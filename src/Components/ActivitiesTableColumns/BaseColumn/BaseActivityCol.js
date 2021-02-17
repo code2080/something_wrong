@@ -91,7 +91,7 @@ const BaseActivityCol = ({
   const handleMenuClick = ({ key }) => {
     _setIsDropdownVisible(false);
     onActionCallback(key);
-  }
+  };
 
   // Memoized callback handler for when manual override is completed and activity should be updated
   const onFinishManualEditing = useCallback(
@@ -118,17 +118,17 @@ const BaseActivityCol = ({
       notification.error({
         getContainer: () => document.getElementById('te-prefs-lib'),
         message: 'Operation failed',
-        description: `Something went wrong...`,
+        description: 'Something went wrong...',
       });
     }
-  }
+  };
 
   const mapToCategories = coreCategoryObject => {
     // Categories is an array of objects with ids and values?
     return Object.keys(coreCategoryObject).map(key => {
-      return {id: key, values: coreCategoryObject[key]};
+      return { id: key, values: coreCategoryObject[key] };
     });
-  }
+  };
 
   const onProcessFilterReturn = res => {
     if (res === null) {
@@ -137,16 +137,16 @@ const BaseActivityCol = ({
     // Map res to PiC format
     try {
       // Override the activity
-      overrideActivityValue({extId: res.type, searchString: res.searchString || null, searchFields: res.searchFields || null, categories: mapToCategories(res.selectedCategories || [])}, _activityValue, activity);
+      overrideActivityValue({ extId: res.type, searchString: res.searchString || null, searchFields: res.searchFields || null, categories: mapToCategories(res.selectedCategories || []) }, _activityValue, activity);
       // Do something label-ish?
     } catch (error) {
       notification.error({
         getContainer: () => document.getElementById('te-prefs-lib'),
         message: 'Operation failed',
-        description: `Something went wrong...`,
+        description: 'Something went wrong...',
       });
     }
-  }
+  };
 
   const onFinshExternalEdit = (res, action) => {
     /**
@@ -177,8 +177,7 @@ const BaseActivityCol = ({
        * but revert to submission value has no view impact
        * so we test for it first
        */
-      if (action === activityActions.REVERT_TO_SUBMISSION_VALUE)
-        return revertToSubmissionValue(_activityValue, activity);
+      if (action === activityActions.REVERT_TO_SUBMISSION_VALUE) { return revertToSubmissionValue(_activityValue, activity); }
 
       // Construct the new view props
       const updView = activityActionViews[action];

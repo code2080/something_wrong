@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -19,8 +19,8 @@ const mapActionsToProps = {
 
 const UserAvatar = ({ user, ownerId, fetchUser }) => {
   return (
-    <div className="avatar--wrapper">
-      <div className="avatar--circle">
+    <div className='avatar--wrapper'>
+      <div className='avatar--circle'>
         {user.initials}
       </div>
       {user.name}

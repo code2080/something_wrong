@@ -17,10 +17,10 @@ const SectionSelector = ({ sections, selectedSection, onSectionChange }) => {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="ALL_SECTIONS">
+      <Menu.Item key='ALL_SECTIONS'>
         <span>Select all</span>
       </Menu.Item>
-      <Menu.Item key="SELECT_NONE">
+      <Menu.Item key='SELECT_NONE'>
         <span>Deselect all</span>
       </Menu.Item>
       <Menu.Divider />
@@ -37,14 +37,14 @@ const SectionSelector = ({ sections, selectedSection, onSectionChange }) => {
   );
 
   return (
-    <div className="section-selector--wrapper">
+    <div className='section-selector--wrapper'>
       <Dropdown
         overlay={menu}
         trigger={['click']}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <Button type="link">
-          Filter sections <Icon type="down" />
+        <Button type='link'>
+          Filter sections <Icon type='down' />
         </Button>
       </Dropdown>,
     </div>

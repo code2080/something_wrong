@@ -6,10 +6,10 @@ const selectExtIdProps = state => state.te.extIdProps;
 export const selectExtIds = createSelector(
   [selectExtIdProps],
   extIdProps =>
-    _.flatMap(extIdProps).reduce((extIds, extIdTypes) => [
-        ...extIds,
-        ...extIdTypes
-      ], [])
+    _.flatMapDeep(extIdProps).reduce((extIds, extIdTypes) => [
+      ...extIds,
+      ...Object.values(extIdTypes)
+    ], [])
 );
 
 /**
@@ -21,11 +21,11 @@ export const selectExtIds = createSelector(
  * @param {String} fallbackVal value you want this function to return if it does not find a label for the specified extid
  */
 export const selectExtIdLabel = createSelector(
-  /** 
+  /**
    * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first (recommend using useFetchLabelsFromExtids hook)
    */
   selectExtIdProps,
-  extIdProps => (field, extId, fallbackVal = extId) => 
-    extIdProps[field][extId] && !_.isEmpty(extIdProps[field][extId].label) ? extIdProps[field][extId].label : fallbackVal
-  
+  extIdProps => (field, extId, fallbackVal = extId) =>
+    !_.isEmpty(extIdProps[field][extId]?.label) ? extIdProps[field][extId].label : fallbackVal
+
 );

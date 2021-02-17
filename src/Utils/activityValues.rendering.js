@@ -38,23 +38,26 @@ export const getSchedulingAlgorithmForActivityValue = (
 
 const generateExtrasForActivityValue = (activityValue, mappingType) => {
   // If manual, always return manual
-  if (activityValue.valueMode === activityValueModes.MANUAL)
+  if (activityValue.valueMode === activityValueModes.MANUAL) {
     return {
       icon: activityValueModeProps[activityValueModes.MANUAL].icon,
       tooltip: 'The value was entered manually by the user'
     };
+  }
   // If from submission, we need to check if it's a filer or not
-  if (activityValue.submissionValueType === submissionValueTypes.FILTER)
+  if (activityValue.submissionValueType === submissionValueTypes.FILTER) {
     return {
       icon: submissionValueTypeProps[submissionValueTypes.FILTER].icon,
       tooltip: 'The object filter values are from the submission'
     };
+  }
   // Else, if it's a timing property
-  if (mappingType === mappingTypes.TIMING)
+  if (mappingType === mappingTypes.TIMING) {
     return {
       icon: 'column-height',
       tooltip: 'The timing is based on the submission'
     };
+  }
   // Else, return from submission
   return {
     icon: activityValueModeProps[activityValueModes.FROM_SUBMISSION].icon,
@@ -64,7 +67,7 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
 
 const renderCategories = categories => categories.map(({ id, values }) => `${_.get(window.tePrefsLibStore.getState(), ['te', 'extIdProps', 'fields', id, 'label'], id)}: ${values}`).join(', ');
 const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
-const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
+const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString);
 
 /**
  * @function formatSubmissionValue
@@ -126,7 +129,7 @@ const getRenderPayloadForTimeSlotStartTime = (
   const validationResult = validateTimeslotTimingMode({ timing: timingValues });
   const endTime = timingValues.find(el => el.extId === 'endTime');
   const length = timingValues.find(el => el.extId === 'length');
-  if (!validationResult.errorCode)
+  if (!validationResult.errorCode) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [activityValue.value, moment(endTime.value).subtract(length.value, 'hours')],
@@ -136,6 +139,7 @@ const getRenderPayloadForTimeSlotStartTime = (
         .subtract(length.value, 'hours')
         .format(TIME_FORMAT)}`
     });
+  }
 
   return createRenderPayload({
     status: validationResult.status,
@@ -157,7 +161,7 @@ const getSchedulingPayloadForTimeSlotEndTime = (
   const validationResult = validateTimeslotTimingMode({ timing: timingValues });
   const startTime = timingValues.find(el => el.extId === 'startTime');
   const length = timingValues.find(el => el.extId === 'length');
-  if (!validationResult.errorCode)
+  if (!validationResult.errorCode) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [moment(startTime.value).add(length.value, 'hours'), moment(activityValue.value)],
@@ -167,6 +171,7 @@ const getSchedulingPayloadForTimeSlotEndTime = (
         .add(length.value, 'hours')
         .format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}`
     });
+  }
 
   return createRenderPayload({
     status: validationResult.status,
@@ -183,19 +188,21 @@ const getSchedulingPayloadForTimeSlotEndTime = (
 const getRenderPayloadForDateRangesValue = activityValue => {
   const { value } = activityValue;
   // Date ranges need to have a start time
-  if (!value || !value.startTime)
+  if (!value || !value.startTime) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING, // Missing data range value is not a failed validation
       value: null,
       formattedValue: null,
     });
+  }
   // ... but end time is optional
-  if (!value.endTime)
+  if (!value.endTime) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [value.startTime],
       formattedValue: `On or after: ${value.startTime}`
     });
+  }
   // All data exists
   return createRenderPayload({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
@@ -213,17 +220,16 @@ const getRenderPayloadForDateRangesValue = activityValue => {
 const getRenderPayloadForPaddingValue = activityValue => {
   const { value } = activityValue;
   // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
-  
-  if(!value)
-    return null
 
-    
-  if (!value.before && !value.after)
+  if (!value) { return null; }
+
+  if (!value.before && !value.after) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: null,
       formattedValue: null,
     });
+  }
   // Only before is set
   if (value.before && !value.after) {
     const { days, hours, minutes } = minToHourMinDisplay(value.before);
@@ -251,7 +257,7 @@ const getRenderPayloadForPaddingValue = activityValue => {
     value: [value.before, value.after],
     formattedValue: `Padding before: ${bD ? `${bD}d, ${bH}:${bM}` : `${bH}:${bM}`}, after: ${aD ? `${aD}d, ${aH}:${aM}` : `${aH}:${aM}`}`,
   });
-}
+};
 
 /**
  * @function getRenderPayloadForOptionalTimingValues
@@ -266,7 +272,7 @@ const getRenderPayloadForOptionalTimingValues = activityValue => {
     value: activityValue.value,
     formattedValue: activityValue.value,
   });
-}
+};
 
 /**
  * @function getRenderPayloadForObjectFilter
@@ -276,13 +282,14 @@ const getRenderPayloadForOptionalTimingValues = activityValue => {
 const getRenderPayloadForObjectFilter = activityValue => {
   const validationResult = validateFilterValue(activityValue);
   const value = Array.isArray(activityValue.value) ? activityValue.value : [activityValue.value];
-  if (!validationResult.errorCode)
+  if (!validationResult.errorCode) {
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value,
       formattedValue: value
         .map(el => renderFilterValues(el)).join(', ')
     });
+  }
 
   return createRenderPayload({
     status: validationResult.status,
@@ -309,36 +316,28 @@ export const getRenderPayloadForActivityValue = (
   const timingMode = getTimingModeForActivity(activity);
   let renderPayload = null;
   // Special case: start time and time slots
-  if (activityValue.extId === 'startTime' && timingMode === mappingTimingModes.TIMESLOTS)
-    renderPayload = getRenderPayloadForTimeSlotStartTime(activityValue, activity.timing);
+  if (activityValue.extId === 'startTime' && timingMode === mappingTimingModes.TIMESLOTS) { renderPayload = getRenderPayloadForTimeSlotStartTime(activityValue, activity.timing); }
 
   // Special case: end time and time slots
-  if (activityValue.extId === 'endTime' && timingMode === mappingTimingModes.TIMESLOTS)
-    renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
+  if (activityValue.extId === 'endTime' && timingMode === mappingTimingModes.TIMESLOTS) { renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing); }
 
   // Special case: dateRanges for sequence scheduling
-  if (activityValue.extId === 'dateRanges')
-    renderPayload = getRenderPayloadForDateRangesValue(activityValue);
+  if (activityValue.extId === 'dateRanges') { renderPayload = getRenderPayloadForDateRangesValue(activityValue); }
 
   // Special case: padding
-  if (activityValue.extId === 'padding')
-    renderPayload = getRenderPayloadForPaddingValue(activityValue);
+  if (activityValue.extId === 'padding') { renderPayload = getRenderPayloadForPaddingValue(activityValue); }
 
   // For all optional timing elements
-  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === mappingTimingModes.SEQUENCE)
-    renderPayload = getRenderPayloadForOptionalTimingValues(activityValue);
+  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === mappingTimingModes.SEQUENCE) { renderPayload = getRenderPayloadForOptionalTimingValues(activityValue); }
 
   // Special case: filters
-  if (activityValue.submissionValueType === submissionValueTypes.FILTER && determineContentOfValue(activityValue) === submissionValueTypes.FILTER)
-    renderPayload = getRenderPayloadForObjectFilter(activityValue);
+  if (activityValue.submissionValueType === submissionValueTypes.FILTER && determineContentOfValue(activityValue) === submissionValueTypes.FILTER) { renderPayload = getRenderPayloadForObjectFilter(activityValue); }
 
   // TODO Workaround to not crash when activityValue becomes a whole returned TimeEdit object
-  if (activityValue.type === 'object' && activityValue.value && activityValue.value.extid)
-    formatFn = teObject => teObject.extid;
+  if (activityValue.type === 'object' && activityValue.value && activityValue.value.extid) { formatFn = teObject => teObject.extid; }
 
   // TODO: Workaround for unhandled object request/empty activity value
-  if (activityValue.type === 'object' && _.isEmpty(activityValue.value))
-    formatFn = _ => 'No values';
+  if (activityValue.type === 'object' && _.isEmpty(activityValue.value)) { formatFn = _ => 'No values'; }
 
   // General case
   if (!renderPayload) {
@@ -356,10 +355,11 @@ export const getRenderPayloadForActivityValue = (
       });
     }
   }
-  if (includeExtras && mappingType)
+  if (includeExtras && mappingType) {
     return {
       ...renderPayload,
       ...generateExtrasForActivityValue(activityValue, mappingType)
     };
+  }
   return renderPayload;
-}
+};

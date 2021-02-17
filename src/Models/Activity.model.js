@@ -44,7 +44,7 @@ export class Activity {
    */
   values; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
 
-  constructor({
+  constructor ({
     _id,
     formId,
     formInstanceId,

@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { DATE_FORMAT } from '../../Constants/common.constants';

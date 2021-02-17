@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Modal, Table } from 'antd';
 import _ from 'lodash';
@@ -17,9 +18,9 @@ import { LabelRenderer } from '../../Utils/rendering.helpers';
 import {
   RequestStatus,
   objectRequestTypeToPlainText,
-} from '../../Constants/objectRequest.constants';
+} from '../../Constants/ObjectRequest.constants';
 
-const ObjectRequestModal = ({onClose, visible, request}) => {
+const ObjectRequestModal = ({ onClose, visible, request }) => {
   const fieldDatasource = Object.entries(request.objectRequest || {}).map(([field, value]) => ({
     key: field,
     field: field,
@@ -32,9 +33,9 @@ const ObjectRequestModal = ({onClose, visible, request}) => {
     title={'Object request details'}
     visible={visible}
     getContainer={() => document.getElementById('te-prefs-lib')}
-    closable={true}
+    closable
     footer={null}
-    maskClosable={true}
+    maskClosable
     onCancel={onClose}
     onOk={onClose}
     width={320}
@@ -46,15 +47,22 @@ const ObjectRequestModal = ({onClose, visible, request}) => {
     <br /><br />
     <b>Request content:</b><br />
     <Table bordered dataSource={fieldDatasource} pagination={{ hideOnSinglePage: true }}>
-      <Table.Column title='Field' dataIndex='field' key='field' render={field => <b><LabelRenderer type='fields' extId={field}/>:</b>} />
+      <Table.Column title='Field' dataIndex='field' key='field' render={field => <b><LabelRenderer type='fields' extId={field} />:</b>} />
       <Table.Column title='Value' dataIndex='value' key='value' />
     </Table>
-  </Modal>
+  </Modal>;
 };
 
 ObjectRequestModal.defaultProps = {
   visible: false,
+  onClose: _.identity,
   request: null,
+};
+
+ObjectRequestModal.propTypes = {
+  onClose: PropTypes.func,
+  visible: PropTypes.bool,
+  request: PropTypes.object,
 };
 
 export default ObjectRequestModal;

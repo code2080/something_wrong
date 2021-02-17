@@ -53,7 +53,7 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-function doDispatch(flow, params, data, postAction) {
+function doDispatch (flow, params, data, postAction) {
   const { success, dispatch } = flow;
   const finalData = data.data || data;
   if (typeof success === 'function') {
@@ -87,7 +87,7 @@ const refreshToken = async () => {
   console.log('Token refreshing');
 };
 
-function createThunkAction({
+function createThunkAction ({
   method,
   flow,
   endpoint,
@@ -109,7 +109,7 @@ function createThunkAction({
     };
   }
 
-  return async function thunk(dispatch, getState) {
+  return async function thunk (dispatch, getState) {
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
     const option = await prepareOption(method, params, requiresAuth, headers);
     const { request, failure } = flow;
@@ -137,12 +137,13 @@ function createThunkAction({
       .then(response => {
         allApis[endpoint].inprogress = false;
         doDispatch({ ...flow, dispatch, getState }, params, response.data, postAction);
-        if (successNotification)
+        if (successNotification) {
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation completed',
             description: successNotification
           });
+        }
         if (callback) callback(response.data);
         return response.data;
       })
@@ -172,13 +173,14 @@ function createThunkAction({
         console.error(error.toString());
 
         // Display failure message
-        if (successNotification)
+        if (successNotification) {
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation failed',
             description: error.toString(),
             duration: 15
           });
+        }
 
         // If no response, return
         if (!response) return null;
@@ -205,7 +207,7 @@ function createThunkAction({
               <p>
                 <b>{data.code}:</b> {data.message}
                 <br />
-                This is not your fault, it's either a bug or a temporary server
+                This is not your fault, it&apos;s either a bug or a temporary server
                 problem. Please contact TimeEdit if you keep getting this
                 message.
                 <br />

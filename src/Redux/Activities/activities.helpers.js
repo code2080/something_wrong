@@ -92,7 +92,7 @@ const updateSingleActivityValue = (newValue, activityValue, activity) => {
  * @param {Object} activity the old activity
  */
 const updateMultipleActivityValues = (newValue, activityValue, activity) => {
-  let updatedActivity = activity;
+  const updatedActivity = activity;
   newValue.forEach(value => {
     const objPath = findObjectPathForActivityValue(value.extId, activity);
     const activityValueIdx = activity[objPath].findIndex(
@@ -131,14 +131,13 @@ export const manuallyOverrideActivityValue = (
   if (
     timingMode !== mappingTimingModes.EXACT &&
     (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
-  )
-    return updateMultipleActivityValues(newValue, activityValue, activity);
+  ) { return updateMultipleActivityValues(newValue, activityValue, activity); }
 
   return updateSingleActivityValue(newValue, activityValue, activity);
 };
 
 const revertMultipleActivityValues = (extIds, activity) => {
-  let updatedActivity = activity;
+  const updatedActivity = activity;
   extIds.forEach(extId => {
     const objPath = findObjectPathForActivityValue(extId, activity);
     const activityValueIdx = activity[objPath].findIndex(

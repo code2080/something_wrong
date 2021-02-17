@@ -119,7 +119,7 @@ const ActivityDesignerPage = ({
       content: 'Are you sure you want to leave the page?',
       onOk: () => navigation.resume(),
       onCancel: () => navigation.cancel(),
-    })
+    });
     return null;
   };
 
@@ -132,17 +132,17 @@ const ActivityDesignerPage = ({
     setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name },
-      { path: `/forms/${formId}/activity-designer`, label: `Activity designer` }
+      { path: `/forms/${formId}/activity-designer`, label: 'Activity designer' }
     ]);
   }, []);
 
   // Effect to set activity types & fields
   useEffect(() => {
-    async function execTypes() {
+    async function execTypes () {
       const _availableTypes = await teCoreAPI.getReservationTypes();
       setAvailableTypes(extractReservationTypes(_availableTypes));
     }
-    async function execFields() {
+    async function execFields () {
       const _availableFields = await teCoreAPI.getReservationFields();
       setAvailableFields(extractReservationFields(_availableFields));
     }
@@ -156,24 +156,26 @@ const ActivityDesignerPage = ({
   const mappingOptions = useMemo(() => getElementsForMapping(form.sections, mapping), [form, mapping]);
   const mappingStatus = useMemo(() => validateMapping(form._id, mappings), [form, mappings]);
   const typeOptions = useMemo(() => {
-    if (validTypes.length > 0)
+    if (validTypes.length > 0) {
       return validTypes.map(
         value => ({
           value,
           label: (availableTypes.find(el => el.value === value) || { label: value }).label,
         })
       );
+    }
     return availableTypes;
   }, [form, validTypes, availableTypes]);
 
   const fieldOptions = useMemo(() => {
-    if (validFields.length > 0)
+    if (validFields.length > 0) {
       return validFields.map(
         value => ({
           value,
           label: (availableFields.find(el => el.value === value) || { label: value }).label,
         })
       );
+    }
     return availableFields;
   }, [validFields, availableFields]);
 
@@ -185,7 +187,7 @@ const ActivityDesignerPage = ({
     const doDelete = async () => {
       await deleteActivities(formId);
       history.goBack();
-    }
+    };
     doDelete();
   }, [formId, deleteActivities]);
 
@@ -301,34 +303,34 @@ const ActivityDesignerPage = ({
         when={mappingStatus === mappingStatuses.NOT_SET}
         config={{ allowBookmarks: false }}
       />
-      <div className="activity-designer--wrapper">
-        <div className="activity-designer--header">
+      <div className='activity-designer--wrapper'>
+        <div className='activity-designer--header'>
           {`Configure the activity design for ${form.name}`}
         </div>
         {hasReservations && (
           <Alert
-            className="activity-designer--alert"
-            type="warning"
-            message="Editing the configuration will delete existing activities"
+            className='activity-designer--alert'
+            type='warning'
+            message='Editing the configuration will delete existing activities'
             description={(
               <React.Fragment>
                 <div>
                   One or many submissions have already been converted to activities with the current configuration. To edit the mapping you must first delete the activities.
                 </div>
-                <Button size="small" type="link" onClick={onDeleteReservationsCallback}>Delete activities now</Button>
+                <Button size='small' type='link' onClick={onDeleteReservationsCallback}>Delete activities now</Button>
               </React.Fragment>
             )}
           />
         )}
-        <div className="activity-designer--toolbar">
-          <div className="activity-designer__toolbar--label">Reservation mode:</div>
-          <div className="activity-designer__toolbar--value">{form.reservationMode || 'Not selected'}</div>
+        <div className='activity-designer--toolbar'>
+          <div className='activity-designer__toolbar--label'>Reservation mode:</div>
+          <div className='activity-designer__toolbar--value'>{form.reservationMode || 'Not selected'}</div>
           <Dropdown
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
           >
-            <Button type="link" size="small">
+            <Button type='link' size='small'>
               Reset configuration...
             </Button>
           </Dropdown>
@@ -337,11 +339,11 @@ const ActivityDesignerPage = ({
             <SavingStatus />
           </div>
         </div>
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <TimingMapping
             mapping={mapping}
             onChange={updateTimingMappingCallback}
@@ -349,11 +351,11 @@ const ActivityDesignerPage = ({
             disabled={hasReservations}
           />
         </div>
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Type</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <ObjectMapping
             mapping={mapping}
             mappingOptions={mappingOptions}
@@ -362,11 +364,11 @@ const ActivityDesignerPage = ({
             disabled={hasReservations}
           />
         </div>
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Field</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <FieldMapping
             mapping={mapping}
             mappingOptions={mappingOptions}
@@ -375,8 +377,8 @@ const ActivityDesignerPage = ({
             disabled={hasReservations}
           />
         </div>
-        <div className="activity-designer--list" style={{ textAlign: 'right' }}>
-          <Button type="link" size="small" onClick={() => history.goBack()}>
+        <div className='activity-designer--list' style={{ textAlign: 'right' }}>
+          <Button type='link' size='small' onClick={() => history.goBack()}>
             Close
           </Button>
         </div>

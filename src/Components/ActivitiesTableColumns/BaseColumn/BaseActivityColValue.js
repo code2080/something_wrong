@@ -30,7 +30,7 @@ const BaseActivityColValue = ({
     switch (activityValue.type) {
       case activityValueTypes.OBJECT: {
         const valueType = determineContentOfValue(activityValue);
-        if (valueType === submissionValueTypes.OBJECT)
+        if (valueType === submissionValueTypes.OBJECT) {
           return getRenderPayloadForActivityValue(
             activityValue,
             activity,
@@ -39,6 +39,7 @@ const BaseActivityColValue = ({
                 ? [extIdProps.objects[extId].label]
                 : extId
           );
+        }
         return getRenderPayloadForActivityValue(
           activityValue,
           activity,
@@ -56,7 +57,7 @@ const BaseActivityColValue = ({
     }
   }, [activityValue, activity, formatFn, extIdProps]);
 
-  if (schedulingPayload.tooltip)
+  if (schedulingPayload.tooltip) {
     return (
       <Tooltip
         title={schedulingPayload.tooltip}
@@ -65,6 +66,7 @@ const BaseActivityColValue = ({
         <span>{schedulingPayload.formattedValue || 'N/A'}</span>
       </Tooltip>
     );
+  }
 
   return (
     <span style={{ overflow: 'hidden' }}>

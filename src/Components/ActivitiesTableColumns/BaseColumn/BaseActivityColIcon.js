@@ -8,14 +8,12 @@ import { submissionValueTypes, submissionValueTypeProps } from '../../../Constan
 
 const BaseActivityColIcon = ({ valueMode, submissionValueType }) => {
   const value = useMemo(() => {
-    if (valueMode === activityValueModes.MANUAL)
-      return { icon: activityValueModeProps.MANUAL.icon, tooltip: 'Manually entered value' };
-    if (submissionValueType === submissionValueTypes.FILTER)
-      return { icon: submissionValueTypeProps.FILTER.icon, tooltip: 'Filter values from submission' };
+    if (valueMode === activityValueModes.MANUAL) { return { icon: activityValueModeProps.MANUAL.icon, tooltip: 'Manually entered value' }; }
+    if (submissionValueType === submissionValueTypes.FILTER) { return { icon: submissionValueTypeProps.FILTER.icon, tooltip: 'Filter values from submission' }; }
     return { icon: activityValueModeProps.FROM_SUBMISSION.icon, tooltip: 'Value from submission' };
   }, [valueMode, submissionValueType]);
   return (
-    <div className="base-activity-col--icon">
+    <div className='base-activity-col--icon'>
       <Tooltip
         title={value.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}

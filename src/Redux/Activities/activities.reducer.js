@@ -19,32 +19,31 @@ const reducer = (state = initialState, action) => {
       if (sourceIdx === destinationIdx) return state;
       const activities = state[formId][formInstanceId];
       /**
-       * Reordering logic:
-       * 1. Set moved activity sequenceIdx = destinationIdx
-       * 2. If destinationIdx > sourceIdx => sequenceIdx -= 1 for all activities with sIdx > sourceIdx && <= destinationIdx
-       * 3. If destinationIdx < sourceIdx => sequenceIdx += 1 for all activities with sIdx < sourceIdx && >= destinationIdx
-       */
+             * Reordering logic:
+             * 1. Set moved activity sequenceIdx = destinationIdx
+             * 2. If destinationIdx > sourceIdx => sequenceIdx -= 1 for all activities with sIdx > sourceIdx && <= destinationIdx
+             * 3. If destinationIdx < sourceIdx => sequenceIdx += 1 for all activities with sIdx < sourceIdx && >= destinationIdx
+             */
       const direction = destinationIdx - sourceIdx;
       const updActivities = activities.map(activity => {
         // If it's the moved activity
-        if (activity.sequenceIdx === sourceIdx)
-          return { ...activity, sequenceIdx: destinationIdx };
+        if (activity.sequenceIdx === sourceIdx) { return { ...activity, sequenceIdx: destinationIdx }; }
         // If activity should be moving DOWN
         else if (
           direction > 0 &&
           activity.sequenceIdx > sourceIdx &&
           activity.sequenceIdx <= destinationIdx
-        )
+        ) {
           return { ...activity, sequenceIdx: activity.sequenceIdx - 1 };
         // If activity should be moving UP
-        else if (
+        } else if (
           direction < 0 &&
           activity.sequenceIdx < sourceIdx &&
           activity.sequenceIdx >= destinationIdx
-        )
+        ) {
           return { ...activity, sequenceIdx: activity.sequenceIdx + 1 };
         // If activity is unaffected by the move
-        else {
+        } else {
           return activity;
         }
       });

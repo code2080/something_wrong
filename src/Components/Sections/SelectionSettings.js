@@ -109,7 +109,7 @@ const SelectionSettings = ({
     if (reservationMode) {
       findFieldsOnReservationMode(reservationMode);
     }
-    async function exec() {
+    async function exec () {
       const typeTree = await teCoreAPI.getReservationFields();
       setAvailableFields(typeTree.map(el => ({ label: el.name, value: el.extid })));
     }
@@ -117,13 +117,14 @@ const SelectionSettings = ({
   }, []);
 
   const fieldOptions = useMemo(() => {
-    if (reservationModeFields.length > 0)
+    if (reservationModeFields.length > 0) {
       return reservationModeFields.map(
         value => ({
           value,
           label: (typeTree.find(el => el.value === value) || { label: value }).label,
         })
       );
+    }
     return typeTree;
   }, [reservationModeFields, typeTree]);
 
@@ -161,12 +162,12 @@ const SelectionSettings = ({
     [formId, formInstanceId, sectionId, selectionSettings]);
 
   return (
-    <div className="selection-settings--wrapper">
-      <div className="selection-settings--setting">
-        <div className="selection-settings__setting--title">Included fields</div>
-        <div className="selection-settings__columns">
-          <div className="selection-settings__column">Field</div>
-          <div className="selection-settings__column">Element</div>
+    <div className='selection-settings--wrapper'>
+      <div className='selection-settings--setting'>
+        <div className='selection-settings__setting--title'>Included fields</div>
+        <div className='selection-settings__columns'>
+          <div className='selection-settings__column'>Field</div>
+          <div className='selection-settings__column'>Element</div>
         </div>
         {(selectionSettings.includedFields || []).map((el, rowIdx) => (
           <IncludedFieldRow
@@ -179,16 +180,16 @@ const SelectionSettings = ({
             onDelete={onDeleteField}
           />
         ))}
-        <Button size="small" type="primary" onClick={onAddField}>
-          <Icon type="plus" />
+        <Button size='small' type='primary' onClick={onAddField}>
+          <Icon type='plus' />
           Add field
         </Button>
       </div>
-      <div className="selection-settings--setting">
-        <div className="selection-settings__setting--title">Extra objects</div>
-        <div className="selection-settings__columns">
-          <div className="selection-settings__column">Element</div>
-          <div className="selection-settings__column">Value</div>
+      <div className='selection-settings--setting'>
+        <div className='selection-settings__setting--title'>Extra objects</div>
+        <div className='selection-settings__columns'>
+          <div className='selection-settings__column'>Element</div>
+          <div className='selection-settings__column'>Value</div>
         </div>
         {(selectionSettings.extraObjects || []).map((el, rowIdx) => (
           <ExtraObjectRow
@@ -203,8 +204,8 @@ const SelectionSettings = ({
           />
         ))}
       </div>
-      <Button size="small" type="primary" onClick={onAddExtraObject}>
-        <Icon type="plus" />
+      <Button size='small' type='primary' onClick={onAddExtraObject}>
+        <Icon type='plus' />
         Add object
       </Button>
     </div>
@@ -219,7 +220,7 @@ SelectionSettings.propTypes = {
   selectionSettings: PropTypes.object.isRequired,
   formSections: PropTypes.array.isRequired,
   reservationMode: PropTypes.string,
-  validFields: PropTypes.array.isRequired,
+  reservationModeFields: PropTypes.array,
   updateSelectionSettings: PropTypes.func.isRequired,
   findFieldsOnReservationMode: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,

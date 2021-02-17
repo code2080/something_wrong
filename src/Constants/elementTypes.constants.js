@@ -143,4 +143,4 @@ export const WEEKDAYNAMES = {
   FRI: 'Friday',
   SAT: 'Saturday',
   SUN: 'Sunday',
-}
+};

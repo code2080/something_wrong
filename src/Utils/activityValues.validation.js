@@ -20,7 +20,7 @@ export const validateGeneralValue = activityValue => {
     errorCode: activityValueValidations.MISSING_VALUE,
     errorMessage: 'The value has an incorrect format, please update it manually',
   });
-}
+};
 
 export const validateFilterValue = activityValue => {
   if (
@@ -36,18 +36,19 @@ export const validateFilterValue = activityValue => {
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
   });
-}
+};
 
 export const validateTimeslotTimingMode = activity => {
   const startTime = activity.timing.find(el => el.extId === 'startTime');
   const length = activity.timing.find(el => el.extId === 'length');
   const endTime = activity.timing.find(el => el.extId === 'endTime');
-  if (!startTime || !length || !endTime || !startTime.value || !length.value || !endTime.value)
+  if (!startTime || !length || !endTime || !startTime.value || !length.value || !endTime.value) {
     return new ActivityValueValidation({
       status: activityValueStatuses.MISSING_DATA,
       errorCode: activityValueValidations.MISSING_VALUE,
       errorMessage: 'Start time, end time or length are missing, please input these values manually to calculate a time range',
     });
+  }
 
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
@@ -57,17 +58,18 @@ export const validateTimeslotTimingMode = activity => {
 export const validateExactTimingMode = activity => {
   const startTime = activity.timing.find(el => el.extId === 'startTime');
   const endTime = activity.timing.find(el => el.extId === 'endTime');
-  if (!startTime || !endTime || !startTime.value || !endTime.value)
+  if (!startTime || !endTime || !startTime.value || !endTime.value) {
     return new ActivityValueValidation({
       status: activityValueStatuses.MISSING_DATA,
       errorCode: activityValueValidations.MISSING_VALUE,
       errorMessage: 'Start time or end time are missing, please input these values manually to schedule this activity',
     });
+  }
 
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
   });
-}
+};
 
 export const validateTiming = activity => {
   const timingMode = getTimingModeForActivity(activity);
@@ -76,10 +78,10 @@ export const validateTiming = activity => {
       return validateExactTimingMode(activity);
     case mappingTimingModes.TIMESLOTS:
       return validateTimeslotTimingMode(activity);
-    case mappingTimingModes.SEQUENCE: 
+    case mappingTimingModes.SEQUENCE:
       return new ActivityValueValidation({
         status: activityValueStatuses.READY_FOR_SCHEDULING,
-      })
+      });
     default:
       return false;
   }

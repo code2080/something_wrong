@@ -111,7 +111,7 @@ export const revertToSubmissionValue = (activityValue, activity) => {
       activity: updatedActivity,
     },
   });
-}
+};
 
 const deleteActivitiesFlow = {
   request: () => ({ type: DELETE_ACTIVITIES_FOR_FORM_REQUEST }),

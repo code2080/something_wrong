@@ -1,4 +1,4 @@
-import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../Constants/permissions.constants'
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../Constants/permissions.constants';
 
 export const hasAssistedSchedulingPermissions = () => {
   try {
