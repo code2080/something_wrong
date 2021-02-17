@@ -77,7 +77,7 @@ const ResizableCell = props => {
 
 ResizableCell.propTypes = {
   width: PropTypes.number,
-  children: PropTypes.object,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
   onResized: PropTypes.func,
   expandable: PropTypes.bool,
   index: PropTypes.number,
@@ -93,7 +93,7 @@ const ResizableHeaderCell = ({ resizable, onResized, expandable, ...restProps })
 };
 
 ResizableHeaderCell.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
   resizable: PropTypes.bool,
   index: PropTypes.number,
   onResized: PropTypes.func,

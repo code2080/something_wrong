@@ -91,7 +91,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
 
 ObjectRequestDropdown.propTypes = {
   request: PropTypes.object,
-  children: PropTypes.array,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
 };
 
 export default ObjectRequestDropdown;

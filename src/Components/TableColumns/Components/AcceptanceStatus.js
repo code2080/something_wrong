@@ -31,7 +31,7 @@ const AcceptanceStatus = ({ acceptanceStatus, acceptanceComment }) => {
 };
 
 AcceptanceStatus.propTypes = {
-  acceptanceStatus: PropTypes.string.isRequired,
+  acceptanceStatus: PropTypes.string,
   acceptanceComment: PropTypes.string,
 };
 

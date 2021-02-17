@@ -138,7 +138,7 @@ SubmissionActionButton.propTypes = {
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   remindUser: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  submissions: PropTypes.array.isRequired,
+  submissions: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(mapStateToProps, mapActionsToProps)(SubmissionActionButton));
