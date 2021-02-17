@@ -1,4 +1,4 @@
-import { sortAlpha } from "../Components/TableColumns/Helpers/sorters";
+import { sortAlpha } from '../Components/TableColumns/Helpers/sorters';
 
 const getElementHtml = (element, isDeep) => {
   if (!element) return '';
@@ -14,7 +14,7 @@ const getElementHtml = (element, isDeep) => {
 const sortValue = (valueA, valueB) => {
   if (!isNaN(valueA) && !isNaN(valueB)) return Number(valueA) - Number(valueB);
   return sortAlpha(valueA, valueB);
-}
+};
 export const sortByElementHtml = (a, b) => {
   const elementA = document.querySelector(a);
   const elementB = document.querySelector(b);
@@ -24,4 +24,4 @@ export const sortByElementDeepHtml = (a, b) => {
   const elementA = document.querySelector(a);
   const elementB = document.querySelector(b);
   return sortValue(getElementHtml(elementA, true), getElementHtml(elementB, true));
-}
+};

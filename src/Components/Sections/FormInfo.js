@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import { PropTypes } from 'prop-types';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { Table } from 'antd';
@@ -41,11 +41,11 @@ const formToFieldInfo = form => {
   }, {
     key: 'updatedAt',
     label: 'Updated',
-      formatValueFn: value => <DateTime value={value} />,
+    formatValueFn: value => <DateTime value={value} />,
   }, {
     key: 'dueDate',
     label: 'Due',
-      formatValueFn: value => <DateTime value={value} />,
+    formatValueFn: value => <DateTime value={value} />,
   }, {
     key: 'allowLateResponses',
     label: 'Allow late responses',
@@ -79,7 +79,7 @@ const FormInfo = ({ formId }) => {
 
   const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
     !_.isEmpty(value) ? [...rows, { key: field, field, value }] : rows
-    , []);
+  , []);
 
   return (
     <div className={'formInfo--wrapper'}>
@@ -108,6 +108,10 @@ const FormInfo = ({ formId }) => {
       </Table>
     </div>
   );
+};
+
+FormInfo.propTypes = {
+  formId: PropTypes.string,
 };
 
 export default FormInfo;

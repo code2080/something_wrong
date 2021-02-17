@@ -84,13 +84,13 @@ const Toolbar = ({
 
   const renderedToolbar = useMemo(
     () => (
-      <div className="top-toolbar--wrapper">
-        <span className="top-toolbar--breadcrumbs__label">Navigate:</span>
+      <div className='top-toolbar--wrapper'>
+        <span className='top-toolbar--breadcrumbs__label'>Navigate:</span>
         <Breadcrumb>
           {breadcrumbs &&
             breadcrumbs.map((el, idx) => (
               <Breadcrumb.Item key={idx}>
-                <span className="top-toolbar--breadcrumbs__item" onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
+                <span className='top-toolbar--breadcrumbs__item' onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
               </Breadcrumb.Item>
             ))}
         </Breadcrumb>
@@ -106,8 +106,7 @@ const Toolbar = ({
   );
 
   useEffect(() => {
-    if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT))
-      teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](<div className="te-prefs-lib">{renderedToolbar}</div>);
+    if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT)) { teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](<div className='te-prefs-lib'>{renderedToolbar}</div>); }
   }, [breadcrumbs]);
   const shouldShowToolbar = useMemo(
     () => !teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT),

@@ -18,18 +18,18 @@ const OptionSelection = ({ value, element }) => {
     return [extractOptionFromValue(value, element.options)];
   }, [value, element]);
   return (
-    <div className="option-selection--wrapper">
+    <div className='option-selection--wrapper'>
       {options.map((opt, idx) => (
         <React.Fragment key={`${opt.value}-fragment`}>
           {idx > 0 && (
-            <span className="delimiter">,</span>
+            <span className='delimiter'>,</span>
           )}
           <Tooltip
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
             title={`Label: ${opt.label}, value: ${opt.value}`}
             mouseEnterDelay={0.8}
           >
-            <div key={opt.value} className="option--wrapper">
+            <div key={opt.value} className='option--wrapper'>
               {opt.label}
             </div>
           </Tooltip>

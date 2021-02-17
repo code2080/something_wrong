@@ -1,14 +1,16 @@
-import babel from 'rollup-plugin-babel'
-import json from 'rollup-plugin-json'
-import commonjs from 'rollup-plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
-import postcss from 'rollup-plugin-postcss'
-import resolve from 'rollup-plugin-node-resolve'
-import url from 'rollup-plugin-url'
-import svgr from '@svgr/rollup'
+import babel from '@rollup/plugin-babel';
+import json from '@rollup/plugin-json';
+import commonjs from '@rollup/plugin-commonjs';
+import external from 'rollup-plugin-peer-deps-external';
+import postcss from 'rollup-plugin-postcss';
+import eslint from '@rbnlffl/rollup-plugin-eslint';
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import url from '@rollup/plugin-url';
+import svgr from '@svgr/rollup';
 import PrefixWrap from 'postcss-prefixwrap';
 
-import pkg from './package.json'
+import pkg from './package.json';
 
 export default {
   input: 'src/index.js',
@@ -16,12 +18,14 @@ export default {
     {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: false
+      sourcemap: false,
+      exports: 'auto',
     },
     {
       file: pkg.module,
       format: 'es',
-      sourcemap: false
+      sourcemap: false,
+      exports: 'auto',
     }
   ],
   external: [
@@ -31,24 +35,32 @@ export default {
     external(),
     postcss({
       inject: false,
-      extract: 'dist/te-prefs-lib.css',
+      extract: 'te-prefs-lib.css',
       extensions: ['.css', '.scss', '.less'],
       use: [
         ['less', { javascriptEnabled: true }],
         ['sass']
       ],
-      plugins: [ PrefixWrap('.te-prefs-lib') ],
+      plugins: [PrefixWrap('.te-prefs-lib')],
       sourceMap: false
     }),
     url(),
     svgr(),
     json(),
+    eslint({
+      throwOnError: true,
+      extensions: ['.js', '.jsx']
+    }),
+    typescript(),
     babel({
       exclude: 'node_modules/**',
-      runtimeHelpers: true,
-      plugins: [ 'external-helpers', 'transform-runtime', 'transform-object-rest-spread' ]
+      babelHelpers: 'runtime',
+      plugins: ['@babel/external-helpers', '@babel/transform-runtime', '@babel/proposal-object-rest-spread', '@babel/transform-spread'],
+      presets: [
+        '@babel/react'
+      ],
     }),
     commonjs(),
     resolve(),
   ]
-}
+};

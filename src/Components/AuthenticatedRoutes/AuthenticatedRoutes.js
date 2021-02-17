@@ -16,8 +16,7 @@ const AuthenticatedRoutes = ({ authenticationStatus, userStatus, children }) => 
   return (
     <Route
       render={() => {
-        if (authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED || userStatus == null)
-          return <Redirect to={{ pathname: '/' }} />;
+        if (authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED || userStatus == null) { return <Redirect to={{ pathname: '/' }} />; }
         return children;
       }}
     />

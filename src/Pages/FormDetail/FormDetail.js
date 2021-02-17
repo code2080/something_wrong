@@ -53,7 +53,7 @@ const applyScopedObjectFilters = (formInstance, scopedObjects, filters) => {
     if (!field) return false;
     const fieldQuery = filters[fieldExtid].toString().toLowerCase();
     return field.values.some(value => value.toLowerCase().includes(fieldQuery));
-  })
+  });
 };
 
 const filterForOwn = (el, userId) => (el.teCoreProps.assignedTo || []).includes(userId);
@@ -98,7 +98,7 @@ const traversedClassList = element => {
     currentNode = currentNode.parentNode;
   } while (currentNode.parentNode);
   return classes;
-}
+};
 
 const FormPage = ({
   userId,
@@ -132,14 +132,14 @@ const FormPage = ({
           fields: obj.fields.map(field => ({ extid: field.extid, values: field.values }))
         })
       )
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     scopedObjectIds && scopedObjectIds.length > 0 && teCoreAPI[teCoreCallnames.GET_OBJECTS_BY_EXTID]({
       extids: scopedObjectIds,
       callback: onFetchedScopedObjects
-    })
+    });
   }, [scopedObjectIds]);
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const FormPage = ({
     ]);
     loadFilter({ filterId: formId });
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
-    form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({res}) => {} });
+    form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({ res }) => {} });
   }, [formId]);
 
   const payload = useMemo(() => {
@@ -164,7 +164,7 @@ const FormPage = ({
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({ sections, submissionValues, objectScope: form.objectScope });
-    const scopedObjectExtids = submissions.map(s => s.scopedObject)
+    const scopedObjectExtids = submissions.map(s => s.scopedObject);
 
     return {
       ...teValues,
@@ -172,7 +172,7 @@ const FormPage = ({
         ...teValues.objects,
         ...scopedObjectExtids
       ],
-    }
+    };
   }, [submissions, form]);
 
   // Effect to get all TE values into redux state
@@ -206,7 +206,7 @@ const FormPage = ({
       render: (isStarred, item) => (
         <Icon
           style={{ fontSize: '0.9rem', color: themeColors.jungleGreen }}
-          type="star"
+          type='star'
           theme={isStarred ? 'filled' : 'outlined'}
           onClick={(e) => {
             e.preventDefault();
@@ -250,16 +250,16 @@ const FormPage = ({
                 return formattedValue
                   .toString()
                   .toLowerCase()
-                  .indexOf(query) > -1
+                  .indexOf(query) > -1;
               })
             : true
       )
       .sort((a, b) => {
         return a.index - b.index;
-      })
+      });
   }, [userId, filters, _dataSource, columns]);
   return (
-    <div className="form--wrapper">
+    <div className='form--wrapper'>
       <FormToolbar formId={formId} onClickMore={handleClickMore} />
       {showFormInfo && <FormInfo formId={formId} />}
       <FormSubmissionFilterBar
@@ -277,7 +277,7 @@ const FormPage = ({
       <DynamicTable
         columns={columns}
         dataSource={filteredDatasource}
-        rowKey="_id"
+        rowKey='_id'
         onRow={formInstance => ({
           onClick: (e) => {
             traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && history.push(`/forms/${formInstance.formId}/form-instances/${formInstance._id}`);

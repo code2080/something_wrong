@@ -1,18 +1,19 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { Icon, Button } from 'antd';
 import { ObjectRequestStatusIcon, ObjectRequestType, ObjectRequestLabel } from '../../Components/Elements/ObjectRequestValue';
-import { Table } from 'antd';
+
 import ExpandedPane from '../../Components/TableColumns/Components/ExpandedPane';
 import { LabelRenderer } from '../../Utils/rendering.helpers';
 import ObjectRequestDropdown from '../../Components/Elements/DatasourceInner/ObjectRequestDropdown';
 
 // CONSTANTS
-import { objectRequestTypeToPlainText } from '../../Constants/ObjectRequest.constants';
+import { objectRequestTypeToPlainText, RequestStatus } from '../../Constants/ObjectRequest.constants';
 import { tableViews } from '../../Constants/tableViews.constants';
 
 // HELPERS
@@ -35,7 +36,7 @@ const ObjectRequestSection = ({ request }) => {
     ? firstSection.name
     : 'No section';
   return sectionName;
-}
+};
 
 // STATUS, SECTION, REQUEST TYPE, TYPE, EXTID, LABEL, ACTIONS
 const objReqColumns = [
@@ -44,7 +45,7 @@ const objReqColumns = [
     dataIndex: 'status',
     key: 'status',
     sorter: (a, b) => sortAlpha(a.type, b.type),
-    render: status =><React.Fragment><ObjectRequestStatusIcon status={status} />{capitalizeString(status || RequestStatus.PENDING)}</React.Fragment>
+    render: status => <React.Fragment><ObjectRequestStatusIcon status={status} />{capitalizeString(status || RequestStatus.PENDING)}</React.Fragment>
   },
   {
     title: 'Section',
@@ -87,8 +88,8 @@ const objReqColumns = [
       <ObjectRequestDropdown request={request} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }} >
           <ObjectRequestLabel request={request} onlyShowRequest />
-          <Button type="link" size="small">
-            <Icon type="more" />
+          <Button type='link' size='small'>
+            <Icon type='more' />
           </Button>
         </div>
       </ObjectRequestDropdown>
@@ -112,7 +113,7 @@ const ObjectRequestOverview = ({ formInstanceId, requests }) => {
       resizable
       columns={objReqColumns}
       dataSource={requests}
-      rowKey="_id"
+      rowKey='_id'
       pagination={false}
       expandedRowRender={request => <ExpandedPane columns={fieldColumns(request)} row={request} />}
       datasourceId={`${tableViews.OBJECTREQUESTS}-${formInstanceId}`}
@@ -121,8 +122,12 @@ const ObjectRequestOverview = ({ formInstanceId, requests }) => {
   );
 };
 
+ObjectRequestOverview.propTypes = {
+  requests: PropTypes.array,
+  formInstanceId: PropTypes.string,
+};
 ObjectRequestOverview.defaultProps = {
   requests: [],
-}
+};
 
 export default ObjectRequestOverview;

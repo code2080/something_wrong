@@ -8,8 +8,8 @@ const envVarMap = {
     APP_ID: '5d08ae441dcbc63d30dd3e44',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`,
-    AE_OL_URL: `https://activity-manager.timeedit.com/${apiVersion}/`,
-    // AE_OL_URL: `http://localhost:3000/${apiVersion}/`,
+    AM_BE_URL: `https://activity-manager.timeedit.com/${apiVersion}/`,
+    // AM_BE_URL: `http://localhost:3000/${apiVersion}/`,
   },
   staging: {
     API_URL: `https://preferences.timeedit.io/${apiVersion}/`,
@@ -18,7 +18,7 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`,
-    AE_OL_URL: `https://activity-manager.timeedit.io/${apiVersion}/`,
+    AM_BE_URL: `https://activity-manager.timeedit.io/${apiVersion}/`,
   },
   beta: {
     API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
@@ -27,7 +27,7 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views-beta.timeedit.io/${apiVersion}/`,
-    AE_OL_URL: `https://beta-activity-manager.timeedit.io/${apiVersion}/`,
+    AM_BE_URL: `https://beta-activity-manager.timeedit.io/${apiVersion}/`,
   },
   localhost: {
     API_URL: `http://localhost:3002/${apiVersion}/`,
@@ -36,7 +36,16 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views.timeedit.io/${apiVersion}/`,
-    AE_OL_URL: `http://localhost:3000/${apiVersion}/`,
+    AM_BE_URL: `http://localhost:3000/${apiVersion}/`,
+  },
+  amLocalhost: {
+    API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://auth-beta.timeedit.io/${apiVersion}/`,
+    ADMIN_URL: `https://admin-beta.timeedit.io/${apiVersion}/`,
+    APP_ID: '5ce6501aa34e8a7737977c2a',
+    APP_NAME: 'tePIC',
+    VIEWS_URL: `https://views-beta.timeedit.io/${apiVersion}/`,
+    AM_BE_URL: `http://localhost:3001/${apiVersion}/`,
   },
 };
 
@@ -45,6 +54,7 @@ const availableEnvs = [
   'staging',
   'beta',
   'localhost',
+  'amLocalhost',
 ];
 
 export const getEnvParams = () => {

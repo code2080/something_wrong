@@ -6,7 +6,7 @@ import { Dropdown, Icon, Menu } from 'antd';
 import { formStatus } from '../../Constants/formStatuses.constants';
 
 // HELPERS
-import {hasAssistedSchedulingPermissions} from '../../Utils/permissionHelpers'
+import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
 
 const actionKeys = {
   LOGOUT: 'LOGOUT',
@@ -48,7 +48,7 @@ const ActionsButton = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <Icon type="menu" />
+      <Icon type='menu' />
     </Dropdown>
   );
 };

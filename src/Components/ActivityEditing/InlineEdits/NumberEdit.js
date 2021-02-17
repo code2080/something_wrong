@@ -4,12 +4,12 @@ import { InputNumber } from 'antd';
 
 const NumberEdit = ({ value, setValue, onFinish }) => (
   <InputNumber
-    type="number"
-    size="small"
+    type='number'
+    size='small'
     allowClear
     onPressEnter={() => onFinish()}
     value={value}
-    placeholder="Type here"
+    placeholder='Type here'
     onChange={value => setValue(value)}
   />
 );

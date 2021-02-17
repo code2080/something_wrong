@@ -1,10 +1,8 @@
-import _ from 'lodash';
 import * as types from './ObjectRequests.actionTypes';
 import { initialState } from './ObjectRequests.initialState';
 
 // MODELS
 import ObjectRequest from '../../Models/ObjectRequest.model';
-
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -20,7 +18,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         list: state.list.map(req => req._id === request._id ? request : req)
-      }
+      };
     }
 
     case types.SET_OBJECT_REQUEST:

@@ -10,7 +10,7 @@ const FormInstanceActionsDropdown = ({ formInstance }) => {
   const menu = useMemo(() => (
     <Menu>
       <Menu.Item>
-        <a target="_blank" href={formInstance.reviewLink}>View schedule in TE Viewer</a>
+        <a target='_blank' rel='noreferrer' href={formInstance.reviewLink}>View schedule in TE Viewer</a>
       </Menu.Item>
       <Menu.Item onClick={() => dispatch(sendReviewerLink({ formInstanceId: formInstance._id }))}>
         Notify user with review link
@@ -22,12 +22,12 @@ const FormInstanceActionsDropdown = ({ formInstance }) => {
 
   return (
     <Dropdown overlay={menu} getPopupContainer={() => document.getElementById('te-prefs-lib')} trigger={['click']}>
-      <a type="link" size="small">
+      <a type='link' size='small'>
         Review schedule...
       </a>
     </Dropdown>
   );
-}
+};
 
 FormInstanceActionsDropdown.propTypes = {
   formInstance: PropTypes.object,

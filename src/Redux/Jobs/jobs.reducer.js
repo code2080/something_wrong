@@ -41,9 +41,22 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case types.UPDATE_JOB_SUCCESS: {
+      const { payload: { job: jobObj } } = action;
+      const job = new Job(jobObj);
+      const formJobs = state[job.formId] || {};
+      return {
+        ...state,
+        [job.formId]: {
+          ...formJobs,
+          [job._id]: job,
+        },
+      };
+    }
+
     case types.ABORT_JOB_SUCCESS: {
       try {
-        const { payload: { actionMeta: _, ...jobObj } } = action;
+        const { payload: { job: jobObj } } = action;
         const job = new Job(jobObj);
         return {
           ...state,
@@ -60,6 +73,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

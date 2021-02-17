@@ -10,13 +10,13 @@ import {
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
 
-const getMandatoryPropsForTimingMode = mode => mappingTimingModeProps[mode].mandatoryProperties;
+export const getMandatoryPropsForTimingMode = mode => mappingTimingModeProps[mode].mandatoryProperties;
 
 export const getMappingSettingsForProp = (prop, mapping) => _.get(mapping, `propSettings[${prop}]`, null);
 export const getMappingTypeForProp = (prop, mapping) => {
-  if (mapping.objects.hasOwnProperty(prop)) return mappingTypes.OBJECT;
-  if (mapping.fields.hasOwnProperty(prop)) return mappingTypes.FIELD;
-  if (mapping.timing.hasOwnProperty(prop)) return mappingTypes.TIMING;
+  if (Object.prototype.hasOwnProperty.call(mapping.objects, prop)) return mappingTypes.OBJECT;
+  if (Object.prototype.hasOwnProperty.call(mapping.fields, prop)) return mappingTypes.FIELD;
+  if (Object.prototype.hasOwnProperty.call(mapping.timing, prop)) return mappingTypes.TIMING;
   return mappingTypes.UNDEFINED;
 };
 
@@ -76,6 +76,9 @@ export const validateMapping = (formId, mappingState) => {
   const { objects, fields } = mapping;
   const objectsValid = validateAllKeysOnProp(objects, 1);
   const fieldsValid = validateAllKeysOnProp(fields, 0);
+  console.log('timing valid: ' + timingValid);
+  console.log('objects valid: ' + objectsValid);
+  console.log('fields valid: ' + fieldsValid);
   return timingValid && objectsValid && fieldsValid ? mappingStatuses.COMPLETE : mappingStatuses.NOT_SET;
 };
 
@@ -90,25 +93,25 @@ const findFirstRepeatingSection = (formSections, mapping) => [
   ...(Object.keys(mapping.timing) || []).reduce(
     (sections, timingKey) => {
       const timing = mapping.timing[timingKey];
-      if (timing && timing[0] && timing[1]) return [ ...sections, timing[0] ];
+      if (timing && timing[0] && timing[1]) return [...sections, timing[0]];
       return sections;
     }, []),
   ...(Object.keys(mapping.objects) || []).reduce(
     (sections, objectKey) => {
       const object = mapping.objects[objectKey];
-      if (object && object[0] && object[1]) return [ ...sections, object[0] ];
+      if (object && object[0] && object[1]) return [...sections, object[0]];
       return sections;
     }, []),
   ...(Object.keys(mapping.fields) || []).reduce(
     (sections, fieldKey) => {
       const field = mapping.fields[fieldKey];
-      if (field && field[0] && field[1]) return [ ...sections, field[0] ];
+      if (field && field[0] && field[1]) return [...sections, field[0]];
       return sections;
     }, []),
 ]
   .reduce((sections, sectionId) => {
     const sectionIdx = formSections.findIndex(el => el._id === sectionId);
-    if (sectionIdx > -1) return [ ...sections, formSections[sectionIdx] ];
+    if (sectionIdx > -1) return [...sections, formSections[sectionIdx]];
     return sections;
   }, [])
   .find(el => {
@@ -138,10 +141,9 @@ export const getElementsForMapping = (formSections, mapping) => {
       let isDisabled = false;
       if (
         firstRepeatingSection &&
-          (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
-            section._id !== firstRepeatingSection._id
-      )
-        isDisabled = true;
+        (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
+        section._id !== firstRepeatingSection._id
+      ) { isDisabled = true; }
 
       return {
         value: section._id,
@@ -169,10 +171,9 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
       let isDisabled = false;
       if (
         firstRepeatingSection &&
-          (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
-            section._id !== firstRepeatingSection._id
-      )
-        isDisabled = true;
+        (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
+        section._id !== firstRepeatingSection._id
+      ) { isDisabled = true; }
 
       const children = sectionType === SECTION_CONNECTED
         ? [({ value: 'startTime', label: 'Event start time' }), ({ value: 'endTime', label: 'Event end time' }), ...section.elements.map(element => ({ value: element._id, label: element.label }))]
@@ -195,5 +196,5 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
 export const getElementsForTimingMapping = ({
   [mappingTimingModes.EXACT]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
   [mappingTimingModes.TIMESLOTS]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
-  [mappingTimingModes.SEQUENCE]: () => {},
+  [mappingTimingModes.SEQUENCE]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
 });

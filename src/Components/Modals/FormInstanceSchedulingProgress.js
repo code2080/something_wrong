@@ -20,7 +20,7 @@ const FormInstanceSchedulingStatusProcess = ({ visible, onClose, form, schedulin
         );
         onClose();
       }
-    })
+    });
   };
 
   return (
@@ -32,9 +32,9 @@ const FormInstanceSchedulingStatusProcess = ({ visible, onClose, form, schedulin
       okButtonProps={{
         loading: saving,
       }}
-      destroyOnClose={true}
+      destroyOnClose
     >
-      <Form.Item label="Set scheduling process">
+      <Form.Item label='Set scheduling process'>
         {getFieldDecorator('schedulingProgress', {
           rules: [
             {
@@ -64,7 +64,7 @@ const FormInstanceSchedulingStatusProcess = ({ visible, onClose, form, schedulin
 FormInstanceSchedulingStatusProcess.propTypes = {
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  schedulingProgress: PropTypes.string.isRequired,
+  schedulingProgress: PropTypes.string,
   formInstanceId: PropTypes.string.isRequired,
   form: PropTypes.object.isRequired,
 };

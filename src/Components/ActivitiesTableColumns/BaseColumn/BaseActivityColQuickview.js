@@ -27,13 +27,13 @@ const BaseActivityColQuickview = ({
   );
 
   return (
-    <div className="base-activity-col--quickview">
+    <div className='base-activity-col--quickview'>
       {mappingType && (
         <Tooltip
           title={mappingType.tooltip}
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
         >
-          <div className="base-activity-col__quickview--icon">
+          <div className='base-activity-col__quickview--icon'>
             <Icon type={mappingType.icon} />
           </div>
         </Tooltip>
@@ -42,7 +42,7 @@ const BaseActivityColQuickview = ({
         title={schedulingPayload.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <div className="base-activity-col__quickview--icon">
+        <div className='base-activity-col__quickview--icon'>
           <Icon type={schedulingPayload.icon} />
         </div>
       </Tooltip>
@@ -50,7 +50,7 @@ const BaseActivityColQuickview = ({
         title={schedulingAlgorithm.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <div className="base-activity-col__quickview--icon">
+        <div className='base-activity-col__quickview--icon'>
           <Icon type={schedulingAlgorithm.icon} />
         </div>
       </Tooltip>

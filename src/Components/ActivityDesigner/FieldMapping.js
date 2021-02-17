@@ -79,7 +79,7 @@ const FieldMapping = ({
   const fields = useMemo(() => _.get(mapping, 'fields', {}), [mapping]);
   const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [mapping]);
   return (
-    <div className="object-mapping--wrapper">
+    <div className='object-mapping--wrapper'>
       {(Object.keys(fields) || []).map(key => (
         <MappingRow
           disabled={disabled}
@@ -94,14 +94,14 @@ const FieldMapping = ({
           onRemoveTEProp={() => onRemoveField(key)}
         />
       ))}
-      <div className="object-mapping--add">
+      <div className='object-mapping--add'>
         <span>Add field:&nbsp;</span>
         <Select
           disabled={disabled}
-          placeholder="Add new field"
+          placeholder='Add new field'
           value={undefined}
           onChange={onAddField}
-          size="small"
+          size='small'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
         >
           {(fieldOptions || []).map(el => (

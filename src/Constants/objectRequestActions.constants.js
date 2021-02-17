@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 // ACTIONS
 import { getTECoreAPIPayload } from '../Redux/Integration/integration.selectors';
-import { updateObjectRequest} from '../Redux/ObjectRequests/ObjectRequests.actions';
+import { updateObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.actions';
 import { setExternalAction } from '../Redux/GlobalUI/globalUI.actions';
 
 export const objectRequestActions = {
@@ -33,7 +33,7 @@ export const objectRequestActionToStatus = {
   [objectRequestActions.ACCEPT]: RequestStatus.ACCEPTED,
   [objectRequestActions.DECLINE]: RequestStatus.DECLINED,
   [objectRequestActions.REPLACE]: RequestStatus.REPLACED,
-}
+};
 
 export const objectRequestActionLabels = {
   [objectRequestActions.ACCEPT]: 'Accept...',
@@ -52,7 +52,7 @@ export const objectRequestActionIcon = {
   [objectRequestActions.REVERT]: <Icon type='undo' size='small' />,
   [objectRequestActions.SELECT]: <Icon type='select' size='small' />,
   [objectRequestActions.FILTER]: <Icon type='filter' size='small' />,
-  [objectRequestActions.DETAILS]: <Icon type="info-circle" size='small' />,
+  [objectRequestActions.DETAILS]: <Icon type='info-circle' size='small' />,
 };
 
 export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI, spotlightRef, showDetails }) => ({ key }) => {
@@ -99,23 +99,23 @@ export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAP
       payload = getTECoreAPIPayload(request.replacementObjectExtId || request.objectExtId, `${request.datasource},object`);
       teCoreAPI[teCoreCallnames.SELECT_OBJECT](payload);
     },
-    [objectRequestActions.FILTER]: () => { 
+    [objectRequestActions.FILTER]: () => {
       payload = {
         type: request.datasource,
         searchString: '',
         categories: Object.entries(request.objectRequest).reduce((categories, [fieldExtId, filterValue]) =>
-        _.isEmpty(filterValue)
-        ? categories
-        : [...categories, {
-          id: fieldExtId,
-          values: [filterValue]
-        }], []),
-      }
+          _.isEmpty(filterValue)
+            ? categories
+            : [...categories, {
+              id: fieldExtId,
+              values: [filterValue]
+            }], []),
+      };
       teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
     },
-    [objectRequestActions.DETAILS]: () => { 
+    [objectRequestActions.DETAILS]: () => {
       showDetails();
     }
-  }
+  };
   objectRequestActionClickFunc[key]();
 };

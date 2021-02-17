@@ -92,12 +92,11 @@ const ManualSchedulingColumn = ({
   const [showInvertedState, setShowInvertedState] = useState(false);
 
   const onSelectAllCallback = useCallback(() => {
-    if (teCorePayload)
-      teCoreAPI.populateSelection(teCorePayload);
+    if (teCorePayload) { teCoreAPI.populateSelection(teCorePayload); }
   }, [teCorePayload]);
 
   const onToggleRowSchedulingStatusCallback = useCallback(() => {
-    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED)
+    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
@@ -105,7 +104,8 @@ const ManualSchedulingColumn = ({
         onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.IN_PROGRESS }),
         onCancel: () => {},
       });
-    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED)
+    }
+    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
@@ -113,15 +113,16 @@ const ManualSchedulingColumn = ({
         onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.SCHEDULING_FINISHED }),
         onCancel: () => {},
       });
+    }
 
     toggleRowSchedulingStatus({ formInstanceId, sectionId, rowKey });
-  }, [mSStatus, toggleRowSchedulingStatus, formInstanceId, sectionId, rowKey])
+  }, [mSStatus, toggleRowSchedulingStatus, formInstanceId, sectionId, rowKey]);
   const derivedStatus = getClassName(rowStatus, showInvertedState);
 
   return (
-    <div className="manual-scheduling-column--wrapper">
+    <div className='manual-scheduling-column--wrapper'>
       {rowStatus === manualSchedulingStatuses.COMPLETED && (
-        <div className="manual-scheduling--strikethrough" />
+        <div className='manual-scheduling--strikethrough' />
       )}
       <div
         onMouseEnter={() => setShowInvertedState(true)}
@@ -130,14 +131,14 @@ const ManualSchedulingColumn = ({
         className={`manual-scheduling--status ${derivedStatus}`}
       >
         {derivedStatus === manualSchedulingStatuses.NOT_COMPLETED && (
-          <Icon type="minus-square" />
+          <Icon type='minus-square' />
         )}
         {derivedStatus === manualSchedulingStatuses.COMPLETED && (
-          <Icon type="check-square" />
+          <Icon type='check-square' />
         )}
       </div>
-      <div className="manual-scheduling--button" onClick={onSelectAllCallback}>
-        <Icon type="select" />
+      <div className='manual-scheduling--button' onClick={onSelectAllCallback}>
+        <Icon type='select' />
       </div>
     </div>
   );

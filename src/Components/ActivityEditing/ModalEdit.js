@@ -40,13 +40,13 @@ const ModalEdit = ({
       title={title}
       visible={visible}
       getContainer={() => document.getElementById('te-prefs-lib')}
-      closable={true}
+      closable
       footer={null}
-      maskClosable={true}
+      maskClosable
       onCancel={onClose}
       onOk={onClose}
     >
-      <div className="modal-edit--wrapper">
+      <div className='modal-edit--wrapper'>
         <ModalComponent
           activityValue={activityValue}
           activity={activity}

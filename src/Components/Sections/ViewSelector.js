@@ -11,7 +11,7 @@ const ViewSelector = ({ view, onViewChange }) => (
     <Radio.Group
       onChange={e => onViewChange(e.target.value)}
       defaultValue={view}
-      size="small"
+      size='small'
     >
       <Radio.Button value={sectionViews.TABLE_VIEW}>Table</Radio.Button>
       <Radio.Button value={sectionViews.LIST_VIEW}>List</Radio.Button>

@@ -52,7 +52,7 @@ export default class Form {
   // DESIGN
   sections;
 
-  constructor({
+  constructor ({
     // FORM IDENTIFICATION
     _id,
     organizationId,
@@ -128,7 +128,7 @@ export default class Form {
     this.sections = sections || [];
   }
 
-  static getOwnerName(ownerId) {
+  static getOwnerName (ownerId) {
     try {
       const storeState = window.tePrefsLibStore.getState();
       const ownerName = _.get(storeState, `users.${ownerId}.name`, null);

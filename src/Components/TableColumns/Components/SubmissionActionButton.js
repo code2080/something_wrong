@@ -31,7 +31,7 @@ const mapActionsToProps = dispatch => ({
     // fetch submissions for getting all reviewLink
     dispatch(fetchFormSubmissions(formId));
   },
-  remindUser(data) {
+  remindUser (data) {
     dispatch(sendReviewerLink(data));
   },
 });
@@ -75,7 +75,7 @@ const SubmissionActionButton = ({
         setFormInstanceSchedulingProgressCallback(teCoreSchedulingProgress.SCHEDULING_FINISHED);
         break;
       case NOTIFY_USER_WITH_REVIEW_LINK:
-        remindUser({ formInstanceIds: [ formInstance._id ] });
+        remindUser({ formInstanceIds: [formInstance._id] });
         break;
       case NOTIFY_ALL_USERS_WITH_REVIEW_LINK:
         remindUser({ formInstanceIds: haveReviewLinkSubmissions.map(submission => submission._id) });
@@ -98,7 +98,7 @@ const SubmissionActionButton = ({
         Notify all users with review link
       </Menu.Item>
       <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
-      <Menu.SubMenu title="Set scheduling progress">
+      <Menu.SubMenu title='Set scheduling progress'>
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>
           Mark submission as not scheduled
         </Menu.Item>
@@ -119,8 +119,8 @@ const SubmissionActionButton = ({
         overlay={actionMenu}
         trigger={['click']}
       >
-        <Button type="link" size="small" onClick={e => e.stopPropagation()}>
-          <Icon type="more" />
+        <Button type='link' size='small' onClick={e => e.stopPropagation()}>
+          <Icon type='more' />
         </Button>
       </Dropdown>
       <FormInstanceAcceptanceStatusModal
@@ -138,7 +138,7 @@ SubmissionActionButton.propTypes = {
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   remindUser: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  submissions: PropTypes.array.isRequired,
+  submissions: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(mapStateToProps, mapActionsToProps)(SubmissionActionButton));

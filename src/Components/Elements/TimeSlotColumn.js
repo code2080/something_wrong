@@ -16,9 +16,8 @@ const TimeSlotColumn = ({ event, timeslots }) => {
     [event, timeslots]
   );
   const tooltipTitle = useMemo(() => {
-    if (timeslot)
-      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(TIME_FORMAT)} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`;
-    return `Timeslot could not be found`;
+    if (timeslot) { return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(TIME_FORMAT)} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`; }
+    return 'Timeslot could not be found';
   }, [timeslot]);
 
   return (
@@ -28,11 +27,11 @@ const TimeSlotColumn = ({ event, timeslots }) => {
       placement='topLeft'
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <div className="picker--wrapper">
-        <div className="icon--wrapper">
-          <Icon type="clock-circle" />
+      <div className='picker--wrapper'>
+        <div className='icon--wrapper'>
+          <Icon type='clock-circle' />
         </div>
-        <div className="value--wrapper">
+        <div className='value--wrapper'>
           {timeslot ? timeslot.label : 'N/A'}
         </div>
       </div>

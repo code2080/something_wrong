@@ -2,21 +2,15 @@ import { ActivityTiming } from './ActivityTiming.model';
 
 export class ActivityDesignerMapping {
   name;
-
   formId;
-
   timing;
-
   objects;
-
   fields;
-
   propSettings;
 
-  constructor({
+  constructor ({
     name,
     formId,
-    reservationTemplateExtId,
     timing,
     objects,
     fields,
@@ -24,7 +18,6 @@ export class ActivityDesignerMapping {
   }) {
     this.name = name;
     this.formId = formId;
-    this.reservationTemplateExtId = reservationTemplateExtId;
     this.timing = new ActivityTiming(timing || {});
     this.objects = objects || {};
     this.fields = fields || {};

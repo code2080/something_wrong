@@ -47,7 +47,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
 
   // Memoized var holding the columns
   const _columns = useMemo(() => {
-    return transformSectionToTableColumns(section, sectionType, formInstanceId, formId)
+    return transformSectionToTableColumns(section, sectionType, formInstanceId, formId);
   },
   [section]
   );
@@ -60,21 +60,21 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
         _columns,
         section._id,
         sectionType
-      )
+      );
     },
     [section, values]
   );
   if (_.isEmpty(_columns)) return null;
   return (
-    <div className="base-section--wrapper">
+    <div className='base-section--wrapper'>
       <div className={`base-section--name__wrapper ${sectionType}`}>
         {section.name}
         {(sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE) && (
           <div
-            className="base-section--extra__btn"
+            className='base-section--extra__btn'
             onClick={() => setShowExtra(!showExtra)}
           >
-            <Icon type="setting" />
+            <Icon type='setting' />
           </div>
         )}
       </div>

@@ -9,10 +9,10 @@ const mapStateToProps = state => ({
 });
 
 const SelectOrg = ({ organizations, onSelectOrg }) => (
-  <Form.Item label="Select your organization:">
+  <Form.Item label='Select your organization:'>
     <Select
       value={undefined}
-      placeholder="Select your organization..."
+      placeholder='Select your organization...'
       onChange={onSelectOrg}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       style={{ minWidth: '100%' }}

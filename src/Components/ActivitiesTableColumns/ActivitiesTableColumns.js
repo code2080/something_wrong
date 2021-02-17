@@ -21,11 +21,12 @@ export const createActivitiesTableColumnsFromMapping = mapping => [
     {
       title: useSelector(state => selectExtIdLabel(state)(field, extId)),
       key: extId,
+      displayName: 'ActivityCol',
       render: activity => (
         <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
           <BaseActivityColOuter
             activity={activity}
-            type="VALUE"
+            type='VALUE'
             prop={extId}
             mapping={mapping}
           />
