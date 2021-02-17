@@ -10,7 +10,7 @@ const SortableTableCell = ({ children, className }) => {
 };
 
 SortableTableCell.propTypes = {
-  children: PropTypes.array,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
   className: PropTypes.string,
 };
 

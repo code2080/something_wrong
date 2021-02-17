@@ -18,7 +18,7 @@ import {
 export const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
 ObjectRequestStatusIcon.propTypes = {
-  status: PropTypes.oneOf(RequestStatus),
+  status: PropTypes.oneOf(Object.values(RequestStatus)),
 };
 
 export const ObjectRequestLabel = ({ request, onlyShowRequest = false }) => {
@@ -37,7 +37,7 @@ ObjectRequestLabel.propTypes = {
 export const ObjectRequestType = ({ type }) => <span className={'requestType'} style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }} >{objectRequestTypeToText[type] || 'N/A'}</span>;
 
 ObjectRequestType.propTypes = {
-  type: PropTypes.oneOf(RequestType),
+  type: PropTypes.oneOf(Object.values(RequestStatus))
 };
 
 const ObjectRequestValue = ({ request }) => (

@@ -28,32 +28,32 @@ const BaseActivityColValue = ({
 }) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
-    case activityValueTypes.OBJECT: {
-      const valueType = determineContentOfValue(activityValue);
-      if (valueType === submissionValueTypes.OBJECT) {
+      case activityValueTypes.OBJECT: {
+        const valueType = determineContentOfValue(activityValue);
+        if (valueType === submissionValueTypes.OBJECT) {
+          return getRenderPayloadForActivityValue(
+            activityValue,
+            activity,
+            extId =>
+              extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
+                ? [extIdProps.objects[extId].label]
+                : extId
+          );
+        }
         return getRenderPayloadForActivityValue(
           activityValue,
           activity,
-          extId =>
-            extIdProps.objects[extId] && !_.isEmpty(extIdProps.objects[extId].label)
-              ? [extIdProps.objects[extId].label]
-              : extId
+          formatFn
         );
       }
-      return getRenderPayloadForActivityValue(
-        activityValue,
-        activity,
-        formatFn
-      );
-    }
-    case activityValueTypes.FIELD:
-    case activityValueTypes.TIMING:
-    default:
-      return getRenderPayloadForActivityValue(
-        activityValue,
-        activity,
-        formatFn
-      );
+      case activityValueTypes.FIELD:
+      case activityValueTypes.TIMING:
+      default:
+        return getRenderPayloadForActivityValue(
+          activityValue,
+          activity,
+          formatFn
+        );
     }
   }, [activityValue, activity, formatFn, extIdProps]);
 

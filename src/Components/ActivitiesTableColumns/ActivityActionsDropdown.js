@@ -163,53 +163,53 @@ const ActivityActionsDropdown = ({
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
-      case 'SCHEDULE_ALL':
-        scheduleActivities(
-          activities.filter(
-            a => a.activityStatus !== activityStatuses.SCHEDULED
-          ),
-          formType,
-          reservationMode,
-          teCoreAPI[activityActions[key].callname],
-          onFinishScheduleMultiple
-        );
-        updateSchedulingProgress();
-        break;
-      case 'SCHEDULE':
-        scheduleActivities(
-          [activity],
-          formType,
-          reservationMode,
-          teCoreAPI[activityActions[key].callname],
-          onFinishScheduleMultiple
-        );
-        updateSchedulingProgress();
-        break;
-      case 'DELETE':
-        teCoreAPI[activityActions[key].callname]({
-          activities: [activity],
-          callback: onDeleteActivities
-        });
-        break;
-      case 'DELETE_ALL':
-        teCoreAPI[activityActions[key].callname]({
-          activities,
-          callback: onDeleteActivities
-        });
-        break;
-      case 'STOP_SCHEDULING':
-        jobs.forEach(job => {
-          abortJob({
-            jobId: job._id,
-            formId,
-            formInstanceId,
+        case 'SCHEDULE_ALL':
+          scheduleActivities(
+            activities.filter(
+              a => a.activityStatus !== activityStatuses.SCHEDULED
+            ),
+            formType,
+            reservationMode,
+            teCoreAPI[activityActions[key].callname],
+            onFinishScheduleMultiple
+          );
+          updateSchedulingProgress();
+          break;
+        case 'SCHEDULE':
+          scheduleActivities(
+            [activity],
+            formType,
+            reservationMode,
+            teCoreAPI[activityActions[key].callname],
+            onFinishScheduleMultiple
+          );
+          updateSchedulingProgress();
+          break;
+        case 'DELETE':
+          teCoreAPI[activityActions[key].callname]({
             activities: [activity],
+            callback: onDeleteActivities
           });
-        });
-        break;
-      default:
-        teCoreAPI[activityActions[key].callname](activity);
-        break;
+          break;
+        case 'DELETE_ALL':
+          teCoreAPI[activityActions[key].callname]({
+            activities,
+            callback: onDeleteActivities
+          });
+          break;
+        case 'STOP_SCHEDULING':
+          jobs.forEach(job => {
+            abortJob({
+              jobId: job._id,
+              formId,
+              formInstanceId,
+              activities: [activity],
+            });
+          });
+          break;
+        default:
+          teCoreAPI[activityActions[key].callname](activity);
+          break;
       }
     },
     [teCoreAPI, activity, onFinishSchedule]

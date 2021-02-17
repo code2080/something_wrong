@@ -158,14 +158,14 @@ const BaseActivityCol = ({
      * We need to parse the response differently depending on action
      */
     switch (action) {
-    case activityActions.EDIT_OBJECT:
-      return onProcessObjectReturn(res);
-    case activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE:
-      return onProcessObjectReturn(res);
-    case activityActions.EDIT_FILTER_OVERRIDE:
-      return onProcessFilterReturn(res);
-    default:
-      break;
+      case activityActions.EDIT_OBJECT:
+        return onProcessObjectReturn(res);
+      case activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE:
+        return onProcessObjectReturn(res);
+      case activityActions.EDIT_FILTER_OVERRIDE:
+        return onProcessFilterReturn(res);
+      default:
+        break;
     }
   };
 
