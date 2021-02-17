@@ -176,7 +176,7 @@ export const renderElementValue = (value, element) => {
       return getLocalDate(value).format('[Week] w / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
-      return <Padding value={value} />;
+      return <Padding value={value} element={element} />
 
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
