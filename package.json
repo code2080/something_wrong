@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -116,6 +116,7 @@
     "dist"
   ],
   "dependencies": {
+    "@allpro/react-router-pause": "^1.1.3",
     "antd": "^3.25.0",
     "axios": "^0.21.1",
     "bufferutil": "^4.0.3",
