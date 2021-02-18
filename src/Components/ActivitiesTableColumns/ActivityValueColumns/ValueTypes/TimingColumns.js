@@ -1,16 +1,18 @@
 import React from 'react';
 import moment from 'moment';
 
+// COMPONENTS
+import BaseActivityCol from '../Base/BaseActivityCol';
+import BaseActivityColOuter from '../Base/BaseActivityColOuter';
+import SortableTableCell from '../../../DynamicTable/SortableTableCell';
+
 // CONSTANTS
 import {
-  mappingTimingModes,
-  mappingTimingModeProps
-} from '../../../Constants/mappingTimingModes.constants';
-import BaseActivityCol from '../BaseColumn/BaseActivityCol';
-import BaseActivityColOuter from '../BaseColumn/BaseActivityColOuter';
-import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
-import SortableTableCell from '../../DynamicTable/SortableTableCell';
-import { sortByElementHtml } from '../../../Utils/sorting.helpers';
+  activityTimeModes,
+  activityTimeModeProps
+} from '../../../../Constants/activityTimeModes.constants';
+import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
+import { sortByElementHtml } from '../../../../Utils/sorting.helpers';
 
 const timingCols = {
   mode: mapping => ({
@@ -24,7 +26,7 @@ const timingCols = {
           type="TIMING"
           prop="mode"
           propTitle="Timing mode"
-          formatFn={value => mappingTimingModeProps[value].label}
+          formatFn={value => activityTimeModeProps[value].label}
           mapping={mapping}
         />
       </SortableTableCell>
@@ -200,16 +202,16 @@ const timingCols = {
 };
 
 export const TimingColumns = {
-  [mappingTimingModes.EXACT]: mapping => [
+  [activityTimeModes.EXACT]: mapping => [
     timingCols.startTimeExact(mapping),
     timingCols.endTimeExact(mapping)
   ],
-  [mappingTimingModes.TIMESLOTS]: mapping => [
+  [activityTimeModes.TIMESLOTS]: mapping => [
     timingCols.startTimeTimeslots(mapping),
     timingCols.endTimeTimeslots(mapping),
     timingCols.length(mapping)
   ],
-  [mappingTimingModes.SEQUENCE]: mapping => [
+  [activityTimeModes.SEQUENCE]: mapping => [
     timingCols.length(mapping),
     timingCols.padding(mapping),
     timingCols.weekday(mapping),

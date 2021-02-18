@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { Dropdown, Menu} from 'antd';
+import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
 
@@ -13,15 +13,14 @@ import { updateObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequest
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // CONSTANTS
-import { objectRequestActionToStatus } from '../../../Constants/objectRequestActions.constants';
 import {
+  objectRequestActionToStatus,
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
-
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();

@@ -41,7 +41,7 @@ const getActivityDataSource = (activities = []) => {
 const ActivitiesTable = ({
   formInstanceId,
   formId,
-  mapping,
+  mapping: design,
   activities,
 }) => {
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const ActivitiesTable = ({
       dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx));
   }
 
-  const columns = mapping ? createActivitiesTableColumnsFromMapping(mapping) : [];
+  const columns = design ? createActivitiesTableColumnsFromMapping(design) : [];
   const dataSource = getActivityDataSource(activities);
 
   return (

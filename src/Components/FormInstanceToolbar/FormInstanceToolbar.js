@@ -29,7 +29,6 @@ const mapStateToProps = (state, ownProps) => {
 const FormInstanceToolbar = ({
   formInstance,
   formType,
-  onClickMore,
 }) => {
   const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] = useFormInstanceSchedulingProcessModal();
   const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] = useFormInstanceAcceptanceStatusModal();
@@ -77,9 +76,6 @@ const FormInstanceToolbar = ({
           </StatusLabel>
         ) : 'N/A' }
       </div>
-      <div className="toolbar--section-flex">
-        <a onClick={() => onClickMore()}>Form info...</a>
-      </div>
       <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
         <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
@@ -94,7 +90,6 @@ const FormInstanceToolbar = ({
 FormInstanceToolbar.propTypes = {
   formInstance: PropTypes.object.isRequired,
   formType: PropTypes.string.isRequired,
-  onClickMore: PropTypes.func.isRequired,
 };
 
 export default connect(

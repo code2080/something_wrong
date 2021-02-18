@@ -21,7 +21,7 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import Padding from '../Components/Elements/Padding';
-import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
+import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
 
@@ -95,13 +95,13 @@ const connectedSectionColumns = {
   ],
   SCHEDULING: (sectionId, formInstanceId, formId) => [
     {
-      title: 'Scheduling',
+      title: '',
       key: 'scheduling',
       dataIndex: null,
       fixedWidth: 82,
       hideInList: true,
       render: (_, event) => (
-        <ManualSchedulingColumn
+        <SelectAllElementValuesColumn
           event={event}
           sectionId={sectionId}
           formInstanceId={formInstanceId}
@@ -234,7 +234,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
 
         },
       ]
-    , []);
+  , []);
 
   switch (sectionType) {
     case SECTION_CONNECTED: {
@@ -340,8 +340,7 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-const transformAvailabilityCalendarToTableRows = (values) =>
-([
+const transformAvailabilityCalendarToTableRows = (values) => ([
   ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
     ...item,
     rowKey: item.eventId,
@@ -372,10 +371,9 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
 };
 
 export const LabelRenderer = ({ type, extId }) => {
-
   if (!extId || !type) return 'N/A';
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
-  return label && label.label || extId || 'N/A';
+  return label && (label.label || extId || 'N/A');
 }

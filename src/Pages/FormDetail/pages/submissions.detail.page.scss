@@ -1,0 +1,14 @@
+@import '../../../Styles/globals.scss';
+
+.form-instance--wrapper {
+  padding: 0;
+  position: relative;
+
+  & > .mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 99;
+    top: 0;
+  }
+}

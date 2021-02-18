@@ -1,7 +1,7 @@
 import { activityValueTypes } from './activityValueTypes.constants';
 import { submissionValueTypes } from './submissionValueTypes.constants';
 import { activityValueModes } from './activityValueModes.constants';
-import { mappingTimingModes } from './mappingTimingModes.constants';
+import { activityTimeModes } from './activityTimeModes.constants';
 import { activityViews } from './activityViews.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 
@@ -24,17 +24,17 @@ export const activityActionFilters = {
     activityValue.type === activityValueTypes.FIELD,
   [activityActions.NUMBER_OVERRIDE]: (activityValue, activity, mapping) =>
     activityValue.extId === 'length' &&
-    mapping.timing.mode === mappingTimingModes.TIMESLOTS,
+    mapping.timing.mode === activityTimeModes.TIMESLOTS,
   [activityActions.EXACT_TIME_OVERRIDE]: (activityValue, activity, mapping) =>
     activityValue.type === activityValueTypes.TIMING &&
-    mapping.timing.mode === mappingTimingModes.EXACT,
+    mapping.timing.mode === activityTimeModes.EXACT,
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: (
     activityValue,
     activity,
     mapping
   ) =>
     activityValue.type === activityValueTypes.TIMING &&
-    mapping.timing.mode === mappingTimingModes.TIMESLOTS &&
+    mapping.timing.mode === activityTimeModes.TIMESLOTS &&
     activityValue.extId !== 'length',
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: (
     activityValue,
@@ -42,7 +42,7 @@ export const activityActionFilters = {
     mapping
   ) =>
     activityValue.type === activityValueTypes.TIMING &&
-    mapping.timing.mode === mappingTimingModes.TIMESLOTS &&
+    mapping.timing.mode === activityTimeModes.TIMESLOTS &&
     activityValue.extId !== 'length',
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: activityValue =>
     activityValue.type === activityValueTypes.OBJECT &&

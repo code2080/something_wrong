@@ -4,45 +4,11 @@
   position: relative;
 
   .base-section--name__wrapper {
-    padding: 2px 8px 2px 1.4rem;
+    padding: 2px 8px;
     font-weight: 700;
     background: #fff;
     position: relative;
-    border-top: 2px solid lighten($rustyGrey, 7.5%);
-    &::after {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 0.6rem;
-      height: 0.6rem;
-      border-radius: 50%;
-      left: 0.4rem;
-      top: calc(50% - 0.3rem);
-    }
-
-    &.SECTION_CONNECTED {
-      &::after {
-        background-color: $candlelight;
-      }
-    }
-
-    &.SECTION_VERTICAL {
-      &::after {
-        background-color: $deepSeaGreen;
-      }
-    }
-
-    &.SECTION_TABLE {
-      &::after {
-        background-color: $pelorous;
-      }
-    }
-  }
-
-  .base-section--extra__btn {
-    position: absolute;
-    right: 8px;
-    top: 2px;
-    cursor: pointer;
+    margin-top: 4px;
+    // border-top: 1px solid lighten($rustyGrey, 7.5%);
   }
 }

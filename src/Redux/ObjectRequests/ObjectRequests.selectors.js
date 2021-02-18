@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
-
 const selectObjectRequestsState = state => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) => objReqList.find(req => req._id === value || req.objectExtId === value);
 export const getFormInstanceForRequest = request => createSelector(state => Object.values(state.submissions), formsubmissions => {

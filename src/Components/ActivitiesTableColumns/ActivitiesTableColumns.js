@@ -2,16 +2,22 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import BaseActivityColOuter from './BaseColumn/BaseActivityColOuter';
-
-// CONSTANTS
-import { StaticColumns } from './StaticColumns/StaticColumns';
-import { TimingColumns } from './TimingColumns/TimingColumns';
-import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+import BaseActivityColOuter from './ActivityValueColumns/Base/BaseActivityColOuter';
 import SortableTableCell from '../DynamicTable/SortableTableCell';
+
+// COLUMNS
+import { StaticColumns } from './StaticColumns/StaticColumns';
+import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
+import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
+
+// SELECTORS
+import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
+
+// SORTERS
 import { sortByElementDeepHtml } from '../../Utils/sorting.helpers';
 
 export const createActivitiesTableColumnsFromMapping = (design, includeSubmissionInfo = false) => [
+  ...SchedulingColumns,
   ...TimingColumns[design.timing.mode](design),
   ...[
     ...Object.keys(design.objects).map(objKey => ['types', objKey]),

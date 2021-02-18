@@ -6,7 +6,7 @@ import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../
 
 // CONSTANTS
 import { activityValueModes } from '../../Constants/activityValueModes.constants';
-import { mappingTimingModes } from '../../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
 
 /**
  * @function updateActivitiesForForm
@@ -129,7 +129,7 @@ export const manuallyOverrideActivityValue = (
    */
   const timingMode = getTimingModeForActivity(activity);
   if (
-    timingMode !== mappingTimingModes.EXACT &&
+    timingMode !== activityTimeModes.EXACT &&
     (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
   )
     return updateMultipleActivityValues(newValue, activityValue, activity);
@@ -175,7 +175,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
   const { extId, submissionValue } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
   if (
-    timingMode !== mappingTimingModes.EXACT &&
+    timingMode !== activityTimeModes.EXACT &&
     (extId === 'startTime' || extId === 'endTime')
   ) {
     return revertMultipleActivityValues(['startTime', 'endTime'], activity);

@@ -29,3 +29,25 @@ export const selectTimingModeForActivity = createSelector(
     }
   }
 );
+
+export const selectTECorePayloadForActivity = createSelector(
+  state => state,
+  state => (formId, formInstanceId, activityId, objectRequests) => {
+    const form = state.forms[formId];
+    const activitiesForFormInstance = state.activities[formId][formInstanceId];
+    const activity = activitiesForFormInstance.find(el => el._id === activityId);
+    if (!activity) return null;
+
+    // Find start time and end time
+    const startTime = activity.timing.find(el => el.extId === 'startTime');
+    const endTime = activity.timing.find(el => el.extId === 'endTime');
+    const typedObjects = (activity.values || []).map(aV => aV.value);
+    return {
+      startTime,
+      endTime,
+      typedObjects,
+      formType: form.formType,
+      reservationMode: form.reservationMode,
+    }
+  }
+);

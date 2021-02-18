@@ -21,6 +21,7 @@ const BaseSectionTableView = ({ sectionId, columns, dataSource }) => (
     expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
     datasourceId={`${tableViews.SECTION}-${sectionId}`}
     resizable
+    showFilter={false}
   />
 );
 

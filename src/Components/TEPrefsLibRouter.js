@@ -9,10 +9,6 @@ import FormOverviewPage from '../Pages/FormOverview/FormOverview';
 
 // FORM DETAIL
 import FormDetailPage from '../Pages/FormDetail/FormDetail';
-import ActivityDesigner from '../Pages/ActivityDesigner/ActivityDesigner';
-
-// FORM INSTANCE
-import FormInstanceDetailPage from '../Pages/FormInstanceDetail/FormInstanceDetail';
 
 // COMPONENTS
 import Toolbar from './Toolbar/Toolbar';
@@ -27,8 +23,6 @@ const TEPrefsLibRouter = () => {
         <AuthenticatedRoutes>
           <Route exact path="/forms" component={FormOverviewPage} />
           <Route exact path="/forms/:formId" component={FormDetailPage} />
-          <Route exact path="/forms/:formId/activity-designer" component={ActivityDesigner} />
-          <Route exact path="/forms/:formId/form-instances/:formInstanceId" component={FormInstanceDetailPage} />
         </AuthenticatedRoutes>
       </Switch>
     </Router>

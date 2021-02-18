@@ -5,7 +5,7 @@ export const mappingTypes = {
   UNDEFINED: 'UNDEFINED',
 };
 
-export const mappingTypeProps = {
+export const designTypeProps = {
   [mappingTypes.FIELD]: {
     label: 'Field',
     icon: 'tag',

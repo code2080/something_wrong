@@ -1,4 +1,4 @@
-import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 
 export class ActivityTiming {
   mode;
@@ -24,7 +24,7 @@ export class ActivityTiming {
     weekday = [],
     time = [],
   }) {
-    this.mode = mode || mappingTimingModes.EXACT;
+    this.mode = mode || activityTimeModes.EXACT;
     this.startDate = startDate;
     this.endDate = endDate;
     this.startTime = startTime;

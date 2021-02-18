@@ -1,4 +1,10 @@
 import moment from 'moment';
+
+/**
+ * Converts a number of minutes to days, hours, minutes
+ * @param {Number} totalMin
+ * @returns string
+ */
 export const minToHourMinDisplay = totalMin => {
   const minutes = totalMin % 60;
   const totalHours = (totalMin - minutes) / 60;

@@ -1,19 +1,19 @@
-export const mappingTimingModes = {
+export const activityTimeModes = {
   EXACT: 'EXACT',
   TIMESLOTS: 'TIMESLOTS',
   SEQUENCE: 'SEQUENCE',
 };
 
-export const mappingTimingModeProps = {
-  [mappingTimingModes.EXACT]: {
+export const activityTimeModeProps = {
+  [activityTimeModes.EXACT]: {
     label: 'Exact',
     mandatoryProperties: ['startTime', 'endTime'],
   },
-  [mappingTimingModes.TIMESLOTS]: {
+  [activityTimeModes.TIMESLOTS]: {
     label: 'Timeslots',
     mandatoryProperties: ['startTime', 'endTime', 'length'],
   },
-  [mappingTimingModes.SEQUENCE]: {
+  [activityTimeModes.SEQUENCE]: {
     label: 'Sequence',
     mandatoryProperties: ['length'],
   },

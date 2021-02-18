@@ -2,7 +2,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 // VALIDATION HELPERS
-import { validateTimeslotTimingMode, validateFilterValue, validateGeneralValue } from './activityValues.validation';
+import { validateTimeslotTimeMode, validateFilterValue, validateGeneralValue } from './activityValues.validation';
 
 // HELPERS
 import { determineSchedulingAlgorithmForActivityValue } from './scheduling.helpers';
@@ -16,7 +16,7 @@ import { activityValueStatuses, activityValueStatusProps } from '../Constants/ac
 import { mappingTypes } from '../Constants/mappingTypes.constants';
 import { schedulingAlgorithmProps } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes, submissionValueTypeProps } from '../Constants/submissionValueTypes.constants';
-import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { DATE_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 
 /**
@@ -64,7 +64,7 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
 
 const renderCategories = categories => categories.map(({ id, values }) => `${_.get(window.tePrefsLibStore.getState(), ['te', 'extIdProps', 'fields', id, 'label'], id)}: ${values}`).join(', ');
 const renderSearchFields = (searchFields, searchString) => `${searchFields}: ${searchString}`;
-const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString)
+const renderFilterValues = ({ categories, searchString, searchFields }) => categories.length ? renderCategories(categories) : renderSearchFields(searchFields, searchString);
 
 /**
  * @function formatSubmissionValue
@@ -123,7 +123,7 @@ const getRenderPayloadForTimeSlotStartTime = (
   activityValue,
   timingValues
 ) => {
-  const validationResult = validateTimeslotTimingMode({ timing: timingValues });
+  const validationResult = validateTimeslotTimeMode({ timing: timingValues });
   const endTime = timingValues.find(el => el.extId === 'endTime');
   const length = timingValues.find(el => el.extId === 'length');
   if (!validationResult.errorCode)
@@ -154,7 +154,7 @@ const getSchedulingPayloadForTimeSlotEndTime = (
   activityValue,
   timingValues
 ) => {
-  const validationResult = validateTimeslotTimingMode({ timing: timingValues });
+  const validationResult = validateTimeslotTimeMode({ timing: timingValues });
   const startTime = timingValues.find(el => el.extId === 'startTime');
   const length = timingValues.find(el => el.extId === 'length');
   if (!validationResult.errorCode)
@@ -213,11 +213,9 @@ const getRenderPayloadForDateRangesValue = activityValue => {
 const getRenderPayloadForPaddingValue = activityValue => {
   const { value } = activityValue;
   // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
-  
-  if(!value)
+  if (!value)
     return null
 
-    
   if (!value.before && !value.after)
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
@@ -309,11 +307,11 @@ export const getRenderPayloadForActivityValue = (
   const timingMode = getTimingModeForActivity(activity);
   let renderPayload = null;
   // Special case: start time and time slots
-  if (activityValue.extId === 'startTime' && timingMode === mappingTimingModes.TIMESLOTS)
+  if (activityValue.extId === 'startTime' && timingMode === activityTimeModes.TIMESLOTS)
     renderPayload = getRenderPayloadForTimeSlotStartTime(activityValue, activity.timing);
 
   // Special case: end time and time slots
-  if (activityValue.extId === 'endTime' && timingMode === mappingTimingModes.TIMESLOTS)
+  if (activityValue.extId === 'endTime' && timingMode === activityTimeModes.TIMESLOTS)
     renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
 
   // Special case: dateRanges for sequence scheduling
@@ -325,7 +323,7 @@ export const getRenderPayloadForActivityValue = (
     renderPayload = getRenderPayloadForPaddingValue(activityValue);
 
   // For all optional timing elements
-  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === mappingTimingModes.SEQUENCE)
+  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === activityTimeModes.SEQUENCE)
     renderPayload = getRenderPayloadForOptionalTimingValues(activityValue);
 
   // Special case: filters

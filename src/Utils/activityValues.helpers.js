@@ -6,7 +6,7 @@ import { ActivityValue } from '../Models/ActivityValue.model';
 
 // CONSTANTS
 import { activityValueTypeProps, activityValueTypes } from '../Constants/activityValueTypes.constants';
-import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
@@ -348,7 +348,7 @@ const extractActivityValue = (
   /**
    * CASE 1: TIMING MODE
    */
-  if (Object.keys(mappingTimingModes).indexOf(elementValue) > -1)
+  if (Object.keys(activityTimeModes).indexOf(elementValue) > -1)
     return createTimingModeActivityValue(elementValue);
 
   // Get the section id, the elementId
@@ -388,7 +388,7 @@ const extractActivityValue = (
       break;
   }
 
-  return (props || valueType != 'object') ? new ActivityValue({
+  return (props || valueType !== 'object') ? new ActivityValue({
     type: valueType,
     extId,
     ...props,

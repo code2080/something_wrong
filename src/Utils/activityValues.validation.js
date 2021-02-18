@@ -1,6 +1,6 @@
 import { getTimingModeForActivity } from './activities.helpers';
 import { determineContentOfValue } from './activityValues.helpers';
-import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
 import { ActivityValueValidation } from '../Models/ActivityValueValidation.model';
@@ -38,7 +38,7 @@ export const validateFilterValue = activityValue => {
   });
 }
 
-export const validateTimeslotTimingMode = activity => {
+export const validateTimeslotTimeMode = activity => {
   const startTime = activity.timing.find(el => el.extId === 'startTime');
   const length = activity.timing.find(el => el.extId === 'length');
   const endTime = activity.timing.find(el => el.extId === 'endTime');
@@ -72,11 +72,11 @@ export const validateExactTimingMode = activity => {
 export const validateTiming = activity => {
   const timingMode = getTimingModeForActivity(activity);
   switch (timingMode) {
-    case mappingTimingModes.EXACT:
+    case activityTimeModes.EXACT:
       return validateExactTimingMode(activity);
-    case mappingTimingModes.TIMESLOTS:
-      return validateTimeslotTimingMode(activity);
-    case mappingTimingModes.SEQUENCE: 
+    case activityTimeModes.TIMESLOTS:
+      return validateTimeslotTimeMode(activity);
+    case activityTimeModes.SEQUENCE: 
       return new ActivityValueValidation({
         status: activityValueStatuses.READY_FOR_SCHEDULING,
       })

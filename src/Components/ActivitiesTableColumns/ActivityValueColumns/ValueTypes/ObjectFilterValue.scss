@@ -1,0 +1,15 @@
+@import '../../../../Styles/globals.scss';
+
+.object-filter-value--wrapper {
+  width: fit-content;
+  z-index: 1;
+  position: relative;
+  display:flex;
+  cursor: pointer;
+
+  .object-filter-value--toggle {
+    display: flex;
+    align-items: center;
+    margin-right: 0.2rem;
+  }
+}

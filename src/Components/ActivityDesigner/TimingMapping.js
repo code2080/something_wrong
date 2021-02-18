@@ -7,7 +7,7 @@ import { Select, Cascader } from 'antd';
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
-import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
+import { activityTimeModes, activityTimeModeProps } from '../../Constants/activityTimeModes.constants';
 
 // STYLES
 import './Mapping.scss';
@@ -51,12 +51,12 @@ const TimingMapping = ({
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           disabled={disabled}
         >
-          {Object.keys(mappingTimingModeProps).map(mode => (
-            <Select.Option key={mode} value={mode}>{mappingTimingModeProps[mode].label}</Select.Option>
+          {Object.keys(activityTimeModeProps).map(mode => (
+            <Select.Option key={mode} value={mode}>{activityTimeModeProps[mode].label}</Select.Option>
           ))}
         </Select>
       </div>
-      {timingMode === mappingTimingModes.EXACT && (
+      {timingMode === activityTimeModes.EXACT && (
         <React.Fragment>
           <div className="timing-mapping__row--wrapper">
             <div className="label">
@@ -90,7 +90,7 @@ const TimingMapping = ({
           </div>
         </React.Fragment>
       )}
-      {timingMode === mappingTimingModes.TIMESLOTS && (
+      {timingMode === activityTimeModes.TIMESLOTS && (
         <React.Fragment>
           <div className="timing-mapping__row--wrapper">
             <div className="label">
@@ -139,7 +139,7 @@ const TimingMapping = ({
           </div>
         </React.Fragment>
       )}
-      {timingMode === mappingTimingModes.SEQUENCE && (
+      {timingMode === activityTimeModes.SEQUENCE && (
         <React.Fragment>
           <div className="timing-mapping__row--wrapper">
             <div className="label">

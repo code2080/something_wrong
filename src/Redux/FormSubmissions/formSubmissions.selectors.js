@@ -13,6 +13,14 @@ export const selectSubmissions = createSelector(
   }
 );
 
+export const selectFormInstance = createSelector(
+  submissionsState,
+  submissions => (formId, formInstanceId) => {
+    const formInstance = submissions[formId][formInstanceId] || {};
+    return formInstance;
+  }
+);
+
 const sectionType = {
   EMPTY: 'EMPTY',
   CONNECTED: 'CONNECTED',

@@ -1,6 +1,6 @@
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
-import { mappingTimingModes, mappingTimingModeProps } from '../../Constants/mappingTimingModes.constants';
+import { activityTimeModes, activityTimeModeProps } from '../../Constants/activityTimeModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { mappingTypes } from '../../Constants/mappingTypes.constants';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import {
   SECTION_CONNECTED
 } from '../../Constants/sectionTypes.constants';
 
-export const getMandatoryPropsForTimingMode = mode => mappingTimingModeProps[mode].mandatoryProperties;
+export const getMandatoryPropsForTimingMode = mode => activityTimeModeProps[mode].mandatoryProperties;
 
 export const getMappingSettingsForProp = (prop, mapping) => _.get(mapping, `propSettings[${prop}]`, null);
 export const getMappingTypeForProp = (prop, mapping) => {
@@ -193,7 +193,7 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
  * @description gets the compatible elements for timing mapping
  */
 export const getElementsForTimingMapping = ({
-  [mappingTimingModes.EXACT]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
-  [mappingTimingModes.TIMESLOTS]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
-  [mappingTimingModes.SEQUENCE]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
+  [activityTimeModes.EXACT]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
+  [activityTimeModes.TIMESLOTS]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
+  [activityTimeModes.SEQUENCE]: (formSections, mapping) => getExactModeElementsForMapping(formSections, mapping),
 });

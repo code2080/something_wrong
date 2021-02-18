@@ -49,22 +49,7 @@ const reducer = (state = initialState, action) => {
     case ABORT_JOB_SUCCESS: {
       const { payload: { actionMeta: { formId } } } = action;
       const activitityObjs = action.payload.activities || [];
-<<<<<<< HEAD
-      const activities = activitityObjs
-        .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
-        .reduce(
-          (_activities, activity) => ({
-            ..._activities,
-            [activity.formInstanceId]: [
-              ...(_activities[activity.formInstanceId] || []),
-              activity
-            ]
-          }),
-          {}
-        );
-=======
       const activities = updateActivitiesForForm(activitityObjs);
->>>>>>> development
       return {
         ...state,
         [formId]: activities,

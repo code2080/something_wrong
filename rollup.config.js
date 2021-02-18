@@ -48,7 +48,12 @@ export default {
       runtimeHelpers: true,
       plugins: [ 'external-helpers', 'transform-runtime', 'transform-object-rest-spread' ]
     }),
-    commonjs(),
+    commonjs({
+      include: 'node_modules/**',
+      namedExports: {
+        'node_modules/react-is/index.js': ['isValidElementType']
+      }
+    }),
     resolve(),
   ]
 }

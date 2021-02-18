@@ -9,29 +9,29 @@ import {
   scheduleActivities,
   updateActivityWithSchedulingResult,
   updateActivitiesWithSchedulingResults,
-} from '../../Utils/scheduling.helpers';
+} from '../../../../Utils/scheduling.helpers';
 
 // ACTIONS
 import {
   updateActivity,
   updateActivities
-} from '../../Redux/Activities/activities.actions';
-import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
-import { abortJob } from '../../Redux/Jobs/jobs.actions';
+} from '../../../../Redux/Activities/activities.actions';
+import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';
+import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
 
 // COMPONENTS
-import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
+import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
-import { activityStatuses } from '../../Constants/activityStatuses.constants';
-import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
-import { teCoreSchedulingProgress } from '../../Constants/teCoreProps.constants';
-import { manualSchedulingFormStatuses } from '../../Constants/manualSchedulingConstants';
+import { activityStatuses } from '../../../../Constants/activityStatuses.constants';
+import { teCoreCallnames } from '../../../../Constants/teCoreActions.constants';
+import { teCoreSchedulingProgress } from '../../../../Constants/teCoreProps.constants';
+import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedulingConstants';
 
 // SELECTORS
-import { selectManualSchedulingStatus } from '../../Redux/ManualSchedulings/manualSchedulings.selectors';
-import { selectJobForActivities } from '../../Redux/Jobs/jobs.selectors';
-import { activityIsReadOnly } from '../../Utils/activities.helpers';
+import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
+import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
+import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -232,8 +232,8 @@ const ActivityActionsDropdown = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      {buttonType === 'more' ? (
-        <Button type="link" icon="more" size="small" />
+      {buttonType === 'ellipsis' ? (
+        <Button type="link" icon="ellipsis" size="small" />
       ) : (
         <Button
           type={buttonType}

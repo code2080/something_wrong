@@ -12,7 +12,7 @@ import { SchedulingError } from '../Models/SchedulingError.model';
 
 // CONSTANTS
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
-import { mappingTimingModes } from '../Constants/mappingTimingModes.constants';
+import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 import {
@@ -74,7 +74,7 @@ export const determineSchedulingAlgorithmForActivityValue = (
    */
   if (activityValue.type === activityValueTypes.TIMING) {
     const timingMode = getTimingModeForActivity(activity);
-    if (timingMode === mappingTimingModes.EXACT)
+    if (timingMode === activityTimeModes.EXACT)
       return schedulingAlgorithms.EXACT;
     return schedulingAlgorithms.BEST_FIT_TIME;
   }
