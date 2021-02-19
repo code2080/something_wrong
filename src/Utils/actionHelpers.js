@@ -18,7 +18,7 @@ const allApis = {};
  * @param {Obj} headers additional headers to be sent
  * @returns {String}
  */
-const prepareOption = async (method, params, requiresAuth, headers) => {
+const prepareOption = async (method, params, requiresAuth, headers, getState) => {
   const option = {
     method,
     headers: {
@@ -29,7 +29,7 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
   };
 
   if (requiresAuth) {
-    const token = await getToken();
+    const token = await getToken() || _.get(getState(), 'auth.accessToken');
     option.headers = {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
@@ -111,7 +111,7 @@ function createThunkAction ({
 
   return async function thunk (dispatch, getState) {
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
-    const option = await prepareOption(method, params, requiresAuth, headers);
+    const option = await prepareOption(method, params, requiresAuth, headers, getState);
     const { request, failure } = flow;
 
     if (permission && !hasPermission(permission)(getState())) {
@@ -188,6 +188,7 @@ function createThunkAction ({
         // Process data
         const { data } = response;
         if (requiresAuth && data.code === 401) {
+          console.log({ url: fullUrl, message: data.message });
           Object.keys(allApis).forEach(key => {
             const item = allApis[key];
             if (typeof item.cancel === 'function' && item.inprogress) {
