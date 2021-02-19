@@ -17,16 +17,16 @@ const TimePicker = ({ value }) => {
       .format(TIME_FORMAT);
   }, [value]);
   return (
-    <div className="picker--wrapper">
-      <div className="icon--wrapper">
-        <Icon type="clock-circle" />
+    <div className='picker--wrapper'>
+      <div className='icon--wrapper'>
+        <Icon type='clock-circle' />
       </div>
-      <div className="value--wrapper">
+      <div className='value--wrapper'>
         {_value}
       </div>
     </div>
   );
-}
+};
 
 TimePicker.propTypes = {
   value: PropTypes.string,

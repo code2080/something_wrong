@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
       const direction = destinationIdx - sourceIdx;
       const updActivities = activities.map(activity => {
         // If it's the moved activity
-        if (activity.sequenceIdx === sourceIdx) { return { ...activity, sequenceIdx: destinationIdx }; }
+        if (activity.sequenceIdx === sourceIdx) return { ...activity, sequenceIdx: destinationIdx };
         // If activity should be moving DOWN
         else if (
           direction > 0 &&
