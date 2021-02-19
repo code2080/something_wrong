@@ -38,6 +38,6 @@ export const StaticColumns = [
     key: 'actions',
     dataIndex: null,
     fixedWidth: 40,
-    render: activity => <ActivityActionsDropdown buttonType="more" activity={activity} />,
+    render: activity => <ActivityActionsDropdown buttonType='more' activity={activity} />,
   },
 ];

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Dropdown, Menu} from 'antd';
+import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
 
@@ -13,15 +14,14 @@ import { updateObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequest
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // CONSTANTS
-import { objectRequestActionToStatus } from '../../../Constants/objectRequestActions.constants';
 import {
+  objectRequestActionToStatus,
   objectRequestActions,
   objectRequestActionIcon,
   objectRequestActionLabels,
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
-
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
           </Menu.Item>
           ]
           : items
-        , [])}
+      , [])}
     </Menu>
   );
 
@@ -60,12 +60,12 @@ const ObjectRequestDropdown = ({ request, children }) => {
       ...request,
       replacementObjectExtId: extid,
       status: objectRequestActionToStatus[action] || request.status
-    }
+    };
 
     const label = fields[0].values[0];
     dispatch(setExtIdPropsForObject(extid, { label }));
     updateObjectRequest(updatedObjectRequest)(dispatch);
-  }
+  };
 
   return <Dropdown
     getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -75,18 +75,23 @@ const ObjectRequestDropdown = ({ request, children }) => {
       spotlightRef,
       showDetails: () => {
         setIsDropdownVisible(false);
-        setDetailsModalVisible(true)
+        setDetailsModalVisible(true);
       }
     })}
     key={request._id}
     visible={isDropdownVisible}
     onVisibleChange={newVisibility => !detailsModalVisible && setIsDropdownVisible(newVisibility)}
   >
-    <div className="dd-trigger" ref={spotlightRef} >
+    <div className='dd-trigger' ref={spotlightRef} >
       {children}
       <ObjectRequestModal onClose={() => setDetailsModalVisible(false)} request={request} visible={detailsModalVisible} />
     </div>
-  </Dropdown>
+  </Dropdown>;
+};
+
+ObjectRequestDropdown.propTypes = {
+  request: PropTypes.object,
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
 };
 
 export default ObjectRequestDropdown;

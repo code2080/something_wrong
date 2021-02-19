@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import _ from 'lodash'
 import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
 import { datasourceValueTypes } from '../../../Constants/datasource.constants';
@@ -22,30 +21,30 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       overlay={menu}
     >
-      <div className="element__datasource--inner">
-        <div className="field--wrapper">
+      <div className='element__datasource--inner'>
+        <div className='field--wrapper'>
           <div
-            className="chevron"
-            onClick={(e) => {e.stopPropagation(); setVisIdx(Math.max(visIdx - 1, 0))}}
+            className='chevron'
+            onClick={(e) => { e.stopPropagation(); setVisIdx(Math.max(visIdx - 1, 0)); }}
           >
-            <Icon type="caret-left" />
+            <Icon type='caret-left' />
           </div>
-          <div className="counter">{`${visIdx + 1}/${labelArr.length}`}</div>
+          <div className='counter'>{`${visIdx + 1}/${labelArr.length}`}</div>
           <div
-            className="chevron"
-            onClick={(e) => {e.stopPropagation(); setVisIdx(Math.min(visIdx + 1, labelArr.length - 1))}}
+            className='chevron'
+            onClick={(e) => { e.stopPropagation(); setVisIdx(Math.min(visIdx + 1, labelArr.length - 1)); }}
           >
-            <Icon type="caret-right" />
+            <Icon type='caret-right' />
           </div>
-          <div className="field--label">{labelArr[visIdx]}:</div>
-          <div className="field--value">
+          <div className='field--label'>{labelArr[visIdx]}:</div>
+          <div className='field--value'>
             {displayValue}
           </div>
         </div>
-        <Icon type="down" />
+        <Icon type='down' />
       </div>
     </Dropdown>
-  )
+  );
 };
 
 DatasourceFilterInner.propTypes = {

@@ -21,13 +21,13 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case types.FETCH_USER_SUCCESS:
+    case types.FETCH_USER_SUCCESS: {
       const user = new User(action.payload);
       return {
         ...state,
         [user._id]: user,
       };
-
+    }
     case types.FETCH_USERS_SUCCESS:
       return _.chain(action.payload.users).map(u => new User(u)).keyBy('_id').valueOf();
 

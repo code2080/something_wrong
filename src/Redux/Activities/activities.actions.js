@@ -20,9 +20,9 @@ import {
   UPDATE_ACTIVITY_REQUEST,
   UPDATE_ACTIVITY_SUCCESS,
   UPDATE_ACTIVITY_FAILURE,
-  SCHEDULE_ACTIVITIES_REQUEST,
-  SCHEDULE_ACTIVITIES_SUCCESS,
-  SCHEDULE_ACTIVITIES_FAILURE,
+  REORDER_ACTIVITIES_REQUEST,
+  REORDER_ACTIVITIES_SUCCESS,
+  REORDER_ACTIVITIES_FAILURE,
   REVERT_TO_SUBMISSION_VALUE_REQUEST,
   REVERT_TO_SUBMISSION_VALUE_SUCCESS,
   REVERT_TO_SUBMISSION_VALUE_FAILURE,
@@ -45,7 +45,7 @@ const fetchActivitiesForFormFlow = {
 export const fetchActivitiesForForm = formId =>
   asyncAction.GET({
     flow: fetchActivitiesForFormFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity`,
     params: { formId },
   });
 
@@ -58,7 +58,7 @@ const fetchActivitiesForFormInstanceFlow = {
 export const fetchActivitiesForFormInstance = (formId, formInstanceId) =>
   asyncAction.GET({
     flow: fetchActivitiesForFormInstanceFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity`,
     params: { formInstanceId, formId },
   });
 
@@ -71,7 +71,7 @@ const saveActivitiesFlow = {
 export const saveActivities = (formId, formInstanceId, callback) =>
   asyncAction.POST({
     flow: saveActivitiesFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity?formInstanceId=${formInstanceId}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity?formInstanceId=${formInstanceId}`,
     params: {
       formId,
       formInstanceId,
@@ -89,7 +89,7 @@ export const overrideActivityValue = (newValue, activityValue, activity) => {
   const updatedActivity = manuallyOverrideActivityValue(newValue, activityValue, activity);
   return asyncAction.PUT({
     flow: manuallyOverrideActivityValueFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity/${activity._id}`,
     params: {
       activity: updatedActivity,
     },
@@ -106,12 +106,12 @@ export const revertToSubmissionValue = (activityValue, activity) => {
   const updatedActivity = revertActivityValueToSubmission(activityValue, activity);
   return asyncAction.PUT({
     flow: revertToSubmissionValueFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity/${activity._id}`,
     params: {
       activity: updatedActivity,
     },
   });
-}
+};
 
 const deleteActivitiesFlow = {
   request: () => ({ type: DELETE_ACTIVITIES_FOR_FORM_REQUEST }),
@@ -122,7 +122,7 @@ const deleteActivitiesFlow = {
 export const deleteActivities = formId =>
   asyncAction.DELETE({
     flow: deleteActivitiesFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity?formId=${formId}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity?formId=${formId}`,
     params: { formId }
   });
 
@@ -135,10 +135,9 @@ const deleteActivitiesInFormInstanceFlow = {
 export const deleteActivitiesInFormInstance = (formId, formInstanceId) =>
   asyncAction.DELETE({
     flow: deleteActivitiesInFormInstanceFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity?formInstanceId=${formInstanceId}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity?formInstanceId=${formInstanceId}`,
     params: { formId, formInstanceId }
   });
-
 
 const updateActivityFlow = {
   request: () => ({ type: UPDATE_ACTIVITY_REQUEST }),
@@ -149,7 +148,7 @@ const updateActivityFlow = {
 export const updateActivity = activity =>
   asyncAction.PUT({
     flow: updateActivityFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity/${activity._id}`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity/${activity._id}`,
     params: { activity }
   });
 
@@ -162,7 +161,7 @@ const updateActivitiesFlow = {
 export const updateActivities = (formId, formInstanceId, activities) =>
   asyncAction.PUT({
     flow: updateActivitiesFlow,
-    endpoint: `${getEnvParams().AE_OL_URL}activity`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity`,
     params: {
       formId,
       formInstanceId,
@@ -170,19 +169,23 @@ export const updateActivities = (formId, formInstanceId, activities) =>
     }
   });
 
-export const scheduleActivity = ({ apiFn, callback, activity }) => (dispatch, getState) => {
-  /**
-   * 1. Determine timing mode (timing mode determines what we need to do)
-   * 2. If timing mode === EXACT
-   * 2a  => collect all determined values (incl. manual overrides)
-   * 2b  => get first available object for non determined values
-   * 2c  => attempt to schedule (if there's objects available)
-   * 2d  => store scheduling result
-   * 3. If timing mode === TIMESLOTS
-   * 3a  => collect all determined values (incl. manual overrides)
-   * 3b  => for non determined objects, get availability matrix for all possible objects during timeslot
-   * 3c  => determine optimal combination of objects
-   * 3d  => attempt to schedule (if there's objects available)
-   * 3e  => store scheduling result
-   */
+const reorderActivitiesFlow = {
+  request: ({ formId, formInstanceId, sourceIdx, destinationIdx }) => ({
+    type: REORDER_ACTIVITIES_REQUEST,
+    payload: { formId, formInstanceId, sourceIdx, destinationIdx },
+  }),
+  success: response => ({ type: REORDER_ACTIVITIES_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: REORDER_ACTIVITIES_FAILURE, payload: { ...err } }),
 };
+
+export const reorderActivities = (formId, formInstanceId, sourceIdx, destinationIdx) =>
+  asyncAction.PUT({
+    flow: reorderActivitiesFlow,
+    endpoint: `${getEnvParams().AM_BE_URL}activity/form-instances/${formInstanceId}`,
+    params: {
+      formId,
+      formInstanceId,
+      sourceIdx,
+      destinationIdx,
+    },
+  });

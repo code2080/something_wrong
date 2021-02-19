@@ -8,7 +8,7 @@ const DateTimeEdit = ({ value, setValue, onFinish }) => (
     getCalendarContainer={() => document.getElementById('te-prefs-lib')}
     value={value != null ? moment(value) : null}
     showTime
-    size="small"
+    size='small'
     allowClear={false}
     onChange={val => setValue(val.toISOString())}
     onOk={() => onFinish()}

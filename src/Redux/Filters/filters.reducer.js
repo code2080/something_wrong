@@ -13,7 +13,7 @@ const reducer = (state = {}, action) => {
       return {
         ...state,
         [filterId]: filter,
-      }
+      };
     };
 
     case types.SET_FILTER: {
@@ -43,6 +43,6 @@ const reducer = (state = {}, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

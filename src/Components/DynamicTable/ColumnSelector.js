@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Button, Icon } from 'antd';
 
@@ -10,15 +10,14 @@ const ColumnSelector = ({
   onColumnStateChange,
   onHide,
 }) => {
-
   return (
-    <div className="column-selector--wrapper">
-      <div className="column-selector--header">
-        <Button type="link" onClick={onHide}>
-          <Icon type="arrow-left" />
+    <div className='column-selector--wrapper'>
+      <div className='column-selector--header'>
+        <Button type='link' onClick={onHide}>
+          <Icon type='arrow-left' />
           Back
         </Button>
-        <span className="column-selector--title">Select columns to display</span>
+        <span className='column-selector--title'>Select columns to display</span>
       </div>
       {columns
         .filter(([_, __, colTitle]) => colTitle !== '')
@@ -36,7 +35,7 @@ const ColumnSelector = ({
 };
 
 ColumnSelector.propTypes = {
-  colums: PropTypes.array,
+  columns: PropTypes.array,
   onColumnStateChange: PropTypes.func.isRequired,
   onHide: PropTypes.func.isRequired,
 };

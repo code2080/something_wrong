@@ -18,21 +18,21 @@ const ExtraObjectRow = ({
   onDelete
 }) => {
   return (
-    <div className="extra-object--wrapper">
+    <div className='extra-object--wrapper'>
       <Cascader
         options={availableObjects}
         value={value}
         onChange={val => onChange(rowIdx, val)}
-        placeholder="Select an element"
+        placeholder='Select an element'
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
-        size="small"
+        size='small'
         style={{ width: '200px' }}
       />
-      <div className="extra-object__value--wrapper">
+      <div className='extra-object__value--wrapper'>
         <ExtraObjectValue extraObject={value} formId={formId} formInstanceId={formInstanceId} />
       </div>
-      <div className="extra-object--delete">
-        <Button type="danger" size="small" icon="delete" onClick={() => onDelete(rowIdx)} />
+      <div className='extra-object--delete'>
+        <Button type='danger' size='small' icon='delete' onClick={() => onDelete(rowIdx)} />
       </div>
     </div>
   );

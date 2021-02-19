@@ -16,20 +16,20 @@ import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
 
 const ActivityStatusCol = ({ activity }) => {
   const content = (
-    <div className="activity-col--popover">
+    <div className='activity-col--popover'>
       <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
-        <Form.Item label="Status">
+        <Form.Item label='Status'>
           <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
             {activityStatusProps[activity.activityStatus].label}
           </StatusLabel>
         </Form.Item>
         {activity.activityStatus === activityStatuses.FAILED && (
-          <Form.Item label="Error">
+          <Form.Item label='Error'>
             {`${_.get(activity, 'errorDetails.message', '')} (${_.get(activity, 'errorDetails.code', '')})`}
           </Form.Item>
         )}
-        <Form.Item label="Time">
-          <div className="ant-form-text">
+        <Form.Item label='Time'>
+          <div className='ant-form-text'>
             {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
           </div>
         </Form.Item>
@@ -39,7 +39,7 @@ const ActivityStatusCol = ({ activity }) => {
 
   return (
     <Popover
-      title="Scheduling information"
+      title='Scheduling information'
       content={content}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >

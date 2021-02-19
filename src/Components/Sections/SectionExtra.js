@@ -19,20 +19,18 @@ const panels = {
 
 const SectionExtra = ({ formId, formInstanceId, section, sectionType }) => {
   const defaultActiveKey = useMemo(() => {
-    if (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE)
-      return [panels.SELECT_SETTINGS];
-    if (section.calendarSettings)
-      return [panels.CALENDAR_SETTINGS];
+    if (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE) { return [panels.SELECT_SETTINGS]; }
+    if (section.calendarSettings) { return [panels.CALENDAR_SETTINGS]; }
     return [];
   }, [section, sectionType]);
 
   return (
-    <div className="base-section__extra--wrapper">
+    <div className='base-section__extra--wrapper'>
       <Collapse
         defaultActiveKey={defaultActiveKey}
       >
         {(sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) && (
-          <Collapse.Panel header="Selection settings" key={panels.SELECT_SETTINGS}>
+          <Collapse.Panel header='Selection settings' key={panels.SELECT_SETTINGS}>
             <SelectionSettings
               formId={formId}
               formInstanceId={formInstanceId}
@@ -41,7 +39,7 @@ const SectionExtra = ({ formId, formInstanceId, section, sectionType }) => {
           </Collapse.Panel>
         )}
         {section && section.calendarSettings && (
-          <Collapse.Panel header="Calendar Settings" key={panels.CALENDAR_SETTINGS}>
+          <Collapse.Panel header='Calendar Settings' key={panels.CALENDAR_SETTINGS}>
             <CalendarSettings calendarSettings={section.calendarSettings} />
           </Collapse.Panel>
         )}

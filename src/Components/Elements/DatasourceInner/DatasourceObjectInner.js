@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import _ from 'lodash'
 import PropTypes from 'prop-types';
 import { Dropdown, Icon } from 'antd';
 
@@ -20,7 +19,7 @@ const DatasourceObjectInner = ({ labels, menu }) => {
       ? <ObjectRequestDropdown request={objReq} key={objReq._id}>
         <div className='element__datasource--inner' >
           <ObjectRequestValue request={objReq} />
-          <Icon type="down" />
+          <Icon type='down' />
         </div>
       </ObjectRequestDropdown>
       : <Dropdown
@@ -28,12 +27,12 @@ const DatasourceObjectInner = ({ labels, menu }) => {
         overlay={menu}
         key={label}
       >
-        <div className="dd-trigger element__datasource--inner" >
+        <div className='dd-trigger element__datasource--inner' >
           {label || 'N/A'}
-          <Icon type="down" />
+          <Icon type='down' />
         </div>
-      </Dropdown>
-  })
+      </Dropdown>;
+  });
 };
 
 DatasourceObjectInner.propTypes = {

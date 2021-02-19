@@ -6,7 +6,7 @@ export default class FormInstanceTECoreProps {
   selectionSettings;
   isStarred;
 
-  constructor({
+  constructor ({
     assignedTo = [],
     acceptanceStatus = null,
     acceptanceComment = null,

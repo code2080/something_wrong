@@ -134,3 +134,13 @@ export const elementTypeMapping = {
     elementId: '5ff3fdb82251fc05196c59d2',
   },
 };
+
+export const WEEKDAYNAMES = {
+  MON: 'Monday',
+  TUE: 'Tuesday',
+  WED: 'Wednesday',
+  THU: 'Thursday',
+  FRI: 'Friday',
+  SAT: 'Saturday',
+  SUN: 'Sunday',
+};

@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case types.SET_EXTID_PROPS_FOR_OBJECT:
+    case types.SET_EXTID_PROPS_FOR_OBJECT: {
       const { extId, extIdProps } = action.payload;
       return {
         ...state,
@@ -42,6 +42,7 @@ const reducer = (state = initialState, action) => {
           },
         },
       };
+    }
 
     default:
       return state;

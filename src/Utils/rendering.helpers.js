@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
+import { sortByElementHtml } from './sorting.helpers';
 
 // HOOKS
 import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
@@ -21,6 +22,8 @@ import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import Padding from '../Components/Elements/Padding';
 import ManualSchedulingColumn from '../Components/TableColumns/Components/ManualSchedulingColumn/ManualSchedulingColumn';
+import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
+import DateTime from '../Components/Common/DateTime';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -28,12 +31,10 @@ import {
   SECTION_VERTICAL,
   SECTION_TABLE,
   SECTION_CONNECTED,
-  SECTION_AVAILABILITY 
+  SECTION_AVAILABILITY
 } from '../Constants/sectionTypes.constants';
-import DateTime from '../Components/Common/DateTime';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
-import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
-import { sortByElementHtml } from './sorting.helpers';
+import { getLocalDate } from './moment.helpers';
 
 const unformattedValue = value => (
   <div
@@ -126,7 +127,7 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_INPUT_TIME:
       return <TimePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE:
-      return <DatePicker value={value} />;
+      return <DatePicker value={getLocalDate(value)} />;
     case elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE:
       return <DateRangePicker value={value} />;
     case elementTypes.ELEMENT_TYPE_RADIO_GROUP:
@@ -134,22 +135,22 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_DROPDOWN:
       return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_CHECKBOX:
-      return <Checkbox value={value} />
+      return <Checkbox value={value} />;
     case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
       return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_PLAINTEXT:
-      /**
-       * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
-       */
+    /**
+         * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
+         */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_CALENDAR:
-      /**
-       * @todo break into separate component
-       */
+    /**
+         * @todo break into separate component
+         */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
       return (
-        <div className="preline">
+        <div className='preline'>
           <Datasource value={value} element={element} />
         </div>
       );
@@ -157,24 +158,25 @@ export const renderElementValue = (value, element) => {
       return <FreeTextFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
       return <NumberFilter value={value} element={element} />;
-    case elementTypes.ELEMENT_TYPE_DURATION:
+    case elementTypes.ELEMENT_TYPE_DURATION: {
       const duration = moment.duration(value, 'minutes');
       return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
-
+    }
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
       return (
-        <div className="preline">
+        <div className='preline'>
           {unformattedValue(value.toString())}
         </div>
       );
     case elementTypes.ELEMENT_TYPE_DAY_PICKER:
-      return moment(value).format('ddd');
+      return moment(value, 'ddd').format('dddd');
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
-      return moment(value).format('[Week] w / gggg');
+      if (!value || !value.startTime) return null;
+      return getLocalDate(value).format('[Week] w / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
-      return <Padding value={value} />
+      return (<Padding value={value} element={element} />);
 
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
@@ -260,7 +262,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
       return [
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ...availabilityCalendarColumns,
-      ]
+      ];
     default:
       return [..._elementColumns];
   };
@@ -280,7 +282,7 @@ const transformVerticalSectionValuesToTableRows = (values, columns, sectionId) =
     if (elementIdx === -1) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
-  return [ { ..._data, rowKey: sectionId } ];
+  return [{ ..._data, rowKey: sectionId }];
 };
 
 /**
@@ -338,8 +340,7 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-const transformAvailabilityCalendarToTableRows = (values) =>
-([
+const transformAvailabilityCalendarToTableRows = (values) => ([
   ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
     ...item,
     rowKey: item.eventId,
@@ -370,10 +371,9 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
 };
 
 export const LabelRenderer = ({ type, extId }) => {
-
   if (!extId || !type) return 'N/A';
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
-  return label && label.label || extId || 'N/A';
-}
+  return label?.label || extId || 'N/A';
+};

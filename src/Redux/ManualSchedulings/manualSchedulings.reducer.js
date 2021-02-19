@@ -17,7 +17,7 @@ const reducer = (state = initialState, action) => {
             [curr.rowKey]: curr.status,
           }
         }
-      }), {...state});
+      }), { ...state });
       return updState;
     }
 
@@ -41,6 +41,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

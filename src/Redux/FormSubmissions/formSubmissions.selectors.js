@@ -5,9 +5,9 @@ import { sortTime } from '../../Components/TableColumns/Helpers/sorters';
 const getSubmissions = (state, formId) => state.submissions[formId];
 
 export const selectSubmissions = createSelector(
-    [getSubmissions],
-    // Fix this sorted
-    submissions => _.flatMap(submissions)
+  [getSubmissions],
+  // Fix this sorted
+  submissions => _.flatMap(submissions)
     .sort((a, b) => sortTime(a.updatedAt, b.updatedAt))
 );
 
@@ -16,7 +16,7 @@ const sectionType = {
   CONNECTED: 'CONNECTED',
   REGULAR: 'REGULAR',
   TABLE: 'TABLE',
-}
+};
 
 const determineSectionTypeFromData = sectionData => {
   if (_.isEmpty(sectionData)) return sectionType.EMPTY;
@@ -27,7 +27,7 @@ const determineSectionTypeFromData = sectionData => {
 
   if (_.head(recurringSectionData).eventId) return sectionType.CONNECTED;
   return sectionType.TABLE;
-}
+};
 
 const extractValuesFromSectionData = sectionData => {
   switch (determineSectionTypeFromData(sectionData)) {
@@ -52,8 +52,8 @@ const extractValuesFromSectionData = sectionData => {
       ], []);
     default:
       return [];
-    }  
   }
+};
 
 export const getSubmissionValues = formInstance =>
   formInstance

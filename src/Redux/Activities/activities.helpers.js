@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Activity } from '../../Models/Activity.model';
 
 // HELPERS
 import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../Utils/activities.helpers';
@@ -6,6 +7,25 @@ import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../
 // CONSTANTS
 import { activityValueModes } from '../../Constants/activityValueModes.constants';
 import { mappingTimingModes } from '../../Constants/mappingTimingModes.constants';
+
+/**
+ * @function updateActivitiesForForm
+ * @description creates an updated state for the formIds activities
+ * @param {Activity[]} activities
+ * @returns {Object} updatedFormState
+ */
+export const updateActivitiesForForm = (activities) => activities
+  .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
+  .reduce(
+    (_activities, activity) => ({
+      ..._activities,
+      [activity.formInstanceId]: [
+        ...(_activities[activity.formInstanceId] || []),
+        activity
+      ]
+    }),
+    {}
+  );
 
 /**
  * @function getActivitiesForFormInstance
@@ -72,7 +92,7 @@ const updateSingleActivityValue = (newValue, activityValue, activity) => {
  * @param {Object} activity the old activity
  */
 const updateMultipleActivityValues = (newValue, activityValue, activity) => {
-  let updatedActivity = activity;
+  const updatedActivity = activity;
   newValue.forEach(value => {
     const objPath = findObjectPathForActivityValue(value.extId, activity);
     const activityValueIdx = activity[objPath].findIndex(
@@ -111,14 +131,13 @@ export const manuallyOverrideActivityValue = (
   if (
     timingMode !== mappingTimingModes.EXACT &&
     (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
-  )
-    return updateMultipleActivityValues(newValue, activityValue, activity);
+  ) { return updateMultipleActivityValues(newValue, activityValue, activity); }
 
   return updateSingleActivityValue(newValue, activityValue, activity);
 };
 
 const revertMultipleActivityValues = (extIds, activity) => {
-  let updatedActivity = activity;
+  const updatedActivity = activity;
   extIds.forEach(extId => {
     const objPath = findObjectPathForActivityValue(extId, activity);
     const activityValueIdx = activity[objPath].findIndex(

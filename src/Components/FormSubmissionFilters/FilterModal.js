@@ -24,7 +24,7 @@ const mapStateToProps = (state, { objectScope, formId }) => {
     objectScopeLabel: scopedObjProps.applicationObjectTypeLabel || null,
     fields: scopedObjProps.fields || [],
   };
-}
+};
 
 const mapActionsToProps = {
   updateFilter,
@@ -57,51 +57,51 @@ const FilterModal = ({
 
   return (
     <Modal
-      title="Filter submissions"
-      wrapClassName="filter-modal--wrapper"
+      title='Filter submissions'
+      wrapClassName='filter-modal--wrapper'
       getContainer={() => document.getElementById('te-prefs-lib')}
       visible={isVisible}
       onOk={onSaveAndClose}
       onCancel={onCancel}
       footer={[
-        <Button key="submit" type="primary" onClick={onSaveAndClose}>
+        <Button key='submit' type='primary' onClick={onSaveAndClose}>
           Close
         </Button>,
       ]}
     >
-      <div className="filter-modal--pane">
-        <div className="filter-modal__pane--title">General filters</div>
-        <Form.Item label="Free text filter">
+      <div className='filter-modal--pane'>
+        <div className='filter-modal__pane--title'>General filters</div>
+        <Form.Item label='Free text filter'>
           <Input
-            placeholder="Filter..."
+            placeholder='Filter...'
             value={filters.freeTextFilter}
             onChange={e => onUpdateFilterSimple('freeTextFilter', e.target.value)}
-            suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            size="small"
+            suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+            size='small'
           />
         </Form.Item>
-        <Form.Item label="Show only own submissions">
+        <Form.Item label='Show only own submissions'>
           <Switch
             checked={filters.onlyOwn}
             onChange={onlyOwn => onUpdateFilterSimple('onlyOwn', onlyOwn)}
-            size="small"
+            size='small'
           />
         </Form.Item>
-        <Form.Item label="Show only starred submissions">
+        <Form.Item label='Show only starred submissions'>
           <Switch
             checked={filters.onlyStarred}
             onChange={onlyStarred => onUpdateFilterSimple('onlyStarred', onlyStarred)}
-            size="small"
+            size='small'
           />
         </Form.Item>
       </div>
-      <div className="filter-modal--pane">
-        <div className="filter-modal__pane--title">{`Primary object filters ${objectScopeLabel ? `(${objectScopeLabel})` : ''}`}</div>
+      <div className='filter-modal--pane'>
+        <div className='filter-modal__pane--title'>{`Primary object filters ${objectScopeLabel ? `(${objectScopeLabel})` : ''}`}</div>
         {(fields || []).map(field => (
           <Form.Item label={field.fieldLabel} key={field.fieldExtId}>
             <Input
-              size="small"
-              placeholder="Filter..."
+              size='small'
+              placeholder='Filter...'
               value={filters.scopedObject[field.fieldExtId]}
               onChange={e => onUpdateScopedObjectFilter(field.fieldExtId, e.target.value)}
             />

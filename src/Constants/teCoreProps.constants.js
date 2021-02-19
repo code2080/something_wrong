@@ -54,7 +54,7 @@ export const toAcceptanceLabel = status => {
     return 'Rejected';
   }
   return 'Not set';
-}
+};
 
 export const toProgressLabel = progress => {
   if (progress === teCoreSchedulingProgress.NOT_SCHEDULED) {
@@ -67,4 +67,4 @@ export const toProgressLabel = progress => {
     return 'Scheduled';
   }
   return 'Not set';
-}
+};

@@ -7,7 +7,7 @@ const elementsReducer = (state = { map: {} }, action) => {
       return {
         ...state,
         map: _.keyBy(action.payload.elements.elements, '_id'),
-      }
+      };
 
     default:
       return state;

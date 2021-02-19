@@ -48,38 +48,38 @@ const AutomaticSchedulingToolbar = ({
   }, []);
 
   return (
-    <div className="toolbar--wrapper">
+    <div className='toolbar--wrapper'>
       {mappingStatus === mappingStatuses.NOT_SET && (
-        <div className="toolbar--section-flex">
-          <span className="label">Almost ready for automatic scheduling!</span>
-          <Button type="link" size="small" onClick={onConfigureMappingCallback}>
-            Configure the form's mapping to the activity template to get started
+        <div className='toolbar--section-flex'>
+          <span className='label'>Almost ready for automatic scheduling!</span>
+          <Button type='link' size='small' onClick={onConfigureMappingCallback}>
+            Configure the form&apos;s mapping to the activity template to get started
           </Button>
         </div>
       )}
       {mappingStatus === mappingStatuses.COMPLETE && activities.length > 0 && (
         <React.Fragment>
-          <div className="toolbar--section-flex">
-            <span className="label">Ready for automatic scheduling!</span>
-            <Button type="link" size="small" onClick={onConvertToReservations}>
+          <div className='toolbar--section-flex'>
+            <span className='label'>Ready for automatic scheduling!</span>
+            <Button type='link' size='small' onClick={onConvertToReservations}>
               View activity summary
             </Button>
           </div>
-          <div className="toolbar--section-flex">
-            <span className="label">Progress</span>
+          <div className='toolbar--section-flex'>
+            <span className='label'>Progress</span>
             <SchedulingProgress formId={formInstance.formId} formInstanceId={formInstance._id} />
           </div>
-          <div className="toolbar--section-flex adjust-right">
-            <Button size="small" onClick={onScheduleReservations}>
+          <div className='toolbar--section-flex adjust-right'>
+            <Button size='small' onClick={onScheduleReservations}>
               Schedule all activities
             </Button>
           </div>
         </React.Fragment>
       )}
       {mappingStatus === mappingStatuses.COMPLETE && !activities.length && (
-        <div className="toolbar--section-flex">
-          <span className="label">Ready for automatic scheduling!</span>
-          <Button type="link" size="small" onClick={onConvertToReservations}>
+        <div className='toolbar--section-flex'>
+          <span className='label'>Ready for automatic scheduling!</span>
+          <Button type='link' size='small' onClick={onConvertToReservations}>
             Convert submissions to activities to get started
           </Button>
         </div>

@@ -4,7 +4,7 @@ export class TECoreReservationModel {
   objects;
   fields;
 
-  constructor({ startTime, endTime, objects, fields }) {
+  constructor ({ startTime, endTime, objects, fields }) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.objects = objects;
@@ -16,7 +16,7 @@ export class TECoreFieldModel {
   fieldExtId;
   value;
 
-  constructor(activityValue) {
+  constructor (activityValue) {
     this.fieldExtId = activityValue.extId;
     this.value = activityValue.value;
   }
@@ -26,7 +26,7 @@ export class TECoreObjectModel {
   typeExtId;
   objectExtIds;
 
-  constructor(activityValue) {
+  constructor (activityValue) {
     this.typeExtId = activityValue.extId;
     this.objectExtIds = activityValue.value;
   }

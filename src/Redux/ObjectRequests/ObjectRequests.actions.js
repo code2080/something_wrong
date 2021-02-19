@@ -20,7 +20,7 @@ const fetchObjectRequestsFlow = {
   success: response => ({ type: types.FETCH_OBJECT_REQUESTS_SUCCESS, payload: response }),
   failure: err => ({ type: types.FETCH_OBJECT_REQUESTS_FAILURE, ...err }),
 };
-export const fetchObjectRequests = () => 
+export const fetchObjectRequests = () =>
   asyncAction.GET({
     flow: fetchObjectRequestsFlow,
     endpoint: 'object-request'
@@ -39,4 +39,3 @@ export const updateObjectRequest = objectRequest =>
       ...objectRequest,
     },
   });
-

@@ -6,8 +6,8 @@ import { Switch } from 'antd';
 import './ElementBase.scss';
 
 const Checkbox = ({ value }) => (
-  <div className="element--wrapper">
-    <Switch size="small" checked={value || false} />
+  <div className='element--wrapper'>
+    <Switch size='small' checked={value || false} />
   </div>
 );
 

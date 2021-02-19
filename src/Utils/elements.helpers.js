@@ -153,7 +153,7 @@ const objectToString = (value, divider) => {
     Object.keys(value)
       .map(key => `${formatElementValue(value[key], divider)}`),
     divider
-  )
+  );
 };
 
 /**

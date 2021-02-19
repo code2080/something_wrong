@@ -1,4 +1,5 @@
 import { asyncAction } from '../../Utils/actionHelpers';
+import { getEnvParams } from '../../configs';
 import {
   FETCH_MAPPINGS_FOR_FORM_REQUEST,
   FETCH_MAPPINGS_FOR_FORM_SUCCESS,
@@ -17,7 +18,7 @@ const fetchMappingsFlow = {
 export const fetchMappings = formId =>
   asyncAction.GET({
     flow: fetchMappingsFlow,
-    endpoint: `forms/${formId}/mappings`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
     params: { formId },
   });
 
@@ -30,6 +31,6 @@ const updateMappingFlow = {
 export const updateMapping = mapping =>
   asyncAction.POST({
     flow: updateMappingFlow,
-    endpoint: `forms/${mapping.formId}/mappings`,
+    endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
     params: { mapping },
   });

@@ -22,22 +22,23 @@ const BaseActivityColOuter = ({
   mapping,
 }) => {
   const activityValues = getActivityValues(activity, type, prop);
-
   const activityValueCols = activityValues && activityValues.length && (activityValues || []).reduce((activityCols, activityValue, idx) => (
-    !_.isEmpty(activityValue.value) ? [...activityCols, <BaseActivityCol
-      key={`av-${idx}`}
-      activityValue={activityValue}
-      activity={activity}
-      type={type}
-      prop={prop}
-      propTitle={propTitle}
-      formatFn={formatFn}
-      mapping={mapping}
-    />] : activityCols
+    !_.isEmpty(activityValue.value)
+      ? [...activityCols, <BaseActivityCol
+        key={`av-${idx}`}
+        activityValue={activityValue}
+        activity={activity}
+        type={type}
+        prop={prop}
+        propTitle={propTitle}
+        formatFn={formatFn}
+        mapping={mapping}
+      />]
+      : activityCols
   ), []);
 
   return (
-    <div className="base-activity-col--outer--wrapper">
+    <div className='base-activity-col--outer--wrapper'>
       {(activityValueCols.length
         ? activityValueCols
         : (activityValues && activityValues.length && <BaseActivityCol

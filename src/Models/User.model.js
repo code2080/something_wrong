@@ -13,7 +13,7 @@ export class User {
 
   _id;
 
-  constructor({
+  constructor ({
     firstName,
     lastName,
     email,

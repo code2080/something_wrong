@@ -26,11 +26,11 @@ const mapStateToProps = (state, { formId, formInstanceId, extraObject }) => {
     valueExtId,
     valueLabel: valueExtId && selectExtIdLabel(state)('objects', valueExtId, 'N/A')
   };
-}
+};
 
 const ExtraObjectValue = ({ typeExtId, typeLabel, valueLabel, valueExtId }) => {
   return (
-    <div className="extra-object--value">
+    <div className='extra-object--value'>
       <span>Type: <strong>{typeLabel }</strong></span>
       <span>Value: <strong>{valueLabel}</strong></span>
     </div>

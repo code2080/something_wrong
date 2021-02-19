@@ -82,15 +82,15 @@ const FreeTextFilter = ({
   ), [onClickCallback, supportedActions]);
 
   return (
-    <div className="element__filter--wrapper">
+    <div className='element__filter--wrapper'>
       <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}
       >
-        <div className="element__filter--inner">
-          <Icon type="filter" />
+        <div className='element__filter--inner'>
+          <Icon type='filter' />
           {`${typeLabel}/${fieldLabel}: ${searchValue}`}
-          <Icon type="down" />
+          <Icon type='down' />
         </div>
       </Dropdown>
     </div>

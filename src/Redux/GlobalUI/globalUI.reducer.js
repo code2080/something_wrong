@@ -28,8 +28,7 @@ const reducer = (state = initialState, action) => {
         !action.payload.table ||
         !action.payload.table.datasourceId ||
         !action.payload.table.columns
-      )
-        return state;
+      ) { return state; }
 
       const { table: { datasourceId, columns } } = action.payload;
       if (!datasourceId || !columns) return state;
@@ -64,36 +63,9 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case types.OPEN_MODAL: {
-      return {
-        ...state,
-        openedModal: {
-          ...state.openedModals,
-          [action.payload.modalKey]: true,
-        },
-      };
-    }
-
-    case types.CLOSE_MODAL: {
-      return {
-        ...state,
-        openedModal: {
-          ...state.openedModals,
-          [action.payload.modalKey]: false,
-        },
-      };
-    }
-
-    case types.CLOSE_ALL_MODALS: {
-      return {
-        ...state,
-        openedModal: {},
-      };
-    }
-
     default:
       return state;
   }
-}
+};
 
 export default reducer;

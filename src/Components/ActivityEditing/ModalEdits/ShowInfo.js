@@ -40,47 +40,47 @@ const ShowInfo = ({
     <React.Fragment>
       {schedulingPayload.status === activityValueStatuses.MISSING_DATA && (!mappingProps.settings || mappingProps.settings.mandatory) && (
         <Alert
-          type="error"
+          type='error'
           message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
           description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
         />
       )}
       {schedulingPayload.status === activityValueStatuses.MISSING_DATA && (mappingProps.settings && !mappingProps.settings.mandatory) && (
         <Alert
-          type="warning"
+          type='warning'
           message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
           description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
         />
       )}
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
-        <Form.Item label="Mapped to:">
-          <div className="ant-form-text">
-            <div className="base-activity-col__modal--icon">
+        <Form.Item label='Mapped to:'>
+          <div className='ant-form-text'>
+            <div className='base-activity-col__modal--icon'>
               <Icon type={mappingType.icon} />
             </div>
-            <span className="prop-name">{prop}</span>
-            {mappingProps.settings && mappingProps.settings.mandatory && (<span className="required-prop">&nbsp;(required)</span>)}
+            <span className='prop-name'>{prop}</span>
+            {mappingProps.settings && mappingProps.settings.mandatory && (<span className='required-prop'>&nbsp;(required)</span>)}
           </div>
         </Form.Item>
-        <Form.Item label="Value used in scheduling:">
-          <div className="ant-form-text">
-            <div className="base-activity-col__modal--icon">
+        <Form.Item label='Value used in scheduling:'>
+          <div className='ant-form-text'>
+            <div className='base-activity-col__modal--icon'>
               <Icon type={schedulingPayload.icon} />
             </div>
             {schedulingPayload.formattedValue}
           </div>
         </Form.Item>
-        <Form.Item label="Scheduling algorithm">
-          <div className="ant-form-text">
-            <div className="base-activity-col__modal--icon">
+        <Form.Item label='Scheduling algorithm'>
+          <div className='ant-form-text'>
+            <div className='base-activity-col__modal--icon'>
               <Icon type={schedulingAlgorithm.icon} />
             </div>
             {schedulingAlgorithm.label}
           </div>
         </Form.Item>
-        <Form.Item label="Value(s) in submission:">
-          <div className="ant-form-text">
-            <div key={`el-0`} className="base-activity-col__modal--submission-value">
+        <Form.Item label='Value(s) in submission:'>
+          <div className='ant-form-text'>
+            <div key={'el-0'} className='base-activity-col__modal--submission-value'>
               {formattedSubmissionValue}
             </div>
           </div>

@@ -1,5 +1,5 @@
 export const reservationTemplates = {
-  'scheduling': {
+  scheduling: {
     name: 'Scheduling',
     objects: [
       'room',
@@ -8,10 +8,10 @@ export const reservationTemplates = {
     ],
     fields: ['comment'],
     propSettings: {
-      'room': { mandatory: true },
-      'professor': { mandatory: true },
-      'course': { mandatory: true },
-      'comment': { mandatory: false },
+      room: { mandatory: true },
+      professor: { mandatory: true },
+      course: { mandatory: true },
+      comment: { mandatory: false },
     }
   },
   'room-block': {
@@ -19,8 +19,8 @@ export const reservationTemplates = {
     objects: ['room'],
     fields: ['comment'],
     propSettings: {
-      'room': { mandatory: true },
-      'comment': { mandatory: false },
+      room: { mandatory: true },
+      comment: { mandatory: false },
     }
   },
 };
