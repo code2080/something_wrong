@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -83,7 +83,6 @@
     "@types/node": "^14.14.27",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
-    "babel-loader": "^8.2.2",
     "babel-preset-react-app": "^10.0.0",
     "core-js": "^3.8.3",
     "cross-env": "^7.0.3",
