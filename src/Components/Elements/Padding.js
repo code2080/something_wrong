@@ -11,11 +11,13 @@ const PaddingDisplay = ({ value, settings }) => {
 
   return (
     <span>
-      {settings.allowDayPadding && Number(days) ? (
-        <Fragment>
-          {days}d,&nbsp;&nbsp;
-        </Fragment>
-      ) : null}
+      {settings.allowDayPadding && Number(days)
+        ? (
+          <Fragment>
+            {days}d,&nbsp;&nbsp;
+          </Fragment>
+        )
+        : null}
       {hours}h
       {settings.allowMinutePadding && (
         <Fragment>
@@ -40,7 +42,7 @@ const PaddingElement = ({ value, element }) => {
   const { settings } = element;
 
   return (
-    <div className="element--padding">
+    <div className='element--padding'>
       {settings && settings.allowPaddingBefore && (
         <div>
           <span>Padding before:</span>

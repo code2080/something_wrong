@@ -1,12 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
 import { useSelector } from 'react-redux';
-import _ from 'lodash';
-
-// ACTIONS
-import React from 'react';
-import { Button } from 'antd';
-import { useSelector } from 'react-redux';
 
 // SELECTORS
 import { selectJobFromForm } from '../../Redux/Jobs/jobs.selectors';
