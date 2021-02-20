@@ -80,14 +80,7 @@ const FormInstanceToolbar = ({
           )
           : 'N/A' }
       </div>
-<<<<<<< HEAD
       <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
-=======
-      <div className='toolbar--section-flex'>
-        <a onClick={() => onClickMore()}>Form info...</a>
-      </div>
-      <div className='toolbar--section-flex' style={{ marginLeft: 'auto' }}>
->>>>>>> development
         <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
 

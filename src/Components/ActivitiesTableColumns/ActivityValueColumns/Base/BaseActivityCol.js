@@ -123,7 +123,7 @@ const BaseActivityCol = ({
     notification.error({
       getContainer: () => document.getElementById('te-prefs-lib'),
       message: 'Operation failed',
-      description: `Something went wrong...`,
+      description: 'Something went wrong...',
     });
 
   // On callback from actions EDIT_OBJECT, SELECT_OBJECT_FROM_FILTER_OVERRIDE

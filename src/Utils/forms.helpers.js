@@ -147,7 +147,6 @@ export const getSelectionSettingsTECorePayload = (selectionSettings, form, formI
       { valueType: datasourceValueTypes.FIELD_VALUE, value: event[includedField.element] },
     ]);
   return [...extraObjectsPayload, ...includedFieldsPaylod];
-<<<<<<< HEAD
 }
 
 /**
@@ -211,6 +210,3 @@ export const traversedClassList = element => {
   } while (currentNode.parentNode);
   return classes;
 }
-=======
-};
->>>>>>> development

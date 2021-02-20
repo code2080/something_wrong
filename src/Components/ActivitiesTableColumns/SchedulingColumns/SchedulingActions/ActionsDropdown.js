@@ -234,17 +234,20 @@ const ActivityActionsDropdown = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      {buttonType === 'ellipsis' ? (
-        <Button type="link" icon="ellipsis" size="small" />
-      ) : (
-        <Button
-          type={buttonType}
-          size="small"
-          style={{ backgroundColor: '#ffffff' }}
-        >
-          Actions <Icon type="down" />
-        </Button>
-      )}
+      {buttonType === 'ellipsis'
+        ? (
+          <Button type="link" icon="ellipsis" size="small" />
+        )
+        : (
+          <Button
+            type={buttonType}
+            size="small"
+            style={{ backgroundColor: '#ffffff' }}
+          >
+            Actions <Icon type="down" />
+          </Button>
+        )
+      }
     </Dropdown>
   );
 };

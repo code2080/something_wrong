@@ -82,7 +82,7 @@ const reducer = (state = initialState, action) => {
         return {
           ...fIState,
           [formInstanceId]: as,
-        }
+        };
       }, {});
       return {
         ...state,

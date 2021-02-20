@@ -1,6 +1,6 @@
 export const weekdayEnums = {
-  MON: "Mon",
-  TUE: "Tue",
+  MON: 'Mon',
+  TUE: 'Tue',
   WED: 'Wed',
   THU: 'Thu',
   FRI: 'Fri',

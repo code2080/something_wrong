@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 // COMPONENtS
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
-import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane'
+import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane';
 
 // SELECTORS
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -43,7 +43,7 @@ const getActivityDataSource = (activities = {}) => {
     return [
       ...a,
       ...orderedFormInstanceActivities,
-    ]
+    ];
   }, []);
 };
 

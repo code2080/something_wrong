@@ -375,10 +375,5 @@ export const LabelRenderer = ({ type, extId }) => {
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
-<<<<<<< HEAD
   return label && (label.label || extId || 'N/A');
 }
-=======
-  return label?.label || extId || 'N/A';
-};
->>>>>>> development

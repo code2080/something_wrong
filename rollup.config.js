@@ -47,18 +47,20 @@ export default {
     url(),
     svgr(),
     json(),
+    typescript(),
     eslint({
-      throwOnError: true,
+      throwOnError: false,
       extensions: ['.js', '.jsx']
     }),
-    typescript(),
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
       plugins: ['@babel/external-helpers', '@babel/transform-runtime', '@babel/proposal-object-rest-spread', '@babel/transform-spread'],
       presets: [
-        '@babel/react'
+        '@babel/react',
+        '@babel/typescript'
       ],
+      extensions: ['.js', '.jsx', '.ts', '.tsx']
     }),
     commonjs({
       include: 'node_modules/**',

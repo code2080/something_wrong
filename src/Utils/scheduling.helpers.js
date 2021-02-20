@@ -72,12 +72,8 @@ export const determineSchedulingAlgorithmForActivityValue = (
    */
   if (activityValue.type === activityValueTypes.TIMING) {
     const timingMode = getTimingModeForActivity(activity);
-<<<<<<< HEAD
     if (timingMode === activityTimeModes.EXACT)
       return schedulingAlgorithms.EXACT;
-=======
-    if (timingMode === mappingTimingModes.EXACT) { return schedulingAlgorithms.EXACT; }
->>>>>>> development
     return schedulingAlgorithms.BEST_FIT_TIME;
   }
   /**

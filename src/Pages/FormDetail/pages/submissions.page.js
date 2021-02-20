@@ -9,7 +9,7 @@ const SubmissionsPage = () => {
 
   if (!selectedSubmissionId)
     return <SubmissionsOverviewPage onSelectSubmission={setSelectedSubmissionId} />;
-  return <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
+  return <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />;
 };
 
 export default SubmissionsPage;

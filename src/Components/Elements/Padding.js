@@ -11,11 +11,14 @@ const PaddingDisplay = ({ value, settings }) => {
 
   return (
     <span>
-      {settings.allowDayPadding && Number(days) ? (
-        <Fragment>
-          {days}d,&nbsp;&nbsp;
-        </Fragment>
-      ) : null}
+      {settings.allowDayPadding && Number(days)
+        ? (
+          <Fragment>
+            {days}d,&nbsp;&nbsp;
+          </Fragment>
+        )
+        : null
+      }
       {hours}h
       {settings.allowMinutePadding && (
         <Fragment>

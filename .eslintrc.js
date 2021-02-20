@@ -4,7 +4,7 @@ module.exports = {
     jest: true,
     es6: true,
   },
-  parser: '@babel/eslint-parser',
+  parser: "@typescript-eslint/parser",
   extends: [
     'plugin:react/recommended',
     'standard',
@@ -42,7 +42,9 @@ module.exports = {
     'comma-dangle': 0,
 
     // we want to force semicolons
-    semi: ['error', 'always'],
+    // but for later ... for now so many errors
+    semi: 0,
+    '@babel/semi': 0,
     // we use 2 spaces to indent our code
     indent: ['error', 2, { SwitchCase: 1 }],
     // we want to avoid useless spaces
@@ -50,12 +52,14 @@ module.exports = {
 
     'react/display-name': 0,
 
-    '@babel/semi': ['error'],
-
     'node/no-callback-literal': 0,
 
-    // // Allow free standing if clauses
-    // "curly": 0
+    "no-use-before-define": 0,
+
+    "jsx-quotes": 0,
+
+    // Allow free standing if clauses
+    "curly": 0
   }
 };
 

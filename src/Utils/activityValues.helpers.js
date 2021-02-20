@@ -1,15 +1,44 @@
+// HELPERS
+import { getSectionFromId, getElementFromSection, getSectionTypeFromId } from './sections.helpers';
+
+// MODELS
+import { ActivityValue } from '../Models/ActivityValue.model';
+
 // CONSTANTS
-<<<<<<< HEAD
-import { activityValueTypeProps, activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { activityValueTypes } from '../Constants/activityValueTypes.constants';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
-=======
-import { activityValueTypes } from '../Constants/activityValueTypes.constants';
->>>>>>> development
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
+import { activityValueModes } from '../Constants/activityValueModes.constants';
+import { elementTypeMapping } from '../Constants/elementTypes.constants';
+import { searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/searchCriteria.constants';
+
+/**
+ * @function ensureValueTypeFormat
+ * @description ensures a value is in the right format (object = array, field, timing = single)
+ * @param {Any} value the value to check
+ * @param {String} valueType the value type
+ * @returns {String || Object || Array } the formatted value
+ */
+const ensureValueTypeFormat = (value, valueType) => {
+  switch (valueType) {
+    case activityValueTypes.OBJECT: {
+      if (Array.isArray(value)) return value;
+      return [value];
+    }
+
+    case activityValueTypes.TIMING:
+    case activityValueTypes.FIELD: {
+      if (Array.isArray(value)) return value[0];
+      return value;
+    }
+    default:
+      return value;
+  }
+};
 
 /**
  * @function determineContentOfValue
@@ -21,8 +50,160 @@ export const determineContentOfValue = activityValue => {
   if (activityValue.type !== activityValueTypes.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
+}
+
+const transformFieldSearchToFilter = (datasource, rawValue) => {
+  return {
+    categories: [],
+    exactSearch: rawValue.matchWholeWord,
+    searchString: rawValue.value,
+    searchFields: [datasource[1]],
+  };
+}
+
+const transformNumberSearchToFilter = (datasource, rawValue) => {
+  return {
+    categories: [],
+    searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
+    searchFields: [datasource[1]],
+  };
+}
+
+const transformDatasourceToFilter = (datasource, rawValue) => {
+  return {
+    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []),
+    searchString: null,
+    searchFields: null,
+  };
+}
+
+const createActivityValueFilterPayload = (element, datasource, rawValue) => {
+  /**
+   * We need to create the filters differently depending on element type
+   */
+  let value;
+  switch (element.elementId) {
+    case elementTypeMapping.ELEMENT_TYPE_INPUT_DATASOURCE.elementId:
+      value = transformFieldSearchToFilter(datasource, rawValue);
+      break;
+    case elementTypeMapping.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE.elementId:
+      value = transformNumberSearchToFilter(datasource, rawValue);
+      break;
+    case elementTypeMapping.ELEMENT_TYPE_DATASOURCE.elementId:
+    default:
+      value = transformDatasourceToFilter(datasource, rawValue);
+      break;
+  }
+  return {
+    submissionValue: value,
+    submissionValueType: submissionValueTypes.FILTER,
+    valueMode: activityValueModes.FROM_SUBMISSION,
+    value,
+  };
+}
+
+/**
+ * @function formatActivityValuePayload
+ * @description general purpose function to format the result of an activity payload generator for one of the section types
+ * @param {Object} element the element the value was for
+ * @param {Any} rawValue the raw submission value
+ * @param {String} valueType the value type
+ * @returns {Object} activityValuePayload
+ */
+const formatActivityValuePayload = (element, rawValue, valueType) => {
+  /**
+   * Ensure type consistency
+   */
+  const _rawValue = ensureValueTypeFormat(rawValue, valueType);
+  /**
+   * Create a default payload - basically a free text base case
+   * if all other interpretations fail
+   */
+  const _defPayload = {
+    submissionValue: Array.isArray(_rawValue) ? _rawValue : [_rawValue],
+    submissionValueType: submissionValueTypes.FREE_TEXT,
+    valueMode: activityValueModes.FROM_SUBMISSION,
+    value: _rawValue,
+  };
+  /**
+   * If there's no datasource attached to the object, we can be sure it should be free text interpretation
+   */
+  if (!element.datasource)
+    return _defPayload
+  /**
+   *  Split the data source to get its components
+   */
+  const datasource = element.datasource.split(',');
+  /**
+   * If data source doesn't match format, return def value payload
+   */
+  if (!datasource.length || datasource.length < 2)
+    return _defPayload;
+  /**
+   * If the datasource contains an object
+   */
+  if (datasource[1] === 'object')
+    return { ..._defPayload, submissionValueType: submissionValueTypes.OBJECT };
+
+  /**
+   * Activity value will contain a filter - delegate to dedicated function
+   */
+  return createActivityValueFilterPayload(element, datasource, rawValue);
 };
-<<<<<<< HEAD
+
+/**
+ * @function getActivityValuePayloadFromConnectedSection
+ * @description extracts the base payload for an activity value for a connected section
+ * @param {Object} formInstance the form instance
+ * @param {String} sectionId the section id
+ * @param {String} eventId the event id
+ * @param {String} elementId the element id
+ * @param {Array} sections all sections in the form
+ * @param {String} valueType the activity value's type
+ */
+const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs = []) => {
+  if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
+  const section = getSectionFromId(sectionId, sections);
+  if (!section) return null;
+  const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
+    const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
+    if (objReq) {
+      return [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
+    }
+    return [...values, val]
+  }, []);
+  if (!eventValues) return null;
+  const elementIdx = eventValues.findIndex(el => el.elementId === elementId);
+  if (elementIdx === -1) return null;
+  const rawValue = eventValues[elementIdx].value;
+  const element = getElementFromSection(elementId, section);
+  if (!element) return null;
+  return formatActivityValuePayload(element, rawValue, valueType);
+};
+
+/**
+ * @function getActivityValuePayloadFromTableSection
+ * @description extracts the base payload for an activity value for a table section
+ * @param {Object} formInstance the form instance
+ * @param {String} sectionId the section id
+ * @param {String} rowIdx the table row
+ * @param {String} elementId the element id
+ * @param {Array} sections all sections in the form
+ * @param {String} valueType the activity value's type
+ */
+const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, sections, valueType) => {
+  if (!formInstance || !sectionId || !rowIdx || !elementId || !sections) return null;
+  const section = getSectionFromId(sectionId, sections);
+  if (!section) return null;
+  const rowValues = formInstance.values[sectionId][rowIdx];
+  if (!rowValues) return null;
+  const elementIdx = rowValues.findIndex(el => el.elementId === elementId);
+  if (elementIdx === -1) return null;
+  const rawValue = rowValues[elementIdx].value.toString();
+  const element = getElementFromSection(elementId, section);
+  if (!element) return null;
+  return formatActivityValuePayload(element, rawValue, valueType);
+};
 
 /**
  * @function getActivityValuePayloadFromRegularSection
@@ -138,14 +319,14 @@ const createActivityValueForConnectedSectionSpecialProp = (
   });
 };
 
-const extractActivityValue = (
+export const extractActivityValue = (
   elementValue,
   extId,
   valueType,
   formInstance,
   sections,
   eventId,
-  rowIdx, 
+  rowIdx,
   formInstanceObjReqs = []
 ) => {
   /**
@@ -207,15 +388,15 @@ const extractActivityValue = (
       break;
   }
 
-  return (props || valueType !== 'object') ? new ActivityValue({
-    type: valueType,
-    extId,
-    ...props,
-    sectionId: sectionId,
-    elementId: elementId,
-    eventId: eventId,
-    rowIdx: rowIdx,
-  }) : null;
-}
-=======
->>>>>>> development
+  return (props || valueType !== 'object')
+    ? new ActivityValue({
+      type: valueType,
+      extId,
+      ...props,
+      sectionId: sectionId,
+      elementId: elementId,
+      eventId: eventId,
+      rowIdx: rowIdx,
+    })
+    : null;
+};

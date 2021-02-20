@@ -163,21 +163,13 @@ export const teCoreActions = {
   },
   SET_FORM_TYPE: {
     callname: teCoreCallnames.SET_FORM_TYPE,
-<<<<<<< HEAD
-    mockFunction: (({formType}) => {
-=======
     mockFunction: ({ formType }) => {
->>>>>>> development
       // Setting correct function in core
     }
   },
   SET_RESERVATION_MODE: {
     callname: teCoreCallnames.SET_RESERVATION_MODE,
-<<<<<<< HEAD
-    mockFunction: (({mode, callback}) => {
-=======
     mockFunction: ({ mode, callback }) => {
->>>>>>> development
       console.log(`Setting reservation mode: ${mode}`);
       callback({ res: 'SUCCESS' });
     }

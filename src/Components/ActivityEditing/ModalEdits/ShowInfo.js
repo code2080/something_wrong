@@ -37,7 +37,6 @@ const ShowInfo = ({
         />
       )}
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
-<<<<<<< HEAD
         <Form.Item label="Mapped to:">
           <div className="ant-form-text">
             <span className="prop-name">{prop}</span>
@@ -51,39 +50,8 @@ const ShowInfo = ({
         </Form.Item>
         <Form.Item label="Value(s) in submission:">
           <div className="ant-form-text">
-            <div key={`el-0`} className="base-activity-col__modal--submission-value">
+            <div key="el-0" className="base-activity-col__modal--submission-value">
               {JSON.stringify(renderedSubmissionValue)}
-=======
-        <Form.Item label='Mapped to:'>
-          <div className='ant-form-text'>
-            <div className='base-activity-col__modal--icon'>
-              <Icon type={mappingType.icon} />
-            </div>
-            <span className='prop-name'>{prop}</span>
-            {mappingProps.settings && mappingProps.settings.mandatory && (<span className='required-prop'>&nbsp;(required)</span>)}
-          </div>
-        </Form.Item>
-        <Form.Item label='Value used in scheduling:'>
-          <div className='ant-form-text'>
-            <div className='base-activity-col__modal--icon'>
-              <Icon type={schedulingPayload.icon} />
-            </div>
-            {schedulingPayload.formattedValue}
-          </div>
-        </Form.Item>
-        <Form.Item label='Scheduling algorithm'>
-          <div className='ant-form-text'>
-            <div className='base-activity-col__modal--icon'>
-              <Icon type={schedulingAlgorithm.icon} />
-            </div>
-            {schedulingAlgorithm.label}
-          </div>
-        </Form.Item>
-        <Form.Item label='Value(s) in submission:'>
-          <div className='ant-form-text'>
-            <div key={'el-0'} className='base-activity-col__modal--submission-value'>
-              {formattedSubmissionValue}
->>>>>>> development
             </div>
           </div>
         </Form.Item>

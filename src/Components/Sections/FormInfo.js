@@ -1,10 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import PropTypes from 'prop-types';
-=======
-import { PropTypes } from 'prop-types';
-import _ from 'lodash';
->>>>>>> development
 import { useSelector } from 'react-redux';
 import { Table } from 'antd';
 import _ from 'lodash';
@@ -116,11 +111,7 @@ const FormInfo = ({ formId }) => {
 };
 
 FormInfo.propTypes = {
-<<<<<<< HEAD
   formId: PropTypes.string.isRequired,
-=======
-  formId: PropTypes.string,
->>>>>>> development
 };
 
 export default FormInfo;

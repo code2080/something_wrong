@@ -45,7 +45,7 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
   if (_.isEmpty(_columns)) return null;
   return (
     <div className="base-section--wrapper">
-      <div className={`base-section--name__wrapper`}>
+      <div className="base-section--name__wrapper">
         {section.name}
       </div>
       <BaseSectionTableView columns={_columns} dataSource={_data} sectionId={section._id} />

@@ -46,6 +46,9 @@ import {
   updateObjectPropOnActivityDesign,
 } from '../../../Utils/activityDesigner';
 
+// STYLES
+import './activityDesigner.page.scss';
+
 const ActivityDesignPage = () => {
   const { formId } = useParams();
   const teCoreAPI = useTECoreAPI();
@@ -78,11 +81,11 @@ const ActivityDesignPage = () => {
   }, []);
 
   useEffect(() => {
-    async function execTypes() {
+    async function execTypes () {
       const _availableTypes = await teCoreAPI.getReservationTypes();
       setAvailableTypes(extractReservationTypes(_availableTypes));
     }
-    async function execFields() {
+    async function execFields () {
       const _availableFields = await teCoreAPI.getReservationFields();
       setAvailableFields(extractReservationFields(_availableFields));
     }

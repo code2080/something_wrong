@@ -23,17 +23,10 @@ const timingCols = {
       <SortableTableCell className={`mode_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-<<<<<<< HEAD:src/Components/ActivitiesTableColumns/ActivityValueColumns/ValueTypes/TimingColumns.js
           type="TIMING"
           prop="mode"
           propTitle="Timing mode"
           formatFn={value => activityTimeModeProps[value].label}
-=======
-          type='TIMING'
-          prop='mode'
-          propTitle='Timing mode'
-          formatFn={value => mappingTimingModeProps[value].label}
->>>>>>> development:src/Components/ActivitiesTableColumns/TimingColumns/TimingColumns.js
           mapping={mapping}
         />
       </SortableTableCell>
