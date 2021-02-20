@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 // COMPONENtS
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
-import ExpandedPane from '../TableColumns/Components/ExpandedPane'
+import ExpandedPane from '../TableColumns/Components/ExpandedPane';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColumns/ActivitiesTableColumns';
@@ -46,9 +46,8 @@ const ActivitiesTable = ({
 }) => {
   const dispatch = useDispatch();
   const onMove = (sourceIdx, destinationIdx) => {
-    if (sourceIdx !== destinationIdx)
-      dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx));
-  }
+    if (sourceIdx !== destinationIdx) { dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx)); }
+  };
 
   const columns = design ? createActivitiesTableColumnsFromMapping(design) : [];
   const dataSource = getActivityDataSource(activities);
@@ -57,12 +56,12 @@ const ActivitiesTable = ({
     <DynamicTable
       columns={columns}
       dataSource={dataSource}
-      rowKey="_id"
+      rowKey='_id'
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
       expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
       resizable
       onSearch={filterFn}
-      draggable={true}
+      draggable
       onMove={onMove}
     />
   );

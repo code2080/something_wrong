@@ -27,7 +27,7 @@ const ActionsButton = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <Icon type="menu" />
+      <Icon type='menu' />
     </Dropdown>
   );
 };

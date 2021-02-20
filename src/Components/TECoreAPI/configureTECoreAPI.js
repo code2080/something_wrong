@@ -1,20 +1,12 @@
-// import React from 'react';
-import { notification } from 'antd';
 import { teCoreActions } from '../../Constants/teCoreActions.constants';
 
-const apiSupportsFunc = (api, callname) => api && api.hasOwnProperty(callname) && typeof api[callname] === 'function';
+const apiSupportsFunc = (api, callname) => api && Object.prototype.hasOwnProperty.call(api, callname) && typeof api[callname] === 'function';
 
 const callCanBeMocked = actionKey =>
   teCoreActions &&
   teCoreActions[actionKey] &&
   teCoreActions[actionKey].mockFunction &&
   typeof teCoreActions[actionKey].mockFunction === 'function';
-
-const unsupportedFuncCall = callname => notification.error({
-  getContainer: () => document.getElementById('te-prefs-lib'),
-  message: 'Unsupported call',
-  description: `${callname} is not implemented in the provided TE Core API`,
-});
 
 const executeAPICall = async (api, callname, args, actionKey) => {
   if (apiSupportsFunc(api, callname)) {
@@ -53,6 +45,6 @@ const configureTECoreAPI = teCoreAPI => {
     ...apiActions,
     ...utilityActions,
   };
-}
+};
 
 export default configureTECoreAPI;

@@ -13,10 +13,10 @@ import { tableViews } from '../../Constants/tableViews.constants';
 
 const BaseSectionTableView = ({ sectionId, columns, dataSource }) => (
   <DynamicTable
-    className="table table--values"
+    className='table table--values'
     columns={columns}
     dataSource={dataSource}
-    rowKey="rowKey"
+    rowKey='rowKey'
     pagination={false}
     expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
     datasourceId={`${tableViews.SECTION}-${sectionId}`}

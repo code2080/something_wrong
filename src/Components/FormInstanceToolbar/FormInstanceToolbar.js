@@ -33,50 +33,61 @@ const FormInstanceToolbar = ({
   const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] = useFormInstanceSchedulingProcessModal();
   const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] = useFormInstanceAcceptanceStatusModal();
   return (
-    <div className="toolbar--wrapper">
-      <div className="toolbar--section-flex">
-        <span className="label">By:</span>
-        <span className="value">{`${formInstance.firstName} ${formInstance.lastName}`}</span>
+    <div className='toolbar--wrapper'>
+      <div className='toolbar--section-flex'>
+        <span className='label'>By:</span>
+        <span className='value'>{`${formInstance.firstName} ${formInstance.lastName}`}</span>
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Primary object:</span>
+      <div className='toolbar--section-flex'>
+        <span className='label'>Primary object:</span>
         <ScopedObject objectExtId={formInstance.scopedObject} />
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Form type:</span>
-        <span className="value">{formType.toLowerCase()}</span>
+      <div className='toolbar--section-flex'>
+        <span className='label'>Form type:</span>
+        <span className='value'>{formType.toLowerCase()}</span>
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Acceptance status:</span>
-        {formInstance.teCoreProps && formInstance.teCoreProps.acceptanceStatus ? (
-          <StatusLabel
-            color={teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].color}
-            className="no-margin"
-            onClick={() => openAcceptanceStatusProcessModal({
-              formId: formInstance.formId,
-              formInstanceId: formInstance._id,
-            })}
-          >
-            {teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].label}
-          </StatusLabel>
-        ) : 'N/A' }
+      <div className='toolbar--section-flex'>
+        <span className='label'>Acceptance status:</span>
+        {formInstance.teCoreProps && formInstance.teCoreProps.acceptanceStatus
+          ? (
+            <StatusLabel
+              color={teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].color}
+              className='no-margin'
+              onClick={() => openAcceptanceStatusProcessModal({
+                formId: formInstance.formId,
+                formInstanceId: formInstance._id,
+              })}
+            >
+              {teCoreAcceptanceStatusProps[formInstance.teCoreProps.acceptanceStatus].label}
+            </StatusLabel>
+          )
+          : 'N/A' }
       </div>
-      <div className="toolbar--section-flex">
-        <span className="label">Scheduling progress:</span>
-        {formInstance.teCoreProps && formInstance.teCoreProps.schedulingProgress ? (
-          <StatusLabel
-            color={teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].color}
-            className="no-margin"
-            onClick={() => openSchedulingStatusProcessModal({
-              schedulingProgress: formInstance.teCoreProps.schedulingProgress,
-              formInstanceId: formInstance._id,
-            })}
-          >
-            {teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].label}
-          </StatusLabel>
-        ) : 'N/A' }
+      <div className='toolbar--section-flex'>
+        <span className='label'>Scheduling progress:</span>
+        {formInstance.teCoreProps && formInstance.teCoreProps.schedulingProgress
+          ? (
+            <StatusLabel
+              color={teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].color}
+              className='no-margin'
+              onClick={() => openSchedulingStatusProcessModal({
+                schedulingProgress: formInstance.teCoreProps.schedulingProgress,
+                formInstanceId: formInstance._id,
+              })}
+            >
+              {teCoreSchedulingProgressProps[formInstance.teCoreProps.schedulingProgress].label}
+            </StatusLabel>
+          )
+          : 'N/A' }
       </div>
+<<<<<<< HEAD
       <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
+=======
+      <div className='toolbar--section-flex'>
+        <a onClick={() => onClickMore()}>Form info...</a>
+      </div>
+      <div className='toolbar--section-flex' style={{ marginLeft: 'auto' }}>
+>>>>>>> development
         <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
 

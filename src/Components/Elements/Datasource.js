@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Menu } from 'antd';
-import _ from 'lodash';
 
 // COMPONENTS
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
@@ -31,8 +30,7 @@ const elTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  if (!ownProps.value && ownProps.value[0])
-    return { labels: null, payload: null };
+  if (!ownProps.value && ownProps.value[0]) { return { labels: null, payload: null }; }
   const { value, element } = ownProps;
   const payload = getTECoreAPIPayload(value, element.datasource);
   const labels = getLabelsForDatasource(payload, state);
@@ -79,7 +77,7 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
             (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
             ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
             (isObject && action === 'FILTER_OBJECTS')
-          ); 
+          );
         }),
     [teCoreAPI, element]
   );
@@ -99,15 +97,14 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
     [onClickCallback, supportedActions]
   );
 
-  return <div className="element__datasource--wrapper">
+  return <div className='element__datasource--wrapper'>
     <DatasourceInner elType={elType} labels={labels} menu={menu} payload={payload} />
-  </div>
-}
+  </div>;
+};
 
 Datasource.propTypes = {
   payload: PropTypes.array,
   labels: PropTypes.object,
-  value: PropTypes.array,
   element: PropTypes.object,
   teCoreAPI: PropTypes.object.isRequired
 };
@@ -115,7 +112,6 @@ Datasource.propTypes = {
 Datasource.defaultProps = {
   payload: null,
   label: {},
-  value: null,
   element: {}
 };
 

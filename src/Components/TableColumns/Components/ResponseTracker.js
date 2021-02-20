@@ -24,7 +24,7 @@ const ResponseTracker = ({ responses }) => {
           percent={(submissions / totalCount) * 100}
           size='small'
           strokeColor='red'
-          format={() =>`${submissions}/${declined}/${totalCount}`}
+          format={() => `${submissions}/${declined}/${totalCount}`}
         />
       </Tooltip>
     </div>

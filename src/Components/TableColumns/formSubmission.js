@@ -7,7 +7,6 @@ import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import DateTime from '../Common/DateTime';
-import { Icon } from 'antd';
 
 // SORTERS
 import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
@@ -53,14 +52,16 @@ export const formSubmission = {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
     dataIndex: 'teCoreProps.schedulingProgress',
-    render: val => val ? (
-      <StatusLabel
-        color={teCoreSchedulingProgressProps[val].color}
-        className="no-margin"
-      >
-        {teCoreSchedulingProgressProps[val].label}
-      </StatusLabel>
-    ) : 'N/A',
+    render: val => val
+      ? (
+        <StatusLabel
+          color={teCoreSchedulingProgressProps[val].color}
+          className='no-margin'
+        >
+          {teCoreSchedulingProgressProps[val].label}
+        </StatusLabel>
+      )
+      : 'N/A',
     sorter: (a, b) => sortAlpha(a.teCoreProps.schedulingProgress, b.teCoreProps.schedulingProgress),
   },
   ACCEPTANCE_STATUS: {
@@ -83,7 +84,7 @@ export const formSubmission = {
     key: 'scheduleLink',
     dataIndex: 'reviewLink',
     fixedWidth: 185,
-    render: reviewLink => reviewLink ? <a href={reviewLink} target="_blank">Link</a> : 'N/A',
+    render: reviewLink => reviewLink ? <a href={reviewLink} rel='noreferrer' target='_blank'>Link</a> : 'N/A',
   },
   IS_STARRED: (dispatch, disabled) => ({
     title: 'Is starred',

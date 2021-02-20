@@ -42,7 +42,7 @@ const mapStateToProps = (state, { activity }) => {
     mSStatus: selectManualSchedulingStatus(state)(activity.formInstanceId, activity.formId),
     formInstance: state.submissions[activity.formId][activity.formInstanceId],
   };
-}
+};
 
 const mapActionsToProps = {
   updateActivity,
@@ -135,11 +135,11 @@ const ActivityActionsDropdown = ({
         };
         updateActivity(updatedActivity);
       }
-    })
+    });
   };
 
   const updateSchedulingProgress = () => {
-    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED)
+    if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
@@ -147,7 +147,8 @@ const ActivityActionsDropdown = ({
         onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.IN_PROGRESS }),
         onCancel: () => { },
       });
-    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED)
+    }
+    if (mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY && formInstance.teCoreProps.schedulingProgress !== teCoreSchedulingProgress.SCHEDULING_FINISHED) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
@@ -155,6 +156,7 @@ const ActivityActionsDropdown = ({
         onOk: () => setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: teCoreSchedulingProgress.SCHEDULING_FINISHED }),
         onCancel: () => { },
       });
+    }
   };
 
   const handleMenuClick = useCallback(

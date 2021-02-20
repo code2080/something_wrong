@@ -20,9 +20,11 @@ export const setBreadcrumbs = fragments => ({
 
 export const setExternalAction = (spotlightRef) => {
   const el = spotlightRef && spotlightRef.current;
-  const spotlightPositionInfo = el ? {
-    boundingRect: spotlightRef.current.getBoundingClientRect(),
-  } : null;
+  const spotlightPositionInfo = el
+    ? {
+      boundingRect: spotlightRef.current.getBoundingClientRect(),
+    }
+    : null;
   return ({
     type: SET_EXTERNAL_ACTION,
     payload: { spotlightPositionInfo }

@@ -16,8 +16,7 @@ const mapStateToProps = (state, ownProps) => {
     !formInstanceId ||
     !state.submissions[formId] ||
     !state.submissions[formId][formInstanceId]
-  )
-    return {};
+  ) { return {}; }
   const {
     acceptanceComment: _acceptanceComment,
     acceptanceStatus: _acceptanceStatus
@@ -71,15 +70,15 @@ const FormInstanceAcceptanceStatus = ({
 
   return (
     <Modal
-      title="Set acceptance status"
+      title='Set acceptance status'
       visible={isVisible}
       onOk={onSubmitAcceptanceStatusCallback}
       onCancel={onClose}
       getContainer={() => document.getElementById('te-prefs-lib')}
-      id="acceptanceStatusModal"
+      id='acceptanceStatusModal'
       destroyOnClose
     >
-      <Form.Item label="Set acceptance status">
+      <Form.Item label='Set acceptance status'>
         <Select
           getPopupContainer={() =>
             document.querySelector('#te-prefs-lib .ant-modal-content')
@@ -95,9 +94,9 @@ const FormInstanceAcceptanceStatus = ({
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="(Optional) Comment">
+      <Form.Item label='(Optional) Comment'>
         <Input
-          placeholder="Comment"
+          placeholder='Comment'
           value={acceptanceComment}
           onChange={e => setAcceptanceComment(e.target.value)}
         />

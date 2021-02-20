@@ -19,7 +19,7 @@ const TEPrefsLibRouter = () => {
     <Router>
       <Toolbar />
       <Switch>
-        <Route exact path="/" component={LoginPage} />
+        <Route exact path='/' component={LoginPage} />
         <AuthenticatedRoutes>
           <Route exact path="/forms" component={FormOverviewPage} />
           <Route exact path="/forms/:formId" component={FormDetailPage} />

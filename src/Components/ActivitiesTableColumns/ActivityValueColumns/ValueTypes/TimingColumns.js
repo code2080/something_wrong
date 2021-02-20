@@ -23,10 +23,17 @@ const timingCols = {
       <SortableTableCell className={`mode_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
+<<<<<<< HEAD:src/Components/ActivitiesTableColumns/ActivityValueColumns/ValueTypes/TimingColumns.js
           type="TIMING"
           prop="mode"
           propTitle="Timing mode"
           formatFn={value => activityTimeModeProps[value].label}
+=======
+          type='TIMING'
+          prop='mode'
+          propTitle='Timing mode'
+          formatFn={value => mappingTimingModeProps[value].label}
+>>>>>>> development:src/Components/ActivitiesTableColumns/TimingColumns/TimingColumns.js
           mapping={mapping}
         />
       </SortableTableCell>
@@ -43,9 +50,9 @@ const timingCols = {
       <SortableTableCell className={`startTime_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="startTime"
-          propTitle="Start time"
+          type='TIMING'
+          prop='startTime'
+          propTitle='Start time'
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -63,9 +70,9 @@ const timingCols = {
       <SortableTableCell className={`endTime_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="endTime"
-          propTitle="End time"
+          type='TIMING'
+          prop='endTime'
+          propTitle='End time'
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -83,9 +90,9 @@ const timingCols = {
       <SortableTableCell className={`startTimeOrAt_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="startTime"
-          propTitle="Start after or at"
+          type='TIMING'
+          prop='startTime'
+          propTitle='Start after or at'
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -103,9 +110,9 @@ const timingCols = {
       <SortableTableCell className={`endTimeOrAt_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="endTime"
-          propTitle="End before or at"
+          type='TIMING'
+          prop='endTime'
+          propTitle='End before or at'
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -123,9 +130,9 @@ const timingCols = {
       <SortableTableCell className={`length_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="length"
-          propTitle="Length"
+          type='TIMING'
+          prop='length'
+          propTitle='Length'
           mapping={mapping}
         />
       </SortableTableCell>
@@ -140,9 +147,9 @@ const timingCols = {
       <SortableTableCell className={`padding_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="padding"
-          propTitle="Padding"
+          type='TIMING'
+          prop='padding'
+          propTitle='Padding'
           mapping={mapping}
         />
       </SortableTableCell>
@@ -157,9 +164,9 @@ const timingCols = {
       <SortableTableCell className={`weekday_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="weekday"
-          propTitle="Weekday"
+          type='TIMING'
+          prop='weekday'
+          propTitle='Weekday'
           mapping={mapping}
         />
       </SortableTableCell>
@@ -174,8 +181,8 @@ const timingCols = {
       <SortableTableCell className={`dateRanges_${activity._id}`}>
         <BaseActivityColOuter
           activity={activity}
-          type="TIMING"
-          prop="dateRanges"
+          type='TIMING'
+          prop='dateRanges'
           mapping={mapping}
         />
       </SortableTableCell>
@@ -190,9 +197,9 @@ const timingCols = {
       <SortableTableCell className={`time_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="time"
-          propTitle="Exact time"
+          type='TIMING'
+          prop='time'
+          propTitle='Exact time'
           mapping={mapping}
         />
       </SortableTableCell>

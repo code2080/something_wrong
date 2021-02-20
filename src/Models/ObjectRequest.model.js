@@ -5,7 +5,7 @@ export default class ObjectRequest {
   createdAt;
   updatedAt;
   isActive;
-  
+
   // Fields of the object
   objectRequest;
 
@@ -18,14 +18,13 @@ export default class ObjectRequest {
   // Extid of the object to be edited if type is EDIT_OBJECT
   objectExtId;
 
-  // State of the request. PENDING || ACCEPTED || DECLINED || REPLACED 
+  // State of the request. PENDING || ACCEPTED || DECLINED || REPLACED
   status;
 
   // Type of request   NEW_OBJECT || EDIT_OBJECT || MISSING_OBJECT
   type;
 
-
-  constructor({
+  constructor ({
     _id,
     objectRequest,
     datasource,

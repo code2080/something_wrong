@@ -36,35 +36,34 @@ const FormSubmissionFilterBar = ({
 
   const filterIconClass = useMemo(() => {
     if (isPropsFilterVisible) return 'active';
-    if ((Object.keys(filters.scopedObject) || []).some(key => filters.scopedObject[key] && filters.scopedObject[key].length > 0))
-      return 'has-filters';
+    if ((Object.keys(filters.scopedObject) || []).some(key => filters.scopedObject[key] && filters.scopedObject[key].length > 0)) { return 'has-filters'; }
   }, [filters, isPropsFilterVisible]);
 
   return (
-    <div className="form-submission-filter-bar--wrapper">
+    <div className='form-submission-filter-bar--wrapper'>
       <Input
-        placeholder="Filter..."
+        placeholder='Filter...'
         value={filters.freeTextFilter}
         onChange={e => onUpdateFilter('freeTextFilter', e.target.value)}
-        suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-        size="small"
+        suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+        size='small'
       />
-      <div className="form-submission-filter-bar--switch">
+      <div className='form-submission-filter-bar--switch'>
         <Switch
           checked={filters.onlyOwn}
           onChange={onlyOwn => onUpdateFilter('onlyOwn', onlyOwn)}
-          size="small"
+          size='small'
         />
         <span>Show only own</span>
       </div>
       <Button
         className={filterIconClass}
-        type="link"
-        size="small"
-        shape="circle"
+        type='link'
+        size='small'
+        shape='circle'
         onClick={togglePropsFilter}
       >
-        <Icon type="filter" theme="filled" />
+        <Icon type='filter' theme='filled' />
       </Button>
     </div>
   );

@@ -15,8 +15,7 @@ const reducer = (state = initialState, action) => {
         !action.payload ||
         !action.payload.submissions ||
         !action.payload.submissions.length
-      )
-        return state;
+      ) { return state; }
       const { submissions, form: { _id: formId } } = action.payload;
       return {
         ...state,
@@ -94,6 +93,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

@@ -9,10 +9,10 @@ export const RequestStatus = {
 };
 
 export const requestStatusToIcon = {
-  [RequestStatus.PENDING]: <Icon type="question" style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.ACCEPTED]: <Icon type="check" style={{ color: 'rgba(0,255,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.DECLINED]: <Icon type="close" style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.REPLACED]: <Icon type="swap" style={{ color: 'rgba(0,0,0, 0.8)', marginRight: '0.2rem' }} />,
+  [RequestStatus.PENDING]: <Icon type='question' style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
+  [RequestStatus.ACCEPTED]: <Icon type='check' style={{ color: 'rgba(0,255,0, 0.8)', marginRight: '0.2rem' }} />,
+  [RequestStatus.DECLINED]: <Icon type='close' style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
+  [RequestStatus.REPLACED]: <Icon type='swap' style={{ color: 'rgba(0,0,0, 0.8)', marginRight: '0.2rem' }} />,
 };
 
 export const RequestType = {

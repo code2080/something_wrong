@@ -15,7 +15,7 @@ const mergeActivityValuesForFields = fields => {
 
 const mergeActivityValuesForObjects = objects => {
   const mergedObjectMap = (objects || [])
-    .reduce((objs, obj) => ({ ...objs, [obj.extId]: [ ...(objs[obj.extId] || []), ...standardizeObjectValue(obj.value) ] }), {});
+    .reduce((objs, obj) => ({ ...objs, [obj.extId]: [...(objs[obj.extId] || []), ...standardizeObjectValue(obj.value)] }), {});
   return Object.keys(mergedObjectMap).map(key => new TECoreObjectModel({ extId: key, value: mergedObjectMap[key] }));
 };
 
@@ -27,7 +27,7 @@ const convertValuesToReservationProps = activity => {
     objects: mergeActivityValuesForObjects(objects),
     fields: mergeActivityValuesForFields(fields),
   };
-}
+};
 
 export const formatActivityForExactScheduling = activity => {
   /**

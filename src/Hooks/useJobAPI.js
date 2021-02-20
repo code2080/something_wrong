@@ -14,9 +14,8 @@ export const useJobWSAPI = () => {
   const { formId } = useParams();
 
   const stopJob = () => {
-    if (activeJobId && formId)
-      dispatch(abortJob({ jobId: activeJobId, formId }));
-  }
+    if (activeJobId && formId) { dispatch(abortJob({ jobId: activeJobId, formId })); }
+  };
 
   useEffect(() => {
     const url = `${getEnvParams().AM_BE_URL}`;

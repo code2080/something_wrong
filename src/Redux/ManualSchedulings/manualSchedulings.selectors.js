@@ -26,7 +26,7 @@ const calculateMSRows = (values, sections) =>
       const sectionType = determineSectionType(section);
       return sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE;
     })
-    .reduce((rows, sectionId) => rows + (Object.keys(values[sectionId]) || []).length, 0)
+    .reduce((rows, sectionId) => rows + (Object.keys(values[sectionId]) || []).length, 0);
 
 export const selectManualSchedulingStatus = createSelector(
   mSState,

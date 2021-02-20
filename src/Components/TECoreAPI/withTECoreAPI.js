@@ -9,6 +9,6 @@ const withTECoreAPI = WrappedComponent => props => {
       teCoreAPI={teCoreAPI.api}
     />
   );
-}
+};
 
 export default withTECoreAPI;

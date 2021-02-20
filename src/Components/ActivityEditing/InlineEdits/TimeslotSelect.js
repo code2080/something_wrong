@@ -44,7 +44,7 @@ const TimeslotSelect = ({ timeslots, activity, value, setValue, onFinish }) => {
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       defaultValue={timeslot ? timeslot._id : undefined}
       style={{ width: 120 }}
-      size="small"
+      size='small'
       onChange={onChangeCallback}
     >
       {(timeslots || []).map(el => <Select.Option key={el._id} value={el._id}>{el.label}</Select.Option>)}

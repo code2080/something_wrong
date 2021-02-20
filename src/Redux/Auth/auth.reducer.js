@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as types from './auth.actionTypes';
 import { setToken } from '../../Utils/tokenHelpers';
 import { authenticationStatuses } from '../../Constants/auth.constants';
@@ -24,21 +23,19 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         coreUserId: action.payload.userId,
-      }
+      };
     }
 
     case types.VALIDATE_LOGIN:
-      if (!action || !action.payload || !action.payload.token)
-        return initialState;
+      if (!action || !action.payload || !action.payload.token) { return initialState; }
       return {
         ...state,
         authenticationStatus: authenticationStatuses.AUTHENTICATED,
       };
 
     case types.LOGIN_SUCCESS: {
-      // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken)
-        return initialState;
+    // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken) { return initialState; }
 
       const { payload: { token: { accessToken } } } = action;
       setToken(accessToken);
@@ -72,21 +69,19 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.LOGIN_MULTIPLE_ORGS: {
-      // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken)
-        return initialState;
+    // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken) { return initialState; }
 
       const { payload: { token: { accessToken } } } = action;
       setToken(accessToken);
       return {
         ...state,
         authenticationStatus: authenticationStatuses.MULTIPLE_ORGS,
-      }
+      };
     }
 
     case types.FETCH_ORGS_FOR_USER_SUCCESS: {
-      if (!action || !action.payload || !action.payload.organizations || !action.payload.organizations.length)
-        return initialState;
+      if (!action || !action.payload || !action.payload.organizations || !action.payload.organizations.length) { return initialState; }
       return {
         ...state,
         availableOrgs: [...action.payload.organizations],
@@ -94,9 +89,8 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.SELECT_ORG_FOR_USER_SUCCESS: {
-      // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.accessToken)
-        return initialState;
+    // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.accessToken) { return initialState; }
 
       const { payload: { accessToken } } = action;
       setToken(accessToken);
@@ -122,6 +116,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

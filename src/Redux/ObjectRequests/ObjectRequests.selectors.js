@@ -26,8 +26,8 @@ export const selectFormInstanceObjectRequests = (formInstance) =>
   createSelector(selectObjectRequestsList(),
     requests =>
       requests.filter(req =>
-        req.formInstanceId === formInstance._id
-        && _.flatMap(getSubmissionValues(formInstance), sectionData => sectionData.sectionValues).includes(req._id)
+        req.formInstanceId === formInstance._id &&
+        _.flatMap(getSubmissionValues(formInstance), sectionData => sectionData.sectionValues).includes(req._id)
       )
   );
 
@@ -38,7 +38,7 @@ export const selectObjectRequestsByValues = values =>
 
 export const selectObjectRequestByValue = value =>
   createSelector(selectObjectRequestsState, objectRequests => {
-    getObjectRequestByValue(objectRequests.list, value)
+    getObjectRequestByValue(objectRequests.list, value);
   });
 
 export const getSectionsForObjectRequest = request => createSelector(
@@ -51,5 +51,5 @@ export const getSectionsForObjectRequest = request => createSelector(
           sectionData.sectionId
         ]
         : sectionIds
-      , [])
-)
+    , [])
+);

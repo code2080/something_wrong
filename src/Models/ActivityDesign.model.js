@@ -8,7 +8,7 @@ export class ActivityDesign {
   fields;
   propSettings;
 
-  constructor({
+  constructor ({
     name,
     formId,
     timing,

@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import './Avatar.scss';
 
 const RecipientAvatar = ({ firstName, lastName }) => (
-  <div className="avatar--wrapper">
-    <div className="avatar--circle recipient">
+  <div className='avatar--wrapper'>
+    <div className='avatar--circle recipient'>
       {`${firstName.charAt(0)}${lastName.charAt(0)}`}
     </div>
     {`${firstName} ${lastName}`}

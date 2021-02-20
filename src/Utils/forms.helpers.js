@@ -90,7 +90,7 @@ export const getExtraObjectElementsInForm = (formSections) => {
           .filter(el => el.datasource && el.datasource.split(',')[1] && el.datasource.split(',')[1] === 'object')
           .map(el => ({ value: el._id, label: el.label })),
       })),
-  ]
+  ];
 };
 
 /**
@@ -145,8 +145,9 @@ export const getSelectionSettingsTECorePayload = (selectionSettings, form, formI
     .map(includedField => [
       { valueType: datasourceValueTypes.FIELD_EXTID, extId: includedField.fieldExtId },
       { valueType: datasourceValueTypes.FIELD_VALUE, value: event[includedField.element] },
-    ])
+    ]);
   return [...extraObjectsPayload, ...includedFieldsPaylod];
+<<<<<<< HEAD
 }
 
 /**
@@ -210,3 +211,6 @@ export const traversedClassList = element => {
   } while (currentNode.parentNode);
   return classes;
 }
+=======
+};
+>>>>>>> development

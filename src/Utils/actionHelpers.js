@@ -4,6 +4,7 @@ import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
 import React from 'react';
 import { hasPermission } from '../Redux/Auth/auth.selectors';
+import _ from 'lodash';
 // import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status
@@ -18,7 +19,7 @@ const allApis = {};
  * @param {Obj} headers additional headers to be sent
  * @returns {String}
  */
-const prepareOption = async (method, params, requiresAuth, headers) => {
+const prepareOption = async (method, params, requiresAuth, headers, getState) => {
   const option = {
     method,
     headers: {
@@ -29,7 +30,7 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
   };
 
   if (requiresAuth) {
-    const token = await getToken();
+    const token = await getToken() || _.get(getState(), 'auth.accessToken');
     option.headers = {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
@@ -53,7 +54,7 @@ const prepareOption = async (method, params, requiresAuth, headers) => {
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-function doDispatch(flow, params, data, postAction) {
+function doDispatch (flow, params, data, postAction) {
   const { success, dispatch } = flow;
   const finalData = data.data || data;
   if (typeof success === 'function') {
@@ -87,7 +88,7 @@ const refreshToken = async () => {
   console.log('Token refreshing');
 };
 
-function createThunkAction({
+function createThunkAction ({
   method,
   flow,
   endpoint,
@@ -109,9 +110,9 @@ function createThunkAction({
     };
   }
 
-  return async function thunk(dispatch, getState) {
+  return async function thunk (dispatch, getState) {
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
-    const option = await prepareOption(method, params, requiresAuth, headers);
+    const option = await prepareOption(method, params, requiresAuth, headers, getState);
     const { request, failure } = flow;
 
     if (permission && !hasPermission(permission)(getState())) {
@@ -137,12 +138,13 @@ function createThunkAction({
       .then(response => {
         allApis[endpoint].inprogress = false;
         doDispatch({ ...flow, dispatch, getState }, params, response.data, postAction);
-        if (successNotification)
+        if (successNotification) {
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation completed',
             description: successNotification
           });
+        }
         if (callback) callback(response.data);
         return response.data;
       })
@@ -172,13 +174,14 @@ function createThunkAction({
         console.error(error.toString());
 
         // Display failure message
-        if (successNotification)
+        if (successNotification) {
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation failed',
             description: error.toString(),
             duration: 15
           });
+        }
 
         // If no response, return
         if (!response) return null;
@@ -186,6 +189,7 @@ function createThunkAction({
         // Process data
         const { data } = response;
         if (requiresAuth && data.code === 401) {
+          console.log({ url: fullUrl, message: data.message });
           Object.keys(allApis).forEach(key => {
             const item = allApis[key];
             if (typeof item.cancel === 'function' && item.inprogress) {
@@ -205,7 +209,7 @@ function createThunkAction({
               <p>
                 <b>{data.code}:</b> {data.message}
                 <br />
-                This is not your fault, it's either a bug or a temporary server
+                This is not your fault, it&apos;s either a bug or a temporary server
                 problem. Please contact TimeEdit if you keep getting this
                 message.
                 <br />

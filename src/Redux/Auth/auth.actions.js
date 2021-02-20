@@ -62,19 +62,16 @@ export const fetchIntegrationSettings = organizationId => asyncAction.GET({
 
 export const validateLogin = () => async dispatch => {
   const token = await window.localStorage.getItem(TOKEN_NAME);
-  if (token)
-    dispatch(({ type: VALIDATE_LOGIN, payload: { token } }));
+  if (token) { dispatch(({ type: VALIDATE_LOGIN, payload: { token } })); }
 };
 
 const loginFlow = {
   request: () => ({ type: LOGIN_REQUEST }),
   success: response => {
-    if (!response.user)
-      return ({ type: LOGIN_FAILURE, payload: { ...response } });
-    if (!response.user.organizationId)
-      return ({ type: LOGIN_MULTIPLE_ORGS, payload: { ...response } });
+    if (!response.user) { return ({ type: LOGIN_FAILURE, payload: { ...response } }); }
+    if (!response.user.organizationId) { return ({ type: LOGIN_MULTIPLE_ORGS, payload: { ...response } }); }
 
-    return { type: LOGIN_SUCCESS, payload: { ...response } }
+    return { type: LOGIN_SUCCESS, payload: { ...response } };
   },
   failure: err => ({ type: LOGIN_FAILURE, payload: { ...err } }),
 };

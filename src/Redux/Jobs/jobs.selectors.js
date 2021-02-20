@@ -24,8 +24,7 @@ export const selectJobForActivities = (formId, activityIds = []) => createSelect
   formJobs => {
     const jobIds = Object.keys(formJobs)
       .filter(jobId => {
-        if (!formJobs[jobId].activities || !formJobs[jobId].activities.length)
-          return false;
+        if (!formJobs[jobId].activities || !formJobs[jobId].activities.length) { return false; }
         const { activities } = formJobs[jobId];
         return activities.some(a => activityIds.includes(a._id));
       }

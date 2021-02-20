@@ -4,16 +4,16 @@ import { List, Icon, Avatar } from 'antd';
 import _ from 'lodash';
 
 // STYLES
-//import './FormInstanceAssignment.scss';
+// import './FormInstanceAssignment.scss';
 
 const User = ({ isSelf, user, onToggleUser, isAssigned }) => {
   return (
-    <List.Item className={`assignment__popover--item ${isAssigned ? `assigned-user` : `user`} ${isSelf ? 'is-self' : ''}`} onClick={isAssigned ? null : onToggleUser} >
-      <Avatar className="assignment__popover__item__avatar">{user.initials}</Avatar>
-      <div className="assignment__popover__item__name">{user.name}</div>
+    <List.Item className={`assignment__popover--item ${isAssigned ? 'assigned-user' : 'user'} ${isSelf ? 'is-self' : ''}`} onClick={isAssigned ? null : onToggleUser} >
+      <Avatar className='assignment__popover__item__avatar'>{user.initials}</Avatar>
+      <div className='assignment__popover__item__name'>{user.name}</div>
       {isAssigned && (
-        <div className="assignment__popover__item__remove" onClick={onToggleUser}>
-          <Icon type="close-circle" />
+        <div className='assignment__popover__item__remove' onClick={onToggleUser}>
+          <Icon type='close-circle' />
         </div>
       )}
     </List.Item>
@@ -30,7 +30,6 @@ User.propTypes = {
 User.defaultProps = {
   isAssigned: false,
   onToggleUser: _.noop(),
-  isAssigned: _.noop(),
   isSelf: false
 };
 
@@ -51,22 +50,22 @@ const ManageAssigneesList = ({
         emptyText: isAssigned ? 'No users assigned' : 'No users found',
       }}
       pagination={(users.length > 10 || !isAssigned) && {
-        size: "small",
+        size: 'small',
         defaultPageSize: 10,
         total: users.length,
       }}
       renderItem={user =>
         (
-            <User
-              isSelf={selfUID === user._id}
-              onToggleUser={() => onToggleUser(user._id)}
-              user={user}
-              isAssigned={isAssigned}
-            />
+          <User
+            isSelf={selfUID === user._id}
+            onToggleUser={() => onToggleUser(user._id)}
+            user={user}
+            isAssigned={isAssigned}
+          />
         )
       }
     />
-  )
+  );
 };
 
 ManageAssigneesList.propTypes = {

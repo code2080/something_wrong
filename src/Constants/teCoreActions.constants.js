@@ -140,14 +140,14 @@ export const teCoreActions = {
             failedObject: {
               extId: 'course_activity_examination',
               id: 4583,
-              type: {class: 'typename', description: 'Samlingsbegrepp för olika sorters aktiviteter', extid: 'activity', id: 8, name: 'Activity'},
+              type: { class: 'typename', description: 'Samlingsbegrepp för olika sorters aktiviteter', extid: 'activity', id: 8, name: 'Activity' },
               typeExtId: 'activity',
             }, // Will be present if an invalid object combination was created - this is the object which couldn´t be added
           })))
   },
   REQUEST_HANDLE_OBJECT_REQUEST: {
     callname: teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST,
-    mockFunction: (({
+    mockFunction: ({
       extId,
       fields,
       objectType,
@@ -156,29 +156,37 @@ export const teCoreActions = {
     }) => {
       console.log(`Asking core to handle request of type ${requestType}`);
       callback({ extId: 'fakeReplacementExtId', fields: [{ values: ['fakeLabel'] }] });
-    })
+    }
   },
   SET_TOOLBAR_CONTENT: {
     callname: teCoreCallnames.SET_TOOLBAR_CONTENT
   },
   SET_FORM_TYPE: {
     callname: teCoreCallnames.SET_FORM_TYPE,
+<<<<<<< HEAD
     mockFunction: (({formType}) => {
+=======
+    mockFunction: ({ formType }) => {
+>>>>>>> development
       // Setting correct function in core
-    })
+    }
   },
   SET_RESERVATION_MODE: {
     callname: teCoreCallnames.SET_RESERVATION_MODE,
+<<<<<<< HEAD
     mockFunction: (({mode, callback}) => {
+=======
+    mockFunction: ({ mode, callback }) => {
+>>>>>>> development
       console.log(`Setting reservation mode: ${mode}`);
-      callback({res: 'SUCCESS'});
-    })
+      callback({ res: 'SUCCESS' });
+    }
   },
   VALIDATE_RESERVATIONS: {
-    callname:teCoreCallnames.VALIDATE_RESERVATIONS,
-    mockFunction: (({reservationIds, callback}) => {
+    callname: teCoreCallnames.VALIDATE_RESERVATIONS,
+    mockFunction: ({ reservationIds, callback }) => {
       console.log('No validation on mock');
-      callback({res: {invalidReservations: []}});
-    })
+      callback({ res: { invalidReservations: [] } });
+    }
   },
 };

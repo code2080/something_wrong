@@ -27,11 +27,12 @@ export const createActivitiesTableColumnsFromMapping = (design, includeSubmissio
     {
       title: useSelector(state => selectExtIdLabel(state)(field, extId)),
       key: extId,
+      displayName: 'ActivityCol',
       render: activity => (
         <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
           <BaseActivityColOuter
             activity={activity}
-            type="VALUE"
+            type='VALUE'
             prop={extId}
             mapping={design}
           />

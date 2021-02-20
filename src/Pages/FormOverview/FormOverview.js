@@ -91,7 +91,7 @@ const FormList = ({
   }, []);
 
   return (
-    <div className="form-list--wrapper">
+    <div className='form-list--wrapper'>
       <DynamicTable
         columns={[
           tableColumns.form.CREATEDAT,
@@ -105,7 +105,7 @@ const FormList = ({
           tableColumns.form.RESPONSE_TRACKER,
         ]}
         dataSource={forms}
-        rowKey="_id"
+        rowKey='_id'
         isLoading={isLoading}
         onRow={form => ({
           onClick: () => history.push(`/forms/${form._id}`)

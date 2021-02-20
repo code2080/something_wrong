@@ -5,7 +5,7 @@ import { Icon, Popover, Input, Button } from 'antd';
 import _ from 'lodash';
 
 // CONSTANTS
-import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants'
+import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants';
 
 // ACTIONS
 import { toggleUserForFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.actions';
@@ -22,10 +22,10 @@ import './FormInstanceAssignment.scss';
 const AssignedUser = ({ isSelf, assignedUser, onRemoveUser }) => {
   return (
     <div className={`assignment__popover--item assigned-user ${isSelf ? 'is-self' : ''}`}>
-      <div className="assignment__popover__item__avatar">{assignedUser.initials}</div>
-      <div className="assignment__popover__item__name">{assignedUser.name}</div>
-      <div className="assignment__popover__item__remove" onClick={onRemoveUser}>
-        <Icon type="close-circle" />
+      <div className='assignment__popover__item__avatar'>{assignedUser.initials}</div>
+      <div className='assignment__popover__item__name'>{assignedUser.name}</div>
+      <div className='assignment__popover__item__remove' onClick={onRemoveUser}>
+        <Icon type='close-circle' />
       </div>
     </div>
   );
@@ -38,13 +38,13 @@ AssignedUser.propTypes = {
 };
 
 const EmptyAssignment = () => (
-  <div className="assignment--avatar empty">
-    <Icon type="user-add" />
+  <div className='assignment--avatar empty'>
+    <Icon type='user-add' />
   </div>
 );
 
 const AddlUsers = ({ n }) => (
-  <div className="assignment--avatar addl">
+  <div className='assignment--avatar addl'>
     {`+${n}`}
   </div>
 );
@@ -88,11 +88,11 @@ AssignedAvatars.defaultProps = {
 };
 
 const AssignmentPopoverTitle = ({ onAssignSelf, isSelf }) => (
-  <div className="assignment__popover--header">
-    <span className="assignment__popover__header--title">Assign submission</span>
+  <div className='assignment__popover--header'>
+    <span className='assignment__popover__header--title'>Assign submission</span>
     {!isSelf && <Button
       type='link'
-      size="small"
+      size='small'
       onClick={() => onAssignSelf()}
     >
       To me
@@ -133,7 +133,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
 
     return withKeyMovedToHead(
       sortedAssignees,
-      selfUID, user => user._id)
+      selfUID, user => user._id);
   },
   [_users, assignedTo]
   );
@@ -142,7 +142,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
     const normalizedQuery = filterQuery.toLowerCase();
     return _users
       .filter(u => !assignedTo.includes(u._id))
-      .filter(u => !normalizedQuery || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.includes(normalizedQuery))
+      .filter(u => !normalizedQuery || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.includes(normalizedQuery));
   },
   [_users, assignedTo, filterQuery]
   );
@@ -150,7 +150,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
   const userLists = [{ users: assignees, isAssigned: true }, { users: filteredUsers, isAssigned: false }];
   return (
     <Popover
-      overlayClassName="assignment__popover--wrapper"
+      overlayClassName='assignment__popover--wrapper'
       title={(
         <AssignmentPopoverTitle
           onAssignSelf={() => toggleUserForFormInstance({ formInstanceId, userId: selfUID })}
@@ -158,10 +158,10 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
         />
       )}
       content={(
-        <div className="assignment--popover">
+        <div className='assignment--popover'>
           <Input
-            placeholder="Find users"
-            suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.45)' }} />}
+            placeholder='Find users'
+            suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.45)' }} />}
             onChange={e => setFilterQuery(e.target.value)}
             size='small'
             value={filterQuery}
@@ -178,10 +178,10 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
         </div>
       )}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      trigger="click"
-      placement="rightTop"
+      trigger='click'
+      placement='rightTop'
     >
-      <div className="assignment--wrapper">
+      <div className='assignment--wrapper'>
         <AssignedAvatars assignees={assignees} selfUID={selfUID} />
       </div>
     </Popover>

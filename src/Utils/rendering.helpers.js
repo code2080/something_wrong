@@ -135,22 +135,22 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_DROPDOWN:
       return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_CHECKBOX:
-      return <Checkbox value={value} />
+      return <Checkbox value={value} />;
     case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
       return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_PLAINTEXT:
-      /**
-       * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
-       */
+    /**
+         * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
+         */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_CALENDAR:
-      /**
-       * @todo break into separate component
-       */
+    /**
+         * @todo break into separate component
+         */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
       return (
-        <div className="preline">
+        <div className='preline'>
           <Datasource value={value} element={element} />
         </div>
       );
@@ -158,13 +158,13 @@ export const renderElementValue = (value, element) => {
       return <FreeTextFilter value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_INPUT_NUMBER_DATASOURCE:
       return <NumberFilter value={value} element={element} />;
-    case elementTypes.ELEMENT_TYPE_DURATION:
+    case elementTypes.ELEMENT_TYPE_DURATION: {
       const duration = moment.duration(value, 'minutes');
       return unformattedValue(`${duration.hours()}h ${duration.minutes()}m`);
-
+    }
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
       return (
-        <div className="preline">
+        <div className='preline'>
           {unformattedValue(value.toString())}
         </div>
       );
@@ -176,7 +176,7 @@ export const renderElementValue = (value, element) => {
       return getLocalDate(value).format('[Week] w / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
-      return <Padding value={value} />
+      return (<Padding value={value} element={element} />);
 
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
@@ -262,7 +262,7 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
       return [
         ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
         ...availabilityCalendarColumns,
-      ]
+      ];
     default:
       return [..._elementColumns];
   };
@@ -375,5 +375,10 @@ export const LabelRenderer = ({ type, extId }) => {
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
+<<<<<<< HEAD
   return label && (label.label || extId || 'N/A');
 }
+=======
+  return label?.label || extId || 'N/A';
+};
+>>>>>>> development

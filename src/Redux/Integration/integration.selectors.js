@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { selectExtIdLabel } from '../TE/te.selectors'
+import { selectExtIdLabel } from '../TE/te.selectors';
 import { datasourceValueTypes, mapValueTypeToFieldName } from '../../Constants/datasource.constants';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
@@ -52,13 +52,12 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
   /**
    * Ensure the split array contains at least 2 elements
    */
-  if (!_datasource.length || _datasource.length < 2)
-    return [{ valueType: undefined, extId: undefined }];
+  if (!_datasource.length || _datasource.length < 2) { return [{ valueType: undefined, extId: undefined }]; }
 
   /**
    * Default return value
    */
-  let _retVal = [
+  const _retVal = [
     {
       valueType: datasourceValueTypes.TYPE_EXTID,
       extId: _datasource[0]
@@ -77,7 +76,7 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
         return {
           valueType: datasourceValueTypes.OBJECT_EXTID,
           extId: objReq ? objReq.replacementObjectExtId : v
-        }
+        };
       }),
     ];
   }
@@ -108,7 +107,8 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
 
 const getElementsFromSection = (section, values) => section.elements.reduce((elements, element) => {
   // We only care about the values if it is a datasource element
-  return element.datasource ? [...elements, ...getPayloadForSection(element, section, values)]
+  return element.datasource
+    ? [...elements, ...getPayloadForSection(element, section, values)]
     : elements;
 }, []).flat();
 
@@ -139,14 +139,16 @@ const extractPayloadFromElements = (elements) => elements.reduce((elementsPayloa
 const getExtIdPairsForActivity = values => {
   // Each value contains the type of the values within, and the values (extIds) themselves
   const typeExtidPairs = values.reduce((typeExtidPairs, value) =>
-    !_.isEmpty(value.value) ? [
-      ...typeExtidPairs,
-      [
-        value.type === 'object' ? 'types' : `${value.type}s`,
-        value.value,
-        value.extId
+    !_.isEmpty(value.value)
+      ? [
+        ...typeExtidPairs,
+        [
+          value.type === 'object' ? 'types' : `${value.type}s`,
+          value.value,
+          value.extId
+        ]
       ]
-    ] : typeExtidPairs
+      : typeExtidPairs
   , []);
   return typeExtidPairs;
 };
@@ -161,13 +163,13 @@ const extractPayloadFromActivities = activities => {
         ...payload[type],
         extId
       ]
-    }
-    return type === 'types'
+    };
+    return type === 'objects'
       ? {
         ...newPayloadWithExtId,
         objects: [
           ...newPayloadWithExtId.objects,
-          ...values
+          // ...values
         ]
       }
       : newPayloadWithExtId;
@@ -184,7 +186,7 @@ const extractPayloadFromObjectRequests = requests => requests.reduce((payload, r
 }), { objects: [] });
 
 const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => {
-  const payloadWithCorrectFields = { ...initialState, ...payload }
+  const payloadWithCorrectFields = { ...initialState, ...payload };
   return {
     ...combinedPayload,
     fields: _.uniq([
@@ -199,8 +201,8 @@ const mergePayloads = payloads => payloads.reduce((combinedPayload, payload) => 
       ...combinedPayload.types,
       ...payloadWithCorrectFields.types
     ]),
-  }
-}, initialState)
+  };
+}, initialState);
 
 export const getExtIdPropsPayload = ({ sections, submissionValues, activities = [], objectRequests = [], objectScope = null }) => {
   const elements = getAllElementsFromSections(sections, submissionValues);
