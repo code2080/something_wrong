@@ -44,11 +44,13 @@ const extractValuesFromSectionData = sectionData => {
     case sectionType.CONNECTED:
       return Object.values(sectionData).reduce((values, event) => [
         ...values,
-        ...event.values.reduce((elVals, element) =>
-          [
-            ...elVals,
-            ...element.value
-          ], [])
+        ...event.values
+          .filter((element) => element.value)
+          .reduce((elVals, element) =>
+            [
+              ...elVals,
+              ...element.value
+            ], [])
       ], []);
     default:
       return [];
