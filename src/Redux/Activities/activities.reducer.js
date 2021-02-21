@@ -1,4 +1,4 @@
-import { Activity } from '../../shared/src/models';
+import { Activity } from '../../Models/Activity.model';
 import * as types from './activities.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 

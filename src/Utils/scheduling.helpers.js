@@ -8,7 +8,7 @@ import { getTimingModeForActivity } from './activities.helpers';
 
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-import { SchedulingError } from '../shared/src/models';
+import { SchedulingError } from '../Models/SchedulingError.model';
 
 // CONSTANTS
 import { activityValueTypes } from '../Constants/activityValueTypes.constants';
