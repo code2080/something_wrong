@@ -4,6 +4,7 @@ export type TActivity = {
   _id: string;
   formId: string;
   formInstanceId: string;
+  groupId: string | null;
   sectionId: string;
   eventId: string;
   rowIdx: string;

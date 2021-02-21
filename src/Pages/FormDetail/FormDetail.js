@@ -15,6 +15,7 @@ import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmission
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
+import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
 
 // SELECTORS
@@ -44,6 +45,7 @@ const FormPage = () => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(formId));
     dispatch(fetchActivitiesForForm(formId));
+    dispatch(fetchActivityGroupsForForm(formId));
     dispatch(setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }

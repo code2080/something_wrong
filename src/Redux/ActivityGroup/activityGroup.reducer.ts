@@ -4,23 +4,64 @@ import { TActivityGroup, TActivityGroupMap, ActivityGroup } from '../../Types/Ac
 // INITIAL STATE
 import initialState from './activityGroup.initialState';
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.FETCH_ACTIVITY_GROUPS_SUCCESS: {
-      const { activityGroups: activityGroupObjs, actionMeta: { formId } } = action.payload;
-      const activityGroups: TActivityGroupMap = activityGroupObjs.reduce((tot, acc) => {
+      const { results: activityGroupObjs, actionMeta: { formId } } = action.payload;
+      
+      const activityGroups: TActivityGroupMap = activityGroupObjs.reduce((tot: any, acc: any) => {
         const activityGroup: TActivityGroup = ActivityGroup.create(acc);
-        return {
+        return [
           ...tot,
-          [activityGroup._id]: activityGroup,
-        };
-      }, {});
+          activityGroup,
+        ];
+      }, []);
+      
+      return {
+        ...state,
+        [formId]: activityGroups || [],
+      };
+    }
+
+    case types.CREATE_ACTIVITY_GROUP_SUCCESS: {
+      const { activityGroup: activityGroupObj } = action.payload;
+      const activityGroup: TActivityGroup = ActivityGroup.create(activityGroupObj);
+      return {
+        ...state,
+        [activityGroup.formId]: [
+          ...state[activityGroup.formId],
+          activityGroup,
+        ],
+      };
+    };
+
+    case types.UPDATE_ACTIVITY_GROUP_SUCCESS: {
+      const { activityGroup: activityGroupObj } = action.payload;
+      const activityGroup: TActivityGroup = ActivityGroup.create(activityGroupObj);
+      const aGIdx = state[activityGroup.formId].findIndex((aG: TActivityGroup) => aG._id === activityGroup._id);
 
       return {
         ...state,
-        [formId]: activityGroups,
+        [activityGroup.formId]: [
+          ...state[activityGroup.formId].slice(0, aGIdx),
+          activityGroup,
+          ...state[activityGroup.formId].slice(aGIdx + 1),
+        ],
       };
-    }
+    };
+
+    case types.DELETE_ACTIVITY_GROUP_SUCCESS: {
+      const { actionMeta: { activityGroupId, formId } } = action.payload;
+      const aGIdx = state[formId].findIndex((aG: TActivityGroup) => aG._id === activityGroupId);
+  
+      return {
+        ...state,
+        [formId]: [
+          ...state[formId].slice(0, aGIdx),
+          ...state[formId].slice(aGIdx + 1),
+        ],
+      };
+    };
 
     default:
       return state;

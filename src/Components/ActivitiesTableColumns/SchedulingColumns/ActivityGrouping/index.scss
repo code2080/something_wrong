@@ -1,0 +1,70 @@
+@import '../../../../Styles/globals.scss';
+
+.activity-group-popover--wrapper {
+  .ant-popover-title {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+  .ant-popover-inner-content {
+    padding: 4px 6px !important;
+  }
+}
+
+.activity-group--button {
+
+  .ant-btn {
+    font-size: 0.7rem;
+    border: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+
+    &:hover {
+      background: transparent !important;
+    }
+  }
+}
+
+.activity-group--popover {
+
+  .activity-group--row {
+    margin-bottom: 0.3rem;
+
+    .header {
+      font-size: 0.75rem;
+      color: $secondary;
+      margin-bottom: -0.15rem;
+    }
+  }
+
+}
+
+.activity-group--list {
+  margin-top: 0.3rem;
+}
+
+.acitivity-group--list-item {
+  display: flex;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba($jungleGreen, 0.1);
+  }
+
+  .activity-group--btns {
+    margin-left: auto;
+    .ant-btn {
+      border: none !important;
+      background: transparent !important;
+
+      &.danger {
+        color: $bittersweet;
+      }
+
+      &.success {
+        color: $jungleGreen;
+      }
+    }
+  }
+}

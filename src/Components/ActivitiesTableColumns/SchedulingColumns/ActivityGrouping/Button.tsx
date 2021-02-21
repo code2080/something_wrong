@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { Button } from 'antd';
 
 // TYPES
 import { TActivity } from '../../../../Types/Activity.type';
@@ -9,9 +9,9 @@ type Props = {
 
 const GroupingButton = ({ activity }: Props) => {
   return (
-    <div className="scheduling-actions--status">
-      <Icon type="appstore" />
-    </div>
+    <Button size="small" icon="appstore">
+      N/A
+    </Button>
   );
 };
 

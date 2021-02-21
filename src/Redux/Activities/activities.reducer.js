@@ -1,4 +1,5 @@
 import * as types from './activities.actionTypes';
+import { ASSIGN_ACTIVITY_TO_GROUP_SUCCESS } from '../ActivityGroup/activityGroup.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 import { Activity } from '../../Models/Activity.model';
@@ -9,6 +10,22 @@ import { updateActivitiesForForm } from './activities.helpers';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case ASSIGN_ACTIVITY_TO_GROUP_SUCCESS: {
+      const { activity: activityObj } = action.payload;
+      const activity = new Activity(activityObj);
+      const activityIdx = state[activity.formId][activity.formInstanceId].findIndex(el => el._id === activity._id);
+      return {
+        ...state,
+        [activity.formId]: {
+          ...state[activity.formId],
+          [activity.formInstanceId]: [
+            ...state[activity.formId][activity.formInstanceId].slice(0, activityIdx),
+            activity,
+            ...state[activity.formId][activity.formInstanceId].slice(activityIdx + 1),
+          ],
+        },
+      };
+    }
     case types.REORDER_ACTIVITIES_REQUEST: {
       // Optimistic reordering before BE returns
       const {

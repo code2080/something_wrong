@@ -15,6 +15,8 @@ export class Activity {
 
   formId; // The form id the activity was derived from
 
+  groupId; // The group the activity belongs to
+
   formInstanceId; // The form instance id the activity was derived from
 
   sectionId; // The section id the activity was derived from
@@ -47,6 +49,7 @@ export class Activity {
   constructor ({
     _id,
     formId,
+    groupId,
     formInstanceId,
     sectionId,
     eventId,
@@ -62,6 +65,7 @@ export class Activity {
   }) {
     this._id = _id;
     this.formId = formId;
+    this.groupId = groupId;
     this.formInstanceId = formInstanceId;
     this.sectionId = sectionId;
     this.eventId = eventId;

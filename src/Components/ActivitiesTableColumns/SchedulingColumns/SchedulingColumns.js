@@ -3,6 +3,7 @@ import { sortByElementHtml } from '../../../Utils/sorting.helpers';
 import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
+import ActivityGroup from './ActivityGrouping';
 
 export const SchedulingColumns = [
   {
@@ -15,6 +16,17 @@ export const SchedulingColumns = [
         <SchedulingActions activity={activity} />
       </SortableTableCell>
     ),
+  },
+  {
+    title: 'Group',
+    key: 'activityGroup',
+    dataIndex: undefined,
+    fixedWidth: 150,
+    render: activity => (
+      <SortableTableCell className={`activityGrouping${activity._id}`}>
+        <ActivityGroup activity={activity} />
+      </SortableTableCell>
+    )
   },
   {
     title: 'Status',

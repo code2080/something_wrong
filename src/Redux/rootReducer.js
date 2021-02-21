@@ -9,13 +9,14 @@ import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
+import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
+import activityGroups from './ActivityGroup/activityGroup.reducer';
+import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import jobs from './Jobs/jobs.reducer';
 import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
-import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
-import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import elements from './Elements/elements.reducer';
 
 import { LOGOUT } from './Auth/auth.actionTypes';
@@ -28,9 +29,10 @@ const appReducer = combineReducers({
   filters,
   submissions,
   activities,
+  activityDesigner,
+  activityGroups,
   jobs,
   manualSchedulings,
-  activityDesigner,
   users,
   te,
   integration,
