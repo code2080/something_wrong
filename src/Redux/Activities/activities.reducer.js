@@ -1,6 +1,6 @@
+import { Activity } from '../../Models/Activity.model';
 import * as types from './activities.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
-import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
