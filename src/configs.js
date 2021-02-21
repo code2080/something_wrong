@@ -49,7 +49,7 @@ const envVarMap = {
   },
 };
 
-const availableEnvs = [
+export const availableEnvs = [
   'production',
   'staging',
   'beta',
