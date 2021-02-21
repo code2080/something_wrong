@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FieldMapping from './FieldMapping';
 
 export default {
-  title: 'Activity Manager Frontend/Components/ActivityDesigner/Field/Mapping',
+  title: 'Activity Manager/Components/ActivityDesigner/Field/Mapping',
   component: FieldMapping,
   argTypes: {
     mapping: {
@@ -40,7 +40,6 @@ const mappingOptions = (disabled) => [
 ];
 export const Mapping = (args) => {
   const [mapping, setMapping] = useState({});
-
   return <FieldMapping
     onChange={setMapping} mapping={mapping} {...args} />;
 };

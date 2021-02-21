@@ -2,7 +2,7 @@ import React from 'react';
 import IconFormType from './IconFormType';
 
 export default {
-  title: 'Activity Manager Frontend/Components/FormType/Icon',
+  title: 'Activity Manager/Components/FormType/Icon',
   component: IconFormType,
   argTypes: {
     type: {

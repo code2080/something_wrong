@@ -3,7 +3,7 @@ import TEPrefsLib from './TEPrefsLib';
 import { availableEnvs } from '../configs';
 
 export default {
-  title: 'Activity Manager Frontend/Components/Primary',
+  title: 'Activity Manager/Components/Main',
   component: TEPrefsLib,
   argTypes: {
     coreAPI: {
@@ -22,7 +22,7 @@ export default {
 };
 
 // eslint-disable-next-line react/prop-types
-export const Primary = ({ env }) => {
+export const Main = ({ env }) => {
   const [toolbarContent, setToolbarContent] = useState(null);
   return (
     <React.Fragment>
