@@ -13,15 +13,16 @@ import { useFetchLabelsFromExtIds, useTECoreAPI } from '../../Hooks/TECoreApiHoo
 // ACTIONS
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
+import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
 
 // SELECTORS
-import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectForm } from '../../Redux/Forms/forms.selectors';
+import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
 
 // PAGES
 import SubmissionsPage from './pages/submissions.page';
@@ -40,6 +41,7 @@ const FormPage = () => {
   const { formId } = useParams();
   const form = useSelector(selectForm)(formId);
   const submissions = useSelector(selectSubmissions)(formId);
+  const selectedFormDetailTab = useSelector(selectFormDetailTab);
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -78,9 +80,16 @@ const FormPage = () => {
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(payload);
 
+  /**
+   * EVENT HANDLERS
+   */
+  const onChangeTabKey = key => {
+    dispatch(setFormDetailTab(key));
+  };
+
   return (
     <div className="form--wrapper">
-      <TEAntdTabBar defaultActiveKey="SUBMISSIONS">
+      <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
         <Tabs.TabPane tab="FORM INFO" key="FORM_INFO">
           <FormInfoPage />
         </Tabs.TabPane>

@@ -1,0 +1,21 @@
+@import '../../../Styles/globals.scss';
+
+.submission-column--wrapper {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: $jungleGreen;
+  }
+
+  .primary-object--row {
+    font-size: 0.55rem;
+    margin-top: -0.2rem;
+
+    span {
+      color: $secondary;
+    }
+  }
+}

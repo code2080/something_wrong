@@ -1,10 +1,19 @@
 import * as types from './globalUI.actionTypes';
 
 // INITIAL STATE
-import initialState from './globalUI.initialState';
+import initialState from './globalUI.initialState.ts';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.SET_FORM_DETAIL_TAB: {
+      const { tab, submission = null } = action.payload;
+      return {
+        ...state,
+        selectedFormDetailTab: tab,
+        selectedFormDetailSubmission: submission,
+      };
+    };
+
     case types.SET_BREADCRUMBS: {
       if (!action || !action.payload || !action.payload.fragments) return state;
       const { fragments } = action.payload;

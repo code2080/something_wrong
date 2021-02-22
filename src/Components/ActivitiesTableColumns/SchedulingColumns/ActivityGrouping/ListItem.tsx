@@ -10,7 +10,7 @@ import { TActivityGroup } from "../../../../Types/ActivityGroup.type"
 
 type Props = {
   activityGroup: TActivityGroup,
-  activityId: string,
+  activityIds: string[],
   isSelected: boolean,
 };
 
@@ -19,7 +19,7 @@ enum EModes {
   EDIT = 'EDIT',
 };
 
-const ActivityGroupListItem = ({ activityGroup, activityId, isSelected }: Props) => {
+const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props) => {
   const dispatch = useDispatch();
   /**
    * STATE
@@ -51,7 +51,7 @@ const ActivityGroupListItem = ({ activityGroup, activityId, isSelected }: Props)
   }
 
   const onAssignActivityToGroup = () => {
-    dispatch(assignActivityToGroup(activityGroup.formId, activityGroup._id, activityId));
+    dispatch(assignActivityToGroup(activityGroup.formId, activityGroup._id, activityIds));
     setMode(EModes.VIEW);
   }
 

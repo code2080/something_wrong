@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -7,6 +7,7 @@ import _ from 'lodash';
 // COMPONENtS
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane';
+import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 
 // SELECTORS
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -59,8 +60,29 @@ const ActivitiesPage = () => {
   const tableColumns = design ? createActivitiesTableColumnsFromMapping(design, true) : [];
   const tableDataSource = getActivityDataSource(activities);
 
+  /**
+   * STATE
+   */
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  /**
+   * EVENT HANDLERS
+   */
+  const onSelectAll = () => {
+    setSelectedRowKeys(tableDataSource.map(a => a._id));
+  };
+
+  const onDeselectAll = () => {
+    setSelectedRowKeys([]);
+  };
+
   return (
     <React.Fragment>
+      <ActivitiesToolbar
+        selectedRowKeys={selectedRowKeys}
+        onSelectAll={onSelectAll}
+        onDeselectAll={onDeselectAll}
+      />
       <DynamicTable
         columns={tableColumns}
         dataSource={tableDataSource}
@@ -69,6 +91,10 @@ const ActivitiesPage = () => {
         expandedRowRender={row => <ExpandedPane columns={tableColumns} row={row} />}
         resizable
         onSearch={filterFn}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
+        }}
       />
     </React.Fragment>
   );

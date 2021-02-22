@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Input, Icon } from 'antd';
@@ -17,13 +17,24 @@ import GroupingButton from './Button';
 import { TActivity } from '../../../../Types/Activity.type';
 
 type Props = {
-  activity: TActivity,
+  activities: TActivity[],
 };
 
-const ActivityGroupPopover = ({ activity }: Props) => {
+const ActivityGroupPopover = ({ activities }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
   const activityGroups: TActivityGroup[] = useSelector(selectActivityGroupsForForm)(formId);
+
+  /**
+   * MEMOIZED PROPS
+   */
+  const selectedActivityGroupId = useMemo(() => {
+    if (!activities || !activities.length) return null;
+    // Need to first check if all activities are on the same activity group
+    const hasSameGroupValue = activities.every(a => activities.every(b => b.groupId === a.groupId));
+    if (hasSameGroupValue) return activities[0].groupId;
+    return null;
+  }, [activities]);
 
   /**
    * STATE
@@ -66,17 +77,12 @@ const ActivityGroupPopover = ({ activity }: Props) => {
         <div className="activity-group--list">
           {activityGroups
             .filter(activityGroup => activityGroup.name.toLowerCase().includes(filterQuery.toLowerCase()))
-            .sort((a, b) => {
-              if (a._id === activity.groupId) return -1;
-              if (b._id === activity.groupId) return 1;
-              return 0;
-            })
             .map((activityGroup, i) => (
               <ActivityGroupListItem
                 key={`idx-${i}`}
-                activityId={activity._id}
+                activityIds={activities.map(el => el._id)}
                 activityGroup={activityGroup}
-                isSelected={activity.groupId === activityGroup._id}
+                isSelected={selectedActivityGroupId === activityGroup._id}
               />
             )
           )}

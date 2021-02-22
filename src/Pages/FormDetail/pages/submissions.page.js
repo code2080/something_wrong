@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+// SELECTORS
+import { selectFormDetailSubmission } from '../../../Redux/GlobalUI/globalUI.selectors';
 
 // COMPONENTS
 import SubmissionsOverviewPage from './submissions.overview.page';
 import SubmissionsDetailPage from './submissions.detail.page';
 
 const SubmissionsPage = () => {
-  const [selectedSubmissionId, setSelectedSubmissionId] = useState(null);
+  const selectedSubmissionId = useSelector(selectFormDetailSubmission);
 
   if (!selectedSubmissionId)
-    return <SubmissionsOverviewPage onSelectSubmission={setSelectedSubmissionId} />;
+    return <SubmissionsOverviewPage />;
   return <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />;
 };
 

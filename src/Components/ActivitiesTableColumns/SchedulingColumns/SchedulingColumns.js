@@ -1,5 +1,5 @@
 import React from 'react';
-import { sortByElementHtml } from '../../../Utils/sorting.helpers';
+import { sortByActivityGroup, sortByElementHtml } from '../../../Utils/sorting.helpers';
 import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
@@ -24,9 +24,10 @@ export const SchedulingColumns = [
     fixedWidth: 150,
     render: activity => (
       <SortableTableCell className={`activityGrouping${activity._id}`}>
-        <ActivityGroup activity={activity} />
+        <ActivityGroup activities={[activity]} />
       </SortableTableCell>
-    )
+    ),
+    sorter: (a, b) => sortByActivityGroup(a, b),
   },
   {
     title: 'Status',

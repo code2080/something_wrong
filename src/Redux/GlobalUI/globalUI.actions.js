@@ -11,6 +11,7 @@ import {
   INIT_VIEW,
   UPDATE_VIEW_SUCCESS,
   UPDATE_VIEW_FAILURE,
+  SET_FORM_DETAIL_TAB,
 } from './globalUI.actionTypes';
 
 export const setBreadcrumbs = fragments => ({
@@ -67,3 +68,8 @@ export const updateView = (datasourceId, visibleCols) => (dispatch, getState) =>
     requiresAuth: false,
   }));
 };
+
+export const setFormDetailTab = (tab, submission = null) => ({
+  type: SET_FORM_DETAIL_TAB,
+  payload: { tab, submission },
+});

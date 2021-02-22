@@ -1,4 +1,4 @@
-import { getSubmissionValues } from '../FormSubmissions/formSubmissions.selectors';
+import { getSubmissionValues } from '../FormSubmissions/formSubmissions.selectors.ts';
 
 const fakeFormId = 'fakeFormId';
 const fakeFormInstanceId = 'fakeFormInstanceId';

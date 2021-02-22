@@ -10,16 +10,18 @@ const renderTabBar = (props, DefaultTabBar) => (
   <DefaultTabBar {...props} className={`${props.className} teantd-tabbar`} />
 );
 
-const TEAntdTabBar = ({ defaultActiveKey, children }) => {
+const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children }) => {
   return (
-    <Tabs defaultActiveKey={defaultActiveKey} renderTabBar={renderTabBar} animated={false} >
+    <Tabs defaultActiveKey={defaultActiveKey} activeKey={activeKey} onChange={onChange} renderTabBar={renderTabBar} animated={false} >
       {children}
     </Tabs>
   );
 };
 
 TEAntdTabBar.propTypes = {
-  defaultActiveKey: PropTypes.string.isRequired,
+  defaultActiveKey: PropTypes.string,
+  activeKey: PropTypes.string,
+  onChange: PropTypes.func,
   children: PropTypes.node.isRequired,
 };
 

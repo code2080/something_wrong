@@ -17,18 +17,18 @@ import { TActivity } from '../../../../Types/Activity.type';
 import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
 
 type Props = {
-  activity: TActivity,
+  activities: TActivity[],
 };
 
-const ActivityGroupSelector = ({ activity }: Props) => {
+const ActivityGroupSelector = ({ activities }: Props) => {
   const { formId }: { formId: string } = useParams();
-  const selectedActivityGroup: TActivityGroup = useSelector(selectActivityGroup)(formId, activity.groupId);
+  const selectedActivityGroup: TActivityGroup = useSelector(selectActivityGroup)(formId, activities[0].groupId);
 
   return (
     <Popover
       overlayClassName='activity-group-popover--wrapper'
       title="Group activity"
-      content={<ActivityGroupPopover activity={activity} />}
+      content={<ActivityGroupPopover activities={activities} />}
       getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
       trigger='hover'
       placement='rightTop'

@@ -10,7 +10,7 @@ import { setBreadcrumbs } from '../../../Redux/GlobalUI/globalUI.actions';
 import BaseSection from '../../../Components/Sections/BaseSection';
 import FormInstanceToolbar from '../../../Components/FormInstanceToolbar/FormInstanceToolbar';
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
-import { selectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { selectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectActivitiesForFormInstanceId } from '../../../Redux/Activities/activities.selectors';
 // SELECTORS
 import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';

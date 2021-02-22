@@ -14,9 +14,9 @@ import {
   DELETE_ACTIVITY_GROUP_REQUEST,
   DELETE_ACTIVITY_GROUP_SUCCESS,
   DELETE_ACTIVITY_GROUP_FAILURE,
-  ASSIGN_ACTIVITY_TO_GROUP_REQUEST,
-  ASSIGN_ACTIVITY_TO_GROUP_SUCCESS,
-  ASSIGN_ACTIVITY_TO_GROUP_FAILURE,
+  ASSIGN_ACTIVITIES_TO_GROUP_REQUEST,
+  ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS,
+  ASSIGN_ACTIVITIES_TO_GROUP_FAILURE,
 } from './activityGroup.actionTypes';
 
 const fetchActivityGroupsForFormFlow = {
@@ -46,15 +46,16 @@ export const createActivityGroup = (formId, activityGroupBody) =>
   });
 
 const assignActivityToGroupFlow = {
-  request: () => ({ type: ASSIGN_ACTIVITY_TO_GROUP_REQUEST }),
-  success: response => ({ type: ASSIGN_ACTIVITY_TO_GROUP_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: ASSIGN_ACTIVITY_TO_GROUP_FAILURE, payload: { ...err } }),
+  request: () => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_REQUEST }),
+  success: response => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS, payload: { ...response } }),
+  failure: err => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_FAILURE, payload: { ...err } }),
 };
 
-export const assignActivityToGroup = (formId, activityGroupId, activityId) =>
+export const assignActivityToGroup = (formId, activityGroupId, activityIds) =>
   asyncAction.POST({
     flow: assignActivityToGroupFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups/${activityGroupId}/activities/${activityId}`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups/${activityGroupId}/activities`,
+    params: { formId, activityIds },
   });
 
 export const updateActivityGroupFlow = {

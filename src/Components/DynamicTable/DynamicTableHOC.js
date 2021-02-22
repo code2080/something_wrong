@@ -60,6 +60,7 @@ const DynamicTableHOC = ({
   draggable,
   onSearch,
   onMove,
+  rowSelection,
 }) => {
   /**
    * STATE
@@ -140,6 +141,8 @@ const DynamicTableHOC = ({
   const _shouldShowFilterBar = useMemo(() => shouldShowFilterBar(showFilter, onSearch, _cols), [showFilter, onSearch, _cols]);
   const _tableComponents = useMemo(() => getTableComponents(draggable), [draggable]);
 
+  const otherProps = useMemo(() => rowSelection ? { rowSelection } : {}, [rowSelection]);
+
   return (
     <div
       className={`${className || ''} dynamic-table--wrapper`}
@@ -170,6 +173,7 @@ const DynamicTableHOC = ({
                 loading={isLoading}
                 sortDirections={['descend', 'ascend']}
                 onRow={onRowHandler}
+                {...otherProps}
               />
             </DndProvider>
           </React.Fragment>
@@ -198,6 +202,7 @@ DynamicTableHOC.propTypes = {
   draggable: PropTypes.bool,
   onSearch: PropTypes.func,
   onMove: PropTypes.func,
+  rowSelection: PropTypes.object,
 };
 
 DynamicTableHOC.defaultProps = {

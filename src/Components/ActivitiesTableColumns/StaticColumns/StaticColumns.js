@@ -1,22 +1,22 @@
 import React from 'react';
 import { sortByElementHtml } from '../../../Utils/sorting.helpers';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
+import SubmissionColumn from './SubmissionColumn';
 
 export const StaticColumns = includeSubmissionInfo => [
   ...(includeSubmissionInfo
     ? [
       {
-        title: 'Submission id',
+        title: 'Submission',
         key: 'formInstanceId',
-        dataIndex: null,
-        fixedWidth: 100,
-        render: activity => (
-          <SortableTableCell className={`formInstanceId_${activity._id}`}>
-            {activity.formInstanceId}
+        dataIndex: 'formInstanceId',
+        render: formInstanceId => (
+          <SortableTableCell className={`formInstanceId_${formInstanceId}`}>
+            <SubmissionColumn formInstanceId={formInstanceId} />
           </SortableTableCell>
         ),
         sorter: (a, b) => {
-          return sortByElementHtml(`.formInstanceId_${a._id}`, `.formInstanceId_${b._id}`);
+          return sortByElementHtml(`.formInstanceId_${a.formInstanceId}`, `.formInstanceId_${b.formInstanceId}`);
         },
       }
     ]

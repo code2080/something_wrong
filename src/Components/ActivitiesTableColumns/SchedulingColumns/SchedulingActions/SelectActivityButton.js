@@ -7,7 +7,7 @@ import { Icon } from 'antd';
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { selectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { selectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
 

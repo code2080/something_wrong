@@ -25,3 +25,10 @@ export const sortByElementDeepHtml = (a, b) => {
   const elementB = document.querySelector(b);
   return sortValue(getElementHtml(elementA, true), getElementHtml(elementB, true));
 };
+
+export const sortByActivityGroup = (a, b) => {
+  if (!a.groupId) return -1;
+  if (!b.groupId) return 1;
+  if (a.groupId === b.groupId) return 0;
+  return sortAlpha(a.groupId, b.groupId);
+}

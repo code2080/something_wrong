@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.helpers';
 
 const selectObjectRequestsState = state => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) => objReqList.find(req => req._id === value || req.objectExtId === value);

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,8 +14,11 @@ import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 // SELECTORS
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
-import { selectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { selectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
+
+// ACTIONS
+import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -39,7 +41,7 @@ import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFil
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
 
-const SubmissionsOverviewPage = ({ onSelectSubmission }) => {
+const SubmissionsOverviewPage = () => {
   const { formId } = useParams();
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
@@ -53,6 +55,7 @@ const SubmissionsOverviewPage = ({ onSelectSubmission }) => {
   const isSaving = useSelector(savingSelector);
   const filters = useSelector(selectFilter)(formId, FormSubmissionFilterInterface);
   const userId = useSelector(selectAuthedUserId);
+
   /**
    * STATE
    */
@@ -155,7 +158,7 @@ const SubmissionsOverviewPage = ({ onSelectSubmission }) => {
         rowKey="_id"
         onRow={formInstance => ({
           onClick: (e) => {
-            traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && onSelectSubmission(formInstance._id);
+            traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
           }
         })}
         isLoading={isLoading}
@@ -165,10 +168,6 @@ const SubmissionsOverviewPage = ({ onSelectSubmission }) => {
       />
     </React.Fragment>
   )
-};
-
-SubmissionsOverviewPage.propTypes = {
-  onSelectSubmission: PropTypes.func.isRequired,
 };
 
 export default SubmissionsOverviewPage;
