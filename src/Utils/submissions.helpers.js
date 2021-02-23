@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import { SECTION_TABLE } from '../Constants/sectionTypes.constants';
+import { determineSectionType } from './determineSectionType.helpers';
 import { formatElementValue } from './elements.helpers';
 
 export const flattenSectionValue = valueGroup => {
@@ -50,4 +52,46 @@ export const flattenValues = (formInstance) => {
   //   return '';
   // }).join('|');
   // return '';
+};
+
+/** function parseFormSectionValues
+ * @description convert submissions value to form section values
+ * @param {Object} values: the values from db
+ * @param {Array} sections: form sections
+ */
+export const parseFormSectionValues = (formInstanceValues, formSections) => {
+  const indexedFormSections = _.keyBy(formSections, '_id');
+  return {
+    ...Object.keys(formInstanceValues).reduce((results, sectionId) => {
+      const foundSection = indexedFormSections[sectionId];
+      if (!foundSection) return results;
+      const sectionType = determineSectionType(foundSection);
+      if (sectionType === SECTION_TABLE) {
+        // UPDATE FOR OLD FORM INSTANCE VALUES;
+        const keys = Object.keys(formInstanceValues[sectionId]);
+        if (
+          formInstanceValues[sectionId][keys[0]] &&
+          !Array.isArray(formInstanceValues[sectionId][keys[0]].values)
+        ) {
+          return {
+            ...results,
+            [sectionId]: {
+              ...keys.reduce((values, key) => {
+                return {
+                  ...values,
+                  [key]: {
+                    values: formInstanceValues[sectionId][key],
+                  },
+                };
+              }, {}),
+            },
+          };
+        }
+      }
+      return {
+        ...results,
+        [sectionId]: formInstanceValues[sectionId],
+      };
+    }, {}),
+  };
 };

@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
         !action.payload.submissions ||
         !action.payload.submissions.length
       ) { return state; }
-      const { submissions, form: { _id: formId } } = action.payload;
+      const { submissions, form: { _id: formId, sections } } = action.payload;
       return {
         ...state,
         [formId]: {
@@ -25,7 +25,8 @@ const reducer = (state = initialState, action) => {
               ...f,
               [el._id]: new FormInstance({
                 ...el,
-                index // To make sure formInstance order is not changed after update
+                index, // To make sure formInstance order is not changed after update
+                sections
               }),
             }),
             {}
