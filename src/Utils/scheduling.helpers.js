@@ -233,16 +233,15 @@ export const scheduleActivities = (activities, formType, reservationMode, teCore
     });
 
   // filter invalidate activities
-  const failedActivities = preprocessingMap
-    .filter(a => a.result != null)
-    .map(a => ({ activityId: a.activityId, result: a.result }));
+  const [noResultActivities, validatedActivities] = _.partition(preprocessingMap, (activity) => activity.result != null);
+  const failedActivities = noResultActivities.map(a => ({ activityId: a.activityId, result: a.result }));
 
   if ((failedActivities || []).length > 0) cFn(failedActivities);
 
   // Edge case: all activities have schedulingAlgorithm EXACT
-  if (preprocessingMap.every(el => el.schedulingAlgorithm === schedulingAlgorithms.EXACT)) {
+  if (validatedActivities.every(el => el.schedulingAlgorithm === schedulingAlgorithms.EXACT)) {
     // Get the ones we're able to schedule
-    const toSchedule = preprocessingMap
+    const toSchedule = validatedActivities
       .filter(a => a.result == null)
       .map(a => ({ activityId: a.activityId, reservation: a.reservation }));
 
