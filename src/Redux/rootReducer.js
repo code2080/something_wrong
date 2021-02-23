@@ -18,7 +18,7 @@ import te from './TE/te.reducer';
 import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
 import elements from './Elements/elements.reducer';
-
+import constraints from './Constraints/constraints.reducer';
 import { LOGOUT } from './Auth/auth.actionTypes';
 
 const appReducer = combineReducers({
@@ -38,6 +38,7 @@ const appReducer = combineReducers({
   integration,
   objectRequests,
   elements,
+  constraints
 });
 
 const rootReducer = (state, action) => {
