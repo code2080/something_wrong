@@ -1,8 +1,8 @@
+import { Activity } from '../../Models/Activity.model';
 import * as types from './activities.actionTypes';
 import { ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS } from '../ActivityGroup/activityGroup.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
-import { Activity } from '../../Models/Activity.model';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
