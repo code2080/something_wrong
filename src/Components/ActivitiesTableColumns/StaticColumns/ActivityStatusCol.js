@@ -30,7 +30,7 @@ const ActivityStatusCol = ({ activity }) => {
         )}
         <Form.Item label='Time'>
           <div className='ant-form-text'>
-            {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
+            {activity.schedulingTimestamp ? moment(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
           </div>
         </Form.Item>
       </Form>
