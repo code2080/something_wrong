@@ -29,7 +29,7 @@ export const useJobWSAPI = () => {
       socket.current.emit('watchJobs', { formId });
     });
     socket.current.on('connect_error', args => console.log(args));
-    socket.current.on('disconnect', () => console.log('WS connection closed'));
+    socket.current.on('disconnect', (reason) => console.log(`WS connection closed, reason: ${reason}`));
     // Event listener for job update
     socket.current.on('jobUpdate', ({ job }) => {
       const jobId = job ? job._id : null;
