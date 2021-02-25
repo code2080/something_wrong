@@ -13,7 +13,7 @@ const IconFormType = ({ type }) => {
       placement={'right'}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <span className={`form-type--icon icon--${type}`}>{type[0].toUpperCase()}</span>;
+      <span className={`form-type--icon icon--${type}`}>{type[0].toUpperCase()}</span>
     </Tooltip>
   );
 };
