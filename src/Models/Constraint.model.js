@@ -1,4 +1,4 @@
-export class Constraint {
+export default class Constraint {
   name;
   description;
   constraintId;
