@@ -81,7 +81,7 @@ const reducer = (state = initialState, action) => {
         (el, idx) =>
           new Activity({
             ...el,
-            sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx
+            sequenceIdx: el.sequenceIdx ?? idx
           })
       );
       const {
