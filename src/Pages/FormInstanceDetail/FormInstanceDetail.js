@@ -24,6 +24,10 @@ import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers'
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
+
+// CONSTANTS
+import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 // STYLES
 import './FormInstanceDetail.scss';
@@ -59,6 +63,7 @@ const FormInstancePage = ({
   const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance));
   const [showFormInfo, setShowFormInfo] = useState(false);
   const externalActionRef = useSelector(state => state.globalUI.spotlightPositionInfo);
+  const hasAEPermissions = useSelector(hasPermission(AEBETA_PERMISSION));
 
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -113,7 +118,7 @@ const FormInstancePage = ({
         formInstanceId={formInstance._id}
         onClickMore={handleClickMore}
       />
-      {hasAssistedSchedulingPermissions() && <JobToolbar />}
+      {hasAEPermissions && hasAssistedSchedulingPermissions() && <JobToolbar />}
       {showFormInfo && <FormInfo formId={formInstance.formId} />}
       {
         tabPanes.length > 1

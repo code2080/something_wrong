@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
 import TEPrefsLib from './TEPrefsLib';
+import { availableEnvs } from '../configs';
 
 export default {
-  title: 'Activity Manager Frontend/Components/Primary',
+  title: 'Activity Manager/Components/Main',
   component: TEPrefsLib,
+  argTypes: {
+    coreAPI: {
+      control: false,
+    },
+    mixpanel: {
+      control: false,
+    },
+    env: {
+      control: {
+        type: 'select',
+        options: availableEnvs,
+      },
+    },
+  },
 };
 
-export const Primary = () => {
+// eslint-disable-next-line react/prop-types
+export const Main = ({ env }) => {
   const [toolbarContent, setToolbarContent] = useState(null);
   return (
     <React.Fragment>
@@ -15,8 +31,9 @@ export const Primary = () => {
         coreAPI={{
           setToolbarContent: content => setToolbarContent(content),
         }}
-        env='amLocalhost'
+        env={env}
       />
     </React.Fragment>
   );
 };
+Main.args = { env: 'staging' };
