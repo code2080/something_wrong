@@ -1,3 +1,3 @@
-import { SchedulingError } from '../shared/src/models';
+import { SchedulingError } from '../../te-data-models/src/models';
 
 export { SchedulingError };

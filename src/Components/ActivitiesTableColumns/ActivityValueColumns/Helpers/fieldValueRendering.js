@@ -18,13 +18,13 @@ import { activityValueStatuses } from '../../../../Constants/activityStatuses.co
  * @param {ActivityValue} activityValue
  * @returns RenderPayload
  */
-export const renderFieldComponent = activityValue => {
+export const renderFieldComponent = (activityValue, activity) => {
   const validationResult = validateGeneralValue(activityValue);
   if (validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: validationResult.errorMessage,
-      renderedComponent: <FieldValue value={activityValue.value} extId={activityValue.extId} />
+      renderedComponent: <FieldValue value={activityValue.value} extId={activityValue.extId} activityId={activity._id} />
     });
 
   return ActivityValueRenderPayload.create({

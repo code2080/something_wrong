@@ -25,6 +25,7 @@ import { EActivityFilterInclusion, EActivityFilterMode } from '../../Types/Activ
 
 const mapArrayToProperties = (arr: any[], labelMap: object | null = null) => {
  return Object.keys(arr).reduce((props: any, key: string) => {
+   if (key && key === 'mode') return props;
     if (arr[key] && arr[key] != null && (!Array.isArray(arr[key]) || arr[key].length))
       return [
         ...props,

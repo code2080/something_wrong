@@ -61,7 +61,7 @@ const ActivitiesPage = () => {
   const activities = useSelector(selectActivitiesForForm)(formId);
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
-  console.log(visibleActivities);
+
   const tableColumns = design ? createActivitiesTableColumnsFromMapping(design, true) : [];
   const tableDataSource = getActivityDataSource(activities, visibleActivities);
 
