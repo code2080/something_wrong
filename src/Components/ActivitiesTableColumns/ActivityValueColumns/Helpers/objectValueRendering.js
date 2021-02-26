@@ -31,16 +31,17 @@ const determineObjectValueContent = activityValue => {
  * @function renderObjectFilterValue
  * @description renders an object filter component
  * @param {ActivityValue} activityValue
+ * @param {Activity} activity
  * @returns RenderPayload
  */
-const renderObjectFilterValue = activityValue => {
+const renderObjectFilterValue = (activityValue, activity) => {
   const validationResult = validateFilterValue(activityValue);
   const value = Array.isArray(activityValue.value) ? activityValue.value : [activityValue.value];
   if (!validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value,
-      renderedComponent: <ObjectFilterValue value={value} />
+      renderedComponent: <ObjectFilterValue value={value} extId={activityValue.extId} activityId={activity._id} />
     });
 
   return ActivityValueRenderPayload.create({
@@ -53,11 +54,11 @@ const renderObjectFilterValue = activityValue => {
  * @function renderObjectValue
  * @description renders object properties that contain object values
  * @param {ActivityValue} activityValue
+ * @param {Activity} activity
  * @returns RenderPayload
  */
-const renderObjectValue = activityValue => {
+const renderObjectValue = (activityValue, activity) => {
   const validationResult = validateGeneralValue(activityValue);
-
   if (validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: validationResult.status,
@@ -67,7 +68,7 @@ const renderObjectValue = activityValue => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,
-    renderedComponent: <ObjectObjectValue value={activityValue.value} />,
+    renderedComponent: <ObjectObjectValue value={activityValue.value} extId={activityValue.extId} activityId={activity._id} />,
   });
 };
 
@@ -82,10 +83,10 @@ export const renderObjectComponent = (activityValue, activity) => {
   // Step 1: determine whether this object activity value contains a filter or objects
   const valueContainsValueOfType = determineObjectValueContent(activityValue);
   if (valueContainsValueOfType === submissionValueTypes.FILTER)
-    return renderObjectFilterValue(activityValue);
+    return renderObjectFilterValue(activityValue, activity);
 
   if (valueContainsValueOfType === submissionValueTypes.OBJECT)
-    return renderObjectValue(activityValue);
+    return renderObjectValue(activityValue, activity);
 
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.MISSING_DATA,

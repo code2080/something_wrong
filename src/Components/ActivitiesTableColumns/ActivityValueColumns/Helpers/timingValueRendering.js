@@ -17,6 +17,7 @@ import { ActivityValueRenderPayload } from './RenderPayload';
 import { validateGeneralValue, validateTimeslotTimeMode } from '../../../../Utils/activityValues.validation';
 import { weekdayEnums } from '../../../../Constants/weekDays.constants';
 import DateRangesValue from '../ValueTypes/DateRangesValue.jsx';
+import TimeSlotTimeValue from '../ValueTypes/TimeSlotTimeValue.jsx';
 
 /**
  * @function getTimeModeForActivity
@@ -58,10 +59,11 @@ const renderTimeSlotStartTimeValue = (
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [activityValue.value, moment(endTime.value).subtract(length.value, 'hours')],
     renderedComponent: (
-      <span>
-        {moment(activityValue.value).format(DATE_FORMAT)} ${moment(activityValue.value).format(TIME_FORMAT)} - ${moment(endTime.value).subtract(length.value, 'hours').format(TIME_FORMAT)}
-      </span>
-    ),
+      <TimeSlotTimeValue
+        formattedValue={`${moment(activityValue.value).format(DATE_FORMAT)} ${moment(activityValue.value).format(TIME_FORMAT)} - ${moment(endTime.value).subtract(length.value, 'hours').format(TIME_FORMAT)}`}
+        extId={activityValue.extId}
+      />
+    )
   });
 };
 
@@ -90,9 +92,10 @@ const renderTimeSlotEndTimeValue = (
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [moment(startTime.value).add(length.value, 'hours'), moment(activityValue.value)],
     renderedComponent: (
-      <span>
-        {moment(startTime.value).format(DATE_FORMAT)} ${moment(startTime.value).add(length.value, 'hours').format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}
-      </span>
+      <TimeSlotTimeValue
+        formattedValue={`${moment(startTime.value).format(DATE_FORMAT)} ${moment(startTime.value).add(length.value, 'hours').format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}`}
+        extId={activityValue.extId}
+      />
     ),
   });
 };
@@ -100,9 +103,10 @@ const renderTimeSlotEndTimeValue = (
 /**
  * @function renderLengthValue
  * @param {ActivityValue} activityValue
+ * @param {String} activityId
  * @returns RenderPayload
  */
-const renderLengthValue = (activityValue) => {
+const renderLengthValue = (activityValue, activityId) => {
   const { value } = activityValue;
   if (!value)
     return ActivityValueRenderPayload.create({
@@ -113,7 +117,7 @@ const renderLengthValue = (activityValue) => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING, // Missing data range value is not a failed validation
     value,
-    renderedComponent: <LengthValue value={value} />,
+    renderedComponent: <LengthValue value={value} extId={activityValue.extId} activityId={activityId} />,
   });
 }
 
@@ -228,7 +232,7 @@ export const renderTimingComponent = (activityValue, activity) => {
 
   // CASE: length value for duration
   if (activityValue.extId === 'length')
-    return renderLengthValue(activityValue);
+    return renderLengthValue(activityValue, activity._id);
 
   // CASE: dateRanges for sequence scheduling
   if (activityValue.extId === 'dateRanges')

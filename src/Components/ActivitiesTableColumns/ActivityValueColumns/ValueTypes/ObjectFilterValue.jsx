@@ -1,17 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 // HELPERS
 import { normalizeFilterValues } from '../Helpers/rendering';
 
+// ACTIONS
+import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
+
 // STYLES
 import './ObjectFilterValue.scss';
 
-const ObjectFilterValue = ({ value }) => {
+// TYPES
+import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
+
+const ObjectFilterValue = ({ value, extId, activityId }) => {
+  const dispatch = useDispatch();
+  const { formId } = useParams();
   const [visIdx, setVisIdx] = useState(0);
   const normalizedFilterValues = normalizeFilterValues(value);
-  // console.log(normalizedFilterValues);
+  const optionPayloadValues = normalizedFilterValues.reduce((tot, acc) => {
+    return {
+      ...tot,
+      [acc.fieldExtId]: [
+        ...(tot[acc.fieldExtId] || []),
+        ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
+      ],
+    };
+  }, {})
+  useEffect(() => {
+    dispatch(
+      setActivityFilterOptions({
+        filterId: `${formId}_ACTIVITIES`,
+        optionType: EActivityFilterType.OBJECT_FILTER,
+        optionPayload: { extId, values: optionPayloadValues },
+        activityId,
+      })
+    );
+  }, []);
 
   const onClickLeft = e => {
     e.stopPropagation();
@@ -53,7 +81,9 @@ const ObjectFilterValue = ({ value }) => {
 }
 
 ObjectFilterValue.propTypes = {
+  extId: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
+  activityId: PropTypes.string.isRequired,
 };
 
 export default ObjectFilterValue;

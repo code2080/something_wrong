@@ -16,7 +16,7 @@ import './FormSubmissionFilters.scss';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
 const mapStateToProps = (state, { formId }) => ({
-  filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
+  filters: selectFilter(state)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface),
 });
 
 const mapActionsToProps = {
@@ -31,7 +31,7 @@ const FormSubmissionFilterBar = ({
   togglePropsFilter,
 }) => {
   const onUpdateFilter = useCallback((key, value) => {
-    updateFilter({ filterId: formId, key, value });
+    updateFilter({ filterId: `${formId}_SUBMISSIONS`, key, value });
   }, [formId, updateFilter]);
 
   const filterIconClass = useMemo(() => {

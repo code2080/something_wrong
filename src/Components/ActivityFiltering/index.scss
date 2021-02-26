@@ -1,0 +1,40 @@
+@import '../../Styles/globals.scss';
+
+.activity-filtering--wrapper {
+  margin-left: auto;
+
+  .ant-btn {
+    color: $deepSeaGreen;
+    border: none !important;
+
+    &.active {
+      color: $deepSeaGreen !important;
+    }
+  }
+}
+
+.activity-filtering--modal {
+
+  .activity-filtering--settings {
+    margin-bottom: 1rem;
+    .activity-filtering--content {
+      display: flex;
+      .activity-filtering--settings-group {
+        margin-right: 1rem;
+        .activity-filtering--settings-label {
+          color: $secondary;
+          font-weight: 500;
+        }
+      }
+    }    
+  }
+
+  .activity-filtering--selection {
+    display: flex;
+  }
+  
+  .activity-filtering--settings-label {
+    color: $black;
+    font-weight: 700;
+  }
+}

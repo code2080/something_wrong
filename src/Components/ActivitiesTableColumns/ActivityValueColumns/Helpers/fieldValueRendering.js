@@ -1,5 +1,10 @@
+import React from 'react';
+
 // VALIDATION
 import { validateGeneralValue } from '../../../../Utils/activityValues.validation';
+
+// COMPONENTS
+import FieldValue from '../ValueTypes/FieldValue';
 
 // HELPERS
 import { ActivityValueRenderPayload } from './RenderPayload';
@@ -11,16 +16,15 @@ import { activityValueStatuses } from '../../../../Constants/activityStatuses.co
  * @function renderFieldComponent
  * @description Entry point for rendering all field components
  * @param {ActivityValue} activityValue
- * @param {Activity} activity
  * @returns RenderPayload
  */
-export const renderFieldComponent = (activityValue, activity) => {
+export const renderFieldComponent = activityValue => {
   const validationResult = validateGeneralValue(activityValue);
   if (validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: validationResult.errorMessage,
-      renderedComponent: Array.isArray(activityValue.value) ? activityValue.value.join(', ') : activityValue.value,
+      renderedComponent: <FieldValue value={activityValue.value} extId={activityValue.extId} />
     });
 
   return ActivityValueRenderPayload.create({

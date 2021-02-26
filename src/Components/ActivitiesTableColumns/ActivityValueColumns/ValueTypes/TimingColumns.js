@@ -11,6 +11,7 @@ import {
   activityTimeModes,
   activityTimeModeProps
 } from '../../../../Constants/activityTimeModes.constants';
+import TimingNameMap from '../../../../Constants/activityDesignTimingMap.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 import { sortByElementHtml } from '../../../../Utils/sorting.helpers';
 
@@ -25,7 +26,7 @@ const timingCols = {
           activity={activity}
           type="TIMING"
           prop="mode"
-          propTitle="Timing mode"
+          propTitle={TimingNameMap.mode}
           formatFn={value => activityTimeModeProps[value].label}
           mapping={mapping}
         />
@@ -45,7 +46,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='startTime'
-          propTitle='Start time'
+          propTitle={TimingNameMap.startTime}
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -65,7 +66,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='endTime'
-          propTitle='End time'
+          propTitle={TimingNameMap.endTime}
           formatFn={value => moment(value).format(DATE_TIME_FORMAT)}
           mapping={mapping}
         />
@@ -125,7 +126,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='length'
-          propTitle='Length'
+          propTitle={TimingNameMap.length}
           mapping={mapping}
         />
       </SortableTableCell>
@@ -142,7 +143,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='padding'
-          propTitle='Padding'
+          propTitle={TimingNameMap.padding}
           mapping={mapping}
         />
       </SortableTableCell>
@@ -159,7 +160,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='weekday'
-          propTitle='Weekday'
+          propTitle={TimingNameMap.weekday}
           mapping={mapping}
         />
       </SortableTableCell>
@@ -175,7 +176,7 @@ const timingCols = {
         <BaseActivityColOuter
           activity={activity}
           type='TIMING'
-          prop='dateRanges'
+          prop={TimingNameMap.dateRanges}
           mapping={mapping}
         />
       </SortableTableCell>
@@ -192,7 +193,7 @@ const timingCols = {
           activity={activity}
           type='TIMING'
           prop='time'
-          propTitle='Exact time'
+          propTitle={TimingNameMap.time}
           mapping={mapping}
         />
       </SortableTableCell>

@@ -8,12 +8,14 @@ import { selectActivitiesForFormAndIds } from '../../Redux/Activities/activities
 
 // COMPONENTS
 import ActivityGroupPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityGrouping/Popover';
-import { TActivity } from '../../Types/Activity.type.js';
+import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES
 import './index.scss';
 
 // TYPES
+import { TActivity } from '../../Types/Activity.type.js';
+
 type Props = {
   selectedRowKeys: string[],
   onSelectAll: () => void,
@@ -66,8 +68,8 @@ const ActivitiesToolbar = ({ selectedRowKeys, onSelectAll, onDeselectAll }: Prop
             Group selected activities
           </Button>
         </Popover>
-
       </div>
+      <ActivityFiltering />
     </div>
   );
 };

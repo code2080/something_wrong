@@ -20,7 +20,7 @@ const mapStateToProps = (state, { objectScope, formId }) => {
   const scopedObjProps = _.get(state, `integration.mappedObjectTypes.${objectScope}`, {});
 
   return {
-    filters: selectFilter(state)(formId, FormSubmissionFilterInterface),
+    filters: selectFilter(state)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface),
     objectScopeLabel: scopedObjProps.applicationObjectTypeLabel || null,
     fields: scopedObjProps.fields || [],
   };
@@ -48,11 +48,11 @@ const FilterModal = ({
   }, [onClose]);
 
   const onUpdateFilterSimple = useCallback((key, value) => {
-    updateFilter({ filterId: formId, key, value });
+    updateFilter({ filterId: `${formId}_SUBMISSIONS`, key, value });
   }, [formId, updateFilter]);
 
   const onUpdateScopedObjectFilter = useCallback((extId, value) => {
-    updateFilter({ filterId: formId, key: 'scopedObject', value: { ...filters.scopedObject, [extId]: value } });
+    updateFilter({ filterId: `${formId}_SUBMISSIONS`, key: 'scopedObject', value: { ...filters.scopedObject, [extId]: value } });
   }, [formId, filters, updateFilter]);
 
   return (

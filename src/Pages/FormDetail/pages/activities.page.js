@@ -12,6 +12,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
+import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
 
 // HELPERS
 import { stringIncludes, anyIncludes } from '../../../Utils/validation';
@@ -36,10 +37,13 @@ const filterFn = (activity, query) => {
   return false;
 };
 
-const getActivityDataSource = (activities = {}) => {
+const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
   return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId];
+    const formInstanceActivities = activities[formInstanceId].filter(el => {
+      if (visibleActivities === 'ALL') return true;
+      return visibleActivities.indexOf(el._id) > -1;
+    });
     const orderedFormInstanceActivities = _.orderBy(formInstanceActivities, ['sequenceIdx'], ['asc']);
     return [
       ...a,
@@ -56,9 +60,10 @@ const ActivitiesPage = () => {
    */
   const activities = useSelector(selectActivitiesForForm)(formId);
   const design = useSelector(selectDesignForForm)(formId);
-
+  const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
+  console.log(visibleActivities);
   const tableColumns = design ? createActivitiesTableColumnsFromMapping(design, true) : [];
-  const tableDataSource = getActivityDataSource(activities);
+  const tableDataSource = getActivityDataSource(activities, visibleActivities);
 
   /**
    * STATE

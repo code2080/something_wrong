@@ -1,0 +1,45 @@
+@import '../../Styles/globals.scss';
+
+.property-selector--title {
+  color: $black;
+  font-weight: 700;
+}
+
+.property-selector--wrapper {
+  border: 1px solid #CCCCCC;
+  border-radius: 2px;
+  transition: all 0.2s;
+  padding: 7px 0;
+  min-width: 200px;
+  margin-right: 8px;
+  height: 100%;
+
+  &:hover, &:active, &.active {
+    border-color: $jungleGreen;
+  }
+  .property-selector--item {
+    padding: 0 7px;
+    cursor: pointer;
+    color: $secondary;
+
+    &:hover, &.active {
+      background: rgba($jungleGreen, 0.2);
+      color: $black;
+    }
+
+    &.has-heading {
+      padding: 0 11px;
+    }
+  }
+  
+  .property-selector--heading {
+    padding: 0 7px;
+  }
+
+  .property-selector--empty {
+    color: $secondary;
+    word-wrap: normal;
+    font-style: italic;
+    padding: 0 7px;
+  }
+}

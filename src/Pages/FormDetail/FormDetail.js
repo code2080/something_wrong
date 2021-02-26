@@ -52,7 +52,8 @@ const FormPage = () => {
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }
     ]));
-    dispatch(loadFilter({ filterId: formId }));
+    dispatch(loadFilter({ filterId: `${formId}_SUBMISSIONS` }));
+    dispatch(loadFilter({ filterId: `${formId}_ACTIVITIES` }));
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
     form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({ res }) => {} });
   }, [formId]);

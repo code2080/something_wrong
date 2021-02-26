@@ -53,7 +53,7 @@ const SubmissionsOverviewPage = () => {
   const submissions = useSelector(selectSubmissions)(formId);
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
-  const filters = useSelector(selectFilter)(formId, FormSubmissionFilterInterface);
+  const filters = useSelector(selectFilter)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface);
   const userId = useSelector(selectAuthedUserId);
 
   /**

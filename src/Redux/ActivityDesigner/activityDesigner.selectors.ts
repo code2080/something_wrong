@@ -10,5 +10,6 @@ export const selectAllDesigns = createSelector(
 
 export const selectDesignForForm = createSelector(
   selectActivityDesigner,
-  activityDesigns => formId => activityDesigns[formId] || new ActivityDesign({ name: `Mapping form ${formId}`, formId })
+  activityDesigns => (formId: string) => activityDesigns[formId] || new ActivityDesign({ name: `Mapping form ${formId}`, formId })
 );
+
