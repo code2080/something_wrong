@@ -13,28 +13,21 @@ const PaddingDisplay = ({ value, settings }) => {
     <span>
       {settings.allowDayPadding && Number(days)
         ? (
-          <Fragment>
-            {days}d,&nbsp;&nbsp;
-          </Fragment>
+          <Fragment>{days}d,&nbsp;&nbsp;</Fragment>
         )
-        : null
-      }
+        : null}
       {hours}h
-      {settings.allowMinutePadding && (
-        <Fragment>
-          &nbsp;{minutes}m
-        </Fragment>
-      )}
+      {settings.allowMinutePadding && <Fragment>&nbsp;{minutes}m</Fragment>}
     </span>
   );
 };
 PaddingDisplay.propTypes = {
   value: PropTypes.number,
-  settings: PropTypes.object,
+  settings: PropTypes.object
 };
 PaddingDisplay.defaultProps = {
   value: null,
-  settings: {},
+  settings: {}
 };
 
 const PaddingElement = ({ value, element }) => {
@@ -62,10 +55,10 @@ const PaddingElement = ({ value, element }) => {
 
 PaddingElement.propTypes = {
   value: PropTypes.object,
-  element: PropTypes.object.isRequired,
+  element: PropTypes.object.isRequired
 };
 PaddingElement.defaultProps = {
-  value: null,
+  value: null
 };
 
 export default PaddingElement;
