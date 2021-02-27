@@ -10,9 +10,9 @@ export const StaticColumns = includeSubmissionInfo => [
         title: 'Submission',
         key: 'formInstanceId',
         dataIndex: 'formInstanceId',
-        render: formInstanceId => (
+        render: (formInstanceId, activity) => (
           <SortableTableCell className={`formInstanceId_${formInstanceId}`}>
-            <SubmissionColumn formInstanceId={formInstanceId} />
+            <SubmissionColumn formInstanceId={formInstanceId} activityId={activity._id} />
           </SortableTableCell>
         ),
         sorter: (a, b) => {
