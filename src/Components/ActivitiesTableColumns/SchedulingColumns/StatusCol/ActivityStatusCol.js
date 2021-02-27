@@ -41,7 +41,7 @@ const StatusText = ({ activity }) => {
     case activityStatuses.SCHEDULED:
       return (
         <span>
-          <Icon type="check" />&nbps;{activity.reservationId}
+          <Icon type="check" />&nbsp;ID:&nbsp;{activity.reservationId || 'N/A'}
         </span>
       );
     default:

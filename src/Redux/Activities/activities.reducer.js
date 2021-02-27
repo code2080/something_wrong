@@ -10,7 +10,8 @@ import { updateActivitiesForForm } from './activities.helpers';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS: {
+    case ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS:
+    case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
       const { activities: activityObjs } = action.payload;
       const activities = activityObjs.map(el => new Activity(el));
 
