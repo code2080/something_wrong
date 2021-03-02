@@ -49,7 +49,7 @@ const extractValuesFromSectionData = sectionData => {
           .reduce((elVals, element) =>
             [
               ...elVals,
-              ...element.value
+              element.value
             ], [])
       ], []);
     default:
