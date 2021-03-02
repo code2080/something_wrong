@@ -1,11 +1,7 @@
 import React from 'react';
+import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 const ConstraintManagerPage = () => {
-  return (
-    <React.Fragment>
-      Constraint Manager
-    </React.Fragment>
-  )
+  return <ConstraintManagerTopBar />;
 };
-
 export default ConstraintManagerPage;
