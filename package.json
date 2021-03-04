@@ -24,6 +24,7 @@
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
+    "sb": "yarn storybook",
     "storybook": "start-storybook -p 6006",
     "storybook:export": "build-storybook"
   },
