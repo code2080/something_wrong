@@ -50,7 +50,7 @@ const createJobFlow = {
     }
     return { type: types.CREATE_JOB_REQUEST };
   },
-  success: (response, params, postAction) => ({
+  success: (response, _params, _postAction) => ({
     type: types.CREATE_JOB_SUCCESS,
     payload: { ...response }
   }),

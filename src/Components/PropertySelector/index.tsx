@@ -12,7 +12,7 @@ import { EPropertyType, TProperty } from '../../Types/property.type';
 
 type Props = {
   properties: TProperty[],
-  onSelect: (selectedPropertyValue: string) => void,  
+  onSelect: (selectedPropertyValue: string) => void,
   selectedPropertyValue?: string | null,
   emptyText?: string,
   title?: string,
@@ -27,11 +27,11 @@ const PropertySelector = ({
   const hasHeadings: boolean = useMemo(() => properties.some(p => p.type === EPropertyType.HEADING), [properties]);
 
   return (
-    <div className="property-selector--outer">
-      {title && (<div className="property-selector--title">{title}</div>)}
-      <div className={`property-selector--wrapper ${!!selectedPropertyValue ? 'active' : 'inactive'}`}>
-        {!properties || !properties.length && (
-          <div className="property-selector--empty">
+    <div className='property-selector--outer'>
+      {title && (<div className='property-selector--title'>{title}</div>)}
+      <div className={`property-selector--wrapper ${selectedPropertyValue ? 'active' : 'inactive'}`}>
+        {(!properties || !properties.length) && (
+          <div className='property-selector--empty'>
             {emptyText || 'No items available'}
           </div>
         )}
@@ -51,7 +51,8 @@ const PropertySelector = ({
               hasHeading={hasHeadings}
               key={property.value}
             />
-          )}
+          );
+        }
         )}
       </div>
     </div>

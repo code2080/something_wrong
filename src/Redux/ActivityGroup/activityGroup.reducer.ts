@@ -8,7 +8,7 @@ const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case types.FETCH_ACTIVITY_GROUPS_SUCCESS: {
       const { results: activityGroupObjs, actionMeta: { formId } } = action.payload;
-      
+
       const activityGroups: TActivityGroupMap = activityGroupObjs.reduce((tot: any, acc: any) => {
         const activityGroup: TActivityGroup = ActivityGroup.create(acc);
         return [
@@ -16,7 +16,7 @@ const reducer = (state = initialState, action: any) => {
           activityGroup,
         ];
       }, []);
-      
+
       return {
         ...state,
         [formId]: activityGroups || [],
@@ -53,7 +53,7 @@ const reducer = (state = initialState, action: any) => {
     case types.DELETE_ACTIVITY_GROUP_SUCCESS: {
       const { actionMeta: { activityGroupId, formId } } = action.payload;
       const aGIdx = state[formId].findIndex((aG: TActivityGroup) => aG._id === activityGroupId);
-  
+
       return {
         ...state,
         [formId]: [
@@ -66,6 +66,6 @@ const reducer = (state = initialState, action: any) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

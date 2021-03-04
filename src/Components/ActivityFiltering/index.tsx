@@ -11,7 +11,7 @@ const ActivityFiltering = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="activity-filtering--wrapper">
+    <div className='activity-filtering--wrapper'>
       <ActivityFilterButton onClick={() => setShowModal(!showModal)} isActive={showModal} />
       <ActivityFilterModal isVisible={showModal} onClose={() => setShowModal(false)} />
     </div>

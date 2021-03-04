@@ -21,6 +21,7 @@ const mapStateToProps = (state, ownProps) => {
  * x) Make sure selection updates correctly, and updates across all values
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TimeslotSelect = ({ timeslots, activity, value, setValue, onFinish }) => {
   const timeslot = useMemo(
     () => {

@@ -49,7 +49,7 @@ export const findObjectPathForActivityValue = (valueExtId, activity) => {
  * @param {object} teCoreAPI
  * @param {object} dispatch
  */
-export const validateScheduledActivities = (activities, teCoreAPI, dispatch) => {
+export const validateScheduledActivities = (activities, teCoreAPI) => {
   const reservationIds = activities
     .filter(activity => activity.activityStatus === activityStatuses.SCHEDULED)
     .map(activity => activity.reservationId);

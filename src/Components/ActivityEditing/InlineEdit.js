@@ -17,6 +17,7 @@ const componentMapping = {
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: TimeslotSelect,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const InlineEdit = ({ activity, activityValue, action, onFinish, onCancel }) => {
   const [value, setValue] = useState(activityValue.value || undefined);
 

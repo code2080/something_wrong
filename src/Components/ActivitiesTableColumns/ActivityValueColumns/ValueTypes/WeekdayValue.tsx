@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
 import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
-import moment from 'moment';
 import { weekdayEnums } from '../../../../Constants/weekDays.constants';
 
 // TYPES
@@ -13,7 +12,7 @@ type Props = {
   activityId: string,
 };
 
-const WeekdayValue = ({ value, extId, activityId }) => {
+const WeekdayValue = ({ value, extId, activityId }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
 

@@ -28,7 +28,7 @@ export const selectActivitiesForFormAndIds = createSelector(
       }, []);
     return matchingActivities;
   }
-)
+);
 
 export const selectActivitiesForFormInstanceId = createSelector(
   activityStateSelector,
@@ -38,28 +38,14 @@ export const selectActivitiesForFormInstanceId = createSelector(
 export const selectActivity = createSelector(
   activityStateSelector,
   (activities: TActivityMap) => (formId: string, formInstanceId: string, activityId: string) => {
-    const activitiesForFormInstance: TActivity[] = _.get(activities, `${formId}.${formInstanceId}`, [])
-    return activitiesForFormInstance.find(a => a._id === activityId)
+    const activitiesForFormInstance: TActivity[] = _.get(activities, `${formId}.${formInstanceId}`, []);
+    return activitiesForFormInstance.find(a => a._id === activityId);
   }
 );
-
-/*
-export const selectTimingModeForActivity = createSelector(
-  selectActivity,
-  (activity: TActivity | undefined) => {
-    try {
-      const activityValue = activity.timing.find(el => el.extId === 'mode');
-      return activityValue.value;
-    } catch (e) {
-      return null;
-    }
-  }
-);
-*/
 
 export const selectTECorePayloadForActivity = createSelector(
   (state: any) => state,
-  state => (formId, formInstanceId, activityId, objectRequests) => {
+  state => (formId, formInstanceId, activityId, _objectRequests) => {
     const form = state.forms[formId];
     const activitiesForFormInstance = state.activities[formId][formInstanceId];
     const activity = activitiesForFormInstance.find(el => el._id === activityId);
@@ -75,6 +61,6 @@ export const selectTECorePayloadForActivity = createSelector(
       typedObjects,
       formType: form.formType,
       reservationMode: form.reservationMode,
-    }
+    };
   }
 );

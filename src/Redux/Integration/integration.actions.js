@@ -54,7 +54,7 @@ export const fetchDataForDataSource = (datasource) => (dispatch, getState) => {
 
 const findTypesOnReservationModeFlow = {
   request: () => ({ type: types.FETCH_TYPES_ON_RESERVATION_MODE_REQUEST }),
-  success: (response, params) => ({
+  success: (response, _) => ({
     type: types.FETCH_TYPES_ON_RESERVATION_MODE_SUCCESS,
     payload: { ...response },
   }),
@@ -78,7 +78,7 @@ export const findTypesOnReservationMode = reservationMode => (dispatch, getState
 
 const findFieldsOnReservationModeFlow = {
   request: () => ({ type: types.FETCH_FIELDS_ON_RESERVATION_MODE_REQUEST }),
-  success: (response, params) => ({
+  success: (response, _) => ({
     type: types.FETCH_FIELDS_ON_RESERVATION_MODE_SUCCESS,
     payload: { ...response },
   }),

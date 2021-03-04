@@ -29,7 +29,7 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
         ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
       ],
     };
-  }, {})
+  }, {});
   useEffect(() => {
     dispatch(
       setActivityFilterOptions({
@@ -48,37 +48,37 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
 
   const onClickRight = e => {
     e.stopPropagation();
-    setVisIdx(Math.min(visIdx + 1, normalizedFilterValues.length - 1))
-  }
+    setVisIdx(Math.min(visIdx + 1, normalizedFilterValues.length - 1));
+  };
 
   return (
-    <div className="object-filter-value--wrapper">
-      <div className="object-filter-value--toggle">
+    <div className='object-filter-value--wrapper'>
+      <div className='object-filter-value--toggle'>
         <div
-          className="chevron"
+          className='chevron'
           onClick={e => onClickLeft(e)}
         >
-          <Icon type="caret-left" />
+          <Icon type='caret-left' />
         </div>
-        <div className="counter">{`${visIdx + 1}/${normalizedFilterValues.length}`}</div>
+        <div className='counter'>{`${visIdx + 1}/${normalizedFilterValues.length}`}</div>
         <div
-          className="chevron"
+          className='chevron'
           onClick={e => onClickRight(e)}
         >
-          <Icon type="caret-right" />
+          <Icon type='caret-right' />
         </div>
       </div>
-      <div className="field--wrapper">
-        <div className="two-col--wrapper">
-          <div className="two-col--col">
-            <div className="title--row">{normalizedFilterValues[visIdx].fieldExtId}:</div>
-            <div className="value--row">{normalizedFilterValues[visIdx].values}</div>
+      <div className='field--wrapper'>
+        <div className='two-col--wrapper'>
+          <div className='two-col--col'>
+            <div className='title--row'>{normalizedFilterValues[visIdx].fieldExtId}:</div>
+            <div className='value--row'>{normalizedFilterValues[visIdx].values}</div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 ObjectFilterValue.propTypes = {
   extId: PropTypes.string.isRequired,

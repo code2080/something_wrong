@@ -1,7 +1,6 @@
-**/*.ts
-**/*.tsx
 **/*.css
 **/*.scss
 **/*.less
 /example/**
 /dist/**
+/te-data-models/**

@@ -54,11 +54,11 @@ const SubmissionColumn = ({ formInstanceId, activityId }: Props) => {
   };
 
   return (
-    <div className="submission-column--wrapper" onClick={onClick}>
-      <div className="submitter--row">
+    <div className='submission-column--wrapper' onClick={onClick}>
+      <div className='submitter--row'>
         {`${formInstance.firstName} ${formInstance.lastName}`}
       </div>
-      <div className="primary-object--row">
+      <div className='primary-object--row'>
         <span>Primary object:&nbsp;</span>
         {formInstance.scopedObject || 'N/A'}
       </div>

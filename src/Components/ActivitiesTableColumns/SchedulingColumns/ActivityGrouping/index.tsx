@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+
 import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
 import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
 
@@ -42,19 +42,19 @@ const ActivityGroupSelector = ({ activities }: Props) => {
   return (
     <Popover
       overlayClassName='activity-group-popover--wrapper'
-      title="Group activity"
+      title='Group activity'
       content={<ActivityGroupPopover activities={activities} />}
       getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
       trigger='hover'
       placement='rightTop'
     >
-      <div className="activity-group--button">
-        <Button size="small" icon="appstore">
+      <div className='activity-group--button'>
+        <Button size='small' icon='appstore'>
           {selectedActivityGroup ? selectedActivityGroup.name : 'N/A'}
         </Button>
       </div>
     </Popover>
-  )
+  );
 };
 // <GroupingButton activityGroup={selectedActivityGroup} />
 export default ActivityGroupSelector;

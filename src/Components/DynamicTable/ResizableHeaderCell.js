@@ -15,6 +15,7 @@ const ResizableCell = props => {
   const [minCellWidth, setMinCellWidth] = useState(0);
 
   const ref = useRef(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onResize = (e, { node, size }) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,7 +32,7 @@ const ResizableCell = props => {
     start = e.pageX;
   };
 
-  const onResizeStop = (e) => {
+  const onResizeStop = () => {
     if (typeof onResized === 'function') {
       onResized(_.max([width + changedWidth, minCellWidth]));
     }

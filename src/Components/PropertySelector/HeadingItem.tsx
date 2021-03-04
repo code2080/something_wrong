@@ -10,7 +10,7 @@ type Props = {
 const HeadingItem = ({ property }: Props) => {
   return (
     <div
-      className="property-selector--heading"
+      className='property-selector--heading'
     >
       {property.label}
     </div>

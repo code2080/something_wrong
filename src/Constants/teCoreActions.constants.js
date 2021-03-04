@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { reservationTemplates } from '../Mock/ReservationTemplates';
 import { reservationTypes } from '../Mock/ReservationTypes';

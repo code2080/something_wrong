@@ -1,4 +1,4 @@
-import { EActivityFilterInclusion, EActivityFilterMode, EActivityFilterType, TObjectFieldFilter, TTimingFilter } from '../../Types/ActivityFilter.interface';
+import { EActivityFilterInclusion, EActivityFilterMode, EActivityFilterType } from '../../Types/ActivityFilter.interface';
 import { TProperty } from '../../Types/property.type';
 import * as types from './filters.actionTypes';
 

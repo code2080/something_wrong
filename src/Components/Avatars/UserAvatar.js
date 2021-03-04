@@ -17,7 +17,7 @@ const mapActionsToProps = {
   fetchUser,
 };
 
-const UserAvatar = ({ user, ownerId, fetchUser }) => {
+const UserAvatar = ({ user }) => {
   return (
     <div className='avatar--wrapper'>
       <div className='avatar--circle'>
@@ -30,8 +30,6 @@ const UserAvatar = ({ user, ownerId, fetchUser }) => {
 
 UserAvatar.propTypes = {
   user: PropTypes.object,
-  ownerId: PropTypes.string.isRequired,
-  fetchUser: PropTypes.func.isRequired,
 };
 
 UserAvatar.defaultProps = {

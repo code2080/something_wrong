@@ -14,7 +14,7 @@ import ActivityFiltering from '../ActivityFiltering';
 import './index.scss';
 
 // TYPES
-import { TActivity } from '../../Types/Activity.type.js';
+import { TActivity } from '../../Types/Activity.type';
 
 type Props = {
   selectedRowKeys: string[],
@@ -33,36 +33,36 @@ const ActivitiesToolbar = ({ selectedRowKeys, onSelectAll, onDeselectAll }: Prop
   const activities: TActivity[] = useSelector(selectActivitiesForFormAndIds)(formId, selectedRowKeys);
 
   return (
-    <div className="activities-toolbar--wrapper">
-      <div className="activities-toolbar--item">
-        <span className="activities-toolbar--item-label">
+    <div className='activities-toolbar--wrapper'>
+      <div className='activities-toolbar--item'>
+        <span className='activities-toolbar--item-label'>
           Activities selected:&nbsp;
         </span>
         {selectedRowKeys.length}
       </div>
-      <div className="activities-toolbar--item">
-        <Button size="small" type="link" onClick={onSelectAll}>Select all</Button>
+      <div className='activities-toolbar--item'>
+        <Button size='small' type='link' onClick={onSelectAll}>Select all</Button>
         <Button
-          size="small"
-          type="link"
+          size='small'
+          type='link'
           onClick={onDeselectAll}
           disabled={!selectedRowKeys || !selectedRowKeys.length}
         >
           Deselect all
         </Button>
       </div>
-      <div className="activities-toolbar--item">
+      <div className='activities-toolbar--item'>
         <Popover
           overlayClassName='activity-group-popover--wrapper'
-          title="Group activity"
+          title='Group activity'
           content={<ActivityGroupPopover activities={activities} />}
           getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
           trigger='hover'
           placement='rightTop'
         >
           <Button
-            size="small"
-            type="link"
+            size='small'
+            type='link'
             disabled={!selectedRowKeys || !selectedRowKeys.length}
           >
             Group selected activities

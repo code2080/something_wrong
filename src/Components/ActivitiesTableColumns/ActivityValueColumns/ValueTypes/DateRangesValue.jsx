@@ -13,11 +13,11 @@ import { DATE_FORMAT } from '../../../../Constants/common.constants';
 import './twoCol.scss';
 
 const DateRangesColumn = ({ value, title }) => (
-  <div className="two-col--col">
-    <div className="title--row">
+  <div className='two-col--col'>
+    <div className='title--row'>
       {title}
     </div>
-    <div className="value--row">
+    <div className='value--row'>
       {moment(value).format(DATE_FORMAT)}
     </div>
   </div>
@@ -32,7 +32,7 @@ const DateRangesValue = ({ startTime, endTime, extId, activityId }) => {
   const dispatch = useDispatch();
   const { formId } = useParams();
 
-  const formattedValue = `${moment(startTime).format(DATE_FORMAT)} - ${moment(endTime).format(DATE_FORMAT)}`
+  const formattedValue = `${moment(startTime).format(DATE_FORMAT)} - ${moment(endTime).format(DATE_FORMAT)}`;
 
   useEffect(() => {
     dispatch(setActivityFilterOptions({
@@ -44,9 +44,9 @@ const DateRangesValue = ({ startTime, endTime, extId, activityId }) => {
   }, []);
 
   return (
-    <div className="two-col--wrapper">
-      {startTime && <DateRangesColumn value={startTime} title="Start:" />}
-      {endTime && <DateRangesColumn value={endTime} title="End:" />}
+    <div className='two-col--wrapper'>
+      {startTime && <DateRangesColumn value={startTime} title='Start:' />}
+      {endTime && <DateRangesColumn value={endTime} title='End:' />}
     </div>
   );
 };

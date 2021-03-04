@@ -23,7 +23,7 @@ const LengthValue = ({ value, extId, activityId }) => {
       optionPayload: { extId, values: [{ value: `${extId}/${formattedValue}`, label: formattedValue }] },
       activityId,
     }));
-  }, [])
+  }, []);
 
   return formattedValue;
 };

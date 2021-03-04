@@ -9,7 +9,7 @@ export const selectSubmissions = createSelector(
   submissions => formId => {
     const submissionsForForm = submissions[formId] || [];
     return _.flatMap(submissionsForForm)
-      .sort((a, b) => sortTime(a.updatedAt, b.updatedAt))
+      .sort((a, b) => sortTime(a.updatedAt, b.updatedAt));
   }
 );
 

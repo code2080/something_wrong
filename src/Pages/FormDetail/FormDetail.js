@@ -55,6 +55,7 @@ const FormPage = () => {
     dispatch(loadFilter({ filterId: `${formId}_SUBMISSIONS` }));
     dispatch(loadFilter({ filterId: `${formId}_ACTIVITIES` }));
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({ res }) => {} });
   }, [formId]);
 

@@ -14,6 +14,7 @@ const mapActionsToProps = {
   fetchUser,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const UserLabel = ({ user, ownerId, fetchUser }) => {
   return (
     <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>

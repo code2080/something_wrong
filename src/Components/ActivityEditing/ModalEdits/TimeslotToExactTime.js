@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // STYLES
 import '../ModalEdit.scss';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const ShowInfo = ({
   activityValue,
   activity,
@@ -11,6 +12,7 @@ const ShowInfo = ({
   prop,
   mappingProps,
 }) => {
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return (
     <React.Fragment>
       <span>i am the timeslot to exact time component</span>

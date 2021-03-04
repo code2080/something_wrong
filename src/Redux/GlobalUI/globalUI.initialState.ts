@@ -1,4 +1,4 @@
-import { EFormDetailTabs } from "../../Types/FormDetailTabs.enum";
+import { EFormDetailTabs } from '../../Types/FormDetailTabs.enum';
 
 export default {
   breadcrumbs: [],

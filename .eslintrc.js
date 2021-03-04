@@ -20,7 +20,8 @@ module.exports = {
   },
   plugins: [
     'react',
-    '@babel'
+    '@babel',
+    '@typescript-eslint'
   ],
   settings: {
     react: {
@@ -57,7 +58,11 @@ module.exports = {
     'no-use-before-define': 0,
 
     // Allow free standing if clauses
-    curly: 0
+    curly: 0,
+
+    // note you must disable the base rule as it can report incorrect errors
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
   }
 };
 

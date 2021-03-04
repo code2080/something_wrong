@@ -1,4 +1,4 @@
-export enum EPropertyType  {
+export enum EPropertyType {
   VALUE = 'VALUE',
   HEADING = 'HEADING',
 };

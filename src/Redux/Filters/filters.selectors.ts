@@ -13,7 +13,7 @@ export const selectFilter = createSelector(
     return {
       ...filterInterface,
       ...(f || {})
-    }
+    };
   }
 );
 
@@ -64,7 +64,7 @@ export const selectVisibleActivitiesForForm = createSelector(
     if (!filters) return [];
     if (!filterMatches || !filterValues) return 'ALL';
     // Reduce over filter values to get one large array
-    const validValues = Object.keys(filterValues).reduce((tot: string[], extId: string) => [ ...tot, ...filterValues[extId] ], []);
+    const validValues = Object.keys(filterValues).reduce((tot: string[], extId: string) => [...tot, ...filterValues[extId]], []);
     if (!validValues || !validValues.length) return 'ALL';
 
     // We need to get all filter matches for the valid values...
@@ -88,14 +88,10 @@ export const selectVisibleActivitiesForForm = createSelector(
 
     // If inclusion === SUBMISSION, we should return all activities on the submissions where we find the visible activities
     const submissions = state.activities[formId] || {};
-    const visibleActivities = Object.keys(submissions).reduce((tot, formInstanceId) => {
-      const includesVisibleActivity = submissions[formInstanceId].find(activity => activitiesMatchingCriteria.indexOf(activity._id) > -1);
-      if (includesVisibleActivity)
-        return _.uniq([
-          ...tot,
-          ...submissions[formInstanceId].map(el => el._id),
-        ]);
-    }, []);
-    return visibleActivities;
+    return _(Object.values(submissions))
+      .filter(act => activitiesMatchingCriteria.includes(act))
+      .map(act => act._id)
+      .uniq()
+      .value();
   }
-)
+);

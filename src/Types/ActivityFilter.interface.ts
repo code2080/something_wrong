@@ -22,7 +22,7 @@ export type TPaddingFilter = {
 
 export type TDateRangeFilter = {
   startTime: string | undefined | null;
-  endTime: string | undefined | null; 
+  endTime: string | undefined | null;
 };
 
 export type TTimingFilter = {

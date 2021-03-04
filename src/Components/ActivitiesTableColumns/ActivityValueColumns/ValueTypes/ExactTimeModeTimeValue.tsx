@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
@@ -13,7 +13,7 @@ type Props = {
   activityId: string,
 };
 
-const ExactTimeModeTimeValue = ({ value, extId, activityId }) => {
+const ExactTimeModeTimeValue = ({ value, extId, activityId } : Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
 

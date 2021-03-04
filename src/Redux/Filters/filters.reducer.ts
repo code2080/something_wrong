@@ -50,7 +50,7 @@ const reducer = (state = {}, action) => {
             ...state,
             [`${filterId}_OPTIONS`]: {
               ...filterIdOptionsState,
-              [extId]: _.uniqBy([ ...(filterIdOptionsState && filterIdOptionsState[extId] ? filterIdOptionsState[extId] : []), ...values ], 'value'),
+              [extId]: _.uniqBy([...(filterIdOptionsState && filterIdOptionsState[extId] ? filterIdOptionsState[extId] : []), ...values], 'value'),
             },
             [`${filterId}_MATCHES`]: {
               ...filterIdMatchesState,
@@ -58,7 +58,7 @@ const reducer = (state = {}, action) => {
                 return {
                   ...tot,
                   [acc.value]: [
-                    ...(filterIdMatchesState[acc.value] || []),
+                    ...(filterIdMatchesState[acc.value] || []),
                     activityId,
                   ],
                 };
@@ -86,12 +86,12 @@ const reducer = (state = {}, action) => {
                     return {
                       ...t,
                       [val.value]: [
-                        ...(filterIdMatchesState[val.value] || []),
+                        ...(filterIdMatchesState[val.value] || []),
                         activityId,
                       ],
                     };
                   }, {})
-                }
+                };
               }, {}),
             },
           };

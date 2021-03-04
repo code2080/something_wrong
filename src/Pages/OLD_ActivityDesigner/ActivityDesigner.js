@@ -93,6 +93,7 @@ const ActivityDesignerPage = ({
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
   teCoreAPI,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   saving,
 }) => {
   const history = useHistory();

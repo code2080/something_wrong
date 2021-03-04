@@ -156,7 +156,7 @@ const getExtIdPairsForActivity = values => {
 const extractPayloadFromActivities = activities => {
   const allExtIdPairs = activities.reduce((extIdPairs, activity) => [...extIdPairs, ...getExtIdPairsForActivity(activity.values)], []);
 
-  return allExtIdPairs.reduce((payload, [type, values, extId]) => {
+  return allExtIdPairs.reduce((payload, [type, _, extId]) => {
     const newPayloadWithExtId = {
       ...payload,
       [type]: [
@@ -237,7 +237,7 @@ const getValueFromElement = el => {
   return null;
 };
 
-const getPayloadForVerticalSection = (element, values, state) =>
+const getPayloadForVerticalSection = (element, values) =>
   values
     .filter(el => el.elementId === element._id)
     .map(el =>

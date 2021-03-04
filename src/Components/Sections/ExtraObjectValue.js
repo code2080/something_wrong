@@ -28,6 +28,7 @@ const mapStateToProps = (state, { formId, formInstanceId, extraObject }) => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ExtraObjectValue = ({ typeExtId, typeLabel, valueLabel, valueExtId }) => {
   return (
     <div className='extra-object--value'>

@@ -8,17 +8,16 @@ type Props = {
 };
 
 const ActivityFilterButton = ({ onClick, isActive }: Props) => {
-
   if (!isActive)
     return (
-      <Button size="small" ghost className="inactive" onClick={onClick}>
-        <Icon type="filter" />
+      <Button size='small' ghost className='inactive' onClick={onClick}>
+        <Icon type='filter' />
       </Button>
     );
 
   return (
-    <Button size="small" ghost className="active" onClick={onClick}>
-      <Icon type="filter" theme="filled" />
+    <Button size='small' ghost className='active' onClick={onClick}>
+      <Icon type='filter' theme='filled' />
     </Button>
   );
 };
