@@ -125,7 +125,7 @@ const renderLengthValue = (activityValue, activityId) => {
     value,
     renderedComponent: <LengthValue value={value} extId={activityValue.extId} activityId={activityId} />,
   });
-}
+};
 
 /**
  * @function getRenderPayloadForDateRangesValue
@@ -147,7 +147,7 @@ const renderDateRangesValue = (activityValue, activityId) => {
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [value.startTime, value.endTime],
     renderedComponent: <DateRangesValue startTime={value.startTime} endTime={value.endTime} extId={activityValue.extId} activityId={activityId} />,
-  })
+  });
 };
 
 /**
@@ -171,7 +171,7 @@ const renderPaddingValue = (activityValue, activityId) => {
     value: [value.before, value.after],
     renderedComponent: <PaddingValue before={value.before} after={value.after} extId={activityValue.extId} activityId={activityId} />,
   });
-}
+};
 
 /**
  * @function renderExactTimeModeTimeValue
@@ -190,8 +190,8 @@ const renderExactTimeModeTimeValue = (activityValue, activityId) => {
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,
     renderedComponent: <ExactTimeModeTimeValue extId={activityValue.extId} value={activityValue.value} activityId={activityId} />,
-  })
-}
+  });
+};
 
 /**
  * @function renderTimeValue

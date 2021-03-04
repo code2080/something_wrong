@@ -66,9 +66,9 @@ const ManualSchedulingColumn = ({ teCorePayload, teCoreAPI }) => {
   }, [teCorePayload]);
 
   return (
-    <div className="manual-scheduling-column--wrapper">
-      <div className="manual-scheduling--button" onClick={onSelectAllCallback}>
-        <Icon type="select" />
+    <div className='manual-scheduling-column--wrapper'>
+      <div className='manual-scheduling--button' onClick={onSelectAllCallback}>
+        <Icon type='select' />
       </div>
     </div>
   );

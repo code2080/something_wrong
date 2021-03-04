@@ -5,7 +5,7 @@ const ConstraintManagerPage = () => {
     <React.Fragment>
       Constraint Manager
     </React.Fragment>
-  )
+  );
 };
 
 export default ConstraintManagerPage;

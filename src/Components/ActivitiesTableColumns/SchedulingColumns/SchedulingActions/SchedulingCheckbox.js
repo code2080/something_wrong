@@ -25,18 +25,18 @@ const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
 const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
   const [reservationId, setReservationId] = useState(undefined);
   return (
-    <div className="popover-scheduled--wrapper">
-      <Form.Item title="Add a reservation id to the scheduling status:">
+    <div className='popover-scheduled--wrapper'>
+      <Form.Item title='Add a reservation id to the scheduling status:'>
         <Input
-          placeholder="Enter the reservation id here"
+          placeholder='Enter the reservation id here'
           value={reservationId}
           onChange={e => setReservationId(e.target.value)}
         />
       </Form.Item>
-      <div className="popover-scheduled--buttons">
-        <Button type="default" size="small" disabled={!reservationId} onClick={() => onConfirm(reservationId)}>Use reservation id</Button>
-        <Button type="default" size="small" onClick={() => onConfirm(null)}>No reservation id</Button>
-        <Button type="danger" size="small" onClick={onCancel}>Cancel</Button>
+      <div className='popover-scheduled--buttons'>
+        <Button type='default' size='small' disabled={!reservationId} onClick={() => onConfirm(reservationId)}>Use reservation id</Button>
+        <Button type='default' size='small' onClick={() => onConfirm(null)}>No reservation id</Button>
+        <Button type='danger' size='small' onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );
@@ -49,7 +49,7 @@ MarkAsScheduledPopover.propTypes = {
 
 const SchedulingCheckboxButton = ({ schedulingStatus }) => (
   <Button
-    size="small"
+    size='small'
     icon={schedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
     className={schedulingStatus}
   />
@@ -103,14 +103,14 @@ const SchedulingCheckbox = ({ activity }) => {
               onCancel={() => setShowConfirmSchedulingPopover(false)}
             />
           )}
-          title="Mark as scheduled"
+          title='Mark as scheduled'
           visible={showConfirmSchedulingPopover}
           onVisibleChange={visible => setShowConfirmSchedulingPopover(visible)}
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           trigger={'click'}
         >
           <Button
-            size="small"
+            size='small'
             icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
             className={derivedSchedulingStatus}
           />
@@ -118,15 +118,15 @@ const SchedulingCheckbox = ({ activity }) => {
       )}
       {activity.activityStatus === activityStatuses.SCHEDULED && (
         <Popconfirm
-          title="Are you sure you want to unschedule this activity?"
+          title='Are you sure you want to unschedule this activity?'
           onConfirm={onUnscheduleActivity}
-          okText="Yes"
-          cancelText="No"
+          okText='Yes'
+          cancelText='No'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           trigger={'click'}
         >
           <Button
-            size="small"
+            size='small'
             icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
             className={derivedSchedulingStatus}
           />

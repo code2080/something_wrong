@@ -54,7 +54,7 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
   ));
 
   return (
-    <div className="form-instance--wrapper">
+    <div className='form-instance--wrapper'>
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}

@@ -50,7 +50,7 @@ export const determineContentOfValue = activityValue => {
   if (activityValue.type !== activityValueTypes.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
-}
+};
 
 const transformFieldSearchToFilter = (datasource, rawValue) => {
   return {
@@ -59,7 +59,7 @@ const transformFieldSearchToFilter = (datasource, rawValue) => {
     searchString: rawValue.value,
     searchFields: [datasource[1]],
   };
-}
+};
 
 const transformNumberSearchToFilter = (datasource, rawValue) => {
   return {
@@ -67,7 +67,7 @@ const transformNumberSearchToFilter = (datasource, rawValue) => {
     searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
     searchFields: [datasource[1]],
   };
-}
+};
 
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
@@ -75,7 +75,7 @@ const transformDatasourceToFilter = (datasource, rawValue) => {
     searchString: null,
     searchFields: null,
   };
-}
+};
 
 const createActivityValueFilterPayload = (element, datasource, rawValue) => {
   /**
@@ -100,7 +100,7 @@ const createActivityValueFilterPayload = (element, datasource, rawValue) => {
     valueMode: activityValueModes.FROM_SUBMISSION,
     value,
   };
-}
+};
 
 /**
  * @function formatActivityValuePayload
@@ -129,7 +129,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
    * If there's no datasource attached to the object, we can be sure it should be free text interpretation
    */
   if (!element.datasource)
-    return _defPayload
+    return _defPayload;
   /**
    *  Split the data source to get its components
    */
@@ -170,7 +170,7 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
     if (objReq) {
       return [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
     }
-    return [...values, val]
+    return [...values, val];
   }, []);
   if (!eventValues) return null;
   const elementIdx = eventValues.findIndex(el => el.elementId === elementId);

@@ -220,17 +220,10 @@ const getRenderPayloadForDateRangesValue = activityValue => {
 const getRenderPayloadForPaddingValue = activityValue => {
   const { value } = activityValue;
   // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
-<<<<<<< HEAD
-  if (!value)
-    return null
-
-  if (!value.before && !value.after)
-=======
 
   if (!value) { return null; }
 
   if (!value.before && !value.after) {
->>>>>>> development
     return createRenderPayload({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: null,
@@ -323,19 +316,12 @@ export const getRenderPayloadForActivityValue = (
   const timingMode = getTimingModeForActivity(activity);
   let renderPayload = null;
   // Special case: start time and time slots
-<<<<<<< HEAD
   if (activityValue.extId === 'startTime' && timingMode === activityTimeModes.TIMESLOTS)
     renderPayload = getRenderPayloadForTimeSlotStartTime(activityValue, activity.timing);
 
   // Special case: end time and time slots
   if (activityValue.extId === 'endTime' && timingMode === activityTimeModes.TIMESLOTS)
     renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing);
-=======
-  if (activityValue.extId === 'startTime' && timingMode === mappingTimingModes.TIMESLOTS) { renderPayload = getRenderPayloadForTimeSlotStartTime(activityValue, activity.timing); }
-
-  // Special case: end time and time slots
-  if (activityValue.extId === 'endTime' && timingMode === mappingTimingModes.TIMESLOTS) { renderPayload = getSchedulingPayloadForTimeSlotEndTime(activityValue, activity.timing); }
->>>>>>> development
 
   // Special case: dateRanges for sequence scheduling
   if (activityValue.extId === 'dateRanges') { renderPayload = getRenderPayloadForDateRangesValue(activityValue); }
@@ -344,12 +330,8 @@ export const getRenderPayloadForActivityValue = (
   if (activityValue.extId === 'padding') { renderPayload = getRenderPayloadForPaddingValue(activityValue); }
 
   // For all optional timing elements
-<<<<<<< HEAD
   if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === activityTimeModes.SEQUENCE)
     renderPayload = getRenderPayloadForOptionalTimingValues(activityValue);
-=======
-  if (['weekday', 'time'].indexOf(activityValue.extId) > -1 && timingMode === mappingTimingModes.SEQUENCE) { renderPayload = getRenderPayloadForOptionalTimingValues(activityValue); }
->>>>>>> development
 
   // Special case: filters
   if (activityValue.submissionValueType === submissionValueTypes.FILTER && determineContentOfValue(activityValue) === submissionValueTypes.FILTER) { renderPayload = getRenderPayloadForObjectFilter(activityValue); }

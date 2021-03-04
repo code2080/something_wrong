@@ -129,13 +129,13 @@ const SubmissionsOverviewPage = () => {
                 return formattedValue
                   .toString()
                   .toLowerCase()
-                  .indexOf(query) > -1
+                  .indexOf(query) > -1;
               })
             : true
       )
       .sort((a, b) => {
         return a.index - b.index;
-      })
+      });
   }, [userId, filters, _dataSource, columns]);
 
   return (
@@ -155,7 +155,7 @@ const SubmissionsOverviewPage = () => {
       <DynamicTable
         columns={columns}
         dataSource={filteredDatasource}
-        rowKey="_id"
+        rowKey='_id'
         onRow={formInstance => ({
           onClick: (e) => {
             traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
@@ -167,7 +167,7 @@ const SubmissionsOverviewPage = () => {
         resizable
       />
     </React.Fragment>
-  )
+  );
 };
 
 export default SubmissionsOverviewPage;

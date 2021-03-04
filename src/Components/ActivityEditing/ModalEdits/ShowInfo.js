@@ -37,20 +37,20 @@ const ShowInfo = ({
         />
       )}
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
-        <Form.Item label="Mapped to:">
-          <div className="ant-form-text">
-            <span className="prop-name">{prop}</span>
-            {mappingProps.settings && mappingProps.settings.mandatory && (<span className="required-prop">&nbsp;(required)</span>)}
+        <Form.Item label='Mapped to:'>
+          <div className='ant-form-text'>
+            <span className='prop-name'>{prop}</span>
+            {mappingProps.settings && mappingProps.settings.mandatory && (<span className='required-prop'>&nbsp;(required)</span>)}
           </div>
         </Form.Item>
-        <Form.Item label="Value used in scheduling:">
-          <div className="ant-form-text">
+        <Form.Item label='Value used in scheduling:'>
+          <div className='ant-form-text'>
             {component.renderedComponent}
           </div>
         </Form.Item>
-        <Form.Item label="Value(s) in submission:">
-          <div className="ant-form-text">
-            <div key="el-0" className="base-activity-col__modal--submission-value">
+        <Form.Item label='Value(s) in submission:'>
+          <div className='ant-form-text'>
+            <div key='el-0' className='base-activity-col__modal--submission-value'>
               {JSON.stringify(renderedSubmissionValue)}
             </div>
           </div>

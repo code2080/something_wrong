@@ -236,15 +236,15 @@ const ActivityActionsDropdown = ({
     >
       {buttonType === 'ellipsis'
         ? (
-          <Button type="link" icon="ellipsis" size="small" />
+          <Button type='link' icon='ellipsis' size='small' />
         )
         : (
           <Button
             type={buttonType}
-            size="small"
+            size='small'
             style={{ backgroundColor: '#ffffff' }}
           >
-            Actions <Icon type="down" />
+            Actions <Icon type='down' />
           </Button>
         )
       }

@@ -112,8 +112,6 @@ const ActivityDesignerPage = ({
     }
   }, []);
 
-<<<<<<< HEAD:src/Pages/OLD_ActivityDesigner/ActivityDesigner.js
-=======
   const navigationHandler = (navigation) => {
     Modal.confirm({
       getContainer: () => document.getElementById('te-prefs-lib'),
@@ -125,7 +123,6 @@ const ActivityDesignerPage = ({
     return null;
   };
 
->>>>>>> development:src/Pages/ActivityDesigner/ActivityDesigner.js
   // State vars
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);

@@ -23,8 +23,8 @@ const SelectActivityButton = ({ activity }) => {
   };
 
   return (
-    <div className="scheduling-actions--button" onClick={onSelectAllCallback}>
-      <Icon type="select" />
+    <div className='scheduling-actions--button' onClick={onSelectAllCallback}>
+      <Icon type='select' />
     </div>
   );
 };

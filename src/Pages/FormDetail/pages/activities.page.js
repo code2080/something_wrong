@@ -91,7 +91,7 @@ const ActivitiesPage = () => {
       <DynamicTable
         columns={tableColumns}
         dataSource={tableDataSource}
-        rowKey="_id"
+        rowKey='_id'
         datasourceId={`${tableViews.ACTIVITIES}-${formId}`}
         expandedRowRender={row => <ExpandedPane columns={tableColumns} row={row} />}
         resizable

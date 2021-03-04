@@ -376,4 +376,4 @@ export const LabelRenderer = ({ type, extId }) => {
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
   return label && (label.label || extId || 'N/A');
-}
+};

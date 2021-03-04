@@ -80,7 +80,7 @@ const FormInstanceToolbar = ({
           )
           : 'N/A' }
       </div>
-      <div className="toolbar--section-flex" style={{ marginLeft: 'auto' }}>
+      <div className='toolbar--section-flex' style={{ marginLeft: 'auto' }}>
         <FormInstanceActionsDropdown formInstance={formInstance} />
       </div>
 

@@ -62,7 +62,7 @@ export const normalizeFilterValue = (value, filterType) => {
       return [{ fieldExtId: searchFields, values: searchString }];
     };
   }
-}
+};
 
 /**
  * @function normalizeFilterValues

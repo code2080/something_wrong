@@ -25,7 +25,7 @@ const determineObjectValueContent = activityValue => {
   if (activityValue.type !== activityValueTypes.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
-}
+};
 
 /**
  * @function renderObjectFilterValue

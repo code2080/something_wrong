@@ -147,7 +147,7 @@ export const getSelectionSettingsTECorePayload = (selectionSettings, form, formI
       { valueType: datasourceValueTypes.FIELD_VALUE, value: event[includedField.element] },
     ]);
   return [...extraObjectsPayload, ...includedFieldsPaylod];
-}
+};
 
 /**
  * @function applyScopedObjectFilters
@@ -168,7 +168,7 @@ export const applyScopedObjectFilters = (formInstance, scopedObjects, filters) =
     if (!field) return false;
     const fieldQuery = filters[fieldExtid].toString().toLowerCase();
     return field.values.some(value => value.toLowerCase().includes(fieldQuery));
-  })
+  });
 };
 
 /**
@@ -209,4 +209,4 @@ export const traversedClassList = element => {
     currentNode = currentNode.parentNode;
   } while (currentNode.parentNode);
   return classes;
-}
+};

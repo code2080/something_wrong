@@ -24,8 +24,8 @@ const timingCols = {
       <SortableTableCell className={`mode_${activity._id}`}>
         <BaseActivityCol
           activity={activity}
-          type="TIMING"
-          prop="mode"
+          type='TIMING'
+          prop='mode'
           propTitle={TimingNameMap.mode}
           formatFn={value => activityTimeModeProps[value].label}
           mapping={mapping}

@@ -55,54 +55,15 @@ const FormInstancePage = ({
     ]);
   }, []);
 
-<<<<<<< HEAD:src/Pages/OLD_FormInstanceDetail/FormInstanceDetail.js
-=======
-  // Effect to fetch all manual schedulings
-  useEffect(() => {
-    fetchManualSchedulingsForFormInstance({ formInstanceId: formInstance._id });
-  }, []);
-
-  // Effect to fetch activities
-  useEffect(() => {
-    fetchActivitiesForFormInstance(formInstance.formId, formInstance._id);
-  }, []);
-
-  const handleClickMore = () => setShowFormInfo(!showFormInfo);
-
->>>>>>> development:src/Pages/FormInstanceDetail/FormInstanceDetail.js
   // Effect to get all TE values into redux state
   const payload = useMemo(() => getExtIdPropsPayload({ sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, sections, activities]);
   useFetchLabelsFromExtIds(payload);
 
   // State var to hold active tab
   const baseSections = sections.map(section => <BaseSection section={section} key={section._id} />);
-<<<<<<< HEAD:src/Pages/OLD_FormInstanceDetail/FormInstanceDetail.js
-
-  return (
-    <div className="form-instance--wrapper">
-=======
-  const tabPanes = [
-    <Tabs.TabPane tab='Overview' key='OVERVIEW'>
-      {baseSections}
-    </Tabs.TabPane>,
-    !_.isEmpty(objectRequests) &&
-    <Tabs.TabPane tab='Object requests' key='OBJECT_REQUESTS' >
-      <ObjectRequestOverview formInstanceId={formInstance._id} requests={objectRequests} />
-    </Tabs.TabPane>,
-    hasAssistedSchedulingPermissions() &&
-    <Tabs.TabPane tab='Activities' key='ACTIVITIES'>
-      <ActivitiesOverview formId={formInstance.formId} formInstanceId={formInstance._id} />
-    </Tabs.TabPane>,
-  ].filter(_.identity);
-
-  const renderTabBar = ({ className, ...restProps }, DefaultTabBar) => (
-    <DefaultTabBar {...restProps} className={`${className} form-instance--tabs`} />
-  );
 
   return (
     <div className='form-instance--wrapper'>
-      <SpotlightMask spotlightPositionInfo={externalActionRef} />
->>>>>>> development:src/Pages/FormInstanceDetail/FormInstanceDetail.js
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
@@ -117,13 +78,7 @@ FormInstancePage.propTypes = {
   sections: PropTypes.array,
   formName: PropTypes.string.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
-<<<<<<< HEAD:src/Pages/OLD_FormInstanceDetail/FormInstanceDetail.js
   activities: PropTypes.array,
-=======
-  fetchManualSchedulingsForFormInstance: PropTypes.func.isRequired,
-  fetchActivitiesForFormInstance: PropTypes.func.isRequired,
-  activities: PropTypes.array.isRequired,
->>>>>>> development:src/Pages/FormInstanceDetail/FormInstanceDetail.js
 };
 
 FormInstancePage.defaultProps = {

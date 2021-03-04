@@ -30,6 +30,6 @@ export const useFetchLabelsFromExtIds = (payload) => {
     const payloadExtids = _.flatMap(payload);
     const missingExtIdsInStore = !payloadExtids.every(extId => extIds.includes(extId));
     if (!_.isEmpty(payloadExtids) && missingExtIdsInStore)
-      exec(payload)
+      exec(payload);
   }, []);
 };

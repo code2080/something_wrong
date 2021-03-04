@@ -140,7 +140,7 @@ const BaseActivityCol = ({
     } catch (error) {
       onFailedExternalEditCallback();
     }
-  }
+  };
 
   // On callback from action to select a different filter / select an object from filter in TEC
   const onProcessExternalActionWithFilterReturn = res => {
@@ -161,7 +161,7 @@ const BaseActivityCol = ({
     } catch (error) {
       onFailedExternalEditCallback();
     }
-  }
+  };
 
   // On callback from the completion of all external edits
   const onFinshExternalEdit = (res, action) => {

@@ -31,4 +31,4 @@ export const sortByActivityGroup = (a, b) => {
   if (!b.groupId) return 1;
   if (a.groupId === b.groupId) return 0;
   return sortAlpha(a.groupId, b.groupId);
-}
+};

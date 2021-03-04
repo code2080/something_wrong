@@ -135,7 +135,7 @@ const ActivityDesignPage = () => {
   // Callback to save mapping
   const onSaveDesign = () => {
     if (designIsValid)
-      dispatch(updateDesign(design))
+      dispatch(updateDesign(design));
   };
 
   // Callback for reset meun clicks
@@ -165,24 +165,24 @@ const ActivityDesignPage = () => {
 
   return (
     <React.Fragment>
-      <div className="activity-designer--wrapper">
-        <div className="activity-designer--toolbar">
-          <div className="activity-designer__toolbar--label">Reservation mode:</div>
-          <div className="activity-designer__toolbar--value">{form.reservationMode || 'Not selected'}</div>
+      <div className='activity-designer--wrapper'>
+        <div className='activity-designer--toolbar'>
+          <div className='activity-designer__toolbar--label'>Reservation mode:</div>
+          <div className='activity-designer__toolbar--value'>{form.reservationMode || 'Not selected'}</div>
           <Dropdown
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
           >
-            <Button type="link" size="small">
+            <Button type='link' size='small'>
               Reset configuration...
             </Button>
           </Dropdown>
           <div style={{ marginLeft: 'auto', display: 'flex' }}>
             <MappingStatus status={designIsValid} />
             <Button
-              type="primary"
-              size="small"
+              type='primary'
+              size='small'
               onClick={onSaveDesign}
               loading={isSaving}
               disabled={!designIsValid}
@@ -192,11 +192,11 @@ const ActivityDesignPage = () => {
           </div>
         </div>
         {hasReservations && <HasReservationsAlert formId={formId} />}
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <TimingMapping
             mapping={design}
             onChange={updateTimingDesignCallback}
@@ -204,11 +204,11 @@ const ActivityDesignPage = () => {
             disabled={hasReservations}
           />
         </div>
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Type</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <ObjectMapping
             mapping={design}
             mappingOptions={mappingOptions}
@@ -217,11 +217,11 @@ const ActivityDesignPage = () => {
             disabled={hasReservations}
           />
         </div>
-        <div className="activity-designer--type-header">
+        <div className='activity-designer--type-header'>
           <div>Field</div>
           <div>Mapping</div>
         </div>
-        <div className="activity-designer--list">
+        <div className='activity-designer--list'>
           <FieldMapping
             mapping={design}
             mappingOptions={mappingOptions}

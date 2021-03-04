@@ -89,21 +89,21 @@ const FormPage = () => {
   };
 
   return (
-    <div className="form--wrapper">
+    <div className='form--wrapper'>
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
-        <Tabs.TabPane tab="FORM INFO" key="FORM_INFO">
+        <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
           <FormInfoPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="SUBMISSIONS" key="SUBMISSIONS">
+        <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
           <SubmissionsPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="ACTIVITIES" key="ACTIVITIES">
+        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES'>
           <ActivitiesPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="ACTIVITY DESIGNER" key="ACTIVITY_DESIGNER">
+        <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
           <ActivityDesignPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="CONSTRAINT MANAGER" key="CONSTRAINT_MANAGER">
+        <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
           <ConstraintManagerPage />
         </Tabs.TabPane>
       </TEAntdTabBar>

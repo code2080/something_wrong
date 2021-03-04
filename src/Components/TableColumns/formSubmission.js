@@ -97,7 +97,7 @@ export const formSubmission = {
     render: (isStarred, item) => (
       <Icon
         style={{ fontSize: '0.9rem', color: themeColors.jungleGreen }}
-        type="star"
+        type='star'
         theme={isStarred ? 'filled' : 'outlined'}
         onClick={(e) => {
           e.preventDefault();

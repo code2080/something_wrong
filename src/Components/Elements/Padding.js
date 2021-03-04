@@ -36,7 +36,7 @@ const PaddingElement = ({ value, element }) => {
   const { settings } = element;
 
   return (
-    <div className="element--padding">
+    <div className='element--padding'>
       {settings && settings.allowPaddingBefore && (
         <div>
           <span>Padding before:</span>
