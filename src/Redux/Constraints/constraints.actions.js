@@ -1,6 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
 import * as types from './constraints.actionTypes';
-import ConstraintConfiguration from '../../Models/ConstraintConfiguration.model';
+import { ConstraintConfiguration } from '../../Models/ConstraintConfiguration.model';
 import { getEnvParams } from '../../configs';
 
 const fetchConstraintsFlow = {
@@ -38,12 +38,13 @@ const fetchConstraintsConfigurationsFlow = {
 };
 
 // Update endpoints later :)
-export const fetchConstraintConfigurations = (formId) => {
+export const fetchConstraintConfigurations = (formId) =>
   asyncAction.GET({
     flow: fetchConstraintsConfigurationsFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraints`
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }constraintConfigurations/forms/${formId}`
   });
-};
 const createConstraintsConfigurationsFlow = {
   request: () => ({
     type: types.CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_REQUEST
@@ -86,7 +87,7 @@ export const createConstraintsConfigurations = ({
   dispatch(
     asyncAction.POST({
       flow: createConstraintsConfigurationsFlow,
-      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraints`,
+      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}`,
       params: constraintConfiguration,
       postAction: { callback, meta }
     })
