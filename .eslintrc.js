@@ -28,6 +28,23 @@ module.exports = {
       version: 'latest',
     }
   },
+  // Disabled advanced ts linting for later
+  // overrides: [
+  //   {
+  //     files: ['**/*.ts', '**/*.tsx'],
+  //     extends: [
+  //       'plugin:@typescript-eslint/recommended',
+  //       'plugin:@typescript-eslint/recommended-requiring-type-checking',
+  //     ],
+  //     parserOptions: {
+  //       tsconfigRootDir: __dirname,
+  //       project: ['./tsconfig.json'],
+  //     },
+  //     rules: {
+  //       '@typescript-eslint/no-extra-semi': 0,
+  //     }
+  //   }
+  // ],
 
   rules: {
     // don't force es6 functions to include space before paren

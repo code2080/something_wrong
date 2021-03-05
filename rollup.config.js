@@ -50,7 +50,7 @@ export default {
     typescript(),
     eslint({
       throwOnError: false,
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx', '.ts', '.tsx']
     }),
     babel({
       exclude: 'node_modules/**',
