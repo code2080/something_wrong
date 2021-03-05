@@ -25,9 +25,10 @@ export const selectObjectRequestsList = () => createSelector(selectObjectRequest
 export const selectFormInstanceObjectRequests = (formInstance) =>
   createSelector(selectObjectRequestsList(),
     requests =>
-      requests.filter(req =>
-        req.formInstanceId === formInstance._id &&
-        _.flatMap(getSubmissionValues(formInstance), sectionData => sectionData.sectionValues).includes(req._id)
+      requests.filter(req => {
+        return req.formInstanceId === formInstance._id &&
+          _.flatMap(getSubmissionValues(formInstance), sectionData => _.flatten(sectionData.sectionValues)).includes(req._id);
+      }
       )
   );
 
