@@ -26,7 +26,7 @@ const reducer = (state = {}, action) => {
       };
     }
 
-    case types.SET_ACTIVITY_FIlTER_MODE: {
+    case types.SET_ACTIVITY_FILTER_MODE: {
       const { filterId, mode } = action.payload;
       return {
         ...state,
@@ -37,7 +37,7 @@ const reducer = (state = {}, action) => {
       };
     }
 
-    case types.SET_ACITIVTY_FILTER_OPTIONS: {
+    case types.SET_ACTIVITY_FILTER_OPTIONS: {
       const { filterId, optionType, optionPayload, activityId } = action.payload;
       const filterIdOptionsState = _.get(state, `${filterId}_OPTIONS`, {});
       const filterIdMatchesState = _.get(state, `${filterId}_MATCHES`, {});

@@ -56,12 +56,12 @@ export const setFilter = ({ filterId, filter }: TActionSetFilter) => ({
 });
 
 export const setActivityFilterOptions = ({ filterId, optionType, optionPayload, activityId }: TActionSetOptions) => ({
-  type: types.SET_ACITIVTY_FILTER_OPTIONS,
+  type: types.SET_ACTIVITY_FILTER_OPTIONS,
   payload: { filterId, optionType, optionPayload, activityId },
 });
 
 export const setActivityFilterMode = ({ filterId, mode }: TActionSetActivityFilterMode) => ({
-  type: types.SET_ACTIVITY_FIlTER_MODE,
+  type: types.SET_ACTIVITY_FILTER_MODE,
   payload: { filterId, mode },
 });
 
