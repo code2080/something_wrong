@@ -23,6 +23,7 @@ import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.s
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // PAGES
 import SubmissionsPage from './pages/submissions.page';
@@ -34,6 +35,7 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { AEBETA_PERMISSIION } from '../../Constants/permissions.constants';
 
 const FormPage = () => {
   const dispatch = useDispatch();
@@ -42,6 +44,7 @@ const FormPage = () => {
   const form = useSelector(selectForm)(formId);
   const submissions = useSelector(selectSubmissions)(formId);
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
+  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSIION));
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -104,9 +107,9 @@ const FormPage = () => {
         <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
           <ActivityDesignPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
+        {hasAEBetaPermission && <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
           <ConstraintManagerPage />
-        </Tabs.TabPane>
+        </Tabs.TabPane>}
       </TEAntdTabBar>
     </div>
   );
