@@ -33,7 +33,14 @@ const constraintManagerTableColumns = [
     title: 'Weight',
     dataIndex: 'weight',
     key: 'weight',
-    render: (weight) => <InputNumber min={1} max={100} defaultValue={weight} />
+    render: (weight, isHardConstraint) => (
+      <InputNumber
+        min={1}
+        max={100}
+        defaultValue={weight}
+        disabled={!isHardConstraint}
+      />
+    )
   }
 ];
 
