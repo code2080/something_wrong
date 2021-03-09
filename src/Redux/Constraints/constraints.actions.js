@@ -37,7 +37,6 @@ const fetchConstraintsConfigurationsFlow = {
   })
 };
 
-// Update endpoints later :)
 export const fetchConstraintConfigurations = (formId) =>
   asyncAction.GET({
     flow: fetchConstraintsConfigurationsFlow,

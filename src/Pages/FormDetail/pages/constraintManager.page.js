@@ -13,13 +13,11 @@ import {
 import { useParams } from 'react-router-dom';
 
 const ConstraintManagerPage = ({ constraintConfigurationId }) => {
-  const handleSelect = (constraintConfigId) => {
-    availableConstraintConfigs.forEach((config) => {
-      if (config._id === constraintConfigId) {
-        setSelectedConstraintConfiguration(config);
-      }
-    });
-  };
+  /* Unneeded? :/
+  const constraintConfigs = useSelector(
+    selectConstraintConfigurations(constraintConfigurationId)
+  );
+*/
 
   const [availableConstraintConfigs, setAvailableConstraintConfigs] = useState(
     []
@@ -29,6 +27,27 @@ const ConstraintManagerPage = ({ constraintConfigurationId }) => {
     setSelectedConstraintConfiguration
   ] = useState({});
 
+  const handleSelect = (constraintConfigId) => {
+    availableConstraintConfigs.forEach((config) => {
+      if (config._id === constraintConfigId) {
+        setSelectedConstraintConfiguration(config);
+      }
+    });
+  };
+
+  const onAddCustomConstraintConf = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleCreateNew = () => {
+    console.log(availableConstraintConfigs);
+    return {};
+  };
+  const handleSaveConstraintConfiguration = () => {
+    console.log(selectedConstraintConfiguration);
+    // dispatch(updateConstraintConfiguration(selectedConstraintConfiguration));
+  };
+
   const dispatch = useDispatch();
   const { formId } = useParams();
   useEffect(() => {
@@ -36,14 +55,6 @@ const ConstraintManagerPage = ({ constraintConfigurationId }) => {
       setAvailableConstraintConfigs(payload);
     });
   }, [formId]);
-
-  const onAddCustomConstraintConf = (e) => {
-    e.stopPropagation();
-  };
-
-const ConstraintManagerPage = () => {
-  return <ConstraintManagerTopBar />;
-
   return (
     <React.Fragment>
       <div className="constraint-manager--wrapper">
@@ -59,7 +70,7 @@ const ConstraintManagerPage = () => {
               <span>{'Default Constraints'}</span>
             </div>
           }
-          constraintConfig={selectedConstraintConfiguration}
+          constraints={selectedConstraintConfiguration.constraints}
         />
         <ConstraintManagerTable
           renderSectionHeader={
@@ -70,7 +81,7 @@ const ConstraintManagerPage = () => {
               </Button>
             </div>
           }
-          constraintConfig={selectedConstraintConfiguration}
+          constraints={selectedConstraintConfiguration.constraints}
         />
       </div>
     </React.Fragment>

@@ -1,32 +1,27 @@
 import React from 'react';
 import { Select, Button } from 'antd';
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import { selectConstraints } from '../../Redux/Constraints/constraints.selectors';
-
 import './ConstraintManagerTopBar.scss';
 
 const ConstraintManagerTopBar = ({
-  selectedConstraintConfigurationId,
   onSelect,
-  onCreateNew
+  onCreateNew,
+  constraintConfigurations,
+  onDeleteConstraintConfiguration,
+  onSaveConstraintConfiguration
 }) => {
-  const constraintConfigurations = useSelector(
-    selectConstraints(selectedConstraintConfigurationId)
-  ); // Added to test functionality
   return (
     <div className="constraint-manager-top-bar--wrapper">
       <div className="constraint-manager-top-bar--selections">
         <span>Select constraint configuration: </span>
         <Select
           onChange={onSelect}
-          defaultValue="Combo Box"
+          defaultValue="Select..."
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
         >
-          {(constraintConfigurations || []).map((configuration) => (
-            <Select.Option key={configuration} value={configuration}>
-              {configuration}
+          {constraintConfigurations.map((conf) => (
+            <Select.Option key={conf._id} value={conf._id}>
+              {conf.name}
             </Select.Option>
           ))}
         </Select>
@@ -35,10 +30,10 @@ const ConstraintManagerTopBar = ({
         <Button size="small" onClick={onCreateNew}>
           Create new
         </Button>
-        <Button size="small" onClick={onCreateNew}>
+        <Button size="small" onClick={onDeleteConstraintConfiguration}>
           Delete
         </Button>
-        <Button size="small" onClick={onCreateNew}>
+        <Button size="small" onClick={onSaveConstraintConfiguration}>
           Save
         </Button>
       </div>
@@ -47,9 +42,11 @@ const ConstraintManagerTopBar = ({
 };
 
 ConstraintManagerTopBar.propTypes = {
-  selectedConstraintConfigurationId: PropTypes.string,
+  constraintConfigurations: PropTypes.array,
   onSelect: PropTypes.func,
-  onCreateNew: PropTypes.func
+  onCreateNew: PropTypes.func,
+  onSaveConstraintConfiguration: PropTypes.func,
+  onDeleteConstraintConfiguration: PropTypes.func
 };
 
 export default ConstraintManagerTopBar;
