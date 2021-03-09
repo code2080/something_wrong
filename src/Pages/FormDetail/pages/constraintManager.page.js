@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 import ConstraintManagerTable from '../../../Components/ConstraintManagerTable/ConstraintManagerTable';
-import { selectConstraintConfigurations } from '../../../Redux/Constraints/constraints.selectors';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+
 import {
   fetchConstraintConfigurations,
   updateConstraintConfiguration
@@ -13,12 +14,6 @@ import {
 import { useParams } from 'react-router-dom';
 
 const ConstraintManagerPage = ({ constraintConfigurationId }) => {
-  /* Unneeded? :/
-  const constraintConfigs = useSelector(
-    selectConstraintConfigurations(constraintConfigurationId)
-  );
-*/
-
   const [availableConstraintConfigs, setAvailableConstraintConfigs] = useState(
     []
   );
@@ -55,6 +50,13 @@ const ConstraintManagerPage = ({ constraintConfigurationId }) => {
       setAvailableConstraintConfigs(payload);
     });
   }, [formId]);
+  const [
+    defau,
+    other
+  ] = _.partition(selectedConstraintConfiguration.constraints, [
+    'type',
+    'DEFAULT'
+  ]);
   return (
     <React.Fragment>
       <div className="constraint-manager--wrapper">
@@ -70,7 +72,7 @@ const ConstraintManagerPage = ({ constraintConfigurationId }) => {
               <span>{'Default Constraints'}</span>
             </div>
           }
-          constraints={selectedConstraintConfiguration.constraints}
+          constraints={defau}
         />
         <ConstraintManagerTable
           renderSectionHeader={
@@ -81,7 +83,7 @@ const ConstraintManagerPage = ({ constraintConfigurationId }) => {
               </Button>
             </div>
           }
-          constraints={selectedConstraintConfiguration.constraints}
+          constraints={other}
         />
       </div>
     </React.Fragment>
