@@ -1,0 +1,22 @@
+@import '../../Styles/globals.scss';
+
+.constraint-manager-top-bar--wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 8px;
+  background-color: #c6c5c570;
+  .ant-btn {
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    padding: 0 6px;
+  }
+}
+
+.constraint-manager-top-bar--buttons {
+  margin-right: 0.2rem;
+
+  .ant-btn.ant-btn-sm {
+    margin-right: 0.4rem;
+    height: 2rem;
+  }
+}
