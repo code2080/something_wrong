@@ -48,10 +48,6 @@ export default {
     svgr(),
     json(),
     typescript(),
-    eslint({
-      throwOnError: false,
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
-    }),
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
