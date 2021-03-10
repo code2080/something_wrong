@@ -11,6 +11,7 @@ import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import activityGroups from './ActivityGroup/activityGroup.reducer';
+import constraintConfigurations from './ConstraintConfigurations/constraintConfigurations.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import jobs from './Jobs/jobs.reducer';
 import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
   activities,
   activityDesigner,
   activityGroups,
+  constraintConfigurations,
   jobs,
   manualSchedulings,
   users,
@@ -38,7 +40,7 @@ const appReducer = combineReducers({
   integration,
   objectRequests,
   elements,
-  constraints
+  constraints,
 });
 
 const rootReducer = (state, action) => {

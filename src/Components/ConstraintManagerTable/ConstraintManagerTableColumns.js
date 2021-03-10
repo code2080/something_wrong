@@ -1,12 +1,18 @@
 import React from 'react';
 import { Switch, InputNumber } from 'antd';
 
-const constraintManagerTableColumns = [
+const constraintManagerTableColumns = (onUpdateValue) => [
   {
     title: 'Active',
     dataIndex: 'isActive',
     key: 'isActive',
-    render: (isActive) => <Switch defaultChecked={isActive} />
+    render: (isActive, ci) => (
+      <Switch 
+        checked={isActive}
+        size="small"
+        onChange={checked => onUpdateValue(ci.constraintId, 'isActive', checked)}
+      />
+    ),
   },
   {
     title: 'Name',
@@ -27,7 +33,12 @@ const constraintManagerTableColumns = [
     title: 'Hard Constraint',
     dataIndex: 'isHardConstraint',
     key: 'isHardConstraint',
-    render: (isHardConstraint) => <Switch defaultChecked={isHardConstraint} />
+    render: (isHardConstraint) => (
+      <Switch
+        checked={isHardConstraint}
+        size="small"
+      />
+    ),
   },
   {
     title: 'Weight',
@@ -37,8 +48,9 @@ const constraintManagerTableColumns = [
       <InputNumber
         min={1}
         max={100}
-        defaultValue={weight}
+        value={weight}
         disabled={!isHardConstraint}
+        size="small"
       />
     )
   }

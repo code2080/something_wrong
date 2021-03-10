@@ -17,6 +17,8 @@ import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
+import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
+import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors.ts';
@@ -48,6 +50,8 @@ const FormPage = () => {
     dispatch(fetchMappings(formId));
     dispatch(fetchActivitiesForForm(formId));
     dispatch(fetchActivityGroupsForForm(formId));
+    dispatch(fetchConstraints());
+    dispatch(fetchConstraintConfigurations(formId));
     dispatch(setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
-    "@timeedit/te-prefs-lib": "^0.10.0",
+    "@timeedit/te-prefs-lib": "link:..",
     "core-js": "^3.8.3",
     "cross-env": "^7.0.3",
     "moment": "^2.29.1",
