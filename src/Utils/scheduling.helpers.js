@@ -11,7 +11,7 @@ import { SchedulingReturn } from '../Models/SchedulingReturn.model';
 import { SchedulingError } from '../Models/SchedulingError.model';
 
 // CONSTANTS
-import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
@@ -70,7 +70,7 @@ export const determineSchedulingAlgorithmForActivityValue = (
    * Check for timing first
    * timing mode exact === exact algo, otherwise best fit time
    */
-  if (activityValue.type === activityValueTypes.TIMING) {
+  if (activityValue.type === ActivityValueType.TIMING) {
     const timingMode = getTimingModeForActivity(activity);
     if (timingMode === activityTimeModes.EXACT)
       return schedulingAlgorithms.EXACT;

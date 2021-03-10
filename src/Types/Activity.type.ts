@@ -1,3 +1,4 @@
+import { ActivityValue } from '../../te-data-models/src/models';
 import { EActivityStatus } from './ActivityStatus.enum';
 
 export type TActivity = {
@@ -12,6 +13,6 @@ export type TActivity = {
   reservationId: string; //  If actvitiyStatus indicates the activity has been scheduled, this prop holds the reservation id
   schedulingTimestamp: string // Timestamp for when the activity was scheduled
   errorDetails: string; // Instance of scheduling error
-  timing: any[]; // An array of ActivityValue, with each element's extId representing one of the properties in the ActivityTiming.model.js
-  values: any[]; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
+  timing: ActivityValue[]; // An array of ActivityValue, with each element's extId representing one of the properties in the ActivityTiming.model.js
+  values: ActivityValue[]; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
 }

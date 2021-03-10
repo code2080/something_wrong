@@ -12,7 +12,7 @@ import { ActivityValueRenderPayload } from './RenderPayload';
 
 // CONSTANTS
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
-import { activityValueTypes } from '../../../../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
 
 /**
@@ -22,7 +22,7 @@ import { submissionValueTypes } from '../../../../Constants/submissionValueTypes
  * @returns {String} value type (enum of submissionValueTypes)
  */
 const determineObjectValueContent = activityValue => {
-  if (activityValue.type !== activityValueTypes.OBJECT) return null;
+  if (activityValue.type !== ActivityValueType.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
 };

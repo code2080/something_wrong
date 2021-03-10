@@ -1,6 +1,6 @@
-import { activityValueTypes } from './activityValueTypes.constants';
+import { ActivityValueType } from './activityValueTypes.constants';
 import { submissionValueTypes } from './submissionValueTypes.constants';
-import { activityValueModes } from './activityValueModes.constants';
+import { ActivityValueMode } from './activityValueModes.constants';
 import { activityTimeModes } from './activityTimeModes.constants';
 import { activityViews } from './activityViews.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
@@ -21,19 +21,19 @@ export const activityActions = {
 
 export const activityActionFilters = {
   [activityActions.FREE_TEXT_OVERRIDE]: activityValue =>
-    activityValue.type === activityValueTypes.FIELD,
+    activityValue.type === ActivityValueType.FIELD,
   [activityActions.NUMBER_OVERRIDE]: (activityValue, activity, mapping) =>
     activityValue.extId === 'length' &&
     mapping.timing.mode === activityTimeModes.TIMESLOTS,
   [activityActions.EXACT_TIME_OVERRIDE]: (activityValue, activity, mapping) =>
-    activityValue.type === activityValueTypes.TIMING &&
+    activityValue.type === ActivityValueType.TIMING &&
     mapping.timing.mode === activityTimeModes.EXACT,
   [activityActions.TIMESLOT_CHANGE_OVERRIDE]: (
     activityValue,
     activity,
     mapping
   ) =>
-    activityValue.type === activityValueTypes.TIMING &&
+    activityValue.type === ActivityValueType.TIMING &&
     mapping.timing.mode === activityTimeModes.TIMESLOTS &&
     activityValue.extId !== 'length',
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: (
@@ -41,20 +41,20 @@ export const activityActionFilters = {
     activity,
     mapping
   ) =>
-    activityValue.type === activityValueTypes.TIMING &&
+    activityValue.type === ActivityValueType.TIMING &&
     mapping.timing.mode === activityTimeModes.TIMESLOTS &&
     activityValue.extId !== 'length',
   [activityActions.SELECT_OBJECT_FROM_FILTER_OVERRIDE]: activityValue =>
-    activityValue.type === activityValueTypes.OBJECT &&
+    activityValue.type === ActivityValueType.OBJECT &&
     activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.EDIT_OBJECT]: activityValue =>
-    activityValue.type === activityValueTypes.OBJECT &&
+    activityValue.type === ActivityValueType.OBJECT &&
     activityValue.submissionValueType === submissionValueTypes.OBJECT,
   [activityActions.EDIT_FILTER_OVERRIDE]: activityValue =>
     activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.SELECT_BEST_FIT_VALUE]: activityValue => activityValue.submissionValueType === submissionValueTypes.FILTER,
   [activityActions.REVERT_TO_SUBMISSION_VALUE]: activityValue =>
-    activityValue.valueMode === activityValueModes.MANUAL,
+    activityValue.valueMode === ActivityValueMode.MANUAL,
   [activityActions.SHOW_INFO]: () => true
 };
 

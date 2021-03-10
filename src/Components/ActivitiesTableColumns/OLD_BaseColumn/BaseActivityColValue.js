@@ -9,7 +9,7 @@ import { determineContentOfValue } from '../../../Utils/activityValues.helpers';
 import { getRenderPayloadForActivityValue } from '../../../Utils/activityValues.rendering';
 
 // CONSTANTS
-import { activityValueTypes } from '../../../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../Constants/submissionValueTypes.constants';
 
 // COMPONENTS
@@ -28,7 +28,7 @@ const BaseActivityColValue = ({
 }) => {
   const schedulingPayload = useMemo(() => {
     switch (activityValue.type) {
-      case activityValueTypes.OBJECT: {
+      case ActivityValueType.OBJECT: {
         const valueType = determineContentOfValue(activityValue);
         if (valueType === submissionValueTypes.OBJECT) {
           return getRenderPayloadForActivityValue(
@@ -46,8 +46,8 @@ const BaseActivityColValue = ({
           formatFn
         );
       }
-      case activityValueTypes.FIELD:
-      case activityValueTypes.TIMING:
+      case ActivityValueType.FIELD:
+      case ActivityValueType.TIMING:
       default:
         return getRenderPayloadForActivityValue(
           activityValue,
