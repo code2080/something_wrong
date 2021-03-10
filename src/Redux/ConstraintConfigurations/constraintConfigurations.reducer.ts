@@ -3,7 +3,7 @@ import {
   CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
-} from './constraintConfigurations.actionTypes'
+} from './constraintConfigurations.actionTypes';
 
 // MODELS
 import { ConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
@@ -24,8 +24,8 @@ const reducer = (state = {}, action) => {
         state
       );
     };
-  
-    case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: 
+
+    case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
     case UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const { payload: { constraintConfiguration: _, ...constraintConfObj } } = action;
       const constraintConfiguration = ConstraintConfiguration.create(constraintConfObj);
