@@ -1,24 +1,14 @@
 export class ConstraintConfiguration {
-  constraintId;
-  isActive;
-  isHardConstraint;
-  weight;
-  parameters;
-  operator;
-
-  constructor ({
-    constraintId,
-    isActive,
-    isHardConstraint,
-    weight,
-    parameters = [],
-    operator
-  }) {
-    this.constraintId = constraintId;
-    this.isActive = isActive;
-    this.isHardConstraint = isHardConstraint;
-    this.weight = weight;
-    this.parameters = parameters;
-    this.operator = operator;
+  formId;
+  name;
+  description;
+  constraints;
+  timestamps;
+  constructor ({ formId, name, description, constraints, timestamps }) {
+    this.formId = formId;
+    this.name = name;
+    this.description = description;
+    this.constraints = constraints || [];
+    this.timestamps = timestamps;
   }
 }

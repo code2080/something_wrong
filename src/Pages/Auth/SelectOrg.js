@@ -14,6 +14,10 @@ const SelectOrg = ({ organizations, onSelectOrg }) => (
       value={undefined}
       placeholder='Select your organization...'
       onChange={onSelectOrg}
+      showSearch
+      filterOption={(input, option) =>
+        option.props.children.toLowerCase().includes(input.toLowerCase())
+      }
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       style={{ minWidth: '100%' }}
     >

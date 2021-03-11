@@ -4,20 +4,20 @@ export default class Constraint {
   constraintId;
   parameters;
   allowedOperators;
-  type;
+  timeStamp;
   constructor ({
     name,
     description,
     constraintId,
     parameters = [],
     allowedOperators = [],
-    type = {}
+    timeStamp
   }) {
     this.name = name;
     this.description = description;
     this.constraintId = constraintId;
     this.parameters = parameters || [];
     this.allowedOperators = allowedOperators || [];
-    this.type = type;
+    this.timeStamp = timeStamp;
   }
 }

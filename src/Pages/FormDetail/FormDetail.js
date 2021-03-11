@@ -6,6 +6,7 @@ import { Tabs } from 'antd';
 
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
+import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 // HOOKS
 import { useFetchLabelsFromExtIds, useTECoreAPI } from '../../Hooks/TECoreApiHooks';
@@ -17,6 +18,8 @@ import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
+import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
+import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors.ts';
@@ -35,7 +38,8 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
-import { AEBETA_PERMISSIION } from '../../Constants/permissions.constants';
+
+import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 const FormPage = () => {
   const dispatch = useDispatch();
@@ -44,13 +48,15 @@ const FormPage = () => {
   const form = useSelector(selectForm)(formId);
   const submissions = useSelector(selectSubmissions)(formId);
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
-  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSIION));
+  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(formId));
     dispatch(fetchActivitiesForForm(formId));
     dispatch(fetchActivityGroupsForForm(formId));
+    dispatch(fetchConstraints());
+    dispatch(fetchConstraintConfigurations(formId));
     dispatch(setBreadcrumbs([
       { path: '/forms', label: 'Forms' },
       { path: `/forms/${formId}`, label: form.name }
@@ -94,6 +100,7 @@ const FormPage = () => {
 
   return (
     <div className='form--wrapper'>
+      {hasAEBetaPermission && <JobToolbar />}
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
         <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
           <FormInfoPage />
