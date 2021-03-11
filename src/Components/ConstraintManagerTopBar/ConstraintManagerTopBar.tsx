@@ -32,8 +32,8 @@ const ConstraintManagerTopBar = ({
           onChange={(cid: string) => onSelect(cid)}
           value={selectedCID || undefined}
           getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
-          size="small"
-          placeholder="Select a constraint configuration"
+          size='small'
+          placeholder='Select a constraint configuration'
           style={{ width: '200px' }}
         >
           {constraintConfigurations.map((conf) => (
@@ -42,7 +42,7 @@ const ConstraintManagerTopBar = ({
             </Select.Option>
           ))}
         </Select>
-        <Button size="small" type="link" onClick={onCreateNew}>Create new...</Button>
+        <Button size='small' type='link' onClick={onCreateNew}>Create new...</Button>
       </div>
       <div className='constraint-manager-top-bar--buttons'>
         <Button size='small' onClick={onDeleteConstraintConfiguration}>

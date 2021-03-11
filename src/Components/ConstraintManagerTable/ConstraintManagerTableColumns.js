@@ -7,9 +7,9 @@ const constraintManagerTableColumns = (onUpdateValue) => [
     dataIndex: 'isActive',
     key: 'isActive',
     render: (isActive, ci) => (
-      <Switch 
+      <Switch
         checked={isActive}
-        size="small"
+        size='small'
         onChange={checked => onUpdateValue(ci.constraintId, 'isActive', checked)}
       />
     ),
@@ -36,7 +36,7 @@ const constraintManagerTableColumns = (onUpdateValue) => [
     render: (isHardConstraint) => (
       <Switch
         checked={isHardConstraint}
-        size="small"
+        size='small'
       />
     ),
   },
@@ -50,7 +50,7 @@ const constraintManagerTableColumns = (onUpdateValue) => [
         max={100}
         value={weight}
         disabled={!isHardConstraint}
-        size="small"
+        size='small'
       />
     )
   }
