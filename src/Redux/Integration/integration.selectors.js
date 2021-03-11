@@ -246,7 +246,7 @@ const getPayloadForVerticalSection = (element, values) =>
 
 const getPayloadForTableSection = (element, values, state) =>
   Object.keys(values).reduce((allRows, rowKey) => {
-    const rowValues = values[rowKey] && values[rowKey].values ? values[rowKey].values : [];
+    const rowValues = values[rowKey]?.values || [];
     return [
       ...allRows,
       ...getPayloadForVerticalSection(element, rowValues, state)
