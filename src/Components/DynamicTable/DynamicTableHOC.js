@@ -109,7 +109,7 @@ const DynamicTableHOC = ({
     }, {}));
 
     // Clear column width when changing page
-    const unlisten = history.listen(location => {
+    const unlisten = history.listen(_location => {
       sessionStorage.removeItem(COLUMNS_WIDTH);
     });
     return () => {

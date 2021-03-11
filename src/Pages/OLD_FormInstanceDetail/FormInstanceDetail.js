@@ -14,10 +14,6 @@ import FormInstanceToolbar from '../../Components/FormInstanceToolbar/FormInstan
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectFormInstanceObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.selectors';
-import { hasPermission } from '../../Redux/Auth/auth.selectors';
-
-// CONSTANTS
-import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 // STYLES
 import './FormInstanceDetail.scss';
