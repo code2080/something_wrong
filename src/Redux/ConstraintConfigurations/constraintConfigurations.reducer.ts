@@ -33,7 +33,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [constraintConfiguration.formId]: {
           ...state[constraintConfiguration.formId],
-          [constraintConfiguration._id]: constraintConfiguration,
+          [constraintConfiguration._id as string]: constraintConfiguration,
         }
       };
     };
