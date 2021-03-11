@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, Form } from 'antd';
-import moment from 'moment';
 import _ from 'lodash';
 
 // COMPONENTS
@@ -30,7 +29,7 @@ const ActivityStatusCol = ({ activity }) => {
         )}
         <Form.Item label='Time'>
           <div className='ant-form-text'>
-            {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
+            {activity.schedulingTimestamp?.local().format(DATE_TIME_FORMAT) ?? 'N/A'}
           </div>
         </Form.Item>
       </Form>

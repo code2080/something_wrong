@@ -62,13 +62,16 @@ export const getTotalAvailableWidth = (fixedWidthCols, hasExpandedRowRenderer, d
  * @param {Number} numberOfFixedWidthColumns
  * @returns Number
  */
-const calculateColumnWidth = (
+const calculateColumnWidth = ({
+  title = '',
   columnIdx,
   columnWidths,
   totalAvailableWidth,
   totalNumberOfColumns,
   numberOfFixedWidthColumns
-) => columnWidths[columnIdx] ? columnWidths[columnIdx] : (totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns));
+}) => {
+  return Math.max(50 + title.length * 5.5, columnWidths[columnIdx] ? columnWidths[columnIdx] : (totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns)));
+};
 
 /**
  * @function getColumnObjectArrayForTable
@@ -96,10 +99,24 @@ export const getColumnObjectArrayForTable = (
   // Map each column definition with the right handlers
   .map((col, idx, arr) => ({
     ...col,
-    width: calculateColumnWidth(idx, columnWidths, totalAvailableWidth, arr.length, numberOfFixedWidthColumns),
+    width: calculateColumnWidth({
+      title: col.title,
+      columnIdx: idx,
+      columnWidths,
+      totalAvailableWidth,
+      totalNumberOfColumns: arr.length,
+      numberOfFixedWidthColumns
+    }),
     onHeaderCell: () => ({
       resizable: allowResizing && col.resizable !== false,
-      width: calculateColumnWidth(idx, columnWidths, totalAvailableWidth, arr.length, numberOfFixedWidthColumns),
+      width: calculateColumnWidth({
+        title: col.title,
+        columnIdx: idx,
+        columnWidths,
+        totalAvailableWidth,
+        totalNumberOfColumns: arr.length,
+        numberOfFixedWidthColumns
+      }),
       title: col.title,
       index: idx,
       expandable: hasExpandedRowRenderer,
@@ -108,8 +125,22 @@ export const getColumnObjectArrayForTable = (
     render:
       (val, el) =>
         col.render
-          ? <EllipsisTruncater width={calculateColumnWidth(idx, columnWidths, totalAvailableWidth, arr.length, numberOfFixedWidthColumns)}>{col.render(val, el)}</EllipsisTruncater>
-          : <EllipsisTruncater width={calculateColumnWidth(idx, columnWidths, totalAvailableWidth, arr.length, numberOfFixedWidthColumns)}>{val}</EllipsisTruncater>,
+          ? <EllipsisTruncater width={calculateColumnWidth({
+            title: col.title,
+            columnIdx: idx,
+            columnWidths,
+            totalAvailableWidth,
+            totalNumberOfColumns: arr.length,
+            numberOfFixedWidthColumns
+          })}>{col.render(val, el)}</EllipsisTruncater>
+          : <EllipsisTruncater width={calculateColumnWidth({
+            title: col.title,
+            columnIdx: idx,
+            columnWidths,
+            totalAvailableWidth,
+            totalNumberOfColumns: arr.length,
+            numberOfFixedWidthColumns
+          })}>{val}</EllipsisTruncater>,
   }));
 
 /**

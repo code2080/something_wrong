@@ -36,3 +36,4 @@ export const Main = ({ env }) => {
     </React.Fragment>
   );
 };
+Main.args = { env: 'staging' };

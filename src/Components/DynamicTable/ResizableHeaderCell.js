@@ -8,6 +8,11 @@ import { getHeaderCellWidth } from '../../Utils/dom.helper';
 let start = 0;
 let changedWidth = 0;
 
+const terminateClickEvent = e => {
+  e.stopPropagation();
+  e.preventDefault();
+};
+
 const BasicHeaderCell = props => <th {...props}><ColumnHeader {...props} /></th>;
 
 const ResizableCell = props => {
@@ -15,8 +20,7 @@ const ResizableCell = props => {
   const [minCellWidth, setMinCellWidth] = useState(0);
 
   const ref = useRef(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onResize = (e, { node, size }) => {
+  const onResize = (e, { node, _size }) => {
     e.preventDefault();
     e.stopPropagation();
     const table = node.closest('table');
@@ -38,20 +42,14 @@ const ResizableCell = props => {
     }
     start = 0;
     changedWidth = 0;
-    ref.current.removeEventListener('click', terminateClickEvent);
-  };
-
-  const terminateClickEvent = e => {
-    e.stopPropagation();
-    e.preventDefault();
+    setTimeout(() => {
+      ref.current.removeEventListener('click', terminateClickEvent);
+    }, 300);
   };
 
   useEffect(() => {
     document.querySelectorAll('.react-resizable-handle').forEach(el => {
-      el.addEventListener('click', e => {
-        e.stopPropagation();
-        e.preventDefault();
-      });
+      el.addEventListener('click', terminateClickEvent);
     });
     if (ref && ref.current) {
       setMinCellWidth(50 + getHeaderCellWidth(ref.current));

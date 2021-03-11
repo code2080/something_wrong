@@ -28,6 +28,9 @@ import {
   filterDataSource,
   getTableComponents,
 } from './helpers';
+import { useHistory } from 'react-router-dom';
+
+const COLUMNS_WIDTH = 'COLUMNS_WIDTH';
 
 // CONSTANTS
 const mapStateToProps = (state, { datasourceId }) => ({
@@ -62,6 +65,7 @@ const DynamicTableHOC = ({
   onMove,
   rowSelection,
 }) => {
+  const history = useHistory();
   /**
    * STATE
    */
@@ -69,6 +73,7 @@ const DynamicTableHOC = ({
   const [showColumnSelection, setShowColumnSelection] = useState(false);
 
   // State to hold columns width
+  // const [columnWidths, setColumnWidths] = useState([]);
   const [columnWidths, setColumnWidths] = useState([]);
 
   // State variable to hold filter query
@@ -81,28 +86,55 @@ const DynamicTableHOC = ({
     getView(datasourceId);
   }, []);
 
+  const visibleColumnsKey = useMemo(() => {
+    return Object.keys(visibleCols).filter(key => visibleCols[key]);
+  }, [visibleCols]);
+
+  // Save to sessionStorage after columnWidths is changed
+  useEffect(() => {
+    let initialColumnsWidth;
+    try {
+      const savedWidths = JSON.parse(sessionStorage.getItem(COLUMNS_WIDTH).split(','));
+      initialColumnsWidth = visibleColumnsKey.map(key => savedWidths[key]);
+    } catch (error) {
+      initialColumnsWidth = columns
+        .filter(col => isColumnVisible(col, visibleCols))
+        .map(col => col.fixedWidth || col.width);
+    }
+    setColumnWidths(visibleColumnsKey.reduce((results, key, keyIndex) => {
+      return {
+        ...results,
+        [key]: isNaN(initialColumnsWidth[keyIndex]) ? null : initialColumnsWidth[keyIndex]
+      };
+    }, {}));
+
+    // Clear column width when changing page
+    const unlisten = history.listen(location => {
+      sessionStorage.removeItem(COLUMNS_WIDTH);
+    });
+    return () => {
+      unlisten();
+    };
+  }, [columns, visibleCols, visibleColumnsKey]);
+
   // Effect to update cols everytime columns change
   useEffect(() => {
     initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [getVisibilityIndexor(col)]: true }), {}));
   }, []);
 
-  // Initial columnWidths
-  useEffect(() => {
-    setColumnWidths(
-      columns
-        .filter(col => isColumnVisible(col, visibleCols))
-        .map(col => col.fixedWidth || col.width)
-    );
-  }, [columns, visibleCols]);
-
   /**
    * EVENT HANDLERS
    */
-  const onResizeColumn = (newWidth, columnIdx) => setColumnWidths([
-    ...columnWidths.slice(0, columnIdx),
-    newWidth,
-    ...columnWidths.slice(columnIdx + 1),
-  ]);
+  const onResizeColumn = (newWidth, columnIdx) => {
+    const newWidths = visibleColumnsKey.reduce((results, key, keyIndex) => {
+      return {
+        ...results,
+        [key]: keyIndex === columnIdx ? newWidth : columnWidths[key],
+      };
+    }, {});
+    sessionStorage.setItem(COLUMNS_WIDTH, JSON.stringify(newWidths));
+    setColumnWidths(newWidths);
+  };
 
   const onMoveRow = (sourceIdx, destinationIdx) => {
     if (onMove && typeof onMove === 'function') { onMove(sourceIdx, destinationIdx); }
@@ -126,14 +158,14 @@ const DynamicTableHOC = ({
     () => getColumnObjectArrayForTable(
       columns,
       visibleCols,
-      columnWidths,
+      visibleColumnsKey.map(key => columnWidths[key]),
       _width,
       fixedWidthCols.length,
       resizable,
       !!expandedRowRender,
       onResizeColumn
     ),
-    [columns, visibleCols, _width, columnWidths, expandedRowRender]
+    [columns, visibleCols, _width, expandedRowRender, columnWidths]
   );
 
   // Memoized datasource filtered on filter query
