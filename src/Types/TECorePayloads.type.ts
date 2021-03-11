@@ -28,8 +28,8 @@ export class TEObject {
 }
 
 export type PopulateSelectionPayload = {
-  objects: [TEObject | TEObjectFilter] | [],
-  fields: [TEField] | [],
+  objects: [TEObject | TEObjectFilter],
+  fields: TEField[],
   formType: 'REGULAR' | 'AVAILABILITY',
   reservationMode: string,
   startTime?: MomentInput,

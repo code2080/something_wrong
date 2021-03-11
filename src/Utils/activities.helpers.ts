@@ -1,6 +1,10 @@
+import _ from 'lodash';
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
+import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
+import { ActivityValueType } from '../Constants/activityValueTypes.constants';
+import { TEField, TEObject, TEObjectFilter } from '../Types/TECorePayloads.type';
 
 // FUNCTIONS
 /**
@@ -67,3 +71,56 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 };
 
 export const activityIsReadOnly = status => [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
+
+const mapActivityValueToTEValue = (activityValue: ActivityValue): TEField | TEObjectFilter | TEObject[] | null => {
+  const { value, type, extId } = activityValue;
+  switch (type) {
+    case ActivityValueType.FIELD:
+      return new TEField(extId, value as string[]);
+    case ActivityValueType.OBJECT: {
+      // Array means it's an array of objectextids, object means that it's an objectfilter
+      return Array.isArray(value)
+        ? (value as string[]).map(objExtId => new TEObject(extId, objExtId))
+        : new TEObjectFilter(
+          extId,
+          (value as CategoryField).categories
+            .map(({ id, values }) => new TEField(id, values))
+        );
+    }
+    default:
+      return null;
+  }
+};
+
+export const extractValuesFromActivityValues = (activityValues: ActivityValue[]): { fields: TEField[], objects: [TEObject | TEObjectFilter]} => _(activityValues)
+  .filter(av => av.value)
+  .map(mapActivityValueToTEValue)
+  .reduce((payload: { fields: TEField[], objects: [TEObjectFilter | TEObject] }, value: TEField | TEObjectFilter | TEObject[] | null) => {
+    if (value instanceof TEField) {
+      return ({
+        ...payload,
+        fields: [
+          ...payload.fields,
+          value,
+        ]
+      });
+    } else if (value instanceof TEObjectFilter) {
+      return {
+        ...payload,
+        objects: [
+          ...payload.objects,
+          value
+        ]
+      };
+    } else if (Array.isArray(value)) {
+      return {
+        ...payload,
+        objects: [
+          ...payload.objects,
+          ...value,
+        ]
+      };
+    } else {
+      return payload;
+    }
+  }, { fields: [], objects: [] });
