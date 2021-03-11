@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Dropdown, Icon, Button } from 'antd';
@@ -94,9 +95,11 @@ const SubmissionActionButton = ({
       {formInstance.reviewLink && (
         <Menu.Item key={NOTIFY_USER_WITH_REVIEW_LINK}>Notify user with review link</Menu.Item>
       )}
-      <Menu.Item key={NOTIFY_ALL_USERS_WITH_REVIEW_LINK}>
-        Notify all users with review link
-      </Menu.Item>
+      {!_.isEmpty(haveReviewLinkSubmissions) && (
+        <Menu.Item key={NOTIFY_ALL_USERS_WITH_REVIEW_LINK}>
+          Notify all users with review link
+        </Menu.Item>
+      )}
       <Menu.Item key={SET_ACCEPTANCE_STATUS}>Set acceptance status ...</Menu.Item>
       <Menu.SubMenu title='Set scheduling progress'>
         <Menu.Item key={SET_PROGRESS_NOT_SCHEDULED}>

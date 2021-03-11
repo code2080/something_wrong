@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.7",
+  "version": "0.10.12",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -102,6 +102,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-standard": "^4.1.0",
     "gh-pages": "^3.1.0",
     "husky": "^5.1.3",

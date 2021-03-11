@@ -6,23 +6,21 @@ import {
 } from './constraintConfigurations.actionTypes';
 
 // MODELS
-import { ConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
+import { ConstraintConfiguration, TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS: {
-      if (!action || !action.payload) return state;
+      if (!action?.payload?.payload) return state;
       const { results } = action.payload;
-      return results.reduce(
-        (consConf, el) => ({
+      return Object.values(results).reduce(
+        (consConf: {[formId: string]: TConstraintConfiguration}, constraint: any) => ({
           ...consConf,
-          [el.formId]: {
-            ...consConf[el.formId],
-            [el.constraintConfigurationId]: ConstraintConfiguration.create(el),
+          [constraint.formId]: {
+            ...consConf[constraint.formId],
+            [constraint.constraintConfigurationId]: ConstraintConfiguration.create(constraint),
           },
-        }),
-        state
-      );
+        }), state);
     };
 
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
@@ -33,7 +31,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [constraintConfiguration.formId]: {
           ...state[constraintConfiguration.formId],
-          [constraintConfiguration._id]: constraintConfiguration,
+          [constraintConfiguration._id as string]: constraintConfiguration,
         }
       };
     };

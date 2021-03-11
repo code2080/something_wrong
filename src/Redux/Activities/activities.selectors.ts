@@ -7,7 +7,7 @@ type TActivityMap = {
   [key: string]: TActivity[],
 };
 
-const activityStateSelector = (state: any): TActivityMap => state.activities;
+const activityStateSelector = (state: any): TActivityMap => state.activities || {};
 
 export const selectActivitiesForForm = createSelector(
   activityStateSelector,
@@ -17,13 +17,13 @@ export const selectActivitiesForForm = createSelector(
 export const selectActivitiesForFormAndIds = createSelector(
   activityStateSelector,
   activities => (formId: string, activityIds: string[]) => {
-    const activitiesRaw = activities[formId];
+    const activitiesRaw = activities[formId] || {};
     const matchingActivities =
       Object.keys(activitiesRaw).reduce((activities: TActivity[], formInstanceId: string) => {
         const activitiesForFormInstance = activitiesRaw[formInstanceId];
         return [
           ...activities,
-          ...activitiesForFormInstance.filter(el => activityIds.indexOf(el._id) > -1)
+          ...activitiesForFormInstance.filter((act: TActivity) => activityIds.includes(act._id))
         ];
       }, []);
     return matchingActivities;

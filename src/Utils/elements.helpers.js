@@ -55,7 +55,7 @@ const findElementValueInTableSection = (elementId, section) => {
     return null;
   }
   const rowArr = Object.keys(section).map(rowIdx => section[rowIdx]);
-  const values = rowArr.reduce((values, row) => {
+  const values = rowArr.values.reduce((values, row) => {
     const elIdx = row.findIndex(el => el.elementId === elementId);
     if (elIdx > -1) return [...values, ...row[elIdx].value];
     return values;
