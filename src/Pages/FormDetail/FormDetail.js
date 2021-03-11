@@ -38,6 +38,7 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+
 import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 const FormPage = () => {
@@ -113,9 +114,9 @@ const FormPage = () => {
         <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
           <ActivityDesignPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
+        {hasAEBetaPermission && <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
           <ConstraintManagerPage />
-        </Tabs.TabPane>
+        </Tabs.TabPane>}
       </TEAntdTabBar>
     </div>
   );
