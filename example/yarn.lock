@@ -1657,9 +1657,9 @@
     loader-utils "^2.0.0"
 
 "@timeedit/te-prefs-lib@^0.10.0":
-  version "0.10.9"
-  resolved "https://registry.yarnpkg.com/@timeedit/te-prefs-lib/-/te-prefs-lib-0.10.9.tgz#f31ca630cdc3d591659a0016815b611dbfcdce71"
-  integrity sha512-vAY+ylGhzs7CjjIoUQPbhG/k3taf5ww+Q74OhsSBSW7k3ZJU9SH60Dxxh20jpa8FpCiiAU/MjiwC/zXlQFw5+Q==
+  version "0.10.13"
+  resolved "https://registry.yarnpkg.com/@timeedit/te-prefs-lib/-/te-prefs-lib-0.10.13.tgz#b25ce12a3ae4617183ecd0cfca668b964a2efa51"
+  integrity sha512-6eNBz2t6M9dqEU8tdfd00aNAh6IPv0DtEJQMFiTXRQ/MGVGFylFCKgKMshTBepHsXAX8kGPE1k27x2lnV+vLYQ==
   dependencies:
     "@allpro/react-router-pause" "^1.1.3"
     antd "^3.25.0"
