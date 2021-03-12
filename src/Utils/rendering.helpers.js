@@ -21,7 +21,7 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import Padding from '../Components/Elements/Padding';
-import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
+// import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
 
@@ -93,23 +93,24 @@ const connectedSectionColumns = {
       }
     },
   ],
-  SCHEDULING: (sectionId, formInstanceId, formId) => [
-    {
-      title: '',
-      key: 'scheduling',
-      dataIndex: null,
-      fixedWidth: 82,
-      hideInList: true,
-      render: (_, event) => (
-        <SelectAllElementValuesColumn
-          event={event}
-          sectionId={sectionId}
-          formInstanceId={formInstanceId}
-          formId={formId}
-        />
-      ),
-    },
-  ],
+  SCHEDULING: (_sectionId, _formInstanceId, _formId) => [] // TODO: Reenable this after we've built support for new data format
+  // [
+  //   {
+  //     title: '',
+  //     key: 'scheduling',
+  //     dataIndex: null,
+  //     fixedWidth: 82,
+  //     hideInList: true,
+  //     render: (_, event) => (
+  //       <SelectAllElementValuesColumn
+  //         event={event}
+  //         sectionId={sectionId}
+  //         formInstanceId={formInstanceId}
+  //         formId={formId}
+  //       />
+  //     ),
+  //   },
+  // ],
 };
 
 /**
