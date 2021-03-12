@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "esnext",
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
     "jsx": "react-jsx",
     "noEmit": true,
