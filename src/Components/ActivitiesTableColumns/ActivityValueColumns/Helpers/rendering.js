@@ -1,5 +1,5 @@
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
-import { activityValueTypes } from '../../../../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
 
 // RENDERING HELPERS
@@ -25,11 +25,11 @@ export const renderComponent = (activityValue, activity) => {
 
   // Deal with the 3 different types in separate functions
   switch (type) {
-    case activityValueTypes.TIMING:
+    case ActivityValueType.TIMING:
       return renderTimingComponent(activityValue, activity);
-    case activityValueTypes.OBJECT:
+    case ActivityValueType.OBJECT:
       return renderObjectComponent(activityValue, activity);
-    case activityValueTypes.FIELD:
+    case ActivityValueType.FIELD:
       return renderFieldComponent(activityValue, activity);
     default:
       return ActivityValueRenderPayload.create({

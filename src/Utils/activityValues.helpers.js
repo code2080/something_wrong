@@ -5,14 +5,14 @@ import { getSectionFromId, getElementFromSection, getSectionTypeFromId } from '.
 import { ActivityValue } from '../Models/ActivityValue.model';
 
 // CONSTANTS
-import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import {
   SECTION_TABLE,
   SECTION_CONNECTED
 } from '../Constants/sectionTypes.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
-import { activityValueModes } from '../Constants/activityValueModes.constants';
+import { ActivityValueMode } from '../Constants/activityValueModes.constants';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/searchCriteria.constants';
 
@@ -25,13 +25,13 @@ import { searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/se
  */
 const ensureValueTypeFormat = (value, valueType) => {
   switch (valueType) {
-    case activityValueTypes.OBJECT: {
+    case ActivityValueType.OBJECT: {
       if (Array.isArray(value)) return value;
       return [value];
     }
 
-    case activityValueTypes.TIMING:
-    case activityValueTypes.FIELD: {
+    case ActivityValueType.TIMING:
+    case ActivityValueType.FIELD: {
       if (Array.isArray(value)) return value[0];
       return value;
     }
@@ -47,7 +47,7 @@ const ensureValueTypeFormat = (value, valueType) => {
  * @returns {String} value type (enum of submissionValueTypes)
  */
 export const determineContentOfValue = activityValue => {
-  if (activityValue.type !== activityValueTypes.OBJECT) return null;
+  if (activityValue.type !== ActivityValueType.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
 };
@@ -97,7 +97,7 @@ const createActivityValueFilterPayload = (element, datasource, rawValue) => {
   return {
     submissionValue: value,
     submissionValueType: submissionValueTypes.FILTER,
-    valueMode: activityValueModes.FROM_SUBMISSION,
+    valueMode: ActivityValueMode.FROM_SUBMISSION,
     value,
   };
 };
@@ -122,7 +122,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
   const _defPayload = {
     submissionValue: Array.isArray(_rawValue) ? _rawValue : [_rawValue],
     submissionValueType: submissionValueTypes.FREE_TEXT,
-    valueMode: activityValueModes.FROM_SUBMISSION,
+    valueMode: ActivityValueMode.FROM_SUBMISSION,
     value: _rawValue,
   };
   /**
@@ -253,11 +253,11 @@ const getScopedObjectValue = formInstance => formInstance.scopedObject;
  * @param {String} selectedTimingMode the chosen timing mode
  */
 const createTimingModeActivityValue = selectedTimingMode => new ActivityValue({
-  type: activityValueTypes.TIMING,
+  type: ActivityValueType.TIMING,
   extId: 'mode',
   submissionValue: [selectedTimingMode],
   submissionValueType: submissionValueTypes.TIMING,
-  valueMode: activityValueModes.FROM_SUBMISSION,
+  valueMode: ActivityValueMode.FROM_SUBMISSION,
   value: selectedTimingMode,
   sectionId: null,
   elementId: null,
@@ -277,7 +277,7 @@ const createScopedObjectActivityValue = (formInstance, valueType, extId) => new 
   extId: extId,
   submissionValue: [getScopedObjectValue(formInstance)],
   submissionValueType: submissionValueTypes.OBJECT,
-  valueMode: activityValueModes.FROM_SUBMISSION,
+  valueMode: ActivityValueMode.FROM_SUBMISSION,
   value: [getScopedObjectValue(formInstance)],
   sectionId: 'scopedObject',
   elementId: null,
@@ -310,7 +310,7 @@ const createActivityValueForConnectedSectionSpecialProp = (
     extId,
     submissionValue,
     submissionValueType: submissionValueTypes.TIMING,
-    valueMode: activityValueModes.FROM_SUBMISSION,
+    valueMode: ActivityValueMode.FROM_SUBMISSION,
     value,
     sectionId: null,
     elementId: null,

@@ -11,7 +11,7 @@ import { getTimingModeForActivity } from './activities.helpers';
 import { minToHourMinDisplay } from './moment.helpers';
 
 // CONSTANTS
-import { activityValueModes, activityValueModeProps } from '../Constants/activityValueModes.constants';
+import { ActivityValueMode, activityValueModeProps } from '../Constants/activityValueModes.constants';
 import { activityValueStatuses, activityValueStatusProps } from '../Constants/activityStatuses.constants';
 import { mappingTypes } from '../Constants/mappingTypes.constants';
 import { schedulingAlgorithmProps } from '../Constants/schedulingAlgorithms.constants';
@@ -38,9 +38,9 @@ export const getSchedulingAlgorithmForActivityValue = (
 
 const generateExtrasForActivityValue = (activityValue, mappingType) => {
   // If manual, always return manual
-  if (activityValue.valueMode === activityValueModes.MANUAL) {
+  if (activityValue.valueMode === ActivityValueMode.MANUAL) {
     return {
-      icon: activityValueModeProps[activityValueModes.MANUAL].icon,
+      icon: activityValueModeProps[ActivityValueMode.MANUAL].icon,
       tooltip: 'The value was entered manually by the user'
     };
   }
@@ -60,7 +60,7 @@ const generateExtrasForActivityValue = (activityValue, mappingType) => {
   }
   // Else, return from submission
   return {
-    icon: activityValueModeProps[activityValueModes.FROM_SUBMISSION].icon,
+    icon: activityValueModeProps[ActivityValueMode.FROM_SUBMISSION].icon,
     tooltip: 'The value is from the submission'
   };
 };

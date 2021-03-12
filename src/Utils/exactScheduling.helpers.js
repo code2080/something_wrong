@@ -1,4 +1,4 @@
-import { activityValueTypes } from '../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TECoreFieldModel,
   TECoreObjectModel,
@@ -21,8 +21,8 @@ const mergeActivityValuesForObjects = objects => {
 
 const convertValuesToReservationProps = activity => {
   // Get all of the same ext id
-  const objects = activity.values.filter(aV => aV.type === activityValueTypes.OBJECT);
-  const fields = activity.values.filter(aV => aV.type === activityValueTypes.FIELD);
+  const objects = activity.values.filter(aV => aV.type === ActivityValueType.OBJECT);
+  const fields = activity.values.filter(aV => aV.type === ActivityValueType.FIELD);
   return {
     objects: mergeActivityValuesForObjects(objects),
     fields: mergeActivityValuesForFields(fields),

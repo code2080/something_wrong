@@ -5,7 +5,7 @@ import { Activity } from '../../Models/Activity.model';
 import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../Utils/activities.helpers';
 
 // CONSTANTS
-import { activityValueModes } from '../../Constants/activityValueModes.constants';
+import { ActivityValueMode } from '../../Constants/activityValueModes.constants';
 import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
 
 /**
@@ -74,7 +74,7 @@ const updateSingleActivityValue = (newValue, activityValue, activity) => {
   const newActivityValue = {
     ...activityValue,
     value: newValue,
-    valueMode: activityValueModes.MANUAL
+    valueMode: ActivityValueMode.MANUAL
   };
   const objPath = findObjectPathForActivityValue(
     newActivityValue.extId,
@@ -103,7 +103,7 @@ const updateMultipleActivityValues = (newValue, activityValue, activity) => {
       {
         ...activity[objPath][activityValueIdx],
         value: value.value,
-        valueMode: activityValueModes.MANUAL
+        valueMode: ActivityValueMode.MANUAL
       },
       ...updatedActivity[objPath].slice(activityValueIdx + 1)
     ];
@@ -148,7 +148,7 @@ const revertMultipleActivityValues = (extIds, activity) => {
       {
         ...activity[objPath][activityValueIdx],
         value: activity[objPath][activityValueIdx].submissionValue[0],
-        valueMode: activityValueModes.FROM_SUBMISSION
+        valueMode: ActivityValueMode.FROM_SUBMISSION
       },
       ...updatedActivity[objPath].slice(activityValueIdx + 1)
     ];
@@ -182,7 +182,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
     return updateActivityWithNewValue(
       {
         ...activityValue,
-        valueMode: activityValueModes.FROM_SUBMISSION,
+        valueMode: ActivityValueMode.FROM_SUBMISSION,
         value: submissionValue,
       },
       activity,
