@@ -52,9 +52,11 @@ const ConstraintManagerPage = () => {
       ...constraintConfiguration,
       constraints: [
         ...constraintConfiguration.constraints.slice(0, constraintInstanceIdx),
-        { ...constraintConfiguration.constraints[constraintInstanceIdx], [prop]: value },
-        ...constraintConfiguration.constraints.slice(0, constraintInstanceIdx + 1)
-      ],
+  const onUpdConstrConfName = (value: string) => {
+    if (!constraintConfiguration) return;
+    setConstraintConfiguration({
+      ...constraintConfiguration,
+      name: value
     });
   };
 
@@ -91,7 +93,13 @@ const ConstraintManagerPage = () => {
       <div className='constraint-manager--wrapper'>
         <ConstraintManagerTopBar
           constraintConfigurations={constraintConfigurations}
-          selectedCID={constraintConfiguration ? constraintConfiguration._id : null}
+          selectedCID={
+            constraintConfiguration ? constraintConfiguration._id : null
+          }
+          selConstrName={
+            constraintConfiguration ? constraintConfiguration.name : null
+          }
+          onUpdConstrConfName={onUpdConstrConfName}
           onSelect={onSelectConstraintConfiguration}
           onCreateNew={onCreateNewConstraintConfiguration}
           onSaveConstraintConfiguration={onSaveConstraintConfiguration}
@@ -101,7 +109,9 @@ const ConstraintManagerPage = () => {
           <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
             <Collapse.Panel key='DEFAULT' header='Default constraints'>
               <Table
-                columns={constraintManagerTableColumns(onUpdateConstraintConfiguration)}
+                columns={constraintManagerTableColumns(
+                  onUpdateConstraintConfiguration
+                )}
                 dataSource={defaultConstraints}
                 rowKey='constraintId'
                 pagination={false}
