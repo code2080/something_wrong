@@ -1,28 +1,37 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Switch, InputNumber } from 'antd';
 
-const constraintManagerTableColumns = (onUpdateValue) => [
+const getPropFromConstraint = (constraintId, prop, allConstraints) => {
+  const constraint = allConstraints.find(el => el.constraintId === constraintId);
+  if (!constraint || !constraint[prop]) return 'N/A';
+  return constraint[prop];
+};
+
+const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
   {
     title: 'Active',
     dataIndex: 'isActive',
     key: 'isActive',
     render: (isActive, ci) => (
-      <Switch 
+      <Switch
         checked={isActive}
-        size="small"
+        size='small'
         onChange={checked => onUpdateValue(ci.constraintId, 'isActive', checked)}
       />
     ),
   },
   {
     title: 'Name',
-    dataIndex: 'constraint.name',
-    key: 'name'
+    dataIndex: 'constraintId',
+    key: 'name',
+    render: constraintId => getPropFromConstraint(constraintId, 'name', allConstraints),
   },
   {
     title: 'Description',
-    dataIndex: 'constraint.description',
-    key: 'description'
+    dataIndex: 'constraintId',
+    key: 'description',
+    render: constraintId => getPropFromConstraint(constraintId, 'description', allConstraints),
   },
   {
     title: 'Parameters',
@@ -36,21 +45,21 @@ const constraintManagerTableColumns = (onUpdateValue) => [
     render: (isHardConstraint) => (
       <Switch
         checked={isHardConstraint}
-        size="small"
+        size='small'
       />
     ),
   },
   {
     title: 'Weight',
-    dataIndex: 'weight',
+    dataIndex: undefined,
     key: 'weight',
-    render: (weight, isHardConstraint) => (
+    render: ({ weight, isHardConstraint }) => (
       <InputNumber
         min={1}
         max={100}
         value={weight}
-        disabled={!isHardConstraint}
-        size="small"
+        disabled={isHardConstraint}
+        size='small'
       />
     )
   }

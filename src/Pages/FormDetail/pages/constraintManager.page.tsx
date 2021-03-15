@@ -1,15 +1,14 @@
+/* eslint-disable no-extra-boolean-cast */
 import React, { useMemo, useState } from 'react';
 import { Button, Empty, Collapse, Table } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+// import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -29,9 +28,8 @@ const getConstraintsOfType = (type: string = 'DEFAULT', config: any, allConstrai
   });
 };
 
-
 const ConstraintManagerPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const constraintConfigurations = useSelector(selectConstraintConfigurationsForForm)(formId);
@@ -47,7 +45,7 @@ const ConstraintManagerPage = () => {
   const onSelectConstraintConfiguration = (cid: string) => {
     const constraintConfig = constraintConfigurations.find(el => el._id === cid);
     if (constraintConfig) setConstraintConfiguration(constraintConfig);
-  }
+  };
 
   const onUpdateConstraintConfiguration = (constraintId: string, prop: string, value: any) => {
     if (!constraintConfiguration) return;
@@ -61,7 +59,7 @@ const ConstraintManagerPage = () => {
         ...constraintConfiguration.constraints.slice(0, constraintInstanceIdx + 1)
       ],
     });
-  }
+  };
 
   const onAddCustomConstraint = (e) => {
     e.stopPropagation();
@@ -86,14 +84,14 @@ const ConstraintManagerPage = () => {
 
   const onDeleteConstraintConfiguration = () => {
     console.log('should delete');
-  }
+  };
 
   const defaultConstraints = useMemo(() => getConstraintsOfType('DEFAULT', constraintConfiguration, allConstraints), [constraintConfiguration, allConstraints]);
   const customConstraints = useMemo(() => getConstraintsOfType('OTHER', constraintConfiguration, allConstraints), [constraintConfiguration, allConstraints]);
   console.log(constraintConfiguration);
   return (
     <React.Fragment>
-      <div className="constraint-manager--wrapper">
+      <div className='constraint-manager--wrapper'>
         <ConstraintManagerTopBar
           constraintConfigurations={constraintConfigurations}
           selectedCID={constraintConfiguration ? constraintConfiguration._id : null}
@@ -104,27 +102,27 @@ const ConstraintManagerPage = () => {
         />
         {constraintConfiguration && (
           <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
-            <Collapse.Panel key="DEFAULT" header="Default constraints">
+            <Collapse.Panel key='DEFAULT' header='Default constraints'>
               <Table
-                columns={constraintManagerTableColumns(onUpdateConstraintConfiguration)}
+                columns={constraintManagerTableColumns(onUpdateConstraintConfiguration, allConstraints)}
                 dataSource={defaultConstraints}
-                rowKey="constraintId"
+                rowKey='constraintId'
                 pagination={false}
               />
             </Collapse.Panel>
             <Collapse.Panel
-              key="CUSTOM"
-              header="Custom constraints"
+              key='CUSTOM'
+              header='Custom constraints'
               extra={(
-                <Button onClick={onAddCustomConstraint} size="small">
+                <Button onClick={onAddCustomConstraint} size='small'>
                     Add new custom constraint
                 </Button>
               )}
             >
               <Table
-                columns={constraintManagerTableColumns(onUpdateConstraintConfiguration)}
+                columns={constraintManagerTableColumns(onUpdateConstraintConfiguration, allConstraints)}
                 dataSource={customConstraints}
-                rowKey="constraintId"
+                rowKey='constraintId'
                 pagination={false}
               />
             </Collapse.Panel>
@@ -133,9 +131,9 @@ const ConstraintManagerPage = () => {
         {(!!constraintConfigurations && constraintConfiguration == null) && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="No constraint configurations exist for this form"
+            description='No constraint configurations exist for this form'
           >
-            <Button size="small" type="primary" onClick={onCreateNewConstraintConfiguration}>
+            <Button size='small' type='primary' onClick={onCreateNewConstraintConfiguration}>
               Create now
             </Button>
           </Empty>
@@ -143,7 +141,7 @@ const ConstraintManagerPage = () => {
         {(!!!constraintConfiguration && constraintConfigurations && !!constraintConfigurations.length) && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="No constraint configurations selected"
+            description='No constraint configurations selected'
           />
         )}
       </div>
@@ -151,7 +149,4 @@ const ConstraintManagerPage = () => {
   );
 };
 
-ConstraintManagerPage.propTypes = {
-  constraintConfigurationId: PropTypes.string
-};
 export default ConstraintManagerPage;
