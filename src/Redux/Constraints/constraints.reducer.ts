@@ -10,7 +10,6 @@ const reducer = (state = {}, action) => {
     case FETCH_CONSTRAINTS_SUCCESS: {
       if (!action || !action.payload) return state;
       const { results } = action.payload;
-      console.log(results);
       return results.reduce((cons: TConstraint[], el: any) => [...cons, Constraint.create(el)], []);
     }
 
