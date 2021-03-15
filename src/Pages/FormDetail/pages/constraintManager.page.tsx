@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 import React, { useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
@@ -8,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+// import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -85,7 +86,7 @@ const ConstraintManagerPage = () => {
       _id: 'new',
       formId,
       name: 'New constraint configuration',
-      constraints: allConstraints
+      constraints: (allConstraints || [])
         .filter((constraint: TConstraint) => constraint.type === EConstraintType.DEFAULT)
         .map((constraint: TConstraint) => ConstraintInstance.createFromConstraint(constraint))
     });
@@ -93,7 +94,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleSaveConstraintConfiguration = () => {
-    dispatch(updateConstraintConfiguration(constraintConfiguration));
+    // dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleDeleteConstraintConfiguration = () => {
@@ -111,6 +112,7 @@ const ConstraintManagerPage = () => {
     [constraintConfiguration, allConstraints]
   );
 
+  console.log(allConstraints);
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
@@ -125,7 +127,7 @@ const ConstraintManagerPage = () => {
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
-              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration)}
+              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration, allConstraints)}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
@@ -141,7 +143,7 @@ const ConstraintManagerPage = () => {
             }
           >
             <Table
-              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration)}
+              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration, allConstraints)}
               dataSource={customConstraints}
               rowKey='constraintId'
               pagination={false}
