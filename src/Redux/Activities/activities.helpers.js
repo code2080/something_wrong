@@ -15,7 +15,7 @@ import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
  * @returns {Object} updatedFormState
  */
 export const updateActivitiesForForm = (activities) => activities
-  .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ? el.sequenceIdx : idx }))
+  .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ?? idx }))
   .reduce(
     (_activities, activity) => ({
       ..._activities,

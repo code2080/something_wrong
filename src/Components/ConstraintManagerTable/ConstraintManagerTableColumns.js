@@ -42,10 +42,11 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     title: 'Hard Constraint',
     dataIndex: 'isHardConstraint',
     key: 'isHardConstraint',
-    render: (isHardConstraint) => (
+    render: (isHardConstraint, ci) => (
       <Switch
         checked={isHardConstraint}
         size='small'
+        onChange={checked => onUpdateValue(ci.constraintId, 'isHardConstraint', checked)}
       />
     ),
   },
@@ -53,13 +54,14 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     title: 'Weight',
     dataIndex: undefined,
     key: 'weight',
-    render: ({ weight, isHardConstraint }) => (
+    render: ({ constraintId, weight, isHardConstraint }) => (
       <InputNumber
         min={1}
         max={100}
         value={weight}
         disabled={isHardConstraint}
         size='small'
+        onChange={val => onUpdateValue(constraintId, 'weight', val)}
       />
     )
   }

@@ -60,7 +60,7 @@ const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props
       <Radio checked={isSelected} onChange={onAssignActivityToGroup} />
       {mode === EModes.VIEW && (
         <React.Fragment>
-          <div className='activity-group--name'>
+          <div className='activity-group--name' onClick={onAssignActivityToGroup}>
             {activityGroup.name}
           </div>
           <div className='activity-group--btns'>

@@ -6,6 +6,7 @@ import { Tabs } from 'antd';
 
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
+import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 // HOOKS
 import { useFetchLabelsFromExtIds, useTECoreAPI } from '../../Hooks/TECoreApiHooks';
@@ -25,6 +26,7 @@ import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.s
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // PAGES
 import SubmissionsPage from './pages/submissions.page';
@@ -37,6 +39,8 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
+import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
+
 const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
@@ -44,6 +48,7 @@ const FormPage = () => {
   const form = useSelector(selectForm)(formId);
   const submissions = useSelector(selectSubmissions)(formId);
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
+  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -95,6 +100,7 @@ const FormPage = () => {
 
   return (
     <div className='form--wrapper'>
+      {hasAEBetaPermission && <JobToolbar />}
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
         <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
           <FormInfoPage />
@@ -108,9 +114,9 @@ const FormPage = () => {
         <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
           <ActivityDesignPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
+        {hasAEBetaPermission && <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
           <ConstraintManagerPage />
-        </Tabs.TabPane>
+        </Tabs.TabPane>}
       </TEAntdTabBar>
     </div>
   );

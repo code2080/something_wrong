@@ -323,9 +323,9 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
   const _data = (Object.keys(values) || []).map(eventId => {
     const _eventValues = columns.reduce((eventValues, col) => {
       // Find the element index
-      const elementIdx = values[eventId].findIndex(el => el.elementId === col.dataIndex);
+      const elementIdx = values[eventId].values.findIndex(el => el.elementId === col.dataIndex);
       if (elementIdx === -1) return eventValues;
-      return { ...eventValues, [col.dataIndex]: values[eventId][elementIdx].value };
+      return { ...eventValues, [col.dataIndex]: values[eventId].values[elementIdx].value };
     }, {});
     return {
       ..._eventValues,
