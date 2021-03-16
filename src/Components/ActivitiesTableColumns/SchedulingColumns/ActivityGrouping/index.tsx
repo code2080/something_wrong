@@ -37,6 +37,7 @@ const ActivityGroupSelector = ({ activities }: Props) => {
         optionPayload: { extId: 'groupId', values: [{ value: `groupId/${formattedValue}`, label: formattedValue }] },
         activityId: activities[0]._id,
       }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

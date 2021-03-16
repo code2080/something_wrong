@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
@@ -7,7 +7,6 @@ import { Modal, Dropdown, Menu, Button, Icon } from 'antd';
 // HELPERS
 import {
   scheduleActivities,
-  updateActivityWithSchedulingResult,
   updateActivitiesWithSchedulingResults,
 } from '../../../../Utils/scheduling.helpers';
 
@@ -112,18 +111,16 @@ const ActivityActionsDropdown = ({
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
-  const onFinishSchedule =
-    schedulingReturn => updateActivity(updateActivityWithSchedulingResult(activity, schedulingReturn));
 
-  const onFinishScheduleMultiple = schedulingReturns => {
+  const onFinishScheduleMultiple = useCallback((schedulingReturns) => {
     updateActivities(
       activity.formId,
       activity.formInstanceId,
       updateActivitiesWithSchedulingResults(activities, schedulingReturns)
     );
-  };
+  }, [activities, activity.formId, activity.formInstanceId, updateActivities]);
 
-  const onDeleteActivities = responses => {
+  const onDeleteActivities = useCallback((responses) => {
     // Check result parameter to see if everything went well or not
     responses.forEach(res => {
       if (!_.get(res, 'result.details')) {
@@ -136,9 +133,9 @@ const ActivityActionsDropdown = ({
         updateActivity(updatedActivity);
       }
     });
-  };
+  }, [updateActivity]);
 
-  const updateSchedulingProgress = () => {
+  const updateSchedulingProgress = useCallback(() => {
     if (mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED && formInstance.teCoreProps.schedulingProgress === teCoreSchedulingProgress.NOT_SCHEDULED) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
@@ -157,63 +154,60 @@ const ActivityActionsDropdown = ({
         onCancel: () => { },
       });
     }
-  };
+  }, [formInstance.teCoreProps.schedulingProgress, formInstanceId, mSStatus.status, setFormInstanceSchedulingProgress]);
 
-  const handleMenuClick = useCallback(
-    ({ key }) => {
-      if (!activityActions[key] || !activityActions[key].callname) return;
-      switch (key) {
-        case 'SCHEDULE_ALL':
-          scheduleActivities(
-            activities.filter(
-              a => a.activityStatus !== activityStatuses.SCHEDULED
-            ),
-            formType,
-            reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple
-          );
-          updateSchedulingProgress();
-          break;
-        case 'SCHEDULE':
-          scheduleActivities(
-            [activity],
-            formType,
-            reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple
-          );
-          updateSchedulingProgress();
-          break;
-        case 'DELETE':
-          teCoreAPI[activityActions[key].callname]({
+  const handleMenuClick = useCallback(({ key }) => {
+    if (!activityActions[key] || !activityActions[key].callname) return;
+    switch (key) {
+      case 'SCHEDULE_ALL':
+        scheduleActivities(
+          activities.filter(
+            a => a.activityStatus !== activityStatuses.SCHEDULED
+          ),
+          formType,
+          reservationMode,
+          teCoreAPI[activityActions[key].callname],
+          onFinishScheduleMultiple
+        );
+        updateSchedulingProgress();
+        break;
+      case 'SCHEDULE':
+        scheduleActivities(
+          [activity],
+          formType,
+          reservationMode,
+          teCoreAPI[activityActions[key].callname],
+          onFinishScheduleMultiple
+        );
+        updateSchedulingProgress();
+        break;
+      case 'DELETE':
+        teCoreAPI[activityActions[key].callname]({
+          activities: [activity],
+          callback: onDeleteActivities
+        });
+        break;
+      case 'DELETE_ALL':
+        teCoreAPI[activityActions[key].callname]({
+          activities,
+          callback: onDeleteActivities
+        });
+        break;
+      case 'STOP_SCHEDULING':
+        jobs.forEach(job => {
+          abortJob({
+            jobId: job._id,
+            formId,
+            formInstanceId,
             activities: [activity],
-            callback: onDeleteActivities
           });
-          break;
-        case 'DELETE_ALL':
-          teCoreAPI[activityActions[key].callname]({
-            activities,
-            callback: onDeleteActivities
-          });
-          break;
-        case 'STOP_SCHEDULING':
-          jobs.forEach(job => {
-            abortJob({
-              jobId: job._id,
-              formId,
-              formInstanceId,
-              activities: [activity],
-            });
-          });
-          break;
-        default:
-          teCoreAPI[activityActions[key].callname](activity);
-          break;
-      }
-    },
-    [teCoreAPI, activity, onFinishSchedule]
-  );
+        });
+        break;
+      default:
+        teCoreAPI[activityActions[key].callname](activity);
+        break;
+    }
+  }, [abortJob, activities, activity, formId, formInstanceId, formType, jobs, onDeleteActivities, onFinishScheduleMultiple, reservationMode, teCoreAPI, updateSchedulingProgress]);
 
   const menu = useMemo(
     () => (
@@ -225,7 +219,7 @@ const ActivityActionsDropdown = ({
           ))}
       </Menu>
     ),
-    [handleMenuClick]
+    [handleMenuClick, activity]
   );
 
   return (

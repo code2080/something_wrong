@@ -49,6 +49,7 @@ const PaddingValue = ({ before, after, extId, activityId }) => {
       optionPayload: { extId, values: [{ value: `${extId}/${formattedValue}`, label: formattedValue }] },
       activityId,
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

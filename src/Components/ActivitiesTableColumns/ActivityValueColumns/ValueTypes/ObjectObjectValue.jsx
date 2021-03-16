@@ -20,6 +20,7 @@ const ObjectObjectValue = ({ value, extId, activityId }) => {
       optionPayload: { extId, values: stdValue.map(el => ({ value: `${extId}/${el}`, label: el })) },
       activityId,
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return formattedValue;
 };
