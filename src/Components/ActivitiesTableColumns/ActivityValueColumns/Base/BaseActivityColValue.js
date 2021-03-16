@@ -26,4 +26,4 @@ BaseActivityColValue.defaultProps = {
   formatFn: val => val,
 };
 
-export default BaseActivityColValue;
+export default React.memo(BaseActivityColValue);

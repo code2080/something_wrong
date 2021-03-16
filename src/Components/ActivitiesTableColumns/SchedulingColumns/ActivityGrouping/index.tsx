@@ -2,20 +2,19 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
-
-import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
-import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
+import { AppstoreOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import ActivityGroupPopover from './Popover';
-
 // SELECTORS
 import { selectActivityGroup } from '../../../../Redux/ActivityGroup/activityGroup.selectors';
+import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
 
 // STYLES
 import './index.scss';
 
 // TYPES
+import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
 import { TActivity } from '../../../../Types/Activity.type';
 import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
 
@@ -50,7 +49,7 @@ const ActivityGroupSelector = ({ activities }: Props) => {
       placement='rightTop'
     >
       <div className='activity-group--button'>
-        <Button size='small' icon='appstore'>
+        <Button size='small' icon={<AppstoreOutlined />}>
           {selectedActivityGroup ? selectedActivityGroup.name : 'N/A'}
         </Button>
       </div>
