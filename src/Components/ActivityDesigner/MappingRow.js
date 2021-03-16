@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Cascader, Switch, Button } from 'antd';
-
+import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
 import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
 
@@ -88,7 +88,7 @@ const MappingRow = ({
           disabled={disabled}
           size='small'
           type='link'
-          icon='delete'
+          icon={<DeleteOutlined />}
           onClick={onRemoveTEProp}
         />
       </div>
