@@ -51,7 +51,7 @@ const FormInstanceAcceptanceStatus = ({
   // Effect to update acceptance comment if original changes
   useEffect(() => {
     setAcceptanceComment(_acceptanceComment);
-  }, [_acceptanceStatus]);
+  }, [_acceptanceComment, _acceptanceStatus]);
 
   // Callback to submit acceptance status
   const onSubmitAcceptanceStatusCallback = useCallback(() => {
@@ -61,12 +61,7 @@ const FormInstanceAcceptanceStatus = ({
       acceptanceComment
     });
     onClose();
-  }, [
-    acceptanceStatus,
-    acceptanceComment,
-    setFormInstanceAcceptanceStatus,
-    onClose
-  ]);
+  }, [setFormInstanceAcceptanceStatus, formInstanceId, acceptanceStatus, acceptanceComment, onClose]);
 
   return (
     <Modal

@@ -11,4 +11,11 @@
     margin-top: 4px;
     // border-top: 1px solid lighten($rustyGrey, 7.5%);
   }
+
+  .ant-table-expanded-row {
+    background: #fff;
+    td {
+      background: #fff;
+    }
+  }
 }
