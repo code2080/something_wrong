@@ -135,6 +135,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
       sortedAssignees,
       selfUID, user => user._id);
   },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   [_users, assignedTo]
   );
 

@@ -37,16 +37,16 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
 
   useEffect(() => {
     window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
-
     // Validate token presence
     store.dispatch(validateLogin());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const { x, y, height } = prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
     window.tePrefsHeight = height;
-  }, [prefsRef.current && prefsRef.current.getBoundingClientRect()]);
+  }, []);
 
   return (
     <Provider store={store}>

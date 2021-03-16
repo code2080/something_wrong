@@ -45,12 +45,14 @@ const LoginPage = ({
     setBreadcrumbs([
       { path: '/', label: 'Login' }
     ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null) { fetchProfile(); }
     if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null) { history.push('/forms'); }
     if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticationStatus, userStatus]);
 
   const handleLogin = useCallback(({ account, password }) => {

@@ -10,7 +10,7 @@ const SignIn = ({ onSignIn, form }) => {
         onSignIn({ account: values.account, password: values.password });
       }
     });
-  }, [form]);
+  }, [form, onSignIn]);
 
   return (
     <Form

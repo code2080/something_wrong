@@ -82,31 +82,29 @@ const Toolbar = ({
   };
   const onHandleBreadrumbsClick = path => history.push(path);
 
-  const renderedToolbar = useMemo(
-    () => (
-      <div className='top-toolbar--wrapper'>
-        <span className='top-toolbar--breadcrumbs__label'>Navigate:</span>
-        <Breadcrumb>
-          {breadcrumbs &&
-            breadcrumbs.map((el, idx) => (
-              <Breadcrumb.Item key={idx}>
-                <span className='top-toolbar--breadcrumbs__item' onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
-              </Breadcrumb.Item>
-            ))}
-        </Breadcrumb>
-        <ActionsButton
-          form={form}
-          breadcrumbs={breadcrumbs}
-          handleClick={onHandleActionClick}
-          isAuthenticated={isAuthenticated}
-        />
-      </div>
-    ),
-    [breadcrumbs]
+  const renderedToolbar = () => (
+    <div className='top-toolbar--wrapper'>
+      <span className='top-toolbar--breadcrumbs__label'>Navigate:</span>
+      <Breadcrumb>
+        {breadcrumbs &&
+          breadcrumbs.map((el, idx) => (
+            <Breadcrumb.Item key={idx}>
+              <span className='top-toolbar--breadcrumbs__item' onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
+            </Breadcrumb.Item>
+          ))}
+      </Breadcrumb>
+      <ActionsButton
+        form={form}
+        breadcrumbs={breadcrumbs}
+        handleClick={onHandleActionClick}
+        isAuthenticated={isAuthenticated}
+      />
+    </div>
   );
 
   useEffect(() => {
     if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT)) { teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](<div className='te-prefs-lib'>{renderedToolbar}</div>); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breadcrumbs]);
   const shouldShowToolbar = useMemo(
     () => !teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT),

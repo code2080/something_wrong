@@ -54,7 +54,7 @@ const SubmissionActionButton = ({
       schedulingProgress,
       formId: formInstance.formId,
     });
-  }, [setFormInstanceSchedulingProgress]);
+  }, [formInstance._id, formInstance.formId, setFormInstanceSchedulingProgress]);
 
   const onClick = useCallback(({ key, domEvent }) => {
     domEvent.stopPropagation();
@@ -84,7 +84,7 @@ const SubmissionActionButton = ({
       default:
         break;
     }
-  }, [setFormInstanceSchedulingProgressCallback, formInstance, haveReviewLinkSubmissions]);
+  }, [history, formInstance.formId, formInstance._id, setFormInstanceSchedulingProgressCallback, remindUser, haveReviewLinkSubmissions]);
 
   const actionMenu = useMemo(() => (
     <Menu
@@ -113,7 +113,7 @@ const SubmissionActionButton = ({
         </Menu.Item>
       </Menu.SubMenu>
     </Menu>
-  ), [formInstance]);
+  ), [formInstance.reviewLink, haveReviewLinkSubmissions, onClick]);
 
   return (
     <React.Fragment>

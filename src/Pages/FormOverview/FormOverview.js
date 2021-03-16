@@ -76,6 +76,8 @@ const FormList = ({
     fetchAllJobs();
     fetchElements();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
+    fetchObjectRequests();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -84,11 +86,8 @@ const FormList = ({
       fetchUsers(user.organizationId);
       fetchIntegrationSettings(user.organizationId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
-  useEffect(() => {
-    fetchObjectRequests();
-  }, []);
 
   return (
     <div className='form-list--wrapper'>
