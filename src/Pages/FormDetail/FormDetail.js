@@ -66,7 +66,8 @@ const FormPage = () => {
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     form.reservationmode && teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({ mode: form.reservationmode, callback: ({ res }) => {} });
-  }, [formId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formId, form]);
 
   const payload = useMemo(() => {
     const sections = form.sections;

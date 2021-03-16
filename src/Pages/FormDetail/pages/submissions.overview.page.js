@@ -65,7 +65,7 @@ const SubmissionsOverviewPage = () => {
   /**
    * MEMOIZED VALUES
    */
-  const scopedObjectIds = useMemo(() => form.objectScope ? _.uniq(submissions.map(el => el.scopedObject)) : [], [form]);
+  const scopedObjectIds = useMemo(() => form.objectScope ? _.uniq(submissions.map(el => el.scopedObject)) : [], [form, submissions]);
 
   /**
    * EFFECTS
@@ -76,6 +76,7 @@ const SubmissionsOverviewPage = () => {
         extids: scopedObjectIds,
         callback: results => setScopedObjects(parseTECoreGetObjectsReturn(results)),
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
@@ -101,7 +102,8 @@ const SubmissionsOverviewPage = () => {
     form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
     ..._cols,
     tableColumns.formSubmission.ACTION_BUTTON
-  ]), [_cols, isSaving]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ]), [_cols, isSaving, form.objectScope]);
 
   const filteredDatasource = useMemo(() => {
     const { freeTextFilter, scopedObject } = filters;
@@ -136,7 +138,7 @@ const SubmissionsOverviewPage = () => {
       .sort((a, b) => {
         return a.index - b.index;
       });
-  }, [userId, filters, _dataSource, columns]);
+  }, [filters, _dataSource, userId, scopedObjects, columns]);
 
   return (
     <React.Fragment>

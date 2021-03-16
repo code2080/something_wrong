@@ -84,6 +84,7 @@ const DynamicTableHOC = ({
   // Effect to load stored views
   useEffect(() => {
     getView(datasourceId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const visibleColumnsKey = useMemo(() => {
@@ -115,11 +116,12 @@ const DynamicTableHOC = ({
     return () => {
       unlisten();
     };
-  }, [columns, visibleCols, visibleColumnsKey]);
+  }, [columns, visibleCols, visibleColumnsKey, history]);
 
   // Effect to update cols everytime columns change
   useEffect(() => {
     initView(datasourceId, columns.reduce((colState, col) => ({ ...colState, [getVisibilityIndexor(col)]: true }), {}));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -151,7 +153,7 @@ const DynamicTableHOC = ({
   // Memoized calculated width
   const fixedWidthCols = useMemo(() => getFixedWidthCols(columns, visibleCols), [columns, visibleCols]);
 
-  const _width = useMemo(() => getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, width), [fixedWidthCols, width]);
+  const _width = useMemo(() => getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, width), [fixedWidthCols, width, expandedRowRender]);
 
   // Memoized variable with the visible column definitions
   const _cols = useMemo(
@@ -165,10 +167,12 @@ const DynamicTableHOC = ({
       !!expandedRowRender,
       onResizeColumn
     ),
-    [columns, visibleCols, _width, expandedRowRender, columnWidths]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [columns, visibleCols, visibleColumnsKey, _width, fixedWidthCols.length, resizable, expandedRowRender, columnWidths]
   );
 
   // Memoized datasource filtered on filter query
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const _dataSource = useMemo(() => filterDataSource(filterQuery, dataSource, _cols, onSearch), [filterQuery, dataSource, _cols]);
   const _shouldShowFilterBar = useMemo(() => shouldShowFilterBar(showFilter, onSearch, _cols), [showFilter, onSearch, _cols]);
   const _tableComponents = useMemo(() => getTableComponents(draggable), [draggable]);

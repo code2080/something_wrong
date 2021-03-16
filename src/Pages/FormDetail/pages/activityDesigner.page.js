@@ -78,6 +78,7 @@ const ActivityDesignPage = () => {
       dispatch(findTypesOnReservationMode(form.reservationMode));
       dispatch(findFieldsOnReservationMode(form.reservationMode));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const ActivityDesignPage = () => {
     }
     execTypes();
     execFields();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -129,9 +131,6 @@ const ActivityDesignPage = () => {
   const updateObjectDesignCallback = objectDesign => setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
   const updateFieldDesignCallback = fieldDesign => setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
 
-  // Callback for reset design update
-  const onResetDesign = resetDesign => setDesign({ ...resetDesign, formId, name: `Mapping for ${formId}` });
-
   // Callback to save mapping
   const onSaveDesign = () => {
     if (designIsValid)
@@ -142,17 +141,17 @@ const ActivityDesignPage = () => {
   const onResetMenuClick = useCallback(({ key }) => {
     switch (key) {
       case resetMenuOptions.RESET_EMPTY:
-        return onResetDesign(resetEmpty());
+        return setDesign({ ...resetEmpty(), formId, name: `Mapping for ${formId}` });
       case resetMenuOptions.RESET_ALL:
-        return onResetDesign(resetAll(typeOptions, fieldOptions));
+        return setDesign({ ...resetAll(typeOptions, fieldOptions), formId, name: `Mapping for ${formId}` });
       case resetMenuOptions.RESET_TYPES:
-        return onResetDesign(resetTypes(design, typeOptions));
+        return setDesign({ ...resetTypes(design, typeOptions), formId, name: `Mapping for ${formId}` });
       case resetMenuOptions.RESET_FIELDS:
-        return onResetDesign(resetFields(design, fieldOptions));
+        return setDesign({ ...resetFields(design, fieldOptions), formId, name: `Mapping for ${formId}` });
       default:
         break;
     }
-  }, [design, typeOptions, fieldOptions]);
+  }, [formId, typeOptions, fieldOptions, design]);
 
   const resetMenu = (
     <Menu onClick={onResetMenuClick}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'antd';
 import { useDispatch } from 'react-redux';
@@ -16,21 +16,24 @@ import './ObjectFilterValue.scss';
 // TYPES
 import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
 
+const extractOptionPayloadValues = (normalizedFilterValues, extId) => normalizedFilterValues.reduce((tot, acc) => {
+  return {
+    ...tot,
+    [acc.fieldExtId]: [
+      ...(tot[acc.fieldExtId] || []),
+      ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
+    ],
+  };
+}, {});
+
 const ObjectFilterValue = ({ value, extId, activityId }) => {
   const dispatch = useDispatch();
   const { formId } = useParams();
   const [visIdx, setVisIdx] = useState(0);
-  const normalizedFilterValues = normalizeFilterValues(value);
-  const optionPayloadValues = normalizedFilterValues.reduce((tot, acc) => {
-    return {
-      ...tot,
-      [acc.fieldExtId]: [
-        ...(tot[acc.fieldExtId] || []),
-        ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
-      ],
-    };
-  }, {});
+  const normalizedFilterValues = useMemo(() => normalizeFilterValues(value), [value]);
+
   useEffect(() => {
+    const optionPayloadValues = extractOptionPayloadValues(normalizedFilterValues, extId);
     dispatch(
       setActivityFilterOptions({
         filterId: `${formId}_ACTIVITIES`,
@@ -39,6 +42,7 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
         activityId,
       })
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onClickLeft = e => {
@@ -71,8 +75,16 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
       <div className='field--wrapper'>
         <div className='two-col--wrapper'>
           <div className='two-col--col'>
-            <div className='title--row'>{normalizedFilterValues[visIdx].fieldExtId}:</div>
-            <div className='value--row'>{normalizedFilterValues[visIdx].values}</div>
+            {visIdx && normalizedFilterValues[visIdx]
+              ? (
+                <React.Fragment>
+                  <div className='title--row'>{normalizedFilterValues[visIdx].fieldExtId}:</div>
+                  <div className='value--row'>{normalizedFilterValues[visIdx].values}</div>
+                </React.Fragment>
+              )
+              : (
+                <span>N/A</span>
+              )}
           </div>
         </div>
       </div>

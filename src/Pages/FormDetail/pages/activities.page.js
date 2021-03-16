@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
+import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
 // HELPERS
 import { stringIncludes, anyIncludes } from '../../../Utils/validation';
@@ -61,7 +62,11 @@ const ActivitiesPage = () => {
   const activities = useSelector(selectActivitiesForForm)(formId);
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
+  const isLoading = useSelector(createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']));
 
+  /**
+   * MEMOIZED PROPS
+   */
   const tableColumns = design ? createActivitiesTableColumnsFromMapping(design, true) : [];
   const tableDataSource = getActivityDataSource(activities, visibleActivities);
 
@@ -100,6 +105,8 @@ const ActivitiesPage = () => {
           selectedRowKeys,
           onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
         }}
+        pagination={false}
+        isLoading={isLoading}
       />
     </React.Fragment>
   );

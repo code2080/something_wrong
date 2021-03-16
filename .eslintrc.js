@@ -9,7 +9,7 @@ module.exports = {
     'plugin:react/recommended',
     'standard',
     'standard-react',
-    // 'plugin:react-hooks/recommended',
+    'plugin:react-hooks/recommended',
   ],
   parserOptions: {
     ecmaFeatures: {

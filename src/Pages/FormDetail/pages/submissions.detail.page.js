@@ -37,10 +37,14 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
       { path: `/forms/${formInstance.formId}`, label: form.name },
       { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`, label: `Submission from ${formInstance.submitter}` }
     ]));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() => getExtIdPropsPayload({ sections: form.sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }), [formInstance, form, activities]);
+  const payload = useMemo(() =>
+    getExtIdPropsPayload({ sections: form.sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }),
+  [form.sections, objectRequests, formInstance.values, activities]
+  );
   useFetchLabelsFromExtIds(payload);
 
   // State var to hold active tab
