@@ -33,7 +33,8 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
       callback: (user) =>
         window.tePrefsLibStore.dispatch({ type: SET_CORE_USER, payload: { userId: user.userId } })
     });
-  }, [teCoreAPI]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     window.tePrefsLibStore.dispatch({ type: SET_ENVIRONMENT, payload: { env } });
