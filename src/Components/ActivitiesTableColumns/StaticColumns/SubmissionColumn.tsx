@@ -44,6 +44,7 @@ const SubmissionColumn = ({ formInstanceId, activityId }: Props) => {
       optionPayload: { extId: 'primaryObject', values: [{ value: `primaryObject/${primaryObject}`, label: primaryObject }] },
       activityId
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**

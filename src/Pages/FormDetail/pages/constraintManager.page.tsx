@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
@@ -39,7 +39,6 @@ const getConstraintsOfType = (
 
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
-  const dispatch = useDispatch();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const constraintConfigurations: TConstraintConfiguration[] = useSelector(selectConstraintConfigurationsForForm)(formId);
 
