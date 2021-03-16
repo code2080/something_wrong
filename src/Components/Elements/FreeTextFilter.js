@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Icon, Menu, Dropdown } from 'antd';
+import { Menu, Dropdown } from 'antd';
+import { DownOutlined, FilterOutlined } from '@ant-design/icons';
 
 // HELPERS
 import { getTECoreAPIPayload } from '../../Redux/Integration/integration.selectors';
@@ -88,9 +89,9 @@ const FreeTextFilter = ({
         overlay={menu}
       >
         <div className='element__filter--inner'>
-          <Icon type='filter' />
+          <FilterOutlined />
           {`${typeLabel}/${fieldLabel}: ${searchValue}`}
-          <Icon type='down' />
+          <DownOutlined />
         </div>
       </Dropdown>
     </div>

@@ -2,7 +2,8 @@ import React, { useCallback, useMemo } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
-import { Modal, Dropdown, Menu, Button, Icon } from 'antd';
+import { Modal, Dropdown, Menu, Button } from 'antd';
+import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 // HELPERS
 import {
@@ -230,7 +231,7 @@ const ActivityActionsDropdown = ({
     >
       {buttonType === 'ellipsis'
         ? (
-          <Button type='link' icon='ellipsis' size='small' />
+          <Button type='link' icon={<EllipsisOutlined />} size='small' />
         )
         : (
           <Button
@@ -238,7 +239,7 @@ const ActivityActionsDropdown = ({
             size='small'
             style={{ backgroundColor: '#ffffff' }}
           >
-            Actions <Icon type='down' />
+            Actions <DownOutlined />
           </Button>
         )
       }

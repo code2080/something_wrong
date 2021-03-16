@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Input, Icon } from 'antd';
+import { Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 // SELECTORS
 import { selectActivityGroupsForForm } from '../../../../Redux/ActivityGroup/activityGroup.selectors';
@@ -68,7 +69,7 @@ const ActivityGroupPopover = ({ activities }: Props) => {
         <div className='header'>Select an existing group:</div>
         <Input
           placeholder='Select activity group'
-          suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.45)' }} />}
+          suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
           onChange={e => setFilterQuery(e.target.value)}
           size='small'
           value={filterQuery}

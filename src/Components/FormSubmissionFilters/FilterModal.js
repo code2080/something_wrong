@@ -2,7 +2,8 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Button, Modal, Form, Input, Icon, Switch } from 'antd';
+import { Button, Modal, Form, Input, Switch } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 // ACTIONS
 import { updateFilter } from '../../Redux/Filters/filters.actions';
@@ -76,7 +77,7 @@ const FilterModal = ({
             placeholder='Filter...'
             value={filters.freeTextFilter}
             onChange={e => onUpdateFilterSimple('freeTextFilter', e.target.value)}
-            suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+            suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
             size='small'
           />
         </Form.Item>

@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const ColumnHeader = props => {
-  const { width, children, title } = props;
+const ColumnHeader = ({ width, children, className, title }) => {
   if (!title) return children;
-
-  const sorter = _.get(children, '[0].props.children.props.children[1]', null);
-  const subtract = sorter.props.children ? 36 : 16;
+  const hasSorter = className.indexOf('sorter') > -1;
+  const subtract = hasSorter ? 36 : 16;
+  const sorter = _.get(children, `[${children.length - 1}].props.children.props.children.props.children[1]`, []);
   return (
     <div>
       <div
@@ -21,12 +20,12 @@ const ColumnHeader = props => {
       >
         {title}
       </div>
-      {sorter.props.children && (
+      {hasSorter && (
         <div
           style={{
             display: 'inline-block',
             position: 'absolute',
-            top: '3px',
+            top: '0px',
           }}
         >
           {sorter}
@@ -39,6 +38,7 @@ const ColumnHeader = props => {
 ColumnHeader.propTypes = {
   width: PropTypes.number,
   children: PropTypes.node,
+  className: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
@@ -46,6 +46,7 @@ ColumnHeader.defaultProps = {
   width: 0,
   title: null,
   children: null,
+  className: '',
 };
 
-export default ColumnHeader;
+export default React.memo(ColumnHeader);

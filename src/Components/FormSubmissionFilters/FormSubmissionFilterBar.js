@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, Icon, Button, Switch } from 'antd';
+import { Input, Button, Switch } from 'antd';
+import { SearchOutlined, FilterFilled } from '@ant-design/icons';
 
 // ACTIONS
 import { updateFilter } from '../../Redux/Filters/filters.actions';
@@ -45,7 +46,7 @@ const FormSubmissionFilterBar = ({
         placeholder='Filter...'
         value={filters.freeTextFilter}
         onChange={e => onUpdateFilter('freeTextFilter', e.target.value)}
-        suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+        suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
         size='small'
       />
       <div className='form-submission-filter-bar--switch'>
@@ -63,7 +64,7 @@ const FormSubmissionFilterBar = ({
         shape='circle'
         onClick={togglePropsFilter}
       >
-        <Icon type='filter' theme='filled' />
+        <FilterFilled />
       </Button>
     </div>
   );

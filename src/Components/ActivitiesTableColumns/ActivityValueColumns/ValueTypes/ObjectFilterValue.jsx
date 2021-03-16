@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd';
+import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -62,14 +62,14 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
           className='chevron'
           onClick={e => onClickLeft(e)}
         >
-          <Icon type='caret-left' />
+          <CaretLeftOutlined />
         </div>
         <div className='counter'>{`${visIdx + 1}/${normalizedFilterValues.length}`}</div>
         <div
           className='chevron'
           onClick={e => onClickRight(e)}
         >
-          <Icon type='caret-right' />
+          <CaretRightOutlined />
         </div>
       </div>
       <div className='field--wrapper'>

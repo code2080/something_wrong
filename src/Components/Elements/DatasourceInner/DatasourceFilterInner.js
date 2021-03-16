@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Icon } from 'antd';
+import { Dropdown } from 'antd';
 import { datasourceValueTypes } from '../../../Constants/datasource.constants';
+import { CaretLeftOutlined, CaretRightOutlined, DownOutlined } from '@ant-design/icons';
 
 // CONSTANTS
 const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
@@ -27,21 +28,21 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
             className='chevron'
             onClick={(e) => { e.stopPropagation(); setVisIdx(Math.max(visIdx - 1, 0)); }}
           >
-            <Icon type='caret-left' />
+            <CaretLeftOutlined />
           </div>
           <div className='counter'>{`${visIdx + 1}/${labelArr.length}`}</div>
           <div
             className='chevron'
             onClick={(e) => { e.stopPropagation(); setVisIdx(Math.min(visIdx + 1, labelArr.length - 1)); }}
           >
-            <Icon type='caret-right' />
+            <CaretRightOutlined />
           </div>
           <div className='field--label'>{labelArr[visIdx]}:</div>
           <div className='field--value'>
             {displayValue}
           </div>
         </div>
-        <Icon type='down' />
+        <DownOutlined />
       </div>
     </Dropdown>
   );

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Popover, Input, Button, Popconfirm } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 // ACTIONS
 import { setSchedulingStatusOfActivities } from '../../../../Redux/Activities/activities.actions';
@@ -45,18 +46,6 @@ const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
 MarkAsScheduledPopover.propTypes = {
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-};
-
-const SchedulingCheckboxButton = ({ schedulingStatus }) => (
-  <Button
-    size='small'
-    icon={schedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
-    className={schedulingStatus}
-  />
-);
-
-SchedulingCheckboxButton.propTypes = {
-  schedulingStatus: PropTypes.string.isRequired,
 };
 
 const SchedulingCheckbox = ({ activity }) => {
@@ -111,7 +100,7 @@ const SchedulingCheckbox = ({ activity }) => {
         >
           <Button
             size='small'
-            icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
+            icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? <MinusSquareOutlined /> : <CheckSquareOutlined />}
             className={derivedSchedulingStatus}
           />
         </Popover>
@@ -127,7 +116,7 @@ const SchedulingCheckbox = ({ activity }) => {
         >
           <Button
             size='small'
-            icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? 'minus-square' : 'check-square'}
+            icon={derivedSchedulingStatus !== activityStatuses.SCHEDULED ? <MinusSquareOutlined /> : <CheckSquareOutlined />}
             className={derivedSchedulingStatus}
           />
         </Popconfirm>

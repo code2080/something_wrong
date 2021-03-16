@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Icon, Menu } from 'antd';
+import { Dropdown, Menu } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 
 const actionKeys = {
   LOGOUT: 'LOGOUT',
@@ -27,7 +28,7 @@ const ActionsButton = ({
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <Icon type='menu' />
+      <MenuOutlined />
     </Dropdown>
   );
 };

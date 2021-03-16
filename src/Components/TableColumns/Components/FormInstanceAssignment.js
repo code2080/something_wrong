@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
-import { Icon, Popover, Input, Button } from 'antd';
+import { Popover, Input, Button } from 'antd';
 import _ from 'lodash';
+import { SearchOutlined, UserAddOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 // CONSTANTS
 import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants';
@@ -25,7 +26,7 @@ const AssignedUser = ({ isSelf, assignedUser, onRemoveUser }) => {
       <div className='assignment__popover__item__avatar'>{assignedUser.initials}</div>
       <div className='assignment__popover__item__name'>{assignedUser.name}</div>
       <div className='assignment__popover__item__remove' onClick={onRemoveUser}>
-        <Icon type='close-circle' />
+        <CloseCircleOutlined />
       </div>
     </div>
   );
@@ -39,7 +40,7 @@ AssignedUser.propTypes = {
 
 const EmptyAssignment = () => (
   <div className='assignment--avatar empty'>
-    <Icon type='user-add' />
+    <UserAddOutlined />
   </div>
 );
 
@@ -162,7 +163,7 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
         <div className='assignment--popover'>
           <Input
             placeholder='Find users'
-            suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.45)' }} />}
+            suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
             onChange={e => setFilterQuery(e.target.value)}
             size='small'
             value={filterQuery}

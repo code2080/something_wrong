@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Icon } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import { TIME_FORMAT } from '../../Constants/common.constants';
 
 // STYLES
@@ -19,7 +19,7 @@ const TimePicker = ({ value }) => {
   return (
     <div className='picker--wrapper'>
       <div className='icon--wrapper'>
-        <Icon type='clock-circle' />
+        <ClockCircleOutlined />
       </div>
       <div className='value--wrapper'>
         {_value}

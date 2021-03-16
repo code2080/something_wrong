@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Icon, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 // HELPERS
 import { findTimeSlot } from '../../Utils/sections.helpers';
@@ -29,7 +30,7 @@ const TimeSlotColumn = ({ event, timeslots }) => {
     >
       <div className='picker--wrapper'>
         <div className='icon--wrapper'>
-          <Icon type='clock-circle' />
+          <ClockCircleOutlined />
         </div>
         <div className='value--wrapper'>
           {timeslot ? timeslot.label : 'N/A'}

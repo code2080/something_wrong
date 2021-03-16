@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Icon } from 'antd';
+import { Button } from 'antd';
+import { FilterFilled } from '@ant-design/icons';
 
 import './button.scss';
 
@@ -11,7 +12,7 @@ type Props = {
 
 const ActivityFilterButton = ({ onClick, isActive }: Props) =>
   <Button size='small' shape='circle' ghost className={`filter-btn ${isActive && 'active'}`} onClick={onClick}>
-    <Icon type='filter' theme='filled' />
+    <FilterFilled />
   </Button>;
 
 export default ActivityFilterButton;

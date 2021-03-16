@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import moment from 'moment';
 import _ from 'lodash';
 
 // COMPONENtS
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
-import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane';
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 
 // SELECTORS
@@ -16,27 +14,10 @@ import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.s
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
 // HELPERS
-import { stringIncludes, anyIncludes } from '../../../Utils/validation';
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 
 // CONSTANTS
-import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
-
-const filterFn = (activity, query) => {
-  // Search activities by [extId, activityStatus, submissionValues[], value[], timing[].value]
-  const validValue =
-    stringIncludes(activity.extId, query) ||
-    stringIncludes(activity.activityStatus, query) ||
-    (activity.values || []).some(item => anyIncludes(item.submissionValue, query) ||
-      anyIncludes(item.value, query)
-    ) ||
-    (activity.timing || []).some(item => item.value && stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query));
-  if (validValue) {
-    return true;
-  }
-  return false;
-};
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -86,6 +67,24 @@ const ActivitiesPage = () => {
     setSelectedRowKeys([]);
   };
 
+  const memoizedTable = useMemo(() => (
+    <DynamicTable
+      showFilter={false}
+      columns={tableColumns}
+      dataSource={tableDataSource}
+      rowKey='_id'
+      datasourceId={`${tableViews.ACTIVITIES}-${formId}`}
+      resizable
+      rowSelection={{
+        selectedRowKeys,
+        onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
+      }}
+      pagination={false}
+      isLoading={isLoading}
+    />
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ), [formId, isLoading, selectedRowKeys, tableDataSource]);
+
   return (
     <React.Fragment>
       <ActivitiesToolbar
@@ -93,21 +92,7 @@ const ActivitiesPage = () => {
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
       />
-      <DynamicTable
-        columns={tableColumns}
-        dataSource={tableDataSource}
-        rowKey='_id'
-        datasourceId={`${tableViews.ACTIVITIES}-${formId}`}
-        expandedRowRender={row => <ExpandedPane columns={tableColumns} row={row} />}
-        resizable
-        onSearch={filterFn}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
-        }}
-        pagination={false}
-        isLoading={isLoading}
-      />
+      {memoizedTable}
     </React.Fragment>
   );
 };

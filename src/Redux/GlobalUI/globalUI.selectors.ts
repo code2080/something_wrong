@@ -11,3 +11,8 @@ export const selectFormDetailSubmission = createSelector(
   globalUIState,
   uiState => uiState.selectedFormDetailSubmission,
 );
+
+export const selectVisibleColsForDatasourceId = createSelector(
+  globalUIState,
+  uiState => (datasourceId: string) => uiState.tableViews[datasourceId] || {}
+);

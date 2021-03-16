@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Dropdown, Icon, Button } from 'antd';
+import { Menu, Dropdown, Button } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
@@ -123,7 +124,7 @@ const SubmissionActionButton = ({
         trigger={['click']}
       >
         <Button type='link' size='small' onClick={e => e.stopPropagation()}>
-          <Icon type='more' />
+          <MoreOutlined />
         </Button>
       </Dropdown>
       <FormInstanceAcceptanceStatusModal

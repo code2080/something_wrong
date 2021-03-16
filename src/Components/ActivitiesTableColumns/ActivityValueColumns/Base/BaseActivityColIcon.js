@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, Icon } from 'antd';
+import { Tooltip } from 'antd';
+import { Icon } from '@ant-design/compatible';
 
 // CONSTANTS
 import { activityValueModes, activityValueModeProps } from '../../../Constants/activityValueModes.constants';

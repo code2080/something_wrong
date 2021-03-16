@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Button, Icon } from 'antd';
+import { Switch, Button } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 // STYLES
 import './ColumnSelector.scss';
@@ -14,7 +15,7 @@ const ColumnSelector = ({
     <div className='column-selector--wrapper'>
       <div className='column-selector--header'>
         <Button type='link' onClick={onHide}>
-          <Icon type='arrow-left' />
+          <ArrowLeftOutlined />
           Back
         </Button>
         <span className='column-selector--title'>Select columns to display</span>

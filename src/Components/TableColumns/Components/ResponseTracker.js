@@ -20,7 +20,7 @@ const ResponseTracker = ({ responses }) => {
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
         <Progress
-          successPercent={((submissions - declined) / totalCount) * 100}
+          success={{ percent: ((submissions - declined) / totalCount) * 100 }}
           percent={(submissions / totalCount) * 100}
           size='small'
           strokeColor='red'

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Icon } from 'antd';
 import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
+import { UndoOutlined, SelectOutlined, FilterOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 // ACTIONS
 import { getTECoreAPIPayload } from '../Redux/Integration/integration.selectors';
@@ -49,10 +49,10 @@ export const objectRequestActionIcon = {
   [objectRequestActions.ACCEPT]: requestStatusToIcon[RequestStatus.ACCEPTED],
   [objectRequestActions.DECLINE]: requestStatusToIcon[RequestStatus.DECLINED],
   [objectRequestActions.REPLACE]: requestStatusToIcon[RequestStatus.REPLACED],
-  [objectRequestActions.REVERT]: <Icon type='undo' size='small' />,
-  [objectRequestActions.SELECT]: <Icon type='select' size='small' />,
-  [objectRequestActions.FILTER]: <Icon type='filter' size='small' />,
-  [objectRequestActions.DETAILS]: <Icon type='info-circle' size='small' />,
+  [objectRequestActions.REVERT]: <UndoOutlined />,
+  [objectRequestActions.SELECT]: <SelectOutlined />,
+  [objectRequestActions.FILTER]: <FilterOutlined />,
+  [objectRequestActions.DETAILS]: <InfoCircleOutlined />,
 };
 
 export const objectRequestOnClick = ({ request, coreCallback, dispatch, teCoreAPI, spotlightRef, showDetails }) => ({ key }) => {

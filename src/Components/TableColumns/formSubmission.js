@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { Icon } from '@ant-design/compatible';
 
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';

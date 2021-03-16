@@ -82,7 +82,7 @@ const Toolbar = ({
   };
   const onHandleBreadrumbsClick = path => history.push(path);
 
-  const renderedToolbar = () => (
+  const renderedToolbar = (
     <div className='top-toolbar--wrapper'>
       <span className='top-toolbar--breadcrumbs__label'>Navigate:</span>
       <Breadcrumb>

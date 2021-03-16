@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon } from 'antd';
+import { Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 // STYLES
 import './FilterBar.scss';
@@ -11,7 +12,7 @@ const FilterBar = ({ query, onChange }) => (
       placeholder='Filter...'
       value={query}
       onChange={e => onChange(e.target.value)}
-      suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+      suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
       size='small'
     />
   </div>

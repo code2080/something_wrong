@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Dropdown, Icon } from 'antd';
+import { Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import ObjectRequestDropdown from './ObjectRequestDropdown';
@@ -19,7 +20,7 @@ const DatasourceObjectInner = ({ labels, menu }) => {
       ? <ObjectRequestDropdown request={objReq} key={objReq._id}>
         <div className='element__datasource--inner' >
           <ObjectRequestValue request={objReq} />
-          <Icon type='down' />
+          <DownOutlined />
         </div>
       </ObjectRequestDropdown>
       : <Dropdown
@@ -29,7 +30,7 @@ const DatasourceObjectInner = ({ labels, menu }) => {
       >
         <div className='dd-trigger element__datasource--inner' >
           {label || 'N/A'}
-          <Icon type='down' />
+          <DownOutlined />
         </div>
       </Dropdown>;
   });

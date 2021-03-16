@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Icon } from 'antd';
+import { SelectOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
@@ -24,7 +24,7 @@ const SelectActivityButton = ({ activity }) => {
 
   return (
     <div className='scheduling-actions--button' onClick={onSelectAllCallback}>
-      <Icon type='select' />
+      <SelectOutlined />
     </div>
   );
 };

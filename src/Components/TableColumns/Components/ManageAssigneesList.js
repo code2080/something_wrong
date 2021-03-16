@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Icon, Avatar } from 'antd';
+import { List, Avatar } from 'antd';
 import _ from 'lodash';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 // STYLES
 // import './FormInstanceAssignment.scss';
@@ -13,7 +14,7 @@ const User = ({ isSelf, user, onToggleUser, isAssigned }) => {
       <div className='assignment__popover__item__name'>{user.name}</div>
       {isAssigned && (
         <div className='assignment__popover__item__remove' onClick={onToggleUser}>
-          <Icon type='close-circle' />
+          <CloseCircleOutlined />
         </div>
       )}
     </List.Item>

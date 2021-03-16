@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, Form, Icon } from 'antd';
+import { Popover, Form } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
+import { CheckOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import StatusLabel from '../../../StatusLabel/StatusLabel';
@@ -41,7 +42,7 @@ const StatusText = ({ activity }) => {
     case activityStatuses.SCHEDULED:
       return (
         <span>
-          <Icon type='check' />&nbsp;ID:&nbsp;{activity.reservationId || 'N/A'}
+          <CheckOutlined />&nbsp;ID:&nbsp;{activity.reservationId || 'N/A'}
         </span>
       );
     default:
