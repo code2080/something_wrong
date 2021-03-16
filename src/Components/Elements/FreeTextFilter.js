@@ -61,7 +61,7 @@ const FreeTextFilter = ({
         break;
     }
     teCoreAPI[callname](_payload);
-  }, [payload, teCoreAPI]);
+  }, [payload, searchCriteria, teCoreAPI]);
   // Memoized list of supported actions
   const supportedActions = useMemo(
     () => teCoreAPI.getCompatibleFunctionsForElement(element.elementId),

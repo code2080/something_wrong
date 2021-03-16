@@ -14,7 +14,7 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
     const value = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE && el.extId === numberedKey);
     if (!value || !value.value) return 'N/A';
     return renderFieldValues(value.value);
-  }, [visIdx]);
+  }, [labels, payload, visIdx]);
 
   return (
     <Dropdown

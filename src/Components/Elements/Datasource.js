@@ -46,7 +46,7 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
     const datasourceSplit = (element.datasource || []).split(',');
     if (datasourceSplit && datasourceSplit[1] && datasourceSplit[1] === 'object') return elTypes.OBJECT;
     return elTypes.FILTER;
-  }, [payload]);
+  }, [element.datasource, payload]);
 
   // Callback on menu click
   const onClickCallback = useCallback(
@@ -79,7 +79,7 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
             (isObject && action === 'FILTER_OBJECTS')
           );
         }),
-    [teCoreAPI, element]
+    [teCoreAPI, element.elementId, element.datasource, labels]
   );
 
   // Memoized menu

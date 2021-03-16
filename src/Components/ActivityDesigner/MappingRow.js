@@ -34,7 +34,7 @@ const MappingRow = ({
   );
   const addElementProp = useCallback(() => {
     return onChangeMapping({ [teProp]: [..._mappedValues, []] });
-  }, [_mappedValues]);
+  }, [_mappedValues, onChangeMapping, teProp]);
 
   return (
     <div className='object-mapping-row--wrapper'>

@@ -16,7 +16,7 @@ const FormInstanceActionsDropdown = ({ formInstance }) => {
         Notify user with review link
       </Menu.Item>
     </Menu>
-  ), [formInstance]);
+  ), [dispatch, formInstance._id, formInstance.reviewLink]);
 
   if (!formInstance || !formInstance.reviewLink) return null;
 

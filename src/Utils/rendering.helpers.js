@@ -372,9 +372,9 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
 };
 
 export const LabelRenderer = ({ type, extId }) => {
-  if (!extId || !type) return 'N/A';
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
   const label = useSelector(state => state.te.extIdProps[type][extId]);
+  if (!extId || !type) return 'N/A';
   return label && (label.label || extId || 'N/A');
 };

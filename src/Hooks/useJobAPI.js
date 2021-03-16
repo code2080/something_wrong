@@ -44,6 +44,7 @@ export const useJobWSAPI = () => {
       // When component unmounts, close the connection
       socket.current.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { activeJobId, activeJobFormId: formId, stopJob };
