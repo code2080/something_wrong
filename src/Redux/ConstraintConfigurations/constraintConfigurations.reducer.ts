@@ -11,9 +11,9 @@ import { ConstraintConfiguration, TConstraintConfiguration } from '../../Types/C
 const reducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS: {
-      if (!action?.payload?.payload) return state;
-      const { results } = action.payload;
-      return Object.values(results).reduce(
+      if (!action?.payload) return state;
+      const { payload } = action;
+      return Object.values(payload).reduce(
         (consConf: {[formId: string]: TConstraintConfiguration}, constraint: any) => ({
           ...consConf,
           [constraint.formId]: {
