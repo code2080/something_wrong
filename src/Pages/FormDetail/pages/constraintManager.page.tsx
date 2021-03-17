@@ -40,7 +40,7 @@ const getConstraintsOfType = (
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
-  const constraintConfigurations: TConstraintConfiguration[] = useSelector(selectConstraintConfigurationsForForm)(formId);
+  const constraintConfigurations: TConstraintConfiguration[] = Object.values(useSelector(selectConstraintConfigurationsForForm(formId)));
 
   /**
    * STATE
