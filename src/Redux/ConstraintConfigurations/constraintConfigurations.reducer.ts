@@ -12,13 +12,13 @@ const reducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS: {
       if (!action?.payload) return state;
-      const { payload } = action;
+      const { actionMeta, ...payload } = action.payload;
       return Object.values(payload).reduce(
-        (consConf: {[formId: string]: TConstraintConfiguration}, constraint: any) => ({
+        (consConf: {[formId: string]: TConstraintConfiguration}, constraintConfig: any) => ({
           ...consConf,
-          [constraint.formId]: {
-            ...consConf[constraint.formId],
-            [constraint.constraintConfigurationId]: ConstraintConfiguration.create(constraint),
+          [constraintConfig.formId]: {
+            ...consConf[constraintConfig.formId],
+            [constraintConfig._id]: ConstraintConfiguration.create(constraintConfig),
           },
         }), state);
     };
