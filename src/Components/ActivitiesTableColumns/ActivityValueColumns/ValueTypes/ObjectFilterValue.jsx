@@ -1,49 +1,16 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 
 // HELPERS
 import { normalizeFilterValues } from '../Helpers/rendering';
 
-// ACTIONS
-import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
-
 // STYLES
 import './ObjectFilterValue.scss';
 
-// TYPES
-import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
-
-const extractOptionPayloadValues = (normalizedFilterValues, extId) => normalizedFilterValues.reduce((tot, acc) => {
-  return {
-    ...tot,
-    [acc.fieldExtId]: [
-      ...(tot[acc.fieldExtId] || []),
-      ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
-    ],
-  };
-}, {});
-
-const ObjectFilterValue = ({ value, extId, activityId }) => {
-  const dispatch = useDispatch();
-  const { formId } = useParams();
+const ObjectFilterValue = ({ value }) => {
   const [visIdx, setVisIdx] = useState(0);
   const normalizedFilterValues = useMemo(() => normalizeFilterValues(value), [value]);
-
-  useEffect(() => {
-    const optionPayloadValues = extractOptionPayloadValues(normalizedFilterValues, extId);
-    dispatch(
-      setActivityFilterOptions({
-        filterId: `${formId}_ACTIVITIES`,
-        optionType: EActivityFilterType.OBJECT_FILTER,
-        optionPayload: { extId, values: optionPayloadValues },
-        activityId,
-      })
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onClickLeft = e => {
     e.stopPropagation();
@@ -75,7 +42,7 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
       <div className='field--wrapper'>
         <div className='two-col--wrapper'>
           <div className='two-col--col'>
-            {visIdx && normalizedFilterValues[visIdx]
+            {normalizedFilterValues[visIdx]
               ? (
                 <React.Fragment>
                   <div className='title--row'>{normalizedFilterValues[visIdx].fieldExtId}:</div>
@@ -93,9 +60,7 @@ const ObjectFilterValue = ({ value, extId, activityId }) => {
 };
 
 ObjectFilterValue.propTypes = {
-  extId: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
-  activityId: PropTypes.string.isRequired,
 };
 
 export default ObjectFilterValue;

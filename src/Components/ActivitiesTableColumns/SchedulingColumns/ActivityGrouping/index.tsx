@@ -28,6 +28,7 @@ const ActivityGroupSelector = ({ activities }: Props) => {
   const selectedActivityGroup: TActivityGroup = useSelector(selectActivityGroup)(formId, activities[0].groupId);
 
   const formattedValue = selectedActivityGroup ? selectedActivityGroup.name : 'N/A';
+  /*
   useEffect(() => {
     if (activities && activities.length === 1)
       dispatch(setActivityFilterOptions({
@@ -38,7 +39,7 @@ const ActivityGroupSelector = ({ activities }: Props) => {
       }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  */
   return (
     <Popover
       overlayClassName='activity-group-popover--wrapper'

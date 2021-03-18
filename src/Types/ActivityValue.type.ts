@@ -10,7 +10,7 @@ export type CategoryField = {
   }]
 }
 
-export type ValueType = string | number | string[] | number[] | CategoryField
+export type ValueType = string | number | string[] | number[] | CategoryField | undefined | null
 
 export type ActivityValue = {
   type: ActivityValueType,
@@ -18,7 +18,7 @@ export type ActivityValue = {
   submissionValue: ValueType | null
   submissionValueType: ActivityValueType,
   valueMode: ActivityValueMode,
-  value: ValueType | null,
+  value: any,
   sectionId?: string | null,
   elementId?: string | null,
   eventId?: string | null,

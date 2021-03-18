@@ -28,6 +28,7 @@ const SubmissionColumn = ({ formInstanceId, activityId }: Props) => {
 
   const formInstance: TFormInstance = useSelector(selectFormInstance)(formId, formInstanceId);
 
+  /*
   useEffect(() => {
     // Set two filter options; one for submitter and one for primary object
     const name = `${formInstance.firstName} ${formInstance.lastName}`;
@@ -46,6 +47,7 @@ const SubmissionColumn = ({ formInstanceId, activityId }: Props) => {
     }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  */
 
   /**
    * EVENT HANDLERS
