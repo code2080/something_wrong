@@ -4,6 +4,7 @@ import { ActivityValue } from '../../Types/ActivityValue.type';
 import { getFVForTimingValue } from './timing';
 import { getFVForObjectValue } from './object';
 import { getFVForFieldValue } from './field';
+import { getFVForOtherValue } from './helpers';
 
 /**
  * Returns a normalized rendering payload including validation for all possible activityValue types
@@ -22,5 +23,7 @@ export const derivedFormattedValueForActivityValue = (activityValue: ActivityVal
       return getFVForObjectValue(activityValue);
     case ActivityValueType.FIELD:
       return getFVForFieldValue(activityValue);
+    case ActivityValueType.OTHER:
+      return getFVForOtherValue(activityValue);
   }
 };

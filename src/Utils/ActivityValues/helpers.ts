@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 import { TActivity } from '../../Types/Activity.type';
 import { ActivityValue } from '../../Types/ActivityValue.type';
@@ -74,4 +75,50 @@ export const normalizeFilterValues = (value: any[]) => {
     return tot;
   }, []);
   return normalizedValues;
+};
+
+const fvForActivityGroup = (groupId: string | null | undefined, formId: string) => {
+  if (!groupId) return 'N/A';
+  const storeState = (window as any).tePrefsLibStore.getState();
+  const activityGroups = _.get(storeState, `activityGroups.${formId}`, []);
+  const activityGroup = activityGroups.find(el => el._id === groupId);
+  if (!activityGroup) return 'N/A';
+  return activityGroup.name;
+};
+
+const fvForSubmitter = (formInstanceId: string, formId: string) => {
+  const storeState = (window as any).tePrefsLibStore.getState();
+  const formInstance = _.get(storeState, `submissions.${formId}.${formInstanceId}`, null);
+  if (!formInstance) return 'N/A';
+  return `${formInstance.firstName} ${formInstance.lastName}`;
+};
+
+const fvForPrimaryObject = (formInstanceId: string, formId: string) => {
+  const storeState = (window as any).tePrefsLibStore.getState();
+  const scopedObject = _.get(storeState, `submissions.${formId}.${formInstanceId}.scopedObject`, null);
+  if (!scopedObject) return 'N/A';
+  return scopedObject;
+};
+
+export const getFVForOtherValue = (activityValue: any): any[] | null => {
+  const { value, extId, formId } = activityValue;
+  switch (extId) {
+    case 'groupId': {
+      const fv = fvForActivityGroup(value, formId);
+      return [{ value: `${extId}/${value}`, label: fv }];
+    }
+
+    case 'submitter': {
+      const fv = fvForSubmitter(value, formId);
+      return [{ value: `${extId}/${value}`, label: fv }];
+    }
+
+    case 'primaryObject': {
+      const fv = fvForPrimaryObject(value, formId);
+      return [{ value: `${extId}/${fv}`, label: fv }];
+    }
+
+    default:
+      return null;
+  }
 };

@@ -128,10 +128,11 @@ export const extractValuesFromActivityValues = (activityValues: ActivityValue[])
   }, { fields: [], objects: [] });
 
 const getAllExtIdsFromActivityValues = (sampleActivity: TActivity): string[] => {
-  const allValues = [...sampleActivity.timing, ...sampleActivity.values];
-  return allValues
+  const allActivityValues = [...sampleActivity.timing, ...sampleActivity.values];
+  const extIds = allActivityValues
     .filter(el => el.extId && el.extId !== '$init')
     .map(el => el.extId);
+  return [...extIds, 'groupId', 'submitter', 'primaryObject'];
 };
 
 const extractMatchesFromFormattedOptions = (formattedOptions: any): string[] => {
@@ -170,8 +171,15 @@ const createUniqOptions = (option) => {
 };
 
 const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
+  // Add constants from the activity
+  const consts = [
+    { extId: 'groupId', value: activity.groupId, type: ActivityValueType.OTHER, formId: activity.formId },
+    { extId: 'submitter', value: activity.formInstanceId, type: ActivityValueType.OTHER, formId: activity.formId },
+    { extId: 'primaryObject', value: activity.formInstanceId, type: ActivityValueType.OTHER, formId: activity.formId },
+  ];
+
   // Get all the activity values
-  const values = [...activity.timing, ...activity.values].filter(el => extIds.indexOf(el.extId) > -1);
+  const values = [...activity.timing, ...activity.values, ...consts].filter(el => extIds.indexOf(el.extId) > -1);
   // Product a non unique ret val
   const retVal = values.reduce((tot, activityValue) => {
     const { extId } = activityValue;
