@@ -2,14 +2,14 @@
 import React, { useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-// import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -40,7 +40,10 @@ const getConstraintsOfType = (
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
-  const constraintConfigurations: TConstraintConfiguration[] = Object.values(useSelector(selectConstraintConfigurationsForForm(formId)));
+  const dispatch = useDispatch();
+  const constraintConfigurations: TConstraintConfiguration[] = Object.values(
+    useSelector(selectConstraintConfigurationsForForm(formId))
+  );
 
   /**
    * STATE
@@ -74,6 +77,7 @@ const ConstraintManagerPage = () => {
         }
         : constraintInstance)
     });
+    dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleAddCustomConstraint = (e) => {
@@ -93,7 +97,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleSaveConstraintConfiguration = () => {
-    // dispatch(updateConstraintConfiguration(constraintConfiguration));
+    dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleDeleteConstraintConfiguration = () => {
