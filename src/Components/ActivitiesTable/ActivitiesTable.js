@@ -22,10 +22,16 @@ const filterFn = (activity, query) => {
   const validValue =
     stringIncludes(activity.extId, query) ||
     stringIncludes(activity.activityStatus, query) ||
-    (activity.values || []).some(item => anyIncludes(item.submissionValue, query) ||
-      anyIncludes(item.value, query)
+    (activity.values || []).some(
+      (item) =>
+        anyIncludes(item.submissionValue, query) ||
+        anyIncludes(item.value, query),
     ) ||
-    (activity.timing || []).some(item => item.value && stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query));
+    (activity.timing || []).some(
+      (item) =>
+        item.value &&
+        stringIncludes(moment(item.value).format(DATE_TIME_FORMAT), query),
+    );
   if (validValue) {
     return true;
   }
@@ -33,7 +39,7 @@ const filterFn = (activity, query) => {
 };
 
 const getActivityDataSource = (activities = []) => {
-  const hasActivityOrdering = activities.every(a => a.sequenceIdx != null);
+  const hasActivityOrdering = activities.every((a) => a.sequenceIdx != null);
   if (!hasActivityOrdering) return activities;
   return _.orderBy(activities, ['sequenceIdx'], ['asc']);
 };
@@ -46,7 +52,11 @@ const ActivitiesTable = ({
 }) => {
   const dispatch = useDispatch();
   const onMove = (sourceIdx, destinationIdx) => {
-    if (sourceIdx !== destinationIdx) { dispatch(reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx)); }
+    if (sourceIdx !== destinationIdx) {
+      dispatch(
+        reorderActivities(formId, formInstanceId, sourceIdx, destinationIdx),
+      );
+    }
   };
 
   const columns = design ? createActivitiesTableColumnsFromMapping(design) : [];
@@ -58,7 +68,7 @@ const ActivitiesTable = ({
       dataSource={dataSource}
       rowKey='_id'
       datasourceId={`${tableViews.ACTIVITIES}-${formInstanceId}`}
-      expandedRowRender={row => <ExpandedPane columns={columns} row={row} />}
+      expandedRowRender={(row) => <ExpandedPane columns={columns} row={row} />}
       resizable
       onSearch={filterFn}
       draggable
@@ -71,12 +81,12 @@ ActivitiesTable.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   mapping: PropTypes.object,
-  activities: PropTypes.array
+  activities: PropTypes.array,
 };
 
 ActivitiesTable.defaultProps = {
   mapping: null,
-  activities: []
+  activities: [],
 };
 
 export default ActivitiesTable;

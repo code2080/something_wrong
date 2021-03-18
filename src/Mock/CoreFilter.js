@@ -3,10 +3,10 @@ export const coreFilter = {
     'room.building': ['114 Ljunggården öster', '202 norr'],
     'general.department': [
       'Biochemistry (BIOC)',
-      'Business Administration (BADM)'
+      'Business Administration (BADM)',
     ],
-    'room.equipment': ['Computer Lab']
+    'room.equipment': ['Computer Lab'],
   },
   searchString: 'de',
-  type: 'room'
+  type: 'room',
 };

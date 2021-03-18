@@ -10,12 +10,8 @@ import './twoCol.scss';
 
 const DateRangesColumn = ({ value, title }) => (
   <div className='two-col--col'>
-    <div className='title--row'>
-      {title}
-    </div>
-    <div className='value--row'>
-      {moment(value).format(DATE_FORMAT)}
-    </div>
+    <div className='title--row'>{title}</div>
+    <div className='value--row'>{moment(value).format(DATE_FORMAT)}</div>
   </div>
 );
 

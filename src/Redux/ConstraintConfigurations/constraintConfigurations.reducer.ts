@@ -6,7 +6,10 @@ import {
 } from './constraintConfigurations.actionTypes';
 
 // MODELS
-import { ConstraintConfiguration, TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
+import {
+  ConstraintConfiguration,
+  TConstraintConfiguration,
+} from '../../Types/ConstraintConfiguration.type';
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
@@ -14,36 +17,49 @@ const reducer = (state = {}, action) => {
       if (!action?.payload) return state;
       const { actionMeta, ...payload } = action.payload;
       return Object.values(payload).reduce(
-        (consConf: {[formId: string]: TConstraintConfiguration}, constraintConfig: any) => ({
+        (
+          consConf: { [formId: string]: TConstraintConfiguration },
+          constraintConfig: any,
+        ) => ({
           ...consConf,
           [constraintConfig.formId]: {
             ...consConf[constraintConfig.formId],
-            [constraintConfig._id]: ConstraintConfiguration.create(constraintConfig),
+            [constraintConfig._id]: ConstraintConfiguration.create(
+              constraintConfig,
+            ),
           },
-        }), state);
-    };
+        }),
+        state,
+      );
+    }
 
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
     case UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
-      const { payload: { constraintConfiguration: _, ...constraintConfObj } } = action;
-      const constraintConfiguration = ConstraintConfiguration.create(constraintConfObj);
+      const {
+        payload: { constraintConfiguration: _, ...constraintConfObj },
+      } = action;
+      const constraintConfiguration = ConstraintConfiguration.create(
+        constraintConfObj,
+      );
       return {
         ...state,
         [constraintConfiguration.formId]: {
           ...state[constraintConfiguration.formId],
           [constraintConfiguration._id as string]: constraintConfiguration,
-        }
+        },
       };
-    };
+    }
 
     case DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
-      const { payload: { formId, constraintConfigurationId } } = action;
+      const {
+        payload: { formId, constraintConfigurationId },
+      } = action;
       const { [constraintConfigurationId]: _, ...updFormState } = state[formId];
       return {
         ...state,
         [formId]: updFormState,
       };
-    };
+    }
 
     default:
       return state;

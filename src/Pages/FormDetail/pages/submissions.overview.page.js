@@ -53,7 +53,10 @@ const SubmissionsOverviewPage = () => {
   const submissions = useSelector(selectSubmissions)(formId);
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
-  const filters = useSelector(selectFilter)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface);
+  const filters = useSelector(selectFilter)(
+    `${formId}_SUBMISSIONS`,
+    FormSubmissionFilterInterface,
+  );
   const userId = useSelector(selectAuthedUserId);
 
   /**
@@ -65,7 +68,11 @@ const SubmissionsOverviewPage = () => {
   /**
    * MEMOIZED VALUES
    */
-  const scopedObjectIds = useMemo(() => form.objectScope ? _.uniq(submissions.map(el => el.scopedObject)) : [], [form, submissions]);
+  const scopedObjectIds = useMemo(
+    () =>
+      form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
+    [form, submissions],
+  );
 
   /**
    * EFFECTS
@@ -74,36 +81,46 @@ const SubmissionsOverviewPage = () => {
     if (scopedObjectIds && scopedObjectIds.length > 0)
       teCoreAPI[teCoreCallnames.GET_OBJECTS_BY_EXTID]({
         extids: scopedObjectIds,
-        callback: results => setScopedObjects(parseTECoreGetObjectsReturn(results)),
+        callback: (results) =>
+          setScopedObjects(parseTECoreGetObjectsReturn(results)),
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
-  const _elementTableData = useMemo(() => extractSubmissionData(submissions, _cols), [submissions, _cols]);
-  const _dataSource = useMemo(() =>
-    submissions.map(submission => {
-      if (!_elementTableData[submission._id]) return submission;
-      return {
-        ...submission,
-        ..._elementTableData[submission._id],
-      };
-    }),
-  [submissions, _elementTableData]);
+  const _elementTableData = useMemo(
+    () => extractSubmissionData(submissions, _cols),
+    [submissions, _cols],
+  );
+  const _dataSource = useMemo(
+    () =>
+      submissions.map((submission) => {
+        if (!_elementTableData[submission._id]) return submission;
+        return {
+          ...submission,
+          ..._elementTableData[submission._id],
+        };
+      }),
+    [submissions, _elementTableData],
+  );
 
-  const columns = useMemo(() => _.compact([
-    tableColumns.formSubmission.ASSIGNMENT,
-    tableColumns.formSubmission.NAME,
-    tableColumns.formSubmission.SUBMISSION_DATE,
-    tableColumns.formSubmission.IS_STARRED(dispatch, isSaving),
-    tableColumns.formSubmission.SCOPED_OBJECT,
-    tableColumns.formSubmission.ACCEPTANCE_STATUS,
-    tableColumns.formSubmission.SCHEDULING_PROGRESS,
-    form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
-    ..._cols,
-    tableColumns.formSubmission.ACTION_BUTTON
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  ]), [_cols, isSaving, form.objectScope]);
+  const columns = useMemo(
+    () =>
+      _.compact([
+        tableColumns.formSubmission.ASSIGNMENT,
+        tableColumns.formSubmission.NAME,
+        tableColumns.formSubmission.SUBMISSION_DATE,
+        tableColumns.formSubmission.IS_STARRED(dispatch, isSaving),
+        tableColumns.formSubmission.SCOPED_OBJECT,
+        tableColumns.formSubmission.ACCEPTANCE_STATUS,
+        tableColumns.formSubmission.SCHEDULING_PROGRESS,
+        form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
+        ..._cols,
+        tableColumns.formSubmission.ACTION_BUTTON,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      ]),
+    [dispatch, isSaving, form.objectScope, _cols],
+  );
 
   const filteredDatasource = useMemo(() => {
     const { freeTextFilter, scopedObject } = filters;
@@ -112,28 +129,26 @@ const SubmissionsOverviewPage = () => {
 
     // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
     return _dataSource
-      .filter(el => filters.onlyOwn ? filterFormInstancesOnAuthedUser(el, userId) : true)
-      .filter(el => !filters.onlyStarred || el.teCoreProps.isStarred)
-      .filter(
-        el => Object.keys(scopedObject)
-          .filter(key => scopedObject[key].length > 0)
+      .filter((el) =>
+        filters.onlyOwn ? filterFormInstancesOnAuthedUser(el, userId) : true,
+      )
+      .filter((el) => !filters.onlyStarred || el.teCoreProps.isStarred)
+      .filter((el) =>
+        Object.keys(scopedObject).filter((key) => scopedObject[key].length > 0)
           .length > 0
           ? applyScopedObjectFilters(el, scopedObjects, scopedObject)
-          : true
+          : true,
       )
-      .filter(
-        el =>
-          query.length >= 3
-            ? columns.some(
-              col => {
-                if (!el[col.dataIndex]) return false;
-                const formattedValue = formatElementValue(el[col.dataIndex]);
-                return formattedValue
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(query) > -1;
-              })
-            : true
+      .filter((el) =>
+        query.length >= 3
+          ? columns.some((col) => {
+              if (!el[col.dataIndex]) return false;
+              const formattedValue = formatElementValue(el[col.dataIndex]);
+              return (
+                formattedValue.toString().toLowerCase().indexOf(query) > -1
+              );
+            })
+          : true,
       )
       .sort((a, b) => {
         return a.index - b.index;
@@ -158,10 +173,16 @@ const SubmissionsOverviewPage = () => {
         columns={columns}
         dataSource={filteredDatasource}
         rowKey='_id'
-        onRow={formInstance => ({
+        onRow={(formInstance) => ({
           onClick: (e) => {
-            traversedClassList(e.target).includes('ant-table-column-has-actions') && formInstance && formInstance.formId && formInstance._id && dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
-          }
+            traversedClassList(e.target).includes(
+              'ant-table-column-has-actions',
+            ) &&
+              formInstance &&
+              formInstance.formId &&
+              formInstance._id &&
+              dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
+          },
         })}
         isLoading={isLoading}
         showFilter={false}

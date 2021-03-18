@@ -17,20 +17,39 @@ const MappingRow = ({
   disabled,
 }) => {
   // Memos
-  const _mappedValues = useMemo(() => ensureBackwardsCompatibleValueRow(formMapping), [formMapping]);
+  const _mappedValues = useMemo(
+    () => ensureBackwardsCompatibleValueRow(formMapping),
+    [formMapping],
+  );
 
   // Callbacks
   const onChangeTEPropCallback = useCallback(
-    _teProp => onChangeMapping({ [_teProp]: formMapping }), [formMapping, onChangeMapping]
+    (_teProp) => onChangeMapping({ [_teProp]: formMapping }),
+    [formMapping, onChangeMapping],
   );
   const onChangeFormMapping = useCallback(
     (el, idx) => {
-      if (!el || !el[0]) return onChangeMapping({ [teProp]: [..._mappedValues.slice(0, idx), ..._mappedValues.slice(idx + 1)] });
-      onChangeMapping({ [teProp]: [..._mappedValues.slice(0, idx), el, ..._mappedValues.slice(idx + 1)] });
-    }, [teProp, onChangeMapping, _mappedValues]);
+      if (!el || !el[0])
+        return onChangeMapping({
+          [teProp]: [
+            ..._mappedValues.slice(0, idx),
+            ..._mappedValues.slice(idx + 1),
+          ],
+        });
+      onChangeMapping({
+        [teProp]: [
+          ..._mappedValues.slice(0, idx),
+          el,
+          ..._mappedValues.slice(idx + 1),
+        ],
+      });
+    },
+    [teProp, onChangeMapping, _mappedValues],
+  );
 
   const onChangePropsCallback = useCallback(
-    checked => onChangeProps({ mandatory: checked }), [onChangeProps]
+    (checked) => onChangeProps({ mandatory: checked }),
+    [onChangeProps],
   );
   const addElementProp = useCallback(() => {
     return onChangeMapping({ [teProp]: [..._mappedValues, []] });
@@ -46,24 +65,27 @@ const MappingRow = ({
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           size='small'
         >
-          {(tePropOptions || []).map(el => (
-            <Select.Option key={el.value} value={el.value}>{el.label}</Select.Option>
+          {(tePropOptions || []).map((el) => (
+            <Select.Option key={el.value} value={el.value}>
+              {el.label}
+            </Select.Option>
           ))}
         </Select>
       </div>
-      {_mappedValues && _mappedValues.map((el, idx) => (
-        <Cascader
-          key={`mapper-${idx}`}
-          disabled={disabled}
-          options={mappingOptions}
-          value={el}
-          onChange={val => onChangeFormMapping(val, idx)}
-          placeholder='Select an element'
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
-          size='small'
-          style={{ width: '200px', marginRight: '8px' }}
-        />
-      ))}
+      {_mappedValues &&
+        _mappedValues.map((el, idx) => (
+          <Cascader
+            key={`mapper-${idx}`}
+            disabled={disabled}
+            options={mappingOptions}
+            value={el}
+            onChange={(val) => onChangeFormMapping(val, idx)}
+            placeholder='Select an element'
+            getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            size='small'
+            style={{ width: '200px', marginRight: '8px' }}
+          />
+        ))}
       <div className='object-mapping-row--add'>
         <Button
           size='small'
@@ -110,7 +132,7 @@ MappingRow.propTypes = {
 
 MappingRow.defaultProps = {
   formMapping: null,
-  props: { mandatory: false, },
+  props: { mandatory: false },
   tePropOptions: [],
   mappingOptions: [],
   disabled: false,

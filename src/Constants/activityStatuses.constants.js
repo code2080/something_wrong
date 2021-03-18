@@ -20,25 +20,29 @@ export const activityStatusProps = {
     color: 'success',
     label: 'Scheduled',
     icon: 'check',
-    tooltip: reservationId => `Activity has been scheduled with reservation id ${reservationId}`,
+    tooltip: (reservationId) =>
+      `Activity has been scheduled with reservation id ${reservationId}`,
   },
   [activityStatuses.MODIFIED]: {
     color: 'warning',
     label: 'Modified',
     icon: 'exclamation',
-    tooltip: reservationId => `The activity has been scheduled with id ${reservationId}, but has been modified since`,
+    tooltip: (reservationId) =>
+      `The activity has been scheduled with id ${reservationId}, but has been modified since`,
   },
   [activityStatuses.DELETED]: {
     color: 'attention',
     label: 'Deleted',
     icon: 'warning',
-    tooltip: reservationId => `The activity was scheduled with id ${reservationId}, but has been deleted since`,
+    tooltip: (reservationId) =>
+      `The activity was scheduled with id ${reservationId}, but has been deleted since`,
   },
   [activityStatuses.NO_AVAILABILITY]: {
     color: 'attention',
     label: 'No availability',
     icon: 'warning',
-    tooltip: () => 'There\'s no availability to schedule this combination of objects within the given time constraints',
+    tooltip: () =>
+      "There's no availability to schedule this combination of objects within the given time constraints",
   },
   [activityStatuses.VALIDATION_ERROR]: {
     color: 'attention',
@@ -50,14 +54,15 @@ export const activityStatusProps = {
     color: 'attention',
     label: 'Failed',
     icon: 'warning',
-    tooltip: () => 'An attempt to schedule this activity was made, but it failed',
+    tooltip: () =>
+      'An attempt to schedule this activity was made, but it failed',
   },
   [activityStatuses.QUEUED]: {
     color: 'default',
     label: 'Queued',
     icon: 'warning',
     tooltip: () => 'The activity is waiting to be scheduled',
-  }
+  },
 };
 
 export const activityValueStatuses = {
@@ -68,7 +73,8 @@ export const activityValueStatuses = {
 export const activityValueStatusProps = {
   [activityValueStatuses.MISSING_DATA]: {
     label: 'Missing data',
-    tooltip: "The submission doesn't contain enough data to automatically schedule this value, please update it manually",
+    tooltip:
+      "The submission doesn't contain enough data to automatically schedule this value, please update it manually",
   },
   [activityValueStatuses.READY_FOR_SCHEDULING]: {
     label: 'Ready for scheduling',

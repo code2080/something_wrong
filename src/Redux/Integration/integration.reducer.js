@@ -10,8 +10,13 @@ import { initialState } from './integration.initialState';
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_DATA_FOR_DATA_SOURCE_SUCCESS: {
-      const { payload: { actionMeta: { datasource }, objectFields } } = action;
-      const objArr = Object.keys(objectFields).map(key => objectFields[key]);
+      const {
+        payload: {
+          actionMeta: { datasource },
+          objectFields,
+        },
+      } = action;
+      const objArr = Object.keys(objectFields).map((key) => objectFields[key]);
       const objects = _.keyBy(objArr, 'te_extid');
       return {
         ...state,
@@ -23,7 +28,11 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.FETCH_MAPPING_SUCCESS: {
-      const { payload: { mapping: { objectTypes } } } = action;
+      const {
+        payload: {
+          mapping: { objectTypes },
+        },
+      } = action;
       const mappedObjectTypes = (objectTypes || []).reduce(
         (prev, curr) => ({
           ...prev,
@@ -38,7 +47,10 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.FETCH_TYPES_ON_RESERVATION_MODE_SUCCESS: {
-      const { type, actionMeta: { reservationMode } } = action.payload;
+      const {
+        type,
+        actionMeta: { reservationMode },
+      } = action.payload;
       return {
         ...state,
         reservationModes: {
@@ -52,14 +64,17 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.FETCH_FIELDS_ON_RESERVATION_MODE_SUCCESS: {
-      const { actionMeta: { reservationMode }, ...fields } = action.payload;
+      const {
+        actionMeta: { reservationMode },
+        ...fields
+      } = action.payload;
       return {
         ...state,
         reservationModes: {
           ...state.reservationModes,
           [reservationMode]: {
             ...(state.reservationModes[reservationMode] || {}),
-            fields: Object.keys(fields).map(n => fields[n]),
+            fields: Object.keys(fields).map((n) => fields[n]),
           },
         },
       };

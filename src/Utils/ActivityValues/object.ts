@@ -11,7 +11,17 @@ export const fvObjectFilterValue = (activityValue: ActivityValue) => {
       ...tot,
       [acc.fieldExtId]: [
         ...(tot[acc.fieldExtId] || []),
-        ...(Array.isArray(acc.values) ? acc.values.map(el => ({ label: el, value: `${extId}/${acc.fieldExtId}/${el}` })) : [{ label: acc.values, value: `${extId}/${acc.fieldExtId}/${acc.values}` }]),
+        ...(Array.isArray(acc.values)
+          ? acc.values.map((el) => ({
+              label: el,
+              value: `${extId}/${acc.fieldExtId}/${el}`,
+            }))
+          : [
+              {
+                label: acc.values,
+                value: `${extId}/${acc.fieldExtId}/${acc.values}`,
+              },
+            ]),
       ],
     };
   }, {});
@@ -21,7 +31,7 @@ export const fvObjectObjectValue = (activityValue: ActivityValue) => {
   const { value, extId } = activityValue;
   if (!value || value == null) return null;
   const _value = Array.isArray(value) ? value : [value];
-  return _value.map(el => ({ value: `${extId}/${el}`, label: el }));
+  return _value.map((el) => ({ value: `${extId}/${el}`, label: el }));
 };
 
 /**
@@ -31,7 +41,9 @@ export const fvObjectObjectValue = (activityValue: ActivityValue) => {
  * @param {Activity} activity
  * @returns string[] | null
  */
-export const getFVForObjectValue = (activityValue: ActivityValue): any[] | null => {
+export const getFVForObjectValue = (
+  activityValue: ActivityValue,
+): any[] | null => {
   // Determine whether this object activity value contains a filter or objects
   const valueContainsValueOfType = determineObjectValueContent(activityValue);
   if (valueContainsValueOfType === submissionValueTypes.FILTER)

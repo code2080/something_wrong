@@ -15,14 +15,14 @@ import './FormSubmissionFilters.scss';
 
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
-const PropSearchWrapper = ({ label, value, onChange, }) => (
+const PropSearchWrapper = ({ label, value, onChange }) => (
   <div className='prop-search--wrapper'>
     <div className='prop-search--label'>{label}</div>
     <Input
       size='small'
       placeholder='Enter filter value...'
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
     />
   </div>
 );
@@ -39,10 +39,17 @@ PropSearchWrapper.defaultProps = {
 };
 
 const mapStateToProps = (state, { objectScope, formId }) => {
-  const scopedObjProps = _.get(state, `integration.mappedObjectTypes.${objectScope}`, {});
+  const scopedObjProps = _.get(
+    state,
+    `integration.mappedObjectTypes.${objectScope}`,
+    {},
+  );
 
   return {
-    filters: selectFilter(state)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface),
+    filters: selectFilter(state)(
+      `${formId}_SUBMISSIONS`,
+      FormSubmissionFilterInterface,
+    ),
     label: scopedObjProps.applicationObjectTypeLabel || null,
     fields: scopedObjProps.fields || [],
   };
@@ -59,9 +66,16 @@ const ScopedObjectFilters = ({
   updateFilter,
   formId,
 }) => {
-  const onUpdateFilter = useCallback((extId, value) => {
-    updateFilter({ filterId: `${formId}_SUBMISSIONS`, key: 'scopedObject', value: { ...filters.scopedObject, [extId]: value } });
-  }, [formId, filters, updateFilter]);
+  const onUpdateFilter = useCallback(
+    (extId, value) => {
+      updateFilter({
+        filterId: `${formId}_SUBMISSIONS`,
+        key: 'scopedObject',
+        value: { ...filters.scopedObject, [extId]: value },
+      });
+    },
+    [formId, filters, updateFilter],
+  );
 
   return (
     <div className='scoped-object-filters--wrapper'>
@@ -69,12 +83,12 @@ const ScopedObjectFilters = ({
         {`Filter primary object ${label ? `(${label})` : ''}`}
       </div>
       <div className='scoped-object-filters--body'>
-        {(fields || []).map(field => (
+        {(fields || []).map((field) => (
           <PropSearchWrapper
             key={field.fieldExtId}
             label={field.fieldLabel}
             value={filters.scopedObject[field.fieldExtId]}
-            onChange={value => onUpdateFilter(field.fieldExtId, value)}
+            onChange={(value) => onUpdateFilter(field.fieldExtId, value)}
           />
         ))}
       </div>

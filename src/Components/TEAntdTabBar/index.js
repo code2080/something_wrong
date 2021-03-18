@@ -12,7 +12,13 @@ const renderTabBar = (props, DefaultTabBar) => (
 
 const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children }) => {
   return (
-    <Tabs defaultActiveKey={defaultActiveKey} activeKey={activeKey} onChange={onChange} renderTabBar={renderTabBar} animated={false} >
+    <Tabs
+      defaultActiveKey={defaultActiveKey}
+      activeKey={activeKey}
+      onChange={onChange}
+      renderTabBar={renderTabBar}
+      animated={false}
+    >
       {children}
     </Tabs>
   );

@@ -17,70 +17,92 @@ const ObjectMapping = ({
   disabled,
 }) => {
   // Callbacks
-  const onChangeObject = useCallback((newTypeMapping, oldType) => {
-    const { objects: { [oldType]: __, ...otherObjs } } = mapping;
-    const { propSettings: { [oldType]: propSettings } } = mapping;
-    const updatedMapping = {
-      ...mapping,
-      objects: {
-        ...otherObjs,
-        ...newTypeMapping,
-      },
-      propSettings: {
-        ...mapping.propSettings,
-        [Object.keys(newTypeMapping)[0]]: propSettings,
-      },
-    };
-    onChange(updatedMapping);
-  }, [mapping, onChange]);
+  const onChangeObject = useCallback(
+    (newTypeMapping, oldType) => {
+      const {
+        objects: { [oldType]: __, ...otherObjs },
+      } = mapping;
+      const {
+        propSettings: { [oldType]: propSettings },
+      } = mapping;
+      const updatedMapping = {
+        ...mapping,
+        objects: {
+          ...otherObjs,
+          ...newTypeMapping,
+        },
+        propSettings: {
+          ...mapping.propSettings,
+          [Object.keys(newTypeMapping)[0]]: propSettings,
+        },
+      };
+      onChange(updatedMapping);
+    },
+    [mapping, onChange],
+  );
 
-  const onChangeProps = useCallback((newPropSettings, objectType) => {
-    const updatedMapping = {
-      ...mapping,
-      propSettings: {
-        ...mapping.propSettings,
-        [objectType]: newPropSettings,
-      },
-    };
-    onChange(updatedMapping);
-  }, [mapping, onChange]);
+  const onChangeProps = useCallback(
+    (newPropSettings, objectType) => {
+      const updatedMapping = {
+        ...mapping,
+        propSettings: {
+          ...mapping.propSettings,
+          [objectType]: newPropSettings,
+        },
+      };
+      onChange(updatedMapping);
+    },
+    [mapping, onChange],
+  );
 
-  const onAddObject = useCallback(objectType => {
-    const updatedMapping = {
-      ...mapping,
-      objects: {
-        ...mapping.objects,
-        [objectType]: null,
-      },
-      propSettings: {
-        ...mapping.propSettings,
-        [objectType]: { mandatory: false },
-      },
-    };
-    onChange(updatedMapping);
-  }, [mapping, onChange]);
+  const onAddObject = useCallback(
+    (objectType) => {
+      const updatedMapping = {
+        ...mapping,
+        objects: {
+          ...mapping.objects,
+          [objectType]: null,
+        },
+        propSettings: {
+          ...mapping.propSettings,
+          [objectType]: { mandatory: false },
+        },
+      };
+      onChange(updatedMapping);
+    },
+    [mapping, onChange],
+  );
 
-  const onRemoveObject = useCallback(objectType => {
-    const { objects: { [objectType]: __, ...remainingObjects } } = mapping;
-    const { propSettings: { [objectType]: ___, ...remainingPropSettings } } = mapping;
-    const updatedMapping = {
-      ...mapping,
-      objects: {
-        ...remainingObjects,
-      },
-      propSettings: {
-        ...remainingPropSettings,
-      },
-    };
-    onChange(updatedMapping);
-  }, [mapping, onChange]);
+  const onRemoveObject = useCallback(
+    (objectType) => {
+      const {
+        objects: { [objectType]: __, ...remainingObjects },
+      } = mapping;
+      const {
+        propSettings: { [objectType]: ___, ...remainingPropSettings },
+      } = mapping;
+      const updatedMapping = {
+        ...mapping,
+        objects: {
+          ...remainingObjects,
+        },
+        propSettings: {
+          ...remainingPropSettings,
+        },
+      };
+      onChange(updatedMapping);
+    },
+    [mapping, onChange],
+  );
 
   // Memoized values
   const objects = useMemo(() => _.get(mapping, 'objects', {}), [mapping]);
-  const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [mapping]);
+  const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [
+    mapping,
+  ]);
   return (
     <div className='object-mapping--wrapper'>
-      {(Object.keys(objects) || []).map(key => (
+      {(Object.keys(objects) || []).map((key) => (
         <MappingRow
           disabled={disabled}
           key={key}
@@ -89,8 +111,12 @@ const ObjectMapping = ({
           tePropSettings={propSettings[key]}
           tePropOptions={typeOptions}
           mappingOptions={mappingOptions}
-          onChangeMapping={newTypeMapping => onChangeObject(newTypeMapping, key)}
-          onChangeProps={newPropSettings => onChangeProps(newPropSettings, key)}
+          onChangeMapping={(newTypeMapping) =>
+            onChangeObject(newTypeMapping, key)
+          }
+          onChangeProps={(newPropSettings) =>
+            onChangeProps(newPropSettings, key)
+          }
           onRemoveTEProp={() => onRemoveObject(key)}
         />
       ))}
@@ -104,8 +130,10 @@ const ObjectMapping = ({
           size='small'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
         >
-          {(typeOptions || []).map(el => (
-            <Select.Option key={el.value} value={el.value}>{el.label}</Select.Option>
+          {(typeOptions || []).map((el) => (
+            <Select.Option key={el.value} value={el.value}>
+              {el.label}
+            </Select.Option>
           ))}
         </Select>
       </div>

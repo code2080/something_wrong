@@ -11,9 +11,7 @@ const MappingStatus = ({ status }) => {
       {!status && (
         <span style={{ color: themeColors.bittersweet }}>Invalid</span>
       )}
-      {status && (
-        <span style={{ color: themeColors.jungleGreen }}>Valid</span>
-      )}
+      {status && <span style={{ color: themeColors.jungleGreen }}>Valid</span>}
     </div>
   );
 };

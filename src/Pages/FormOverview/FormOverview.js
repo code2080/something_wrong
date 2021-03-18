@@ -8,7 +8,10 @@ import _ from 'lodash';
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 
 // ACTIONS
-import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
+import {
+  fetchIntegrationSettings,
+  fetchOrg,
+} from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
 import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
 import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
@@ -27,7 +30,7 @@ import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { fetchElements } from '../../Redux/Elements/elements.actions';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isLoading: loadingSelector(state),
   forms: selectAllForms(state),
   user: state.auth.user,
@@ -58,15 +61,20 @@ const FormList = ({
   fetchIntegrationSettings,
   fetchObjectRequests,
   setBreadcrumbs,
-  history
+  history,
 }) => {
-  const objectScopes = useMemo(() => ({
-    types: _.uniq(forms.reduce((objScopes, form) =>
-      form.objectScope
-        ? [...objScopes, form.objectScope]
-        : objScopes, [])
-    )
-  }), [forms]);
+  const objectScopes = useMemo(
+    () => ({
+      types: _.uniq(
+        forms.reduce(
+          (objScopes, form) =>
+            form.objectScope ? [...objScopes, form.objectScope] : objScopes,
+          [],
+        ),
+      ),
+    }),
+    [forms],
+  );
 
   useFetchLabelsFromExtIds(objectScopes);
 
@@ -77,7 +85,7 @@ const FormList = ({
     fetchElements();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
     fetchObjectRequests();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -86,7 +94,7 @@ const FormList = ({
       fetchUsers(user.organizationId);
       fetchIntegrationSettings(user.organizationId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -106,8 +114,8 @@ const FormList = ({
         dataSource={forms}
         rowKey='_id'
         isLoading={isLoading}
-        onRow={form => ({
-          onClick: () => history.push(`/forms/${form._id}`)
+        onRow={(form) => ({
+          onClick: () => history.push(`/forms/${form._id}`),
         })}
         pagination={false}
         datasourceId={tableViews.FORM_OVERVIEW}
@@ -130,7 +138,7 @@ FormList.propTypes = {
   fetchAllJobs: PropTypes.func.isRequired,
   fetchOrg: PropTypes.func.isRequired,
   fetchIntegrationSettings: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 };
 
 FormList.defaultProps = {
@@ -139,5 +147,5 @@ FormList.defaultProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapActionsToProps)(FormList)
+  connect(mapStateToProps, mapActionsToProps)(FormList),
 );

@@ -8,14 +8,18 @@ import { getHeaderCellWidth } from '../../Utils/dom.helper';
 let start = 0;
 let changedWidth = 0;
 
-const terminateClickEvent = e => {
+const terminateClickEvent = (e) => {
   e.stopPropagation();
   e.preventDefault();
 };
 
-const BasicHeaderCell = props => <th {...props}><ColumnHeader {...props} /></th>;
+const BasicHeaderCell = (props) => (
+  <th {...props}>
+    <ColumnHeader {...props} />
+  </th>
+);
 
-const ResizableCell = props => {
+const ResizableCell = (props) => {
   const { width, children, index, onResized, expandable, ...restProps } = props;
   const [minCellWidth, setMinCellWidth] = useState(0);
 
@@ -27,8 +31,14 @@ const ResizableCell = props => {
     const col = table.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
     if (!col) return;
     changedWidth = e.pageX - start;
-    col.style.width = `${_.max([Number(width + changedWidth), minCellWidth])}px`;
-    col.style.minWidth = `${_.max([Number(width + changedWidth), minCellWidth])}px`;
+    col.style.width = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
+    col.style.minWidth = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
   };
 
   const onResizeStart = (e) => {
@@ -48,7 +58,7 @@ const ResizableCell = props => {
   };
 
   useEffect(() => {
-    document.querySelectorAll('.react-resizable-handle').forEach(el => {
+    document.querySelectorAll('.react-resizable-handle').forEach((el) => {
       el.addEventListener('click', terminateClickEvent);
     });
     if (ref && ref.current) {
@@ -66,9 +76,7 @@ const ResizableCell = props => {
       onResizeStop={onResizeStop}
     >
       <th {...restProps} ref={ref}>
-        <ColumnHeader {...restProps} >
-          {children}
-        </ColumnHeader>
+        <ColumnHeader {...restProps}>{children}</ColumnHeader>
       </th>
     </Resizable>
   );
@@ -86,9 +94,20 @@ ResizableCell.defaultProps = {
   width: null,
 };
 
-const ResizableHeaderCell = ({ resizable, onResized, expandable, ...restProps }) => {
+const ResizableHeaderCell = ({
+  resizable,
+  onResized,
+  expandable,
+  ...restProps
+}) => {
   if (!resizable) return <BasicHeaderCell {...restProps} />;
-  return <ResizableCell {...restProps} onResized={onResized} expandable={expandable} />;
+  return (
+    <ResizableCell
+      {...restProps}
+      onResized={onResized}
+      expandable={expandable}
+    />
+  );
 };
 
 ResizableHeaderCell.propTypes = {

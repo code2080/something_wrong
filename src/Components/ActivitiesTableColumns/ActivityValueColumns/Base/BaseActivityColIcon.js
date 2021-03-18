@@ -4,14 +4,33 @@ import { Tooltip } from 'antd';
 import { Icon } from '@ant-design/compatible';
 
 // CONSTANTS
-import { activityValueModes, activityValueModeProps } from '../../../Constants/activityValueModes.constants';
-import { submissionValueTypes, submissionValueTypeProps } from '../../../Constants/submissionValueTypes.constants';
+import {
+  activityValueModes,
+  activityValueModeProps,
+} from '../../../Constants/activityValueModes.constants';
+import {
+  submissionValueTypes,
+  submissionValueTypeProps,
+} from '../../../Constants/submissionValueTypes.constants';
 
 const BaseActivityColIcon = ({ valueMode, submissionValueType }) => {
   const value = useMemo(() => {
-    if (valueMode === activityValueModes.MANUAL) { return { icon: activityValueModeProps.MANUAL.icon, tooltip: 'Manually entered value' }; }
-    if (submissionValueType === submissionValueTypes.FILTER) { return { icon: submissionValueTypeProps.FILTER.icon, tooltip: 'Filter values from submission' }; }
-    return { icon: activityValueModeProps.FROM_SUBMISSION.icon, tooltip: 'Value from submission' };
+    if (valueMode === activityValueModes.MANUAL) {
+      return {
+        icon: activityValueModeProps.MANUAL.icon,
+        tooltip: 'Manually entered value',
+      };
+    }
+    if (submissionValueType === submissionValueTypes.FILTER) {
+      return {
+        icon: submissionValueTypeProps.FILTER.icon,
+        tooltip: 'Filter values from submission',
+      };
+    }
+    return {
+      icon: activityValueModeProps.FROM_SUBMISSION.icon,
+      tooltip: 'Value from submission',
+    };
   }, [valueMode, submissionValueType]);
   return (
     <div className='base-activity-col--icon'>

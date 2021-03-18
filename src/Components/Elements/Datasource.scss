@@ -4,10 +4,10 @@
   width: fit-content;
   z-index: 1;
   position: relative;
-  display:flex;
-  
+  display: flex;
+
   & > :not(.element__datasource--inner--empty) {
-  cursor: pointer;
+    cursor: pointer;
   }
 
   .element__datasource--inner {
@@ -17,7 +17,7 @@
     align-items: center;
     padding: 0 0.15rem;
     white-space: nowrap;
-    display:flex;
+    display: flex;
 
     .object_request {
       .requestType {

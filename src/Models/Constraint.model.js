@@ -5,13 +5,13 @@ export default class Constraint {
   parameters;
   allowedOperators;
   timeStamp;
-  constructor ({
+  constructor({
     name,
     description,
     constraintId,
     parameters = [],
     allowedOperators = [],
-    timeStamp
+    timeStamp,
   }) {
     this.name = name;
     this.description = description;

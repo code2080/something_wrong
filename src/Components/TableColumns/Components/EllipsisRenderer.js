@@ -21,12 +21,12 @@ const EllipsisRenderer = ({ text, width }) => (
 
 EllipsisRenderer.propTypes = {
   text: PropTypes.string,
-  width: PropTypes.number
+  width: PropTypes.number,
 };
 
 EllipsisRenderer.defaultProps = {
   text: '',
-  width: 150
+  width: 150,
 };
 
 export default EllipsisRenderer;

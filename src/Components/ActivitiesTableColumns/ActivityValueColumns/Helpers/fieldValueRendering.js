@@ -24,7 +24,13 @@ export const renderFieldComponent = (activityValue, activity) => {
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: validationResult.errorMessage,
-      renderedComponent: <FieldValue value={activityValue.value} extId={activityValue.extId} activityId={activity._id} />
+      renderedComponent: (
+        <FieldValue
+          value={activityValue.value}
+          extId={activityValue.extId}
+          activityId={activity._id}
+        />
+      ),
     });
 
   return ActivityValueRenderPayload.create({

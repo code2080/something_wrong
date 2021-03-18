@@ -6,7 +6,9 @@ import { minToHourMinDisplay } from '../../../../Utils/moment.helpers';
 const LengthValue = ({ value }) => {
   const { days, hours, minutes } = minToHourMinDisplay(value);
 
-  const formattedValue = days ? `${days}d, ${hours}:${minutes}` : `${hours}:${minutes}`;
+  const formattedValue = days
+    ? `${days}d, ${hours}:${minutes}`
+    : `${hours}:${minutes}`;
 
   return formattedValue;
 };

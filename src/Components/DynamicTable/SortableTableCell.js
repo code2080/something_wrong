@@ -2,11 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 const SortableTableCell = ({ children, className }) => {
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 };
 
 SortableTableCell.propTypes = {

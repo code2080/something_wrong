@@ -3,12 +3,12 @@ import * as types from './filters.actionTypes';
 // eslint-disable-next-line no-undef
 const loadFiltersFromLS = (filterId: string) => {
   const stringedFilter = localStorage.getItem(filterId);
-  if (stringedFilter)
-    return JSON.parse(stringedFilter);
+  if (stringedFilter) return JSON.parse(stringedFilter);
   return {};
 };
 // eslint-disable-next-line no-undef
-const saveFilterToLS = (filterId: string, filter: any) => localStorage.setItem(filterId, JSON.stringify(filter));
+const saveFilterToLS = (filterId: string, filter: any) =>
+  localStorage.setItem(filterId, JSON.stringify(filter));
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
@@ -40,7 +40,7 @@ const reducer = (state = {}, action) => {
       return {
         ...state,
         [`${filterId}_ACTIVITIES_OPTIONS`]: options,
-        [`${filterId}_ACTIVITIES_MATCHES`]: matches
+        [`${filterId}_ACTIVITIES_MATCHES`]: matches,
       };
     }
 
@@ -51,7 +51,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [filterId]: filter,
       };
-    };
+    }
 
     case types.SET_FILTER: {
       if (!action || !action.payload || !action.payload.filterId) return state;
@@ -61,7 +61,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [filterId]: filter,
       };
-    };
+    }
 
     case types.UPDATE_FILTER: {
       if (!action || !action.payload || !action.payload.filterId) return state;
@@ -74,7 +74,7 @@ const reducer = (state = {}, action) => {
       return {
         ...state,
         [filterId]: {
-          ...updFilter
+          ...updFilter,
         },
       };
     }

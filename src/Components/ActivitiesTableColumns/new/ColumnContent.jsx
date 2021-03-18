@@ -15,7 +15,7 @@ import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 // ACTIONS
 import {
   overrideActivityValue,
-  revertToSubmissionValue
+  revertToSubmissionValue,
 } from '../../../Redux/Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
@@ -23,7 +23,7 @@ import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
 // HELPERS
 import {
   getMappingSettingsForProp,
-  getMappingTypeForProp
+  getMappingTypeForProp,
 } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 import {
@@ -38,7 +38,7 @@ import {
   activityActionFilters,
   activityActionViews,
   externalActivityActionMapping,
-  activityActionLabels
+  activityActionLabels,
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
 import { activityIsReadOnly } from '../../../Utils/activities.helpers';
@@ -60,13 +60,18 @@ const ColumnContent = ({
   overrideActivityValue,
   revertToSubmissionValue,
   setExtIdPropsForObject,
-  teCoreAPI
+  teCoreAPI,
 }) => {
   const dispatch = useDispatch();
   const spotlightedElRef = useRef(null);
 
   // Activity value
-  const _activityValue = getNormalizedActivityValue(activityValue, activity, type, typeExtId);
+  const _activityValue = getNormalizedActivityValue(
+    activityValue,
+    activity,
+    type,
+    typeExtId,
+  );
 
   /**
    * STATE
@@ -74,7 +79,7 @@ const ColumnContent = ({
   // Component's view mode
   const [viewProps, setViewProps] = useState({
     view: activityViews.VALUE_VIEW,
-    action: null
+    action: null,
   });
 
   // Dropdown visibility
@@ -88,35 +93,38 @@ const ColumnContent = ({
   const propertiesForMappedDesignValue = useMemo(() => {
     return {
       settings: getMappingSettingsForProp(_activityValue.extId, design),
-      type: getMappingTypeForProp(_activityValue.extId, design)
+      type: getMappingTypeForProp(_activityValue.extId, design),
     };
   }, [_activityValue, design]);
 
   // Valid dropdown actions for the activity value
-  const validActivityValueActions = useMemo(
-    () => {
-      const actions = activityIsReadOnly(activity.activityStatus) ? [activityActions.SHOW_INFO] : Object.keys(activityActions);
-      return actions.filter(activityAction =>
-        activityActionFilters[activityAction](_activityValue, activity, design)
-      );
-    },
-    [_activityValue, activity, design]
-  );
+  const validActivityValueActions = useMemo(() => {
+    const actions = activityIsReadOnly(activity.activityStatus)
+      ? [activityActions.SHOW_INFO]
+      : Object.keys(activityActions);
+    return actions.filter((activityAction) =>
+      activityActionFilters[activityAction](_activityValue, activity, design),
+    );
+  }, [_activityValue, activity, design]);
 
   /**
    * EVENT HANDLERS
    */
   // On update dropdown visibility state
-  const onUpdateDropdownVisibility = vis => {
-    if (viewProps.view === activityViews.MODAL_EDIT) return setIsDropdownVisible(false);
+  const onUpdateDropdownVisibility = (vis) => {
+    if (viewProps.view === activityViews.MODAL_EDIT)
+      return setIsDropdownVisible(false);
     return setIsDropdownVisible(vis);
   };
 
   // On callback from manual editing
-  const onFinishManualEditing = useCallback(value => {
-    overrideActivityValue(value, _activityValue, activity);
-    setViewProps(resetView());
-  }, [_activityValue, activity, overrideActivityValue]);
+  const onFinishManualEditing = useCallback(
+    (value) => {
+      overrideActivityValue(value, _activityValue, activity);
+      setViewProps(resetView());
+    },
+    [_activityValue, activity, overrideActivityValue],
+  );
 
   // On failed callback from external edit action
   const onFailedExternalEditCallback = () =>
@@ -127,7 +135,7 @@ const ColumnContent = ({
     });
 
   // On callback from actions EDIT_OBJECT, SELECT_OBJECT_FROM_FILTER_OVERRIDE
-  const onProcessExternalActionWithObjectReturn = res => {
+  const onProcessExternalActionWithObjectReturn = (res) => {
     if (res === null) return;
     try {
       // Grab the extid and the fields
@@ -143,7 +151,7 @@ const ColumnContent = ({
   };
 
   // On callback from action to select a different filter / select an object from filter in TEC
-  const onProcessExternalActionWithFilterReturn = res => {
+  const onProcessExternalActionWithFilterReturn = (res) => {
     if (res === null) return;
     // Map res to AM format
     try {
@@ -153,10 +161,12 @@ const ColumnContent = ({
           extId: res.type,
           searchString: res.searchString || null,
           searchFields: res.searchFields || null,
-          categories: mapCoreCategoryObjectToCategories(res.selectedCategories || [])
+          categories: mapCoreCategoryObjectToCategories(
+            res.selectedCategories || [],
+          ),
         },
         _activityValue,
-        activity
+        activity,
       );
     } catch (error) {
       onFailedExternalEditCallback();
@@ -186,7 +196,7 @@ const ColumnContent = ({
   };
 
   // On callback to execute a selected action on the activity value from dropdown
-  const onDispatchSelectedActivityValueAction = async action => {
+  const onDispatchSelectedActivityValueAction = async (action) => {
     /**
      * Most actions change the view props
      * but revert to submission value has no view impact
@@ -207,7 +217,7 @@ const ColumnContent = ({
         activityValue: _activityValue,
         objectExtId: activityValue.value,
         typeExtId: activityValue.extId,
-        callback: res => onFinshExternalEdit(res, action)
+        callback: (res) => onFinshExternalEdit(res, action),
       });
     } else {
       setViewProps({ view: updView, action });
@@ -256,17 +266,27 @@ const ColumnContent = ({
       default:
         return null;
     }
-  }, [_activityValue, activity, formatFn, onFinishManualEditing, propTitle, propertiesForMappedDesignValue, typeExtId, viewProps.action, viewProps.view]);
+  }, [
+    _activityValue,
+    activity,
+    formatFn,
+    onFinishManualEditing,
+    propTitle,
+    propertiesForMappedDesignValue,
+    typeExtId,
+    viewProps.action,
+    viewProps.view,
+  ]);
 
   return (
     <Dropdown
-      overlay={(
+      overlay={
         <Menu onClick={onHandleDropdownMenuItemClick}>
-          {(validActivityValueActions || []).map(action => (
+          {(validActivityValueActions || []).map((action) => (
             <Menu.Item key={action}>{activityActionLabels[action]}</Menu.Item>
           ))}
         </Menu>
-      )}
+      }
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       visible={isDropdownVisible}
       onVisibleChange={onUpdateDropdownVisibility}
@@ -290,14 +310,14 @@ ColumnContent.propTypes = {
   overrideActivityValue: PropTypes.func.isRequired,
   revertToSubmissionValue: PropTypes.func.isRequired,
   setExtIdPropsForObject: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired
+  teCoreAPI: PropTypes.object.isRequired,
 };
 
 ColumnContent.defaultProps = {
   activityValue: null,
   propTitle: null,
   type: 'VALUE',
-  formatFn: value => value,
+  formatFn: (value) => value,
   mapping: null,
 };
 

@@ -13,26 +13,28 @@ import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 export const createActivitiesTableColumnsFromMapping = (design) => {
   console.log(design);
   const allActivityValues = [
-    ...Object.keys(design.objects).map(objKey => ['types', objKey]),
-    ...Object.keys(design.fields).map(fieldKey => ['fields', fieldKey])
+    ...Object.keys(design.objects).map((objKey) => ['types', objKey]),
+    ...Object.keys(design.fields).map((fieldKey) => ['fields', fieldKey]),
   ];
-  const activityValueColumns = allActivityValues.reduce((values, [field, extId]) => [
-    ...values,
-    {
-      title: <TitleCell extId={extId} field={field} />,
-      key: extId,
-      displayName: 'ActivityCol',
-      render: activity => (
-        <ColumnWrapper
-          activity={activity}
-          type='VALUE'
-          prop={extId}
-          mapping={design}
-        />
-      ),
-    }
-  ],
-  []);
+  const activityValueColumns = allActivityValues.reduce(
+    (values, [field, extId]) => [
+      ...values,
+      {
+        title: <TitleCell extId={extId} field={field} />,
+        key: extId,
+        displayName: 'ActivityCol',
+        render: (activity) => (
+          <ColumnWrapper
+            activity={activity}
+            type='VALUE'
+            prop={extId}
+            mapping={design}
+          />
+        ),
+      },
+    ],
+    [],
+  );
 
   return [
     ...SchedulingColumns,

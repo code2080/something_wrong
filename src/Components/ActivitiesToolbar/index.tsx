@@ -17,9 +17,9 @@ import './index.scss';
 import { TActivity } from '../../Types/Activity.type';
 
 type Props = {
-  selectedRowKeys: string[],
-  onSelectAll: () => void,
-  onDeselectAll: () => void,
+  selectedRowKeys: string[];
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
 };
 
 /**
@@ -28,9 +28,16 @@ type Props = {
  * x) Group activities
  * x) Schedule activities
  */
-const ActivitiesToolbar = ({ selectedRowKeys, onSelectAll, onDeselectAll }: Props) => {
+const ActivitiesToolbar = ({
+  selectedRowKeys,
+  onSelectAll,
+  onDeselectAll,
+}: Props) => {
   const { formId }: { formId: string } = useParams();
-  const activities: TActivity[] = useSelector(selectActivitiesForFormAndIds)(formId, selectedRowKeys);
+  const activities: TActivity[] = useSelector(selectActivitiesForFormAndIds)(
+    formId,
+    selectedRowKeys,
+  );
 
   return (
     <div className='activities-toolbar--wrapper'>
@@ -41,7 +48,9 @@ const ActivitiesToolbar = ({ selectedRowKeys, onSelectAll, onDeselectAll }: Prop
         {selectedRowKeys.length}
       </div>
       <div className='activities-toolbar--item'>
-        <Button size='small' type='link' onClick={onSelectAll}>Select all</Button>
+        <Button size='small' type='link' onClick={onSelectAll}>
+          Select all
+        </Button>
         <Button
           size='small'
           type='link'
@@ -56,7 +65,9 @@ const ActivitiesToolbar = ({ selectedRowKeys, onSelectAll, onDeselectAll }: Prop
           overlayClassName='activity-group-popover--wrapper'
           title='Group activity'
           content={<ActivityGroupPopover activities={activities} />}
-          getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           trigger='hover'
           placement='rightTop'
         >

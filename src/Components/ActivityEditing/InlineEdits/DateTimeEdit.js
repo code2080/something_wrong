@@ -1,9 +1,11 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { DatePicker } from 'antd';
-import { DATE_TIME_FORMAT, TIME_FORMAT } from '../../../Constants/common.constants';
+import {
+  DATE_TIME_FORMAT,
+  TIME_FORMAT,
+} from '../../../Constants/common.constants';
 
 const DateTimeEdit = ({ value, setValue, onFinish }) => (
   <DatePicker
@@ -13,7 +15,7 @@ const DateTimeEdit = ({ value, setValue, onFinish }) => (
     format={DATE_TIME_FORMAT}
     size='small'
     allowClear={false}
-    onChange={val => setValue(val.toISOString())}
+    onChange={(val) => setValue(val.toISOString())}
     onOk={() => onFinish()}
   />
 );
@@ -21,11 +23,11 @@ const DateTimeEdit = ({ value, setValue, onFinish }) => (
 DateTimeEdit.propTypes = {
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
-  onFinish: PropTypes.func.isRequired
+  onFinish: PropTypes.func.isRequired,
 };
 
 DateTimeEdit.defaultProps = {
-  value: ''
+  value: '',
 };
 
 export default DateTimeEdit;

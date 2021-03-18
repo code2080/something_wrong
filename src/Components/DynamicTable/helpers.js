@@ -11,7 +11,7 @@ import { DraggableBodyRow } from './dnd/BodyRow';
  * @param {Object} column
  * @returns String
  */
-export const getVisibilityIndexor = column => column.key || column.title;
+export const getVisibilityIndexor = (column) => column.key || column.title;
 
 /**
  * @function isColumnVisible
@@ -35,7 +35,10 @@ export const isColumnVisible = (column, visibleColumns) => {
  * @param {Array} visiblecolumns
  * @returns Array
  */
-export const getFixedWidthCols = (columns, visiblecolumns) => columns.filter(col => isColumnVisible(col, visiblecolumns) && col.fixedWidth);
+export const getFixedWidthCols = (columns, visiblecolumns) =>
+  columns.filter(
+    (col) => isColumnVisible(col, visiblecolumns) && col.fixedWidth,
+  );
 
 /**
  * @function getTotalAvailableWidth
@@ -45,10 +48,16 @@ export const getFixedWidthCols = (columns, visiblecolumns) => columns.filter(col
  * @param {Number} defaultTotalWidth
  * @returns Number
  */
-export const getTotalAvailableWidth = (fixedWidthCols, hasExpandedRowRenderer, defaultTotalWidth) => {
+export const getTotalAvailableWidth = (
+  fixedWidthCols,
+  hasExpandedRowRenderer,
+  defaultTotalWidth,
+) => {
   // Get the visible columns
-  const fixedWidth = fixedWidthCols
-    .reduce((tot, col) => col.fixedWidth ? tot + col.fixedWidth : tot, 0);
+  const fixedWidth = fixedWidthCols.reduce(
+    (tot, col) => (col.fixedWidth ? tot + col.fixedWidth : tot),
+    0,
+  );
   const constant = hasExpandedRowRenderer ? 90 : 40;
   return defaultTotalWidth ? defaultTotalWidth - (fixedWidth + constant) : 0;
 };
@@ -68,9 +77,15 @@ const calculateColumnWidth = ({
   columnWidths,
   totalAvailableWidth,
   totalNumberOfColumns,
-  numberOfFixedWidthColumns
+  numberOfFixedWidthColumns,
 }) => {
-  return Math.max(50 + title.length * 5.5, columnWidths[columnIdx] ? columnWidths[columnIdx] : (totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns)));
+  return Math.max(
+    50 + title.length * 5.5,
+    columnWidths[columnIdx]
+      ? columnWidths[columnIdx]
+      : totalAvailableWidth /
+          (totalNumberOfColumns - numberOfFixedWidthColumns),
+  );
 };
 
 /**
@@ -92,56 +107,66 @@ export const getColumnObjectArrayForTable = (
   numberOfFixedWidthColumns,
   allowResizing,
   hasExpandedRowRenderer,
-  onResizeColumn
-) => columns
-  // Filter out non-visible columns
-  .filter(col => isColumnVisible(col, visibleColumns))
-  // Map each column definition with the right handlers
-  .map((col, idx, arr) => ({
-    ...col,
-    width: calculateColumnWidth({
-      title: col.title,
-      columnIdx: idx,
-      columnWidths,
-      totalAvailableWidth,
-      totalNumberOfColumns: arr.length,
-      numberOfFixedWidthColumns
-    }),
-    onHeaderCell: () => ({
-      resizable: allowResizing && col.resizable !== false,
+  onResizeColumn,
+) =>
+  columns
+    // Filter out non-visible columns
+    .filter((col) => isColumnVisible(col, visibleColumns))
+    // Map each column definition with the right handlers
+    .map((col, idx, arr) => ({
+      ...col,
       width: calculateColumnWidth({
         title: col.title,
         columnIdx: idx,
         columnWidths,
         totalAvailableWidth,
         totalNumberOfColumns: arr.length,
-        numberOfFixedWidthColumns
+        numberOfFixedWidthColumns,
       }),
-      title: col.title,
-      index: idx,
-      expandable: hasExpandedRowRenderer,
-      onResized: newWidth => onResizeColumn(newWidth, idx),
-    }),
-    render:
-      (val, el) =>
-        col.render
-          ? <EllipsisTruncater width={calculateColumnWidth({
-            title: col.title,
-            columnIdx: idx,
-            columnWidths,
-            totalAvailableWidth,
-            totalNumberOfColumns: arr.length,
-            numberOfFixedWidthColumns
-          })}>{col.render(val, el)}</EllipsisTruncater>
-          : <EllipsisTruncater width={calculateColumnWidth({
-            title: col.title,
-            columnIdx: idx,
-            columnWidths,
-            totalAvailableWidth,
-            totalNumberOfColumns: arr.length,
-            numberOfFixedWidthColumns
-          })}>{val}</EllipsisTruncater>,
-  }));
+      onHeaderCell: () => ({
+        resizable: allowResizing && col.resizable !== false,
+        width: calculateColumnWidth({
+          title: col.title,
+          columnIdx: idx,
+          columnWidths,
+          totalAvailableWidth,
+          totalNumberOfColumns: arr.length,
+          numberOfFixedWidthColumns,
+        }),
+        title: col.title,
+        index: idx,
+        expandable: hasExpandedRowRenderer,
+        onResized: (newWidth) => onResizeColumn(newWidth, idx),
+      }),
+      render: (val, el) =>
+        col.render ? (
+          <EllipsisTruncater
+            width={calculateColumnWidth({
+              title: col.title,
+              columnIdx: idx,
+              columnWidths,
+              totalAvailableWidth,
+              totalNumberOfColumns: arr.length,
+              numberOfFixedWidthColumns,
+            })}
+          >
+            {col.render(val, el)}
+          </EllipsisTruncater>
+        ) : (
+          <EllipsisTruncater
+            width={calculateColumnWidth({
+              title: col.title,
+              columnIdx: idx,
+              columnWidths,
+              totalAvailableWidth,
+              totalNumberOfColumns: arr.length,
+              numberOfFixedWidthColumns,
+            })}
+          >
+            {val}
+          </EllipsisTruncater>
+        ),
+    }));
 
 /**
  * @function shouldShowFilterBar
@@ -152,7 +177,9 @@ export const getColumnObjectArrayForTable = (
  * @returns Bool
  */
 export const shouldShowFilterBar = (showFilter, onSearch, columns) =>
-  showFilter && (typeof onSearch === 'function' || columns.some(({ dataIndex, filterFn }) => dataIndex || filterFn));
+  showFilter &&
+  (typeof onSearch === 'function' ||
+    columns.some(({ dataIndex, filterFn }) => dataIndex || filterFn));
 
 /**
  * @function filterDataSource
@@ -163,29 +190,27 @@ export const shouldShowFilterBar = (showFilter, onSearch, columns) =>
  * @param {Func} onSearch
  * @returns Array
  */
-export const filterDataSource = (filterQuery, dataSource, columns, onSearch) => {
+export const filterDataSource = (
+  filterQuery,
+  dataSource,
+  columns,
+  onSearch,
+) => {
   if (filterQuery === '') return dataSource;
   // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
-  return dataSource.filter(
-    el => {
-      if (typeof onSearch === 'function') return onSearch(el, filterQuery);
-      return columns
-        .some(
-          col => {
-            const { dataIndex, filterFn } = col;
-            const filterVal = (filterFn && filterFn(el, filterQuery)) || el[dataIndex];
-            if (!filterVal) return false;
-            return filterVal
-              .toString()
-              .toLowerCase()
-              .includes(
-                filterQuery
-                  .toString()
-                  .toLowerCase()
-              );
-          });
-    }
-  );
+  return dataSource.filter((el) => {
+    if (typeof onSearch === 'function') return onSearch(el, filterQuery);
+    return columns.some((col) => {
+      const { dataIndex, filterFn } = col;
+      const filterVal =
+        (filterFn && filterFn(el, filterQuery)) || el[dataIndex];
+      if (!filterVal) return false;
+      return filterVal
+        .toString()
+        .toLowerCase()
+        .includes(filterQuery.toString().toLowerCase());
+    });
+  });
 };
 
 /**
@@ -194,13 +219,9 @@ export const filterDataSource = (filterQuery, dataSource, columns, onSearch) => 
  * @param {Bool} isTableDraggable
  * @returns Object
  */
-export const getTableComponents = isTableDraggable => ({
+export const getTableComponents = (isTableDraggable) => ({
   header: {
     cell: ResizableHeaderCell,
   },
-  ...(
-    isTableDraggable
-      ? { body: { row: DraggableBodyRow } }
-      : {}
-  ),
+  ...(isTableDraggable ? { body: { row: DraggableBodyRow } } : {}),
 });

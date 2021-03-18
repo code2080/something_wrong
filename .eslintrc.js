@@ -14,21 +14,17 @@ module.exports = {
   ],
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 2021,
     requireConfigFile: false,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    '@babel',
-    '@typescript-eslint'
-  ],
+  plugins: ['react', '@babel', '@typescript-eslint'],
   settings: {
     react: {
       version: 'latest',
-    }
+    },
   },
   // Disabled advanced ts linting for later
   // overrides: [
@@ -81,8 +77,11 @@ module.exports = {
 
     // note you must disable the base rule as it can report incorrect errors
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
-  }
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
+  },
 };
 
 /*

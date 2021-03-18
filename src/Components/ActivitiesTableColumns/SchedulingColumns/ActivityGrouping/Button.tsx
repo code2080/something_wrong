@@ -5,7 +5,7 @@ import { AppstoreOutlined } from '@ant-design/icons';
 // TYPES
 import { TActivity } from '../../../../Types/Activity.type';
 type Props = {
-  activity: TActivity,
+  activity: TActivity;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
