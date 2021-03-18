@@ -184,7 +184,8 @@ const timingCols = {
         <BaseActivityColOuter
           activity={activity}
           type='TIMING'
-          prop={TimingNameMap.dateRanges}
+          prop='dateRanges'
+          propTitle={TimingNameMap.dateRanges}
           mapping={mapping}
         />
       </SortableTableCell>
