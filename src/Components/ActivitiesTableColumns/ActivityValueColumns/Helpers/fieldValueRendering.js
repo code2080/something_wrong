@@ -23,18 +23,17 @@ export const renderFieldComponent = (activityValue, activity) => {
   if (validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA,
-      errorMessage: validationResult.errorMessage,
-      renderedComponent: (
-        <FieldValue
-          value={activityValue.value}
-          extId={activityValue.extId}
-          activityId={activity._id}
-        />
-      ),
+      errorMessage: 'Activity value contains unknown property type',
     });
 
   return ActivityValueRenderPayload.create({
-    status: activityValueStatuses.MISSING_DATA,
-    errorMessage: 'Activity value contains unknown property type',
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    renderedComponent: (
+      <FieldValue
+        value={activityValue.value}
+        extId={activityValue.extId}
+        activityId={activity._id}
+      />
+    ),
   });
 };
