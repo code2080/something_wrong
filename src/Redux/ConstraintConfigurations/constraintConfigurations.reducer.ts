@@ -25,16 +25,22 @@ const reducer = (state = {}, action) => {
 
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
     case UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
-      const { payload: { constraintConfiguration: _, ...constraintConfObj } } = action;
-      const constraintConfiguration = ConstraintConfiguration.create(constraintConfObj);
+      const {
+        payload: { actionMeta: _, ...constraintConfObj }
+      } = action;
+
+      const constraintConfiguration = ConstraintConfiguration.create(
+        constraintConfObj.constraintConfiguration
+      );
+      constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {
         ...state,
         [constraintConfiguration.formId]: {
           ...state[constraintConfiguration.formId],
-          [constraintConfiguration._id as string]: constraintConfiguration,
+          [constraintConfiguration._id as string]: constraintConfiguration
         }
       };
-    };
+    }
 
     case DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const { payload: { formId, constraintConfigurationId } } = action;
