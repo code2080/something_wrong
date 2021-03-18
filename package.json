@@ -23,7 +23,7 @@
     "prettier:fix": "prettier ./src --check",
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
-    "prepare": "husky install",
+    "prepare": "husky install && yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
     "sb": "yarn storybook",
