@@ -10,6 +10,7 @@ module.exports = {
     'standard',
     'standard-react',
     'plugin:react-hooks/recommended',
+    'prettier',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -49,23 +50,23 @@ module.exports = {
 
   rules: {
     // don't force es6 functions to include space before paren
-    'space-before-function-paren': ['error'],
+    // 'space-before-function-paren': ['error'],
 
     // allow specifying true explicitly for boolean props
     'react/jsx-boolean-value': ['error'],
 
     // allow double quotes
-    'jsx-quotes': ['error', 'prefer-single'],
+    // 'jsx-quotes': ['error', 'prefer-single'],
 
     // allow trailing commas
-    'comma-dangle': 0,
+    // 'comma-dangle': 0,
 
     // we want to force semicolons
     // but for later ... for now so many errors
-    '@babel/semi': ['error'],
-    semi: ['error', 'always'],
+    // '@babel/semi': ['error'],
+    // semi: ['error', 'always'],
     // we use 2 spaces to indent our code
-    indent: ['error', 2, { SwitchCase: 1 }],
+    // indent: ['error', 2, { SwitchCase: 1 }],
     // we want to avoid useless spaces
     'no-multi-spaces': ['error'],
 
