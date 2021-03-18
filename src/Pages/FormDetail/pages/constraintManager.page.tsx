@@ -31,10 +31,15 @@ const getConstraintsOfType = (
   allConstraints: TConstraint[]
 ): TConstraintInstance[] => {
   if (!config?.constraints || _.isEmpty(allConstraints)) return [];
-  return config.constraints.filter((constraintInstance: TConstraintInstance) => {
-    const c = allConstraints.find((constraint) => constraintInstance.constraintId === constraint.constraintId);
-    return c?.type === type;
-  });
+  return config.constraints.filter(
+    (constraintInstance: TConstraintInstance) => {
+      const c = allConstraints.find(
+        (constraint) =>
+          constraintInstance.constraintId === constraint.constraintId
+      );
+      return c?.type === type;
+    }
+  );
 };
 
 const ConstraintManagerPage = () => {
@@ -48,7 +53,10 @@ const ConstraintManagerPage = () => {
   /**
    * STATE
    */
-  const [constraintConfiguration, setConstraintConfiguration] = useState<TConstraintConfiguration | null>(null);
+  const [
+    constraintConfiguration,
+    setConstraintConfiguration
+  ] = useState<TConstraintConfiguration | null>(null);
 
   /**
    * EVENT HANDLERS
@@ -70,12 +78,14 @@ const ConstraintManagerPage = () => {
 
     setConstraintConfiguration({
       ...constraintConfiguration,
-      constraints: constraints.map((constraintInstance) => constraintInstance.constraintId === constraintId
-        ? {
-          ...constraintInstance,
-          [prop]: value
-        }
-        : constraintInstance)
+      constraints: constraints.map((constraintInstance) =>
+        constraintInstance.constraintId === constraintId
+          ? {
+            ...constraintInstance,
+            [prop]: value
+          }
+          : constraintInstance
+      )
     });
     dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
@@ -90,8 +100,13 @@ const ConstraintManagerPage = () => {
       formId,
       name: 'New constraint configuration',
       constraints: (allConstraints || [])
-        .filter((constraint: TConstraint) => constraint.type === EConstraintType.DEFAULT)
-        .map((constraint: TConstraint) => ConstraintInstance.createFromConstraint(constraint))
+        .filter(
+          (constraint: TConstraint) =>
+            constraint.type === EConstraintType.DEFAULT
+        )
+        .map((constraint: TConstraint) =>
+          ConstraintInstance.createFromConstraint(constraint)
+        )
     });
     setConstraintConfiguration(newConstraintConfig);
   };
@@ -100,9 +115,7 @@ const ConstraintManagerPage = () => {
     dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
-  const handleDeleteConstraintConfiguration = () => {
-    console.log('should delete');
-  };
+  const handleDeleteConstraintConfiguration = () => {};
 
   const defaultConstraints = useMemo(
     () =>
@@ -114,13 +127,13 @@ const ConstraintManagerPage = () => {
       getConstraintsOfType('OTHER', constraintConfiguration, allConstraints),
     [constraintConfiguration, allConstraints]
   );
-
-  console.log(allConstraints);
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
         constraintConfigurations={constraintConfigurations}
-        selectedCID={constraintConfiguration ? constraintConfiguration._id : null}
+        selectedCID={
+          constraintConfiguration ? constraintConfiguration._id : null
+        }
         onSelect={handleSelectConstraintConfiguration}
         onCreateNew={handleCreateNewConstraintConfiguration}
         onSaveConstraintConfiguration={handleSaveConstraintConfiguration}
@@ -130,7 +143,10 @@ const ConstraintManagerPage = () => {
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
-              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration, allConstraints)}
+              columns={constraintManagerTableColumns(
+                handleUpdateConstraintConfiguration,
+                allConstraints
+              )}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
@@ -141,12 +157,15 @@ const ConstraintManagerPage = () => {
             header='Custom constraints'
             extra={
               <Button onClick={handleAddCustomConstraint} size='small'>
-                  Add new custom constraint
+                Add new custom constraint
               </Button>
             }
           >
             <Table
-              columns={constraintManagerTableColumns(handleUpdateConstraintConfiguration, allConstraints)}
+              columns={constraintManagerTableColumns(
+                handleUpdateConstraintConfiguration,
+                allConstraints
+              )}
               dataSource={customConstraints}
               rowKey='constraintId'
               pagination={false}
@@ -164,16 +183,16 @@ const ConstraintManagerPage = () => {
             type='primary'
             onClick={handleCreateNewConstraintConfiguration}
           >
-              Create now
+            Create now
           </Button>
         </Empty>
       )}
-      {!constraintConfiguration && !_.isEmpty(constraintConfigurations) &&
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description='No constraint configurations selected'
-            />
-      }
+      {!constraintConfiguration && !_.isEmpty(constraintConfigurations) && (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description='No constraint configurations selected'
+        />
+      )}
     </div>
   );
 };
