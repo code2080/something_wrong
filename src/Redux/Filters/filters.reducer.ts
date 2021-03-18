@@ -1,6 +1,4 @@
-import _ from 'lodash';
 import * as types from './filters.actionTypes';
-import { EActivityFilterType } from '../../Types/ActivityFilter.interface';
 
 // eslint-disable-next-line no-undef
 const loadFiltersFromLS = (filterId: string) => {
@@ -37,67 +35,12 @@ const reducer = (state = {}, action) => {
       };
     }
 
-    case types.SET_ACTIVITY_FILTER_OPTIONS: {
-      const { filterId, optionType, optionPayload, activityId } = action.payload;
-      const filterIdOptionsState = _.get(state, `${filterId}_OPTIONS`, {});
-      const filterIdMatchesState = _.get(state, `${filterId}_MATCHES`, {});
-      const { extId, values } = optionPayload;
-      switch (optionType) {
-        case EActivityFilterType.FIELD:
-        case EActivityFilterType.OBJECT:
-        case EActivityFilterType.TIMING:
-          return {
-            ...state,
-            [`${filterId}_OPTIONS`]: {
-              ...filterIdOptionsState,
-              [extId]: _.uniqBy([...(filterIdOptionsState && filterIdOptionsState[extId] ? filterIdOptionsState[extId] : []), ...values], 'value'),
-            },
-            [`${filterId}_MATCHES`]: {
-              ...filterIdMatchesState,
-              ...values.reduce((tot, acc) => {
-                return {
-                  ...tot,
-                  [acc.value]: [
-                    ...(filterIdMatchesState[acc.value] || []),
-                    activityId,
-                  ],
-                };
-              }, {}),
-            },
-          };
-        case EActivityFilterType.OBJECT_FILTER: {
-          return {
-            ...state,
-            [`${filterId}_OPTIONS`]: {
-              ...filterIdOptionsState,
-              [extId]: Object.keys(values).reduce((tot, fieldExtId) => {
-                return {
-                  ...tot,
-                  [fieldExtId]: _.uniqBy([...(tot[fieldExtId] || []), ...values[fieldExtId]], 'value'),
-                };
-              }, filterIdOptionsState[extId] || {}),
-            },
-            [`${filterId}_MATCHES`]: {
-              ...filterIdMatchesState,
-              ...Object.keys(values).reduce((tot, fieldExtId) => {
-                return {
-                  ...tot,
-                  ...values[fieldExtId].reduce((t, val) => {
-                    return {
-                      ...t,
-                      [val.value]: [
-                        ...(filterIdMatchesState[val.value] || []),
-                        activityId,
-                      ],
-                    };
-                  }, {})
-                };
-              }, {}),
-            },
-          };
-        }
-        default:
-          return state;
+    case types.SET_ACTIVITY_FILTER: {
+      const { filterId, matches, options } = action.payload;
+      return {
+        ...state,
+        [`${filterId}_ACTIVITIES_OPTIONS`]: options,
+        [`${filterId}_ACTIVITIES_MATCHES`]: matches
       };
     }
 

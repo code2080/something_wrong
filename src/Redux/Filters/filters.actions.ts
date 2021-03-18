@@ -55,6 +55,11 @@ export const setFilter = ({ filterId, filter }: TActionSetFilter) => ({
   payload: { filterId, filter },
 });
 
+export const setActivityFilter = ({ filterId, options, matches }) => ({
+  type: types.SET_ACTIVITY_FILTER,
+  payload: { filterId, options, matches },
+});
+
 export const setActivityFilterOptions = ({ filterId, optionType, optionPayload, activityId }: TActionSetOptions) => ({
   type: types.SET_ACTIVITY_FILTER_OPTIONS,
   payload: { filterId, optionType, optionPayload, activityId },

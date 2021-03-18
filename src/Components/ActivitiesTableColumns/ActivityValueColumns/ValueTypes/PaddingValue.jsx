@@ -1,9 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { EActivityFilterType } from '../../../../Types/ActivityFilter.interface';
-import { setActivityFilterOptions } from '../../../../Redux/Filters/filters.actions';
 
 // HELPERS
 import { minToHourMinDisplay } from '../../../../Utils/moment.helpers';
@@ -30,28 +26,7 @@ PaddingColumn.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-const PaddingValue = ({ before, after, extId, activityId }) => {
-  const dispatch = useDispatch();
-  const { formId } = useParams();
-
-  const formattedValue = useMemo(() => {
-    const b = minToHourMinDisplay(before);
-    const a = minToHourMinDisplay(after);
-    if (b && !a) return `Before: ${b.days ? `${b.days}d, ${b.hours}:${b.minutes}` : `${b.hours}:${b.minutes}`}`;
-    if (a && !b) return `After: ${a.days ? `${a.days}d, ${a.hours}:${a.minutes}` : `${a.hours}:${a.minutes}`}`;
-    return `Before: ${b.days ? `${b.days}d, ${b.hours}:${b.minutes}` : `${b.hours}:${b.minutes}`}, after: ${a.days ? `${a.days}d, ${a.hours}:${a.minutes}` : `${a.hours}:${a.minutes}`}`;
-  }, [before, after]);
-
-  useEffect(() => {
-    dispatch(setActivityFilterOptions({
-      filterId: `${formId}_ACTIVITIES`,
-      optionType: EActivityFilterType.TIMING,
-      optionPayload: { extId, values: [{ value: `${extId}/${formattedValue}`, label: formattedValue }] },
-      activityId,
-    }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+const PaddingValue = ({ before, after }) => {
   return (
     <div className='two-col--wrapper'>
       {before && <PaddingColumn value={before} title='Before:' />}
@@ -63,8 +38,6 @@ const PaddingValue = ({ before, after, extId, activityId }) => {
 PaddingValue.propTypes = {
   before: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   after: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  extId: PropTypes.string.isRequired,
-  activityId: PropTypes.string.isRequired,
 };
 
 export default PaddingValue;

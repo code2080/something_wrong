@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Radio } from 'antd';
 import { useDispatch } from 'react-redux';
-import { CloseOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons';
 
 // ACTIONS
 import { updateActivityGroup, assignActivityToGroup, deleteActivityGroup } from '../../../../Redux/ActivityGroup/activityGroup.actions';
@@ -65,7 +65,7 @@ const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props
             {activityGroup.name}
           </div>
           <div className='activity-group--btns'>
-            <Button size='small' icon='edit' onClick={onStartEditMode} />
+            <Button size='small' icon={<EditOutlined />} onClick={onStartEditMode} />
             <Button className='danger' size='small' icon={<DeleteOutlined />} onClick={onDeleteActivityGroup} />
           </div>
         </React.Fragment>
