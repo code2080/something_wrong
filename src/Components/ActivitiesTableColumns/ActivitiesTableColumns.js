@@ -11,6 +11,7 @@ import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 // SORTERS
 
 export const createActivitiesTableColumnsFromMapping = (design) => {
+  console.log(design);
   const allActivityValues = [
     ...Object.keys(design.objects).map(objKey => ['types', objKey]),
     ...Object.keys(design.fields).map(fieldKey => ['fields', fieldKey])

@@ -212,11 +212,9 @@ export const TimingColumns = {
     timingCols.endTimeTimeslots(mapping),
     timingCols.length(mapping)
   ],
-  [activityTimeModes.SEQUENCE]: mapping => [
-    timingCols.length(mapping),
-    timingCols.padding(mapping),
-    timingCols.weekday(mapping),
-    timingCols.dateRanges(mapping),
-    timingCols.time(mapping),
-  ],
+  [activityTimeModes.SEQUENCE]: mapping => {
+    const { timing } = mapping;
+    const mappedKeys = Object.keys(timing).filter(key => timing[key] && timing[key].length);
+    return mappedKeys.map(key => timingCols[key](mapping));
+  },
 };
