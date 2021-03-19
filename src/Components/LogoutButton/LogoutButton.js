@@ -12,8 +12,9 @@ import './LogoutButton.scss';
 
 // CONSTANTS
 import { authenticationStatuses } from '../../Constants/auth.constants';
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
+const mapStateToProps = (state) => ({
+  isAuthenticated:
+    state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
 });
 
 const mapActionsToProps = {
@@ -49,4 +50,6 @@ LogoutButton.defaultProps = {
   isAuthenticated: false,
 };
 
-export default withRouter(connect(mapStateToProps, mapActionsToProps)(LogoutButton));
+export default withRouter(
+  connect(mapStateToProps, mapActionsToProps)(LogoutButton),
+);

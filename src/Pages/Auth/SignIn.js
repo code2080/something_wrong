@@ -1,45 +1,37 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Button, Form, Input } from 'antd';
+import { Button, Input, Form } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
-const SignIn = ({ onSignIn, form }) => {
-  const handleSubmit = useCallback(e => {
-    e.preventDefault();
-    form.validateFields((err, values) => {
-      if (!err) {
-        onSignIn({ account: values.account, password: values.password });
-      }
-    });
-  }, [form]);
+const SignIn = ({ onSignIn }) => {
+  const [account, setAccount] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = () => {
+    onSignIn({ account, password });
+  };
 
   return (
-    <Form
-      hideRequiredMark
-      onSubmit={handleSubmit}
-    >
+    <Form hideRequiredMark onSubmit={handleSubmit}>
       <Form.Item label='Email:'>
-        {form.getFieldDecorator('account', {
-          rules: [{ required: true, message: 'Please input a username or email!' }],
-        })(
-          <Input
-            prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder='Email'
-          />,
-        )}
+        <Input
+          prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder='Email'
+          value={account}
+          onChange={(e) => setAccount(e.target.value)}
+        />
       </Form.Item>
       <Form.Item label='Password:'>
-        {form.getFieldDecorator('password', {
-          rules: [{ required: true, message: 'Please input your Password!' }],
-        })(
-          <Input
-            prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            type='password'
-            placeholder='Password'
-          />,
-        )}
+        <Input
+          prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+          type='password'
+          placeholder='Password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </Form.Item>
       <Form.Item>
-        <Button type='primary' htmlType='submit'>
+        <Button type='primary' onClick={handleSubmit}>
           Sign in
         </Button>
       </Form.Item>
@@ -48,8 +40,7 @@ const SignIn = ({ onSignIn, form }) => {
 };
 
 SignIn.propTypes = {
-  form: PropTypes.object.isRequired,
   onSignIn: PropTypes.func.isRequired,
 };
 
-export default Form.create({ name: 'te-prefs-lib-login' })(SignIn);
+export default SignIn;

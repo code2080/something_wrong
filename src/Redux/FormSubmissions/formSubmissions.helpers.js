@@ -7,7 +7,7 @@ const sectionType = {
   TABLE: 'TABLE',
 };
 
-const determineSectionTypeFromData = sectionData => {
+const determineSectionTypeFromData = (sectionData) => {
   if (_.isEmpty(sectionData)) return sectionType.EMPTY;
   if (Array.isArray(sectionData)) return sectionType.REGULAR;
 
@@ -18,41 +18,46 @@ const determineSectionTypeFromData = sectionData => {
   return sectionType.TABLE;
 };
 
-const extractValuesFromSectionData = sectionData => {
+const extractValuesFromSectionData = (sectionData) => {
   switch (determineSectionTypeFromData(sectionData)) {
     case sectionType.REGULAR:
-      return sectionData.reduce((values, element) => [...values, element.value], []);
+      return sectionData.reduce(
+        (values, element) => [...values, element.value],
+        [],
+      );
     case sectionType.TABLE:
-      return Object.values(sectionData).reduce((values, row) => [
-        ...values,
-        ...row.reduce((elVals, element) => [
-          ...elVals,
-          element.value
-        ], [])
-      ], []);
+      return Object.values(sectionData).reduce(
+        (values, row) => [
+          ...values,
+          ...row.reduce((elVals, element) => [...elVals, element.value], []),
+        ],
+        [],
+      );
     case sectionType.CONNECTED:
-      return Object.values(sectionData).reduce((values, event) => [
-        ...values,
-        ...event.values
-          .filter((element) => element.value)
-          .reduce((elVals, element) =>
-            [
-              ...elVals,
-              ...element.value
-            ], [])
-      ], []);
+      return Object.values(sectionData).reduce(
+        (values, event) => [
+          ...values,
+          ...event.values
+            .filter((element) => element.value)
+            .reduce((elVals, element) => [...elVals, element.value], []),
+        ],
+        [],
+      );
     default:
       return [];
   }
 };
 
-export const getSubmissionValues = formInstance =>
+export const getSubmissionValues = (formInstance) =>
   formInstance
-    ? Object.entries(formInstance.values).reduce((values, [sectionId, sectionData]) => [
-      ...values,
-      {
-        sectionId,
-        sectionValues: extractValuesFromSectionData(sectionData)
-      }
-    ], [])
+    ? Object.entries(formInstance.values).reduce(
+        (values, [sectionId, sectionData]) => [
+          ...values,
+          {
+            sectionId,
+            sectionValues: extractValuesFromSectionData(sectionData),
+          },
+        ],
+        [],
+      )
     : [];

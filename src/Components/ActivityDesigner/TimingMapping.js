@@ -7,23 +7,27 @@ import { Select, Cascader } from 'antd';
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
-import { activityTimeModes, activityTimeModeProps } from '../../Constants/activityTimeModes.constants';
+import {
+  activityTimeModes,
+  activityTimeModeProps,
+} from '../../Constants/activityTimeModes.constants';
 
 // STYLES
 import './Mapping.scss';
 import MultiRowParameter from './MultiRowParameter';
 
-const TimingMapping = ({
-  onChange,
-  formSections,
-  mapping,
-  disabled,
-}) => {
-  const timingMode = useMemo(() => _.get(mapping, 'timing.mode', null), [mapping]);
+const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
+  const timingMode = useMemo(() => _.get(mapping, 'timing.mode', null), [
+    mapping,
+  ]);
 
   const onSequenceModeTimingParameterUpdateValue = (idx, value) => {
     const currValue = _.get(mapping, 'timing.dateRanges', []);
-    onChange('dateRanges', [...currValue.slice(0, idx), value, ...currValue.slice(idx + 1)]);
+    onChange('dateRanges', [
+      ...currValue.slice(0, idx),
+      value,
+      ...currValue.slice(idx + 1),
+    ]);
   };
 
   const onSequenceModeTimingParameterAdd = () => {
@@ -46,13 +50,15 @@ const TimingMapping = ({
         </div>
         <Select
           value={_.get(mapping, 'timing.mode', null)}
-          onChange={val => onChange('mode', val)}
+          onChange={(val) => onChange('mode', val)}
           size='small'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           disabled={disabled}
         >
-          {Object.keys(activityTimeModeProps).map(mode => (
-            <Select.Option key={mode} value={mode}>{activityTimeModeProps[mode].label}</Select.Option>
+          {Object.keys(activityTimeModeProps).map((mode) => (
+            <Select.Option key={mode} value={mode}>
+              {activityTimeModeProps[mode].label}
+            </Select.Option>
           ))}
         </Select>
       </div>
@@ -64,9 +70,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.startTime', null)}
-              onChange={val => onChange('startTime', val)}
+              onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -79,9 +88,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.endTime', null)}
-              onChange={val => onChange('endTime', val)}
+              onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -98,9 +110,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.startTime', null)}
-              onChange={val => onChange('startTime', val)}
+              onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -113,9 +128,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.endTime', null)}
-              onChange={val => onChange('endTime', val)}
+              onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -128,9 +146,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.length', null)}
-              onChange={val => onChange('length', val)}
+              onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -147,9 +168,12 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.length', null)}
-              onChange={val => onChange('length', val)}
+              onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -157,13 +181,14 @@ const TimingMapping = ({
             />
           </div>
           <div className='timing-mapping__row--wrapper'>
-            <div className='label'>
-              Padding
-            </div>
+            <div className='label'>Padding</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.padding', null)}
-              onChange={val => onChange('padding', val)}
+              onChange={(val) => onChange('padding', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -171,13 +196,14 @@ const TimingMapping = ({
             />
           </div>
           <div className='timing-mapping__row--wrapper'>
-            <div className='label'>
-              Weekday
-            </div>
+            <div className='label'>Weekday</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.weekday', null)}
-              onChange={val => onChange('weekday', val)}
+              onChange={(val) => onChange('weekday', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -185,13 +211,14 @@ const TimingMapping = ({
             />
           </div>
           <div className='timing-mapping__row--wrapper'>
-            <div className='label'>
-              Exact time
-            </div>
+            <div className='label'>Exact time</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+              options={getElementsForTimingMapping[timingMode](
+                formSections,
+                mapping,
+              )}
               value={_.get(mapping, 'timing.time', null)}
-              onChange={val => onChange('time', val)}
+              onChange={(val) => onChange('time', val)}
               placeholder='Select an element'
               getPopupContainer={() => document.getElementById('te-prefs-lib')}
               size='small'
@@ -200,7 +227,10 @@ const TimingMapping = ({
           </div>
           <MultiRowParameter
             values={_.get(mapping, 'timing.dateRanges', [])}
-            options={getElementsForTimingMapping[timingMode](formSections, mapping)}
+            options={getElementsForTimingMapping[timingMode](
+              formSections,
+              mapping,
+            )}
             onUpdateValue={onSequenceModeTimingParameterUpdateValue}
             onAddParameter={onSequenceModeTimingParameterAdd}
             onRemoveParameter={onSequenceModeTimingParameterDelete}

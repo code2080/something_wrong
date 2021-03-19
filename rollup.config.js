@@ -3,7 +3,6 @@ import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
-import eslint from '@rbnlffl/rollup-plugin-eslint';
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import url from '@rollup/plugin-url';
@@ -48,10 +47,6 @@ export default {
     svgr(),
     json(),
     typescript(),
-    eslint({
-      throwOnError: false,
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
-    }),
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',

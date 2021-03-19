@@ -4,7 +4,7 @@ export enum EConstraintParameterType {
   Number = 'Number',
   ObjectField = 'ObjectField',
   ElementField = 'ElementField',
-};
+}
 
 export enum EConstraintOperators {
   '>' = '>',
@@ -12,12 +12,12 @@ export enum EConstraintOperators {
   '=' = '=',
   '=<' = '=<',
   '<' = '>',
-};
+}
 
 export enum EConstraintType {
   DEFAULT = 'DEFAULT',
   OTHER = 'OTHER',
-};
+}
 
 export type TConstraintParameter = {
   name: string;
@@ -29,9 +29,9 @@ export type TConstraint = {
   name: string;
   description?: string;
   constraintId: string;
-  parameters: TConstraintParameter[],
-  allowedOperators: EConstraintOperators[],
-  type: EConstraintType,
+  parameters: TConstraintParameter[];
+  allowedOperators: EConstraintOperators[];
+  type: EConstraintType;
 };
 
 export class Constraint {
@@ -43,4 +43,4 @@ export class Constraint {
     allowedOperators: obj.allowedOperators,
     type: obj.type,
   });
-};
+}

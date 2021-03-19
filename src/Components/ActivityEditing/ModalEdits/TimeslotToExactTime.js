@@ -29,7 +29,7 @@ ShowInfo.propTypes = {
 };
 
 ShowInfo.defaultProps = {
-  formatFn: val => val,
+  formatFn: (val) => val,
   propTitle: null,
   visible: false,
 };

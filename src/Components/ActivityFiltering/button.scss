@@ -1,0 +1,11 @@
+@import '../../Styles/globals.scss';
+
+.ant-btn.filter-btn {
+  color: $deepSeaGreen;
+  border: none !important;
+
+  &.active {
+    color: $deepSeaGreen !important;
+    background-color: $candlelight;
+  }
+}

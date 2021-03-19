@@ -8,15 +8,10 @@ export class ActivityValueRenderPayload {
    * @param {String} errorMessage error message to display if status === MISSING_DATA
    * @returns {Object} renderPayload
    */
-  static create = ({
-    status,
-    value,
-    renderedComponent,
-    errorMessage,
-  }) => ({
+  static create = ({ status, value, renderedComponent, errorMessage }) => ({
     status,
     value,
     renderedComponent,
     errorMessage,
   });
-};
+}

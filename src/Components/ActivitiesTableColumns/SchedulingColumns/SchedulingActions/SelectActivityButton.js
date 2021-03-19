@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Icon } from 'antd';
+import { SelectOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
@@ -13,18 +13,27 @@ import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/act
 
 const SelectActivityButton = ({ activity }) => {
   const teCoreAPI = useTECoreAPI();
-  const formInstance = useSelector(selectFormInstance)(activity.formId, activity.formInstanceId);
-  const formInstanceRequests = useSelector(selectFormInstanceObjectRequests(formInstance));
-  const teCorePayload = useSelector(selectTECorePayloadForActivity)(activity.formId, activity.formInstanceId, activity._id, formInstanceRequests);
+  const formInstance = useSelector(selectFormInstance)(
+    activity.formId,
+    activity.formInstanceId,
+  );
+  const formInstanceRequests = useSelector(
+    selectFormInstanceObjectRequests(formInstance),
+  );
+  const teCorePayload = useSelector(selectTECorePayloadForActivity)(
+    activity.formId,
+    activity.formInstanceId,
+    activity._id,
+    formInstanceRequests,
+  );
 
   const onSelectAllCallback = () => {
-    if (teCorePayload)
-      teCoreAPI.populateSelection(teCorePayload);
+    if (teCorePayload) teCoreAPI.populateSelection(teCorePayload);
   };
 
   return (
     <div className='scheduling-actions--button' onClick={onSelectAllCallback}>
-      <Icon type='select' />
+      <SelectOutlined />
     </div>
   );
 };

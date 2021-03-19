@@ -28,7 +28,7 @@ const ConstraintManagerTopBar = ({
   selectedCID,
   selConstrName,
   onDeleteConstraintConfiguration,
-  onSaveConstraintConfiguration
+  onSaveConstraintConfiguration,
 }: Props) => {
   return (
     <div className='constraint-manager-top-bar--wrapper'>
@@ -45,7 +45,7 @@ const ConstraintManagerTopBar = ({
           style={{ width: '200px' }}
         >
           {constraintConfigurations.map((conf) => (
-            <Select.Option key={conf._id} value={conf._id}>
+            <Select.Option key={conf._id} value={conf._id as string}>
               {conf.name}
             </Select.Option>
           ))}

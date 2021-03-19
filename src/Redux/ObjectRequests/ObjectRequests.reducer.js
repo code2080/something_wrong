@@ -9,7 +9,10 @@ export default (state = initialState, action) => {
     case types.FETCH_OBJECT_REQUESTS_SUCCESS: {
       return {
         ...state,
-        list: action.payload.requests.reduce((reqs, req) => [...reqs, new ObjectRequest(req)], []),
+        list: action.payload.requests.reduce(
+          (reqs, req) => [...reqs, new ObjectRequest(req)],
+          [],
+        ),
       };
     }
 
@@ -17,7 +20,9 @@ export default (state = initialState, action) => {
       const { request } = action.payload;
       return {
         ...state,
-        list: state.list.map(req => req._id === request._id ? request : req)
+        list: state.list.map((req) =>
+          req._id === request._id ? request : req,
+        ),
       };
     }
 

@@ -11,8 +11,7 @@ import SubmissionsDetailPage from './submissions.detail.page';
 const SubmissionsPage = () => {
   const selectedSubmissionId = useSelector(selectFormDetailSubmission);
 
-  if (!selectedSubmissionId)
-    return <SubmissionsOverviewPage />;
+  if (!selectedSubmissionId) return <SubmissionsOverviewPage />;
   return <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />;
 };
 

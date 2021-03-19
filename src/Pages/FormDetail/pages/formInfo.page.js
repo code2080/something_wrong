@@ -12,55 +12,71 @@ import ObjectScopeCol from '../../../Components/TableColumns/Components/ObjectSc
 // SELECTORS
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
 
-const formToFieldInfo = form => {
-  const formFieldMapping = [{
-    key: 'name',
-    label: 'Name',
-    formatValueFn: value => value,
-  }, {
-    key: 'description',
-    label: 'Description',
-    formatValueFn: value => value,
-  }, {
-    key: 'ownerId',
-    label: 'By',
-    formatValueFn: value => <OwnerCol ownerId={value} />,
-  }, {
-    key: 'createdAt',
-    label: 'Created',
-    formatValueFn: value => <DateTime value={value} />,
-  }, {
-    key: 'updatedAt',
-    label: 'Updated',
-    formatValueFn: value => <DateTime value={value} />,
-  }, {
-    key: 'dueDate',
-    label: 'Due',
-    formatValueFn: value => <DateTime value={value} />,
-  }, {
-    key: 'allowLateResponses',
-    label: 'Allow late responses',
-    formatValueFn: value => value ? 'Yes' : 'No',
-  }, {
-    key: 'formPeriod',
-    label: 'Form period',
-    formatValueFn: value => <b><DateTime value={[value.startDate, value.endDate]} /></b>,
-  }, {
-    key: 'objectScope',
-    label: 'Primary object',
-    formatValueFn: value => <ObjectScopeCol objectScope={value} />,
-  }, {
-    key: 'reservationMode',
-    label: 'Reservation mode',
-    formatValueFn: value => value,
-  }, {
-    key: 'allowLinkSharing',
-    label: 'Public link',
-    formatValueFn: value => value ? 'Yes' : 'No',
-  }];
+const formToFieldInfo = (form) => {
+  const formFieldMapping = [
+    {
+      key: 'name',
+      label: 'Name',
+      formatValueFn: (value) => value,
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      formatValueFn: (value) => value,
+    },
+    {
+      key: 'ownerId',
+      label: 'By',
+      formatValueFn: (value) => <OwnerCol ownerId={value} />,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created',
+      formatValueFn: (value) => <DateTime value={value} />,
+    },
+    {
+      key: 'updatedAt',
+      label: 'Updated',
+      formatValueFn: (value) => <DateTime value={value} />,
+    },
+    {
+      key: 'dueDate',
+      label: 'Due',
+      formatValueFn: (value) => <DateTime value={value} />,
+    },
+    {
+      key: 'allowLateResponses',
+      label: 'Allow late responses',
+      formatValueFn: (value) => (value ? 'Yes' : 'No'),
+    },
+    {
+      key: 'formPeriod',
+      label: 'Form period',
+      formatValueFn: (value) => (
+        <b>
+          <DateTime value={[value.startDate, value.endDate]} />
+        </b>
+      ),
+    },
+    {
+      key: 'objectScope',
+      label: 'Primary object',
+      formatValueFn: (value) => <ObjectScopeCol objectScope={value} />,
+    },
+    {
+      key: 'reservationMode',
+      label: 'Reservation mode',
+      formatValueFn: (value) => value,
+    },
+    {
+      key: 'allowLinkSharing',
+      label: 'Public link',
+      formatValueFn: (value) => (value ? 'Yes' : 'No'),
+    },
+  ];
   return formFieldMapping.map(({ key, label, formatValueFn }) => ({
     label: label,
-    value: formatValueFn(form[key])
+    value: formatValueFn(form[key]),
   }));
 };
 
@@ -69,9 +85,11 @@ const FormInfoPage = () => {
   const form = useSelector(selectForm)(formId);
   const formInfoFields = formToFieldInfo(form);
 
-  const formInfoFieldData = formInfoFields.reduce((rows, { label: field, value }) =>
-    !_.isEmpty(value) ? [...rows, { key: field, field, value }] : rows
-  , []);
+  const formInfoFieldData = formInfoFields.reduce(
+    (rows, { label: field, value }) =>
+      !_.isEmpty(value) ? [...rows, { key: field, field, value }] : rows,
+    [],
+  );
 
   return (
     <div className={'formInfo--wrapper'}>
@@ -90,13 +108,9 @@ const FormInfoPage = () => {
           dataIndex='field'
           key='field'
           width='200px'
-          render={field => <b>{field}:</b>}
+          render={(field) => <b>{field}:</b>}
         />
-        <Table.Column
-          title='Value'
-          dataIndex='value'
-          key='value'
-        />
+        <Table.Column title='Value' dataIndex='value' key='value' />
       </Table>
     </div>
   );

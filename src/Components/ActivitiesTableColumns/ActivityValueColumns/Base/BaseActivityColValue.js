@@ -7,12 +7,15 @@ import PropTypes from 'prop-types';
 import { renderComponent } from '../Helpers/rendering';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
-const BaseActivityColValue = ({
-  activityValue,
-  activity,
-}) => {
-  const component = useMemo(() => renderComponent(activityValue, activity), [activityValue, activity]);
-  if (component.status === activityValueStatuses.READY_FOR_SCHEDULING && component.renderedComponent)
+const BaseActivityColValue = ({ activityValue, activity }) => {
+  const component = useMemo(() => renderComponent(activityValue, activity), [
+    activityValue,
+    activity,
+  ]);
+  if (
+    component.status === activityValueStatuses.READY_FOR_SCHEDULING &&
+    component.renderedComponent
+  )
     return component.renderedComponent;
   return <span>Missing data</span>;
 };
@@ -23,7 +26,7 @@ BaseActivityColValue.propTypes = {
 };
 
 BaseActivityColValue.defaultProps = {
-  formatFn: val => val,
+  formatFn: (val) => val,
 };
 
-export default BaseActivityColValue;
+export default React.memo(BaseActivityColValue);

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, Form, Icon } from 'antd';
+import { Popover, Form } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
+import { CheckOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import StatusLabel from '../../../StatusLabel/StatusLabel';
@@ -11,7 +12,10 @@ import StatusLabel from '../../../StatusLabel/StatusLabel';
 import './ActivityStatusCol.scss';
 
 // CONSTANTS
-import { activityStatusProps, activityStatuses } from '../../../../Constants/activityStatuses.constants';
+import {
+  activityStatusProps,
+  activityStatuses,
+} from '../../../../Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 
 const PopoverContent = ({ activity }) => (
@@ -24,12 +28,18 @@ const PopoverContent = ({ activity }) => (
       </Form.Item>
       {activity.activityStatus === activityStatuses.FAILED && (
         <Form.Item label='Error'>
-          {`${_.get(activity, 'errorDetails.message', '')} (${_.get(activity, 'errorDetails.code', '')})`}
+          {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
+            activity,
+            'errorDetails.code',
+            '',
+          )})`}
         </Form.Item>
       )}
       <Form.Item label='Time'>
         <div className='ant-form-text'>
-          {activity.schedulingTimestamp ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT) : 'N/A'}
+          {activity.schedulingTimestamp
+            ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT)
+            : 'N/A'}
         </div>
       </Form.Item>
     </Form>
@@ -41,7 +51,8 @@ const StatusText = ({ activity }) => {
     case activityStatuses.SCHEDULED:
       return (
         <span>
-          <Icon type='check' />&nbsp;ID:&nbsp;{activity.reservationId || 'N/A'}
+          <CheckOutlined />
+          &nbsp;ID:&nbsp;{activity.reservationId || 'N/A'}
         </span>
       );
     default:

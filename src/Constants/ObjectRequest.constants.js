@@ -1,5 +1,10 @@
 import React from 'react';
-import { Icon } from 'antd';
+import {
+  QuestionOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  SwapOutlined,
+} from '@ant-design/icons';
 
 export const RequestStatus = {
   PENDING: 'pending',
@@ -8,11 +13,12 @@ export const RequestStatus = {
   REPLACED: 'replaced',
 };
 
+const styleAddOn = { color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' };
 export const requestStatusToIcon = {
-  [RequestStatus.PENDING]: <Icon type='question' style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.ACCEPTED]: <Icon type='check' style={{ color: 'rgba(0,255,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.DECLINED]: <Icon type='close' style={{ color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' }} />,
-  [RequestStatus.REPLACED]: <Icon type='swap' style={{ color: 'rgba(0,0,0, 0.8)', marginRight: '0.2rem' }} />,
+  [RequestStatus.PENDING]: <QuestionOutlined style={styleAddOn} />,
+  [RequestStatus.ACCEPTED]: <CheckOutlined />,
+  [RequestStatus.DECLINED]: <CloseOutlined />,
+  [RequestStatus.REPLACED]: <SwapOutlined />,
 };
 
 export const RequestType = {

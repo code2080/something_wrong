@@ -5,15 +5,18 @@ const activityGroupStateSelector = (state: any) => state.activityGroups;
 
 export const selectActivityGroupsForForm = createSelector(
   activityGroupStateSelector,
-  activityGroups => (formId: string) => activityGroups[formId] ? activityGroups[formId] : []
+  (activityGroups) => (formId: string) =>
+    activityGroups[formId] ? activityGroups[formId] : [],
 );
 
 export const selectActivityGroup = createSelector(
   activityGroupStateSelector,
-  activityGroups => (formId: string, activityGroupId: string | null) => {
+  (activityGroups) => (formId: string, activityGroupId: string | null) => {
     if (!formId || !activityGroupId) return null;
     const activityGroupsForForm = activityGroups[formId];
-    const activityGroup = activityGroupsForForm.find((el: TActivityGroup) => el._id === activityGroupId);
+    const activityGroup = activityGroupsForForm.find(
+      (el: TActivityGroup) => el._id === activityGroupId,
+    );
     return activityGroup;
-  }
+  },
 );

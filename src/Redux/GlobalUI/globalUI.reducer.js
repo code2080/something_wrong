@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
         selectedFormDetailTab: tab,
         selectedFormDetailSubmission: submission,
       };
-    };
+    }
 
     case types.SET_BREADCRUMBS: {
       if (!action || !action.payload || !action.payload.fragments) return state;
@@ -21,12 +21,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         breadcrumbs: fragments,
       };
-    };
+    }
 
     case types.SET_EXTERNAL_ACTION: {
       return {
         ...state,
-        spotlightPositionInfo: action.payload.spotlightPositionInfo
+        spotlightPositionInfo: action.payload.spotlightPositionInfo,
       };
     }
 
@@ -37,16 +37,20 @@ const reducer = (state = initialState, action) => {
         !action.payload.table ||
         !action.payload.table.datasourceId ||
         !action.payload.table.columns
-      ) { return state; }
+      ) {
+        return state;
+      }
 
-      const { table: { datasourceId, columns } } = action.payload;
+      const {
+        table: { datasourceId, columns },
+      } = action.payload;
       if (!datasourceId || !columns) return state;
       return {
         ...state,
         tableViews: {
           ...state.tableViews,
           [datasourceId]: columns,
-        }
+        },
       };
     }
 
@@ -62,7 +66,9 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.UPDATE_VIEW_REQUEST: {
-      const { payload: { datasourceId, columns } } = action;
+      const {
+        payload: { datasourceId, columns },
+      } = action;
       return {
         ...state,
         tableViews: {

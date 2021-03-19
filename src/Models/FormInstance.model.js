@@ -1,3 +1,4 @@
+import { parseFormSectionValues } from '../Utils/submissions.helpers';
 import FormInstanceTECoreProps from './FormInstanceTECoreProps.model';
 
 export default class FormInstance {
@@ -33,7 +34,7 @@ export default class FormInstance {
 
   submittedAt;
 
-  constructor ({
+  constructor({
     _id,
     scopedObject,
     status,
@@ -50,6 +51,7 @@ export default class FormInstance {
     updatedAt,
     submittedAt,
     index,
+    sections = [],
   }) {
     this._id = _id;
     this.scopedObject = scopedObject;
@@ -63,7 +65,7 @@ export default class FormInstance {
     this.submitter = `${firstName} ${lastName}`;
     this.teCoreProps = new FormInstanceTECoreProps(teCoreProps || {});
     this.reviewLink = reviewLink;
-    this.values = values;
+    this.values = parseFormSectionValues(values, sections);
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.submittedAt = submittedAt || updatedAt;

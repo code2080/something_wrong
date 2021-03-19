@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Modal as AntModal, Form, Select } from 'antd';
+import { Modal as AntModal, Select, Form } from 'antd';
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
-
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
-const FormInstanceSchedulingStatusProcess = ({ visible, onClose, form, schedulingProgress, formInstanceId }) => {
+const FormInstanceSchedulingStatusProcess = ({
+  visible,
+  onClose,
+  schedulingProgress: defaultSchedulingProgress,
+  formInstanceId,
+}) => {
   const dispatch = useDispatch();
-  const { getFieldDecorator, validateFields } = form;
-  const saving = useSelector(createLoadingSelector(['SET_SCHEDULING_PROGRESS']));
+  const saving = useSelector(
+    createLoadingSelector(['SET_SCHEDULING_PROGRESS']),
+  );
+
+  /**
+   * STATE
+   */
+  const [schedulingProgress, setSchedulingProgress] = useState(
+    defaultSchedulingProgress,
+  );
+  /**
+   * EVENT HANDLERS
+   */
   const onSubmit = () => {
-    validateFields(async (err, values) => {
-      if (!err) {
-        await dispatch(
-          setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress: values.schedulingProgress })
-        );
-        onClose();
-      }
-    });
+    dispatch(
+      setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }),
+    );
+    onClose();
   };
 
   return (
@@ -35,27 +46,20 @@ const FormInstanceSchedulingStatusProcess = ({ visible, onClose, form, schedulin
       destroyOnClose
     >
       <Form.Item label='Set scheduling process'>
-        {getFieldDecorator('schedulingProgress', {
-          rules: [
-            {
-              required: 'Scheduling process is required'
-            },
-          ],
-          initialValue: schedulingProgress,
-        })(
-          <Select
-            getPopupContainer={() =>
-              document.querySelector('#te-prefs-lib .ant-modal-content')
-            }
-            style={{ width: '100%' }}
-          >
-            {Object.values(teCoreSchedulingProgressProps).map(item => (
-              <Select.Option key={item.key} value={item.key}>
-                {item.label}
-              </Select.Option>
-            ))}
-          </Select>
-        )}
+        <Select
+          getPopupContainer={() =>
+            document.querySelector('#te-prefs-lib .ant-modal-content')
+          }
+          style={{ width: '100%' }}
+          value={schedulingProgress}
+          onChange={(val) => setSchedulingProgress(val)}
+        >
+          {Object.values(teCoreSchedulingProgressProps).map((item) => (
+            <Select.Option key={item.key} value={item.key}>
+              {item.label}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
     </AntModal>
   );
@@ -66,7 +70,6 @@ FormInstanceSchedulingStatusProcess.propTypes = {
   onClose: PropTypes.func.isRequired,
   schedulingProgress: PropTypes.string,
   formInstanceId: PropTypes.string.isRequired,
-  form: PropTypes.object.isRequired,
 };
 
-export default Form.create()(FormInstanceSchedulingStatusProcess);
+export default FormInstanceSchedulingStatusProcess;

@@ -17,7 +17,9 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.UPDATE_MAPPING_FOR_FORM_SUCCESS: {
-      const { payload: { design } } = action;
+      const {
+        payload: { design },
+      } = action;
       return {
         ...state,
         [design.formId]: {

@@ -1,3 +1,7 @@
+import {
+  teCoreAcceptanceStatus,
+  teCoreSchedulingProgress,
+} from '../Constants/teCoreProps.constants';
 export default class FormInstanceTECoreProps {
   assignedTo;
   acceptanceStatus;
@@ -6,11 +10,11 @@ export default class FormInstanceTECoreProps {
   selectionSettings;
   isStarred;
 
-  constructor ({
+  constructor({
     assignedTo = [],
-    acceptanceStatus = null,
-    acceptanceComment = null,
-    schedulingProgress = null,
+    acceptanceStatus = teCoreAcceptanceStatus.NOT_SET,
+    acceptanceComment = '',
+    schedulingProgress = teCoreSchedulingProgress.NOT_SCHEDULED,
     selectionSettings = {},
     isStarred = false,
   }) {

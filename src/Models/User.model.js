@@ -13,13 +13,7 @@ export class User {
 
   _id;
 
-  constructor ({
-    firstName,
-    lastName,
-    email,
-    permissions,
-    _id,
-  }) {
+  constructor({ firstName, lastName, email, permissions, _id }) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;

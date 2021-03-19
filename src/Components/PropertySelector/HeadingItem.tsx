@@ -4,17 +4,11 @@ import React from 'react';
 import { TProperty } from '../../Types/property.type';
 
 type Props = {
-  property: TProperty,
+  property: TProperty;
 };
 
 const HeadingItem = ({ property }: Props) => {
-  return (
-    <div
-      className='property-selector--heading'
-    >
-      {property.label}
-    </div>
-  );
+  return <div className='property-selector--heading'>{property.label}</div>;
 };
 
 export default HeadingItem;

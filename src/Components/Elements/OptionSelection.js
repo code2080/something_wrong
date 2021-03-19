@@ -13,7 +13,7 @@ const OptionSelection = ({ value, element }) => {
   const options = useMemo(() => {
     if (!value) return [{ value: null, label: 'N/A' }];
     if (Array.isArray(value)) {
-      return value.map(v => extractOptionFromValue(v, element.options));
+      return value.map((v) => extractOptionFromValue(v, element.options));
     }
     return [extractOptionFromValue(value, element.options)];
   }, [value, element]);
@@ -21,9 +21,7 @@ const OptionSelection = ({ value, element }) => {
     <div className='option-selection--wrapper'>
       {options.map((opt, idx) => (
         <React.Fragment key={`${opt.value}-fragment`}>
-          {idx > 0 && (
-            <span className='delimiter'>,</span>
-          )}
+          {idx > 0 && <span className='delimiter'>,</span>}
           <Tooltip
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
             title={`Label: ${opt.label}, value: ${opt.value}`}

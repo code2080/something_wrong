@@ -5,14 +5,17 @@ import ObjectFilterValue from '../ValueTypes/ObjectFilterValue.jsx';
 import ObjectObjectValue from '../ValueTypes/ObjectObjectValue.jsx';
 
 // VALIDATION
-import { validateFilterValue, validateGeneralValue } from '../../../../Utils/activityValues.validation';
+import {
+  validateFilterValue,
+  validateGeneralValue,
+} from '../../../../Utils/activityValues.validation';
 
 // HELPERS
 import { ActivityValueRenderPayload } from './RenderPayload';
 
 // CONSTANTS
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
-import { activityValueTypes } from '../../../../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
 
 /**
@@ -21,8 +24,8 @@ import { submissionValueTypes } from '../../../../Constants/submissionValueTypes
  * @param {Object} activityValue the activity value to be assessed
  * @returns {String} value type (enum of submissionValueTypes)
  */
-const determineObjectValueContent = activityValue => {
-  if (activityValue.type !== activityValueTypes.OBJECT) return null;
+const determineObjectValueContent = (activityValue) => {
+  if (activityValue.type !== ActivityValueType.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
 };
@@ -36,12 +39,20 @@ const determineObjectValueContent = activityValue => {
  */
 const renderObjectFilterValue = (activityValue, activity) => {
   const validationResult = validateFilterValue(activityValue);
-  const value = Array.isArray(activityValue.value) ? activityValue.value : [activityValue.value];
+  const value = Array.isArray(activityValue.value)
+    ? activityValue.value
+    : [activityValue.value];
   if (!validationResult.errorCode)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value,
-      renderedComponent: <ObjectFilterValue value={value} extId={activityValue.extId} activityId={activity._id} />
+      renderedComponent: (
+        <ObjectFilterValue
+          value={value}
+          extId={activityValue.extId}
+          activityId={activity._id}
+        />
+      ),
     });
 
   return ActivityValueRenderPayload.create({
@@ -68,7 +79,13 @@ const renderObjectValue = (activityValue, activity) => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,
-    renderedComponent: <ObjectObjectValue value={activityValue.value} extId={activityValue.extId} activityId={activity._id} />,
+    renderedComponent: (
+      <ObjectObjectValue
+        value={activityValue.value}
+        extId={activityValue.extId}
+        activityId={activity._id}
+      />
+    ),
   });
 };
 

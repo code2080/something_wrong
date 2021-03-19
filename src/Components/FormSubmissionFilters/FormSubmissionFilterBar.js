@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, Icon, Button, Switch } from 'antd';
+import { Input, Button, Switch } from 'antd';
+import { SearchOutlined, FilterFilled } from '@ant-design/icons';
 
 // ACTIONS
 import { updateFilter } from '../../Redux/Filters/filters.actions';
@@ -16,7 +17,10 @@ import './FormSubmissionFilters.scss';
 import { FormSubmissionFilterInterface } from '../../Models/FormSubmissionFilter.interface';
 
 const mapStateToProps = (state, { formId }) => ({
-  filters: selectFilter(state)(`${formId}_SUBMISSIONS`, FormSubmissionFilterInterface),
+  filters: selectFilter(state)(
+    `${formId}_SUBMISSIONS`,
+    FormSubmissionFilterInterface,
+  ),
 });
 
 const mapActionsToProps = {
@@ -30,13 +34,23 @@ const FormSubmissionFilterBar = ({
   isPropsFilterVisible,
   togglePropsFilter,
 }) => {
-  const onUpdateFilter = useCallback((key, value) => {
-    updateFilter({ filterId: `${formId}_SUBMISSIONS`, key, value });
-  }, [formId, updateFilter]);
+  const onUpdateFilter = useCallback(
+    (key, value) => {
+      updateFilter({ filterId: `${formId}_SUBMISSIONS`, key, value });
+    },
+    [formId, updateFilter],
+  );
 
   const filterIconClass = useMemo(() => {
     if (isPropsFilterVisible) return 'active';
-    if ((Object.keys(filters.scopedObject) || []).some(key => filters.scopedObject[key] && filters.scopedObject[key].length > 0)) { return 'has-filters'; }
+    if (
+      (Object.keys(filters.scopedObject) || []).some(
+        (key) =>
+          filters.scopedObject[key] && filters.scopedObject[key].length > 0,
+      )
+    ) {
+      return 'has-filters';
+    }
   }, [filters, isPropsFilterVisible]);
 
   return (
@@ -44,14 +58,14 @@ const FormSubmissionFilterBar = ({
       <Input
         placeholder='Filter...'
         value={filters.freeTextFilter}
-        onChange={e => onUpdateFilter('freeTextFilter', e.target.value)}
-        suffix={<Icon type='search' style={{ color: 'rgba(0,0,0,.25)' }} />}
+        onChange={(e) => onUpdateFilter('freeTextFilter', e.target.value)}
+        suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
         size='small'
       />
       <div className='form-submission-filter-bar--switch'>
         <Switch
           checked={filters.onlyOwn}
-          onChange={onlyOwn => onUpdateFilter('onlyOwn', onlyOwn)}
+          onChange={(onlyOwn) => onUpdateFilter('onlyOwn', onlyOwn)}
           size='small'
         />
         <span>Show only own</span>
@@ -63,7 +77,7 @@ const FormSubmissionFilterBar = ({
         shape='circle'
         onClick={togglePropsFilter}
       >
-        <Icon type='filter' theme='filled' />
+        <FilterFilled />
       </Button>
     </div>
   );
@@ -81,4 +95,7 @@ FormSubmissionFilterBar.defaultProps = {
   filters: null,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(FormSubmissionFilterBar);
+export default connect(
+  mapStateToProps,
+  mapActionsToProps,
+)(FormSubmissionFilterBar);

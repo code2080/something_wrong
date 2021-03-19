@@ -14,7 +14,10 @@ import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReserv
 // SELECTORS
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
-import { selectValidFieldsOnReservationMode, selectValidTypesOnReservationMode } from '../../../Redux/Integration/integration.selectors';
+import {
+  selectValidFieldsOnReservationMode,
+  selectValidTypesOnReservationMode,
+} from '../../../Redux/Integration/integration.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
@@ -23,7 +26,10 @@ import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // ACTIONS
 import { updateDesign } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
-import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../../Redux/Integration/integration.actions';
+import {
+  findTypesOnReservationMode,
+  findFieldsOnReservationMode,
+} from '../../../Redux/Integration/integration.actions';
 
 // HELPERS
 import {
@@ -59,10 +65,16 @@ const ActivityDesignPage = () => {
    */
   const form = useSelector(selectForm)(formId);
   const activities = useSelector(selectActivitiesForForm)(formId);
-  const validTypes = useSelector(selectValidTypesOnReservationMode)(form.reservationMode);
-  const validFields = useSelector(selectValidFieldsOnReservationMode)(form.reservationMode);
+  const validTypes = useSelector(selectValidTypesOnReservationMode)(
+    form.reservationMode,
+  );
+  const validFields = useSelector(selectValidFieldsOnReservationMode)(
+    form.reservationMode,
+  );
   const storeDesign = useSelector(selectDesignForForm)(formId);
-  const isSaving = useSelector(createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']));
+  const isSaving = useSelector(
+    createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
+  );
   /**
    * STATE VARS
    */
@@ -78,45 +90,59 @@ const ActivityDesignPage = () => {
       dispatch(findTypesOnReservationMode(form.reservationMode));
       dispatch(findFieldsOnReservationMode(form.reservationMode));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    async function execTypes () {
+    async function execTypes() {
       const _availableTypes = await teCoreAPI.getReservationTypes();
       setAvailableTypes(extractReservationTypes(_availableTypes));
     }
-    async function execFields () {
+    async function execFields() {
       const _availableFields = await teCoreAPI.getReservationFields();
       setAvailableFields(extractReservationFields(_availableFields));
     }
     execTypes();
     execFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
    * MEMOIZED VARS
    */
   const hasReservations = useMemo(
-    () => (Object.keys(activities || {}) || []).reduce(
-      (number, formInstanceId) => number + (activities[formInstanceId].length || 0),
-      0
-    ) > 0,
-    [activities]
+    () =>
+      (Object.keys(activities || {}) || []).reduce(
+        (number, formInstanceId) =>
+          number + (activities[formInstanceId].length || 0),
+        0,
+      ) > 0,
+    [activities],
   );
 
-  const mappingOptions = useMemo(() => getElementsForMapping(form.sections, design), [form, design]);
-  const typeOptions = useMemo(() => parseTypeOptions(validTypes, availableTypes), [validTypes, availableTypes]);
-  const fieldOptions = useMemo(() => parseFieldOptions(validFields, availableFields), [validFields, availableFields]);
+  const mappingOptions = useMemo(
+    () => getElementsForMapping(form.sections, design),
+    [form, design],
+  );
+  const typeOptions = useMemo(
+    () => parseTypeOptions(validTypes, availableTypes),
+    [validTypes, availableTypes],
+  );
+  const fieldOptions = useMemo(
+    () => parseFieldOptions(validFields, availableFields),
+    [validFields, availableFields],
+  );
 
   const designIsValid = useMemo(() => {
     const { fields, objects, timing } = design;
     const mandatoryTimingFields = getMandatoryPropsForTimingMode(timing.mode);
-    if (!mandatoryTimingFields || mandatoryTimingFields.some(field => _.isEmpty(timing[field])))
+    if (
+      !mandatoryTimingFields ||
+      mandatoryTimingFields.some((field) => _.isEmpty(timing[field]))
+    )
       return false;
-    if (checkObjectIsInvalid(fields))
-      return false;
-    if (checkObjectIsInvalid(objects))
-      return false;
+    if (checkObjectIsInvalid(fields)) return false;
+    if (checkObjectIsInvalid(objects)) return false;
     return true;
   }, [design]);
 
@@ -125,41 +151,71 @@ const ActivityDesignPage = () => {
    */
 
   // Event handlers for updating the various props on the design
-  const updateTimingDesignCallback = (prop, value) => setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
-  const updateObjectDesignCallback = objectDesign => setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
-  const updateFieldDesignCallback = fieldDesign => setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
-
-  // Callback for reset design update
-  const onResetDesign = resetDesign => setDesign({ ...resetDesign, formId, name: `Mapping for ${formId}` });
+  const updateTimingDesignCallback = (prop, value) =>
+    setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
+  const updateObjectDesignCallback = (objectDesign) =>
+    setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
+  const updateFieldDesignCallback = (fieldDesign) =>
+    setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
 
   // Callback to save mapping
   const onSaveDesign = () => {
-    if (designIsValid)
-      dispatch(updateDesign(design));
+    if (designIsValid) dispatch(updateDesign(design));
   };
 
   // Callback for reset meun clicks
-  const onResetMenuClick = useCallback(({ key }) => {
-    switch (key) {
-      case resetMenuOptions.RESET_EMPTY:
-        return onResetDesign(resetEmpty());
-      case resetMenuOptions.RESET_ALL:
-        return onResetDesign(resetAll(typeOptions, fieldOptions));
-      case resetMenuOptions.RESET_TYPES:
-        return onResetDesign(resetTypes(design, typeOptions));
-      case resetMenuOptions.RESET_FIELDS:
-        return onResetDesign(resetFields(design, fieldOptions));
-      default:
-        break;
-    }
-  }, [design, typeOptions, fieldOptions]);
+  const onResetMenuClick = useCallback(
+    ({ key }) => {
+      switch (key) {
+        case resetMenuOptions.RESET_EMPTY:
+          return setDesign({
+            ...resetEmpty(),
+            formId,
+            name: `Mapping for ${formId}`,
+          });
+        case resetMenuOptions.RESET_ALL:
+          return setDesign({
+            ...resetAll(typeOptions, fieldOptions),
+            formId,
+            name: `Mapping for ${formId}`,
+          });
+        case resetMenuOptions.RESET_TYPES:
+          return setDesign({
+            ...resetTypes(design, typeOptions),
+            formId,
+            name: `Mapping for ${formId}`,
+          });
+        case resetMenuOptions.RESET_FIELDS:
+          return setDesign({
+            ...resetFields(design, fieldOptions),
+            formId,
+            name: `Mapping for ${formId}`,
+          });
+        default:
+          break;
+      }
+    },
+    [formId, typeOptions, fieldOptions, design],
+  );
 
   const resetMenu = (
     <Menu onClick={onResetMenuClick}>
       <Menu.Item key={resetMenuOptions.RESET_EMPTY}>Reset to empty</Menu.Item>
-      {form.reservationMode && <Menu.Item key={resetMenuOptions.RESET_ALL}>Reset to reservation mode</Menu.Item>}
-      {form.reservationMode && <Menu.Item key={resetMenuOptions.RESET_TYPES}>Reset types to reservation mode</Menu.Item>}
-      {form.reservationMode && <Menu.Item key={resetMenuOptions.RESET_FIELDS}>Reset fields to reservation mode</Menu.Item>}
+      {form.reservationMode && (
+        <Menu.Item key={resetMenuOptions.RESET_ALL}>
+          Reset to reservation mode
+        </Menu.Item>
+      )}
+      {form.reservationMode && (
+        <Menu.Item key={resetMenuOptions.RESET_TYPES}>
+          Reset types to reservation mode
+        </Menu.Item>
+      )}
+      {form.reservationMode && (
+        <Menu.Item key={resetMenuOptions.RESET_FIELDS}>
+          Reset fields to reservation mode
+        </Menu.Item>
+      )}
     </Menu>
   );
 
@@ -167,8 +223,12 @@ const ActivityDesignPage = () => {
     <React.Fragment>
       <div className='activity-designer--wrapper'>
         <div className='activity-designer--toolbar'>
-          <div className='activity-designer__toolbar--label'>Reservation mode:</div>
-          <div className='activity-designer__toolbar--value'>{form.reservationMode || 'Not selected'}</div>
+          <div className='activity-designer__toolbar--label'>
+            Reservation mode:
+          </div>
+          <div className='activity-designer__toolbar--value'>
+            {form.reservationMode || 'Not selected'}
+          </div>
           <Dropdown
             overlay={resetMenu}
             trigger={['click']}

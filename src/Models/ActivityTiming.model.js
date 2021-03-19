@@ -12,7 +12,7 @@ export class ActivityTiming {
   weekday;
   time;
 
-  constructor ({
+  constructor({
     mode,
     startDate = [],
     endDate = [],

@@ -5,7 +5,12 @@ import { connect } from 'react-redux';
 import { Typography } from 'antd';
 
 // ACTIONS
-import { login, fetchOrgsForUser, selectOrgForUser, fetchProfile } from '../../Redux/Auth/auth.actions';
+import {
+  login,
+  fetchOrgsForUser,
+  selectOrgForUser,
+  fetchProfile,
+} from '../../Redux/Auth/auth.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 
 // COMPONENTS
@@ -18,9 +23,10 @@ import './Login.scss';
 // CONSTANTS
 import { authenticationStatuses } from '../../Constants/auth.constants';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authenticationStatus: state.auth.authenticationStatus,
-  userStatus: state.auth.user && state.auth.user.id && state.auth.user.organizationId,
+  userStatus:
+    state.auth.user && state.auth.user.id && state.auth.user.organizationId,
 });
 
 const mapActionsToProps = {
@@ -42,29 +48,48 @@ const LoginPage = ({
   history,
 }) => {
   useEffect(() => {
-    setBreadcrumbs([
-      { path: '/', label: 'Login' }
-    ]);
+    setBreadcrumbs([{ path: '/', label: 'Login' }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus == null) { fetchProfile(); }
-    if (authenticationStatus === authenticationStatuses.AUTHENTICATED && userStatus != null) { history.push('/forms'); }
-    if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS) fetchOrgsForUser();
+    if (
+      authenticationStatus === authenticationStatuses.AUTHENTICATED &&
+      userStatus == null
+    ) {
+      fetchProfile();
+    }
+    if (
+      authenticationStatus === authenticationStatuses.AUTHENTICATED &&
+      userStatus != null
+    ) {
+      history.push('/forms');
+    }
+    if (authenticationStatus === authenticationStatuses.MULTIPLE_ORGS)
+      fetchOrgsForUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticationStatus, userStatus]);
 
-  const handleLogin = useCallback(({ account, password }) => {
-    login({ account, password });
-  }, [login]);
+  const handleLogin = useCallback(
+    ({ account, password }) => {
+      login({ account, password });
+    },
+    [login],
+  );
 
-  const handleSelectOrg = useCallback(organizationId => {
-    selectOrgForUser({ organizationId });
-  }, [selectOrgForUser]);
+  const handleSelectOrg = useCallback(
+    (organizationId) => {
+      selectOrgForUser({ organizationId });
+    },
+    [selectOrgForUser],
+  );
 
   return (
     <div className='login--wrapper'>
       <Typography.Title level={2}>Sign in.</Typography.Title>
-      <Typography.Paragraph>Sign in with your TE Preferences credentials to get started.</Typography.Paragraph>
+      <Typography.Paragraph>
+        Sign in with your TE Preferences credentials to get started.
+      </Typography.Paragraph>
       {authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED && (
         <SignIn onSignIn={handleLogin} />
       )}
@@ -91,7 +116,6 @@ LoginPage.defaultProps = {
   userStatus: null,
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapActionsToProps
-)(LoginPage));
+export default withRouter(
+  connect(mapStateToProps, mapActionsToProps)(LoginPage),
+);

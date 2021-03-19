@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Icon, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 // HELPERS
 import { findTimeSlot } from '../../Utils/sections.helpers';
@@ -13,10 +14,14 @@ import { TIME_FORMAT } from '../../Constants/common.constants';
 const TimeSlotColumn = ({ event, timeslots }) => {
   const timeslot = useMemo(
     () => findTimeSlot(event.startTime, event.endTime, timeslots),
-    [event, timeslots]
+    [event, timeslots],
   );
   const tooltipTitle = useMemo(() => {
-    if (timeslot) { return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(TIME_FORMAT)} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`; }
+    if (timeslot) {
+      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(
+        TIME_FORMAT,
+      )} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`;
+    }
     return 'Timeslot could not be found';
   }, [timeslot]);
 
@@ -29,7 +34,7 @@ const TimeSlotColumn = ({ event, timeslots }) => {
     >
       <div className='picker--wrapper'>
         <div className='icon--wrapper'>
-          <Icon type='clock-circle' />
+          <ClockCircleOutlined />
         </div>
         <div className='value--wrapper'>
           {timeslot ? timeslot.label : 'N/A'}

@@ -1,6 +1,6 @@
 @import '../../../../Styles/globals.scss';
 
-.base-activity-col--wrapper {
+.column-content--wrapper {
   display: flex;
   align-items: center;
   position: relative;
@@ -19,7 +19,7 @@
   &:not(:first-child) {
     margin-left: 8px;
     &:after {
-      content: "";
+      content: '';
       display: block;
       position: absolute;
       width: 2px;
@@ -28,7 +28,6 @@
       background: $rustyGrey;
     }
   }
-
 }
 
 .base-activity-col--quickview {

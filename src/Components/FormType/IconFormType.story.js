@@ -16,18 +16,15 @@ export default {
           detail: "'regular' | 'availability'",
         },
         defaultValue: {
-          summary: 'regular'
+          summary: 'regular',
         },
       },
       control: {
         type: 'select',
-        options: [
-          'regular',
-          'availability'
-        ]
-      }
-    }
-  }
+        options: ['regular', 'availability'],
+      },
+    },
+  },
 };
 
 export const Icon = (args) => <IconFormType {...args} />;

@@ -3,17 +3,17 @@ export enum EActivityFilterType {
   OBJECT = 'OBJECT',
   OBJECT_FILTER = 'OBJECT_FILTER',
   FIELD = 'FIELD',
-};
+}
 
 export enum EActivityFilterMode {
   some = 'some',
   every = 'every',
-};
+}
 
 export enum EActivityFilterInclusion {
   SINGLE = 'SINGLE',
   SUBMISSION = 'SUBMISSION',
-};
+}
 
 export type TPaddingFilter = {
   before: string | undefined | null;
@@ -36,5 +36,5 @@ export type TObjectFieldFilter = {
 
 export type TFilter = {
   extId: string;
-  value: string | string[] | undefined | null | TObjectFieldFilter
+  value: string | string[] | undefined | null | TObjectFieldFilter;
 };

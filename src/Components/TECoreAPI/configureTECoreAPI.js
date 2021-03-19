@@ -1,8 +1,11 @@
 import { teCoreActions } from '../../Constants/teCoreActions.constants';
 
-const apiSupportsFunc = (api, callname) => api && Object.prototype.hasOwnProperty.call(api, callname) && typeof api[callname] === 'function';
+const apiSupportsFunc = (api, callname) =>
+  api &&
+  Object.prototype.hasOwnProperty.call(api, callname) &&
+  typeof api[callname] === 'function';
 
-const callCanBeMocked = actionKey =>
+const callCanBeMocked = (actionKey) =>
   teCoreActions &&
   teCoreActions[actionKey] &&
   teCoreActions[actionKey].mockFunction &&
@@ -23,22 +26,28 @@ const executeAPICall = async (api, callname, args, actionKey) => {
   // unsupportedFuncCall(callname);
 };
 
-const configureTECoreAPI = teCoreAPI => {
+const configureTECoreAPI = (teCoreAPI) => {
   const apiActions = Object.keys(teCoreActions).reduce(
     (actions, actionKey) => ({
       ...actions,
-      [teCoreActions[actionKey].callname]:
-        args => executeAPICall(teCoreAPI, [teCoreActions[actionKey].callname], args, actionKey),
-    })
-    , {});
+      [teCoreActions[actionKey].callname]: (args) =>
+        executeAPICall(
+          teCoreAPI,
+          [teCoreActions[actionKey].callname],
+          args,
+          actionKey,
+        ),
+    }),
+    {},
+  );
   const utilityActions = {
     listSupportedActions: () => Object.keys(teCoreAPI) || [],
-    apiSupportsFunc: callname => apiSupportsFunc(teCoreAPI, callname),
-    getCompatibleFunctionsForElement:
-      elementId => Object.keys(teCoreActions).filter(
-        actionKey =>
+    apiSupportsFunc: (callname) => apiSupportsFunc(teCoreAPI, callname),
+    getCompatibleFunctionsForElement: (elementId) =>
+      Object.keys(teCoreActions).filter(
+        (actionKey) =>
           teCoreActions[actionKey].compatibleWith &&
-          teCoreActions[actionKey].compatibleWith.indexOf(elementId) > -1
+          teCoreActions[actionKey].compatibleWith.indexOf(elementId) > -1,
       ),
   };
   return {

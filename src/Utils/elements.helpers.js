@@ -4,7 +4,7 @@ import { determineSectionType } from './determineSectionType.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
-  SECTION_CONNECTED
+  SECTION_CONNECTED,
 } from '../Constants/sectionTypes.constants';
 import { DATE_FORMAT } from '../Constants/common.constants';
 
@@ -17,8 +17,8 @@ import { DATE_FORMAT } from '../Constants/common.constants';
  */
 export const pickElement = (elementId, sectionId, sections) => {
   try {
-    const section = sections.find(el => el._id === sectionId);
-    const element = section.elements.find(el => el._id === elementId);
+    const section = sections.find((el) => el._id === sectionId);
+    const element = section.elements.find((el) => el._id === elementId);
     return element;
   } catch (error) {
     return null;
@@ -31,9 +31,9 @@ export const pickElement = (elementId, sectionId, sections) => {
  * @param {String} elementId the element id
  * @returns {String} element type
  */
-export const getElementTypeFromId = elementId => {
+export const getElementTypeFromId = (elementId) => {
   const elementIdx = Object.keys(elementTypeMapping).findIndex(
-    elementType => elementTypeMapping[elementType].elementId === elementId
+    (elementType) => elementTypeMapping[elementType].elementId === elementId,
   );
   if (elementIdx > -1) return Object.keys(elementTypeMapping)[elementIdx];
   return null;
@@ -44,7 +44,7 @@ const findElementValueInRegularSection = (elementId, section) => {
     console.log('No section in findElementValueInRegularSection');
     return null;
   }
-  const elIdx = section.findIndex(el => el.elementId === elementId);
+  const elIdx = section.findIndex((el) => el.elementId === elementId);
   if (elIdx > -1) return section[elIdx].value;
   return null;
 };
@@ -54,9 +54,9 @@ const findElementValueInTableSection = (elementId, section) => {
     console.log('No section in findElementValueInTableSection');
     return null;
   }
-  const rowArr = Object.keys(section).map(rowIdx => section[rowIdx]);
-  const values = rowArr.reduce((values, row) => {
-    const elIdx = row.findIndex(el => el.elementId === elementId);
+  const rowArr = Object.keys(section).map((rowIdx) => section[rowIdx]);
+  const values = rowArr.values.reduce((values, row) => {
+    const elIdx = row.findIndex((el) => el.elementId === elementId);
     if (elIdx > -1) return [...values, ...row[elIdx].value];
     return values;
   }, []);
@@ -69,9 +69,9 @@ const findElementValueInConnectedSection = (elementId, section) => {
     console.log('No section in findElementValueInConnectedSection');
     return null;
   }
-  const eventArr = Object.keys(section).map(eventId => section[eventId]);
+  const eventArr = Object.keys(section).map((eventId) => section[eventId]);
   const values = eventArr.reduce((values, event) => {
-    const elIdx = event.values.findIndex(el => el.elementId === elementId);
+    const elIdx = event.values.findIndex((el) => el.elementId === elementId);
     if (elIdx > -1) return [...values, ...event.values[elIdx].value];
     return values;
   }, []);
@@ -88,7 +88,9 @@ const findElementValueInConnectedSection = (elementId, section) => {
  */
 export const findElementValueInSubmission = (element, sections, values) => {
   // Find the appropriate section
-  const sectionIdx = sections.findIndex(section => section._id === element.sectionId);
+  const sectionIdx = sections.findIndex(
+    (section) => section._id === element.sectionId,
+  );
   if (sectionIdx === -1) return null;
   const sectionValues = values[element.sectionId];
   const sectionType = determineSectionType(sections[sectionIdx]);
@@ -98,7 +100,10 @@ export const findElementValueInSubmission = (element, sections, values) => {
     case SECTION_TABLE:
       return findElementValueInTableSection(element.elementId, sectionValues);
     case SECTION_CONNECTED:
-      return findElementValueInConnectedSection(element.elementId, sectionValues);
+      return findElementValueInConnectedSection(
+        element.elementId,
+        sectionValues,
+      );
     default:
       return null;
   }
@@ -113,9 +118,14 @@ export const findElementValueInSubmission = (element, sections, values) => {
  * @param {Object} values the submission values
  * @returns {String} element value
  */
-export const findElementValueInSubmissionFromId = (elementId, sectionId, sections, values) => {
+export const findElementValueInSubmissionFromId = (
+  elementId,
+  sectionId,
+  sections,
+  values,
+) => {
   // Find the appropriate section
-  const sectionIdx = sections.findIndex(section => section._id === sectionId);
+  const sectionIdx = sections.findIndex((section) => section._id === sectionId);
   if (sectionIdx === -1) return null;
   const sectionValues = values[sectionId];
   const sectionType = determineSectionType(sections[sectionIdx]);
@@ -139,20 +149,21 @@ export const findElementValueInSubmissionFromId = (elementId, sectionId, section
  * @returns {Object} the options object
  */
 export const extractOptionFromValue = (value, options) => {
-  const optionIdx = (options || []).findIndex(opt => opt.value === value);
+  const optionIdx = (options || []).findIndex((opt) => opt.value === value);
   if (optionIdx === -1) return { value, label: 'N/A' };
   return options[optionIdx];
 };
 
 const arrayToString = (value, divider) => {
-  return value.map(item => formatElementValue(item, divider));
+  return value.map((item) => formatElementValue(item, divider));
 };
 
 const objectToString = (value, divider) => {
   return arrayToString(
-    Object.keys(value)
-      .map(key => `${formatElementValue(value[key], divider)}`),
-    divider
+    Object.keys(value).map(
+      (key) => `${formatElementValue(value[key], divider)}`,
+    ),
+    divider,
   );
 };
 
@@ -171,7 +182,8 @@ export const formatElementValue = (value, divider) => {
     if (value instanceof Date) return value;
     if (moment.isMoment(value)) {
       const momentValue = moment(value);
-      if (value._f) return momentValue.format((value._f || '').replace(':ss', ''));
+      if (value._f)
+        return momentValue.format((value._f || '').replace(':ss', ''));
       return momentValue.format(DATE_FORMAT);
     }
     return objectToString(value, divider);

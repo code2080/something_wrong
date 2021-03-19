@@ -19,17 +19,22 @@ export const useMixpanel = () => {
 export const useFetchLabelsFromExtIds = (payload) => {
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
-  const extIds = useSelector(state => selectExtIds(state));
+  const extIds = useSelector((state) => selectExtIds(state));
 
-  async function exec (payload) {
-    const extIdProps = await teCoreAPI.getExtIdProps({ ...initialPayload, ...payload });
+  async function exec(payload) {
+    const extIdProps = await teCoreAPI.getExtIdProps({
+      ...initialPayload,
+      ...payload,
+    });
     dispatch(setTEDataForValues(extIdProps));
   }
 
   useEffect(() => {
     const payloadExtids = _.flatMap(payload);
-    const missingExtIdsInStore = !payloadExtids.every(extId => extIds.includes(extId));
-    if (!_.isEmpty(payloadExtids) && missingExtIdsInStore)
-      exec(payload);
+    const missingExtIdsInStore = !payloadExtids.every((extId) =>
+      extIds.includes(extId),
+    );
+    if (!_.isEmpty(payloadExtids) && missingExtIdsInStore) exec(payload);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

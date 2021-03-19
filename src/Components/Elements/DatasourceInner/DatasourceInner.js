@@ -7,15 +7,17 @@ import DatasourceFilterInner from './DatasourceFilterInner';
 import DatasourceObjectInner from './DatasourceObjectInner';
 
 const DatasourceEmptyInner = () => (
-  <div className='element__datasource--inner--empty'>
-    N/A
-  </div>
+  <div className='element__datasource--inner--empty'>N/A</div>
 );
 
 const DatasourceInner = ({ elType, labels, payload, menu }) => {
   if (elType === 'EMPTY' || _.isEmpty(labels)) return <DatasourceEmptyInner />;
-  if (elType === 'OBJECT') return <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu} />;
-  if (elType === 'FILTER') return <DatasourceFilterInner labels={labels} payload={payload} menu={menu} />;
+  if (elType === 'OBJECT')
+    return <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu} />;
+  if (elType === 'FILTER')
+    return (
+      <DatasourceFilterInner labels={labels} payload={payload} menu={menu} />
+    );
   return null;
 };
 

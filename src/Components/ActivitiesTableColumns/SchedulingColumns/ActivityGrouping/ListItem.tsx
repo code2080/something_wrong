@@ -1,25 +1,39 @@
 import React, { useState } from 'react';
 import { Button, Input, Radio } from 'antd';
 import { useDispatch } from 'react-redux';
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  CheckOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 
 // ACTIONS
-import { updateActivityGroup, assignActivityToGroup, deleteActivityGroup } from '../../../../Redux/ActivityGroup/activityGroup.actions';
+import {
+  updateActivityGroup,
+  assignActivityToGroup,
+  deleteActivityGroup,
+} from '../../../../Redux/ActivityGroup/activityGroup.actions';
 
 // TYPES
 import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
 
 type Props = {
-  activityGroup: TActivityGroup,
-  activityIds: string[],
-  isSelected: boolean,
+  activityGroup: TActivityGroup;
+  activityIds: string[];
+  isSelected: boolean;
 };
 
 enum EModes {
   VIEW = 'VIEW',
   EDIT = 'EDIT',
-};
+}
 
-const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props) => {
+const ActivityGroupListItem = ({
+  activityGroup,
+  activityIds,
+  isSelected,
+}: Props) => {
   const dispatch = useDispatch();
   /**
    * STATE
@@ -36,7 +50,13 @@ const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props
   };
 
   const onUpdateActivityGroup = () => {
-    dispatch(updateActivityGroup(activityGroup.formId, activityGroup._id, newGroupName));
+    dispatch(
+      updateActivityGroup(
+        activityGroup.formId,
+        activityGroup._id,
+        newGroupName,
+      ),
+    );
     setMode(EModes.VIEW);
   };
 
@@ -51,7 +71,13 @@ const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props
   };
 
   const onAssignActivityToGroup = () => {
-    dispatch(assignActivityToGroup(activityGroup.formId, activityGroup._id, activityIds));
+    dispatch(
+      assignActivityToGroup(
+        activityGroup.formId,
+        activityGroup._id,
+        activityIds,
+      ),
+    );
     setMode(EModes.VIEW);
   };
 
@@ -60,23 +86,49 @@ const ActivityGroupListItem = ({ activityGroup, activityIds, isSelected }: Props
       <Radio checked={isSelected} onChange={onAssignActivityToGroup} />
       {mode === EModes.VIEW && (
         <React.Fragment>
-          <div className='activity-group--name'>
+          <div
+            className='activity-group--name'
+            onClick={onAssignActivityToGroup}
+          >
             {activityGroup.name}
           </div>
           <div className='activity-group--btns'>
-            <Button size='small' icon='edit' onClick={onStartEditMode} />
-            <Button className='danger' size='small' icon='delete' onClick={onDeleteActivityGroup} />
+            <Button
+              size='small'
+              icon={<EditOutlined />}
+              onClick={onStartEditMode}
+            />
+            <Button
+              className='danger'
+              size='small'
+              icon={<DeleteOutlined />}
+              onClick={onDeleteActivityGroup}
+            />
           </div>
         </React.Fragment>
       )}
       {mode === EModes.EDIT && (
         <React.Fragment>
           <div className='activity-group--name'>
-            <Input size='small' value={newGroupName} onChange={e => setNewGroupName(e.target.value)} />
+            <Input
+              size='small'
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+            />
           </div>
           <div className='activity-group--btns'>
-            <Button className='danger' size='small' icon='close' onClick={onResetMode} />
-            <Button className='success' size='small' icon='check' onClick={onUpdateActivityGroup} />
+            <Button
+              className='danger'
+              size='small'
+              icon={<CloseOutlined />}
+              onClick={onResetMode}
+            />
+            <Button
+              className='success'
+              size='small'
+              icon={<CheckOutlined />}
+              onClick={onUpdateActivityGroup}
+            />
           </div>
         </React.Fragment>
       )}

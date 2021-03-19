@@ -27,14 +27,15 @@
     width: 12px !important;
     height: 12px !important;
     font-size: 0.5rem;
-  
-    &:active, &:hover &:focus {
+
+    &:active,
+    &:hover &:focus {
       border: none !important;
       color: $black !important;
       outline: none !important;
     }
 
-    i {
+    .anticon {
       font-size: 0.7rem;
       vertical-align: 0.2rem;
     }

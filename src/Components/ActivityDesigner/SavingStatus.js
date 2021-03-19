@@ -1,7 +1,8 @@
 import React from 'react';
-import { Spin, Icon } from 'antd';
+import { Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { CheckCircleFilled } from '@ant-design/icons';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
@@ -9,8 +10,8 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 // CONSTANTS
 import { themeColors } from '../../Constants/themeColors.constants';
 
-const mapStateToProps = state => ({
-  isSaving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state)
+const mapStateToProps = (state) => ({
+  isSaving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state),
 });
 
 const SavingStatus = ({ isSaving }) => {
@@ -24,7 +25,7 @@ const SavingStatus = ({ isSaving }) => {
       )}
       {!isSaving && (
         <React.Fragment>
-          <Icon type='check-circle' theme='filled' />
+          <CheckCircleFilled />
           &nbsp;Saved
         </React.Fragment>
       )}

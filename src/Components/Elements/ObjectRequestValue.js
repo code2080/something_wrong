@@ -15,7 +15,8 @@ import {
   RequestType,
 } from '../../Constants/ObjectRequest.constants';
 
-export const ObjectRequestStatusIcon = ({ status }) => requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
+export const ObjectRequestStatusIcon = ({ status }) =>
+  requestStatusToIcon[status] || requestStatusToIcon[RequestStatus.PENDING];
 
 ObjectRequestStatusIcon.propTypes = {
   status: PropTypes.oneOf(Object.values(RequestStatus)),
@@ -24,9 +25,17 @@ ObjectRequestStatusIcon.propTypes = {
 export const ObjectRequestLabel = ({ request, onlyShowRequest = false }) => {
   const labelField = useSelector(selectLabelField(request.datasource));
   const editExtId = request.replacementObjectExtId || request.objectExtId;
-  const extIdLabel = useSelector(state => selectExtIdLabel(state)('objects', editExtId));
-  const firstFieldLabel = request.objectRequest[labelField] || _.head(Object.values(request.objectRequest));
-  return (!onlyShowRequest && extIdLabel !== editExtId && extIdLabel) || firstFieldLabel || 'N/A';
+  const extIdLabel = useSelector((state) =>
+    selectExtIdLabel(state)('objects', editExtId),
+  );
+  const firstFieldLabel =
+    request.objectRequest[labelField] ||
+    _.head(Object.values(request.objectRequest));
+  return (
+    (!onlyShowRequest && extIdLabel !== editExtId && extIdLabel) ||
+    firstFieldLabel ||
+    'N/A'
+  );
 };
 
 ObjectRequestLabel.propTypes = {
@@ -34,10 +43,17 @@ ObjectRequestLabel.propTypes = {
   onlyShowRequest: PropTypes.bool,
 };
 
-export const ObjectRequestType = ({ type }) => <span className={'requestType'} style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }} >{objectRequestTypeToText[type] || 'N/A'}</span>;
+export const ObjectRequestType = ({ type }) => (
+  <span
+    className={'requestType'}
+    style={{ color: type === RequestType.MISSING_OBJECT ? 'red' : 'green' }}
+  >
+    {objectRequestTypeToText[type] || 'N/A'}
+  </span>
+);
 
 ObjectRequestType.propTypes = {
-  type: PropTypes.oneOf(Object.values(RequestStatus))
+  type: PropTypes.oneOf(Object.values(RequestStatus)),
 };
 
 const ObjectRequestValue = ({ request }) => (

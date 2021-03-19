@@ -1,5 +1,5 @@
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
-import { activityValueTypes } from '../../../../Constants/activityValueTypes.constants';
+import { ActivityValueType } from '../../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
 
 // RENDERING HELPERS
@@ -25,11 +25,11 @@ export const renderComponent = (activityValue, activity) => {
 
   // Deal with the 3 different types in separate functions
   switch (type) {
-    case activityValueTypes.TIMING:
+    case ActivityValueType.TIMING:
       return renderTimingComponent(activityValue, activity);
-    case activityValueTypes.OBJECT:
+    case ActivityValueType.OBJECT:
       return renderObjectComponent(activityValue, activity);
-    case activityValueTypes.FIELD:
+    case ActivityValueType.FIELD:
       return renderFieldComponent(activityValue, activity);
     default:
       return ActivityValueRenderPayload.create({
@@ -50,17 +50,14 @@ export const normalizeFilterValue = (value, filterType) => {
   switch (filterType) {
     case filterTypes.CATEGORIES:
       return value.categories.reduce((tot, acc) => {
-        return [
-          ...tot,
-          { fieldExtId: acc.id, values: acc.values.join(', ') },
-        ];
+        return [...tot, { fieldExtId: acc.id, values: acc.values.join(', ') }];
       }, []);
     case filterTypes.SEARCH_STRING:
     default: {
       const { searchFields, searchString } = value;
       if (!searchFields || !searchString) return null;
       return [{ fieldExtId: searchFields, values: searchString }];
-    };
+    }
   }
 };
 
@@ -70,10 +67,12 @@ export const normalizeFilterValue = (value, filterType) => {
  * @param {*} value the filter values
  * @returns array
  */
-export const normalizeFilterValues = value => {
+export const normalizeFilterValues = (value) => {
   const _value = Array.isArray(value) ? value : [value];
   const normalizedValues = _value.reduce((tot, acc) => {
-    const filterType = acc.categories.length ? filterTypes.CATEGORIES : filterTypes.SEARCH_STRING;
+    const filterType = acc.categories.length
+      ? filterTypes.CATEGORIES
+      : filterTypes.SEARCH_STRING;
     const normalizedFilterValue = normalizeFilterValue(acc, filterType);
     if (normalizedFilterValue) return [...tot, ...normalizedFilterValue];
     return tot;

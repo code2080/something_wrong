@@ -43,7 +43,7 @@ export class ActivityValue {
 
   rowIdx; // The row this activity value is from (if section === SECTION_TABLE, otherwise null)
 
-  constructor ({
+  constructor({
     type,
     extId,
     submissionValue,

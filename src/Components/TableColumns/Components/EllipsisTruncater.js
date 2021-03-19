@@ -18,11 +18,11 @@ const EllipsisTruncater = ({ children, width }) => (
 
 EllipsisTruncater.propTypes = {
   children: PropTypes.node,
-  width: PropTypes.number
+  width: PropTypes.number,
 };
 
 EllipsisTruncater.defaultProps = {
-  width: 0
+  width: 0,
 };
 
 export default EllipsisTruncater;

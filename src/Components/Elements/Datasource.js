@@ -7,7 +7,10 @@ import { Menu } from 'antd';
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 
 // SELECTORS
-import { getTECoreAPIPayload, getLabelsForDatasource } from '../../Redux/Integration/integration.selectors';
+import {
+  getTECoreAPIPayload,
+  getLabelsForDatasource,
+} from '../../Redux/Integration/integration.selectors';
 
 // HELPERS
 import { transformPayloadForDatasourceFiltering } from '../../Utils/teCoreAPIHelpers';
@@ -18,7 +21,7 @@ import './Datasource.scss';
 // CONSTANTS
 import {
   teCoreActions,
-  teCoreCallnames
+  teCoreCallnames,
 } from '../../Constants/teCoreActions.constants';
 
 import DatasourceInner from './DatasourceInner/DatasourceInner';
@@ -30,7 +33,9 @@ const elTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  if (!ownProps.value && ownProps.value[0]) { return { labels: null, payload: null }; }
+  if (!ownProps.value && ownProps.value[0]) {
+    return { labels: null, payload: null };
+  }
   const { value, element } = ownProps;
   const payload = getTECoreAPIPayload(value, element.datasource);
   const labels = getLabelsForDatasource(payload, state);
@@ -44,9 +49,14 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
   const elType = useMemo(() => {
     if (payload == null) return elTypes.EMPTY;
     const datasourceSplit = (element.datasource || []).split(',');
-    if (datasourceSplit && datasourceSplit[1] && datasourceSplit[1] === 'object') return elTypes.OBJECT;
+    if (
+      datasourceSplit &&
+      datasourceSplit[1] &&
+      datasourceSplit[1] === 'object'
+    )
+      return elTypes.OBJECT;
     return elTypes.FILTER;
-  }, [payload]);
+  }, [element.datasource, payload]);
 
   // Callback on menu click
   const onClickCallback = useCallback(
@@ -63,23 +73,25 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
       }
       teCoreAPI[callname](_payload);
     },
-    [payload, teCoreAPI]
+    [payload, teCoreAPI],
   );
   // Memoized list of supported actions
   const supportedActions = useMemo(
     () =>
       teCoreAPI
         .getCompatibleFunctionsForElement(element.elementId)
-        .filter(action => {
+        .filter((action) => {
           const isObject = element.datasource.split(',')[1] === 'object';
           const isSingleLabel = Object.keys(labels).length === 1;
           return !(
-            (!isObject && (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
-            ((action === 'SELECT_OBJECTS' && isSingleLabel) || (action === 'SELECT_OBJECT' && !isSingleLabel)) ||
+            (!isObject &&
+              (action === 'SELECT_OBJECT' || action === 'SELECT_OBJECTS')) ||
+            (action === 'SELECT_OBJECTS' && isSingleLabel) ||
+            (action === 'SELECT_OBJECT' && !isSingleLabel) ||
             (isObject && action === 'FILTER_OBJECTS')
           );
         }),
-    [teCoreAPI, element]
+    [teCoreAPI, element.elementId, element.datasource, labels],
   );
 
   // Memoized menu
@@ -89,30 +101,37 @@ const Datasource = ({ payload, labels, element, teCoreAPI }) => {
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         onClick={onClickCallback}
       >
-        {supportedActions.map(key => (
+        {supportedActions.map((key) => (
           <Menu.Item key={key}>{teCoreActions[key].label}</Menu.Item>
         ))}
       </Menu>
     ),
-    [onClickCallback, supportedActions]
+    [onClickCallback, supportedActions],
   );
 
-  return <div className='element__datasource--wrapper'>
-    <DatasourceInner elType={elType} labels={labels} menu={menu} payload={payload} />
-  </div>;
+  return (
+    <div className='element__datasource--wrapper'>
+      <DatasourceInner
+        elType={elType}
+        labels={labels}
+        menu={menu}
+        payload={payload}
+      />
+    </div>
+  );
 };
 
 Datasource.propTypes = {
   payload: PropTypes.array,
   labels: PropTypes.object,
   element: PropTypes.object,
-  teCoreAPI: PropTypes.object.isRequired
+  teCoreAPI: PropTypes.object.isRequired,
 };
 
 Datasource.defaultProps = {
   payload: null,
   label: {},
-  element: {}
+  element: {},
 };
 
 export default connect(mapStateToProps, null)(withTECoreAPI(Datasource));

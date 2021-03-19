@@ -7,16 +7,26 @@ import { connect } from 'react-redux';
 // CONSTANTS
 import { authenticationStatuses } from '../../Constants/auth.constants';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authenticationStatus: state.auth.authenticationStatus,
-  userStatus: state.auth.user && state.auth.user.id && state.auth.user.organizationId,
+  userStatus:
+    state.auth.user && state.auth.user.id && state.auth.user.organizationId,
 });
 
-const AuthenticatedRoutes = ({ authenticationStatus, userStatus, children }) => {
+const AuthenticatedRoutes = ({
+  authenticationStatus,
+  userStatus,
+  children,
+}) => {
   return (
     <Route
       render={() => {
-        if (authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED || userStatus == null) { return <Redirect to={{ pathname: '/' }} />; }
+        if (
+          authenticationStatus === authenticationStatuses.NOT_AUTHENTICATED ||
+          userStatus == null
+        ) {
+          return <Redirect to={{ pathname: '/' }} />;
+        }
         return children;
       }}
     />
@@ -35,7 +45,4 @@ AuthenticatedRoutes.defaultProps = {
   children: null,
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  null
-)(AuthenticatedRoutes));
+export default withRouter(connect(mapStateToProps, null)(AuthenticatedRoutes));

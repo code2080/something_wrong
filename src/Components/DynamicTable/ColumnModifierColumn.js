@@ -1,8 +1,8 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { PlusCircleFilled } from '@ant-design/icons';
 
-export const columnModifierColumn = onModifyCols => ({
-  title: <Icon type='plus-circle' theme='filled' style={{ fontSize: '0.8rem' }} />,
+export const columnModifierColumn = (onModifyCols) => ({
+  title: <PlusCircleFilled style={{ fontSize: '0.8rem' }} />,
   dataIndex: null,
   key: 'modifyColumns',
   onHeaderCell: () => ({

@@ -17,7 +17,7 @@ const configureStore = () => {
 
   const composedEnhancers = compose(
     applyMiddleware(...middleware),
-    ...enhancers
+    ...enhancers,
   );
 
   const store = createStore(rootReducer, initialState, composedEnhancers);
