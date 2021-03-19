@@ -15,8 +15,10 @@ const reducer = (state = initialState, action) => {
           [curr.formId]: {
             ..._.get(state, `${curr.formId}`, {}),
             [curr._id]: new Job(curr),
-          }
-        }), state);
+          },
+        }),
+        state,
+      );
     }
 
     case types.CREATE_JOB_FAILURE: {
@@ -25,7 +27,9 @@ const reducer = (state = initialState, action) => {
 
     case types.CREATE_JOB_SUCCESS: {
       try {
-        const { payload: { actionMeta: _, ...jobObj } } = action;
+        const {
+          payload: { actionMeta: _, ...jobObj },
+        } = action;
         const job = new Job(jobObj);
         const formJobs = state[job.formId] || {};
         return {
@@ -42,7 +46,9 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.UPDATE_JOB_SUCCESS: {
-      const { payload: { job: jobObj } } = action;
+      const {
+        payload: { job: jobObj },
+      } = action;
       const job = new Job(jobObj);
       const formJobs = state[job.formId] || {};
       return {
@@ -56,7 +62,9 @@ const reducer = (state = initialState, action) => {
 
     case types.ABORT_JOB_SUCCESS: {
       try {
-        const { payload: { job: jobObj } } = action;
+        const {
+          payload: { job: jobObj },
+        } = action;
         const job = new Job(jobObj);
         return {
           ...state,

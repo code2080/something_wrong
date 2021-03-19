@@ -7,16 +7,10 @@ const actionKeys = {
   LOGOUT: 'LOGOUT',
 };
 
-const ActionsButton = ({
-  handleClick,
-  isAuthenticated,
-}) => {
+const ActionsButton = ({ handleClick, isAuthenticated }) => {
   const menu = (
     <Menu onClick={handleClick}>
-      <Menu.Item
-        key={actionKeys.LOGOUT}
-        disabled={!isAuthenticated}
-      >
+      <Menu.Item key={actionKeys.LOGOUT} disabled={!isAuthenticated}>
         Log out
       </Menu.Item>
     </Menu>

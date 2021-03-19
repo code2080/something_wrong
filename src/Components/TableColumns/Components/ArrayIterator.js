@@ -9,18 +9,18 @@ const ArrayIterator = ({ arr, arrProp, maxWidth }) => {
     () =>
       arrProp
         ? (arr || [])
-          .filter(value => value)
-          .map(arr => arr[arrProp] || arr.teExtId)
+            .filter((value) => value)
+            .map((arr) => arr[arrProp] || arr.teExtId)
         : arr,
-    [arr, arrProp]
+    [arr, arrProp],
   );
   const renderedArr = useMemo(
     () =>
       flatArr.reduce(
         (text, el, idx) => `${text}${idx > 0 ? ', ' : ''}${el}`,
-        ''
+        '',
       ),
-    [flatArr]
+    [flatArr],
   );
 
   if (!flatArr || flatArr.length === 0) return 'N/A';
@@ -39,13 +39,13 @@ const ArrayIterator = ({ arr, arrProp, maxWidth }) => {
 ArrayIterator.propTypes = {
   arr: PropTypes.array,
   arrProp: PropTypes.string,
-  maxWidth: PropTypes.string
+  maxWidth: PropTypes.string,
 };
 
 ArrayIterator.defaultProps = {
   arr: [],
   arrProp: null,
-  maxWidth: '150px'
+  maxWidth: '150px',
 };
 
 export default ArrayIterator;

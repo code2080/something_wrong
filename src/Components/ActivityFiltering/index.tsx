@@ -12,8 +12,14 @@ const ActivityFiltering = () => {
 
   return (
     <div className='activity-filtering--wrapper'>
-      <ActivityFilterButton onClick={() => setShowModal(!showModal)} isActive={showModal} />
-      <ActivityFilterModal isVisible={showModal} onClose={() => setShowModal(false)} />
+      <ActivityFilterButton
+        onClick={() => setShowModal(!showModal)}
+        isActive={showModal}
+      />
+      <ActivityFilterModal
+        isVisible={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 };

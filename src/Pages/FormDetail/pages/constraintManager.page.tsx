@@ -18,7 +18,7 @@ import {
   ConstraintConfiguration,
   ConstraintInstance,
   TConstraintConfiguration,
-  TConstraintInstance
+  TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
 import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
 
@@ -28,17 +28,17 @@ import constraintManagerTableColumns from '../../../Components/ConstraintManager
 const getConstraintsOfType = (
   type: string = 'DEFAULT',
   config: TConstraintConfiguration | null,
-  allConstraints: TConstraint[]
+  allConstraints: TConstraint[],
 ): TConstraintInstance[] => {
   if (!config?.constraints || _.isEmpty(allConstraints)) return [];
   return config.constraints.filter(
     (constraintInstance: TConstraintInstance) => {
       const c = allConstraints.find(
         (constraint) =>
-          constraintInstance.constraintId === constraint.constraintId
+          constraintInstance.constraintId === constraint.constraintId,
       );
       return c?.type === type;
-    }
+    },
   );
 };
 
@@ -55,7 +55,7 @@ const ConstraintManagerPage = () => {
    */
   const [
     constraintConfiguration,
-    setConstraintConfiguration
+    setConstraintConfiguration,
   ] = useState<TConstraintConfiguration | null>(null);
 
   /**
@@ -63,7 +63,7 @@ const ConstraintManagerPage = () => {
    */
   const handleSelectConstraintConfiguration = (cid: string): void => {
     const constraintConfig = constraintConfigurations.find(
-      (constraintConfig) => constraintConfig._id === cid
+      (constraintConfig) => constraintConfig._id === cid,
     );
     if (constraintConfig) setConstraintConfiguration(constraintConfig);
   };
@@ -71,7 +71,7 @@ const ConstraintManagerPage = () => {
   const handleUpdateConstraintConfiguration = (
     constraintId: string,
     prop: string,
-    value: any
+    value: any,
   ): void => {
     if (!constraintConfiguration) return;
     const { constraints } = constraintConfiguration;
@@ -81,11 +81,11 @@ const ConstraintManagerPage = () => {
       constraints: constraints.map((constraintInstance) =>
         constraintInstance.constraintId === constraintId
           ? {
-            ...constraintInstance,
-            [prop]: value
-          }
-          : constraintInstance
-      )
+              ...constraintInstance,
+              [prop]: value,
+            }
+          : constraintInstance,
+      ),
     });
     dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
@@ -102,11 +102,11 @@ const ConstraintManagerPage = () => {
       constraints: (allConstraints || [])
         .filter(
           (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT
+            constraint.type === EConstraintType.DEFAULT,
         )
         .map((constraint: TConstraint) =>
-          ConstraintInstance.createFromConstraint(constraint)
-        )
+          ConstraintInstance.createFromConstraint(constraint),
+        ),
     });
     setConstraintConfiguration(newConstraintConfig);
   };
@@ -120,12 +120,12 @@ const ConstraintManagerPage = () => {
   const defaultConstraints = useMemo(
     () =>
       getConstraintsOfType('DEFAULT', constraintConfiguration, allConstraints),
-    [constraintConfiguration, allConstraints]
+    [constraintConfiguration, allConstraints],
   );
   const customConstraints = useMemo(
     () =>
       getConstraintsOfType('OTHER', constraintConfiguration, allConstraints),
-    [constraintConfiguration, allConstraints]
+    [constraintConfiguration, allConstraints],
   );
   return (
     <div className='constraint-manager--wrapper'>
@@ -145,7 +145,7 @@ const ConstraintManagerPage = () => {
             <Table
               columns={constraintManagerTableColumns(
                 handleUpdateConstraintConfiguration,
-                allConstraints
+                allConstraints,
               )}
               dataSource={defaultConstraints}
               rowKey='constraintId'
@@ -164,7 +164,7 @@ const ConstraintManagerPage = () => {
             <Table
               columns={constraintManagerTableColumns(
                 handleUpdateConstraintConfiguration,
-                allConstraints
+                allConstraints,
               )}
               dataSource={customConstraints}
               rowKey='constraintId'

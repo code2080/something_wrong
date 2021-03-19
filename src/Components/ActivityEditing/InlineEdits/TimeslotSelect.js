@@ -23,17 +23,14 @@ const mapStateToProps = (state, ownProps) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TimeslotSelect = ({ timeslots, activity, value, setValue, onFinish }) => {
-  const timeslot = useMemo(
-    () => {
-      const startTime = activity.timing.find(el => el.extId === 'startTime');
-      const endTime = activity.timing.find(el => el.extId === 'endTime');
-      return findTimeSlot(startTime.value, endTime.value, timeslots);
-    },
-    [activity, timeslots]
-  );
+  const timeslot = useMemo(() => {
+    const startTime = activity.timing.find((el) => el.extId === 'startTime');
+    const endTime = activity.timing.find((el) => el.extId === 'endTime');
+    return findTimeSlot(startTime.value, endTime.value, timeslots);
+  }, [activity, timeslots]);
 
-  const onChangeCallback = value => {
-    const selectedTimeslot = timeslots.find(el => el._id === value);
+  const onChangeCallback = (value) => {
+    const selectedTimeslot = timeslots.find((el) => el._id === value);
     onFinish([
       { extId: 'startTime', value: selectedTimeslot.startTime },
       { extId: 'endTime', value: selectedTimeslot.endTime },
@@ -48,7 +45,11 @@ const TimeslotSelect = ({ timeslots, activity, value, setValue, onFinish }) => {
       size='small'
       onChange={onChangeCallback}
     >
-      {(timeslots || []).map(el => <Select.Option key={el._id} value={el._id}>{el.label}</Select.Option>)}
+      {(timeslots || []).map((el) => (
+        <Select.Option key={el._id} value={el._id}>
+          {el.label}
+        </Select.Option>
+      ))}
     </Select>
   );
 };

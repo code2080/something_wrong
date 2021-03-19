@@ -3,15 +3,15 @@ import { SECTION_TABLE } from '../Constants/sectionTypes.constants';
 import { determineSectionType } from './determineSectionType.helpers';
 import { formatElementValue } from './elements.helpers';
 
-export const flattenSectionValue = valueGroup => {
+export const flattenSectionValue = (valueGroup) => {
   if (Array.isArray(valueGroup)) {
-    return valueGroup.map(item => formatElementValue(item.value));
+    return valueGroup.map((item) => formatElementValue(item.value));
   } else if (typeof valueGroup === 'object') {
-    const b = Object.values(valueGroup).map(value => {
+    const b = Object.values(valueGroup).map((value) => {
       if (Array.isArray(value)) {
-        return value.map(val => formatElementValue(val.value));
+        return value.map((val) => formatElementValue(val.value));
       }
-      return (value.values || []).map(item => formatElementValue(item.value));
+      return (value.values || []).map((item) => formatElementValue(item.value));
     });
     return b;
   }

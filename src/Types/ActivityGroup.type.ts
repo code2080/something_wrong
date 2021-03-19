@@ -10,8 +10,8 @@ export class ActivityGroup {
     name: obj.name,
     formId: obj.formId,
   });
-};
+}
 
 export type TActivityGroupMap = {
-  [key: string]: TActivityGroup,
+  [key: string]: TActivityGroup;
 };

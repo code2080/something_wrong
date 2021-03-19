@@ -7,7 +7,8 @@ const dateTimeRenderer = (value, format) => {
   return moment.utc(value).format(format);
 };
 const DateTime = ({ value, format }) => {
-  if (Array.isArray(value)) return value.map(val => dateTimeRenderer(val, format)).join(' - ');
+  if (Array.isArray(value))
+    return value.map((val) => dateTimeRenderer(val, format)).join(' - ');
   return dateTimeRenderer(value, format);
 };
 
@@ -17,7 +18,7 @@ DateTime.propTypes = {
 };
 DateTime.defaultProps = {
   value: null,
-  format: DATE_FORMAT
+  format: DATE_FORMAT,
 };
 
 export default DateTime;

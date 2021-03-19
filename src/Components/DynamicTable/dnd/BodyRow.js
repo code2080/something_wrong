@@ -24,7 +24,9 @@ const BodyRow = ({
   }
 
   return connectDragSource(
-    connectDropTarget(<tr {...restProps} className={className} style={style} />),
+    connectDropTarget(
+      <tr {...restProps} className={className} style={style} />,
+    ),
   );
 };
 
@@ -37,7 +39,7 @@ BodyRow.propTypes = {
 };
 
 const rowSource = {
-  beginDrag (props) {
+  beginDrag(props) {
     currentDraggingIndex = props.index;
     return {
       index: props.index,
@@ -46,7 +48,7 @@ const rowSource = {
 };
 
 const rowTarget = {
-  drop (props, monitor) {
+  drop(props, monitor) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
 
@@ -66,11 +68,15 @@ const rowTarget = {
   },
 };
 
-export const DraggableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-}))(
-  DragSource('row', rowSource, connect => ({
+export const DraggableBodyRow = DropTarget(
+  'row',
+  rowTarget,
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+  }),
+)(
+  DragSource('row', rowSource, (connect) => ({
     connectDragSource: connect.dragSource(),
   }))(BodyRow),
 );

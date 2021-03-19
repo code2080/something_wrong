@@ -27,28 +27,44 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
   const dispatch = useDispatch();
   const form = useSelector(selectForm)(formId);
   const formInstance = useSelector(selectFormInstance)(formId, formInstanceId);
-  const activities = useSelector(selectActivitiesForFormInstanceId)(formId, formInstanceId);
-  const objectRequests = useSelector(selectFormInstanceObjectRequests(formInstance));
+  const activities = useSelector(selectActivitiesForFormInstanceId)(
+    formId,
+    formInstanceId,
+  );
+  const objectRequests = useSelector(
+    selectFormInstanceObjectRequests(formInstance),
+  );
 
   // Effect to update breadcrumbs
   useEffect(() => {
-    dispatch(setBreadcrumbs([
-      { path: '/forms', label: 'Forms' },
-      { path: `/forms/${formInstance.formId}`, label: form.name },
-      { path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`, label: `Submission from ${formInstance.submitter}` }
-    ]));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(
+      setBreadcrumbs([
+        { path: '/forms', label: 'Forms' },
+        { path: `/forms/${formInstance.formId}`, label: form.name },
+        {
+          path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`,
+          label: `Submission from ${formInstance.submitter}`,
+        },
+      ]),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Effect to get all TE values into redux state
-  const payload = useMemo(() =>
-    getExtIdPropsPayload({ sections: form.sections, objectRequests: objectRequests, submissionValues: formInstance.values, activities }),
-  [form.sections, objectRequests, formInstance.values, activities]
+  const payload = useMemo(
+    () =>
+      getExtIdPropsPayload({
+        sections: form.sections,
+        objectRequests: objectRequests,
+        submissionValues: formInstance.values,
+        activities,
+      }),
+    [form.sections, objectRequests, formInstance.values, activities],
   );
   useFetchLabelsFromExtIds(payload);
 
   // State var to hold active tab
-  const baseSections = form.sections.map(section => (
+  const baseSections = form.sections.map((section) => (
     <BaseSection
       section={section}
       key={section._id}

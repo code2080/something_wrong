@@ -2,10 +2,7 @@ export class SelectionSettings {
   includedFields;
   extraObjects;
 
-  constructor ({
-    includedFields,
-    extraObjects,
-  }) {
+  constructor({ includedFields, extraObjects }) {
     this.includedFields = includedFields || [];
     this.extraObjects = extraObjects || [];
   }

@@ -9,7 +9,7 @@ const TextEdit = ({ value, setValue, onFinish }) => (
     onPressEnter={() => onFinish()}
     value={value}
     placeholder='Type here'
-    onChange={e => setValue(e.target.value)}
+    onChange={(e) => setValue(e.target.value)}
   />
 );
 

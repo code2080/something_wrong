@@ -13,7 +13,11 @@ const DatePicker = ({ value }) => (
       <CalendarOutlined />
     </div>
     <div className='value--wrapper'>
-      {(!value || !value[0] || !value[1]) ? 'N/A' : `${moment(value[0]).format(DATE_FORMAT)} - ${moment(value[1]).format(DATE_FORMAT)}`}
+      {!value || !value[0] || !value[1]
+        ? 'N/A'
+        : `${moment(value[0]).format(DATE_FORMAT)} - ${moment(value[1]).format(
+            DATE_FORMAT,
+          )}`}
     </div>
   </div>
 );

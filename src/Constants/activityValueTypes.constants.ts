@@ -2,7 +2,8 @@ export enum ActivityValueType {
   OBJECT = 'object',
   FIELD = 'field',
   TIMING = 'timing',
-};
+  OTHER = 'other',
+}
 
 export const activityValueTypeProps = {
   [ActivityValueType.OBJECT]: {

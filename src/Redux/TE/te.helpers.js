@@ -12,7 +12,7 @@ const teTypes = {
   TYPE: 'types',
 };
 
-const determineTEType = element => {
+const determineTEType = (element) => {
   const { datasource } = element;
   if (!datasource) return null;
   const _datasource = datasource.split(',');
@@ -37,36 +37,23 @@ export const findTEValuesInSubmission = (sections, values) => {
     }, initialState);
     return {
       ...allSections,
-      fields: [
-        ...allSections.fields,
-        ..._section.fields,
-      ],
-      objects: [
-        ...allSections.objects,
-        ..._section.objects,
-      ],
-      types: [
-        ...allSections.types,
-        ..._section.types,
-      ],
+      fields: [...allSections.fields, ..._section.fields],
+      objects: [...allSections.objects, ..._section.objects],
+      types: [...allSections.types, ..._section.types],
     };
   }, initialState);
   // Find their respective values
   return Object.keys(elements).reduce((elementValues, dataType) => {
     const elementsInDataType = elements[dataType];
-    const _elementValues = elementsInDataType.reduce(
-      (allValues, element) => {
-        return [
-          ...allValues,
-          ...(findElementValueInSubmission(element, sections, values) || [])
-        ];
-      }, []
-    );
+    const _elementValues = elementsInDataType.reduce((allValues, element) => {
+      return [
+        ...allValues,
+        ...(findElementValueInSubmission(element, sections, values) || []),
+      ];
+    }, []);
     return {
       ...elementValues,
-      [dataType]: [
-        ..._elementValues,
-      ],
+      [dataType]: [..._elementValues],
     };
   }, initialState);
 };

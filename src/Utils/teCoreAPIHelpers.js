@@ -1,5 +1,9 @@
 import { datasourceValueTypes } from '../Constants/datasource.constants';
-import { searchCriteriaFreeText, searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/searchCriteria.constants';
+import {
+  searchCriteriaFreeText,
+  searchCriteriaNumber,
+  searchCriteriaNumberProps,
+} from '../Constants/searchCriteria.constants';
 
 /**
  * @function transformPayloadForDatasourceFiltering
@@ -8,16 +12,23 @@ import { searchCriteriaFreeText, searchCriteriaNumber, searchCriteriaNumberProps
  * @returns {Object} transformedPayload
  */
 
-export const transformPayloadForDatasourceFiltering = payload => {
+export const transformPayloadForDatasourceFiltering = (payload) => {
   // No payload is a no-op
   if (!payload || payload.length === 0) return {};
   // There can only be one type, so we can safely use find
-  const type = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
+  const type = payload.find(
+    (el) => el.valueType === datasourceValueTypes.TYPE_EXTID,
+  );
   // No type is a no-op
   if (!type) return null;
   // There can be multiple filters, so need to use Array.prototype.filter
-  const searchString = payload.filter(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
-  const categories = (searchString || []).reduce((prev, curr) => [...prev, { id: curr.extId, values: curr.value }], []);
+  const searchString = payload.filter(
+    (el) => el.valueType === datasourceValueTypes.FIELD_VALUE,
+  );
+  const categories = (searchString || []).reduce(
+    (prev, curr) => [...prev, { id: curr.extId, values: curr.value }],
+    [],
+  );
   return {
     type: type.extId,
     categories,
@@ -34,11 +45,20 @@ export const transformPayloadForDatasourceFiltering = payload => {
  * @returns {Object} transformedPayload
  */
 
-export const transformPayloadForFreeTextFiltering = (payload, searchCriteria = searchCriteriaFreeText.CONTAINS) => {
+export const transformPayloadForFreeTextFiltering = (
+  payload,
+  searchCriteria = searchCriteriaFreeText.CONTAINS,
+) => {
   if (!payload || payload.length === 0) return {};
-  const type = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
-  const searchString = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
-  const searchField = payload.find(el => el.valueType === datasourceValueTypes.FIELD_EXTID);
+  const type = payload.find(
+    (el) => el.valueType === datasourceValueTypes.TYPE_EXTID,
+  );
+  const searchString = payload.find(
+    (el) => el.valueType === datasourceValueTypes.FIELD_VALUE,
+  );
+  const searchField = payload.find(
+    (el) => el.valueType === datasourceValueTypes.FIELD_EXTID,
+  );
   if (!type || !searchString || !searchField) return null;
   return {
     type: type.extId,
@@ -57,15 +77,22 @@ export const transformPayloadForFreeTextFiltering = (payload, searchCriteria = s
  * @returns {Object} transformedPayload
  */
 
-export const transformPayloadForNumberFiltering = (payload, searchCriteria = searchCriteriaNumber.EQUAL_TO) => {
+export const transformPayloadForNumberFiltering = (
+  payload,
+  searchCriteria = searchCriteriaNumber.EQUAL_TO,
+) => {
   // No payload is a no-op
   if (!payload || payload.length === 0) return {};
   // There can only be one type, so we can safely use find
-  const type = payload.find(el => el.valueType === datasourceValueTypes.TYPE_EXTID);
+  const type = payload.find(
+    (el) => el.valueType === datasourceValueTypes.TYPE_EXTID,
+  );
   // No type is a no-op
   if (!type) return null;
   // There can be multiple filters, so need to use Array.prototype.filter
-  const searchStrings = payload.filter(el => el.valueType === datasourceValueTypes.FIELD_VALUE);
+  const searchStrings = payload.filter(
+    (el) => el.valueType === datasourceValueTypes.FIELD_VALUE,
+  );
   // Make sure we have one element in the search string
   if (!searchStrings || !searchStrings.length) return null;
 

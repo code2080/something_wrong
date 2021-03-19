@@ -3,20 +3,20 @@ import * as types from './manualSchedulings.actionTypes';
 
 const toggleRowSchedulingStatusFlow = {
   request: () => ({ type: types.TOGGLE_ROW_SCHEDULING_STATUS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: types.TOGGLE_ROW_SCHEDULING_STATUS_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: types.TOGGLE_ROW_SCHEDULING_STATUS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
 export const toggleRowSchedulingStatus = ({
   formInstanceId,
   sectionId,
-  rowKey
+  rowKey,
 }) =>
   asyncAction.PUT({
     flow: toggleRowSchedulingStatusFlow,
@@ -24,20 +24,20 @@ export const toggleRowSchedulingStatus = ({
   });
 
 const fetchManualSchedulingsForFormInstanceFlow = {
-  request: () => ({ type: types.FETCH_FORM_INSTANCE_MANUAL_SCHEDULINGS_REQUEST }),
-  success: response => ({
-    type: types.FETCH_FORM_INSTANCE_MANUAL_SCHEDULINGS_SUCCESS,
-    payload: { ...response }
+  request: () => ({
+    type: types.FETCH_FORM_INSTANCE_MANUAL_SCHEDULINGS_REQUEST,
   }),
-  failure: err => ({
+  success: (response) => ({
+    type: types.FETCH_FORM_INSTANCE_MANUAL_SCHEDULINGS_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
     type: types.FETCH_FORM_INSTANCE_MANUAL_SCHEDULINGS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
-export const fetchManualSchedulingsForFormInstance = ({
-  formInstanceId,
-}) =>
+export const fetchManualSchedulingsForFormInstance = ({ formInstanceId }) =>
   asyncAction.GET({
     flow: fetchManualSchedulingsForFormInstanceFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/manual-scheduling`,

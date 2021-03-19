@@ -11,7 +11,7 @@ const FilterBar = ({ query, onChange }) => (
     <Input
       placeholder='Filter...'
       value={query}
-      onChange={e => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
       suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
       size='small'
     />

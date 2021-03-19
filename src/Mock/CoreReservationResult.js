@@ -11,25 +11,28 @@ export const coreReservationResult = {
         startTime: '2020-12-28T11:00:00.000Z',
         endTime: '2020-12-28T12:00:00.000Z',
         objects: [{ typeExtId: 'course', objectExtIds: 'course.AE1111' }],
-        fields: [{ fieldExtId: 'activity.comment', value: 'New event' }]
-      }
-    }
+        fields: [{ fieldExtId: 'activity.comment', value: 'New event' }],
+      },
+    },
   ],
-  newIds: []
+  newIds: [],
 };
 
-const failedResult = ({ reservation: 'Bokningen är ofullständig', references: [-9011] });
-const failure = ({
+const failedResult = {
+  reservation: 'Bokningen är ofullständig',
+  references: [-9011],
+};
+const failure = {
   result: { reservation: 'Bokningen är ofullständig', references: [-9011] },
   inData: {
     startTime: '2020-12-28T11:00:00.000Z',
     endTime: '2020-12-28T12:00:00.000Z',
     objects: [{ typeExtId: 'course', objectExtIds: 'course.AE1111' }],
-    fields: [{ fieldExtId: 'activity.comment', value: 'New event' }]
-  }
-});
+    fields: [{ fieldExtId: 'activity.comment', value: 'New event' }],
+  },
+};
 
-export const coreReservationResults = reservations => ({
+export const coreReservationResults = (reservations) => ({
   result: reservations.map(() => failedResult),
   failures: reservations.map(() => failure),
   newIds: [],

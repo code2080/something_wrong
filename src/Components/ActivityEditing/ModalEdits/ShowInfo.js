@@ -3,54 +3,81 @@ import PropTypes from 'prop-types';
 import { Form, Alert } from 'antd';
 
 // HELPERS
-import { renderComponent, renderSubmissionValue } from '../../ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
+import {
+  renderComponent,
+  renderSubmissionValue,
+} from '../../ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
 
 // STYLES
 import '../ModalEdit.scss';
 
 // CONSTANTS
-import { activityValueStatuses, activityValueStatusProps } from '../../../Constants/activityStatuses.constants';
+import {
+  activityValueStatuses,
+  activityValueStatusProps,
+} from '../../../Constants/activityStatuses.constants';
 
-const ShowInfo = ({
-  activityValue,
-  activity,
-  prop,
-  mappingProps,
-}) => {
-  const component = useMemo(() => renderComponent(activityValue, activity), [activity, activityValue]);
-  const renderedSubmissionValue = useMemo(() => renderSubmissionValue(activityValue.submissionValue || [], activityValue.submissionValueType), [activityValue]);
+const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
+  const component = useMemo(() => renderComponent(activityValue, activity), [
+    activity,
+    activityValue,
+  ]);
+  const renderedSubmissionValue = useMemo(
+    () =>
+      renderSubmissionValue(
+        activityValue.submissionValue || [],
+        activityValue.submissionValueType,
+      ),
+    [activityValue],
+  );
 
   return (
     <React.Fragment>
-      {component.status === activityValueStatuses.MISSING_DATA && (!mappingProps.settings || mappingProps.settings.mandatory) && (
-        <Alert
-          type='error'
-          message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
-          description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
-        />
-      )}
-      {component.status === activityValueStatuses.MISSING_DATA && (mappingProps.settings && !mappingProps.settings.mandatory) && (
-        <Alert
-          type='warning'
-          message={activityValueStatusProps[activityValueStatuses.MISSING_DATA].label}
-          description={activityValueStatusProps[activityValueStatuses.MISSING_DATA].tooltip}
-        />
-      )}
+      {component.status === activityValueStatuses.MISSING_DATA &&
+        (!mappingProps.settings || mappingProps.settings.mandatory) && (
+          <Alert
+            type='error'
+            message={
+              activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
+            }
+            description={
+              activityValueStatusProps[activityValueStatuses.MISSING_DATA]
+                .tooltip
+            }
+          />
+        )}
+      {component.status === activityValueStatuses.MISSING_DATA &&
+        mappingProps.settings &&
+        !mappingProps.settings.mandatory && (
+          <Alert
+            type='warning'
+            message={
+              activityValueStatusProps[activityValueStatuses.MISSING_DATA].label
+            }
+            description={
+              activityValueStatusProps[activityValueStatuses.MISSING_DATA]
+                .tooltip
+            }
+          />
+        )}
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
         <Form.Item label='Mapped to:'>
           <div className='ant-form-text'>
             <span className='prop-name'>{prop}</span>
-            {mappingProps.settings && mappingProps.settings.mandatory && (<span className='required-prop'>&nbsp;(required)</span>)}
+            {mappingProps.settings && mappingProps.settings.mandatory && (
+              <span className='required-prop'>&nbsp;(required)</span>
+            )}
           </div>
         </Form.Item>
         <Form.Item label='Value used in scheduling:'>
-          <div className='ant-form-text'>
-            {component.renderedComponent}
-          </div>
+          <div className='ant-form-text'>{component.renderedComponent}</div>
         </Form.Item>
         <Form.Item label='Value(s) in submission:'>
           <div className='ant-form-text'>
-            <div key='el-0' className='base-activity-col__modal--submission-value'>
+            <div
+              key='el-0'
+              className='base-activity-col__modal--submission-value'
+            >
               {JSON.stringify(renderedSubmissionValue)}
             </div>
           </div>
@@ -68,7 +95,7 @@ ShowInfo.propTypes = {
 };
 
 ShowInfo.defaultProps = {
-  formatFn: val => val,
+  formatFn: (val) => val,
   propTitle: null,
   visible: false,
 };

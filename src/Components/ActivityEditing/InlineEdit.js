@@ -18,13 +18,22 @@ const componentMapping = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const InlineEdit = ({ activity, activityValue, action, onFinish, onCancel }) => {
+const InlineEdit = ({
+  activity,
+  activityValue,
+  action,
+  onFinish,
+  onCancel: _,
+}) => {
   const [value, setValue] = useState(activityValue.value || undefined);
 
-  const onFinishCallback = useCallback(finishVal => {
-    const valToUse = finishVal != null ? finishVal : value;
-    onFinish(valToUse);
-  }, [onFinish, value]);
+  const onFinishCallback = useCallback(
+    (finishVal) => {
+      const valToUse = finishVal != null ? finishVal : value;
+      onFinish(valToUse);
+    },
+    [onFinish, value],
+  );
 
   const InlineComponent = componentMapping[action];
   if (!InlineComponent || InlineComponent == null) return null;

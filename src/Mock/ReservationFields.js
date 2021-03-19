@@ -12,8 +12,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     categories: ['10797500011', '10797500013', '10797500015'],
@@ -30,8 +30,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -46,8 +46,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     categories: ['10797500013'],
@@ -64,8 +64,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -80,8 +80,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -97,8 +97,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -113,15 +113,15 @@ export const reservationFields = [
       {
         class: 'fieldid',
         extid: '',
-        id: 90
-      }
+        id: 90,
+      },
     ],
     searchable: true,
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -136,8 +136,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -152,8 +152,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -167,8 +167,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -181,8 +181,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     categories: ['1', '0'],
@@ -198,8 +198,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -212,8 +212,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -226,8 +226,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -240,8 +240,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -255,15 +255,15 @@ export const reservationFields = [
       {
         class: 'fieldid',
         extid: '',
-        id: 2
-      }
+        id: 2,
+      },
     ],
     searchable: true,
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -278,8 +278,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     categories: [
@@ -292,7 +292,7 @@ export const reservationFields = [
       ' 6000 -  6999',
       ' 7000 -  7999',
       ' 8000 -  8999',
-      ' 9000 -  9999'
+      ' 9000 -  9999',
     ],
     class: 'fielddef',
     default_value: '0',
@@ -307,8 +307,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -323,8 +323,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -337,8 +337,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -351,8 +351,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -366,8 +366,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     class: 'fielddef',
@@ -382,8 +382,8 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
+      id: 0,
+    },
   },
   {
     categories: [
@@ -396,7 +396,7 @@ export const reservationFields = [
       ' 10176 -  11871',
       ' 11872 -  13567',
       ' 13568 -  15263',
-      ' 15264 -  16959'
+      ' 15264 -  16959',
     ],
     class: 'fielddef',
     default_value: '0',
@@ -411,7 +411,7 @@ export const reservationFields = [
     sum_type: {
       class: 'typeid',
       extid: '',
-      id: 0
-    }
-  }
+      id: 0,
+    },
+  },
 ];

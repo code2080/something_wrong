@@ -12,14 +12,20 @@ import WeekdayValue from '../ValueTypes/WeekdayValue';
 
 // CONSTANTS
 import { activityTimeModes } from '../../../../Constants/activityTimeModes.constants';
-import { DATE_FORMAT, TIME_FORMAT } from '../../../../Constants/common.constants';
+import {
+  DATE_FORMAT,
+  TIME_FORMAT,
+} from '../../../../Constants/common.constants';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 // HELPERS
 import { ActivityValueRenderPayload } from './RenderPayload';
 
 // VALIDATION
-import { validateGeneralValue, validateTimeslotTimeMode } from '../../../../Utils/activityValues.validation';
+import {
+  validateGeneralValue,
+  validateTimeslotTimeMode,
+} from '../../../../Utils/activityValues.validation';
 
 /**
  * @function getTimeModeForActivity
@@ -27,9 +33,9 @@ import { validateGeneralValue, validateTimeslotTimeMode } from '../../../../Util
  * @param {Activity} activity
  * @returns string
  */
-export const determineTimeModeForActivity = activity => {
+export const determineTimeModeForActivity = (activity) => {
   try {
-    const aV = activity.timing.find(el => el.extId === 'mode');
+    const aV = activity.timing.find((el) => el.extId === 'mode');
     return aV.value;
   } catch (error) {
     return null;
@@ -56,18 +62,27 @@ const renderTimeSlotStartTimeValue = (
       errorMessage: validationResult.errorMessage,
     });
 
-  const endTime = timingValues.find(el => el.extId === 'endTime');
-  const length = timingValues.find(el => el.extId === 'length');
+  const endTime = timingValues.find((el) => el.extId === 'endTime');
+  const length = timingValues.find((el) => el.extId === 'length');
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
-    value: [activityValue.value, moment(endTime.value).subtract(length.value, 'hours')],
+    value: [
+      activityValue.value,
+      moment(endTime.value).subtract(length.value, 'hours'),
+    ],
     renderedComponent: (
       <TimeSlotTimeValue
-        formattedValue={`${moment(activityValue.value).format(DATE_FORMAT)} ${moment(activityValue.value).format(TIME_FORMAT)} - ${moment(endTime.value).subtract(length.value, 'hours').format(TIME_FORMAT)}`}
+        formattedValue={`${moment(activityValue.value).format(
+          DATE_FORMAT,
+        )} ${moment(activityValue.value).format(TIME_FORMAT)} - ${moment(
+          endTime.value,
+        )
+          .subtract(length.value, 'hours')
+          .format(TIME_FORMAT)}`}
         extId={activityValue.extId}
         activityId={activityId}
       />
-    )
+    ),
   });
 };
 
@@ -81,7 +96,7 @@ const renderTimeSlotStartTimeValue = (
 const renderTimeSlotEndTimeValue = (
   activityValue,
   timingValues,
-  activityId
+  activityId,
 ) => {
   // Validate the time slot
   const validationResult = validateTimeslotTimeMode({ timing: timingValues });
@@ -91,14 +106,23 @@ const renderTimeSlotEndTimeValue = (
       errorMessage: validationResult.errorMessage,
     });
 
-  const startTime = timingValues.find(el => el.extId === 'startTime');
-  const length = timingValues.find(el => el.extId === 'length');
+  const startTime = timingValues.find((el) => el.extId === 'startTime');
+  const length = timingValues.find((el) => el.extId === 'length');
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
-    value: [moment(startTime.value).add(length.value, 'hours'), moment(activityValue.value)],
+    value: [
+      moment(startTime.value).add(length.value, 'hours'),
+      moment(activityValue.value),
+    ],
     renderedComponent: (
       <TimeSlotTimeValue
-        formattedValue={`${moment(startTime.value).format(DATE_FORMAT)} ${moment(startTime.value).add(length.value, 'hours').format(TIME_FORMAT)} - ${moment(activityValue.value).format(TIME_FORMAT)}`}
+        formattedValue={`${moment(startTime.value).format(
+          DATE_FORMAT,
+        )} ${moment(startTime.value)
+          .add(length.value, 'hours')
+          .format(TIME_FORMAT)} - ${moment(activityValue.value).format(
+          TIME_FORMAT,
+        )}`}
         extId={activityValue.extId}
         activityId={activityId}
       />
@@ -117,13 +141,19 @@ const renderLengthValue = (activityValue, activityId) => {
   if (!value)
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA, // Missing length parameter is a validation error
-      errorMessage: 'Duration parameter is missing, please edit it manually'
+      errorMessage: 'Duration parameter is missing, please edit it manually',
     });
 
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING, // Missing data range value is not a failed validation
     value,
-    renderedComponent: <LengthValue value={value} extId={activityValue.extId} activityId={activityId} />,
+    renderedComponent: (
+      <LengthValue
+        value={value}
+        extId={activityValue.extId}
+        activityId={activityId}
+      />
+    ),
   });
 };
 
@@ -146,7 +176,14 @@ const renderDateRangesValue = (activityValue, activityId) => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [value.startTime, value.endTime],
-    renderedComponent: <DateRangesValue startTime={value.startTime} endTime={value.endTime} extId={activityValue.extId} activityId={activityId} />,
+    renderedComponent: (
+      <DateRangesValue
+        startTime={value.startTime}
+        endTime={value.endTime}
+        extId={activityValue.extId}
+        activityId={activityId}
+      />
+    ),
   });
 };
 
@@ -169,7 +206,14 @@ const renderPaddingValue = (activityValue, activityId) => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: [value.before, value.after],
-    renderedComponent: <PaddingValue before={value.before} after={value.after} extId={activityValue.extId} activityId={activityId} />,
+    renderedComponent: (
+      <PaddingValue
+        before={value.before}
+        after={value.after}
+        extId={activityValue.extId}
+        activityId={activityId}
+      />
+    ),
   });
 };
 
@@ -189,7 +233,13 @@ const renderExactTimeModeTimeValue = (activityValue, activityId) => {
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,
-    renderedComponent: <ExactTimeModeTimeValue extId={activityValue.extId} value={activityValue.value} activityId={activityId} />,
+    renderedComponent: (
+      <ExactTimeModeTimeValue
+        extId={activityValue.extId}
+        value={activityValue.value}
+        activityId={activityId}
+      />
+    ),
   });
 };
 
@@ -199,11 +249,18 @@ const renderExactTimeModeTimeValue = (activityValue, activityId) => {
  * @param {ActivityValue} activityValue
  * @returns RenderPayload
  */
-const renderTimeValue = (activityValue, activityId) => ActivityValueRenderPayload.create({
-  status: activityValueStatuses.READY_FOR_SCHEDULING,
-  value: activityValue.value,
-  renderedComponent: <TimeValue value={activityValue.value} extId={activityValue.extId} activityId={activityId} />,
-});
+const renderTimeValue = (activityValue, activityId) =>
+  ActivityValueRenderPayload.create({
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    value: activityValue.value,
+    renderedComponent: (
+      <TimeValue
+        value={activityValue.value}
+        extId={activityValue.extId}
+        activityId={activityId}
+      />
+    ),
+  });
 
 /**
  * @function renderTimeValue
@@ -211,11 +268,18 @@ const renderTimeValue = (activityValue, activityId) => ActivityValueRenderPayloa
  * @param {ActivityValue} activityValue
  * @returns RenderPayload
  */
-const renderWeekDayValue = (activityValue, activityId) => ActivityValueRenderPayload.create({
-  status: activityValueStatuses.READY_FOR_SCHEDULING,
-  value: activityValue.value,
-  renderedComponent: <WeekdayValue value={activityValue.value} extId={activityValue.extId} activityId={activityId} />,
-});
+const renderWeekDayValue = (activityValue, activityId) =>
+  ActivityValueRenderPayload.create({
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
+    value: activityValue.value,
+    renderedComponent: (
+      <WeekdayValue
+        value={activityValue.value}
+        extId={activityValue.extId}
+        activityId={activityId}
+      />
+    ),
+  });
 
 /**
  * @function renderTimingComponent
@@ -229,12 +293,26 @@ export const renderTimingComponent = (activityValue, activity) => {
   const timeMode = determineTimeModeForActivity(activity);
 
   // CASE: start time and time slots
-  if (activityValue.extId === 'startTime' && timeMode === activityTimeModes.TIMESLOTS)
-    return renderTimeSlotStartTimeValue(activityValue, activity.timing, activity._id);
+  if (
+    activityValue.extId === 'startTime' &&
+    timeMode === activityTimeModes.TIMESLOTS
+  )
+    return renderTimeSlotStartTimeValue(
+      activityValue,
+      activity.timing,
+      activity._id,
+    );
 
   // CASE: end time and time slots
-  if (activityValue.extId === 'endTime' && timeMode === activityTimeModes.TIMESLOTS)
-    return renderTimeSlotEndTimeValue(activityValue, activity.timing, activity._id);
+  if (
+    activityValue.extId === 'endTime' &&
+    timeMode === activityTimeModes.TIMESLOTS
+  )
+    return renderTimeSlotEndTimeValue(
+      activityValue,
+      activity.timing,
+      activity._id,
+    );
 
   // CASE: length value for duration
   if (activityValue.extId === 'length')
@@ -249,7 +327,11 @@ export const renderTimingComponent = (activityValue, activity) => {
     return renderPaddingValue(activityValue, activity._id);
 
   // CASE: startTime, endTime in EXACT mode
-  if ((activityValue.extId === 'startTime' || activityValue.extId === 'endTime') && timeMode === activityTimeModes.EXACT)
+  if (
+    (activityValue.extId === 'startTime' ||
+      activityValue.extId === 'endTime') &&
+    timeMode === activityTimeModes.EXACT
+  )
     return renderExactTimeModeTimeValue(activityValue, activity._id);
 
   if (activityValue.extId === 'time')

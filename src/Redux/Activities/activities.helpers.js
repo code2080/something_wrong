@@ -2,7 +2,10 @@ import _ from 'lodash';
 import { Activity } from '../../Models/Activity.model';
 
 // HELPERS
-import { getTimingModeForActivity, findObjectPathForActivityValue } from '../../Utils/activities.helpers';
+import {
+  getTimingModeForActivity,
+  findObjectPathForActivityValue,
+} from '../../Utils/activities.helpers';
 
 // CONSTANTS
 import { ActivityValueMode } from '../../Constants/activityValueModes.constants';
@@ -14,18 +17,21 @@ import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
  * @param {Activity[]} activities
  * @returns {Object} updatedFormState
  */
-export const updateActivitiesForForm = (activities) => activities
-  .map((el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ?? idx }))
-  .reduce(
-    (_activities, activity) => ({
-      ..._activities,
-      [activity.formInstanceId]: [
-        ...(_activities[activity.formInstanceId] || []),
-        activity
-      ]
-    }),
-    {}
-  );
+export const updateActivitiesForForm = (activities) =>
+  activities
+    .map(
+      (el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ?? idx }),
+    )
+    .reduce(
+      (_activities, activity) => ({
+        ..._activities,
+        [activity.formInstanceId]: [
+          ...(_activities[activity.formInstanceId] || []),
+          activity,
+        ],
+      }),
+      {},
+    );
 
 /**
  * @function getActivitiesForFormInstance
@@ -50,7 +56,9 @@ export const getActivitiesForFormInstance = (state, formId, formInstanceId) => {
  */
 const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
   const valueIdx = activity[objPath].findIndex(
-    el => el.extId === newActivityValue.extId && el.submissionValue === newActivityValue.submissionValue
+    (el) =>
+      el.extId === newActivityValue.extId &&
+      el.submissionValue === newActivityValue.submissionValue,
   );
   if (valueIdx === -1) return null;
   return {
@@ -58,8 +66,8 @@ const updateActivityWithNewValue = (newActivityValue, activity, objPath) => {
     [objPath]: [
       ...activity[objPath].slice(0, valueIdx),
       { ...newActivityValue },
-      ...activity[objPath].slice(valueIdx + 1)
-    ]
+      ...activity[objPath].slice(valueIdx + 1),
+    ],
   };
 };
 
@@ -74,11 +82,11 @@ const updateSingleActivityValue = (newValue, activityValue, activity) => {
   const newActivityValue = {
     ...activityValue,
     value: newValue,
-    valueMode: ActivityValueMode.MANUAL
+    valueMode: ActivityValueMode.MANUAL,
   };
   const objPath = findObjectPathForActivityValue(
     newActivityValue.extId,
-    activity
+    activity,
   );
   if (!objPath) return null;
   return updateActivityWithNewValue(newActivityValue, activity, objPath);
@@ -93,19 +101,19 @@ const updateSingleActivityValue = (newValue, activityValue, activity) => {
  */
 const updateMultipleActivityValues = (newValue, activityValue, activity) => {
   const updatedActivity = activity;
-  newValue.forEach(value => {
+  newValue.forEach((value) => {
     const objPath = findObjectPathForActivityValue(value.extId, activity);
     const activityValueIdx = activity[objPath].findIndex(
-      el => el.extId === value.extId
+      (el) => el.extId === value.extId,
     );
     updatedActivity[objPath] = [
       ...updatedActivity[objPath].slice(0, activityValueIdx),
       {
         ...activity[objPath][activityValueIdx],
         value: value.value,
-        valueMode: ActivityValueMode.MANUAL
+        valueMode: ActivityValueMode.MANUAL,
       },
-      ...updatedActivity[objPath].slice(activityValueIdx + 1)
+      ...updatedActivity[objPath].slice(activityValueIdx + 1),
     ];
   });
   return updatedActivity;
@@ -122,7 +130,7 @@ const updateMultipleActivityValues = (newValue, activityValue, activity) => {
 export const manuallyOverrideActivityValue = (
   newValue,
   activityValue,
-  activity
+  activity,
 ) => {
   /**
    * All props only affect themselves, except for certain timing changes
@@ -131,26 +139,28 @@ export const manuallyOverrideActivityValue = (
   if (
     timingMode !== activityTimeModes.EXACT &&
     (activityValue.extId === 'startTime' || activityValue.extId === 'endTime')
-  ) { return updateMultipleActivityValues(newValue, activityValue, activity); }
+  ) {
+    return updateMultipleActivityValues(newValue, activityValue, activity);
+  }
 
   return updateSingleActivityValue(newValue, activityValue, activity);
 };
 
 const revertMultipleActivityValues = (extIds, activity) => {
   const updatedActivity = activity;
-  extIds.forEach(extId => {
+  extIds.forEach((extId) => {
     const objPath = findObjectPathForActivityValue(extId, activity);
     const activityValueIdx = activity[objPath].findIndex(
-      el => el.extId === extId
+      (el) => el.extId === extId,
     );
     updatedActivity[objPath] = [
       ...updatedActivity[objPath].slice(0, activityValueIdx),
       {
         ...activity[objPath][activityValueIdx],
         value: activity[objPath][activityValueIdx].submissionValue[0],
-        valueMode: ActivityValueMode.FROM_SUBMISSION
+        valueMode: ActivityValueMode.FROM_SUBMISSION,
       },
-      ...updatedActivity[objPath].slice(activityValueIdx + 1)
+      ...updatedActivity[objPath].slice(activityValueIdx + 1),
     ];
   });
   return updatedActivity;
@@ -186,7 +196,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
         value: submissionValue,
       },
       activity,
-      findObjectPathForActivityValue(extId, activity)
+      findObjectPathForActivityValue(extId, activity),
     );
   }
 };

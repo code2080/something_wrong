@@ -36,7 +36,11 @@ const error = (state = initialState.error, action) => {
     [requestName]:
       requestState === 'FAILURE'
         ? action.payload
-          ? _.get(action.payload, 'code', _.get(action, 'meta.responseBody.code', 'error'))
+          ? _.get(
+              action.payload,
+              'code',
+              _.get(action, 'meta.responseBody.code', 'error'),
+            )
           : 'error'
         : '',
   };

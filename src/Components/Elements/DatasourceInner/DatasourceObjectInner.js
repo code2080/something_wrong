@@ -14,31 +14,33 @@ import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/Obje
 const DatasourceObjectInner = ({ labels, menu }) => {
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));
 
-  return labels.map(label => {
-    const objReq = foundObjReqs.find(req => req._id === label);
-    return objReq
-      ? <ObjectRequestDropdown request={objReq} key={objReq._id}>
-        <div className='element__datasource--inner' >
+  return labels.map((label) => {
+    const objReq = foundObjReqs.find((req) => req._id === label);
+    return objReq ? (
+      <ObjectRequestDropdown request={objReq} key={objReq._id}>
+        <div className='element__datasource--inner'>
           <ObjectRequestValue request={objReq} />
           <DownOutlined />
         </div>
       </ObjectRequestDropdown>
-      : <Dropdown
+    ) : (
+      <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={menu}
         key={label}
       >
-        <div className='dd-trigger element__datasource--inner' >
+        <div className='dd-trigger element__datasource--inner'>
           {label || 'N/A'}
           <DownOutlined />
         </div>
-      </Dropdown>;
+      </Dropdown>
+    );
   });
 };
 
 DatasourceObjectInner.propTypes = {
   labels: PropTypes.array,
-  menu: PropTypes.object.isRequired
+  menu: PropTypes.object.isRequired,
 };
 
 DatasourceObjectInner.defaultProps = {

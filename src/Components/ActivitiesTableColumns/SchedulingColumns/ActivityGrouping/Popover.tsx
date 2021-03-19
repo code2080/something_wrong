@@ -17,13 +17,15 @@ import ActivityGroupListItem from './ListItem';
 import { TActivity } from '../../../../Types/Activity.type';
 
 type Props = {
-  activities: TActivity[],
+  activities: TActivity[];
 };
 
 const ActivityGroupPopover = ({ activities }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
-  const activityGroups: TActivityGroup[] = useSelector(selectActivityGroupsForForm)(formId);
+  const activityGroups: TActivityGroup[] = useSelector(
+    selectActivityGroupsForForm,
+  )(formId);
 
   /**
    * MEMOIZED PROPS
@@ -31,7 +33,9 @@ const ActivityGroupPopover = ({ activities }: Props) => {
   const selectedActivityGroupId = useMemo(() => {
     if (!activities || !activities.length) return null;
     // Need to first check if all activities are on the same activity group
-    const hasSameGroupValue = activities.every(a => activities.every(b => b.groupId === a.groupId));
+    const hasSameGroupValue = activities.every((a) =>
+      activities.every((b) => b.groupId === a.groupId),
+    );
     if (hasSameGroupValue) return activities[0].groupId;
     return null;
   }, [activities]);
@@ -61,7 +65,7 @@ const ActivityGroupPopover = ({ activities }: Props) => {
           enterButton='Create'
           size='small'
           value={newGroupName}
-          onChange={e => setNewGroupName(e.target.value)}
+          onChange={(e) => setNewGroupName(e.target.value)}
           onSearch={onCreateActivityGroup}
         />
       </div>
@@ -70,22 +74,25 @@ const ActivityGroupPopover = ({ activities }: Props) => {
         <Input
           placeholder='Select activity group'
           suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
-          onChange={e => setFilterQuery(e.target.value)}
+          onChange={(e) => setFilterQuery(e.target.value)}
           size='small'
           value={filterQuery}
         />
         <div className='activity-group--list'>
           {activityGroups
-            .filter(activityGroup => activityGroup.name.toLowerCase().includes(filterQuery.toLowerCase()))
+            .filter((activityGroup) =>
+              activityGroup.name
+                .toLowerCase()
+                .includes(filterQuery.toLowerCase()),
+            )
             .map((activityGroup, i) => (
               <ActivityGroupListItem
                 key={`idx-${i}`}
-                activityIds={activities.map(el => el._id)}
+                activityIds={activities.map((el) => el._id)}
                 activityGroup={activityGroup}
                 isSelected={selectedActivityGroupId === activityGroup._id}
               />
-            )
-            )}
+            ))}
         </div>
       </div>
     </div>

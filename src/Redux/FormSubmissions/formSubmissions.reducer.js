@@ -15,8 +15,13 @@ const reducer = (state = initialState, action) => {
         !action.payload ||
         !action.payload.submissions ||
         !action.payload.submissions.length
-      ) { return state; }
-      const { submissions, form: { _id: formId, sections } } = action.payload;
+      ) {
+        return state;
+      }
+      const {
+        submissions,
+        form: { _id: formId, sections },
+      } = action.payload;
       return {
         ...state,
         [formId]: {
@@ -26,18 +31,19 @@ const reducer = (state = initialState, action) => {
               [el._id]: new FormInstance({
                 ...el,
                 index, // To make sure formInstance order is not changed after update
-                sections
+                sections,
               }),
             }),
-            {}
+            {},
           ),
-        }
+        },
       };
-    };
+    }
 
     case types.SET_FORM_INSTANCE_ACCEPTANCE_STATUS_SUCCESS:
     case types.SET_SCHEDULING_PROGRESS_SUCCESS: {
-      if (!action || !action.payload || !action.payload.formInstance) return state;
+      if (!action || !action.payload || !action.payload.formInstance)
+        return state;
       const { formInstance } = action.payload;
       return {
         ...state,
@@ -52,8 +58,12 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS: {
-      const { payload: { formInstance } } = action;
-      const updatedTECoreProps = new FormInstanceTECoreProps(formInstance.teCoreProps);
+      const {
+        payload: { formInstance },
+      } = action;
+      const updatedTECoreProps = new FormInstanceTECoreProps(
+        formInstance.teCoreProps,
+      );
       return {
         ...state,
         [formInstance.formId]: {
@@ -68,13 +78,8 @@ const reducer = (state = initialState, action) => {
 
     case types.UPDATE_SELECTION_SETTINGS_SUCCESS: {
       const {
-        actionMeta: {
-          formId,
-          formInstanceId,
-        },
-        formInstance: {
-          teCoreProps
-        }
+        actionMeta: { formId, formInstanceId },
+        formInstance: { teCoreProps },
       } = action.payload;
 
       const updatedTECoreProps = new FormInstanceTECoreProps(teCoreProps);

@@ -1,7 +1,7 @@
 export enum ActivityValueMode {
   FROM_SUBMISSION = 'FROM_SUBMISSION',
   MANUAL = 'MANUAL',
-};
+}
 
 export const activityValueModeProps = {
   [ActivityValueMode.FROM_SUBMISSION]: {

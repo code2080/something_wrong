@@ -22,77 +22,77 @@ import {
 
 const fetchFormSubmissionsFlow = {
   request: () => ({ type: FETCH_SUBMISSIONS_FOR_FORM_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: FETCH_SUBMISSIONS_FOR_FORM_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: FETCH_SUBMISSIONS_FOR_FORM_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
-export const fetchFormSubmissions = formId =>
+export const fetchFormSubmissions = (formId) =>
   asyncAction.GET({
     flow: fetchFormSubmissionsFlow,
-    endpoint: `forms/${formId}/submissions`
+    endpoint: `forms/${formId}/submissions`,
   });
 
 const setFormInstanceAcceptanceStatusFlow = {
   request: () => ({ type: SET_FORM_INSTANCE_ACCEPTANCE_STATUS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: SET_FORM_INSTANCE_ACCEPTANCE_STATUS_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: SET_FORM_INSTANCE_ACCEPTANCE_STATUS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
 export const setFormInstanceAcceptanceStatus = ({
   formInstanceId,
   acceptanceStatus,
-  acceptanceComment
+  acceptanceComment,
 }) =>
   asyncAction.PUT({
     flow: setFormInstanceAcceptanceStatusFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/acceptance-status`,
-    params: { acceptanceStatus, acceptanceComment }
+    params: { acceptanceStatus, acceptanceComment },
   });
 
 const setFormInstanceSchedulingProgressFlow = {
   request: () => ({ type: SET_SCHEDULING_PROGRESS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: SET_SCHEDULING_PROGRESS_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: SET_SCHEDULING_PROGRESS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
 export const setFormInstanceSchedulingProgress = ({
   formInstanceId,
-  schedulingProgress
+  schedulingProgress,
 }) =>
   asyncAction.PUT({
     flow: setFormInstanceSchedulingProgressFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/scheduling-progress`,
-    params: { schedulingProgress }
+    params: { schedulingProgress },
   });
 
 const toggleFormInstanceStarringStatusFlow = {
   request: () => ({ type: SET_SCHEDULING_PROGRESS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: SET_SCHEDULING_PROGRESS_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: SET_SCHEDULING_PROGRESS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
 export const toggleFormInstanceStarringStatus = ({
@@ -101,48 +101,47 @@ export const toggleFormInstanceStarringStatus = ({
 }) =>
   asyncAction.POST({
     flow: toggleFormInstanceStarringStatusFlow,
-    endpoint: `form-instances/${formInstanceId}/te-core/${isStarred ? 'unstar' : 'star'}`,
+    endpoint: `form-instances/${formInstanceId}/te-core/${
+      isStarred ? 'unstar' : 'star'
+    }`,
   });
 
 const toggleUserForFormInstanceFlow = {
   request: () => ({ type: ASSIGN_USER_TO_FORM_INSTANCE_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: ASSIGN_USER_TO_FORM_INSTANCE_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: ASSIGN_USER_TO_FORM_INSTANCE_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
-export const toggleUserForFormInstance = ({
-  formInstanceId,
-  userId
-}) =>
+export const toggleUserForFormInstance = ({ formInstanceId, userId }) =>
   asyncAction.PUT({
     flow: toggleUserForFormInstanceFlow,
     endpoint: `form-instances/${formInstanceId}/te-core/assign`,
-    params: { userId }
+    params: { userId },
   });
 
 const updateSelectionSettingsFlow = {
   request: () => ({ type: UPDATE_SELECTION_SETTINGS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: UPDATE_SELECTION_SETTINGS_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: UPDATE_SELECTION_SETTINGS_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
 export const updateSelectionSettings = ({
   formId,
   formInstanceId,
   sectionId,
-  selectionSettings
+  selectionSettings,
 }) =>
   asyncAction.PUT({
     flow: updateSelectionSettingsFlow,
@@ -157,19 +156,17 @@ export const updateSelectionSettings = ({
 
 const sendReviewerLinkFlow = {
   request: () => ({ type: SEND_REVIEWER_LINK_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: SEND_REVIEWER_LINK_SUCCESS,
-    payload: { ...response }
+    payload: { ...response },
   }),
-  failure: err => ({
+  failure: (err) => ({
     type: SEND_REVIEWER_LINK_FAILURE,
-    payload: { ...err }
-  })
+    payload: { ...err },
+  }),
 };
 
-export const sendReviewerLink = ({
-  formInstanceIds,
-}) =>
+export const sendReviewerLink = ({ formInstanceIds }) =>
   asyncAction.POST({
     flow: sendReviewerLinkFlow,
     endpoint: 'form-instances/notify/viewer-link',

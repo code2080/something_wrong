@@ -16,20 +16,38 @@ const AcceptanceForm = ({ defaultStatus, defaultComment, onSubmit }) => {
   return (
     <Form key='acceptanceForm' onSubmit={handleSubmit}>
       <Form.Item>
-        <Input placeholder='Comment' value={comment} onChange={e => setComment(e.target.value)}/>
+        <Input
+          placeholder='Comment'
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
       </Form.Item>
       <Form.Item>
         <Select
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           value={status}
-          onChange={val => setStatus(val)}
+          onChange={(val) => setStatus(val)}
         >
-          <Select.Option key={ACCEPTANCE_STATUS_ACCEPT} value={ACCEPTANCE_STATUS_ACCEPT}>Mark submission as accepted</Select.Option>
-          <Select.Option key={ACCEPTANCE_STATUS_REJECT} value={ACCEPTANCE_STATUS_REJECT}>Mark submission as rejected</Select.Option>
+          <Select.Option
+            key={ACCEPTANCE_STATUS_ACCEPT}
+            value={ACCEPTANCE_STATUS_ACCEPT}
+          >
+            Mark submission as accepted
+          </Select.Option>
+          <Select.Option
+            key={ACCEPTANCE_STATUS_REJECT}
+            value={ACCEPTANCE_STATUS_REJECT}
+          >
+            Mark submission as rejected
+          </Select.Option>
         </Select>
       </Form.Item>
       <Form.Item>
-        <Button type='primary' style={{ float: 'right' }} onClick={handleSubmit}>
+        <Button
+          type='primary'
+          style={{ float: 'right' }}
+          onClick={handleSubmit}
+        >
           Done
         </Button>
       </Form.Item>

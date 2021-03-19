@@ -16,20 +16,22 @@ const mapStateToProps = (state, ownProps) => {
     !formInstanceId ||
     !state.submissions[formId] ||
     !state.submissions[formId][formInstanceId]
-  ) { return {}; }
+  ) {
+    return {};
+  }
   const {
     acceptanceComment: _acceptanceComment,
-    acceptanceStatus: _acceptanceStatus
+    acceptanceStatus: _acceptanceStatus,
   } = state.submissions[formId][formInstanceId].teCoreProps || {};
 
   return {
     _acceptanceStatus,
-    _acceptanceComment
+    _acceptanceComment,
   };
 };
 
 const mapActionsToProps = {
-  setFormInstanceAcceptanceStatus
+  setFormInstanceAcceptanceStatus,
 };
 
 const FormInstanceAcceptanceStatus = ({
@@ -38,7 +40,7 @@ const FormInstanceAcceptanceStatus = ({
   formInstanceId,
   isVisible,
   onClose,
-  setFormInstanceAcceptanceStatus
+  setFormInstanceAcceptanceStatus,
 }) => {
   // State vars to hold acceptance status, comment
   const [acceptanceStatus, setAcceptanceStatus] = useState(null);
@@ -58,10 +60,16 @@ const FormInstanceAcceptanceStatus = ({
     setFormInstanceAcceptanceStatus({
       formInstanceId,
       acceptanceStatus,
-      acceptanceComment
+      acceptanceComment,
     });
     onClose();
-  }, [setFormInstanceAcceptanceStatus, formInstanceId, acceptanceStatus, acceptanceComment, onClose]);
+  }, [
+    setFormInstanceAcceptanceStatus,
+    formInstanceId,
+    acceptanceStatus,
+    acceptanceComment,
+    onClose,
+  ]);
 
   return (
     <Modal
@@ -79,10 +87,10 @@ const FormInstanceAcceptanceStatus = ({
             document.querySelector('#te-prefs-lib .ant-modal-content')
           }
           value={acceptanceStatus}
-          onChange={val => setAcceptanceStatus(val)}
+          onChange={(val) => setAcceptanceStatus(val)}
           style={{ width: '100%' }}
         >
-          {Object.keys(teCoreAcceptanceStatusProps).map(key => (
+          {Object.keys(teCoreAcceptanceStatusProps).map((key) => (
             <Select.Option key={key} value={key}>
               {teCoreAcceptanceStatusProps[key].label}
             </Select.Option>
@@ -93,7 +101,7 @@ const FormInstanceAcceptanceStatus = ({
         <Input
           placeholder='Comment'
           value={acceptanceComment}
-          onChange={e => setAcceptanceComment(e.target.value)}
+          onChange={(e) => setAcceptanceComment(e.target.value)}
         />
       </Form.Item>
     </Modal>
@@ -106,16 +114,16 @@ FormInstanceAcceptanceStatus.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
   isVisible: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
-  setFormInstanceAcceptanceStatus: PropTypes.func.isRequired
+  setFormInstanceAcceptanceStatus: PropTypes.func.isRequired,
 };
 
 FormInstanceAcceptanceStatus.defaultProps = {
   _acceptanceStatus: null,
   _acceptanceComment: null,
-  isVisible: false
+  isVisible: false,
 };
 
 export default connect(
   mapStateToProps,
-  mapActionsToProps
+  mapActionsToProps,
 )(FormInstanceAcceptanceStatus);
