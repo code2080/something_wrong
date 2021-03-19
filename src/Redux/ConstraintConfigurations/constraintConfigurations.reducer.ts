@@ -30,7 +30,7 @@ const reducer = (state = {}, action) => {
       } = action;
 
       const constraintConfiguration = ConstraintConfiguration.create(
-        constraintConfObj.constraintConfiguration
+        constraintConfObj
       );
       constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {

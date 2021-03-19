@@ -70,40 +70,38 @@ const updateConstraintConfigurationFlow = {
   })
 };
 
-export const updateConstraintConfiguration = (
-  constraintConfigurationId,
-  formId,
-  constraintId,
-  isActive,
-  isHardConstraint,
-  weight,
-  parameters,
-  operator
-) => async (dispatch, getState) => {
+export const updateConstraintConfiguration = (consConf) => async (
+  dispatch,
+  getState
+) => {
   const storeState = await getState();
+  const { name, description, _id, formId, constraints } = consConf;
+  const constraintConfigurationId = _id;
   const {
     auth: { coreUserId }
   } = storeState;
   const constraintConfiguration = new ConstraintConfiguration({
-    constraintId,
-    isActive,
-    isHardConstraint,
-    weight,
-    parameters,
-    operator,
+    constraintConfigurationId,
+    name,
+    formId,
+    constraints,
+    description,
+    timestamps: opts.timestamps,
     userId: coreUserId
   });
+  dispatch(
   asyncAction.PATCH({
     flow: updateConstraintConfigurationFlow,
     endpoint: `${
       getEnvParams().AM_BE_URL
-    }forms/${formId}/constraints/${constraintConfigurationId}`,
+      }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
     params: {
       constraintConfigurationId,
       formId,
       constraintConfiguration
     }
-  });
+    })
+  );
 };
 
 const deleteConstraintConfigurationFlow = {
