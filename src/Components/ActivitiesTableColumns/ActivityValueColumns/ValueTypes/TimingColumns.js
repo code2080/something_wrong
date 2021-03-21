@@ -214,7 +214,7 @@ export const TimingColumns = {
   ],
   [activityTimeModes.SEQUENCE]: mapping => {
     const { timing } = mapping;
-    const mappedKeys = Object.keys(timing).filter(key => timing[key] && timing[key].length);
+    const mappedKeys = Object.keys(timing).filter(key => timing[key] && timing[key].length && key !== 'mode');
     return mappedKeys.map(key => timingCols[key](mapping));
   },
 };
