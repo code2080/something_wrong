@@ -6,8 +6,8 @@ import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 
 // TYPES
 type Props = {
-  field: string,
-  extId: string,
+  field: string;
+  extId: string;
 };
 
 const TitleCell = ({ field, extId }: Props) => {

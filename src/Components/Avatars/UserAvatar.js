@@ -20,9 +20,7 @@ const mapActionsToProps = {
 const UserAvatar = ({ user }) => {
   return (
     <div className='avatar--wrapper'>
-      <div className='avatar--circle'>
-        {user.initials}
-      </div>
+      <div className='avatar--circle'>{user.initials}</div>
       {user.name}
     </div>
   );

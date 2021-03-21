@@ -6,24 +6,26 @@ import { initialState } from './te.initialState';
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.SET_TE_DATA_FOR_VALUES: {
-      const { extIdProps: { objects, fields, types } } = action.payload;
+      const {
+        extIdProps: { objects, fields, types },
+      } = action.payload;
       return {
         ...state,
         extIdProps: {
           ...state.extIdProps,
           objects: {
             ...state.extIdProps.objects,
-            ...objects
+            ...objects,
           },
           fields: {
             ...state.extIdProps.fields,
-            ...fields
+            ...fields,
           },
           types: {
             ...state.extIdProps.types,
-            ...types
+            ...types,
           },
-        }
+        },
       };
     }
 

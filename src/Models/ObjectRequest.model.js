@@ -24,7 +24,7 @@ export default class ObjectRequest {
   // Type of request   NEW_OBJECT || EDIT_OBJECT || MISSING_OBJECT
   type;
 
-  constructor ({
+  constructor({
     _id,
     objectRequest,
     datasource,
@@ -36,8 +36,7 @@ export default class ObjectRequest {
     type,
     isActive,
     createdAt,
-    updatedAt
-
+    updatedAt,
   }) {
     this._id = _id;
     this.objectRequest = objectRequest;

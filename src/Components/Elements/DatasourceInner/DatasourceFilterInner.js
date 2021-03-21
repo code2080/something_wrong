@@ -2,17 +2,32 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'antd';
 import { datasourceValueTypes } from '../../../Constants/datasource.constants';
-import { CaretLeftOutlined, CaretRightOutlined, DownOutlined } from '@ant-design/icons';
+import {
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  DownOutlined,
+} from '@ant-design/icons';
 
 // CONSTANTS
-const renderFieldValues = values => (values || []).reduce((text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`, '');
+const renderFieldValues = (values) =>
+  (values || []).reduce(
+    (text, val, idx) => `${text}${idx > 0 ? ', ' : ''}${val}`,
+    '',
+  );
 
 const DatasourceFilterInner = ({ labels, payload, menu }) => {
   const [visIdx, setVisIdx] = useState(0);
-  const labelArr = useMemo(() => Object.keys(labels).map(key => labels[key]), [labels]);
+  const labelArr = useMemo(
+    () => Object.keys(labels).map((key) => labels[key]),
+    [labels],
+  );
   const displayValue = useMemo(() => {
     const numberedKey = Object.keys(labels)[visIdx];
-    const value = payload.find(el => el.valueType === datasourceValueTypes.FIELD_VALUE && el.extId === numberedKey);
+    const value = payload.find(
+      (el) =>
+        el.valueType === datasourceValueTypes.FIELD_VALUE &&
+        el.extId === numberedKey,
+    );
     if (!value || !value.value) return 'N/A';
     return renderFieldValues(value.value);
   }, [labels, payload, visIdx]);
@@ -26,21 +41,25 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
         <div className='field--wrapper'>
           <div
             className='chevron'
-            onClick={(e) => { e.stopPropagation(); setVisIdx(Math.max(visIdx - 1, 0)); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setVisIdx(Math.max(visIdx - 1, 0));
+            }}
           >
             <CaretLeftOutlined />
           </div>
           <div className='counter'>{`${visIdx + 1}/${labelArr.length}`}</div>
           <div
             className='chevron'
-            onClick={(e) => { e.stopPropagation(); setVisIdx(Math.min(visIdx + 1, labelArr.length - 1)); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setVisIdx(Math.min(visIdx + 1, labelArr.length - 1));
+            }}
           >
             <CaretRightOutlined />
           </div>
           <div className='field--label'>{labelArr[visIdx]}:</div>
-          <div className='field--value'>
-            {displayValue}
-          </div>
+          <div className='field--value'>{displayValue}</div>
         </div>
         <DownOutlined />
       </div>
@@ -51,7 +70,7 @@ const DatasourceFilterInner = ({ labels, payload, menu }) => {
 DatasourceFilterInner.propTypes = {
   labels: PropTypes.object,
   payload: PropTypes.array,
-  menu: PropTypes.object.isRequired
+  menu: PropTypes.object.isRequired,
 };
 
 DatasourceFilterInner.defaultProps = {

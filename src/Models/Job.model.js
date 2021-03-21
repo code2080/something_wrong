@@ -16,7 +16,7 @@ export class Job {
   status;
   score;
 
-  constructor ({
+  constructor({
     _id,
     activities = [],
     type = schedulingAlgorithms.UNKNOWN,
@@ -29,7 +29,7 @@ export class Job {
     username,
     password,
     status = jobStatus.NOT_STARTED,
-    score = { initial: null, current: null }
+    score = { initial: null, current: null },
   }) {
     this._id = _id;
     this.activities = activities;

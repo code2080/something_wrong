@@ -8,7 +8,8 @@ import { formInstanceStatusTypes } from '../../../Constants/formInstanceStatuses
 const ResponseTracker = ({ responses }) => {
   const submissions = responses[formInstanceStatusTypes.SUBMITTED] || 0;
   const declined = responses[formInstanceStatusTypes.DECLINED] || 0;
-  const totalCount = Object.values(responses).reduce((tot, value) => tot + value) - declined;
+  const totalCount =
+    Object.values(responses).reduce((tot, value) => tot + value) - declined;
   return (
     <div style={{ marginRight: '8px' }}>
       <Tooltip

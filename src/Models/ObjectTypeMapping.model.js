@@ -7,7 +7,7 @@ export default class ObjectTypeMapping {
 
   fields;
 
-  constructor ({
+  constructor({
     applicationObjectTypeName,
     applicationObjectTypeLabel,
     objectTypeExtId,

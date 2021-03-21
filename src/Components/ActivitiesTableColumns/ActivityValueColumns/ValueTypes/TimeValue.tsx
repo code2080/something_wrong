@@ -3,9 +3,9 @@ import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 
 // TYPES
 type Props = {
-  value: string,
-  extId: string,
-  activityId: string,
+  value: string;
+  extId: string;
+  activityId: string;
 };
 
 const TimeValue = ({ value }: Props) => {

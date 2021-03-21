@@ -6,8 +6,20 @@ const ColumnHeader = (props) => {
   const { width, children, className, ...restProps } = props;
   const hasSorter = className.indexOf('sorter') > -1;
   const subtract = hasSorter ? 36 : 16;
-  const title = hasSorter ? _.get(children, `[${children.length - 1}].props.children.props.children.props.children[0]`, []) : children[1];
-  const sorter = _.get(children, `[${children.length - 1}].props.children.props.children.props.children[1]`, []);
+  const title = hasSorter
+    ? _.get(
+        children,
+        `[${
+          children.length - 1
+        }].props.children.props.children.props.children[0]`,
+        [],
+      )
+    : children[1];
+  const sorter = _.get(
+    children,
+    `[${children.length - 1}].props.children.props.children.props.children[1]`,
+    [],
+  );
   return (
     <th {...restProps}>
       <div

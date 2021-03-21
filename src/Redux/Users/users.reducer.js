@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
     case FETCH_PROFILE_SUCCESS: {
       const userObj = {
         _id: action.payload.id,
-        ...action.payload
+        ...action.payload,
       };
       const user = new User(userObj);
       return {
@@ -29,17 +29,23 @@ const reducer = (state = initialState, action) => {
       };
     }
     case types.FETCH_USERS_SUCCESS:
-      return _.chain(action.payload.users).map(u => new User(u)).keyBy('_id').valueOf();
+      return _.chain(action.payload.users)
+        .map((u) => new User(u))
+        .keyBy('_id')
+        .valueOf();
 
     case FETCH_FORMS_SUCCESS:
-      return (action.payload.owners || []).reduce((s, o) => ({
-        [o._id]: new User(o),
-        ...s, // Intentionally overwriting value if it already is in state (always more information available on the object already in state)
-      }), state);
+      return (action.payload.owners || []).reduce(
+        (s, o) => ({
+          [o._id]: new User(o),
+          ...s, // Intentionally overwriting value if it already is in state (always more information available on the object already in state)
+        }),
+        state,
+      );
 
     default:
       return state;
-  };
+  }
 };
 
 export default reducer;

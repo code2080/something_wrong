@@ -11,7 +11,10 @@ import { getFVForOtherValue } from './helpers';
  * @param {ActivityValue} activityValue
  * @param {Activity} activity
  */
-export const derivedFormattedValueForActivityValue = (activityValue: ActivityValue, activity: TActivity): any[] | null => {
+export const derivedFormattedValueForActivityValue = (
+  activityValue: ActivityValue,
+  activity: TActivity,
+): any[] | null => {
   // Start by figuring out if we're dealing with a timing, object, or field value
   const type = activityValue.type;
 

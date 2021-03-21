@@ -4,20 +4,30 @@ import { PropTypes } from 'prop-types';
 export const SpotlightMask = ({ spotlightPositionInfo }) => {
   if (!spotlightPositionInfo) return null;
 
-  const { boundingRect: { x: left, y: top, width, height } } = spotlightPositionInfo;
+  const {
+    boundingRect: { x: left, y: top, width, height },
+  } = spotlightPositionInfo;
   const [scrollLeft, scrollTop] = window.tePrefsScroll;
   const [offsetX, offsetY] = window.tePrefsOffset;
   return (
-    <svg style={{
-      width: '100%',
-      height: `${window.tePrefsHeight}px`,
-      top: 0,
-      left: 0,
-      position: 'absolute',
-      zIndex: 6,
-    }} >
+    <svg
+      style={{
+        width: '100%',
+        height: `${window.tePrefsHeight}px`,
+        top: 0,
+        left: 0,
+        position: 'absolute',
+        zIndex: 6,
+      }}
+    >
       <defs>
-        <filter id='blur' x={-width} y={-height} width={width * 2} height={height * 2} >
+        <filter
+          id='blur'
+          x={-width}
+          y={-height}
+          width={width * 2}
+          height={height * 2}
+        >
           <feGaussianBlur stdDeviation='5' />
         </filter>
         <mask id='spotlightMask'>
@@ -32,7 +42,13 @@ export const SpotlightMask = ({ spotlightPositionInfo }) => {
           />
         </mask>
       </defs>
-      <rect fill='black' fillOpacity='0.8' width='100%' height='100%' mask='url(#spotlightMask)' />
+      <rect
+        fill='black'
+        fillOpacity='0.8'
+        width='100%'
+        height='100%'
+        mask='url(#spotlightMask)'
+      />
     </svg>
   );
 };

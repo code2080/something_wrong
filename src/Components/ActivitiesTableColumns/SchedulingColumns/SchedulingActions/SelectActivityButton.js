@@ -13,13 +13,22 @@ import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/act
 
 const SelectActivityButton = ({ activity }) => {
   const teCoreAPI = useTECoreAPI();
-  const formInstance = useSelector(selectFormInstance)(activity.formId, activity.formInstanceId);
-  const formInstanceRequests = useSelector(selectFormInstanceObjectRequests(formInstance));
-  const teCorePayload = useSelector(selectTECorePayloadForActivity)(activity.formId, activity.formInstanceId, activity._id, formInstanceRequests);
+  const formInstance = useSelector(selectFormInstance)(
+    activity.formId,
+    activity.formInstanceId,
+  );
+  const formInstanceRequests = useSelector(
+    selectFormInstanceObjectRequests(formInstance),
+  );
+  const teCorePayload = useSelector(selectTECorePayloadForActivity)(
+    activity.formId,
+    activity.formInstanceId,
+    activity._id,
+    formInstanceRequests,
+  );
 
   const onSelectAllCallback = () => {
-    if (teCorePayload)
-      teCoreAPI.populateSelection(teCorePayload);
+    if (teCorePayload) teCoreAPI.populateSelection(teCorePayload);
   };
 
   return (

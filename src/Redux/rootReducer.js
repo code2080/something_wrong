@@ -49,8 +49,8 @@ const rootReducer = (state, action) => {
     const tmpEnv = _.get(state, 'auth.env');
     state = Object.assign({
       auth: {
-        env: tmpEnv
-      }
+        env: tmpEnv,
+      },
     });
   }
   return appReducer(state, action);

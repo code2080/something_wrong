@@ -6,7 +6,11 @@ const ColumnHeader = ({ width, children, className, title }) => {
   if (!title) return children;
   const hasSorter = className.indexOf('sorter') > -1;
   const subtract = hasSorter ? 36 : 16;
-  const sorter = _.get(children, `[${children.length - 1}].props.children.props.children.props.children[1]`, []);
+  const sorter = _.get(
+    children,
+    `[${children.length - 1}].props.children.props.children.props.children[1]`,
+    [],
+  );
   return (
     <div>
       <div

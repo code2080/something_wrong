@@ -7,19 +7,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 
-const FormInstanceSchedulingStatusProcess = ({ visible, onClose, schedulingProgress: defaultSchedulingProgress, formInstanceId }) => {
+const FormInstanceSchedulingStatusProcess = ({
+  visible,
+  onClose,
+  schedulingProgress: defaultSchedulingProgress,
+  formInstanceId,
+}) => {
   const dispatch = useDispatch();
-  const saving = useSelector(createLoadingSelector(['SET_SCHEDULING_PROGRESS']));
+  const saving = useSelector(
+    createLoadingSelector(['SET_SCHEDULING_PROGRESS']),
+  );
 
   /**
    * STATE
    */
-  const [schedulingProgress, setSchedulingProgress] = useState(defaultSchedulingProgress);
+  const [schedulingProgress, setSchedulingProgress] = useState(
+    defaultSchedulingProgress,
+  );
   /**
    * EVENT HANDLERS
    */
   const onSubmit = () => {
-    dispatch(setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }));
+    dispatch(
+      setFormInstanceSchedulingProgress({ formInstanceId, schedulingProgress }),
+    );
     onClose();
   };
 
@@ -41,9 +52,9 @@ const FormInstanceSchedulingStatusProcess = ({ visible, onClose, schedulingProgr
           }
           style={{ width: '100%' }}
           value={schedulingProgress}
-          onChange={val => setSchedulingProgress(val)}
+          onChange={(val) => setSchedulingProgress(val)}
         >
-          {Object.values(teCoreSchedulingProgressProps).map(item => (
+          {Object.values(teCoreSchedulingProgressProps).map((item) => (
             <Select.Option key={item.key} value={item.key}>
               {item.label}
             </Select.Option>

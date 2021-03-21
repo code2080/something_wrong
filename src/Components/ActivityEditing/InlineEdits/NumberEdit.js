@@ -10,7 +10,7 @@ const NumberEdit = ({ value, setValue, onFinish }) => (
     onPressEnter={() => onFinish()}
     value={value}
     placeholder='Type here'
-    onChange={value => setValue(value)}
+    onChange={(value) => setValue(value)}
   />
 );
 

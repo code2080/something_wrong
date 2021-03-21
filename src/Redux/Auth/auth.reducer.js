@@ -27,33 +27,50 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.VALIDATE_LOGIN:
-      if (!action || !action.payload || !action.payload.token) { return initialState; }
+      if (!action || !action.payload || !action.payload.token) {
+        return initialState;
+      }
       return {
         ...state,
         authenticationStatus: authenticationStatuses.AUTHENTICATED,
       };
 
     case types.LOGIN_SUCCESS: {
-    // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken) { return initialState; }
+      // If payload doesn't contain token
+      if (
+        !action ||
+        !action.payload ||
+        !action.payload.token ||
+        !action.payload.token.accessToken
+      ) {
+        return initialState;
+      }
 
-      const { payload: { token: { accessToken } } } = action;
+      const {
+        payload: {
+          token: { accessToken },
+        },
+      } = action;
       setToken(accessToken);
       return {
         ...state,
         authenticationStatus: authenticationStatuses.AUTHENTICATED,
       };
-    };
+    }
 
     case types.FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        authenticationStatus: action.payload.organizationId ? authenticationStatuses.AUTHENTICATED : authenticationStatuses.MULTIPLE_ORGS,
+        authenticationStatus: action.payload.organizationId
+          ? authenticationStatuses.AUTHENTICATED
+          : authenticationStatuses.MULTIPLE_ORGS,
         user: action.payload,
       };
 
     case types.GET_ORG_FOR_USER_SUCCESS: {
-      const { payload: { organization: org } } = action;
+      const {
+        payload: { organization: org },
+      } = action;
       return {
         ...state,
         org,
@@ -61,7 +78,9 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.GET_INTEGRATION_SETTINGS_SUCCESS: {
-      const { payload: { connectionSetting } } = action;
+      const {
+        payload: { connectionSetting },
+      } = action;
       return {
         ...state,
         integrationSettings: connectionSetting,
@@ -69,10 +88,21 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.LOGIN_MULTIPLE_ORGS: {
-    // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.token || !action.payload.token.accessToken) { return initialState; }
+      // If payload doesn't contain token
+      if (
+        !action ||
+        !action.payload ||
+        !action.payload.token ||
+        !action.payload.token.accessToken
+      ) {
+        return initialState;
+      }
 
-      const { payload: { token: { accessToken } } } = action;
+      const {
+        payload: {
+          token: { accessToken },
+        },
+      } = action;
       setToken(accessToken);
       return {
         ...state,
@@ -81,7 +111,14 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.FETCH_ORGS_FOR_USER_SUCCESS: {
-      if (!action || !action.payload || !action.payload.organizations || !action.payload.organizations.length) { return initialState; }
+      if (
+        !action ||
+        !action.payload ||
+        !action.payload.organizations ||
+        !action.payload.organizations.length
+      ) {
+        return initialState;
+      }
       return {
         ...state,
         availableOrgs: [...action.payload.organizations],
@@ -89,10 +126,14 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.SELECT_ORG_FOR_USER_SUCCESS: {
-    // If payload doesn't contain token
-      if (!action || !action.payload || !action.payload.accessToken) { return initialState; }
+      // If payload doesn't contain token
+      if (!action || !action.payload || !action.payload.accessToken) {
+        return initialState;
+      }
 
-      const { payload: { accessToken } } = action;
+      const {
+        payload: { accessToken },
+      } = action;
       setToken(accessToken);
       return {
         ...state,
@@ -103,7 +144,7 @@ const reducer = (state = initialState, action) => {
     case types.LOGOUT:
       return {
         ...initialState,
-        env: state.env
+        env: state.env,
       };
 
     case types.LOGIN_FAILURE:

@@ -21,11 +21,7 @@ const AcceptanceStatus = ({ acceptanceStatus, acceptanceComment }) => {
       >
         {teCoreAcceptanceStatusProps[acceptanceStatus].label}
       </StatusLabel>
-      <div
-        className='acceptance-status--comment'
-      >
-        {acceptanceComment}
-      </div>
+      <div className='acceptance-status--comment'>{acceptanceComment}</div>
     </div>
   );
 };

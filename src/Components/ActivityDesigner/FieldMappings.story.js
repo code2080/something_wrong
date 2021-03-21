@@ -14,14 +14,14 @@ export default {
     fieldOptions: {
       control: {
         type: 'object',
-      }
+      },
     },
     mappingOptions: {
       control: {
         type: 'object',
-      }
+      },
     },
-  }
+  },
 };
 const fieldOptions = [
   { value: 'res.title', label: 'Title' },
@@ -33,15 +33,20 @@ const mappingOptions = (disabled) => [
     value: '5f4f4df052717b0020dd1748',
     label: 'Activities section',
     disabled,
-    children: [{
-      value: '5f4f4df052717b0020dd1749', label: 'Course activity'
-    }]
+    children: [
+      {
+        value: '5f4f4df052717b0020dd1749',
+        label: 'Course activity',
+      },
+    ],
   },
 ];
 export const Mapping = (args) => {
   const [mapping, setMapping] = useState({});
-  return <FieldMapping
-    onChange={setMapping} mapping={mapping} {...args} />;
+  return <FieldMapping onChange={setMapping} mapping={mapping} {...args} />;
 };
 
-Mapping.args = { fieldOptions, mappingOptions: mappingOptions(!!Mapping?.args?.disabled) };
+Mapping.args = {
+  fieldOptions,
+  mappingOptions: mappingOptions(!!Mapping?.args?.disabled),
+};

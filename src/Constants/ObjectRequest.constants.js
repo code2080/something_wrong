@@ -1,5 +1,10 @@
 import React from 'react';
-import { QuestionOutlined, CheckOutlined, CloseOutlined, SwapOutlined } from '@ant-design/icons';
+import {
+  QuestionOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  SwapOutlined,
+} from '@ant-design/icons';
 
 export const RequestStatus = {
   PENDING: 'pending',

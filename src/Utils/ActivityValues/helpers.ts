@@ -17,7 +17,7 @@ const filterTypes = {
  */
 export const determineTimeModeForActivity = (activity: TActivity) => {
   try {
-    const aV = activity.timing.find(el => el.extId === 'mode');
+    const aV = activity.timing.find((el) => el.extId === 'mode');
     return aV.value;
   } catch (error) {
     return null;
@@ -47,17 +47,14 @@ export const normalizeFilterValue = (value, filterType) => {
   switch (filterType) {
     case filterTypes.CATEGORIES:
       return value.categories.reduce((tot, acc) => {
-        return [
-          ...tot,
-          { fieldExtId: acc.id, values: acc.values.join(', ') },
-        ];
+        return [...tot, { fieldExtId: acc.id, values: acc.values.join(', ') }];
       }, []);
     case filterTypes.SEARCH_STRING:
     default: {
       const { searchFields, searchString } = value;
       if (!searchFields || !searchString) return null;
       return [{ fieldExtId: searchFields, values: searchString }];
-    };
+    }
   }
 };
 
@@ -69,7 +66,9 @@ export const normalizeFilterValue = (value, filterType) => {
  */
 export const normalizeFilterValues = (value: any[]) => {
   const normalizedValues = value.reduce((tot, acc) => {
-    const filterType = acc.categories.length ? filterTypes.CATEGORIES : filterTypes.SEARCH_STRING;
+    const filterType = acc.categories.length
+      ? filterTypes.CATEGORIES
+      : filterTypes.SEARCH_STRING;
     const normalizedFilterValue = normalizeFilterValue(acc, filterType);
     if (normalizedFilterValue) return [...tot, ...normalizedFilterValue];
     return tot;
@@ -77,25 +76,36 @@ export const normalizeFilterValues = (value: any[]) => {
   return normalizedValues;
 };
 
-const fvForActivityGroup = (groupId: string | null | undefined, formId: string) => {
+const fvForActivityGroup = (
+  groupId: string | null | undefined,
+  formId: string,
+) => {
   if (!groupId) return 'N/A';
   const storeState = (window as any).tePrefsLibStore.getState();
   const activityGroups = _.get(storeState, `activityGroups.${formId}`, []);
-  const activityGroup = activityGroups.find(el => el._id === groupId);
+  const activityGroup = activityGroups.find((el) => el._id === groupId);
   if (!activityGroup) return 'N/A';
   return activityGroup.name;
 };
 
 const fvForSubmitter = (formInstanceId: string, formId: string) => {
   const storeState = (window as any).tePrefsLibStore.getState();
-  const formInstance = _.get(storeState, `submissions.${formId}.${formInstanceId}`, null);
+  const formInstance = _.get(
+    storeState,
+    `submissions.${formId}.${formInstanceId}`,
+    null,
+  );
   if (!formInstance) return 'N/A';
   return `${formInstance.firstName} ${formInstance.lastName}`;
 };
 
 const fvForPrimaryObject = (formInstanceId: string, formId: string) => {
   const storeState = (window as any).tePrefsLibStore.getState();
-  const scopedObject = _.get(storeState, `submissions.${formId}.${formInstanceId}.scopedObject`, null);
+  const scopedObject = _.get(
+    storeState,
+    `submissions.${formId}.${formInstanceId}.scopedObject`,
+    null,
+  );
   if (!scopedObject) return 'N/A';
   return scopedObject;
 };

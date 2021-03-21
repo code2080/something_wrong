@@ -10,8 +10,8 @@ import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors
 // CONSTANTS
 import { themeColors } from '../../Constants/themeColors.constants';
 
-const mapStateToProps = state => ({
-  isSaving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state)
+const mapStateToProps = (state) => ({
+  isSaving: createLoadingSelector(['UPDATE_MAPPING_FOR_FORM'])(state),
 });
 
 const SavingStatus = ({ isSaving }) => {

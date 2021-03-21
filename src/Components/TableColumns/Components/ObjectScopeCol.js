@@ -6,7 +6,8 @@ const mapStateToProps = (state, { objectScope }) => ({
   label: selectExtIdLabel(state)('types', objectScope),
 });
 
-const ObjectScopeCol = ({ objectScope, label }) => label || objectScope || 'N/A';
+const ObjectScopeCol = ({ objectScope, label }) =>
+  label || objectScope || 'N/A';
 
 ObjectScopeCol.propTypes = {
   objectScope: PropTypes.string,

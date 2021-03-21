@@ -2,9 +2,9 @@ import { weekdayEnums } from '../../../../Constants/weekDays.constants';
 
 // TYPES
 type Props = {
-  value: string,
-  extId: string,
-  activityId: string,
+  value: string;
+  extId: string;
+  activityId: string;
 };
 
 const WeekdayValue = ({ value }: Props) => {

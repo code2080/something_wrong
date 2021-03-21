@@ -30,25 +30,44 @@ const ObjectRequestDropdown = ({ request, children }) => {
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-  const objectRequestDropdownMenu = ({ coreCallback, request, spotlightRef, showDetails }) => (
+  const objectRequestDropdownMenu = ({
+    coreCallback,
+    request,
+    spotlightRef,
+    showDetails,
+  }) => (
     <Menu
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      onClick={objectRequestOnClick({ dispatch, teCoreAPI, coreCallback, request, spotlightRef, showDetails })}
+      onClick={objectRequestOnClick({
+        dispatch,
+        teCoreAPI,
+        coreCallback,
+        request,
+        spotlightRef,
+        showDetails,
+      })}
     >
-      <span style={{ padding: '5px 12px', cursor: 'default' }}>Execute request...</span>
+      <span style={{ padding: '5px 12px', cursor: 'default' }}>
+        Execute request...
+      </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce((items, action) =>
-        objectRequestActionCondition(request)[action]
-          ? [...items, <Menu.Item key={action} >
-            {objectRequestActionIcon[action]} {objectRequestActionLabels[action]}
-          </Menu.Item>
-          ]
-          : items
-      , [])}
+      {_.flatMap(objectRequestActions).reduce(
+        (items, action) =>
+          objectRequestActionCondition(request)[action]
+            ? [
+                ...items,
+                <Menu.Item key={action}>
+                  {objectRequestActionIcon[action]}{' '}
+                  {objectRequestActionLabels[action]}
+                </Menu.Item>,
+              ]
+            : items,
+        [],
+      )}
     </Menu>
   );
 
-  const onHandledObjectRequest = request => action => (response = {}) => {
+  const onHandledObjectRequest = (request) => (action) => (response = {}) => {
     dispatch(setExternalAction(null));
     if (!response || !request) {
       // api call failed (or was cancelled)
@@ -59,7 +78,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
     const updatedObjectRequest = {
       ...request,
       replacementObjectExtId: extid,
-      status: objectRequestActionToStatus[action] || request.status
+      status: objectRequestActionToStatus[action] || request.status,
     };
 
     const label = fields[0].values[0];
@@ -67,26 +86,34 @@ const ObjectRequestDropdown = ({ request, children }) => {
     updateObjectRequest(updatedObjectRequest)(dispatch);
   };
 
-  return <Dropdown
-    getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    overlay={objectRequestDropdownMenu({
-      coreCallback: onHandledObjectRequest(request),
-      request,
-      spotlightRef,
-      showDetails: () => {
-        setIsDropdownVisible(false);
-        setDetailsModalVisible(true);
+  return (
+    <Dropdown
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      overlay={objectRequestDropdownMenu({
+        coreCallback: onHandledObjectRequest(request),
+        request,
+        spotlightRef,
+        showDetails: () => {
+          setIsDropdownVisible(false);
+          setDetailsModalVisible(true);
+        },
+      })}
+      key={request._id}
+      visible={isDropdownVisible}
+      onVisibleChange={(newVisibility) =>
+        !detailsModalVisible && setIsDropdownVisible(newVisibility)
       }
-    })}
-    key={request._id}
-    visible={isDropdownVisible}
-    onVisibleChange={newVisibility => !detailsModalVisible && setIsDropdownVisible(newVisibility)}
-  >
-    <div className='dd-trigger' ref={spotlightRef} >
-      {children}
-      <ObjectRequestModal onClose={() => setDetailsModalVisible(false)} request={request} visible={detailsModalVisible} />
-    </div>
-  </Dropdown>;
+    >
+      <div className='dd-trigger' ref={spotlightRef}>
+        {children}
+        <ObjectRequestModal
+          onClose={() => setDetailsModalVisible(false)}
+          request={request}
+          visible={detailsModalVisible}
+        />
+      </div>
+    </Dropdown>
+  );
 };
 
 ObjectRequestDropdown.propTypes = {

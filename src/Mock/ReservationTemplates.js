@@ -1,18 +1,14 @@
 export const reservationTemplates = {
   scheduling: {
     name: 'Scheduling',
-    objects: [
-      'room',
-      'professor',
-      'course',
-    ],
+    objects: ['room', 'professor', 'course'],
     fields: ['comment'],
     propSettings: {
       room: { mandatory: true },
       professor: { mandatory: true },
       course: { mandatory: true },
       comment: { mandatory: false },
-    }
+    },
   },
   'room-block': {
     name: 'Room block',
@@ -21,6 +17,6 @@ export const reservationTemplates = {
     propSettings: {
       room: { mandatory: true },
       comment: { mandatory: false },
-    }
+    },
   },
 };

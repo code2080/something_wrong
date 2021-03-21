@@ -26,15 +26,16 @@ import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
   return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId].filter(el => {
+    const formInstanceActivities = activities[formInstanceId].filter((el) => {
       if (visibleActivities === 'ALL') return true;
       return visibleActivities.indexOf(el._id) > -1;
     });
-    const orderedFormInstanceActivities = _.orderBy(formInstanceActivities, ['sequenceIdx'], ['asc']);
-    return [
-      ...a,
-      ...orderedFormInstanceActivities,
-    ];
+    const orderedFormInstanceActivities = _.orderBy(
+      formInstanceActivities,
+      ['sequenceIdx'],
+      ['asc'],
+    );
+    return [...a, ...orderedFormInstanceActivities];
   }, []);
 };
 
@@ -48,14 +49,22 @@ const ActivitiesPage = () => {
   const activities = useSelector(selectActivitiesForForm)(formId);
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
-  const isLoading = useSelector(createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']));
+  const isLoading = useSelector(
+    createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
+  );
   const [vt] = useVT(() => ({ scroll: { y: 600 }, overscanRowCount: 30 }), []);
 
   /**
    * MEMOIZED PROPS
    */
-  const tableColumns = useMemo(() => design ? createActivitiesTableColumnsFromMapping(design, true) : [], [design]);
-  const tableDataSource = useMemo(() => getActivityDataSource(activities, visibleActivities), [activities, visibleActivities]);
+  const tableColumns = useMemo(
+    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
+    [design],
+  );
+  const tableDataSource = useMemo(
+    () => getActivityDataSource(activities, visibleActivities),
+    [activities, visibleActivities],
+  );
   useEffect(() => {
     const { options, matches } = getFilterPropsForActivities(activities);
     dispatch(setActivityFilter({ filterId: formId, options, matches }));
@@ -69,19 +78,22 @@ const ActivitiesPage = () => {
    * EVENT HANDLERS
    */
   const onSelectAll = () => {
-    setSelectedRowKeys(tableDataSource.map(a => a._id));
+    setSelectedRowKeys(tableDataSource.map((a) => a._id));
   };
 
   const onDeselectAll = () => {
     setSelectedRowKeys([]);
   };
 
-  const tableComponents = useMemo(() => ({
-    ...vt,
-    header: {
-      cell: ColumnHeader,
-    },
-  }), [vt]);
+  const tableComponents = useMemo(
+    () => ({
+      ...vt,
+      header: {
+        cell: ColumnHeader,
+      },
+    }),
+    [vt],
+  );
 
   return (
     <React.Fragment>
@@ -99,7 +111,7 @@ const ActivitiesPage = () => {
         loading={isLoading}
         rowSelection={{
           selectedRowKeys,
-          onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
+          onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
         }}
         pagination={false}
       />

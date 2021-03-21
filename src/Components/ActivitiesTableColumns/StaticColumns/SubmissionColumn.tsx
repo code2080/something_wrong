@@ -15,14 +15,17 @@ import './SubmissionColumn.scss';
 
 // TYPES
 type Props = {
-  formInstanceId: string,
+  formInstanceId: string;
 };
 
 const SubmissionColumn = ({ formInstanceId }: Props) => {
   const { formId }: { formId: string } = useParams();
   const dispatch = useDispatch();
 
-  const formInstance: TFormInstance = useSelector(selectFormInstance)(formId, formInstanceId);
+  const formInstance: TFormInstance = useSelector(selectFormInstance)(
+    formId,
+    formInstanceId,
+  );
 
   /**
    * EVENT HANDLERS

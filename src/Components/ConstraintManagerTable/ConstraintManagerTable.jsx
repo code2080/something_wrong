@@ -27,7 +27,7 @@ const ConstraintManagerTable = ({ renderSectionHeader, constraints }) => {
 
 ConstraintManagerTable.propTypes = {
   renderSectionHeader: PropTypes.object,
-  constraints: PropTypes.array
+  constraints: PropTypes.array,
 };
 
 export default ConstraintManagerTable;

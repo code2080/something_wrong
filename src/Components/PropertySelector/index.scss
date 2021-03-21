@@ -6,7 +6,7 @@
 }
 
 .property-selector--wrapper {
-  border: 1px solid #CCCCCC;
+  border: 1px solid #cccccc;
   border-radius: 2px;
   transition: all 0.2s;
   padding: 7px 0;
@@ -14,7 +14,9 @@
   margin-right: 8px;
   height: 100%;
 
-  &:hover, &:active, &.active {
+  &:hover,
+  &:active,
+  &.active {
     border-color: $jungleGreen;
   }
   .property-selector--item {
@@ -22,7 +24,8 @@
     cursor: pointer;
     color: $secondary;
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       background: rgba($jungleGreen, 0.2);
       color: $black;
     }
@@ -31,7 +34,7 @@
       padding: 0 11px;
     }
   }
-  
+
   .property-selector--heading {
     padding: 0 7px;
   }

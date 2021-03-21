@@ -2,14 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Cascader, Button } from 'antd';
 
-const MultiRowParameter = ({ values, options, onUpdateValue, onAddParameter, onRemoveParameter, disabled }) => {
-  const shouldAddParameterBtnBeDisabled = disabled || (values.length > 0 && values.some(v => !v));
+const MultiRowParameter = ({
+  values,
+  options,
+  onUpdateValue,
+  onAddParameter,
+  onRemoveParameter,
+  disabled,
+}) => {
+  const shouldAddParameterBtnBeDisabled =
+    disabled || (values.length > 0 && values.some((v) => !v));
 
   return (
     <div className='multi-row-parameter--wrapper'>
-      <div className='label'>
-        Timing parameters
-      </div>
+      <div className='label'>Timing parameters</div>
       {(!values || !values.length) && (
         <div className='multi-row-parameter--empty'>
           No timing parameters added
@@ -17,13 +23,11 @@ const MultiRowParameter = ({ values, options, onUpdateValue, onAddParameter, onR
       )}
       {(values || []).map((value, idx) => (
         <div className='timing-mapping__row--wrapper' key={`value-${idx}`}>
-          <div className='label'>
-            {`Timing parameter ${idx + 1}`}
-          </div>
+          <div className='label'>{`Timing parameter ${idx + 1}`}</div>
           <Cascader
             options={options}
             value={value}
-            onChange={val => onUpdateValue(idx, val)}
+            onChange={(val) => onUpdateValue(idx, val)}
             placeholder='Select an element'
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
             size='small'
@@ -39,7 +43,12 @@ const MultiRowParameter = ({ values, options, onUpdateValue, onAddParameter, onR
         </div>
       ))}
       <div className='multi-row-parameter--add'>
-        <Button type='default' size='small' onClick={onAddParameter} disabled={shouldAddParameterBtnBeDisabled}>
+        <Button
+          type='default'
+          size='small'
+          onClick={onAddParameter}
+          disabled={shouldAddParameterBtnBeDisabled}
+        >
           Add timing parameter
         </Button>
       </div>

@@ -5,8 +5,7 @@ import DateTimeEdit from './DateTimeEdit';
 export default {
   title: 'Activity Manager/Components/ActivityEditing/InlineEdit/Time Edit',
   component: DateTimeEdit,
-  argTypes: {
-  },
+  argTypes: {},
 };
 
 export const TimeEdit = (args) => {
