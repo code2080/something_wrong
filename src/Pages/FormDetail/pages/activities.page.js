@@ -39,6 +39,12 @@ const getActivityDataSource = (activities = {}, visibleActivities) => {
   }, []);
 };
 
+const calculateAvailableTableHeight = () => {
+  const el = document.getElementById('te-prefs-lib');
+  const height = el.clientHeight;
+  return height - 110;
+};
+
 const ActivitiesPage = () => {
   const { formId } = useParams();
   const dispatch = useDispatch();
@@ -52,7 +58,13 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   );
-  const [vt] = useVT(() => ({ scroll: { y: 600 }, overscanRowCount: 30 }), []);
+
+  const [yScroll] = useState(calculateAvailableTableHeight());
+
+  const [vt] = useVT(
+    () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
+    [],
+  );
 
   /**
    * MEMOIZED PROPS
@@ -69,6 +81,7 @@ const ActivitiesPage = () => {
     const { options, matches } = getFilterPropsForActivities(activities);
     dispatch(setActivityFilter({ filterId: formId, options, matches }));
   }, [activities, dispatch, formId]);
+
   /**
    * STATE
    */
@@ -95,6 +108,7 @@ const ActivitiesPage = () => {
     [vt],
   );
 
+  console.log('yScrollHeight ' + yScroll);
   return (
     <React.Fragment>
       <ActivitiesToolbar
@@ -103,7 +117,7 @@ const ActivitiesPage = () => {
         onDeselectAll={onDeselectAll}
       />
       <Table
-        scroll={{ y: 600 }}
+        scroll={{ y: yScroll }}
         components={tableComponents}
         columns={tableColumns}
         dataSource={tableDataSource}

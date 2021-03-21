@@ -7,6 +7,9 @@
   cursor: pointer;
   transition: all 0.2s;
   padding: 0 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .base-activity-col--icon {
     color: $rustyGrey;
