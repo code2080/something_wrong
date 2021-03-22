@@ -111,6 +111,7 @@ export const updateConstraintConfiguration = (consConf) => async (
     timestamps: opts.timestamps,
     userId: coreUserId
   });
+  console.log(constraintConfiguration)
   dispatch(
   asyncAction.PATCH({
     flow: updateConstraintConfigurationFlow,
@@ -122,7 +123,8 @@ export const updateConstraintConfiguration = (consConf) => async (
       formId,
       constraintConfiguration,
     },
-  });
+  
+  }))
 };
 
 const deleteConstraintConfigurationFlow = {
