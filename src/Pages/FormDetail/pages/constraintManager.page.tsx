@@ -42,6 +42,7 @@ const getConstraintsOfType = (
   );
 };
 
+
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
@@ -75,6 +76,7 @@ const ConstraintManagerPage = () => {
       name: value
     });
   };
+
   const handleUpdateConstraintConfiguration = (
     constraintId: string,
     prop: string,
@@ -94,7 +96,6 @@ const ConstraintManagerPage = () => {
           : constraintInstance,
       ),
     });
-    dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleAddCustomConstraint = (e) => {
