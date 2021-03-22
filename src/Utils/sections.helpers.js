@@ -14,7 +14,7 @@ import { TIME_FORMAT } from '../Constants/common.constants';
  * @returns {String} sectionType
  */
 export const getSectionTypeFromId = (sectionId, sections) => {
-  const sectionIdx = sections.findIndex(el => el._id === sectionId);
+  const sectionIdx = sections.findIndex((el) => el._id === sectionId);
   if (sectionIdx === -1) return null;
   return determineSectionType(sections[sectionIdx]);
 };
@@ -26,7 +26,8 @@ export const getSectionTypeFromId = (sectionId, sections) => {
  * @param {Array} sections all sections on the form
  * @returns {Object} section
  */
-export const getSectionFromId = (sectionId, sections) => sections.find(el => el._id === sectionId);
+export const getSectionFromId = (sectionId, sections) =>
+  sections.find((el) => el._id === sectionId);
 
 /**
  * @function getElementFromSection
@@ -35,7 +36,8 @@ export const getSectionFromId = (sectionId, sections) => sections.find(el => el.
  * @param {Object} section the section to select from
  * @returns {Object} element
  */
-export const getElementFromSection = (elementId, section) => section.elements.find(el => el._id === elementId);
+export const getElementFromSection = (elementId, section) =>
+  section.elements.find((el) => el._id === elementId);
 
 /**
  * @function getSectionsToUseInActivities
@@ -47,14 +49,17 @@ export const getElementFromSection = (elementId, section) => section.elements.fi
 export const getSectionsToUseInActivities = (sections, activityDesign) => {
   // Loop through objects, fields and get the sectionIds
   const sectionIds = [
-    ...(Object.keys(activityDesign.objects) || []).reduce((objects, objectKey) => {
-      const elementsForType = activityDesign.objects[objectKey];
-      const newPaths = (elementsForType || []).reduce((newPaths, element) => {
-        if (element && element[0]) return [...newPaths, element[0]];
-        return newPaths;
-      }, []);
-      return [objects, ...newPaths];
-    }, []),
+    ...(Object.keys(activityDesign.objects) || []).reduce(
+      (objects, objectKey) => {
+        const elementsForType = activityDesign.objects[objectKey];
+        const newPaths = (elementsForType || []).reduce((newPaths, element) => {
+          if (element && element[0]) return [...newPaths, element[0]];
+          return newPaths;
+        }, []);
+        return [objects, ...newPaths];
+      },
+      [],
+    ),
     ...(Object.keys(activityDesign.fields) || []).reduce((fields, fieldKey) => {
       const elementsForField = activityDesign.fields[fieldKey];
       const newPaths = (elementsForField || []).reduce((newPaths, element) => {
@@ -65,7 +70,7 @@ export const getSectionsToUseInActivities = (sections, activityDesign) => {
     }, []),
   ];
   return sectionIds.reduce((foundSections, sectionId) => {
-    const sectionIdx = sections.findIndex(el => el._id === sectionId);
+    const sectionIdx = sections.findIndex((el) => el._id === sectionId);
     if (sectionIdx > -1) return [...foundSections, sections[sectionIdx]];
     return foundSections;
   }, []);
@@ -83,7 +88,7 @@ export const getSectionsToUseInActivities = (sections, activityDesign) => {
 export const findTimeSlot = (startTime, endTime, timeslots) => {
   const _startTime = moment.utc(startTime).format(TIME_FORMAT);
   const _endTime = moment.utc(endTime).format(TIME_FORMAT);
-  return timeslots.find(timeslot => {
+  return timeslots.find((timeslot) => {
     const slotStart = moment.utc(timeslot.startTime).format(TIME_FORMAT);
     const slotEnd = moment.utc(timeslot.endTime).format(TIME_FORMAT);
     return slotStart === _startTime && slotEnd === _endTime;
@@ -98,7 +103,11 @@ export const findTimeSlot = (startTime, endTime, timeslots) => {
  * @returns selectionSettings
  */
 export const getSelectionSettings = (sectionId, formInstance) =>
-  _.get(formInstance, `teCoreProps.selectionSettings.${sectionId}`, new SelectionSettings({}));
+  _.get(
+    formInstance,
+    `teCoreProps.selectionSettings.${sectionId}`,
+    new SelectionSettings({}),
+  );
 
 /**
  * @function getSelectionFieldElements
@@ -106,12 +115,14 @@ export const getSelectionSettings = (sectionId, formInstance) =>
  * @param section the section to filter the elements in
  * @returns fieldElements
  */
-export const getSelectionFieldElements = section =>
+export const getSelectionFieldElements = (section) =>
   (section.elements || [])
-    .filter(el => {
+    .filter((el) => {
       const elementType = getElementTypeFromId(el.elementId);
-      return elementType === elementTypes.ELEMENT_TYPE_INPUT_TEXT ||
+      return (
+        elementType === elementTypes.ELEMENT_TYPE_INPUT_TEXT ||
         elementType === elementTypes.ELEMENT_TYPE_INPUT_NUMBER ||
-        elementType === elementTypes.ELEMENT_TYPE_TEXTAREA;
+        elementType === elementTypes.ELEMENT_TYPE_TEXTAREA
+      );
     })
-    .map(el => ({ value: el._id, label: el.label }));
+    .map((el) => ({ value: el._id, label: el.label }));

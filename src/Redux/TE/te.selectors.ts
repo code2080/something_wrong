@@ -1,15 +1,13 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-const selectExtIdProps = state => state.te.extIdProps;
+const selectExtIdProps = (state) => state.te.extIdProps;
 
-export const selectExtIds = createSelector(
-  [selectExtIdProps],
-  extIdProps =>
-    _.flatMapDeep(extIdProps).reduce((extIds, extIdTypes) => [
-      ...extIds,
-      ...Object.values(extIdTypes)
-    ], [])
+export const selectExtIds = createSelector([selectExtIdProps], (extIdProps) =>
+  _.flatMapDeep(extIdProps).reduce(
+    (extIds, extIdTypes) => [...extIds, ...Object.values(extIdTypes)],
+    [],
+  ),
 );
 
 /**
@@ -25,7 +23,8 @@ export const selectExtIdLabel = createSelector(
    * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first (recommend using useFetchLabelsFromExtids hook)
    */
   selectExtIdProps,
-  extIdProps => (field, extId, fallbackVal = extId) =>
-    !_.isEmpty(extIdProps[field][extId]?.label) ? extIdProps[field][extId].label : fallbackVal
-
+  (extIdProps) => (field, extId, fallbackVal = extId) =>
+    !_.isEmpty(extIdProps[field][extId]?.label)
+      ? extIdProps[field][extId].label
+      : fallbackVal,
 );

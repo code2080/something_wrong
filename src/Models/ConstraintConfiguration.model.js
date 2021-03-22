@@ -6,14 +6,14 @@ export class ConstraintConfiguration {
   constraints;
   timestamps;
   userId;
-  constructor ({
+  constructor({
     formId,
     name,
     description,
     constraints,
     timestamps,
     constraintConfigurationId,
-    userId
+    userId,
   }) {
     this.formId = formId;
     this.name = name;

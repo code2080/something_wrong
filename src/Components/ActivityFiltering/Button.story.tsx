@@ -8,19 +8,21 @@ export default {
     onChange: {
       controls: {
         disabled: true,
-      }
+      },
     },
     isActive: {
       controls: {
         disabled: true,
-      }
-    }
+      },
+    },
   },
 };
 
 export const Button = () => {
   const [isActive, setIsActive] = useState(false);
-  return <FilterButton isActive = { isActive } onClick={() => setIsActive(!isActive)} />;
+  return (
+    <FilterButton isActive={isActive} onClick={() => setIsActive(!isActive)} />
+  );
 };
 
 Button.args = {

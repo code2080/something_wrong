@@ -3,7 +3,9 @@ import React from 'react';
 import { Switch, InputNumber } from 'antd';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
-  const constraint = allConstraints.find(el => el.constraintId === constraintId);
+  const constraint = allConstraints.find(
+    (el) => el.constraintId === constraintId,
+  );
   if (!constraint || !constraint[prop]) return 'N/A';
   return constraint[prop];
 };
@@ -17,7 +19,9 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
       <Switch
         checked={isActive}
         size='small'
-        onChange={checked => onUpdateValue(ci.constraintId, 'isActive', checked)}
+        onChange={(checked) =>
+          onUpdateValue(ci.constraintId, 'isActive', checked)
+        }
       />
     ),
   },
@@ -25,18 +29,20 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     title: 'Name',
     dataIndex: 'constraintId',
     key: 'name',
-    render: constraintId => getPropFromConstraint(constraintId, 'name', allConstraints),
+    render: (constraintId) =>
+      getPropFromConstraint(constraintId, 'name', allConstraints),
   },
   {
     title: 'Description',
     dataIndex: 'constraintId',
     key: 'description',
-    render: constraintId => getPropFromConstraint(constraintId, 'description', allConstraints),
+    render: (constraintId) =>
+      getPropFromConstraint(constraintId, 'description', allConstraints),
   },
   {
     title: 'Parameters',
     dataIndex: 'parameters',
-    key: 'parameters'
+    key: 'parameters',
   },
   {
     title: 'Hard Constraint',
@@ -46,7 +52,9 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
       <Switch
         checked={isHardConstraint}
         size='small'
-        onChange={checked => onUpdateValue(ci.constraintId, 'isHardConstraint', checked)}
+        onChange={(checked) =>
+          onUpdateValue(ci.constraintId, 'isHardConstraint', checked)
+        }
       />
     ),
   },
@@ -61,10 +69,10 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
         value={weight}
         disabled={isHardConstraint}
         size='small'
-        onChange={val => onUpdateValue(constraintId, 'weight', val)}
+        onChange={(val) => onUpdateValue(constraintId, 'weight', val)}
       />
-    )
-  }
+    ),
+  },
 ];
 
 export default constraintManagerTableColumns;

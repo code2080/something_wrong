@@ -21,11 +21,17 @@ import {
 
 const fetchActivityGroupsForFormFlow = {
   request: () => ({ type: FETCH_ACTIVITY_GROUPS_REQUEST }),
-  success: response => ({ type: FETCH_ACTIVITY_GROUPS_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: FETCH_ACTIVITY_GROUPS_FAILURE, payload: { ...err } }),
+  success: (response) => ({
+    type: FETCH_ACTIVITY_GROUPS_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: FETCH_ACTIVITY_GROUPS_FAILURE,
+    payload: { ...err },
+  }),
 };
 
-export const fetchActivityGroupsForForm = formId =>
+export const fetchActivityGroupsForForm = (formId) =>
   asyncAction.GET({
     flow: fetchActivityGroupsForFormFlow,
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups`,
@@ -34,8 +40,14 @@ export const fetchActivityGroupsForForm = formId =>
 
 export const createActivityGroupFlow = {
   request: () => ({ type: CREATE_ACTIVITY_GROUP_REQUEST }),
-  success: response => ({ type: CREATE_ACTIVITY_GROUP_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: CREATE_ACTIVITY_GROUP_FAILURE, payload: { ...err } }),
+  success: (response) => ({
+    type: CREATE_ACTIVITY_GROUP_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: CREATE_ACTIVITY_GROUP_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const createActivityGroup = (formId, activityGroupBody) =>
@@ -47,39 +59,63 @@ export const createActivityGroup = (formId, activityGroupBody) =>
 
 const assignActivityToGroupFlow = {
   request: () => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_REQUEST }),
-  success: response => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: ASSIGN_ACTIVITIES_TO_GROUP_FAILURE, payload: { ...err } }),
+  success: (response) => ({
+    type: ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: ASSIGN_ACTIVITIES_TO_GROUP_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const assignActivityToGroup = (formId, activityGroupId, activityIds) =>
   asyncAction.POST({
     flow: assignActivityToGroupFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups/${activityGroupId}/activities`,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }forms/${formId}/activity-groups/${activityGroupId}/activities`,
     params: { formId, activityIds },
   });
 
 export const updateActivityGroupFlow = {
   request: () => ({ type: UPDATE_ACTIVITY_GROUP_REQUEST }),
-  success: response => ({ type: UPDATE_ACTIVITY_GROUP_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: UPDATE_ACTIVITY_GROUP_FAILURE, payload: { ...err } }),
+  success: (response) => ({
+    type: UPDATE_ACTIVITY_GROUP_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: UPDATE_ACTIVITY_GROUP_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const updateActivityGroup = (formId, activityGroupId, name) =>
   asyncAction.PATCH({
     flow: updateActivityGroupFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups/${activityGroupId}`,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }forms/${formId}/activity-groups/${activityGroupId}`,
     params: { name },
   });
 
 const deleteActivityGroupFlow = {
   request: () => ({ type: DELETE_ACTIVITY_GROUP_REQUEST }),
-  success: response => ({ type: DELETE_ACTIVITY_GROUP_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: DELETE_ACTIVITY_GROUP_FAILURE, payload: { ...err } }),
+  success: (response) => ({
+    type: DELETE_ACTIVITY_GROUP_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: DELETE_ACTIVITY_GROUP_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const deleteActivityGroup = (formId, activityGroupId) =>
   asyncAction.DELETE({
     flow: deleteActivityGroupFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-groups/${activityGroupId}`,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }forms/${formId}/activity-groups/${activityGroupId}`,
     params: { activityGroupId, formId },
   });

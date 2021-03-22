@@ -4,8 +4,14 @@ import { getEnvParams } from '../../configs';
 
 const fetchConstraintsFlow = {
   request: () => ({ type: types.FETCH_CONSTRAINTS_REQUEST }),
-  success: response => ({ type: types.FETCH_CONSTRAINTS_SUCCESS, payload: { ...response } }),
-  failure: err => ({ type: types.FETCH_CONSTRAINTS_FAILURE, payload: { ...err } })
+  success: (response) => ({
+    type: types.FETCH_CONSTRAINTS_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: types.FETCH_CONSTRAINTS_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const fetchConstraints = () =>

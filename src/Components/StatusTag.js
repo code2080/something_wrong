@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Tag } from 'antd';
 
 // CONSTANTS
-import { themeColors, themeColorTextColor } from '../Constants/themeColors.constants.js';
+import {
+  themeColors,
+  themeColorTextColor,
+} from '../Constants/themeColors.constants.js';
 
 const StatusTag = ({ children, color }) => {
   const resolvedColor = useMemo(() => {

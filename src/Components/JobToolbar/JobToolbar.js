@@ -16,7 +16,9 @@ const JobToolbar = () => {
   const job = useSelector(selectJobFromForm)(activeJobId, activeJobFormId);
 
   const onStopJob = () => {
-    if (activeJobId) { stopJob(); }
+    if (activeJobId) {
+      stopJob();
+    }
   };
 
   const hasActiveJob = job && job._id;
@@ -26,16 +28,11 @@ const JobToolbar = () => {
         <span className={`label ${hasActiveJob ? 'active' : 'inactive'}`}>
           {hasActiveJob
             ? 'Scheduling job in progress'
-            : 'No active automatic scheduling job'
-          }
+            : 'No active automatic scheduling job'}
         </span>
         {hasActiveJob && (
           <React.Fragment>
-            <Button
-              type='link'
-              size='small'
-              onClick={onStopJob}
-            >
+            <Button type='link' size='small' onClick={onStopJob}>
               Stop
             </Button>
             <div className='meter'>

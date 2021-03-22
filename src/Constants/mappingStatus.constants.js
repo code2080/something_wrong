@@ -6,10 +6,12 @@ export const mappingStatuses = {
 export const mappingStatusProps = {
   [mappingStatuses.NOT_SET]: {
     label: 'Not set',
-    tooltip: reservationTemplateName => `No mapping for ${reservationTemplateName} has been created`,
+    tooltip: (reservationTemplateName) =>
+      `No mapping for ${reservationTemplateName} has been created`,
   },
   [mappingStatuses.COMPLETE]: {
     label: 'All properties mapped',
-    tooltip: reservationTemplateName => `All properties for ${reservationTemplateName} are mapped`,
+    tooltip: (reservationTemplateName) =>
+      `All properties for ${reservationTemplateName} are mapped`,
   },
 };

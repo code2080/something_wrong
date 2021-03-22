@@ -12,16 +12,13 @@ const SignIn = ({ onSignIn }) => {
   };
 
   return (
-    <Form
-      hideRequiredMark
-      onSubmit={handleSubmit}
-    >
+    <Form hideRequiredMark onSubmit={handleSubmit}>
       <Form.Item label='Email:'>
         <Input
           prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
           placeholder='Email'
           value={account}
-          onChange={e => setAccount(e.target.value)}
+          onChange={(e) => setAccount(e.target.value)}
         />
       </Form.Item>
       <Form.Item label='Password:'>
@@ -30,7 +27,7 @@ const SignIn = ({ onSignIn }) => {
           type='password'
           placeholder='Password'
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Item>
       <Form.Item>

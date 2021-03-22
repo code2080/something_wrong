@@ -14,7 +14,9 @@ export const useJobWSAPI = () => {
   const { formId } = useParams();
 
   const stopJob = () => {
-    if (activeJobId && formId) { dispatch(abortJob({ jobId: activeJobId, formId })); }
+    if (activeJobId && formId) {
+      dispatch(abortJob({ jobId: activeJobId, formId }));
+    }
   };
 
   useEffect(() => {
@@ -28,8 +30,10 @@ export const useJobWSAPI = () => {
       console.log('WS connection initialized, starting dedicated session');
       socket.current.emit('watchJobs', { formId });
     });
-    socket.current.on('connect_error', args => console.log(args));
-    socket.current.on('disconnect', (reason) => console.log(`WS connection closed, reason: ${reason}`));
+    socket.current.on('connect_error', (args) => console.log(args));
+    socket.current.on('disconnect', (reason) =>
+      console.log(`WS connection closed, reason: ${reason}`),
+    );
     // Event listener for job update
     socket.current.on('jobUpdate', ({ job }) => {
       const jobId = job ? job._id : null;
@@ -44,7 +48,7 @@ export const useJobWSAPI = () => {
       // When component unmounts, close the connection
       socket.current.disconnect();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { activeJobId, activeJobFormId: formId, stopJob };

@@ -23,7 +23,10 @@ export const sortByElementHtml = (a, b) => {
 export const sortByElementDeepHtml = (a, b) => {
   const elementA = document.querySelector(a);
   const elementB = document.querySelector(b);
-  return sortValue(getElementHtml(elementA, true), getElementHtml(elementB, true));
+  return sortValue(
+    getElementHtml(elementA, true),
+    getElementHtml(elementB, true),
+  );
 };
 
 export const sortByActivityGroup = (a, b) => {

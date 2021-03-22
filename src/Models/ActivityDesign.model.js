@@ -8,14 +8,7 @@ export class ActivityDesign {
   fields;
   propSettings;
 
-  constructor ({
-    name,
-    formId,
-    timing,
-    objects,
-    fields,
-    propSettings,
-  }) {
+  constructor({ name, formId, timing, objects, fields, propSettings }) {
     this.name = name;
     this.formId = formId;
     this.timing = new ActivityTiming(timing || {});

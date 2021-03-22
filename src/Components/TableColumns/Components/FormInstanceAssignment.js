@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import { Popover, Input, Button } from 'antd';
 import _ from 'lodash';
-import { SearchOutlined, UserAddOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  UserAddOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons';
 
 // CONSTANTS
 import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.constants';
@@ -22,8 +26,14 @@ import './FormInstanceAssignment.scss';
 
 const AssignedUser = ({ isSelf, assignedUser, onRemoveUser }) => {
   return (
-    <div className={`assignment__popover--item assigned-user ${isSelf ? 'is-self' : ''}`}>
-      <div className='assignment__popover__item__avatar'>{assignedUser.initials}</div>
+    <div
+      className={`assignment__popover--item assigned-user ${
+        isSelf ? 'is-self' : ''
+      }`}
+    >
+      <div className='assignment__popover__item__avatar'>
+        {assignedUser.initials}
+      </div>
       <div className='assignment__popover__item__name'>{assignedUser.name}</div>
       <div className='assignment__popover__item__remove' onClick={onRemoveUser}>
         <CloseCircleOutlined />
@@ -45,9 +55,7 @@ const EmptyAssignment = () => (
 );
 
 const AddlUsers = ({ n }) => (
-  <div className='assignment--avatar addl'>
-    {`+${n}`}
-  </div>
+  <div className='assignment--avatar addl'>{`+${n}`}</div>
 );
 
 AddlUsers.propTypes = {
@@ -67,38 +75,44 @@ AssignedAvatar.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-const AssignedAvatars = ({ assignees, selfUID, show }) => (
-  assignees.length
-    ? <React.Fragment>
-      {_.take(assignees, show).map(assignee => <AssignedAvatar user={assignee} isSelf={assignee._id === selfUID} key={assignee._id} />)}
+const AssignedAvatars = ({ assignees, selfUID, show }) =>
+  assignees.length ? (
+    <React.Fragment>
+      {_.take(assignees, show).map((assignee) => (
+        <AssignedAvatar
+          user={assignee}
+          isSelf={assignee._id === selfUID}
+          key={assignee._id}
+        />
+      ))}
       {assignees.length > show && <AddlUsers n={assignees.length - show} />}
     </React.Fragment>
-    : <EmptyAssignment />
-);
+  ) : (
+    <EmptyAssignment />
+  );
 
 AssignedAvatars.propTypes = {
   assignees: PropTypes.array,
   selfUID: PropTypes.string,
-  show: PropTypes.number
+  show: PropTypes.number,
 };
 
 AssignedAvatars.defaultProps = {
   assignees: [],
   selfUID: '',
-  show: 3
+  show: 3,
 };
 
 const AssignmentPopoverTitle = ({ onAssignSelf, isSelf }) => (
   <div className='assignment__popover--header'>
-    <span className='assignment__popover__header--title'>Assign submission</span>
-    {!isSelf && <Button
-      type='link'
-      size='small'
-      onClick={() => onAssignSelf()}
-    >
-      To me
-    </Button>
-    }
+    <span className='assignment__popover__header--title'>
+      Assign submission
+    </span>
+    {!isSelf && (
+      <Button type='link' size='small' onClick={() => onAssignSelf()}>
+        To me
+      </Button>
+    )}
   </div>
 );
 
@@ -107,7 +121,7 @@ AssignmentPopoverTitle.propTypes = {
   isSelf: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   selfUID: state.auth.user.id,
 });
 
@@ -116,55 +130,75 @@ const mapActionsToProps = {
 };
 
 const withKeyMovedToHead = (list, key, accessor = _.identity) => {
-  const keyIndex = _.indexOf(list, _.find(list, el => accessor(el) === key));
-  return keyIndex > -1 ? [list[keyIndex], ...list.slice(0, keyIndex), ...list.slice(keyIndex + 1)] : [...list];
+  const keyIndex = _.indexOf(
+    list,
+    _.find(list, (el) => accessor(el) === key),
+  );
+  return keyIndex > -1
+    ? [list[keyIndex], ...list.slice(0, keyIndex), ...list.slice(keyIndex + 1)]
+    : [...list];
 };
 
-const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUserForFormInstance }) => {
+const FormInstanceAssignment = ({
+  selfUID,
+  assignedTo,
+  formInstanceId,
+  toggleUserForFormInstance,
+}) => {
   const [filterQuery, setFilterQuery] = useState('');
   const users = useSelector(getUsers(ASSIGNABLE_PERMISSION_NAME));
   const sortedUsers = _.sortBy(_.flatMap(users), ['firstName', 'lastName']);
-  const _users = withKeyMovedToHead(sortedUsers, selfUID, user => user._id);
+  const _users = withKeyMovedToHead(sortedUsers, selfUID, (user) => user._id);
 
-  const assignees = useMemo(() => {
-    const sortedAssignees = _.sortBy(assignedTo
-      .filter(uid => _.find(_users, u => u._id === uid))
-      .map(uid => _.find(_users, u => u._id === uid)),
-    ['firstName', 'lastName']);
+  const assignees = useMemo(
+    () => {
+      const sortedAssignees = _.sortBy(
+        assignedTo
+          .filter((uid) => _.find(_users, (u) => u._id === uid))
+          .map((uid) => _.find(_users, (u) => u._id === uid)),
+        ['firstName', 'lastName'],
+      );
 
-    return withKeyMovedToHead(
-      sortedAssignees,
-      selfUID, user => user._id);
-  },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [_users, assignedTo]
+      return withKeyMovedToHead(sortedAssignees, selfUID, (user) => user._id);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [_users, assignedTo],
   );
 
   const filteredUsers = useMemo(() => {
     const normalizedQuery = filterQuery.toLowerCase();
     return _users
-      .filter(u => !assignedTo.includes(u._id))
-      .filter(u => !normalizedQuery || `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.includes(normalizedQuery));
-  },
-  [_users, assignedTo, filterQuery]
-  );
+      .filter((u) => !assignedTo.includes(u._id))
+      .filter(
+        (u) =>
+          !normalizedQuery ||
+          `${u.firstName.toLowerCase()} ${u.lastName.toLowerCase()}`.includes(
+            normalizedQuery,
+          ),
+      );
+  }, [_users, assignedTo, filterQuery]);
 
-  const userLists = [{ users: assignees, isAssigned: true }, { users: filteredUsers, isAssigned: false }];
+  const userLists = [
+    { users: assignees, isAssigned: true },
+    { users: filteredUsers, isAssigned: false },
+  ];
   return (
     <Popover
       overlayClassName='assignment__popover--wrapper'
-      title={(
+      title={
         <AssignmentPopoverTitle
-          onAssignSelf={() => toggleUserForFormInstance({ formInstanceId, userId: selfUID })}
-          isSelf={!!_.find(assignees, assignee => assignee._id === selfUID)}
+          onAssignSelf={() =>
+            toggleUserForFormInstance({ formInstanceId, userId: selfUID })
+          }
+          isSelf={!!_.find(assignees, (assignee) => assignee._id === selfUID)}
         />
-      )}
-      content={(
+      }
+      content={
         <div className='assignment--popover'>
           <Input
             placeholder='Find users'
             suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
-            onChange={e => setFilterQuery(e.target.value)}
+            onChange={(e) => setFilterQuery(e.target.value)}
             size='small'
             value={filterQuery}
           />
@@ -174,11 +208,13 @@ const FormInstanceAssignment = ({ selfUID, assignedTo, formInstanceId, toggleUse
               users={users}
               selfUID={selfUID}
               isAssigned={isAssigned}
-              onToggleUser={userId => toggleUserForFormInstance({ formInstanceId, userId })}
+              onToggleUser={(userId) =>
+                toggleUserForFormInstance({ formInstanceId, userId })
+              }
             />
           ))}
         </div>
-      )}
+      }
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       trigger='click'
       placement='rightTop'
@@ -202,4 +238,7 @@ FormInstanceAssignment.defaultProps = {
   assignedTo: [],
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(FormInstanceAssignment);
+export default connect(
+  mapStateToProps,
+  mapActionsToProps,
+)(FormInstanceAssignment);

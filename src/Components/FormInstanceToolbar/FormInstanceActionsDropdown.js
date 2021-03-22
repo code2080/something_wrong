@@ -7,21 +7,34 @@ import { sendReviewerLink } from '../../Redux/FormSubmissions/formSubmissions.ac
 
 const FormInstanceActionsDropdown = ({ formInstance }) => {
   const dispatch = useDispatch();
-  const menu = useMemo(() => (
-    <Menu>
-      <Menu.Item>
-        <a target='_blank' rel='noreferrer' href={formInstance.reviewLink}>View schedule in TE Viewer</a>
-      </Menu.Item>
-      <Menu.Item onClick={() => dispatch(sendReviewerLink({ formInstanceId: formInstance._id }))}>
-        Notify user with review link
-      </Menu.Item>
-    </Menu>
-  ), [dispatch, formInstance._id, formInstance.reviewLink]);
+  const menu = useMemo(
+    () => (
+      <Menu>
+        <Menu.Item>
+          <a target='_blank' rel='noreferrer' href={formInstance.reviewLink}>
+            View schedule in TE Viewer
+          </a>
+        </Menu.Item>
+        <Menu.Item
+          onClick={() =>
+            dispatch(sendReviewerLink({ formInstanceId: formInstance._id }))
+          }
+        >
+          Notify user with review link
+        </Menu.Item>
+      </Menu>
+    ),
+    [dispatch, formInstance._id, formInstance.reviewLink],
+  );
 
   if (!formInstance || !formInstance.reviewLink) return null;
 
   return (
-    <Dropdown overlay={menu} getPopupContainer={() => document.getElementById('te-prefs-lib')} trigger={['click']}>
+    <Dropdown
+      overlay={menu}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      trigger={['click']}
+    >
       <a type='link' size='small'>
         Review schedule...
       </a>

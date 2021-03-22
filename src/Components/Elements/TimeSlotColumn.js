@@ -14,10 +14,14 @@ import { TIME_FORMAT } from '../../Constants/common.constants';
 const TimeSlotColumn = ({ event, timeslots }) => {
   const timeslot = useMemo(
     () => findTimeSlot(event.startTime, event.endTime, timeslots),
-    [event, timeslots]
+    [event, timeslots],
   );
   const tooltipTitle = useMemo(() => {
-    if (timeslot) { return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(TIME_FORMAT)} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`; }
+    if (timeslot) {
+      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(
+        TIME_FORMAT,
+      )} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`;
+    }
     return 'Timeslot could not be found';
   }, [timeslot]);
 

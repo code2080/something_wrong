@@ -35,7 +35,6 @@ const FormToolbar = ({ form, onClickMore }) => (
       <div className='toolbar--section-flex'>
         <a onClick={() => onClickMore()}>Form info...</a>
       </div>
-
     </div>
   </React.Fragment>
 );

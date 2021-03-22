@@ -31,12 +31,12 @@ import {
   SECTION_VERTICAL,
   SECTION_TABLE,
   SECTION_CONNECTED,
-  SECTION_AVAILABILITY
+  SECTION_AVAILABILITY,
 } from '../Constants/sectionTypes.constants';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 
-const unformattedValue = value => (
+const unformattedValue = (value) => (
   <div
     style={{
       zIndex: 2,
@@ -60,7 +60,10 @@ const connectedSectionColumns = {
         </SortableTableCell>
       ),
       sorter: (a, b) => {
-        return sortByElementHtml(`.startTime_${a.rowKey}`, `.startTime_${b.rowKey}`);
+        return sortByElementHtml(
+          `.startTime_${a.rowKey}`,
+          `.startTime_${b.rowKey}`,
+        );
       },
     },
     {
@@ -74,11 +77,14 @@ const connectedSectionColumns = {
         </SortableTableCell>
       ),
       sorter: (a, b) => {
-        return sortByElementHtml(`.endTime_${a.rowKey}`, `.endTime_${b.rowKey}`);
+        return sortByElementHtml(
+          `.endTime_${a.rowKey}`,
+          `.endTime_${b.rowKey}`,
+        );
       },
     },
   ],
-  TIMESLOT: timeslots => [
+  TIMESLOT: (timeslots) => [
     {
       title: 'Timeslot',
       key: 'timeslot',
@@ -89,11 +95,14 @@ const connectedSectionColumns = {
         </SortableTableCell>
       ),
       sorter: (a, b) => {
-        return sortByElementHtml(`.timeslot_${a.rowKey} .value--wrapper`, `.timeslot_${b.rowKey} .value--wrapper`);
-      }
+        return sortByElementHtml(
+          `.timeslot_${a.rowKey} .value--wrapper`,
+          `.timeslot_${b.rowKey} .value--wrapper`,
+        );
+      },
     },
   ],
-  SCHEDULING: (_sectionId, _formInstanceId, _formId) => [] // TODO: Reenable this after we've built support for new data format
+  SCHEDULING: (_sectionId, _formInstanceId, _formId) => [], // TODO: Reenable this after we've built support for new data format
   // [
   //   {
   //     title: '',
@@ -140,14 +149,14 @@ export const renderElementValue = (value, element) => {
     case elementTypes.ELEMENT_TYPE_CHECKBOX_GROUP:
       return <OptionSelection value={value} element={element} />;
     case elementTypes.ELEMENT_TYPE_PLAINTEXT:
-    /**
-         * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
-         */
+      /**
+       * @todo this should probably not be rendered at all (even as a column?) since it's not something the user's put in
+       */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_CALENDAR:
-    /**
-         * @todo break into separate component
-         */
+      /**
+       * @todo break into separate component
+       */
       return unformattedValue(value.toString());
     case elementTypes.ELEMENT_TYPE_DATASOURCE:
       return (
@@ -165,9 +174,7 @@ export const renderElementValue = (value, element) => {
     }
     case elementTypes.ELEMENT_TYPE_TEXTAREA:
       return (
-        <div className='preline'>
-          {unformattedValue(value.toString())}
-        </div>
+        <div className='preline'>{unformattedValue(value.toString())}</div>
       );
     case elementTypes.ELEMENT_TYPE_DAY_PICKER:
       return moment(value, 'ddd').format('dddd');
@@ -177,7 +184,7 @@ export const renderElementValue = (value, element) => {
       return getLocalDate(value).format('[Week] w / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
-      return (<Padding value={value} element={element} />);
+      return <Padding value={value} element={element} />;
 
     case elementTypes.ELEMENT_TYPE_UUID:
     case elementTypes.ELEMENT_TYPE_INPUT_TEXT:
@@ -192,19 +199,19 @@ const availabilityCalendarColumns = [
     title: 'Start time',
     key: 'start',
     dataIndex: 'start',
-    render: start => <DateTime value={start} format={DATE_TIME_FORMAT} />
+    render: (start) => <DateTime value={start} format={DATE_TIME_FORMAT} />,
   },
   {
     title: 'End time',
     key: 'end',
     dataIndex: 'end',
-    render: end => <DateTime value={end} format={DATE_TIME_FORMAT} />
+    render: (end) => <DateTime value={end} format={DATE_TIME_FORMAT} />,
   },
   {
     title: 'Comment',
     key: 'comment',
     dataIndex: 'comment',
-    render: comment => <span>{comment}</span>,
+    render: (comment) => <span>{comment}</span>,
   },
 ];
 
@@ -214,41 +221,62 @@ const availabilityCalendarColumns = [
  * @param {Object} section the form section object to extract the columns from
  * @returns {Array} columns
  */
-export const transformSectionToTableColumns = (section, sectionType, formInstanceId, formId) => {
-  const _elementColumns = section.elements.reduce((cols, el) =>
-    getElementTypeFromId(el.elementId) === elementTypes.ELEMENT_TYPE_PLAINTEXT
-      ? cols
-      : [
-        ...cols,
-        {
-          title: el.label,
-          key: el._id,
-          dataIndex: el._id,
-          render: (value, item = {}) => (
-            <SortableTableCell className={`element_${el._id}_${item.rowKey}`}>
-              {renderElementValue(value, el)}
-            </SortableTableCell>
-          ),
-          sorter: (a, b) => {
-            return sortByElementHtml(`.element_${el._id}_${a.rowKey}`, `.element_${el._id}_${b.rowKey}`);
-          },
-
-        },
-      ]
-  , []);
+export const transformSectionToTableColumns = (
+  section,
+  sectionType,
+  formInstanceId,
+  formId,
+) => {
+  const _elementColumns = section.elements.reduce(
+    (cols, el) =>
+      getElementTypeFromId(el.elementId) === elementTypes.ELEMENT_TYPE_PLAINTEXT
+        ? cols
+        : [
+            ...cols,
+            {
+              title: el.label,
+              key: el._id,
+              dataIndex: el._id,
+              render: (value, item = {}) => (
+                <SortableTableCell
+                  className={`element_${el._id}_${item.rowKey}`}
+                >
+                  {renderElementValue(value, el)}
+                </SortableTableCell>
+              ),
+              sorter: (a, b) => {
+                return sortByElementHtml(
+                  `.element_${el._id}_${a.rowKey}`,
+                  `.element_${el._id}_${b.rowKey}`,
+                );
+              },
+            },
+          ],
+    [],
+  );
 
   switch (sectionType) {
     case SECTION_CONNECTED: {
       if (section.calendarSettings && section.calendarSettings.useTimeslots) {
         return [
-          ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+          ...connectedSectionColumns.SCHEDULING(
+            section._id,
+            formInstanceId,
+            formId,
+          ),
           ...connectedSectionColumns.TIMEINFO,
-          ...connectedSectionColumns.TIMESLOT(section.calendarSettings.timeslots),
+          ...connectedSectionColumns.TIMESLOT(
+            section.calendarSettings.timeslots,
+          ),
           ..._elementColumns,
         ];
       }
       return [
-        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ...connectedSectionColumns.SCHEDULING(
+          section._id,
+          formInstanceId,
+          formId,
+        ),
         ...connectedSectionColumns.TIMEINFO,
         ..._elementColumns,
       ];
@@ -256,17 +284,25 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
 
     case SECTION_TABLE:
       return [
-        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
-        ..._elementColumns
+        ...connectedSectionColumns.SCHEDULING(
+          section._id,
+          formInstanceId,
+          formId,
+        ),
+        ..._elementColumns,
       ];
     case SECTION_AVAILABILITY:
       return [
-        ...connectedSectionColumns.SCHEDULING(section._id, formInstanceId, formId),
+        ...connectedSectionColumns.SCHEDULING(
+          section._id,
+          formInstanceId,
+          formId,
+        ),
         ...availabilityCalendarColumns,
       ];
     default:
       return [..._elementColumns];
-  };
+  }
 };
 
 /**
@@ -275,11 +311,16 @@ export const transformSectionToTableColumns = (section, sectionType, formInstanc
  * @param {Array} values the vertical section values to extract the data from
  * @param {Array} columns the columns to use as transformation map
  */
-const transformVerticalSectionValuesToTableRows = (values, columns, sectionId) => {
+const transformVerticalSectionValuesToTableRows = (
+  values,
+  columns,
+  sectionId,
+) => {
   const _data = columns.reduce((data, col) => {
-    if (!values || !columns || !sectionId || !values.length || !columns.length) return data;
+    if (!values || !columns || !sectionId || !values.length || !columns.length)
+      return data;
     // Find the element idx
-    const elementIdx = values.findIndex(el => el.elementId === col.dataIndex);
+    const elementIdx = values.findIndex((el) => el.elementId === col.dataIndex);
     if (elementIdx === -1) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
@@ -293,14 +334,25 @@ const transformVerticalSectionValuesToTableRows = (values, columns, sectionId) =
  * @param {Array} columns the columns to use as transformation map
  */
 const transformConnectedSectionValuesToTableRows = (values, columns) => {
-  if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
+  if (
+    !values ||
+    !columns ||
+    Object.keys(values).length === 0 ||
+    !columns.length
+  )
+    return [];
 
-  const _data = (Object.keys(values) || []).map(eventId => {
+  const _data = (Object.keys(values) || []).map((eventId) => {
     const _eventValues = columns.reduce((eventValues, col) => {
       // Find the element index
-      const elementIdx = values[eventId].values.findIndex(el => el.elementId === col.dataIndex);
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
       if (elementIdx === -1) return eventValues;
-      return { ...eventValues, [col.dataIndex]: values[eventId].values[elementIdx].value };
+      return {
+        ...eventValues,
+        [col.dataIndex]: values[eventId].values[elementIdx].value,
+      };
     }, {});
     return {
       ..._eventValues,
@@ -320,13 +372,24 @@ const transformConnectedSectionValuesToTableRows = (values, columns) => {
  * @param {Array} columns the columns to use as transformation map
  */
 const transformTableSectionValuesToTableRows = (values, columns) => {
-  if (!values || !columns || Object.keys(values).length === 0 || !columns.length) return [];
-  const _data = (Object.keys(values) || []).map(eventId => {
+  if (
+    !values ||
+    !columns ||
+    Object.keys(values).length === 0 ||
+    !columns.length
+  )
+    return [];
+  const _data = (Object.keys(values) || []).map((eventId) => {
     const _eventValues = columns.reduce((eventValues, col) => {
       // Find the element index
-      const elementIdx = values[eventId].values.findIndex(el => el.elementId === col.dataIndex);
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
       if (elementIdx === -1) return eventValues;
-      return { ...eventValues, [col.dataIndex]: values[eventId].values[elementIdx].value };
+      return {
+        ...eventValues,
+        [col.dataIndex]: values[eventId].values[elementIdx].value,
+      };
     }, {});
     return {
       ..._eventValues,
@@ -341,12 +404,12 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-const transformAvailabilityCalendarToTableRows = (values) => ([
-  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map(item => ({
+const transformAvailabilityCalendarToTableRows = (values) => [
+  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map((item) => ({
     ...item,
     rowKey: item.eventId,
-  }))
-]);
+  })),
+];
 
 /**
  * @function transformSectionValuesToTableRows
@@ -356,10 +419,19 @@ const transformAvailabilityCalendarToTableRows = (values) => ([
  * @param {String} sectionId the id of the section
  * @param {String} sectionType the type of section
  */
-export const transformSectionValuesToTableRows = (values, columns, sectionId, sectionType) => {
+export const transformSectionValuesToTableRows = (
+  values,
+  columns,
+  sectionId,
+  sectionType,
+) => {
   switch (sectionType) {
     case SECTION_VERTICAL:
-      return transformVerticalSectionValuesToTableRows(values, columns, sectionId);
+      return transformVerticalSectionValuesToTableRows(
+        values,
+        columns,
+        sectionId,
+      );
     case SECTION_TABLE:
       return transformTableSectionValuesToTableRows(values, columns);
     case SECTION_CONNECTED:
@@ -374,7 +446,7 @@ export const transformSectionValuesToTableRows = (values, columns, sectionId, se
 export const LabelRenderer = ({ type, extId }) => {
   const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
   useFetchLabelsFromExtIds(payload);
-  const label = useSelector(state => state.te.extIdProps[type][extId]);
+  const label = useSelector((state) => state.te.extIdProps[type][extId]);
   if (!extId || !type) return 'N/A';
   return label && (label.label || extId || 'N/A');
 };

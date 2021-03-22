@@ -1,4 +1,8 @@
-import { EConstraintOperators, EConstraintType, TConstraint } from './Constraint.type';
+import {
+  EConstraintOperators,
+  EConstraintType,
+  TConstraint,
+} from './Constraint.type';
 
 export type TConstraintInstance = {
   constraintId: string;
@@ -6,7 +10,7 @@ export type TConstraintInstance = {
   isHardConstraint: boolean;
   weight?: number;
   parameters: string[];
-  operator: EConstraintOperators,
+  operator: EConstraintOperators;
 };
 
 export class ConstraintInstance {
@@ -36,4 +40,4 @@ export class ConstraintConfiguration {
     description: obj.description || null,
     constraints: obj.constraints || [],
   });
-};
+}

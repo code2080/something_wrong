@@ -1,5 +1,9 @@
 // HELPERS
-import { getSectionFromId, getElementFromSection, getSectionTypeFromId } from './sections.helpers';
+import {
+  getSectionFromId,
+  getElementFromSection,
+  getSectionTypeFromId,
+} from './sections.helpers';
 
 // MODELS
 import { ActivityValue } from '../Models/ActivityValue.model';
@@ -9,12 +13,15 @@ import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import {
   SECTION_TABLE,
-  SECTION_CONNECTED
+  SECTION_CONNECTED,
 } from '../Constants/sectionTypes.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 import { ActivityValueMode } from '../Constants/activityValueModes.constants';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
-import { searchCriteriaNumber, searchCriteriaNumberProps } from '../Constants/searchCriteria.constants';
+import {
+  searchCriteriaNumber,
+  searchCriteriaNumberProps,
+} from '../Constants/searchCriteria.constants';
 
 /**
  * @function ensureValueTypeFormat
@@ -46,7 +53,7 @@ const ensureValueTypeFormat = (value, valueType) => {
  * @param {Object} activityValue the activity value to be assessed
  * @returns {String} value type (enum of submissionValueTypes)
  */
-export const determineContentOfValue = activityValue => {
+export const determineContentOfValue = (activityValue) => {
   if (activityValue.type !== ActivityValueType.OBJECT) return null;
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
@@ -64,14 +71,19 @@ const transformFieldSearchToFilter = (datasource, rawValue) => {
 const transformNumberSearchToFilter = (datasource, rawValue) => {
   return {
     categories: [],
-    searchString: `${searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label}${rawValue.value}`,
+    searchString: `${
+      searchCriteriaNumberProps[searchCriteriaNumber[rawValue.equality]].label
+    }${rawValue.value}`,
     searchFields: [datasource[1]],
   };
 };
 
 const transformDatasourceToFilter = (datasource, rawValue) => {
   return {
-    categories: Object.entries(rawValue[0]).reduce((categories, [field, values]) => [...categories, { id: field, values }], []),
+    categories: Object.entries(rawValue[0]).reduce(
+      (categories, [field, values]) => [...categories, { id: field, values }],
+      [],
+    ),
     searchString: null,
     searchFields: null,
   };
@@ -128,8 +140,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
   /**
    * If there's no datasource attached to the object, we can be sure it should be free text interpretation
    */
-  if (!element.datasource)
-    return _defPayload;
+  if (!element.datasource) return _defPayload;
   /**
    *  Split the data source to get its components
    */
@@ -137,8 +148,7 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
   /**
    * If data source doesn't match format, return def value payload
    */
-  if (!datasource.length || datasource.length < 2)
-    return _defPayload;
+  if (!datasource.length || datasource.length < 2) return _defPayload;
   /**
    * If the datasource contains an object
    */
@@ -161,19 +171,36 @@ const formatActivityValuePayload = (element, rawValue, valueType) => {
  * @param {Array} sections all sections in the form
  * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs = []) => {
-  if (!formInstance || !sectionId || !eventId || !elementId || !sections) return null;
+const getActivityValuePayloadFromConnectedSection = (
+  formInstance,
+  sectionId,
+  eventId,
+  elementId,
+  sections,
+  valueType,
+  formInstanceObjReqs = [],
+) => {
+  if (!formInstance || !sectionId || !eventId || !elementId || !sections)
+    return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
-  const eventValues = formInstance.values[sectionId][eventId].values.reduce((values, val) => {
-    const objReq = formInstanceObjReqs.find(req => req._id === val.value[0]);
-    if (objReq) {
-      return [...values, { ...val, value: [objReq.replacementObjectExtId || null] }];
-    }
-    return [...values, val];
-  }, []);
+  const eventValues = formInstance.values[sectionId][eventId].values.reduce(
+    (values, val) => {
+      const objReq = formInstanceObjReqs.find(
+        (req) => req._id === val.value[0],
+      );
+      if (objReq) {
+        return [
+          ...values,
+          { ...val, value: [objReq.replacementObjectExtId || null] },
+        ];
+      }
+      return [...values, val];
+    },
+    [],
+  );
   if (!eventValues) return null;
-  const elementIdx = eventValues.findIndex(el => el.elementId === elementId);
+  const elementIdx = eventValues.findIndex((el) => el.elementId === elementId);
   if (elementIdx === -1) return null;
   const rawValue = eventValues[elementIdx].value;
   const element = getElementFromSection(elementId, section);
@@ -191,13 +218,21 @@ const getActivityValuePayloadFromConnectedSection = (formInstance, sectionId, ev
  * @param {Array} sections all sections in the form
  * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx, elementId, sections, valueType) => {
-  if (!formInstance || !sectionId || !rowIdx || !elementId || !sections) return null;
+const getActivityValuePayloadFromTableSection = (
+  formInstance,
+  sectionId,
+  rowIdx,
+  elementId,
+  sections,
+  valueType,
+) => {
+  if (!formInstance || !sectionId || !rowIdx || !elementId || !sections)
+    return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
   const rowValues = formInstance.values[sectionId][rowIdx];
   if (!rowValues) return null;
-  const elementIdx = rowValues.findIndex(el => el.elementId === elementId);
+  const elementIdx = rowValues.findIndex((el) => el.elementId === elementId);
   if (elementIdx === -1) return null;
   const rawValue = rowValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
@@ -214,13 +249,21 @@ const getActivityValuePayloadFromTableSection = (formInstance, sectionId, rowIdx
  * @param {Array} sections all sections in the form
  * @param {String} valueType the activity value's type
  */
-const getActivityValuePayloadFromRegularSection = (formInstance, sectionId, elementId, sections, valueType) => {
+const getActivityValuePayloadFromRegularSection = (
+  formInstance,
+  sectionId,
+  elementId,
+  sections,
+  valueType,
+) => {
   if (!formInstance || !sectionId || !elementId || !sections) return null;
   const section = getSectionFromId(sectionId, sections);
   if (!section) return null;
   const sectionValues = formInstance.values[sectionId];
   if (!sectionValues) return null;
-  const elementIdx = sectionValues.findIndex(el => el.elementId === elementId);
+  const elementIdx = sectionValues.findIndex(
+    (el) => el.elementId === elementId,
+  );
   if (elementIdx === -1) return null;
   const rawValue = sectionValues[elementIdx].value.toString();
   const element = getElementFromSection(elementId, section);
@@ -237,7 +280,8 @@ const getActivityValuePayloadFromRegularSection = (formInstance, sectionId, elem
  * @param {String} eventId the event id
  * @returns {Any} eventValue
  */
-const getEventValue = (prop, formInstance, sectionId, eventId) => formInstance.values[sectionId][eventId][prop];
+const getEventValue = (prop, formInstance, sectionId, eventId) =>
+  formInstance.values[sectionId][eventId][prop];
 
 /**
  * @function getScopedObjectValue
@@ -245,25 +289,26 @@ const getEventValue = (prop, formInstance, sectionId, eventId) => formInstance.v
  * @param {Object} formInstance the form instance to fetch the value from
  * @returns {String} scopedObjectExtId
  */
-const getScopedObjectValue = formInstance => formInstance.scopedObject;
+const getScopedObjectValue = (formInstance) => formInstance.scopedObject;
 
 /**
  * @function createTimingModeActivityValue
  * @description special case helper for creating the activity value for the TIMING.mode mapping parameter
  * @param {String} selectedTimingMode the chosen timing mode
  */
-const createTimingModeActivityValue = selectedTimingMode => new ActivityValue({
-  type: ActivityValueType.TIMING,
-  extId: 'mode',
-  submissionValue: [selectedTimingMode],
-  submissionValueType: submissionValueTypes.TIMING,
-  valueMode: ActivityValueMode.FROM_SUBMISSION,
-  value: selectedTimingMode,
-  sectionId: null,
-  elementId: null,
-  eventId: null,
-  rowIdx: null,
-});
+const createTimingModeActivityValue = (selectedTimingMode) =>
+  new ActivityValue({
+    type: ActivityValueType.TIMING,
+    extId: 'mode',
+    submissionValue: [selectedTimingMode],
+    submissionValueType: submissionValueTypes.TIMING,
+    valueMode: ActivityValueMode.FROM_SUBMISSION,
+    value: selectedTimingMode,
+    sectionId: null,
+    elementId: null,
+    eventId: null,
+    rowIdx: null,
+  });
 
 /**
  * @function createActivityValueForScopedObjectProp
@@ -272,18 +317,19 @@ const createTimingModeActivityValue = selectedTimingMode => new ActivityValue({
  * @param {String} valueType the value type of the activity value
  * @param {String} extId the ext id of the prop that's mapped to the primary object
  */
-const createScopedObjectActivityValue = (formInstance, valueType, extId) => new ActivityValue({
-  type: valueType,
-  extId: extId,
-  submissionValue: [getScopedObjectValue(formInstance)],
-  submissionValueType: submissionValueTypes.OBJECT,
-  valueMode: ActivityValueMode.FROM_SUBMISSION,
-  value: [getScopedObjectValue(formInstance)],
-  sectionId: 'scopedObject',
-  elementId: null,
-  eventId: null,
-  rowIdx: null,
-});
+const createScopedObjectActivityValue = (formInstance, valueType, extId) =>
+  new ActivityValue({
+    type: valueType,
+    extId: extId,
+    submissionValue: [getScopedObjectValue(formInstance)],
+    submissionValueType: submissionValueTypes.OBJECT,
+    valueMode: ActivityValueMode.FROM_SUBMISSION,
+    value: [getScopedObjectValue(formInstance)],
+    sectionId: 'scopedObject',
+    elementId: null,
+    eventId: null,
+    rowIdx: null,
+  });
 
 /**
  * @function createActivityValueForConnectedSectionSpecialProp
@@ -303,7 +349,9 @@ const createActivityValueForConnectedSectionSpecialProp = (
   eventId,
   elementId,
 ) => {
-  const submissionValue = [getEventValue(elementId, formInstance, sectionId, eventId)];
+  const submissionValue = [
+    getEventValue(elementId, formInstance, sectionId, eventId),
+  ];
   const value = ensureValueTypeFormat(submissionValue, valueType);
   return new ActivityValue({
     type: valueType,
@@ -327,7 +375,7 @@ export const extractActivityValue = (
   sections,
   eventId,
   rowIdx,
-  formInstanceObjReqs = []
+  formInstanceObjReqs = [],
 ) => {
   /**
    * Extraction logic:
@@ -344,7 +392,7 @@ export const extractActivityValue = (
    * 2) If we're extracting the value of the form instance's primary object
    * 3) If we're extracting the value of one of the special properties of a connected section's event model
    * 4) The general case; elementPath[0] === sectionId, elementPath[1] === elementId
-  */
+   */
   /**
    * CASE 1: TIMING MODE
    */
@@ -369,7 +417,7 @@ export const extractActivityValue = (
       extId,
       sectionId,
       eventId,
-      elementId
+      elementId,
     );
   /**
    * CASE 4: GENERAL CASE
@@ -378,25 +426,46 @@ export const extractActivityValue = (
   let props = {};
   switch (sectionType) {
     case SECTION_CONNECTED:
-      props = getActivityValuePayloadFromConnectedSection(formInstance, sectionId, eventId, elementId, sections, valueType, formInstanceObjReqs);
+      props = getActivityValuePayloadFromConnectedSection(
+        formInstance,
+        sectionId,
+        eventId,
+        elementId,
+        sections,
+        valueType,
+        formInstanceObjReqs,
+      );
       break;
     case SECTION_TABLE:
-      props = getActivityValuePayloadFromTableSection(formInstance, sectionId, rowIdx, elementId, sections, valueType);
+      props = getActivityValuePayloadFromTableSection(
+        formInstance,
+        sectionId,
+        rowIdx,
+        elementId,
+        sections,
+        valueType,
+      );
       break;
     default:
-      props = getActivityValuePayloadFromRegularSection(formInstance, sectionId, elementId, sections, valueType);
+      props = getActivityValuePayloadFromRegularSection(
+        formInstance,
+        sectionId,
+        elementId,
+        sections,
+        valueType,
+      );
       break;
   }
 
-  return (props || valueType !== 'object')
+  return props || valueType !== 'object'
     ? new ActivityValue({
-      type: valueType,
-      extId,
-      ...props,
-      sectionId: sectionId,
-      elementId: elementId,
-      eventId: eventId,
-      rowIdx: rowIdx,
-    })
+        type: valueType,
+        extId,
+        ...props,
+        sectionId: sectionId,
+        elementId: elementId,
+        eventId: eventId,
+        rowIdx: rowIdx,
+      })
     : null;
 };

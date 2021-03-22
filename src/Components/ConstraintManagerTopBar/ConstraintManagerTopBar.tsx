@@ -8,12 +8,12 @@ import './ConstraintManagerTopBar.scss';
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
 
 type Props = {
-  constraintConfigurations: TConstraintConfiguration[],
-  selectedCID: string | null | undefined,
-  onSelect: (cid: string) => void,
-  onCreateNew: () => void,
-  onDeleteConstraintConfiguration: () => void,
-  onSaveConstraintConfiguration: () => void,
+  constraintConfigurations: TConstraintConfiguration[];
+  selectedCID: string | null | undefined;
+  onSelect: (cid: string) => void;
+  onCreateNew: () => void;
+  onDeleteConstraintConfiguration: () => void;
+  onSaveConstraintConfiguration: () => void;
 };
 
 const ConstraintManagerTopBar = ({
@@ -22,7 +22,7 @@ const ConstraintManagerTopBar = ({
   constraintConfigurations,
   selectedCID,
   onDeleteConstraintConfiguration,
-  onSaveConstraintConfiguration
+  onSaveConstraintConfiguration,
 }: Props) => {
   return (
     <div className='constraint-manager-top-bar--wrapper'>
@@ -31,7 +31,9 @@ const ConstraintManagerTopBar = ({
         <Select
           onChange={(cid: string) => onSelect(cid)}
           value={selectedCID || undefined}
-          getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           size='small'
           placeholder='Select a constraint configuration'
           style={{ width: '200px' }}
@@ -42,7 +44,9 @@ const ConstraintManagerTopBar = ({
             </Select.Option>
           ))}
         </Select>
-        <Button size='small' type='link' onClick={onCreateNew}>Create new...</Button>
+        <Button size='small' type='link' onClick={onCreateNew}>
+          Create new...
+        </Button>
       </div>
       <div className='constraint-manager-top-bar--buttons'>
         <Button size='small' onClick={onDeleteConstraintConfiguration}>

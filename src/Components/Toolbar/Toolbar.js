@@ -23,7 +23,7 @@ const actionKeys = {
   ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
 };
 
-const getFormIdFromBreadcrumb = breadcrumbs => {
+const getFormIdFromBreadcrumb = (breadcrumbs) => {
   try {
     const formBreadcrumb = breadcrumbs[1];
     const fragments = formBreadcrumb.path.split('/');
@@ -33,13 +33,14 @@ const getFormIdFromBreadcrumb = breadcrumbs => {
   }
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const breadcrumbs = state.globalUI.breadcrumbs;
   const formId = getFormIdFromBreadcrumb(breadcrumbs);
   return {
     breadcrumbs,
     form: formId ? state.forms[formId] : null,
-    isAuthenticated: state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
+    isAuthenticated:
+      state.auth.authenticationStatus === authenticationStatuses.AUTHENTICATED,
   };
 };
 
@@ -80,7 +81,7 @@ const Toolbar = ({
         break;
     }
   };
-  const onHandleBreadrumbsClick = path => history.push(path);
+  const onHandleBreadrumbsClick = (path) => history.push(path);
 
   const renderedToolbar = (
     <div className='top-toolbar--wrapper'>
@@ -89,7 +90,12 @@ const Toolbar = ({
         {breadcrumbs &&
           breadcrumbs.map((el, idx) => (
             <Breadcrumb.Item key={idx}>
-              <span className='top-toolbar--breadcrumbs__item' onClick={() => onHandleBreadrumbsClick(el.path)}>{el.label}</span>
+              <span
+                className='top-toolbar--breadcrumbs__item'
+                onClick={() => onHandleBreadrumbsClick(el.path)}
+              >
+                {el.label}
+              </span>
             </Breadcrumb.Item>
           ))}
       </Breadcrumb>
@@ -103,12 +109,16 @@ const Toolbar = ({
   );
 
   useEffect(() => {
-    if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT)) { teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](<div className='te-prefs-lib'>{renderedToolbar}</div>); }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT)) {
+      teCoreAPI[teCoreCallnames.SET_TOOLBAR_CONTENT](
+        <div className='te-prefs-lib'>{renderedToolbar}</div>,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breadcrumbs]);
   const shouldShowToolbar = useMemo(
     () => !teCoreAPI.apiSupportsFunc(teCoreCallnames.SET_TOOLBAR_CONTENT),
-    [teCoreAPI]
+    [teCoreAPI],
   );
 
   if (!shouldShowToolbar) return null;
@@ -124,7 +134,9 @@ Toolbar.propTypes = {
 };
 
 Toolbar.defaultProps = {
-  breadcrumbs: []
+  breadcrumbs: [],
 };
 
-export default withRouter(connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(Toolbar)));
+export default withRouter(
+  connect(mapStateToProps, mapActionsToProps)(withTECoreAPI(Toolbar)),
+);

@@ -19,22 +19,28 @@ const allApis = {};
  * @param {Obj} headers additional headers to be sent
  * @returns {String}
  */
-const prepareOption = async (method, params, requiresAuth, headers, getState) => {
+const prepareOption = async (
+  method,
+  params,
+  requiresAuth,
+  headers,
+  getState,
+) => {
   const option = {
     method,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      ...headers
+      ...headers,
     },
-    body: {}
+    body: {},
   };
 
   if (requiresAuth) {
-    const token = await getToken() || _.get(getState(), 'auth.accessToken');
+    const token = (await getToken()) || _.get(getState(), 'auth.accessToken');
     option.headers = {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
-      ...headers
+      ...headers,
     };
   }
 
@@ -54,11 +60,13 @@ const prepareOption = async (method, params, requiresAuth, headers, getState) =>
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-function doDispatch (flow, params, data, postAction) {
+function doDispatch(flow, params, data, postAction) {
   const { success, dispatch } = flow;
   const finalData = data.data || data;
   if (typeof success === 'function') {
-    dispatch(success({ ...finalData, actionMeta: { ...params } }, params, postAction));
+    dispatch(
+      success({ ...finalData, actionMeta: { ...params } }, params, postAction),
+    );
   }
 }
 
@@ -68,7 +76,7 @@ function doDispatch (flow, params, data, postAction) {
  * @param {String} endpoint route to be called
  * @returns {String}
  */
-const getAPIUrl = endpoint => {
+const getAPIUrl = (endpoint) => {
   if (endpoint.search('http://') > -1 || endpoint.search('https://') > -1) {
     return endpoint;
   }
@@ -88,7 +96,7 @@ const refreshToken = async () => {
   console.log('Token refreshing');
 };
 
-function createThunkAction ({
+function createThunkAction({
   method,
   flow,
   endpoint,
@@ -99,24 +107,32 @@ function createThunkAction ({
   successNotification = null,
   postAction = {},
   permission = null,
-  callback = null
+  callback = null,
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
     allApis[endpoint].inprogress = true;
   } else {
     allApis[endpoint] = {
-      inprogress: true
+      inprogress: true,
     };
   }
 
-  return async function thunk (dispatch, getState) {
+  return async function thunk(dispatch, getState) {
     const fullUrl = !absoluteUrl ? getAPIUrl(endpoint) : endpoint;
-    const option = await prepareOption(method, params, requiresAuth, headers, getState);
+    const option = await prepareOption(
+      method,
+      params,
+      requiresAuth,
+      headers,
+      getState,
+    );
     const { request, failure } = flow;
 
     if (permission && !hasPermission(permission)(getState())) {
-      console.log(`Trying to call ${endpoint}, but missing permission: ${permission}`);
+      console.log(
+        `Trying to call ${endpoint}, but missing permission: ${permission}`,
+      );
       return;
     }
 
@@ -130,25 +146,30 @@ function createThunkAction ({
       allApis[endpoint].cancel('DUPLICATED_CANCELLED');
       allApis[endpoint].inprogress = false;
     }
-    option.cancelToken = new CancelToken(c => {
+    option.cancelToken = new CancelToken((c) => {
       allApis[endpoint].cancel = c;
     });
 
     return axios(fullUrl, option)
-      .then(response => {
+      .then((response) => {
         allApis[endpoint].inprogress = false;
-        doDispatch({ ...flow, dispatch, getState }, params, response.data, postAction);
+        doDispatch(
+          { ...flow, dispatch, getState },
+          params,
+          response.data,
+          postAction,
+        );
         if (successNotification) {
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation completed',
-            description: successNotification
+            description: successNotification,
           });
         }
         if (callback) callback(response.data);
         return response.data;
       })
-      .catch(error => {
+      .catch((error) => {
         allApis[endpoint].inprogress = false;
         const { response } = error;
 
@@ -156,10 +177,10 @@ function createThunkAction ({
         if (error.message === 'UNAUTHORIZED_CANCELLED') {
           allApis[endpoint].recall = () => {
             option.headers.Authorization = `Bearer ${getToken()}`;
-            option.cancelToken = new CancelToken(c => {
+            option.cancelToken = new CancelToken((c) => {
               allApis[endpoint].cancel = c;
             });
-            return axios(fullUrl, option).then(newResponse => {
+            return axios(fullUrl, option).then((newResponse) => {
               doDispatch(
                 { ...flow, dispatch, getState },
                 params,
@@ -179,7 +200,7 @@ function createThunkAction ({
             getContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation failed',
             description: error.toString(),
-            duration: 15
+            duration: 15,
           });
         }
 
@@ -190,7 +211,7 @@ function createThunkAction ({
         const { data } = response;
         if (requiresAuth && data.code === 401) {
           console.log({ url: fullUrl, message: data.message });
-          Object.keys(allApis).forEach(key => {
+          Object.keys(allApis).forEach((key) => {
             const item = allApis[key];
             if (typeof item.cancel === 'function' && item.inprogress) {
               item.cancel('UNAUTHORIZED_CANCELLED');
@@ -209,16 +230,22 @@ function createThunkAction ({
               <p>
                 <b>{data.code}:</b> {data.message}
                 <br />
-                This is not your fault, it&apos;s either a bug or a temporary server
-                problem. Please contact TimeEdit if you keep getting this
+                This is not your fault, it&apos;s either a bug or a temporary
+                server problem. Please contact TimeEdit if you keep getting this
                 message.
                 <br />
                 (When trying to call {endpoint})
               </p>
             ),
-            duration: 15
+            duration: 15,
           });
-          dispatch(failure({ ...data, actionMeta: { ...params } }, option.params, postAction));
+          dispatch(
+            failure(
+              { ...data, actionMeta: { ...params } },
+              option.params,
+              postAction,
+            ),
+          );
         }
         return error;
       });
@@ -310,7 +337,7 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
-      callback
+      callback,
     }),
   DELETE: ({
     flow,
@@ -332,5 +359,5 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
-    })
+    }),
 };
