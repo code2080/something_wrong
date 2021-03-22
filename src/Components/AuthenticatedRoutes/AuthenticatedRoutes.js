@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';

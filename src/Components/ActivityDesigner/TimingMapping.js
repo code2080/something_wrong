@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Select, Cascader } from 'antd';
@@ -42,7 +42,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className='timing-mapping__row--wrapper'>
         <div className='label'>
           Mode
@@ -63,7 +63,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
         </Select>
       </div>
       {timingMode === activityTimeModes.EXACT && (
-        <React.Fragment>
+        <>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>
               Start time
@@ -100,10 +100,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               disabled={disabled}
             />
           </div>
-        </React.Fragment>
+        </>
       )}
       {timingMode === activityTimeModes.TIMESLOTS && (
-        <React.Fragment>
+        <>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>
               Start on or after:
@@ -158,10 +158,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               disabled={disabled}
             />
           </div>
-        </React.Fragment>
+        </>
       )}
       {timingMode === activityTimeModes.SEQUENCE && (
-        <React.Fragment>
+        <>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>
               Length
@@ -236,9 +236,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
             onRemoveParameter={onSequenceModeTimingParameterDelete}
             disabled={disabled}
           />
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 

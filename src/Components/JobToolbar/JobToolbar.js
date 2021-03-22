@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'antd';
 import { useSelector } from 'react-redux';
 
@@ -31,14 +30,14 @@ const JobToolbar = () => {
             : 'No active automatic scheduling job'}
         </span>
         {hasActiveJob && (
-          <React.Fragment>
+          <>
             <Button type='link' size='small' onClick={onStopJob}>
               Stop
             </Button>
             <div className='meter'>
               <span />
             </div>
-          </React.Fragment>
+          </>
         )}
       </div>
     </div>

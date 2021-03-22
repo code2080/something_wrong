@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Alert } from 'antd';
 
@@ -32,7 +32,7 @@ const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       {component.status === activityValueStatuses.MISSING_DATA &&
         (!mappingProps.settings || mappingProps.settings.mandatory) && (
           <Alert
@@ -83,7 +83,7 @@ const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
           </div>
         </Form.Item>
       </Form>
-    </React.Fragment>
+    </>
   );
 };
 

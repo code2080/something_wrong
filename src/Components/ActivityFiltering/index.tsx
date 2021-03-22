@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import { Popover, Input, Button } from 'antd';
@@ -77,7 +77,7 @@ AssignedAvatar.propTypes = {
 
 const AssignedAvatars = ({ assignees, selfUID, show }) =>
   assignees.length ? (
-    <React.Fragment>
+    <>
       {_.take(assignees, show).map((assignee) => (
         <AssignedAvatar
           user={assignee}
@@ -86,7 +86,7 @@ const AssignedAvatars = ({ assignees, selfUID, show }) =>
         />
       ))}
       {assignees.length > show && <AddlUsers n={assignees.length - show} />}
-    </React.Fragment>
+    </>
   ) : (
     <EmptyAssignment />
   );

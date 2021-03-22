@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
@@ -41,14 +41,14 @@ const ObjectFilterValue = ({ value }) => {
         <div className='two-col--wrapper'>
           <div className='two-col--col'>
             {normalizedFilterValues[visIdx] ? (
-              <React.Fragment>
+              <>
                 <div className='title--row'>
                   {normalizedFilterValues[visIdx].fieldExtId}:
                 </div>
                 <div className='value--row'>
                   {normalizedFilterValues[visIdx].values}
                 </div>
-              </React.Fragment>
+              </>
             ) : (
               <span>N/A</span>
             )}

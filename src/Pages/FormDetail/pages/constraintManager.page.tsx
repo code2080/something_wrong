@@ -1,5 +1,4 @@
-/* eslint-disable no-extra-boolean-cast */
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';

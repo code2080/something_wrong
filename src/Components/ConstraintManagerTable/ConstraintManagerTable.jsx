@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
 import { tableViews } from '../../Constants/tableViews.constants';

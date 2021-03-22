@@ -1,5 +1,3 @@
-import React from 'react';
-
 // COMPONENTS
 import ObjectFilterValue from '../ValueTypes/ObjectFilterValue.jsx';
 import ObjectObjectValue from '../ValueTypes/ObjectObjectValue.jsx';

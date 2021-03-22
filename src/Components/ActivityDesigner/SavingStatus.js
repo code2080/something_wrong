@@ -1,4 +1,3 @@
-import React from 'react';
 import { Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -18,16 +17,16 @@ const SavingStatus = ({ isSaving }) => {
   return (
     <div style={{ color: themeColors.deepSeaGreen }}>
       {isSaving && (
-        <React.Fragment>
+        <>
           <Spin size='small' spinning={isSaving} />
           &nbsp;Saving
-        </React.Fragment>
+        </>
       )}
       {!isSaving && (
-        <React.Fragment>
+        <>
           <CheckCircleFilled />
           &nbsp;Saved
-        </React.Fragment>
+        </>
       )}
     </div>
   );

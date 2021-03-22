@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
@@ -12,7 +12,7 @@ type Props = {
 
 const TitleCell = ({ field, extId }: Props) => {
   const label: string = useSelector(selectExtIdLabel)(field, extId) as string;
-  return <React.Fragment>{label}</React.Fragment>;
+  return <>{label}</>;
 };
 
-export default React.memo(TitleCell);
+export default memo(TitleCell);

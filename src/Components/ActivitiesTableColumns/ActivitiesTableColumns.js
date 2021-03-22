@@ -1,5 +1,3 @@
-import React from 'react';
-
 // COMPONENTS
 import ColumnWrapper from './new/ColumnWrapper';
 import TitleCell from './new/TitleCell';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { sortByElementHtml } from '../../../Utils/sorting.helpers';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SubmissionColumn from './SubmissionColumn';

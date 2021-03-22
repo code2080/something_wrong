@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
@@ -109,7 +109,7 @@ const ActivitiesPage = () => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <ActivitiesToolbar
         selectedRowKeys={selectedRowKeys}
         onSelectAll={onSelectAll}
@@ -128,7 +128,7 @@ const ActivitiesPage = () => {
         }}
         pagination={false}
       />
-    </React.Fragment>
+    </>
   );
 };
 

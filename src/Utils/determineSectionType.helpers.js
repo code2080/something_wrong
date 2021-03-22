@@ -5,18 +5,6 @@ import {
 } from '../Constants/sectionTypes.constants';
 
 /**
- * @function determineSectionTypes
- * @description determines the types of multiple sections
- * @param {Array} sections the sections
- * @returns {Array<Object>}
- */
-export const determineSectionTypes = (sections) =>
-  sections.map((el) => ({
-    sectionId: el._id,
-    sectionType: determineSectionType(el),
-  }));
-
-/**
  * @function determineSectionType
  * @description returns the section type for any given section
  * @param {Object} section the section
@@ -29,3 +17,15 @@ export const determineSectionType = (section) => {
   }
   return SECTION_VERTICAL;
 };
+
+/**
+ * @function determineSectionTypes
+ * @description determines the types of multiple sections
+ * @param {Array} sections the sections
+ * @returns {Array<Object>}
+ */
+export const determineSectionTypes = (sections) =>
+  sections.map((el) => ({
+    sectionId: el._id,
+    sectionType: determineSectionType(el),
+  }));
