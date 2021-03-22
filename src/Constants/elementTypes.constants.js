@@ -116,7 +116,7 @@ export const elementTypeMapping = {
   ELEMENT_TYPE_DURATION: {
     label: 'Duration',
     valueType: valueTypes.SINGLE,
-    elementId: '5ef38b9915047a5cc681a7fa',
+    elementId: '5eec64be61130c1413380418',
   },
   ELEMENT_TYPE_DAY_PICKER: {
     label: 'Day picker',
