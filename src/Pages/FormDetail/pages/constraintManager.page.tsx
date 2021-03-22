@@ -127,6 +127,7 @@ const ConstraintManagerPage = () => {
       getConstraintsOfType('OTHER', constraintConfiguration, allConstraints),
     [constraintConfiguration, allConstraints],
   );
+
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
