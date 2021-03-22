@@ -92,6 +92,10 @@ export const updateConstraintConfiguration = (consConf) => async (
   dispatch,
   getState,
 ) => {
+  const opts = {
+    // Make Mongoose use Unix time (seconds since Jan 1, 1970)
+    timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
+  };
   const storeState = await getState();
   const { name, description, _id, formId, constraints } = consConf;
   const constraintConfigurationId = _id;
