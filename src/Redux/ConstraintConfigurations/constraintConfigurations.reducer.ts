@@ -36,11 +36,13 @@ const reducer = (state = {}, action) => {
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
     case UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const {
-        payload: { constraintConfiguration: _, ...constraintConfObj },
+        payload: { actionMeta: _, ...constraintConfObj },
       } = action;
+
       const constraintConfiguration = ConstraintConfiguration.create(
         constraintConfObj,
       );
+      constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {
         ...state,
         [constraintConfiguration.formId]: {
