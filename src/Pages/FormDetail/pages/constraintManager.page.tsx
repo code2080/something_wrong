@@ -42,12 +42,13 @@ const getConstraintsOfType = (
   );
 };
 
+
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
   const constraintConfigurations: TConstraintConfiguration[] = Object.values(
-    useSelector(selectConstraintConfigurationsForForm(formId)),
+    useSelector(selectConstraintConfigurationsForForm(formId))
   );
 
   /**
@@ -66,6 +67,14 @@ const ConstraintManagerPage = () => {
       (constraintConfig) => constraintConfig._id === cid,
     );
     if (constraintConfig) setConstraintConfiguration(constraintConfig);
+  };
+
+  const handleUpdConstrConfName = (value: string) => {
+    if (!constraintConfiguration) return;
+    setConstraintConfiguration({
+      ...constraintConfiguration,
+      name: value
+    });
   };
 
   const handleUpdateConstraintConfiguration = (
@@ -87,7 +96,6 @@ const ConstraintManagerPage = () => {
           : constraintInstance,
       ),
     });
-    dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleAddCustomConstraint = (e) => {
@@ -112,6 +120,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleSaveConstraintConfiguration = () => {
+    if(!constraintConfiguration) return;
     dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
@@ -134,9 +143,13 @@ const ConstraintManagerPage = () => {
         selectedCID={
           constraintConfiguration ? constraintConfiguration._id : null
         }
+        selConstrName={
+          constraintConfiguration ? constraintConfiguration.name : null
+        }
         onSelect={handleSelectConstraintConfiguration}
         onCreateNew={handleCreateNewConstraintConfiguration}
         onSaveConstraintConfiguration={handleSaveConstraintConfiguration}
+        onUpdConstrConfName={handleUpdConstrConfName}
         onDeleteConstraintConfiguration={handleDeleteConstraintConfiguration}
       />
       {constraintConfiguration && (

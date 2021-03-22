@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Button } from 'antd';
+import { Select, Button, Typography } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
@@ -10,17 +10,23 @@ import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.ty
 type Props = {
   constraintConfigurations: TConstraintConfiguration[];
   selectedCID: string | null | undefined;
+  selConstrName: string | null | undefined;
+  onUpdConstrConfName: (value: string) => void;
   onSelect: (cid: string) => void;
   onCreateNew: () => void;
   onDeleteConstraintConfiguration: () => void;
   onSaveConstraintConfiguration: () => void;
 };
 
+const { Paragraph } = Typography;
+
 const ConstraintManagerTopBar = ({
   onSelect,
   onCreateNew,
+  onUpdConstrConfName,
   constraintConfigurations,
   selectedCID,
+  selConstrName,
   onDeleteConstraintConfiguration,
   onSaveConstraintConfiguration,
 }: Props) => {
@@ -49,6 +55,14 @@ const ConstraintManagerTopBar = ({
         </Button>
       </div>
       <div className='constraint-manager-top-bar--buttons'>
+        <Paragraph
+          editable={{
+            onChange: onUpdConstrConfName
+          }}
+        >
+          {selConstrName}
+        </Paragraph>
+
         <Button size='small' onClick={onDeleteConstraintConfiguration}>
           Delete
         </Button>

@@ -14,4 +14,18 @@
 
 .constraint-manager-top-bar--buttons {
   margin-right: 0.2rem;
+  display: flex;
+  width: 800px;
+  justify-content: flex-end;
+
+  .ant-typography {
+    align-content: center;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ant-typography-edit-content {
+    width: 50%;
+  }
 }
