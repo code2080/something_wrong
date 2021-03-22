@@ -68,6 +68,13 @@ const ConstraintManagerPage = () => {
     if (constraintConfig) setConstraintConfiguration(constraintConfig);
   };
 
+  const handleUpdConstrConfName = (value: string) => {
+    if (!constraintConfiguration) return;
+    setConstraintConfiguration({
+      ...constraintConfiguration,
+      name: value
+    });
+  };
   const handleUpdateConstraintConfiguration = (
     constraintId: string,
     prop: string,
@@ -112,6 +119,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleSaveConstraintConfiguration = () => {
+    if(!constraintConfiguration) return;
     dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
@@ -134,9 +142,13 @@ const ConstraintManagerPage = () => {
         selectedCID={
           constraintConfiguration ? constraintConfiguration._id : null
         }
+        selConstrName={
+          constraintConfiguration ? constraintConfiguration.name : null
+        }
         onSelect={handleSelectConstraintConfiguration}
         onCreateNew={handleCreateNewConstraintConfiguration}
         onSaveConstraintConfiguration={handleSaveConstraintConfiguration}
+        onUpdConstrConfName={handleUpdConstrConfName}
         onDeleteConstraintConfiguration={handleDeleteConstraintConfiguration}
       />
       {constraintConfiguration && (
