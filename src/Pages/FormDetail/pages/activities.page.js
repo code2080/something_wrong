@@ -108,7 +108,6 @@ const ActivitiesPage = () => {
     [vt],
   );
 
-  console.log('yScrollHeight ' + yScroll);
   return (
     <React.Fragment>
       <ActivitiesToolbar

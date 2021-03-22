@@ -128,7 +128,6 @@ const ConstraintManagerPage = () => {
     [constraintConfiguration, allConstraints],
   );
 
-  console.log(allConstraints);
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
