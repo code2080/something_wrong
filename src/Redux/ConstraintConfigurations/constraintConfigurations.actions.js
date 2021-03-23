@@ -5,8 +5,9 @@ import { getEnvParams } from '../../configs';
 
 const opts = {
   // Make Mongoose use Unix time (seconds since Jan 1, 1970)
-  timestamps: { currentTime: () => Math.floor(Date.now() / 1000) }
+  timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
 };
+
 const fetchConstraintsConfigurationsFlow = {
   request: () => ({
     type: types.FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_REQUEST,
@@ -43,37 +44,26 @@ const createConstraintsConfigurationsFlow = {
   }),
 };
 
-export const createConstraintsConfigurations = ({
-  formId,
-  constraintConfigurationId,
-  isActive,
-  isHardConstraint,
-  weight,
-  parameters = [],
-  operator,
-  callback = null,
-  meta = {},
-}) => async (dispatch, getState) => {
+export const createConstraintConfigurations = (constrConf, callback = null) => async (dispatch, getState) => {
   const storeState = await getState();
   const {
     auth: { coreUserId },
   } = storeState;
+  const {formId, description, constraints} = constrConf;
   const constraintConfiguration = new ConstraintConfiguration({
-    constraintConfigurationId,
-    isActive,
-    isHardConstraint,
-    weight,
-    parameters,
-    operator,
+    name: "New constraint configuration",
+    formId,
+    description: description || " ",
+    constraints,
     userId: coreUserId,
+    constraintConfigurationId: " ",
   });
-
   dispatch(
     asyncAction.POST({
       flow: createConstraintsConfigurationsFlow,
-      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}`,
+      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraint-configurations`,
       params: constraintConfiguration,
-      postAction: { callback, meta },
+      postAction: { callback },
     }),
   );
 };
@@ -96,12 +86,10 @@ export const updateConstraintConfiguration = (consConf) => async (
   dispatch,
   getState,
 ) => {
-  const opts = {
-    // Make Mongoose use Unix time (seconds since Jan 1, 1970)
-    timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
-  };
+
   const storeState = await getState();
   const { name, description, _id, formId, constraints } = consConf;
+  console.log("In actions 1", consConf)
   const constraintConfigurationId = _id;
   const {
     auth: { coreUserId },
@@ -115,7 +103,8 @@ export const updateConstraintConfiguration = (consConf) => async (
     timestamps: opts.timestamps,
     userId: coreUserId,
   });
-  console.log(constraintConfiguration)
+  constraintConfiguration.constraintConfigurationId = _id
+  console.log("In actions", constraintConfiguration)
   dispatch(
     asyncAction.PATCH({
       flow: updateConstraintConfigurationFlow,
