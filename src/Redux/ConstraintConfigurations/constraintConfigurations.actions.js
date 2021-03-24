@@ -89,7 +89,6 @@ export const updateConstraintConfiguration = (consConf) => async (
 
   const storeState = await getState();
   const { name, description, _id, formId, constraints } = consConf;
-  console.log("In actions 1", consConf)
   const constraintConfigurationId = _id;
   const {
     auth: { coreUserId },
@@ -104,7 +103,6 @@ export const updateConstraintConfiguration = (consConf) => async (
     userId: coreUserId,
   });
   constraintConfiguration.constraintConfigurationId = _id
-  console.log("In actions", constraintConfiguration)
   dispatch(
     asyncAction.PATCH({
       flow: updateConstraintConfigurationFlow,
@@ -135,17 +133,17 @@ const deleteConstraintConfigurationFlow = {
 };
 
 export const deleteConstraintConfiguration = (
-  constraintConfigurationId,
-  formId,
-) => {
+  constraintConfiguration
+) => async (dispatch) => {
+  const {_id, formId} = constraintConfiguration
+  const constraintConfigurationId = _id
+  dispatch(
   asyncAction.DELETE({
     flow: deleteConstraintConfigurationFlow,
-    endpoint: `${
-      getEnvParams().AM_BE_URL
-    }forms/${formId}/constraints/${constraintConfigurationId}`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
     params: {
       constraintConfigurationId,
       formId,
     },
-  });
+  }))
 };

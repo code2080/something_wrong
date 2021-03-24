@@ -58,7 +58,6 @@ const reducer = (state = {}, action) => {
       const constraintConfiguration = ConstraintConfiguration.create(
         constraintConfObj,
       );
-      console.log(constraintConfiguration)
       constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {
         ...state,
@@ -71,7 +70,7 @@ const reducer = (state = {}, action) => {
 
     case DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const {
-        payload: { formId, constraintConfigurationId },
+        payload: {actionMeta: { formId, constraintConfigurationId }},
       } = action;
       const { [constraintConfigurationId]: _, ...updFormState } = state[formId];
       return {

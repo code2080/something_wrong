@@ -1,15 +1,16 @@
 /* eslint-disable no-extra-boolean-cast */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-import { updateConstraintConfiguration, createConstraintConfigurations } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+import { updateConstraintConfiguration, createConstraintConfigurations, deleteConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -50,7 +51,7 @@ const ConstraintManagerPage = () => {
   const constraintConfigurations: TConstraintConfiguration[] = Object.values(
     useSelector(selectConstraintConfigurationsForForm(formId))
   );
-
+  
   /**
    * STATE
    */
@@ -62,7 +63,7 @@ const ConstraintManagerPage = () => {
 
   useEffect(
     () => {
-      setConstrConf(constraintConfigurations[constraintConfigurations.length - 1])
+      setConstrConf(constraintConfigurations.slice(-1)[0])
     },
     [constraintConfigurations.length]
   );
@@ -131,7 +132,9 @@ const ConstraintManagerPage = () => {
   };
 
   const handleDeleteConstrconf = () => {
-    const someConstaraints = selectConstraintConfigurationsForForm(formId);
+    if(!constraintConfiguration) return
+    setConstrConf(constraintConfiguration[0])
+    dispatch(deleteConstraintConfiguration(constraintConfiguration))
   };
 
   const defaultConstraints = useMemo(
