@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Button, Typography } from 'antd';
+import { Select, Button, Typography, Popconfirm } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
@@ -62,10 +62,19 @@ const ConstraintManagerTopBar = ({
         >
           {selConstrName}
         </Paragraph>
-
-        <Button size='small' onClick={onDeleteConstraintConfiguration}>
+        <Popconfirm 
+        title="Are you sure you want to delete the configuration?"
+        placement="top"
+        onConfirm={onDeleteConstraintConfiguration}
+        okText="Yes"
+        cancelText="No"
+        getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+        trigger={'click'}
+        >
+        <Button size='small'>
           Delete
         </Button>
+        </Popconfirm>
         <Button size='small' onClick={onSaveConstraintConfiguration}>
           Save
         </Button>
