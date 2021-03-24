@@ -2,15 +2,18 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-import { updateConstraintConfiguration, createConstraintConfigurations, deleteConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
-
+import {
+  updateConstraintConfiguration,
+  createConstraintConfigurations,
+  deleteConstraintConfiguration,
+} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -43,30 +46,27 @@ const getConstrOfType = (
   );
 };
 
-
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
   const constrConfs: TConstraintConfiguration[] = Object.values(
-    useSelector(selectConstraintConfigurationsForForm(formId))
+    useSelector(selectConstraintConfigurationsForForm(formId)),
   );
-  
+
   /**
    * STATE
    */
-  const [
-    constrConf,
-    setConstrConf,
-  ] = useState<TConstraintConfiguration | null>(null);
-
+  const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
+    null,
+  );
 
   useEffect(
     () => {
-      setConstrConf(constrConfs.slice(-1)[0])
+      setConstrConf(constrConfs.slice(-1)[0]);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [constrConfs.length]
+    [constrConfs.length],
   );
   /**
    * EVENT HANDLERS
@@ -82,7 +82,7 @@ const ConstraintManagerPage = () => {
     if (!constrConf) return;
     setConstrConf({
       ...constrConf,
-      name: value
+      name: value,
     });
   };
 
@@ -124,40 +124,34 @@ const ConstraintManagerPage = () => {
           ConstraintInstance.createFromConstraint(constraint),
         ),
     });
-    dispatch(createConstraintConfigurations(newConstrConf))
+    dispatch(createConstraintConfigurations(newConstrConf));
   };
 
   const handleSaveConstrConf = () => {
-    if(!constrConf) return;
+    if (!constrConf) return;
     dispatch(updateConstraintConfiguration(constrConf));
   };
 
   const handleDeleteConstrconf = () => {
-    if(!constrConf) return
-    setConstrConf(constrConf[0])
-    dispatch(deleteConstraintConfiguration(constrConf))
+    if (!constrConf) return;
+    setConstrConf(constrConf[0]);
+    dispatch(deleteConstraintConfiguration(constrConf));
   };
 
   const defaultConstraints = useMemo(
-    () =>
-      getConstrOfType('DEFAULT', constrConf, allConstraints),
+    () => getConstrOfType('DEFAULT', constrConf, allConstraints),
     [constrConf, allConstraints],
   );
   const customConstraints = useMemo(
-    () =>
-      getConstrOfType('OTHER', constrConf, allConstraints),
+    () => getConstrOfType('OTHER', constrConf, allConstraints),
     [constrConf, allConstraints],
   );
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
         constraintConfigurations={constrConfs}
-        selectedCID={
-          constrConf ? constrConf._id : null
-        }
-        selConstrName={
-          constrConf ? constrConf.name : null
-        }
+        selectedCID={constrConf ? constrConf._id : null}
+        selConstrName={constrConf ? constrConf.name : null}
         onSelect={handleSelectConstrConf}
         onCreateNew={handleCreateConstrConf}
         onSaveConstraintConfiguration={handleSaveConstrConf}
@@ -203,11 +197,7 @@ const ConstraintManagerPage = () => {
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description='No constraint configurations exist for this form'
         >
-          <Button
-            size='small'
-            type='primary'
-            onClick={handleCreateConstrConf}
-          >
+          <Button size='small' type='primary' onClick={handleCreateConstrConf}>
             Create now
           </Button>
         </Empty>

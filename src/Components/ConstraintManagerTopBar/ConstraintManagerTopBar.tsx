@@ -57,23 +57,23 @@ const ConstraintManagerTopBar = ({
       <div className='constraint-manager-top-bar--buttons'>
         <Paragraph
           editable={{
-            onChange: onUpdConstrConfName
+            onChange: onUpdConstrConfName,
           }}
         >
           {selConstrName}
         </Paragraph>
-        <Popconfirm 
-        title="Are you sure you want to delete the configuration?"
-        placement="top"
-        onConfirm={onDeleteConstraintConfiguration}
-        okText="Yes"
-        cancelText="No"
-        getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
-        trigger={'click'}
+        <Popconfirm
+          title='Are you sure you want to delete the configuration?'
+          placement='top'
+          onConfirm={onDeleteConstraintConfiguration}
+          okText='Yes'
+          cancelText='No'
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
+          trigger={'click'}
         >
-        <Button size='small'>
-          Delete
-        </Button>
+          <Button size='small'>Delete</Button>
         </Popconfirm>
         <Button size='small' onClick={onSaveConstraintConfiguration}>
           Save

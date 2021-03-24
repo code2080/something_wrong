@@ -44,24 +44,29 @@ const createConstraintsConfigurationsFlow = {
   }),
 };
 
-export const createConstraintConfigurations = (constrConf, callback = null) => async (dispatch, getState) => {
+export const createConstraintConfigurations = (
+  constrConf,
+  callback = null,
+) => async (dispatch, getState) => {
   const storeState = await getState();
   const {
     auth: { coreUserId },
   } = storeState;
-  const {formId, description, constraints} = constrConf;
+  const { formId, description, constraints } = constrConf;
   const constraintConfiguration = new ConstraintConfiguration({
-    name: "New constraint configuration",
+    name: 'New constraint configuration',
     formId,
-    description: description || " ",
+    description: description || ' ',
     constraints,
     userId: coreUserId,
-    constraintConfigurationId: " ",
+    constraintConfigurationId: ' ',
   });
   dispatch(
     asyncAction.POST({
       flow: createConstraintsConfigurationsFlow,
-      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraint-configurations`,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations`,
       params: constraintConfiguration,
       postAction: { callback },
     }),
@@ -86,7 +91,6 @@ export const updateConstraintConfiguration = (consConf) => async (
   dispatch,
   getState,
 ) => {
-
   const storeState = await getState();
   const { name, description, _id, formId, constraints } = consConf;
   const constraintConfigurationId = _id;
@@ -102,20 +106,20 @@ export const updateConstraintConfiguration = (consConf) => async (
     timestamps: opts.timestamps,
     userId: coreUserId,
   });
-  constraintConfiguration.constraintConfigurationId = _id
+  constraintConfiguration.constraintConfigurationId = _id;
   dispatch(
     asyncAction.PATCH({
       flow: updateConstraintConfigurationFlow,
       endpoint: `${
         getEnvParams().AM_BE_URL
       }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
-    params: {
-      constraintConfigurationId,
-      formId,
-      constraintConfiguration,
-    },
-  
-  }))
+      params: {
+        constraintConfigurationId,
+        formId,
+        constraintConfiguration,
+      },
+    }),
+  );
 };
 
 const deleteConstraintConfigurationFlow = {
@@ -133,17 +137,20 @@ const deleteConstraintConfigurationFlow = {
 };
 
 export const deleteConstraintConfiguration = (
-  constraintConfiguration
+  constraintConfiguration,
 ) => async (dispatch) => {
-  const {_id, formId} = constraintConfiguration
-  const constraintConfigurationId = _id
+  const { _id, formId } = constraintConfiguration;
+  const constraintConfigurationId = _id;
   dispatch(
-  asyncAction.DELETE({
-    flow: deleteConstraintConfigurationFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
-    params: {
-      constraintConfigurationId,
-      formId,
-    },
-  }))
+    asyncAction.DELETE({
+      flow: deleteConstraintConfigurationFlow,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
+      params: {
+        constraintConfigurationId,
+        formId,
+      },
+    }),
+  );
 };
