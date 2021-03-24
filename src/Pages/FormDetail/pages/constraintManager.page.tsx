@@ -65,6 +65,7 @@ const ConstraintManagerPage = () => {
     () => {
       setConstrConf(constrConfs.slice(-1)[0])
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [constrConfs.length]
   );
   /**
