@@ -25,23 +25,18 @@ export default {
       format: 'es',
       sourcemap: false,
       exports: 'auto',
-    }
+    },
   ],
-  external: [
-    ...Object.keys(pkg.peerDependencies)
-  ],
+  external: [...Object.keys(pkg.peerDependencies)],
   plugins: [
     external(),
     postcss({
       inject: false,
       extract: 'te-prefs-lib.css',
       extensions: ['.css', '.scss', '.less'],
-      use: [
-        ['less', { javascriptEnabled: true }],
-        ['sass']
-      ],
+      use: [['less', { javascriptEnabled: true }], ['sass']],
       plugins: [PrefixWrap('.te-prefs-lib')],
-      sourceMap: false
+      sourceMap: false,
     }),
     url(),
     svgr(),
@@ -50,16 +45,11 @@ export default {
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
-      plugins: ['@babel/external-helpers', '@babel/transform-runtime', '@babel/proposal-object-rest-spread', '@babel/transform-spread'],
-      presets: [
-        '@babel/react',
-        '@babel/typescript'
-      ],
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
     commonjs({
       include: 'node_modules/**',
     }),
     resolve(),
-  ]
+  ],
 };

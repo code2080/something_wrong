@@ -1,4 +1,3 @@
-import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Modal, Table } from 'antd';
@@ -58,11 +57,11 @@ const ObjectRequestModal = ({ onClose, visible, request }) => {
       <br />
       <b>Object type:</b> {objectTypeLabel}
       {!_.isEmpty(objectLabel) && (
-        <React.Fragment>
+        <>
           <br />
           <b>Object:</b> {objectLabel}
           <br />
-        </React.Fragment>
+        </>
       )}
       <br />
       <br />

@@ -1,5 +1,3 @@
-import React from 'react';
-
 // COMPONENTS
 import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 import ResizableHeaderCell from './ResizableHeaderCell';

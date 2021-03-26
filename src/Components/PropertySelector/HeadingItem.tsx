@@ -1,5 +1,3 @@
-import React from 'react';
-
 // TYPES
 import { TProperty } from '../../Types/property.type';
 

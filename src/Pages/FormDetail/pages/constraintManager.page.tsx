@@ -1,5 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 import React, { useMemo, useState, useEffect } from 'react';
+
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
@@ -146,6 +147,7 @@ const ConstraintManagerPage = () => {
     () => getConstrOfType('OTHER', constrConf, allConstraints),
     [constrConf, allConstraints],
   );
+
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar

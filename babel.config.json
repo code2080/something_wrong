@@ -6,7 +6,12 @@
         "modules": false
       }
     ],
-    "@babel/preset-react",
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
+    ],
     "@babel/typescript"
   ],
   "ignore": ["./example"],
@@ -18,7 +23,6 @@
     ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
     ["@babel/plugin-proposal-nullish-coalescing-operator", { "loose": false }],
     "@babel/plugin-proposal-do-expressions",
-    "@babel/plugin-transform-react-jsx",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     "@babel/plugin-proposal-function-sent",
     "@babel/plugin-proposal-export-namespace-from",
@@ -27,6 +31,10 @@
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-syntax-import-meta",
     ["@babel/plugin-proposal-class-properties", { "loose": false }],
-    "@babel/plugin-proposal-json-strings"
+    "@babel/plugin-proposal-json-strings",
+    "@babel/external-helpers",
+    "@babel/transform-runtime",
+    "@babel/proposal-object-rest-spread",
+    "@babel/transform-spread"
   ]
 }

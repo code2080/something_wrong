@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Input, Form } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';

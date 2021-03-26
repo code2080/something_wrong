@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Menu, Dropdown, Button } from 'antd';
@@ -220,7 +220,7 @@ const ActivityDesignPage = () => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <div className='activity-designer--wrapper'>
         <div className='activity-designer--toolbar'>
           <div className='activity-designer__toolbar--label'>
@@ -291,7 +291,7 @@ const ActivityDesignPage = () => {
           />
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

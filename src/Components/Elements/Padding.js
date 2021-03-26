@@ -1,4 +1,4 @@
-import React, { useMemo, Fragment } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import './Padding.scss';
@@ -12,10 +12,9 @@ const PaddingDisplay = ({ value, settings }) => {
   return (
     <span>
       {settings.allowDayPadding && Number(days) ? (
-        <Fragment>{days}d,&nbsp;&nbsp;</Fragment>
+        <>{days}d,&nbsp;&nbsp;</>
       ) : null}
-      {hours}h
-      {settings.allowMinutePadding && <Fragment>&nbsp;{minutes}m</Fragment>}
+      {hours}h{settings.allowMinutePadding && <>&nbsp;{minutes}m</>}
     </span>
   );
 };

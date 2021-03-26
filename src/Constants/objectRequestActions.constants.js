@@ -1,4 +1,3 @@
-import React from 'react';
 import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';

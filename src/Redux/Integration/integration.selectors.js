@@ -110,25 +110,6 @@ export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
   );
 };
 
-const getElementsFromSection = (section, values) =>
-  section.elements
-    .reduce((elements, element) => {
-      // We only care about the values if it is a datasource element
-      return element.datasource
-        ? [...elements, ...getPayloadForSection(element, section, values)]
-        : elements;
-    }, [])
-    .flat();
-
-const getAllElementsFromSections = (sections, submissionValues) =>
-  sections.reduce(
-    (elements, section) => [
-      ...elements,
-      ...getElementsFromSection(section, submissionValues),
-    ],
-    [],
-  );
-
 const extractPayloadFromElements = (elements) =>
   elements.reduce((elementsPayload, element) => {
     if (!element) return elementsPayload;
@@ -224,46 +205,6 @@ const mergePayloads = (payloads) =>
     };
   }, initialState);
 
-export const getExtIdPropsPayload = ({
-  sections,
-  submissionValues,
-  activities = [],
-  objectRequests = [],
-  objectScope = null,
-}) => {
-  const elements = getAllElementsFromSections(sections, submissionValues);
-  const submissionPayload = extractPayloadFromElements(elements);
-  const activitiesPayload = extractPayloadFromActivities(activities);
-  const objectScopePayload = objectScope ? { types: [objectScope] } : {};
-  const objectRequestsPayload = extractPayloadFromObjectRequests(
-    objectRequests,
-  );
-  return mergePayloads([
-    submissionPayload,
-    activitiesPayload,
-    objectScopePayload,
-    objectRequestsPayload,
-  ]);
-};
-
-const getPayloadForSection = (element, section, values, state) => {
-  if (!values[section._id] && process.env.NODE_ENV === 'development') {
-    console.log('No values for section ID', section._id, values, section);
-    return [];
-  }
-  const sectionType = determineSectionType(section);
-  if (sectionType === SECTION_VERTICAL) {
-    return getPayloadForVerticalSection(element, values[section._id], state);
-  }
-  if (sectionType === SECTION_CONNECTED) {
-    return getPayloadForConnectedSection(element, values[section._id], state);
-  }
-  if (sectionType === SECTION_TABLE) {
-    return getPayloadForTableSection(element, values[section._id], state);
-  }
-  return [];
-};
-
 const getValueFromElement = (el) => {
   if (Array.isArray(el.value)) return el.value;
   if (el && el.value && el.value.value) return el.value.value;
@@ -295,6 +236,64 @@ const getPayloadForConnectedSection = (element, values, state) =>
     ];
   }, []);
 
+const getPayloadForSection = (element, section, values, state) => {
+  if (!values[section._id] && process.env.NODE_ENV === 'development') {
+    console.log('No values for section ID', section._id, values, section);
+    return [];
+  }
+  const sectionType = determineSectionType(section);
+  if (sectionType === SECTION_VERTICAL) {
+    return getPayloadForVerticalSection(element, values[section._id], state);
+  }
+  if (sectionType === SECTION_CONNECTED) {
+    return getPayloadForConnectedSection(element, values[section._id], state);
+  }
+  if (sectionType === SECTION_TABLE) {
+    return getPayloadForTableSection(element, values[section._id], state);
+  }
+  return [];
+};
+
+const getElementsFromSection = (section, values) =>
+  section.elements
+    .reduce((elements, element) => {
+      // We only care about the values if it is a datasource element
+      return element.datasource
+        ? [...elements, ...getPayloadForSection(element, section, values)]
+        : elements;
+    }, [])
+    .flat();
+
+const getAllElementsFromSections = (sections, submissionValues) =>
+  sections.reduce(
+    (elements, section) => [
+      ...elements,
+      ...getElementsFromSection(section, submissionValues),
+    ],
+    [],
+  );
+
+export const getExtIdPropsPayload = ({
+  sections,
+  submissionValues,
+  activities = [],
+  objectRequests = [],
+  objectScope = null,
+}) => {
+  const elements = getAllElementsFromSections(sections, submissionValues);
+  const submissionPayload = extractPayloadFromElements(elements);
+  const activitiesPayload = extractPayloadFromActivities(activities);
+  const objectScopePayload = objectScope ? { types: [objectScope] } : {};
+  const objectRequestsPayload = extractPayloadFromObjectRequests(
+    objectRequests,
+  );
+  return mergePayloads([
+    submissionPayload,
+    activitiesPayload,
+    objectScopePayload,
+    objectRequestsPayload,
+  ]);
+};
 export const getLabelsForDatasource = (payload, state) =>
   payload
     .filter(

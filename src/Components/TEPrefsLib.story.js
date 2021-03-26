@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TEPrefsLib from './TEPrefsLib';
 import { availableEnvs } from '../configs';
 
@@ -25,7 +25,7 @@ export default {
 export const Main = ({ env }) => {
   const [toolbarContent, setToolbarContent] = useState(null);
   return (
-    <React.Fragment>
+    <>
       {toolbarContent}
       <TEPrefsLib
         coreAPI={{
@@ -33,7 +33,7 @@ export const Main = ({ env }) => {
         }}
         env={env}
       />
-    </React.Fragment>
+    </>
   );
 };
 Main.args = { env: 'staging' };

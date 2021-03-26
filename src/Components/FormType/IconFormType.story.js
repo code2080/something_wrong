@@ -1,4 +1,3 @@
-import React from 'react';
 import IconFormType from './IconFormType';
 
 export default {

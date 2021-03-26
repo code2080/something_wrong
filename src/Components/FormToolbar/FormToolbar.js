@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -14,7 +13,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const FormToolbar = ({ form, onClickMore }) => (
-  <React.Fragment>
+  <>
     <div className='toolbar--wrapper'>
       <div className='toolbar--section-flex'>
         <span className='label'>By:</span>
@@ -36,7 +35,7 @@ const FormToolbar = ({ form, onClickMore }) => (
         <a onClick={() => onClickMore()}>Form info...</a>
       </div>
     </div>
-  </React.Fragment>
+  </>
 );
 
 FormToolbar.propTypes = {

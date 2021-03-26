@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';

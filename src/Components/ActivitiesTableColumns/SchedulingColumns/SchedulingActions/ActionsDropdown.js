@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';

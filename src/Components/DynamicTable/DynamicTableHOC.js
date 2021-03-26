@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
@@ -241,7 +241,7 @@ const DynamicTableHOC = ({
           onHide={() => setShowColumnSelection(false)}
         />
       ) : (
-        <React.Fragment>
+        <>
           {_shouldShowFilterBar && (
             <FilterBar
               query={filterQuery}
@@ -265,7 +265,7 @@ const DynamicTableHOC = ({
               {...otherProps}
             />
           </DndProvider>
-        </React.Fragment>
+        </>
       )}
     </div>
   );
