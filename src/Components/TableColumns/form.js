@@ -1,5 +1,3 @@
-import React from 'react';
-
 // COMPONENTS
 import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';

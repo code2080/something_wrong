@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 // HELPERS
@@ -29,4 +29,4 @@ BaseActivityColValue.defaultProps = {
   formatFn: (val) => val,
 };
 
-export default React.memo(BaseActivityColValue);
+export default memo(BaseActivityColValue);

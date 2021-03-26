@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Menu } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';

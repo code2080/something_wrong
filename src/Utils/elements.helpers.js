@@ -154,25 +154,25 @@ export const extractOptionFromValue = (value, options) => {
   return options[optionIdx];
 };
 
-const arrayToString = (value, divider) => {
-  return value.map((item) => formatElementValue(item, divider));
-};
-
-const objectToString = (value, divider) => {
-  return arrayToString(
-    Object.keys(value).map(
-      (key) => `${formatElementValue(value[key], divider)}`,
-    ),
-    divider,
-  );
-};
-
 /**
  * @function formatElementValue
  * @description convert element value to readable text
  * @param {any} value the element raw value
  */
 export const formatElementValue = (value, divider) => {
+  const arrayToString = (value, divider) => {
+    return value.map((item) => formatElementValue(item, divider));
+  };
+
+  const objectToString = (value, divider) => {
+    return arrayToString(
+      Object.keys(value).map(
+        (key) => `${formatElementValue(value[key], divider)}`,
+      ),
+      divider,
+    );
+  };
+
   if (value === null || value === undefined) return value;
   if (Array.isArray(value)) {
     return arrayToString(value, divider);

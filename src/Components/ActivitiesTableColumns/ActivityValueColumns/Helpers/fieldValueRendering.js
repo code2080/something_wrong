@@ -1,5 +1,3 @@
-import React from 'react';
-
 // VALIDATION
 import { validateGeneralValue } from '../../../../Utils/activityValues.validation';
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Resizable } from 'react-resizable';
 import PropTypes from 'prop-types';
 import ColumnHeader from './ColumnHeader';

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -156,7 +156,7 @@ const SubmissionsOverviewPage = () => {
   }, [filters, _dataSource, userId, scopedObjects, columns]);
 
   return (
-    <React.Fragment>
+    <>
       <FormSubmissionFilterBar
         formId={formId}
         togglePropsFilter={() => setShowFilterModal(!showFilterModal)}
@@ -189,7 +189,7 @@ const SubmissionsOverviewPage = () => {
         datasourceId={tableViews.SUBMISSION_OVERVIEW}
         resizable
       />
-    </React.Fragment>
+    </>
   );
 };
 

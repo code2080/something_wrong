@@ -1,4 +1,3 @@
-import React from 'react';
 import { PlusCircleFilled } from '@ant-design/icons';
 
 export const columnModifierColumn = (onModifyCols) => ({

@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 // STYLES
@@ -14,9 +13,9 @@ const ShowInfo = ({
 }) => {
   /* eslint-enable @typescript-eslint/no-unused-vars */
   return (
-    <React.Fragment>
+    <>
       <span>i am the timeslot to exact time component</span>
-    </React.Fragment>
+    </>
   );
 };
 

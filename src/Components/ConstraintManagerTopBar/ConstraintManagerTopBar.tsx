@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Select, Button, Typography, Popconfirm } from 'antd';
+
 
 // STYLES
 import './ConstraintManagerTopBar.scss';

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 // COMPONENTS
 import ColumnContent from './ColumnContent';
@@ -52,4 +52,4 @@ const ColumnWrapper = ({ activity, type, prop, mapping }: Props) => {
   );
 };
 
-export default React.memo(ColumnWrapper);
+export default memo(ColumnWrapper);

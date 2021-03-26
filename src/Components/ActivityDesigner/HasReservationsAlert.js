@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Button } from 'antd';
 import { useDispatch } from 'react-redux';
@@ -16,7 +15,7 @@ const HasReservationsAlert = ({ formId }) => {
       type='warning'
       message='Editing the configuration will delete existing activities'
       description={
-        <React.Fragment>
+        <>
           <div>
             The form has already been converted to activities with the current
             design. To edit the design, you must first delete the activities.
@@ -28,7 +27,7 @@ const HasReservationsAlert = ({ formId }) => {
           >
             Delete activities now
           </Button>
-        </React.Fragment>
+        </>
       }
     />
   );

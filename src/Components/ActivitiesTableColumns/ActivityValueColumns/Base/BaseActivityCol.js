@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { notification, Menu, Dropdown } from 'antd';

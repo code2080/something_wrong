@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { List, Avatar } from 'antd';
 import _ from 'lodash';

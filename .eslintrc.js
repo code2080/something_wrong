@@ -23,7 +23,7 @@ module.exports = {
   plugins: ['react', '@babel', '@typescript-eslint'],
   settings: {
     react: {
-      version: 'latest',
+      version: '17',
     },
   },
   // Disabled advanced ts linting for later
@@ -45,63 +45,30 @@ module.exports = {
   // ],
 
   rules: {
-    // don't force es6 functions to include space before paren
-    // 'space-before-function-paren': ['error'],
-
     // allow specifying true explicitly for boolean props
     'react/jsx-boolean-value': ['error'],
-
-    // allow double quotes
-    // 'jsx-quotes': ['error', 'prefer-single'],
-
-    // allow trailing commas
-    // 'comma-dangle': 0,
-
-    // we want to force semicolons
-    // but for later ... for now so many errors
-    // '@babel/semi': ['error'],
-    // semi: ['error', 'always'],
-    // we use 2 spaces to indent our code
-    // indent: ['error', 2, { SwitchCase: 1 }],
     // we want to avoid useless spaces
     'no-multi-spaces': ['error'],
-
     'react/display-name': 0,
-
     'node/no-callback-literal': 0,
-
-    'no-use-before-define': 0,
-
     // Allow free standing if clauses
     curly: 0,
+    // Enforce consistend <></> Fragment syntax, unless keyed
+    'react/jsx-fragments': ['error', 'syntax'],
+    // Disable jsx uses react, not needed with react 17
+    // https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#eslint
+    'react/jsx-uses-react': 0,
+    'react/react-in-jsx-scope': 0,
 
-    // note you must disable the base rule as it can report incorrect errors
+    /* [Typescript overrides] */
+    // note you must disable the base rule as it can report incorrect errors,
+    // using TS no unused vars instead
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       { argsIgnorePattern: '^_', ignoreRestSiblings: true },
     ],
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
   },
 };
-
-/*
-{
-  "env": {
-    "node": true,
-    "jest": true
-  },
-  "extends": ["airbnb-base", "plugin:jest/recommended", "plugin:security/recommended", "plugin:prettier/recommended"],
-  "plugins": ["jest", "security", "prettier"],
-  "parserOptions": {
-    "ecmaVersion": 2018
-  },
-  "rules": {
-    "no-console": "error",
-    "func-names": "off",
-    "no-underscore-dangle": "off",
-    "consistent-return": "off",
-    "jest/expect-expect": "off",
-    "security/detect-object-injection": "off"
-  }
-}
-*/

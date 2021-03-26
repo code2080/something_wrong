@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -53,4 +53,4 @@ ColumnHeader.defaultProps = {
   className: '',
 };
 
-export default React.memo(ColumnHeader);
+export default memo(ColumnHeader);

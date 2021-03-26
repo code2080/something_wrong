@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { SelectOutlined } from '@ant-design/icons';

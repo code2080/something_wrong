@@ -43,25 +43,6 @@ export const createSchedulingReturns = (protoReturns) => {
 };
 
 /**
- * @function getBindingSchedulingAlgorithm
- * @description determines the binding (ie most complicated) scheduling algorithm in a set of activities
- * @param {Array<Activities>} activities the activities to process
- * @returns schedulingAlgorithm: String
- */
-const getBindingSchedulingAlgorithm = (activities) => {
-  const schedA = activities.map((a) =>
-    determineSchedulingAlgorithmForActivity(a),
-  );
-  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME)) {
-    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
-  }
-  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT)) {
-    return schedulingAlgorithms.BEST_FIT_OBJECT;
-  }
-  return schedulingAlgorithms.BEST_FIT_TIME;
-};
-
-/**
  * @function determineSchedulingAlgorithmForActivityValue
  * @description determines which scheduling algorithm we need to use for one individual activity
  * @param {Object<ActivityValue>} activityValue the activity value
@@ -176,6 +157,25 @@ export const determineSchedulingAlgorithmForActivity = (activity) => {
   }
   if (hasBestFitTime) return schedulingAlgorithms.BEST_FIT_TIME;
   if (hasBestFitObject) return schedulingAlgorithms.BEST_FIT_OBJECT;
+};
+
+/**
+ * @function getBindingSchedulingAlgorithm
+ * @description determines the binding (ie most complicated) scheduling algorithm in a set of activities
+ * @param {Array<Activities>} activities the activities to process
+ * @returns schedulingAlgorithm: String
+ */
+const getBindingSchedulingAlgorithm = (activities) => {
+  const schedA = activities.map((a) =>
+    determineSchedulingAlgorithmForActivity(a),
+  );
+  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME)) {
+    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
+  }
+  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT)) {
+    return schedulingAlgorithms.BEST_FIT_OBJECT;
+  }
+  return schedulingAlgorithms.BEST_FIT_TIME;
 };
 
 export const scheduleActivity = async (

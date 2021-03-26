@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Input, Radio } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
@@ -85,7 +85,7 @@ const ActivityGroupListItem = ({
     <div className='acitivity-group--list-item'>
       <Radio checked={isSelected} onChange={onAssignActivityToGroup} />
       {mode === EModes.VIEW && (
-        <React.Fragment>
+        <>
           <div
             className='activity-group--name'
             onClick={onAssignActivityToGroup}
@@ -105,10 +105,10 @@ const ActivityGroupListItem = ({
               onClick={onDeleteActivityGroup}
             />
           </div>
-        </React.Fragment>
+        </>
       )}
       {mode === EModes.EDIT && (
-        <React.Fragment>
+        <>
           <div className='activity-group--name'>
             <Input
               size='small'
@@ -130,7 +130,7 @@ const ActivityGroupListItem = ({
               onClick={onUpdateActivityGroup}
             />
           </div>
-        </React.Fragment>
+        </>
       )}
     </div>
   );

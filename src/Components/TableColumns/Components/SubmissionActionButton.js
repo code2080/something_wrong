@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -164,7 +164,7 @@ const SubmissionActionButton = ({
   );
 
   return (
-    <React.Fragment>
+    <>
       <Dropdown
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
         overlay={actionMenu}
@@ -180,7 +180,7 @@ const SubmissionActionButton = ({
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
       />
-    </React.Fragment>
+    </>
   );
 };
 

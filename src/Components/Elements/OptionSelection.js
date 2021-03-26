@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 
@@ -20,7 +20,7 @@ const OptionSelection = ({ value, element }) => {
   return (
     <div className='option-selection--wrapper'>
       {options.map((opt, idx) => (
-        <React.Fragment key={`${opt.value}-fragment`}>
+        <Fragment key={`${opt.value}-fragment`}>
           {idx > 0 && <span className='delimiter'>,</span>}
           <Tooltip
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
@@ -31,7 +31,7 @@ const OptionSelection = ({ value, element }) => {
               {opt.label}
             </div>
           </Tooltip>
-        </React.Fragment>
+        </Fragment>
       ))}
     </div>
   );
