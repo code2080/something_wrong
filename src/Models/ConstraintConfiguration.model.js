@@ -13,7 +13,6 @@ export class ConstraintConfiguration {
     constraints,
     timestamps,
     constraintConfigurationId,
-    userId,
   }) {
     this.formId = formId;
     this.name = name;
@@ -21,6 +20,5 @@ export class ConstraintConfiguration {
     this.constraints = constraints || [];
     this.timestamps = timestamps;
     this.constraintConfigurationId = constraintConfigurationId;
-    this.userId = userId;
   }
 }

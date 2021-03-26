@@ -47,18 +47,13 @@ const createConstraintsConfigurationsFlow = {
 export const createConstraintConfigurations = (
   constrConf,
   callback = null,
-) => async (dispatch, getState) => {
-  const storeState = await getState();
-  const {
-    auth: { coreUserId },
-  } = storeState;
+) => async (dispatch) => {
   const { formId, description, constraints } = constrConf;
   const constraintConfiguration = new ConstraintConfiguration({
     name: 'New constraint configuration',
     formId,
     description: description || ' ',
     constraints,
-    userId: coreUserId,
     constraintConfigurationId: ' ',
   });
   dispatch(
