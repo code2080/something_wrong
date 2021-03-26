@@ -5,7 +5,6 @@ export class ConstraintConfiguration {
   description;
   constraints;
   timestamps;
-  userId;
   constructor({
     formId,
     name,
