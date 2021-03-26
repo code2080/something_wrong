@@ -3,6 +3,11 @@ import * as types from './constraintConfigurations.actionTypes';
 import { ConstraintConfiguration } from '../../Models/ConstraintConfiguration.model';
 import { getEnvParams } from '../../configs';
 
+const opts = {
+  // Make Mongoose use Unix time (seconds since Jan 1, 1970)
+  timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
+};
+
 const fetchConstraintsConfigurationsFlow = {
   request: () => ({
     type: types.FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_REQUEST,
@@ -39,37 +44,26 @@ const createConstraintsConfigurationsFlow = {
   }),
 };
 
-export const createConstraintsConfigurations = ({
-  formId,
-  constraintConfigurationId,
-  isActive,
-  isHardConstraint,
-  weight,
-  parameters = [],
-  operator,
+export const createConstraintConfigurations = (
+  constrConf,
   callback = null,
-  meta = {},
-}) => async (dispatch, getState) => {
-  const storeState = await getState();
-  const {
-    auth: { coreUserId },
-  } = storeState;
+) => async (dispatch) => {
+  const { formId, description, constraints } = constrConf;
   const constraintConfiguration = new ConstraintConfiguration({
-    constraintConfigurationId,
-    isActive,
-    isHardConstraint,
-    weight,
-    parameters,
-    operator,
-    userId: coreUserId,
+    name: 'New constraint configuration',
+    formId,
+    description: description || ' ',
+    constraints,
+    constraintConfigurationId: ' ',
   });
-
   dispatch(
     asyncAction.POST({
       flow: createConstraintsConfigurationsFlow,
-      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}`,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations`,
       params: constraintConfiguration,
-      postAction: { callback, meta },
+      postAction: { callback },
     }),
   );
 };
@@ -92,10 +86,6 @@ export const updateConstraintConfiguration = (consConf) => async (
   dispatch,
   getState,
 ) => {
-  const opts = {
-    // Make Mongoose use Unix time (seconds since Jan 1, 1970)
-    timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
-  };
   const storeState = await getState();
   const { name, description, _id, formId, constraints } = consConf;
   const constraintConfigurationId = _id;
@@ -111,6 +101,7 @@ export const updateConstraintConfiguration = (consConf) => async (
     timestamps: opts.timestamps,
     userId: coreUserId,
   });
+  constraintConfiguration.constraintConfigurationId = _id;
   dispatch(
     asyncAction.PATCH({
       flow: updateConstraintConfigurationFlow,
@@ -141,17 +132,20 @@ const deleteConstraintConfigurationFlow = {
 };
 
 export const deleteConstraintConfiguration = (
-  constraintConfigurationId,
-  formId,
-) => {
-  asyncAction.DELETE({
-    flow: deleteConstraintConfigurationFlow,
-    endpoint: `${
-      getEnvParams().AM_BE_URL
-    }forms/${formId}/constraints/${constraintConfigurationId}`,
-    params: {
-      constraintConfigurationId,
-      formId,
-    },
-  });
+  constraintConfiguration,
+) => async (dispatch) => {
+  const { _id, formId } = constraintConfiguration;
+  const constraintConfigurationId = _id;
+  dispatch(
+    asyncAction.DELETE({
+      flow: deleteConstraintConfigurationFlow,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
+      params: {
+        constraintConfigurationId,
+        formId,
+      },
+    }),
+  );
 };

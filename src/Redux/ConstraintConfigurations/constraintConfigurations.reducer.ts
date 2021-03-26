@@ -33,12 +33,30 @@ const reducer = (state = {}, action) => {
       );
     }
 
-    case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS:
+    case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
+      const {
+        payload: { actionMeta: _, ...constrConfObj },
+      } = action;
+      const constraintConfiguration = ConstraintConfiguration.create(
+        constrConfObj,
+      );
+      Object.assign(constraintConfiguration, {
+        constraintConfigurationId: constraintConfiguration._id,
+      });
+      console.log(constraintConfiguration);
+      return {
+        ...state,
+        [constraintConfiguration.formId]: {
+          ...state[constraintConfiguration.formId],
+          [constraintConfiguration._id as string]: constraintConfiguration,
+        },
+      };
+    }
+
     case UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const {
         payload: { actionMeta: _, ...constraintConfObj },
       } = action;
-
       const constraintConfiguration = ConstraintConfiguration.create(
         constraintConfObj,
       );
@@ -54,7 +72,9 @@ const reducer = (state = {}, action) => {
 
     case DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const {
-        payload: { formId, constraintConfigurationId },
+        payload: {
+          actionMeta: { formId, constraintConfigurationId },
+        },
       } = action;
       const { [constraintConfigurationId]: _, ...updFormState } = state[formId];
       return {

@@ -1,4 +1,7 @@
-import { Select, Button } from 'antd';
+
+import React from 'react';
+import { Select, Button, Typography, Popconfirm } from 'antd';
+
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
@@ -9,17 +12,23 @@ import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.ty
 type Props = {
   constraintConfigurations: TConstraintConfiguration[];
   selectedCID: string | null | undefined;
+  selConstrName: string | null | undefined;
+  onUpdConstrConfName: (value: string) => void;
   onSelect: (cid: string) => void;
   onCreateNew: () => void;
   onDeleteConstraintConfiguration: () => void;
   onSaveConstraintConfiguration: () => void;
 };
 
+const { Paragraph } = Typography;
+
 const ConstraintManagerTopBar = ({
   onSelect,
   onCreateNew,
+  onUpdConstrConfName,
   constraintConfigurations,
   selectedCID,
+  selConstrName,
   onDeleteConstraintConfiguration,
   onSaveConstraintConfiguration,
 }: Props) => {
@@ -48,9 +57,26 @@ const ConstraintManagerTopBar = ({
         </Button>
       </div>
       <div className='constraint-manager-top-bar--buttons'>
-        <Button size='small' onClick={onDeleteConstraintConfiguration}>
-          Delete
-        </Button>
+        <Paragraph
+          editable={{
+            onChange: onUpdConstrConfName,
+          }}
+        >
+          {selConstrName}
+        </Paragraph>
+        <Popconfirm
+          title='Are you sure you want to delete the configuration?'
+          placement='top'
+          onConfirm={onDeleteConstraintConfiguration}
+          okText='Yes'
+          cancelText='No'
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
+          trigger={'click'}
+        >
+          <Button size='small'>Delete</Button>
+        </Popconfirm>
         <Button size='small' onClick={onSaveConstraintConfiguration}>
           Save
         </Button>

@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+/* eslint-disable no-extra-boolean-cast */
+import React, { useMemo, useState, useEffect } from 'react';
+
 import _ from 'lodash';
 import { Button, Empty, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,7 +10,11 @@ import { useParams } from 'react-router-dom';
 import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
 
 // ACTIONS
-import { updateConstraintConfiguration } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+import {
+  updateConstraintConfiguration,
+  createConstraintConfigurations,
+  deleteConstraintConfiguration,
+} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
@@ -24,7 +30,7 @@ import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
 
-const getConstraintsOfType = (
+const getConstrOfType = (
   type: string = 'DEFAULT',
   config: TConstraintConfiguration | null,
   allConstraints: TConstraint[],
@@ -45,38 +51,52 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
-  const constraintConfigurations: TConstraintConfiguration[] = Object.values(
+  const constrConfs: TConstraintConfiguration[] = Object.values(
     useSelector(selectConstraintConfigurationsForForm(formId)),
   );
 
   /**
    * STATE
    */
-  const [
-    constraintConfiguration,
-    setConstraintConfiguration,
-  ] = useState<TConstraintConfiguration | null>(null);
+  const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
+    null,
+  );
 
+  useEffect(
+    () => {
+      setConstrConf(constrConfs.slice(-1)[0]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [constrConfs.length],
+  );
   /**
    * EVENT HANDLERS
    */
-  const handleSelectConstraintConfiguration = (cid: string): void => {
-    const constraintConfig = constraintConfigurations.find(
+  const handleSelectConstrConf = (cid: string): void => {
+    const constrConf = constrConfs.find(
       (constraintConfig) => constraintConfig._id === cid,
     );
-    if (constraintConfig) setConstraintConfiguration(constraintConfig);
+    if (constrConf) setConstrConf(constrConf);
   };
 
-  const handleUpdateConstraintConfiguration = (
+  const handleUpdConstrConfName = (value: string) => {
+    if (!constrConf) return;
+    setConstrConf({
+      ...constrConf,
+      name: value,
+    });
+  };
+
+  const handleUpdConstrConf = (
     constraintId: string,
     prop: string,
     value: any,
   ): void => {
-    if (!constraintConfiguration) return;
-    const { constraints } = constraintConfiguration;
+    if (!constrConf) return;
+    const { constraints } = constrConf;
 
-    setConstraintConfiguration({
-      ...constraintConfiguration,
+    setConstrConf({
+      ...constrConf,
       constraints: constraints.map((constraintInstance) =>
         constraintInstance.constraintId === constraintId
           ? {
@@ -86,16 +106,14 @@ const ConstraintManagerPage = () => {
           : constraintInstance,
       ),
     });
-    dispatch(updateConstraintConfiguration(constraintConfiguration));
   };
 
   const handleAddCustomConstraint = (e) => {
     e.stopPropagation();
   };
 
-  const handleCreateNewConstraintConfiguration = () => {
-    const newConstraintConfig = ConstraintConfiguration.create({
-      _id: 'new',
+  const handleCreateConstrConf = () => {
+    const newConstrConf = ConstraintConfiguration.create({
       formId,
       name: 'New constraint configuration',
       constraints: (allConstraints || [])
@@ -107,44 +125,47 @@ const ConstraintManagerPage = () => {
           ConstraintInstance.createFromConstraint(constraint),
         ),
     });
-    setConstraintConfiguration(newConstraintConfig);
+    dispatch(createConstraintConfigurations(newConstrConf));
   };
 
-  const handleSaveConstraintConfiguration = () => {
-    dispatch(updateConstraintConfiguration(constraintConfiguration));
+  const handleSaveConstrConf = () => {
+    if (!constrConf) return;
+    dispatch(updateConstraintConfiguration(constrConf));
   };
 
-  const handleDeleteConstraintConfiguration = () => {};
+  const handleDeleteConstrconf = () => {
+    if (!constrConf) return;
+    setConstrConf(constrConf[0]);
+    dispatch(deleteConstraintConfiguration(constrConf));
+  };
 
   const defaultConstraints = useMemo(
-    () =>
-      getConstraintsOfType('DEFAULT', constraintConfiguration, allConstraints),
-    [constraintConfiguration, allConstraints],
+    () => getConstrOfType('DEFAULT', constrConf, allConstraints),
+    [constrConf, allConstraints],
   );
   const customConstraints = useMemo(
-    () =>
-      getConstraintsOfType('OTHER', constraintConfiguration, allConstraints),
-    [constraintConfiguration, allConstraints],
+    () => getConstrOfType('OTHER', constrConf, allConstraints),
+    [constrConf, allConstraints],
   );
 
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
-        constraintConfigurations={constraintConfigurations}
-        selectedCID={
-          constraintConfiguration ? constraintConfiguration._id : null
-        }
-        onSelect={handleSelectConstraintConfiguration}
-        onCreateNew={handleCreateNewConstraintConfiguration}
-        onSaveConstraintConfiguration={handleSaveConstraintConfiguration}
-        onDeleteConstraintConfiguration={handleDeleteConstraintConfiguration}
+        constraintConfigurations={constrConfs}
+        selectedCID={constrConf ? constrConf._id : null}
+        selConstrName={constrConf ? constrConf.name : null}
+        onSelect={handleSelectConstrConf}
+        onCreateNew={handleCreateConstrConf}
+        onSaveConstraintConfiguration={handleSaveConstrConf}
+        onUpdConstrConfName={handleUpdConstrConfName}
+        onDeleteConstraintConfiguration={handleDeleteConstrconf}
       />
-      {constraintConfiguration && (
+      {constrConf && (
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
               columns={constraintManagerTableColumns(
-                handleUpdateConstraintConfiguration,
+                handleUpdConstrConf,
                 allConstraints,
               )}
               dataSource={defaultConstraints}
@@ -163,7 +184,7 @@ const ConstraintManagerPage = () => {
           >
             <Table
               columns={constraintManagerTableColumns(
-                handleUpdateConstraintConfiguration,
+                handleUpdConstrConf,
                 allConstraints,
               )}
               dataSource={customConstraints}
@@ -173,21 +194,17 @@ const ConstraintManagerPage = () => {
           </Collapse.Panel>
         </Collapse>
       )}
-      {_.isEmpty(constraintConfigurations) && !constraintConfiguration && (
+      {_.isEmpty(constrConfs) && !constrConf && (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description='No constraint configurations exist for this form'
         >
-          <Button
-            size='small'
-            type='primary'
-            onClick={handleCreateNewConstraintConfiguration}
-          >
+          <Button size='small' type='primary' onClick={handleCreateConstrConf}>
             Create now
           </Button>
         </Empty>
       )}
-      {!constraintConfiguration && !_.isEmpty(constraintConfigurations) && (
+      {!constrConf && !_.isEmpty(constrConfs) && (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description='No constraint configurations selected'
