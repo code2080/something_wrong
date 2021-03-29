@@ -45,6 +45,6 @@ export class Constraint {
     allowedOperators: obj.allowedOperators,
     type: obj.type,
     weight: obj.weight,
-    isHardConstraint: obj.isHardConstraint
+    isHardConstraint: obj.isHardConstraint,
   });
 }

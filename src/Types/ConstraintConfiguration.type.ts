@@ -1,7 +1,4 @@
-import {
-  EConstraintOperators,
-  EConstraintType,
-} from './Constraint.type';
+import { EConstraintOperators, EConstraintType } from './Constraint.type';
 
 export type TConstraintInstance = {
   constraintId: string;
