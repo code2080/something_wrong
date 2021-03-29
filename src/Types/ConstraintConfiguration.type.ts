@@ -14,11 +14,11 @@ export type TConstraintInstance = {
 };
 
 export class ConstraintInstance {
-  static createFromConstraint = (obj: TConstraint): TConstraintInstance => ({
+  static createFromConstraint = (obj: any): TConstraintInstance => ({
     constraintId: obj.constraintId,
     isActive: obj.type === EConstraintType.DEFAULT,
-    isHardConstraint: false,
-    weight: 10,
+    isHardConstraint: obj.isHardConstraint,
+    weight: obj.weight,
     parameters: [],
     operator: EConstraintOperators['<'],
   });
