@@ -1,7 +1,6 @@
 import {
   EConstraintOperators,
   EConstraintType,
-  TConstraint,
 } from './Constraint.type';
 
 export type TConstraintInstance = {
