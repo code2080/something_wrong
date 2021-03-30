@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
 import _ from 'lodash';
-import { Button, Empty, Collapse, Table } from 'antd';
+import { Button, Empty, Collapse, Table, Alert } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -61,6 +61,8 @@ const ConstraintManagerPage = () => {
   const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
     null,
   );
+  
+  const [isUnsaved, setIsUnsaved] = useState(false);
 
   useEffect(
     () => {
@@ -69,6 +71,14 @@ const ConstraintManagerPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [constrConfs.length],
   );
+
+  useEffect( () => {  
+    setIsUnsaved(true)
+    console.log("Changes :(", isUnsaved)
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [constrConf?.constraints, constrConf?.name]
+  )
   /**
    * EVENT HANDLERS
    */
@@ -130,7 +140,8 @@ const ConstraintManagerPage = () => {
 
   const handleSaveConstrConf = () => {
     if (!constrConf) return;
-    dispatch(updateConstraintConfiguration(constrConf));
+    dispatch(updateConstraintConfiguration(constrConf)).then(setIsUnsaved(false));
+    
   };
 
   const handleDeleteConstrconf = () => {
@@ -148,8 +159,15 @@ const ConstraintManagerPage = () => {
     [constrConf, allConstraints],
   );
 
+  const checkIfSaved = () =>{
+    if(isUnsaved)
+      return <Alert message="You have unsaved changes" banner/>
+  }
+
   return (
+    
     <div className='constraint-manager--wrapper'>
+      {checkIfSaved()}
       <ConstraintManagerTopBar
         constraintConfigurations={constrConfs}
         selectedCID={constrConf ? constrConf._id : null}
