@@ -6,25 +6,26 @@ import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.const
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
-import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: types.FETCH_ALL_JOBS_SUCCESS,
     payload: { ...response }
   }),
-  failure: err => ({ type: types.FETCH_ALL_JOBS_FAILURE, payload: { ...err } })
+  failure: (err) => ({
+    type: types.FETCH_ALL_JOBS_FAILURE,
+    payload: { ...err }
+  })
 };
 
 export const fetchAllJobs = () =>
   asyncAction.GET({
     flow: fetchAllJobsFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}jobs?limit=200`,
-    permission: AEBETA_PERMISSION
+    endpoint: `${getEnvParams().AM_BE_URL}jobs?limit=200`
   });
 
-export const updateJobFromWS = job => ({
+export const updateJobFromWS = (job) => ({
   type: types.UPDATE_JOB_SUCCESS,
   payload: { job }
 });
@@ -40,7 +41,7 @@ const createJobFlow = {
       );
     } else {
       callback(
-        activities.map(a => ({
+        activities.map((a) => ({
           activityId: a._id,
           result: new SchedulingReturn({
             status: activityStatuses.QUEUED
@@ -66,7 +67,7 @@ const createJobFlow = {
       );
     } else {
       callback(
-        activities.map(a => ({
+        activities.map((a) => ({
           activityId: a._id,
           result: new SchedulingReturn({
             status: activityStatuses.FAILED,
@@ -92,7 +93,6 @@ export const createJob = ({
   const {
     auth: { coreUserId }
   } = storeState;
-  // const { formPeriod } = storeState.forms[formId];
   const job = new Job({
     activities,
     type,
@@ -105,27 +105,25 @@ export const createJob = ({
       flow: createJobFlow,
       endpoint: `${getEnvParams().AM_BE_URL}jobs`,
       params: job,
-      postAction: { callback, meta, activities },
-      permission: AEBETA_PERMISSION
+      postAction: { callback, meta, activities }
     })
   );
 };
 
 const abortJobFlow = {
   request: () => ({ type: types.ABORT_JOB_REQUEST }),
-  success: response => ({
+  success: (response) => ({
     type: types.ABORT_JOB_SUCCESS,
     payload: { ...response }
   }),
-  failure: err => ({ type: types.ABORT_JOB_FAILURE, payload: { ...err } })
+  failure: (err) => ({ type: types.ABORT_JOB_FAILURE, payload: { ...err } })
 };
 
-export const abortJob = ({ jobId, formId }) => async dispatch =>
+export const abortJob = ({ jobId, formId }) => async (dispatch) =>
   dispatch(
     asyncAction.POST({
       flow: abortJobFlow,
       endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
-      params: { formId },
-      permission: AEBETA_PERMISSION
+      params: { formId }
     })
   );
