@@ -9,7 +9,7 @@ const CalendarTimeslot = ({ timeslot }) => (
       <div className='setting--label'>Start time:</div>
       <TimePicker
         size='small'
-        value={moment(timeslot.startTime)}
+        value={moment(timeslot.startTime).utc()}
         disabled
       />
     </div>
@@ -17,7 +17,7 @@ const CalendarTimeslot = ({ timeslot }) => (
       <div className='setting--label'>End time:</div>
       <TimePicker
         size='small'
-        value={moment(timeslot.endTime)}
+        value={moment(timeslot.endTime).utc()}
         disabled
       />
     </div>

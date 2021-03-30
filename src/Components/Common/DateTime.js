@@ -4,7 +4,7 @@ import { DATE_FORMAT } from '../../Constants/common.constants';
 
 const dateTimeRenderer = (value, format) => {
   if (!moment(value).isValid()) return null;
-  return moment(value).format(format);
+  return moment(value).utc().format(format);
 };
 const DateTime = ({ value, format }) => {
   if (Array.isArray(value)) return value.map(val => dateTimeRenderer(val, format)).join(' - ');
