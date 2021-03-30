@@ -61,7 +61,7 @@ const ConstraintManagerPage = () => {
   const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
     null,
   );
-  
+
   const [isUnsaved, setIsUnsaved] = useState(false);
 
   useEffect(
@@ -72,13 +72,14 @@ const ConstraintManagerPage = () => {
     [constrConfs.length],
   );
 
-  useEffect( () => {  
-    setIsUnsaved(true)
-    console.log("Changes :(", isUnsaved)
-  },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [constrConf?.constraints, constrConf?.name]
-  )
+  useEffect(
+    () => {
+      setIsUnsaved(true);
+      console.log('Changes :(', isUnsaved);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [constrConf?.constraints, constrConf?.name],
+  );
   /**
    * EVENT HANDLERS
    */
@@ -140,8 +141,9 @@ const ConstraintManagerPage = () => {
 
   const handleSaveConstrConf = () => {
     if (!constrConf) return;
-    dispatch(updateConstraintConfiguration(constrConf)).then(setIsUnsaved(false));
-    
+    dispatch(updateConstraintConfiguration(constrConf)).then(
+      setIsUnsaved(false),
+    );
   };
 
   const handleDeleteConstrconf = () => {
@@ -159,13 +161,11 @@ const ConstraintManagerPage = () => {
     [constrConf, allConstraints],
   );
 
-  const checkIfSaved = () =>{
-    if(isUnsaved)
-      return <Alert message="You have unsaved changes" banner/>
-  }
+  const checkIfSaved = () => {
+    if (isUnsaved) return <Alert message='You have unsaved changes' banner />;
+  };
 
   return (
-    
     <div className='constraint-manager--wrapper'>
       {checkIfSaved()}
       <ConstraintManagerTopBar
