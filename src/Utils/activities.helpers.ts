@@ -149,7 +149,7 @@ const getAllExtIdsFromActivityValues = (
   const extIds = allActivityValues
     .filter((el) => el.extId && el.extId !== '$init')
     .map((el) => el.extId);
-  return [...extIds, 'groupId', 'submitter', 'primaryObject'];
+  return [...extIds, 'tagId', 'submitter', 'primaryObject'];
 };
 
 const extractMatchesFromFormattedOptions = (
@@ -202,8 +202,8 @@ const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
   // Add constants from the activity
   const consts = [
     {
-      extId: 'groupId',
-      value: activity.groupId,
+      extId: 'tagId',
+      value: activity.tagId,
       type: ActivityValueType.OTHER,
       formId: activity.formId,
     },

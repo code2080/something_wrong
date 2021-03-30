@@ -4,45 +4,45 @@ import { useParams } from 'react-router-dom';
 import { AppstoreOutlined } from '@ant-design/icons';
 
 // COMPONENTS
-import ActivityGroupPopover from './Popover';
+import ActivityTagPopover from './Popover';
 // SELECTORS
-import { selectActivityGroup } from '../../../../Redux/ActivityGroup/activityGroup.selectors';
+import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
 // STYLES
 import './index.scss';
 
 // TYPES
 import { TActivity } from '../../../../Types/Activity.type';
-import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
+import { TActivityTag } from '../../../../Types/ActivityTag.type';
 
 type Props = {
   activities: TActivity[];
 };
 
-const ActivityGroupSelector = ({ activities }: Props) => {
+const ActivityTagSelector = ({ activities }: Props) => {
   const { formId }: { formId: string } = useParams();
-  const selectedActivityGroup: TActivityGroup = useSelector(
-    selectActivityGroup,
-  )(formId, activities[0].groupId);
+  const selectedActivityTag: TActivityTag = useSelector(
+    selectActivityTag,
+  )(formId, activities[0].tagId);
 
   return (
     <Popover
-      overlayClassName='activity-group-popover--wrapper'
-      title='Group activity'
-      content={<ActivityGroupPopover activities={activities} />}
+      overlayClassName='activity-tag-popover--wrapper'
+      title='Tag activity'
+      content={<ActivityTagPopover activities={activities} />}
       getPopupContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
       }
       trigger='hover'
       placement='rightTop'
     >
-      <div className='activity-group--button'>
+      <div className='activity-tag--button'>
         <Button size='small' icon={<AppstoreOutlined />}>
-          {selectedActivityGroup ? selectedActivityGroup.name : 'N/A'}
+          {selectedActivityTag ? selectedActivityTag.name : 'N/A'}
         </Button>
       </div>
     </Popover>
   );
 };
 // <GroupingButton activityGroup={selectedActivityGroup} />
-export default ActivityGroupSelector;
+export default ActivityTagSelector;

@@ -5,38 +5,38 @@ import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 // SELECTORS
-import { selectActivityGroupsForForm } from '../../../../Redux/ActivityGroup/activityGroup.selectors';
+import { selectActivityTagsForForm } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
 // ACTIONS
-import { createActivityGroup } from '../../../../Redux/ActivityGroup/activityGroup.actions';
+import { createActivityTag } from '../../../../Redux/ActivityTag/activityTag.actions';
 
 // TYPES
-import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
+import { TActivityTag } from '../../../../Types/ActivityTag.type';
 
-import ActivityGroupListItem from './ListItem';
+import ActivityTagListItem from './ListItem';
 import { TActivity } from '../../../../Types/Activity.type';
 
 type Props = {
   activities: TActivity[];
 };
 
-const ActivityGroupPopover = ({ activities }: Props) => {
+const ActivityTagPopover = ({ activities }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
-  const activityGroups: TActivityGroup[] = useSelector(
-    selectActivityGroupsForForm,
+  const activityTags: TActivityTag[] = useSelector(
+    selectActivityTagsForForm,
   )(formId);
 
   /**
    * MEMOIZED PROPS
    */
-  const selectedActivityGroupId = useMemo(() => {
+  const selectedActivityTagId = useMemo(() => {
     if (!activities || !activities.length) return null;
-    // Need to first check if all activities are on the same activity group
-    const hasSameGroupValue = activities.every((a) =>
-      activities.every((b) => b.groupId === a.groupId),
+    // Need to first check if all activities are on the same activity tag 
+    const hasSameTagValue = activities.every((a) =>
+      activities.every((b) => b.tagId === a.tagId),
     );
-    if (hasSameGroupValue) return activities[0].groupId;
+    if (hasSameTagValue) return activities[0].tagId;
     return null;
   }, [activities]);
 
@@ -44,53 +44,53 @@ const ActivityGroupPopover = ({ activities }: Props) => {
    * STATE
    */
   const [filterQuery, setFilterQuery] = useState('');
-  const [newGroupName, setNewGroupName] = useState('');
+  const [newTagName, setNewTagName] = useState('');
 
   /**
    * EVENT HANDLERS
    */
-  const onCreateActivityGroup = () => {
-    if (newGroupName && newGroupName.length > 0) {
-      dispatch(createActivityGroup(formId, { name: newGroupName }));
-      setNewGroupName('');
+  const onCreateActivityTag = () => {
+    if (newTagName && newTagName.length > 0) {
+      dispatch(createActivityTag(formId, { name: newTagName }));
+      setNewTagName('');
     }
   };
   return (
-    <div className='activity-group--popover'>
-      <div className='activity-group--row'>
-        <div className='header'>Create new group:</div>
+    <div className='activity-tag--popover'>
+      <div className='activity-tag--row'>
+        <div className='header'>Create new tag:</div>
         <Input.Search
-          placeholder='Activity group name'
+          placeholder='Activity tag name'
           allowClear
           enterButton='Create'
           size='small'
-          value={newGroupName}
-          onChange={(e) => setNewGroupName(e.target.value)}
-          onSearch={onCreateActivityGroup}
+          value={newTagName}
+          onChange={(e) => setNewTagName(e.target.value)}
+          onSearch={onCreateActivityTag}
         />
       </div>
-      <div className='activity-group--row'>
-        <div className='header'>Select an existing group:</div>
+      <div className='activity-tag--row'>
+        <div className='header'>Select an existing tag:</div>
         <Input
-          placeholder='Select activity group'
+          placeholder='Select activity tag'
           suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />}
           onChange={(e) => setFilterQuery(e.target.value)}
           size='small'
           value={filterQuery}
         />
-        <div className='activity-group--list'>
-          {activityGroups
-            .filter((activityGroup) =>
-              activityGroup.name
+        <div className='activity-tag--list'>
+          {activityTags
+            .filter((activityTag) =>
+              activityTag.name
                 .toLowerCase()
                 .includes(filterQuery.toLowerCase()),
             )
-            .map((activityGroup, i) => (
-              <ActivityGroupListItem
+            .map((activityTag, i) => (
+              <ActivityTagListItem
                 key={`idx-${i}`}
                 activityIds={activities.map((el) => el._id)}
-                activityGroup={activityGroup}
-                isSelected={selectedActivityGroupId === activityGroup._id}
+                activityTag={activityTag}
+                isSelected={selectedActivityTagId === activityTag._id}
               />
             ))}
         </div>
@@ -99,4 +99,4 @@ const ActivityGroupPopover = ({ activities }: Props) => {
   );
 };
 // <GroupingButton activityGroup={selectedActivityGroup} />
-export default ActivityGroupPopover;
+export default ActivityTagPopover;

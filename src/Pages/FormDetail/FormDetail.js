@@ -22,7 +22,7 @@ import {
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
-import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
+import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
@@ -60,7 +60,7 @@ const FormPage = () => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(formId));
     dispatch(fetchActivitiesForForm(formId));
-    dispatch(fetchActivityGroupsForForm(formId));
+    dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
     dispatch(
