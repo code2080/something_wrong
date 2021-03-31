@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // ACTIONS
-import { setBreadcrumbs } from '../../../Redux/GlobalUI/globalUI.actions';
+import {
+  setBreadcrumbs,
+  setFormDetailTab,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // COMPONENTS
 import BaseSection from '../../../Components/Sections/BaseSection';
@@ -21,6 +24,7 @@ import './submissions.detail.page.scss';
 
 // HOOKS
 import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
+import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
 
 const SubmissionsDetailPage = ({ formInstanceId }) => {
   const { formId } = useParams();
@@ -40,9 +44,15 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
-        { path: `/forms/${formInstance.formId}`, label: form.name },
         {
-          path: `/forms/${formInstance.formId}/form-instances/${formInstance._id}`,
+          path: `/forms/${formInstance.formId}`,
+          label: form.name,
+          onClick: () => {
+            dispatch(setFormDetailTab(EFormDetailTabs.SUBMISSIONS, null));
+          },
+        },
+        {
+          path: `/forms/${formInstance.formId}`,
           label: `Submission from ${formInstance.submitter}`,
         },
       ]),

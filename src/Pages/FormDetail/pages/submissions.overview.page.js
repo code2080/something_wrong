@@ -18,7 +18,10 @@ import { selectSubmissions } from '../../../Redux/FormSubmissions/formSubmission
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
 
 // ACTIONS
-import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
+import {
+  setBreadcrumbs,
+  setFormDetailTab,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -86,6 +89,15 @@ const SubmissionsOverviewPage = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
+
+  useEffect(() => {
+    dispatch(
+      setBreadcrumbs([
+        { path: '/forms', label: 'Forms' },
+        { path: `/forms/${formId}`, label: form.name },
+      ]),
+    );
+  }, []);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(
