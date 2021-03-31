@@ -5,7 +5,7 @@ import {
 import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
-import ActivityTag from './ActivityGrouping';
+import ActivityTag from './ActivityTaging';
 
 export const SchedulingColumns = [
   {
@@ -20,7 +20,7 @@ export const SchedulingColumns = [
     ),
   },
   {
-    title: 'Group',
+    title: 'Tag',
     key: 'activityTag',
     dataIndex: undefined,
     fixedWidth: 150,

@@ -76,10 +76,7 @@ export const normalizeFilterValues = (value: any[]) => {
   return normalizedValues;
 };
 
-const fvForActivityTag = (
-  tagId: string | null | undefined,
-  formId: string,
-) => {
+const fvForActivityTag = (tagId: string | null | undefined, formId: string) => {
   if (!tagId) return 'N/A';
   const storeState = (window as any).tePrefsLibStore.getState();
   const activityTags = _.get(storeState, `activityTags.${formId}`, []);

@@ -23,16 +23,16 @@ type Props = {
 const ActivityTagPopover = ({ activities }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
-  const activityTags: TActivityTag[] = useSelector(
-    selectActivityTagsForForm,
-  )(formId);
+  const activityTags: TActivityTag[] = useSelector(selectActivityTagsForForm)(
+    formId,
+  );
 
   /**
    * MEMOIZED PROPS
    */
   const selectedActivityTagId = useMemo(() => {
     if (!activities || !activities.length) return null;
-    // Need to first check if all activities are on the same activity tag 
+    // Need to first check if all activities are on the same activity tag
     const hasSameTagValue = activities.every((a) =>
       activities.every((b) => b.tagId === a.tagId),
     );

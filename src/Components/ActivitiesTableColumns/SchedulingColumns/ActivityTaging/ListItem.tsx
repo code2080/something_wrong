@@ -51,11 +51,7 @@ const ActivityTagListItem = ({
 
   const onUpdateActivityTag = () => {
     dispatch(
-      updateActivityTag(
-        activityTag.formId,
-        activityTag._id,
-        newTagName,
-      ),
+      updateActivityTag(activityTag.formId, activityTag._id, newTagName),
     );
     setMode(EModes.VIEW);
   };
@@ -72,11 +68,7 @@ const ActivityTagListItem = ({
 
   const onAssignActivityToTag = () => {
     dispatch(
-      assignActivityToTag(
-        activityTag.formId,
-        activityTag._id,
-        activityIds,
-      ),
+      assignActivityToTag(activityTag.formId, activityTag._id, activityIds),
     );
     setMode(EModes.VIEW);
   };
@@ -86,10 +78,7 @@ const ActivityTagListItem = ({
       <Radio checked={isSelected} onChange={onAssignActivityToTag} />
       {mode === EModes.VIEW && (
         <>
-          <div
-            className='activity-tag--name'
-            onClick={onAssignActivityToTag}
-          >
+          <div className='activity-tag--name' onClick={onAssignActivityToTag}>
             {activityTag.name}
           </div>
           <div className='activity-tag--btns'>
