@@ -112,7 +112,7 @@ export const extractValuesFromActivityValues = (
   _(activityValues)
     .filter((av) => av.value)
     .map(mapActivityValueToTEValue)
-    .reduce(
+    .reduce<any>(
       (
         payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
         value: TEField | TEObjectFilter | TEObject[] | null,
@@ -149,7 +149,7 @@ const getAllExtIdsFromActivityValues = (
   const extIds = allActivityValues
     .filter((el) => el.extId && el.extId !== '$init')
     .map((el) => el.extId);
-  return [...extIds, 'groupId', 'submitter', 'primaryObject'];
+  return [...extIds, 'tagId', 'submitter', 'primaryObject'];
 };
 
 const extractMatchesFromFormattedOptions = (
@@ -198,12 +198,15 @@ const createUniqOptions = (option) => {
   );
 };
 
-const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
+const extractValueFromActivity = (
+  activity: TActivity,
+  extIds: string[],
+): [{ [extId: string]: any }, any[]] => {
   // Add constants from the activity
   const consts = [
     {
-      extId: 'groupId',
-      value: activity.groupId,
+      extId: 'tagId',
+      value: activity.tagId,
       type: ActivityValueType.OTHER,
       formId: activity.formId,
     },

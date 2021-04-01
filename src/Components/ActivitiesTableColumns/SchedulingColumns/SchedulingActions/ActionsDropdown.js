@@ -56,7 +56,7 @@ const mapActionsToProps = {
 
 const activityActions = {
   SCHEDULE_ALL: {
-    label: 'Schedule all activities',
+    label: 'Schedule submission',
     filterFn: (activity) =>
       !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,

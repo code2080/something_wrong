@@ -11,6 +11,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         selectedFormDetailTab: tab,
         selectedFormDetailSubmission: submission,
+        tabHistory: [
+          ...state.tabHistory,
+          {
+            tab,
+            payload: {
+              submission,
+            },
+          },
+        ].slice(0, 20), // Only keep 20 latest tabChanged
       };
     }
 

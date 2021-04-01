@@ -4,8 +4,11 @@ import _ from 'lodash';
 const selectExtIdProps = (state) => state.te.extIdProps;
 
 export const selectExtIds = createSelector([selectExtIdProps], (extIdProps) =>
-  _.flatMapDeep(extIdProps).reduce(
-    (extIds, extIdTypes) => [...extIds, ...Object.values(extIdTypes)],
+  _.flatMapDeep(extIdProps).reduce<any>(
+    (extIds: string[], extIdTypes: any) => [
+      ...extIds,
+      ...Object.values(extIdTypes),
+    ],
     [],
   ),
 );

@@ -92,7 +92,10 @@ const Toolbar = ({
             <Breadcrumb.Item key={idx}>
               <span
                 className='top-toolbar--breadcrumbs__item'
-                onClick={() => onHandleBreadrumbsClick(el.path)}
+                onClick={() => {
+                  if (typeof el.onClick === 'function') el.onClick();
+                  onHandleBreadrumbsClick(el.path);
+                }}
               >
                 {el.label}
               </span>

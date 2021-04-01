@@ -28,6 +28,7 @@
     "prettier:fix": "prettier ./src --write",
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
+    "ts:lint": "tsc --noemit -p tsconfig.json",
     "prepare": "husky install && yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
@@ -92,6 +93,7 @@
     "@storybook/react": "^6.1.18",
     "@svgr/rollup": "^5.5.0",
     "@types/jest": "^26.0.20",
+    "@types/lodash": "^4.14.168",
     "@types/node": "^14.14.27",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
@@ -159,7 +161,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "socket.io-client": "^3.1.1",
+    "socket.io-client": "^4.0.1",
     "utf-8-validate": "^5.0.4",
     "virtualizedtableforantd4": "^1.1.2"
   }

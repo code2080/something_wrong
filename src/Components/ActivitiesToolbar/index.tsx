@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
 
 // COMPONENTS
-import ActivityGroupPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityGrouping/Popover';
+import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
 import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES
@@ -24,7 +24,7 @@ type Props = {
 /**
  * OPTIONS FOR ACTIVITIES
  * x) View selection
- * x) Group activities
+ * x) Tag activities
  * x) Schedule activities
  */
 const ActivitiesToolbar = ({
@@ -61,9 +61,9 @@ const ActivitiesToolbar = ({
       </div>
       <div className='activities-toolbar--item'>
         <Popover
-          overlayClassName='activity-group-popover--wrapper'
-          title='Group activity'
-          content={<ActivityGroupPopover activities={activities} />}
+          overlayClassName='activity-tag-popover--wrapper'
+          title='Tag activity'
+          content={<ActivityTagPopover activities={activities} />}
           getPopupContainer={() =>
             document.getElementById('te-prefs-lib') as HTMLElement
           }
@@ -75,7 +75,7 @@ const ActivitiesToolbar = ({
             type='link'
             disabled={!selectedRowKeys || !selectedRowKeys.length}
           >
-            Group selected activities
+            Tag selected activities
           </Button>
         </Popover>
       </div>
