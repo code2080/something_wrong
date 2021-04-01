@@ -187,12 +187,12 @@ const SubmissionsOverviewPage = () => {
         rowKey='_id'
         onRow={(formInstance) => ({
           onClick: (e) => {
-            traversedClassList(e.target).includes(
-              'ant-table-column-has-actions',
-            ) &&
-              formInstance &&
-              formInstance.formId &&
-              formInstance._id &&
+            console.log('test');
+            const list = traversedClassList(e.target);
+            const hasFormInstance =
+              formInstance && formInstance.formId && formInstance._id;
+            list.includes('ant-table-cell') &&
+              hasFormInstance &&
               dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
           },
         })}
