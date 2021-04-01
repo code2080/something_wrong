@@ -4,6 +4,7 @@ import {
   EActivityFilterInclusion,
   EActivityFilterMode,
 } from '../../Types/ActivityFilter.interface';
+import { TActivity } from '../../Types/Activity.type';
 
 const filterstate = (state) => state.filters;
 
@@ -106,8 +107,8 @@ export const selectVisibleActivitiesForForm = createSelector(
     // If inclusion === SUBMISSION, we should return all activities on the submissions where we find the visible activities
     const submissions = state.activities[formId] || {};
     return _(Object.values(submissions))
-      .filter((act) => activitiesMatchingCriteria.includes(act))
-      .map((act) => act._id)
+      .filter((act: TActivity) => activitiesMatchingCriteria.includes(act))
+      .map((act: TActivity) => act._id)
       .uniq()
       .value();
   },

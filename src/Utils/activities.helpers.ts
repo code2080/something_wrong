@@ -112,7 +112,7 @@ export const extractValuesFromActivityValues = (
   _(activityValues)
     .filter((av) => av.value)
     .map(mapActivityValueToTEValue)
-    .reduce(
+    .reduce<any>(
       (
         payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
         value: TEField | TEObjectFilter | TEObject[] | null,
@@ -198,7 +198,10 @@ const createUniqOptions = (option) => {
   );
 };
 
-const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
+const extractValueFromActivity = (
+  activity: TActivity,
+  extIds: string[],
+): [{ [extId: string]: any }, any[]] => {
   // Add constants from the activity
   const consts = [
     {
