@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
 
 // COMPONENTS
-import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityGrouping/Popover';
+import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
 import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES
