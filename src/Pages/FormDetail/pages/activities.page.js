@@ -121,7 +121,7 @@ const ActivitiesPage = () => {
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
-        loading={isLoading}
+        loading={isLoading && activities?.length === 0}
         rowSelection={{
           selectedRowKeys,
           onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
