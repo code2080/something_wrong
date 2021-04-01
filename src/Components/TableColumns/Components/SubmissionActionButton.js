@@ -15,9 +15,11 @@ import {
   fetchFormSubmissions,
   sendReviewerLink,
 } from '../../../Redux/FormSubmissions/formSubmissions.actions';
+import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
+import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
 
 const EDIT_FORM_INSTANCE = 'EDIT_FORM_INSTANCE';
 const SET_PROGRESS_NOT_SCHEDULED = 'SET_PROGRESS_NOT_SCHEDULED';
@@ -46,11 +48,15 @@ const mapActionsToProps = (dispatch) => ({
   remindUser(data) {
     dispatch(sendReviewerLink(data));
   },
+  setFormDetailTab(tab, submissionId) {
+    dispatch(setFormDetailTab(tab, submissionId));
+  },
 });
 
 const SubmissionActionButton = ({
   formInstance,
   setFormInstanceSchedulingProgress,
+  setFormDetailTab,
   remindUser,
   history,
   submissions,
@@ -84,9 +90,7 @@ const SubmissionActionButton = ({
           setIsAcceptanceStatusModalOpen(true);
           break;
         case EDIT_FORM_INSTANCE:
-          history.push(
-            `/forms/${formInstance.formId}/form-instances/${formInstance._id}`,
-          );
+          setFormDetailTab(EFormDetailTabs.SUBMISSIONS, formInstance._id);
           break;
         case SET_PROGRESS_NOT_SCHEDULED:
           setFormInstanceSchedulingProgressCallback(
@@ -187,6 +191,7 @@ const SubmissionActionButton = ({
 SubmissionActionButton.propTypes = {
   formInstance: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
+  setFormDetailTab: PropTypes.func.isRequired,
   remindUser: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   submissions: PropTypes.object.isRequired,

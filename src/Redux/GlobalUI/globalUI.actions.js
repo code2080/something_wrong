@@ -12,6 +12,7 @@ import {
   UPDATE_VIEW_SUCCESS,
   UPDATE_VIEW_FAILURE,
   SET_FORM_DETAIL_TAB,
+  GO_TO_PREVIOUS_TAB,
 } from './globalUI.actionTypes';
 
 export const setBreadcrumbs = (fragments) => ({
@@ -93,4 +94,8 @@ export const updateView = (datasourceId, visibleCols) => (
 export const setFormDetailTab = (tab, submission = null) => ({
   type: SET_FORM_DETAIL_TAB,
   payload: { tab, submission },
+});
+
+export const goToPreviousTab = () => ({
+  type: GO_TO_PREVIOUS_TAB,
 });
