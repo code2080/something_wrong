@@ -28,6 +28,7 @@
     "prettier:fix": "prettier ./src --write",
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
+    "ts:lint": "tsc --noemit -p tsconfig.json",
     "prepare": "husky install && yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
