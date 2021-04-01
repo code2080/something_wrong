@@ -53,7 +53,7 @@ export const createActivityTagFlow = {
 export const createActivityTag = (formId, activityTagBody) =>
   asyncAction.POST({
     flow: createActivityTagFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-tag`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activity-tags`,
     params: { ...activityTagBody },
   });
 
