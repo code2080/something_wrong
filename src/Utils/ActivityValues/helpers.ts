@@ -76,16 +76,13 @@ export const normalizeFilterValues = (value: any[]) => {
   return normalizedValues;
 };
 
-const fvForActivityGroup = (
-  groupId: string | null | undefined,
-  formId: string,
-) => {
-  if (!groupId) return 'N/A';
+const fvForActivityTag = (tagId: string | null | undefined, formId: string) => {
+  if (!tagId) return 'N/A';
   const storeState = (window as any).tePrefsLibStore.getState();
-  const activityGroups = _.get(storeState, `activityGroups.${formId}`, []);
-  const activityGroup = activityGroups.find((el) => el._id === groupId);
-  if (!activityGroup) return 'N/A';
-  return activityGroup.name;
+  const activityTags = _.get(storeState, `activityTags.${formId}`, []);
+  const activityTag = activityTags.find((el) => el._id === tagId);
+  if (!activityTag) return 'N/A';
+  return activityTag.name;
 };
 
 const fvForSubmitter = (formInstanceId: string, formId: string) => {
@@ -113,8 +110,8 @@ const fvForPrimaryObject = (formInstanceId: string, formId: string) => {
 export const getFVForOtherValue = (activityValue: any): any[] | null => {
   const { value, extId, formId } = activityValue;
   switch (extId) {
-    case 'groupId': {
-      const fv = fvForActivityGroup(value, formId);
+    case 'tagId': {
+      const fv = fvForActivityTag(value, formId);
       return [{ value: `${extId}/${value}`, label: fv }];
     }
 

@@ -29,9 +29,9 @@ export const sortByElementDeepHtml = (a, b) => {
   );
 };
 
-export const sortByActivityGroup = (a, b) => {
-  if (!a.groupId) return -1;
-  if (!b.groupId) return 1;
-  if (a.groupId === b.groupId) return 0;
-  return sortAlpha(a.groupId, b.groupId);
+export const sortByActivityTag = (a, b) => {
+  if (!a.tagId) return -1;
+  if (!b.tagId) return 1;
+  if (a.tagId === b.tagId) return 0;
+  return sortAlpha(a.tagId, b.tagId);
 };
