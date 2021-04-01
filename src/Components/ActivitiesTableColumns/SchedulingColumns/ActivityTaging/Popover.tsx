@@ -49,8 +49,8 @@ const ActivityTagPopover = ({ activities }: Props) => {
   /**
    * EVENT HANDLERS
    */
-  const onCreateActivityTag = () => {
-    if (newTagName && newTagName.length > 0) {
+  const onCreateActivityTag = (name: string) => {
+    if (name.trim()) {
       dispatch(createActivityTag(formId, { name: newTagName }));
       setNewTagName('');
     }
