@@ -1,4 +1,4 @@
-import { Button, Popover } from 'antd';
+import { Button, Divider, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -19,6 +19,8 @@ type Props = {
   selectedRowKeys: string[];
   onSelectAll: () => void;
   onDeselectAll: () => void;
+  onScheduleActivities: (activities) => void;
+  allActivities: TActivity[];
 };
 
 /**
@@ -31,6 +33,8 @@ const ActivitiesToolbar = ({
   selectedRowKeys,
   onSelectAll,
   onDeselectAll,
+  onScheduleActivities,
+  allActivities,
 }: Props) => {
   const { formId }: { formId: string } = useParams();
   const activities: TActivity[] = useSelector(selectActivitiesForFormAndIds)(
@@ -59,6 +63,24 @@ const ActivitiesToolbar = ({
           Deselect all
         </Button>
       </div>
+      <Divider type='vertical' />
+      <Button
+        size='small'
+        type='link'
+        onClick={() => onScheduleActivities(activities)}
+        disabled={!selectedRowKeys || !selectedRowKeys.length}
+      >
+        Schedule seletected activities
+      </Button>
+      <Button
+        size='small'
+        type='link'
+        onClick={() => onScheduleActivities(allActivities)}
+        disabled={!allActivities || !allActivities.length}
+      >
+        Schedule all activities
+      </Button>
+      <Divider type='vertical' />
       <div className='activities-toolbar--item'>
         <Popover
           overlayClassName='activity-tag-popover--wrapper'

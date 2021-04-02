@@ -18,10 +18,12 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
+
+// ACTIONS
 import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
-// CONSTANTS
-// import { tableViews } from '../../../Constants/tableViews.constants';
+// HOOKS
+import useActivityScheduling from '../../../Hooks/activityScheduling';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -58,6 +60,19 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   );
+  const [formType, reservationMode] = useSelector((state) => {
+    const form = state.forms[formId];
+    return [form.formType, form.reservationMode];
+  });
+
+  /**
+   * HOOKS
+   */
+  const { onScheduleActivities } = useActivityScheduling({
+    formId,
+    formType,
+    reservationMode,
+  });
 
   const [yScroll] = useState(calculateAvailableTableHeight());
 
@@ -77,6 +92,8 @@ const ActivitiesPage = () => {
     () => getActivityDataSource(activities, visibleActivities),
     [activities, visibleActivities],
   );
+  // const indexedActivities = useMemo(() => keyBy(tableDataSource, '_id'), [tableDataSource]);
+
   useEffect(() => {
     const { options, matches } = getFilterPropsForActivities(activities);
     dispatch(setActivityFilter({ filterId: formId, options, matches }));
@@ -114,6 +131,8 @@ const ActivitiesPage = () => {
         selectedRowKeys={selectedRowKeys}
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
+        onScheduleActivities={onScheduleActivities}
+        allActivities={tableDataSource}
       />
       <Table
         scroll={{ y: yScroll }}

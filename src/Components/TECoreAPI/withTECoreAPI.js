@@ -7,3 +7,8 @@ const withTECoreAPI = (WrappedComponent) => (props) => {
 };
 
 export default withTECoreAPI;
+
+export const useTECoreAPI = () => {
+  const teCoreAPI = useContext(TECoreAPIContext);
+  return teCoreAPI.api;
+};
