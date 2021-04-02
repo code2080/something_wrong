@@ -125,13 +125,18 @@ const ActivitiesPage = () => {
     [vt],
   );
 
+  const scheduleActivities = async (activities) => {
+    await onScheduleActivities(activities);
+    onDeselectAll();
+  };
+
   return (
     <>
       <ActivitiesToolbar
         selectedRowKeys={selectedRowKeys}
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
-        onScheduleActivities={onScheduleActivities}
+        onScheduleActivities={scheduleActivities}
         allActivities={tableDataSource}
       />
       <Table

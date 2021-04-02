@@ -43,7 +43,7 @@ const useActivityScheduling = ({
   ]);
   const allActivities = useSelector(selectActivitiesForForm)(formId);
 
-  const { openConfirmModal } = SchedulingStatusModal({ formId });
+  const { openConfirmModal } = SchedulingStatusModal();
 
   const checkActivitiesInFormInstance = (groupedActivities) => {
     return groupBy(Object.keys(groupedActivities), (formInstanceId) => {

@@ -1,79 +1,14 @@
-import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { get, keyBy } from 'lodash';
+import { useDispatch } from 'react-redux';
 
 // COMPONENTS
-import { Modal, Table } from 'antd';
-import StatusLabel from '../Components/StatusLabel/StatusLabel';
+import { Modal } from 'antd';
 
 // ACTIONS
 import { setFormInstanceSchedulingProgress } from '../Redux/FormSubmissions/formSubmissions.actions';
 
-// SELECTORS
-import { selectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
-
-// CONSTANTS
-import { teCoreSchedulingProgressProps } from '../Constants/teCoreProps.constants';
-
-type Props = {
-  formId: string;
-};
-
-const SchedulingStatusConfirmModal = ({ formId }: Props) => {
+const SchedulingStatusConfirmModal = () => {
   const dispatch = useDispatch();
-  const formInstances = useSelector(selectSubmissions)(formId);
-  const indexedFormInstances = useMemo(() => keyBy(formInstances, '_id'), [
-    formInstances,
-  ]);
 
-  const columns = [
-    {
-      title: 'Submission',
-      key: 'name',
-      dataIndex: 'submissionId',
-      render: (submissionId: string) => {
-        return get(indexedFormInstances, [submissionId, 'submitter'], '');
-      },
-    },
-    {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      render: (status: string, item) => {
-        if (
-          !teCoreSchedulingProgressProps[status] ||
-          !indexedFormInstances[item.submissionId]
-        )
-          return null;
-        const oldStatus = get(
-          indexedFormInstances[item.submissionId],
-          'teCoreProps.schedulingProgress',
-        );
-        return (
-          <div>
-            <StatusLabel
-              color={teCoreSchedulingProgressProps[oldStatus]?.color}
-              className='no-margin'
-            >
-              {teCoreSchedulingProgressProps[oldStatus]?.label}
-            </StatusLabel>
-            <span>--&gt;</span>
-            <StatusLabel
-              color={teCoreSchedulingProgressProps[status].color}
-              className='no-margin'
-            >
-              {teCoreSchedulingProgressProps[status].label}
-            </StatusLabel>
-          </div>
-        );
-      },
-    },
-  ];
-  const renderTable = (dataSource: any) => {
-    return (
-      <Table columns={columns} dataSource={dataSource} pagination={false} />
-    );
-  };
   const openConfirmModal = (content: any) => {
     const dataSource: { status: string; submissionId: string }[] = [];
     Object.keys(content).forEach((key: string) => {
@@ -91,8 +26,7 @@ const SchedulingStatusConfirmModal = ({ formId }: Props) => {
       Modal.confirm({
         getContainer: () =>
           document.getElementById('te-prefs-lib') || document.body,
-        title: 'Do you want to update the scheduling progress?',
-        content: renderTable(dataSource),
+        content: 'Do you want to update scheduling status for the submissions?',
         width: 550,
         icon: null,
         onOk: () => {
@@ -106,6 +40,8 @@ const SchedulingStatusConfirmModal = ({ formId }: Props) => {
           });
         },
         onCancel: () => {},
+        okText: 'Yes',
+        cancelText: 'No',
       });
     }
   };
