@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import { Table } from 'antd';
+import { Table, Spin } from 'antd';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -19,6 +20,8 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
 import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
+
+import './activities.page.scss';
 
 // CONSTANTS
 // import { tableViews } from '../../../Constants/tableViews.constants';
@@ -45,7 +48,7 @@ const calculateAvailableTableHeight = () => {
   return height - 110;
 };
 
-const ActivitiesPage = () => {
+const ActivitiesPage = ({ isActiveTab }) => {
   const { formId } = useParams();
   const dispatch = useDispatch();
 
@@ -65,6 +68,16 @@ const ActivitiesPage = () => {
     () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
     [],
   );
+
+  const [isReady, setReady] = useState(false);
+
+  useEffect(() => {
+    if (isActiveTab) {
+      setTimeout(() => {
+        setReady(true);
+      }, 200);
+    }
+  }, [isActiveTab]);
 
   /**
    * MEMOIZED PROPS
@@ -108,7 +121,7 @@ const ActivitiesPage = () => {
     [vt],
   );
 
-  return (
+  return isReady ? (
     <>
       <ActivitiesToolbar
         selectedRowKeys={selectedRowKeys}
@@ -129,7 +142,15 @@ const ActivitiesPage = () => {
         pagination={false}
       />
     </>
+  ) : (
+    <div className='loading-activity-tab'>
+      <Spin />
+    </div>
   );
+};
+
+ActivitiesPage.propTypes = {
+  isActiveTab: PropTypes.bool.isRequired,
 };
 
 export default ActivitiesPage;
