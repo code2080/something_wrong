@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import { Table, Spin } from 'antd';
+import { Table } from 'antd';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -20,11 +19,6 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
 import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
-
-import './activities.page.scss';
-
-// CONSTANTS
-// import { tableViews } from '../../../Constants/tableViews.constants';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -48,7 +42,7 @@ const calculateAvailableTableHeight = () => {
   return height - 110;
 };
 
-const ActivitiesPage = ({ isActiveTab }) => {
+const ActivitiesPage = () => {
   const { formId } = useParams();
   const dispatch = useDispatch();
 
@@ -68,16 +62,6 @@ const ActivitiesPage = ({ isActiveTab }) => {
     () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
     [],
   );
-
-  const [isReady, setReady] = useState(false);
-
-  useEffect(() => {
-    if (isActiveTab) {
-      setTimeout(() => {
-        setReady(true);
-      }, 200);
-    }
-  }, [isActiveTab]);
 
   /**
    * MEMOIZED PROPS
@@ -121,7 +105,7 @@ const ActivitiesPage = ({ isActiveTab }) => {
     [vt],
   );
 
-  return isReady ? (
+  return (
     <>
       <ActivitiesToolbar
         selectedRowKeys={selectedRowKeys}
@@ -142,15 +126,7 @@ const ActivitiesPage = ({ isActiveTab }) => {
         pagination={false}
       />
     </>
-  ) : (
-    <div className='loading-activity-tab'>
-      <Spin />
-    </div>
   );
-};
-
-ActivitiesPage.propTypes = {
-  isActiveTab: PropTypes.bool.isRequired,
 };
 
 export default ActivitiesPage;

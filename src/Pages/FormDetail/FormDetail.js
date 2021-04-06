@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -87,8 +87,6 @@ const FormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
-  const [isActiveTab, setActiveTab] = useState(false);
-
   const payload = useMemo(() => {
     const sections = form.sections;
     const submissionValues = submissions.reduce(
@@ -120,7 +118,6 @@ const FormPage = () => {
    * EVENT HANDLERS
    */
   const onChangeTabKey = (key) => {
-    setActiveTab(true);
     dispatch(setFormDetailTab(key));
   };
 
@@ -135,7 +132,7 @@ const FormPage = () => {
           <SubmissionsPage />
         </Tabs.TabPane>
         <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
-          <ActivitiesPage isActiveTab={isActiveTab} />
+          <ActivitiesPage />
         </Tabs.TabPane>
         {hasActivityDesignPermission && (
           <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
