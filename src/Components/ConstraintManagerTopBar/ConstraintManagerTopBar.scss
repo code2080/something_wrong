@@ -24,7 +24,6 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0;
-
   }
 
   .ant-typography-edit-content {
@@ -33,15 +32,13 @@
     margin-top: auto;
     height: 24px;
 
-    textarea{
+    textarea {
       height: 24px;
       max-height: 24px !important;
-  }
-  .ant-input{
+    }
+    .ant-input {
       height: 24px;
       min-height: 24px;
-
     }
   }
-
 }
