@@ -57,12 +57,12 @@ const ConstraintManagerTopBar = ({
       <div className='constraint-manager-top-bar--buttons'>
         {
           <Paragraph
-          editable={{
-            onChange: onUpdConstrConfName,
-            tooltip: false,
-          }}
-        >
-          {selConstrName}
+            editable={{
+              onChange: onUpdConstrConfName,
+              tooltip: false,
+            }}
+          >
+            {selConstrName}
           </Paragraph>
         }
         <Popconfirm
