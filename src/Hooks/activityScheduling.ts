@@ -15,7 +15,6 @@ import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 
 // COMPONENTS
-import { useTECoreAPI } from '../Components/TECoreAPI/withTECoreAPI';
 import { selectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
 
@@ -24,6 +23,9 @@ import { TFormInstance } from '../Types/FormInstance.type';
 import { selectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
+
+// HOOKS
+import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 
 type Props = {
   formType: string;
