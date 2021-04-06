@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.2rem 8px;
-  background-color: #c6c5c570;
+  margin-bottom: 0;
   .ant-btn {
     font-size: 0.75rem;
     line-height: 0.75rem;
@@ -23,9 +23,25 @@
     width: 50%;
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 0;
+
   }
 
   .ant-typography-edit-content {
     width: 50%;
+    margin-bottom: 0;
+    margin-top: auto;
+    height: 24px;
+
+    textarea{
+      height: 24px;
+      max-height: 24px !important;
   }
+  .ant-input{
+      height: 24px;
+      min-height: 24px;
+
+    }
+  }
+
 }
