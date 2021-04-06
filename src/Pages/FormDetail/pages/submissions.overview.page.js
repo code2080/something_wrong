@@ -97,6 +97,7 @@ const SubmissionsOverviewPage = () => {
         { path: `/forms/${formId}`, label: form.name },
       ]),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);

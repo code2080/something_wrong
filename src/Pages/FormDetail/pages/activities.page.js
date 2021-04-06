@@ -68,7 +68,7 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  const { onScheduleActivities } = useActivityScheduling({
+  const { handleScheduleActivities } = useActivityScheduling({
     formId,
     formType,
     reservationMode,
@@ -76,7 +76,7 @@ const ActivitiesPage = () => {
 
   const [yScroll] = useState(calculateAvailableTableHeight());
 
-  const [vt] = useVT(
+  const [virtualTable] = useVT(
     () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
     [],
   );
@@ -88,11 +88,11 @@ const ActivitiesPage = () => {
     () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
     [design],
   );
+
   const tableDataSource = useMemo(
     () => getActivityDataSource(activities, visibleActivities),
     [activities, visibleActivities],
   );
-  // const indexedActivities = useMemo(() => keyBy(tableDataSource, '_id'), [tableDataSource]);
 
   useEffect(() => {
     const { options, matches } = getFilterPropsForActivities(activities);
@@ -117,16 +117,16 @@ const ActivitiesPage = () => {
 
   const tableComponents = useMemo(
     () => ({
-      ...vt,
+      ...virtualTable,
       header: {
         cell: ColumnHeader,
       },
     }),
-    [vt],
+    [virtualTable],
   );
 
-  const scheduleActivities = async (activities) => {
-    await onScheduleActivities(activities);
+  const onScheduleActivities = async (activities) => {
+    await handleScheduleActivities(activities);
     onDeselectAll();
   };
 
@@ -136,7 +136,7 @@ const ActivitiesPage = () => {
         selectedRowKeys={selectedRowKeys}
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
-        onScheduleActivities={scheduleActivities}
+        onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
       <Table

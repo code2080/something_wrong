@@ -78,7 +78,7 @@ const useActivityScheduling = ({
     });
   };
 
-  const onScheduleActivities = async (activities) => {
+  const handleScheduleActivities = async (activities) => {
     const groupedActivities = groupBy(
       activities.filter(
         (activity) => activity.activityStatus !== activityStatuses.SCHEDULED,
@@ -120,7 +120,7 @@ const useActivityScheduling = ({
   };
 
   return {
-    onScheduleActivities,
+    handleScheduleActivities,
   };
 };
 export default useActivityScheduling;
