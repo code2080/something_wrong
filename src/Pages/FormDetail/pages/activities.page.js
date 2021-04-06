@@ -157,23 +157,3 @@ const ActivitiesPage = () => {
 };
 
 export default ActivitiesPage;
-
-/*
-  const memoizedTable = useMemo(() => (
-          <DynamicTable
-        showFilter={false}
-        columns={tableColumns}
-        dataSource={tableDataSource}
-        rowKey='_id'
-        datasourceId={`${tableViews.ACTIVITIES}-${formId}`}
-        resizable
-        rowSelection={{
-          selectedRowKeys,
-          onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
-        }}
-        pagination={false}
-        isLoading={isLoading}
-      />
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  ), [formId, isLoading, selectedRowKeys, tableDataSource]);
-*/
