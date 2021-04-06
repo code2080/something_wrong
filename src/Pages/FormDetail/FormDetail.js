@@ -45,7 +45,10 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 
-import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
+import {
+  AEBETA_PERMISSION,
+  AE_ACTIVITY_PERMISSION,
+} from '../../Constants/permissions.constants';
 
 const FormPage = () => {
   const dispatch = useDispatch();
@@ -55,6 +58,9 @@ const FormPage = () => {
   const submissions = useSelector(selectSubmissions)(formId);
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
   const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
+  const hasActivityDesignPermission = useSelector(
+    hasPermission(AE_ACTIVITY_PERMISSION),
+  );
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -125,12 +131,14 @@ const FormPage = () => {
         <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
           <SubmissionsPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES'>
+        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
           <ActivitiesPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
-          <ActivityDesignPage />
-        </Tabs.TabPane>
+        {hasActivityDesignPermission && (
+          <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
+            <ActivityDesignPage />
+          </Tabs.TabPane>
+        )}
         {hasAEBetaPermission && (
           <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
             <ConstraintManagerPage />
