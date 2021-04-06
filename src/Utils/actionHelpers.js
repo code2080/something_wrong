@@ -107,6 +107,7 @@ function createThunkAction({
   postAction = {},
   permission = null,
   callback = null,
+  isParallel = false,
 }) {
   const { CancelToken } = axios;
   if (allApis[endpoint]) {
@@ -146,7 +147,9 @@ function createThunkAction({
       allApis[endpoint].inprogress = false;
     }
     option.cancelToken = new CancelToken((c) => {
-      allApis[endpoint].cancel = c;
+      if (!isParallel) {
+        allApis[endpoint].cancel = c;
+      }
     });
 
     return axios(fullUrl, option)
@@ -261,6 +264,7 @@ export const asyncAction = {
     successNotification,
     postAction,
     permission = '',
+    isParallel,
   }) =>
     createThunkAction({
       method: 'GET',
@@ -272,6 +276,7 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
+      isParallel,
     }),
   PUT: ({
     flow,
@@ -282,6 +287,7 @@ export const asyncAction = {
     successNotification,
     postAction,
     permission = '',
+    isParallel,
   }) =>
     createThunkAction({
       method: 'PUT',
@@ -293,6 +299,7 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
+      isParallel,
     }),
   PATCH: ({
     flow,
@@ -303,6 +310,7 @@ export const asyncAction = {
     successNotification,
     postAction,
     permission = '',
+    isParallel,
   }) =>
     createThunkAction({
       method: 'PATCH',
@@ -314,6 +322,7 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
+      isParallel,
     }),
   POST: ({
     flow,
@@ -325,6 +334,7 @@ export const asyncAction = {
     postAction,
     permission = '',
     callback,
+    isParallel,
   }) =>
     createThunkAction({
       method: 'POST',
@@ -337,6 +347,7 @@ export const asyncAction = {
       postAction,
       permission,
       callback,
+      isParallel,
     }),
   DELETE: ({
     flow,
@@ -347,6 +358,7 @@ export const asyncAction = {
     successNotification,
     postAction,
     permission = '',
+    isParallel,
   }) =>
     createThunkAction({
       method: 'DELETE',
@@ -358,5 +370,6 @@ export const asyncAction = {
       successNotification,
       postAction,
       permission,
+      isParallel,
     }),
 };

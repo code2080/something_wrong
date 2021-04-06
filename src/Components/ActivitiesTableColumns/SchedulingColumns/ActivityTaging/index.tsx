@@ -27,22 +27,24 @@ const ActivityTagSelector = ({ activities }: Props) => {
   );
 
   return (
-    <Popover
-      overlayClassName='activity-tag-popover--wrapper'
-      title='Tag activity'
-      content={<ActivityTagPopover activities={activities} />}
-      getPopupContainer={() =>
-        document.getElementById('te-prefs-lib') as HTMLElement
-      }
-      trigger='hover'
-      placement='rightTop'
-    >
-      <div className='activity-tag--button'>
-        <Button size='small' icon={<AppstoreOutlined />}>
-          {selectedActivityTag ? selectedActivityTag.name : 'N/A'}
-        </Button>
-      </div>
-    </Popover>
+    <div className='activity-tag'>
+      <Popover
+        overlayClassName='activity-tag-popover--wrapper'
+        title='Tag activity'
+        content={<ActivityTagPopover activities={activities} />}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+        trigger='hover'
+        placement='rightTop'
+      >
+        <div className='activity-tag--button'>
+          <Button size='small' icon={<AppstoreOutlined />}>
+            {selectedActivityTag ? selectedActivityTag.name : 'N/A'}
+          </Button>
+        </div>
+      </Popover>
+    </div>
   );
 };
 // <GroupingButton activityGroup={selectedActivityGroup} />
