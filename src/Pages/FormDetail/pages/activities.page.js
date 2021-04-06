@@ -18,7 +18,12 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
+
+// ACTIONS
 import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
+
+// HOOKS
+import useActivityScheduling from '../../../Hooks/activityScheduling';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -55,10 +60,23 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   );
+  const [formType, reservationMode] = useSelector((state) => {
+    const form = state.forms[formId];
+    return [form.formType, form.reservationMode];
+  });
+
+  /**
+   * HOOKS
+   */
+  const { handleScheduleActivities } = useActivityScheduling({
+    formId,
+    formType,
+    reservationMode,
+  });
 
   const [yScroll] = useState(calculateAvailableTableHeight());
 
-  const [vt] = useVT(
+  const [virtualTable] = useVT(
     () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
     [],
   );
@@ -70,10 +88,12 @@ const ActivitiesPage = () => {
     () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
     [design],
   );
+
   const tableDataSource = useMemo(
     () => getActivityDataSource(activities, visibleActivities),
     [activities, visibleActivities],
   );
+
   useEffect(() => {
     const { options, matches } = getFilterPropsForActivities(activities);
     dispatch(setActivityFilter({ filterId: formId, options, matches }));
@@ -97,13 +117,18 @@ const ActivitiesPage = () => {
 
   const tableComponents = useMemo(
     () => ({
-      ...vt,
+      ...virtualTable,
       header: {
         cell: ColumnHeader,
       },
     }),
-    [vt],
+    [virtualTable],
   );
+
+  const onScheduleActivities = async (activities) => {
+    await handleScheduleActivities(activities);
+    onDeselectAll();
+  };
 
   return (
     <>
@@ -111,6 +136,8 @@ const ActivitiesPage = () => {
         selectedRowKeys={selectedRowKeys}
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
+        onScheduleActivities={onScheduleActivities}
+        allActivities={tableDataSource}
       />
       <Table
         scroll={{ y: yScroll }}
@@ -130,23 +157,3 @@ const ActivitiesPage = () => {
 };
 
 export default ActivitiesPage;
-
-/*
-  const memoizedTable = useMemo(() => (
-          <DynamicTable
-        showFilter={false}
-        columns={tableColumns}
-        dataSource={tableDataSource}
-        rowKey='_id'
-        datasourceId={`${tableViews.ACTIVITIES}-${formId}`}
-        resizable
-        rowSelection={{
-          selectedRowKeys,
-          onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
-        }}
-        pagination={false}
-        isLoading={isLoading}
-      />
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  ), [formId, isLoading, selectedRowKeys, tableDataSource]);
-*/

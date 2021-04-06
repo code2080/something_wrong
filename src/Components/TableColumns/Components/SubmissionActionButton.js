@@ -58,7 +58,6 @@ const SubmissionActionButton = ({
   setFormInstanceSchedulingProgress,
   setFormDetailTab,
   remindUser,
-  history,
   submissions,
 }) => {
   const haveReviewLinkSubmissions = Object.values(submissions).filter(
@@ -122,8 +121,7 @@ const SubmissionActionButton = ({
       }
     },
     [
-      history,
-      formInstance.formId,
+      setFormDetailTab,
       formInstance._id,
       setFormInstanceSchedulingProgressCallback,
       remindUser,
@@ -193,7 +191,6 @@ SubmissionActionButton.propTypes = {
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   setFormDetailTab: PropTypes.func.isRequired,
   remindUser: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
   submissions: PropTypes.object.isRequired,
 };
 

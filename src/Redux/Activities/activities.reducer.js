@@ -7,6 +7,7 @@ import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 // INITIAL STATE
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
+import { get, remove } from 'lodash-es';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -96,7 +97,32 @@ const reducer = (state = initialState, action) => {
       const activities = updateActivitiesForForm(activitityObjs);
       return {
         ...state,
-        [formId]: activities,
+        [formId]: {
+          ...state[formId],
+          ...Object.keys(activities).reduce((results, formInstanceId) => {
+            const oldActivities = get(state, [formId, formInstanceId], []);
+            const oldActivityIds = oldActivities.map(({ _id }) => _id);
+            const newActivities = remove(
+              activities[formInstanceId],
+              (item) => !oldActivityIds.includes(item._id),
+            );
+
+            return {
+              ...results,
+              // TO KEEP ACTIVITY INDEX
+              [formInstanceId]: [
+                ...oldActivities.map((activity) => {
+                  const foundActivity = activities[formInstanceId].find(
+                    (a) => a._id === activity._id,
+                  );
+                  if (foundActivity) return foundActivity;
+                  return activity;
+                }),
+                ...newActivities,
+              ],
+            };
+          }, {}),
+        },
       };
     }
 
