@@ -1,5 +1,9 @@
 @import '../../../../Styles/globals.scss';
 
+.activity-tag {
+  overflow: hidden;
+}
+
 .activity-tag-popover--wrapper {
   .ant-popover-title {
     padding-left: 6px !important;

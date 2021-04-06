@@ -61,15 +61,17 @@ const StatusText = ({ activity }) => {
 
 const ActivityStatusCol = ({ activity }) => {
   return (
-    <Popover
-      title='Scheduling information'
-      content={<PopoverContent activity={activity} />}
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-    >
-      <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
-        <StatusText activity={activity} />
-      </StatusLabel>
-    </Popover>
+    <div className='activity-status-column'>
+      <Popover
+        title='Scheduling information'
+        content={<PopoverContent activity={activity} />}
+        getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      >
+        <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
+          <StatusText activity={activity} />
+        </StatusLabel>
+      </Popover>
+    </div>
   );
 };
 
