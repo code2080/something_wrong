@@ -1,6 +1,10 @@
 @import '../../../../Styles/globals.scss';
 
+.activity-status-column {
+  overflow: hidden;
+}
 .activity-col--popover {
+  overflow: hidden;
   .ant-row.ant-form-item {
     margin-bottom: 4px !important;
   }
