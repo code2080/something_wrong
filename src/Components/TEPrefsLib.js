@@ -46,8 +46,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
     });
     // Validate token presence
     store.dispatch(validateLogin());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [env]);
 
   useEffect(() => {
     const { x, y, height } =
