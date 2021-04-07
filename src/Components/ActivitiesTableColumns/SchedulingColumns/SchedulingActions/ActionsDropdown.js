@@ -32,6 +32,7 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
+import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -270,17 +271,23 @@ const ActivityActionsDropdown = ({
     ),
     [handleMenuClick, activity],
   );
-
   return (
     <Dropdown
       overlay={menu}
+      disabled={!hasAssistedSchedulingPermissions}
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
       {buttonType === 'ellipsis' ? (
-        <Button type='link' icon={<EllipsisOutlined />} size='small' />
+        <Button
+          type='link'
+          icon={<EllipsisOutlined />}
+          size='small'
+          disabled={!hasAssistedSchedulingPermissions}
+        />
       ) : (
         <Button
+          disabled={!hasAssistedSchedulingPermissions}
           type={buttonType}
           size='small'
           style={{ backgroundColor: '#ffffff' }}

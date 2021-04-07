@@ -13,6 +13,7 @@ import { activityStatuses } from '../../../../Constants/activityStatuses.constan
 
 // STYLES
 import './SchedulingCheckbox.scss';
+import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {
@@ -41,7 +42,7 @@ const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
         <Button
           type='default'
           size='small'
-          disabled={!reservationId}
+          disabled={!reservationId || !hasAssistedSchedulingPermissions}
           onClick={() => onConfirm(reservationId)}
         >
           Use reservation id
@@ -97,7 +98,6 @@ const SchedulingCheckbox = ({ activity }) => {
     activity.activityStatus,
     showInvertedState,
   );
-
   return (
     <div
       onMouseEnter={() => setShowInvertedState(true)}
@@ -106,6 +106,7 @@ const SchedulingCheckbox = ({ activity }) => {
     >
       {activity.activityStatus !== activityStatuses.SCHEDULED && (
         <Button
+          disabled={!hasAssistedSchedulingPermissions}
           size='small'
           icon={
             derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
@@ -128,6 +129,7 @@ const SchedulingCheckbox = ({ activity }) => {
           trigger={'click'}
         >
           <Button
+            disabled={!hasAssistedSchedulingPermissions}
             size='small'
             icon={
               derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
