@@ -123,7 +123,7 @@ const FormPage = () => {
 
   return (
     <div className='form--wrapper'>
-      {hasAEBetaPermission && <JobToolbar />}
+      <JobToolbar />
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
         <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
           <FormInfoPage />
