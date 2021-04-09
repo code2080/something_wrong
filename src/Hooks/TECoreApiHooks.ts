@@ -1,18 +1,19 @@
-import { useEffect, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectExtIds } from '../Redux/TE/te.selectors';
 import { setTEDataForValues } from '../Redux/TE/te.actions';
 import { initialState as initialPayload } from '../Redux/TE/te.helpers';
 import { TECoreAPIContext } from '../Components/TECoreAPI/context';
+import { TECoreAPI } from '../Types/TECoreAPI';
 import _ from 'lodash';
 
-export const useTECoreAPI = () => {
-  const teCoreAPI = useContext(TECoreAPIContext);
+export const useTECoreAPI = (): TECoreAPI => {
+  const teCoreAPI: any = useContext(TECoreAPIContext);
   return teCoreAPI.api;
 };
 
 export const useMixpanel = () => {
-  const teCoreAPI = useContext(TECoreAPIContext);
+  const teCoreAPI: any = useContext(TECoreAPIContext);
   return teCoreAPI.mixpanel;
 };
 
