@@ -10,6 +10,7 @@ import { activityStatuses } from '../../../../Constants/activityStatuses.constan
 
 // STYLES
 import './SchedulingActions.scss';
+import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
 
 const SchedulingActions = ({ activity }) => {
   return (
@@ -17,8 +18,14 @@ const SchedulingActions = ({ activity }) => {
       {activity.activityStatus === activityStatuses.COMPLETED && (
         <div className='scheduling-actions--strikethrough' />
       )}
-      <SchedulingCheckbox activity={activity} />
-      <SelectActivityButton activity={activity} />
+      <SchedulingCheckbox
+        activity={activity}
+        disabled={!hasAssistedSchedulingPermissions}
+      />
+      <SelectActivityButton
+        activity={activity}
+        disabled={!hasAssistedSchedulingPermissions}
+      />
       <ActionsDropdown buttonType='ellipsis' activity={activity} />
     </div>
   );
