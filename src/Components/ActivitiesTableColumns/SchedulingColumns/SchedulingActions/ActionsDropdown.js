@@ -269,29 +269,30 @@ const ActivityActionsDropdown = ({
         {Object.keys(activityActions)
           .filter((key) => activityActions[key].filterFn(activity))
           .map((key) => (
-            <Menu.Item key={key}>{activityActions[key].label}</Menu.Item>
+            <Menu.Item
+              disabled={
+                ['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
+                !hasAssistedSchedulingPermissions
+              }
+              key={key}
+            >
+              {activityActions[key].label}
+            </Menu.Item>
           ))}
       </Menu>
     ),
-    [handleMenuClick, activity],
+    [handleMenuClick, activity, hasAssistedSchedulingPermissions],
   );
   return (
     <Dropdown
       overlay={menu}
-      disabled={!hasAssistedSchedulingPermissions}
       trigger={['click']}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
       {buttonType === 'ellipsis' ? (
-        <Button
-          type='link'
-          icon={<EllipsisOutlined />}
-          size='small'
-          disabled={!hasAssistedSchedulingPermissions}
-        />
+        <Button type='link' icon={<EllipsisOutlined />} size='small' />
       ) : (
         <Button
-          disabled={!hasAssistedSchedulingPermissions}
           type={buttonType}
           size='small'
           style={{ backgroundColor: '#ffffff' }}

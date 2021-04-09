@@ -6,7 +6,6 @@ import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
 import ActivityTag from './ActivityTaging';
-import { hasAssistedSchedulingPermissions } from '../../../Utils/permissionHelpers';
 
 export const SchedulingColumns = [
   {
@@ -16,10 +15,7 @@ export const SchedulingColumns = [
     fixedWidth: 90,
     render: (activity) => (
       <SortableTableCell className={`activityScheduling_${activity._id}`}>
-        <SchedulingActions
-          activity={activity}
-          disabled={hasAssistedSchedulingPermissions}
-        />
+        <SchedulingActions activity={activity} />
       </SortableTableCell>
     ),
   },
