@@ -13,7 +13,7 @@ import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReserv
 
 // SELECTORS
 import { selectForm } from '../../../Redux/Forms/forms.selectors';
-import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
   selectValidTypesOnReservationMode,
@@ -64,7 +64,13 @@ const ActivityDesignPage = () => {
    * SELECTORS
    */
   const form = useSelector(selectForm)(formId);
-  const activities = useSelector(selectActivitiesForForm)(formId);
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
   const validTypes = useSelector(selectValidTypesOnReservationMode)(
     form.reservationMode,
   );

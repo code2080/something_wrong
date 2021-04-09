@@ -7,17 +7,19 @@ import { ActivityValue } from '../../Types/ActivityValue.type';
 
 // TYPES
 type TActivityMap = {
-  [key: string]: TActivity[];
+  [formId: string]: TActivity[];
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
 
-export const selectActivitiesForForm = createSelector(
-  activityStateSelector,
-  (activities: TActivityMap) => (formId: string): TActivity[] =>
-    activities[formId],
-);
+export const makeSelectActivitiesForForm = () =>
+  createSelector(
+    activityStateSelector,
+    (_: any, formId: string) => formId,
+    (activities: TActivityMap, formId: string): TActivity[] =>
+      activities[formId] || [],
+  );
 
 export const selectActivitiesForFormAndIds = createSelector(
   activityStateSelector,

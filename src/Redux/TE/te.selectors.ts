@@ -1,15 +1,15 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-const selectExtIdProps = (state) => state.te.extIdProps;
+const selectExtIdProps = (state) => state.te.extIdProps || {};
 
-export const selectExtIds = createSelector([selectExtIdProps], (extIdProps) =>
-  _.flatMapDeep(extIdProps).reduce<any>(
-    (extIds: string[], extIdTypes: any) => [
+export const selectExtIds = createSelector(selectExtIdProps, (extIdProps) =>
+  _.flatMapDeep<string>(extIdProps).reduce(
+    (extIds, extIdTypes: any) => [
       ...extIds,
-      ...Object.values(extIdTypes),
+      ...(Object.values(extIdTypes) as string[]),
     ],
-    [],
+    <string[]>[],
   ),
 );
 
@@ -33,7 +33,7 @@ const getLabelFromExtId = (
  * @function selectExtIdLabel
  * @description curried function to fetch the label for the specified extId
  * @param {Object} state curried redux state
- * @param {String} field field to access of the extIdProps object (valid arguments: 'fields', 'objects', 'types')
+ * @param {Field} field field to access of the extIdProps object (valid arguments: 'fields', 'objects', 'types')
  * @param {String} extId extId that you want to get related label from
  * @param {String} fallbackVal value you want this function to return if it does not find a label for the specified extid
  */
