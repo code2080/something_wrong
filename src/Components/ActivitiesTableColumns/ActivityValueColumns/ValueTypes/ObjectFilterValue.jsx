@@ -7,13 +7,20 @@ import { normalizeFilterValues } from '../Helpers/rendering';
 
 // STYLES
 import './ObjectFilterValue.scss';
+import { useSelector } from 'react-redux';
+import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 
 const ObjectFilterValue = ({ value }) => {
   const [visIdx, setVisIdx] = useState(0);
   const normalizedFilterValues = useMemo(() => normalizeFilterValues(value), [
     value,
   ]);
-
+  const labels = useSelector(selectMultipleExtIdLabels)(
+    normalizedFilterValues.map((val) => ({
+      field: 'fields',
+      extId: val.fieldExtId,
+    })),
+  );
   const onClickLeft = (e) => {
     e.stopPropagation();
     setVisIdx(Math.max(visIdx - 1, 0));
@@ -43,7 +50,7 @@ const ObjectFilterValue = ({ value }) => {
             {normalizedFilterValues[visIdx] ? (
               <>
                 <div className='title--row'>
-                  {normalizedFilterValues[visIdx].fieldExtId}:
+                  {labels[normalizedFilterValues[visIdx].fieldExtId]}:
                 </div>
                 <div className='value--row'>
                   {normalizedFilterValues[visIdx].values}
