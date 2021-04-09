@@ -1,8 +1,15 @@
 import _ from 'lodash';
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 import { TActivity } from '../../Types/Activity.type';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { ActivityValue, ValueType } from '../../Types/ActivityValue.type';
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
+import { extractValuesFromActivityValues } from '../activities.helpers';
+import {
+  GetExtIdPropsPayload,
+  TEField,
+  TEObject,
+  TEObjectFilter,
+} from '../../Types/TECorePayloads.type';
 
 const filterTypes = {
   CATEGORIES: 'CATEGORIES',
@@ -126,4 +133,51 @@ export const getFVForOtherValue = (activityValue: any): any[] | null => {
     default:
       return null;
   }
+};
+
+const extractExtIdsFromValues = (values: {
+  fields: TEField[];
+  objects: (TEObject | TEObjectFilter)[];
+}): GetExtIdPropsPayload => {
+  const [objectIds, objFilters]: [any[], any[]] = _.partition(
+    values.objects,
+    (obj) => obj instanceof TEObject,
+  );
+  const objFilterData = objFilters.reduce<{
+    fields: TEField[];
+    types: string[];
+  }>(
+    (objFilterData, objFilter: TEObjectFilter) => ({
+      fields: [...objFilterData.fields, ...objFilter.fields],
+      types: [...objFilterData.types, objFilter.type],
+    }),
+    { fields: [], types: [] },
+  );
+  const fieldIds = [...values.fields, ...objFilterData.fields].map(
+    (f) => f.fieldExtId,
+  );
+  const objectTypes = objectIds.map((obj: TEObject) => obj.type);
+  return {
+    objects: _.uniqWith(
+      objectIds as TEObject[],
+      (o1, o2) => o1.type === o2.type && o1.id === o2.id,
+    ),
+    fields: _.uniq(fieldIds),
+    types: _.uniq([...objFilterData.types, ...objectTypes]),
+  };
+};
+
+export const getExtIdsFromActivities = (
+  activities: TActivity[],
+): GetExtIdPropsPayload => {
+  if (_.isEmpty(activities)) return { objects: [], fields: [], types: [] };
+  const activityValues = _(activities)
+    .flatMap()
+    .map((a) => a.values as ActivityValue[])
+    .flatMap()
+    .value();
+
+  const values = extractValuesFromActivityValues(activityValues);
+  const extIds = extractExtIdsFromValues(values);
+  return extIds;
 };
