@@ -89,13 +89,7 @@ const FormPage = () => {
 
   const payload = useMemo(() => {
     const sections = form.sections;
-    const submissionValues = submissions.reduce(
-      (acc, submission) => ({
-        ...acc,
-        ...submission.values,
-      }),
-      {},
-    );
+    const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
