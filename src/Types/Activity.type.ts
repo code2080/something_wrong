@@ -1,5 +1,5 @@
-import { ActivityValue } from '../../te-data-models/src/models';
 import { EActivityStatus } from './ActivityStatus.enum';
+import { ActivityValue } from './ActivityValue.type';
 
 export type TActivity = {
   _id: string;

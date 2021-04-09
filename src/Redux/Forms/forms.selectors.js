@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 
 import { formStatus } from '../../Constants/formStatuses.constants';
 
-const formState = (state) => state.forms;
+const formState = (state) => state.forms || {};
 const elementState = (state) => state.elements;
 
 export const selectForm = createSelector(formState, (forms) => (formId) =>
@@ -11,7 +11,7 @@ export const selectForm = createSelector(formState, (forms) => (formId) =>
 );
 
 export const selectAllForms = createSelector(formState, (forms) =>
-  (Object.keys(forms) || [])
+  Object.keys(forms)
     .map((key) => forms[key])
     .filter((form) => form.status !== formStatus.ARCHIVED)
     .sort(

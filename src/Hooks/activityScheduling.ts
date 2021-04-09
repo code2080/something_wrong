@@ -15,12 +15,12 @@ import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 
 // COMPONENTS
-import { selectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
+import { makeSelectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
 
 // TYPES
 import { TFormInstance } from '../Types/FormInstance.type';
-import { selectActivitiesForForm } from '../Redux/Activities/activities.selectors';
+import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 
@@ -39,11 +39,18 @@ const useActivityScheduling = ({
 }: Props) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
-  const formInstances = useSelector(selectSubmissions)(formId);
-  const indexedFormInstances = useMemo(() => keyBy(formInstances, '_id'), [
-    formInstances,
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
+  const indexedFormInstances = useMemo(() => keyBy(submissions, '_id'), [
+    submissions,
   ]);
-  const allActivities = useSelector(selectActivitiesForForm)(formId);
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const allActivities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
 
   const { openConfirmModal } = SchedulingStatusModal();
 

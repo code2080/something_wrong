@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
-import { MomentInput } from 'moment';
 import { TActivity } from '../../Types/Activity.type';
 import { PopulateSelectionPayload } from '../../Types/TECorePayloads.type';
 import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
@@ -8,17 +7,19 @@ import { ActivityValue } from '../../Types/ActivityValue.type';
 
 // TYPES
 type TActivityMap = {
-  [key: string]: TActivity[];
+  [formId: string]: TActivity[];
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
 
-export const selectActivitiesForForm = createSelector(
-  activityStateSelector,
-  (activities: TActivityMap) => (formId: string): TActivity[] =>
-    activities[formId],
-);
+export const makeSelectActivitiesForForm = () =>
+  createSelector(
+    activityStateSelector,
+    (_: any, formId: string) => formId,
+    (activities: TActivityMap, formId: string): TActivity[] =>
+      activities[formId] || [],
+  );
 
 export const selectActivitiesForFormAndIds = createSelector(
   activityStateSelector,
@@ -83,10 +84,10 @@ export const selectTECorePayloadForActivity = createSelector(
       formType: form.formType,
       startTime: activity.timing.find(
         (act: ActivityValue) => act.extId === 'startTime',
-      ).value as MomentInput,
+      )?.value as string,
       endTime: activity.timing.find(
         (act: ActivityValue) => act.extId === 'endTime',
-      ).value as MomentInput,
+      )?.value as string,
     } as PopulateSelectionPayload;
   },
 );

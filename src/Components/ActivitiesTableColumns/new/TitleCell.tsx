@@ -2,11 +2,11 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
+import { Field, selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 
 // TYPES
 type Props = {
-  field: string;
+  field: Field;
   extId: string;
 };
 

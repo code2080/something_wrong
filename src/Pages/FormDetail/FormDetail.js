@@ -11,6 +11,7 @@ import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 // HOOKS
 import {
   useFetchLabelsFromExtIds,
+  fetchLabelsFromExtIds,
   useTECoreAPI,
 } from '../../Hooks/TECoreApiHooks';
 
@@ -28,7 +29,6 @@ import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
-import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { selectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
@@ -49,13 +49,18 @@ import {
   AEBETA_PERMISSION,
   AE_ACTIVITY_PERMISSION,
 } from '../../Constants/permissions.constants';
+import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
+import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
+import { selectExtIds } from '../../Redux/TE/te.selectors';
+import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams();
   const form = useSelector(selectForm)(formId);
-  const submissions = useSelector(selectSubmissions)(formId);
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
   const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const hasActivityDesignPermission = useSelector(
@@ -87,15 +92,9 @@ const FormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
-  const payload = useMemo(() => {
+  const submissionPayload = useMemo(() => {
     const sections = form.sections;
-    const submissionValues = submissions.reduce(
-      (acc, submission) => ({
-        ...acc,
-        ...submission.values,
-      }),
-      {},
-    );
+    const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
@@ -111,8 +110,26 @@ const FormPage = () => {
     };
   }, [submissions, form]);
 
+  // **** Test sending objects with type to core to see if this helps with DEV-7663
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
+  const extIds = useSelector(selectExtIds);
+
+  useEffect(() => {
+    const activityPayload = getExtIdsFromActivities(activities);
+    console.log({ extIds: activityPayload });
+    fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activities, dispatch, teCoreAPI]);
+  // ****
+
   // Effect to get all TE values into redux state
-  useFetchLabelsFromExtIds(payload);
+  useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EVENT HANDLERS

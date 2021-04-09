@@ -28,13 +28,9 @@ export const ensureBackwardsCompatibleValueRow = (valueRow) => {
   return valueRow;
 };
 
-export const getTimingModeForActivity = (activity) => {
-  try {
-    const aV = activity.timing.find((el) => el.extId === 'mode');
-    return aV.value;
-  } catch (error) {
-    return null;
-  }
+export const getTimingModeForActivity = (activity: TActivity) => {
+  const aV = activity.timing.find((el) => el.extId === 'mode');
+  return aV?.value ?? null;
 };
 
 /**
@@ -110,7 +106,7 @@ export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
 ): { fields: TEField[]; objects: [TEObject | TEObjectFilter] } =>
   _(activityValues)
-    .filter((av) => av.value)
+    .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
     .reduce<any>(
       (
@@ -208,32 +204,33 @@ const extractValueFromActivity = (
       extId: 'tagId',
       value: activity.tagId,
       type: ActivityValueType.OTHER,
-      formId: activity.formId,
     },
     {
       extId: 'submitter',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
-      formId: activity.formId,
     },
     {
       extId: 'primaryObject',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
-      formId: activity.formId,
     },
-  ];
-
+  ] as ActivityValue[];
   // Get all the activity values
-  const values = [...activity.timing, ...activity.values, ...consts].filter(
-    (el) => extIds.indexOf(el.extId) > -1,
-  );
-  // Product a non unique ret val
-  const retVal = values.reduce(
+  const values = [
+    ...activity.timing,
+    ...activity.values,
+    ...consts,
+  ].filter((value) => extIds.includes(value.extId));
+  // Produce a non unique ret val
+  const retVal = values.reduce<{
+    options: { [extid: string]: any[] };
+    matches: string[];
+  }>(
     (tot, activityValue) => {
       const { extId } = activityValue;
       const formattedOptions: any = derivedFormattedValueForActivityValue(
-        activityValue,
+        activityValue as ActivityValue,
         activity,
       );
       if (!formattedOptions) return tot;

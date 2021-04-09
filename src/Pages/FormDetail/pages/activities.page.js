@@ -10,7 +10,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 import ColumnHeader from '../../../Components/ActivitiesTableColumns/new/ColumnHeader';
 
 // SELECTORS
-import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
@@ -24,6 +24,7 @@ import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
+import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -54,7 +55,13 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const activities = useSelector(selectActivitiesForForm)(formId);
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
@@ -65,6 +72,10 @@ const ActivitiesPage = () => {
     return [form.formType, form.reservationMode];
   });
 
+  useEffect(() => {
+    const extIds = getExtIdsFromActivities(activities);
+    console.log({ extIds });
+  }, [activities]);
   /**
    * HOOKS
    */
