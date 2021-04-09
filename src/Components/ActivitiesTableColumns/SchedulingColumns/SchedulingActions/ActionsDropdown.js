@@ -32,7 +32,8 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
-import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
+import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -116,6 +117,9 @@ const ActivityActionsDropdown = ({
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
+  const hasAssistedSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
 
   const onFinishScheduleMultiple = useCallback(
     (schedulingReturns) => {

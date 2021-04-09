@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Popconfirm } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
@@ -13,7 +13,8 @@ import { activityStatuses } from '../../../../Constants/activityStatuses.constan
 
 // STYLES
 import './SchedulingCheckbox.scss';
-import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
+import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {
@@ -28,6 +29,9 @@ const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
 };
 
 const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
+  const hasAssistedSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
   const [reservationId, setReservationId] = useState(undefined);
   return (
     <div className='popover-scheduled--wrapper'>
@@ -66,6 +70,9 @@ MarkAsScheduledPopover.propTypes = {
 const SchedulingCheckbox = ({ activity }) => {
   const dispatch = useDispatch();
   const { formId } = useParams();
+  const hasAssistedSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
 
   const [showInvertedState, setShowInvertedState] = useState(false);
   const onUpdateSchedulingStatus = () => {

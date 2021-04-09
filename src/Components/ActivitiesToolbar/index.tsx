@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 // SELECTORS
 import { selectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
-import { hasAssistedSchedulingPermissions } from '../../Utils/permissionHelpers';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // COMPONENTS
 import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
@@ -12,6 +12,9 @@ import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES
 import './index.scss';
+
+// CONSTANTS
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
@@ -42,7 +45,10 @@ const ActivitiesToolbar = ({
     formId,
     selectedRowKeys,
   );
-  const hasSchedulingPermissions: boolean = hasAssistedSchedulingPermissions();
+  const hasSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
+
   return (
     <div className='activities-toolbar--wrapper'>
       Activities selected:&nbsp; {selectedRowKeys?.length ?? 0}

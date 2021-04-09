@@ -10,9 +10,14 @@ import { activityStatuses } from '../../../../Constants/activityStatuses.constan
 
 // STYLES
 import './SchedulingActions.scss';
-import { hasAssistedSchedulingPermissions } from '../../../../Utils/permissionHelpers';
+import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
+import { useSelector } from 'react-redux';
 
 const SchedulingActions = ({ activity }) => {
+  const hasAssistedSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
   return (
     <div className='scheduling-actions-column--wrapper'>
       {activity.activityStatus === activityStatuses.COMPLETED && (

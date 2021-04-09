@@ -7,7 +7,7 @@ const selectAuthedOrg = (state) => state.auth.org;
 export const selectOrgId = createSelector(selectAuthedOrg, (org) => org._id);
 
 export const hasPermission = (permission = '') =>
-  createSelector([selectAuthUserPermissions], (permissions) =>
+  createSelector([selectAuthUserPermissions], (permissions): boolean =>
     permissions.includes(permission),
   );
 
