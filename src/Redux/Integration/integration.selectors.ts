@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { selectExtIdLabel } from '../TE/te.selectors';
+import { Field, selectExtIdLabel } from '../TE/te.selectors';
 import {
   datasourceValueTypes,
   mapValueTypeToFieldName,
@@ -43,7 +43,11 @@ export const selectValidFieldsOnReservationMode = createSelector(
  * @param {String} datasource the selected datasource
  */
 
-export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
+export const getTECoreAPIPayload = (
+  value,
+  datasource,
+  objectRequests = <any[]>[],
+) => {
   /**
    * No value or datasource is a no-op
    */
@@ -218,38 +222,35 @@ const getPayloadForVerticalSection = (element, values) =>
       getTECoreAPIPayload(getValueFromElement(el), element.datasource),
     );
 
-const getPayloadForTableSection = (element, values, state) =>
-  Object.keys(values).reduce((allRows, rowKey) => {
+const getPayloadForTableSection = (element, values) =>
+  Object.keys(values).reduce<any[]>((allRows, rowKey) => {
     const rowValues = values[rowKey]?.values || [];
-    return [
-      ...allRows,
-      ...getPayloadForVerticalSection(element, rowValues, state),
-    ];
+    return [...allRows, ...getPayloadForVerticalSection(element, rowValues)];
   }, []);
 
-const getPayloadForConnectedSection = (element, values, state) =>
-  Object.keys(values).reduce((allEvents, eventId) => {
+const getPayloadForConnectedSection = (element, values) =>
+  Object.keys(values).reduce<any[]>((allEvents, eventId) => {
     const event = values[eventId];
     return [
       ...allEvents,
-      ...getPayloadForVerticalSection(element, event.values, state),
+      ...getPayloadForVerticalSection(element, event.values),
     ];
   }, []);
 
-const getPayloadForSection = (element, section, values, state) => {
+const getPayloadForSection = (element, section, values) => {
   if (!values[section._id] && process.env.NODE_ENV === 'development') {
     console.log('No values for section ID', section._id, values, section);
     return [];
   }
   const sectionType = determineSectionType(section);
   if (sectionType === SECTION_VERTICAL) {
-    return getPayloadForVerticalSection(element, values[section._id], state);
+    return getPayloadForVerticalSection(element, values[section._id]);
   }
   if (sectionType === SECTION_CONNECTED) {
-    return getPayloadForConnectedSection(element, values[section._id], state);
+    return getPayloadForConnectedSection(element, values[section._id]);
   }
   if (sectionType === SECTION_TABLE) {
-    return getPayloadForTableSection(element, values[section._id], state);
+    return getPayloadForTableSection(element, values[section._id]);
   }
   return [];
 };
@@ -268,7 +269,11 @@ const getAllElementsFromSections = (sections, submissionValues) =>
   sections.reduce(
     (elements, section) => [
       ...elements,
-      ...getElementsFromSection(section, submissionValues),
+      ...(Array.isArray(submissionValues)
+        ? submissionValues
+            .map((values) => getElementsFromSection(section, values))
+            .flat()
+        : getElementsFromSection(section, submissionValues)),
     ],
     [],
   );
@@ -305,7 +310,7 @@ export const getLabelsForDatasource = (payload, state) =>
       (prev, curr) => ({
         ...prev,
         [curr.extId]: selectExtIdLabel(state)(
-          mapValueTypeToFieldName(curr.valueType),
+          mapValueTypeToFieldName(curr.valueType) as Field,
           curr.extId,
         ),
       }),

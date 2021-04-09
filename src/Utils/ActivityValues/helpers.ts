@@ -15,13 +15,11 @@ const filterTypes = {
  * @param {Activity} activity
  * @returns string
  */
-export const determineTimeModeForActivity = (activity: TActivity) => {
-  try {
-    const aV = activity.timing.find((el) => el.extId === 'mode');
-    return aV.value;
-  } catch (error) {
-    return null;
-  }
+export const determineTimeModeForActivity = (
+  activity: TActivity,
+): ValueType => {
+  const aV = activity.timing.find((el) => el.extId === 'mode');
+  return aV?.value ?? null;
 };
 
 /**

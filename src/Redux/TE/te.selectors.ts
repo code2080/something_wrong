@@ -13,6 +13,22 @@ export const selectExtIds = createSelector([selectExtIdProps], (extIdProps) =>
   ),
 );
 
+export type Field = 'types' | 'fields' | 'objects';
+
+type ExtIdLabelPayload = {
+  field: Field;
+  extId: string;
+  fallbackVal: string;
+};
+
+const getLabelFromExtId = (
+  extIdProps: any,
+  { field, extId, fallbackVal = extId }: ExtIdLabelPayload,
+) =>
+  !_.isEmpty(extIdProps[field][extId]?.label)
+    ? (extIdProps[field][extId].label as string)
+    : fallbackVal;
+
 /**
  * @function selectExtIdLabel
  * @description curried function to fetch the label for the specified extId
@@ -26,8 +42,7 @@ export const selectExtIdLabel = createSelector(
    * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first (recommend using useFetchLabelsFromExtids hook)
    */
   selectExtIdProps,
-  (extIdProps) => (field, extId, fallbackVal = extId) =>
-    !_.isEmpty(extIdProps[field][extId]?.label)
-      ? extIdProps[field][extId].label
-      : fallbackVal,
+  (extIdProps) => (field: Field, extId: string, fallbackVal = extId) =>
+    getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
+);
 );

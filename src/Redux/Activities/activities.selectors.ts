@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
-import { MomentInput } from 'moment';
 import { TActivity } from '../../Types/Activity.type';
 import { PopulateSelectionPayload } from '../../Types/TECorePayloads.type';
 import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
@@ -83,10 +82,10 @@ export const selectTECorePayloadForActivity = createSelector(
       formType: form.formType,
       startTime: activity.timing.find(
         (act: ActivityValue) => act.extId === 'startTime',
-      ).value as MomentInput,
+      )?.value as string,
       endTime: activity.timing.find(
         (act: ActivityValue) => act.extId === 'endTime',
-      ).value as MomentInput,
+      )?.value as string,
     } as PopulateSelectionPayload;
   },
 );
