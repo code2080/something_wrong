@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom';
 import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
-import { selectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { makeSelectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
-import { TFormInstance } from '../../../Types/FormInstance.type';
 
 // STYLES
 import './SubmissionColumn.scss';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
+import { useMemo } from 'react';
 
 // TYPES
 type Props = {
@@ -21,11 +21,13 @@ type Props = {
 const SubmissionColumn = ({ formInstanceId }: Props) => {
   const { formId }: { formId: string } = useParams();
   const dispatch = useDispatch();
-
-  const { firstName, lastName, scopedObject } = useSelector(selectFormInstance)(
-    formId,
-    formInstanceId,
-  ) as TFormInstance;
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const { firstName, lastName, scopedObject } = useSelector((state) =>
+    selectFormInstance(state, {
+      formId,
+      formInstanceId,
+    }),
+  );
   const primaryObject = useSelector(selectExtIdLabel)(
     'objects',
     scopedObject as string,
