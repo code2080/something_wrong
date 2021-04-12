@@ -9,6 +9,7 @@ import {
 const DateTimeEdit = ({ value, setValue, onFinish }) => (
   <DatePicker
     getCalendarContainer={() => document.getElementById('te-prefs-lib')}
+    getPopupContainer={() => document.getElementById('te-prefs-lib')}
     value={value != null ? moment(value) : null}
     showTime={{ format: TIME_FORMAT }}
     format={DATE_TIME_FORMAT}
