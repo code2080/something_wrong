@@ -77,6 +77,8 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 };
 
 export const activityIsReadOnly = (status) =>
+  // TODO: Temporarily disables editing activities until we ensure it works again
+  true ||
   [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
