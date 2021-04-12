@@ -19,7 +19,7 @@ export const makeSelectSubmissions = () =>
 export const selectFormInstance = createSelector(
   submissionsState,
   (submissions) => (formId, formInstanceId) => {
-    const formInstance = submissions[formId][formInstanceId] || {};
-    return formInstance;
+    const submissionsForForm = submissions[formId] || {};
+    return submissionsForForm[formInstanceId] || {};
   },
 );
