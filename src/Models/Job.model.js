@@ -14,6 +14,7 @@ export class Job {
   username;
   password;
   status;
+  reservationMode;
   score;
 
   constructor({
@@ -30,6 +31,7 @@ export class Job {
     password,
     status = jobStatus.NOT_STARTED,
     score = { initial: null, current: null },
+    reservationMode,
   }) {
     this._id = _id;
     this.activities = activities;
@@ -44,5 +46,6 @@ export class Job {
     this.password = password;
     this.status = status;
     this.score = score;
+    this.reservationMode = reservationMode;
   }
 }
