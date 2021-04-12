@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ExactTimeModeTimeValue = ({ value }: Props) => {
-  const formattedValue = moment(value).format(DATE_TIME_FORMAT);
+  const formattedValue = moment(value).utc().format(DATE_TIME_FORMAT);
 
   return formattedValue;
 };
