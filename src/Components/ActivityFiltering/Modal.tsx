@@ -104,7 +104,7 @@ const generateSelectedValuesFromFilter = (filterValues): TProperty[] => {
 const mapExtraInfoToProperties = (): TProperty[] => [
   { value: 'submitter', label: 'Submitter' },
   { value: 'primaryObject', label: 'Primary object' },
-  { value: 'groupId', label: 'Group' },
+  { value: 'tagId', label: 'Tag' },
 ];
 
 /**
