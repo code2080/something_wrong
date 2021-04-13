@@ -31,7 +31,6 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
-import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 
