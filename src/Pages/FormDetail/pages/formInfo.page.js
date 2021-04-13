@@ -9,7 +9,8 @@ import OwnerCol from '../../../Components/TableColumns/Components/OwnerCol';
 import ObjectScopeCol from '../../../Components/TableColumns/Components/ObjectScopeCol';
 
 // SELECTORS
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+import { useMemo } from 'react';
 
 const formToFieldInfo = (form) => {
   const formFieldMapping = [
@@ -81,7 +82,8 @@ const formToFieldInfo = (form) => {
 
 const FormInfoPage = () => {
   const { formId } = useParams();
-  const form = useSelector(selectForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
   const formInfoFields = formToFieldInfo(form);
 
   const formInfoFieldData = formInfoFields.reduce(

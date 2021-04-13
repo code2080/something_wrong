@@ -77,6 +77,8 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 };
 
 export const activityIsReadOnly = (status) =>
+  // TODO: Temporarily disables editing activities until we ensure it works again
+  true ||
   [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
@@ -204,18 +206,21 @@ const extractValueFromActivity = (
       extId: 'tagId',
       value: activity.tagId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
     {
       extId: 'submitter',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
     {
       extId: 'primaryObject',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
-  ] as ActivityValue[];
+  ] as (ActivityValue & { formId?: string })[];
   // Get all the activity values
   const values = [
     ...activity.timing,

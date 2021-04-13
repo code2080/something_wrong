@@ -30,7 +30,7 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
-import { selectForm } from '../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
@@ -58,7 +58,8 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams();
-  const form = useSelector(selectForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);

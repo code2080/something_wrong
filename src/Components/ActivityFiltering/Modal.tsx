@@ -54,21 +54,21 @@ const mapDesignToProperties = (design: any): TProperty[] => {
 };
 
 const createPropertySelectorProperties = (
-  spv: string | null,
+  selectedPropertyValue: string | null,
   filterOptions: any,
   filterValues: any,
 ): TProperty[] => {
-  if (!spv) return [];
-  const options = filterOptions[spv];
-  const selectedOptions = filterValues[spv] || [];
+  if (!selectedPropertyValue) return [];
+  const options = filterOptions[selectedPropertyValue];
+  const selectedOptions = filterValues[selectedPropertyValue] || [];
   if (!options) return [];
   if (Array.isArray(options))
-    return filterOptions[spv].filter(
-      (el) => selectedOptions.findIndex((v) => v === el.value) === -1,
+    return filterOptions[selectedPropertyValue].filter(
+      ({ value }) => !selectedOptions.includes(value),
     );
   return Object.keys(options).reduce((tot: TProperty[], key: string) => {
     const filteredOptions = options[key].filter(
-      (el) => selectedOptions.findIndex((v) => v === el.value) === -1,
+      ({ value }) => !selectedOptions.includes(value),
     );
     if (!filteredOptions || !filteredOptions.length) return tot;
     return [
