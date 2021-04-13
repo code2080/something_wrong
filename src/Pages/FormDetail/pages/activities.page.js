@@ -73,8 +73,7 @@ const ActivitiesPage = () => {
   });
 
   useEffect(() => {
-    const extIds = getExtIdsFromActivities(activities);
-    console.log({ extIds });
+    getExtIdsFromActivities(activities);
   }, [activities]);
   /**
    * HOOKS
