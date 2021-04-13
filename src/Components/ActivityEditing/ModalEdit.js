@@ -39,6 +39,7 @@ const ModalEdit = ({
       title={title}
       visible={visible}
       getContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
       closable
       footer={null}
       maskClosable

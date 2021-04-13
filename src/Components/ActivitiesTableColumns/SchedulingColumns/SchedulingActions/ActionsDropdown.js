@@ -158,6 +158,7 @@ const ActivityActionsDropdown = ({
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
@@ -176,6 +177,7 @@ const ActivityActionsDropdown = ({
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
