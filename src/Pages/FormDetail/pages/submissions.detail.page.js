@@ -76,7 +76,9 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
         submissionValues: formInstance.values,
         activities,
       }),
-    [form.sections, objectRequests, formInstance.values, activities],
+    // TODO: memoize and readd dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [form],
   );
   useFetchLabelsFromExtIds(payload);
 
