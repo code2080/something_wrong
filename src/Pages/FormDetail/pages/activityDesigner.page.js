@@ -12,7 +12,7 @@ import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
 
 // SELECTORS
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
@@ -63,7 +63,8 @@ const ActivityDesignPage = () => {
   /**
    * SELECTORS
    */
-  const form = useSelector(selectForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],

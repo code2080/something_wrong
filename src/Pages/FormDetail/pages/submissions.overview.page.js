@@ -12,7 +12,7 @@ import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
@@ -52,7 +52,8 @@ const SubmissionsOverviewPage = () => {
   /**
    * SELECTORS
    */
-  const form = useSelector(selectForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const isLoading = useSelector(loadingSelector);
