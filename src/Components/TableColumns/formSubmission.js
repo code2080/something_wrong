@@ -51,22 +51,24 @@ export const formSubmission = {
   SCHEDULING_PROGRESS: {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
-    dataIndex: 'teCoreProps.schedulingProgress',
-    render: (val) =>
-      val ? (
+    dataIndex: 'teCoreProps',
+    render: (teCoreProps) =>
+      teCoreProps ? (
         <StatusLabel
-          color={teCoreSchedulingProgressProps[val].color}
+          color={
+            teCoreSchedulingProgressProps[teCoreProps.schedulingProgress].color
+          }
           className='no-margin'
         >
-          {teCoreSchedulingProgressProps[val].label}
+          {teCoreSchedulingProgressProps[teCoreProps.schedulingProgress].label}
         </StatusLabel>
       ) : (
         'N/A'
       ),
-    sorter: (a, b) =>
+    sorter: (lSubmission, rSubmission) =>
       sortAlpha(
-        a.teCoreProps.schedulingProgress,
-        b.teCoreProps.schedulingProgress,
+        lSubmission.teCoreProps.schedulingProgress,
+        rSubmission.teCoreProps.schedulingProgress,
       ),
   },
   ACCEPTANCE_STATUS: {
