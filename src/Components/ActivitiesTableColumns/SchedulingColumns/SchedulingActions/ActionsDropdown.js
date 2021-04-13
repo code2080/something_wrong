@@ -59,14 +59,12 @@ const mapActionsToProps = {
 const activityActions = {
   SCHEDULE_ALL: {
     label: 'Schedule submission',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SCHEDULE: {
     label: 'Schedule activity',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SELECT: {
