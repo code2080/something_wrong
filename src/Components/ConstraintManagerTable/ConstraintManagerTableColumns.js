@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Switch, InputNumber } from 'antd';
+import ParameterCascader from './Components/ParameterCascader'
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   const constraint = allConstraints.find(
@@ -9,7 +10,15 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   return constraint[prop];
 };
 
-const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
+const renderConstraintParameters = (onGetExtIdParameter) => {
+
+  return(
+       <ParameterCascader
+          getExtIdParams={onGetExtIdParameter}
+       />
+  )
+}
+const constraintManagerTableColumns = (onUpdateValue, allConstraints, onGetExtIdParameter) => [
   {
     title: 'Active',
     dataIndex: 'isActive',
@@ -17,7 +26,7 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     render: (isActive, ci) => (
       <Switch
         checked={isActive}
-        size='small'
+        size='small' 
         onChange={(checked) =>
           onUpdateValue(ci.constraintId, 'isActive', checked)
         }
@@ -42,6 +51,9 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     title: 'Parameters',
     dataIndex: 'parameters',
     key: 'parameters',
+    render: () => (
+      renderConstraintParameters(onGetExtIdParameter)
+    ),
   },
   {
     title: 'Hard Constraint',
@@ -73,5 +85,6 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     ),
   },
 ];
+
 
 export default constraintManagerTableColumns;

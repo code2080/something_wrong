@@ -19,6 +19,7 @@ import {
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
 import { selectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+
 import {
   ConstraintConfiguration,
   ConstraintInstance,
@@ -27,11 +28,14 @@ import {
 } from '../../../Types/ConstraintConfiguration.type';
 import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
 
+
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 
 const getConstrOfType = (
-  type: string = 'DEFAULT',
+  type: string,
   config: TConstraintConfiguration | null,
   allConstraints: TConstraint[],
 ): TConstraintInstance[] => {
@@ -54,7 +58,8 @@ const ConstraintManagerPage = () => {
   const constrConfs: TConstraintConfiguration[] = Object.values(
     useSelector(selectConstraintConfigurationsForForm(formId)),
   );
-
+  const activityDesign = useSelector(selectDesignForForm)(formId);
+  const tecoreAPI = useTECoreAPI();
   /**
    * STATE
    */
@@ -119,7 +124,7 @@ const ConstraintManagerPage = () => {
       constraints: (allConstraints || [])
         .filter(
           (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT,
+            constraint.type === EConstraintType.DEFAULT || constraint.type === EConstraintType.OTHER,
         )
         .map((constraint: TConstraint) =>
           ConstraintInstance.createFromConstraint(constraint),
@@ -138,6 +143,12 @@ const ConstraintManagerPage = () => {
     setConstrConf(constrConf[0]);
     dispatch(deleteConstraintConfiguration(constrConf));
   };
+
+  const handleGetExtIdParameter = () => {
+    const activityDesignObj = Object.keys(activityDesign.objects)
+    const parameterObjs = tecoreAPI.getFieldIdsForObjects(activityDesignObj)
+    return parameterObjs
+  }
 
   const defaultConstraints = useMemo(
     () => getConstrOfType('DEFAULT', constrConf, allConstraints),
@@ -167,6 +178,7 @@ const ConstraintManagerPage = () => {
               columns={constraintManagerTableColumns(
                 handleUpdConstrConf,
                 allConstraints,
+                handleGetExtIdParameter,
               )}
               dataSource={defaultConstraints}
               rowKey='constraintId'
@@ -186,6 +198,7 @@ const ConstraintManagerPage = () => {
               columns={constraintManagerTableColumns(
                 handleUpdConstrConf,
                 allConstraints,
+                handleGetExtIdParameter,
               )}
               dataSource={customConstraints}
               rowKey='constraintId'
