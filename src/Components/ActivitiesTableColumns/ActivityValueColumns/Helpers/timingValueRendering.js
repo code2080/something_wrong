@@ -199,7 +199,7 @@ const renderPaddingValue = (activityValue, activityId) => {
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.READY_FOR_SCHEDULING,
       value: [],
-      renderedComponent: 'N/A',
+      renderedComponent: ' ',
     });
 
   return ActivityValueRenderPayload.create({
