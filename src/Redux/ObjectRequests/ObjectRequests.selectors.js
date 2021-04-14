@@ -1,7 +1,8 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
+import _, { flatten } from 'lodash';
 
 import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.helpers';
+import { makeSelectSubmissions } from '../FormSubmissions/formSubmissions.selectors';
 
 const selectObjectRequestsState = (state) => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) =>
@@ -61,7 +62,7 @@ export const getSectionsForObjectRequest = (request) =>
     (submissionValues) =>
       submissionValues.reduce(
         (sectionIds, sectionData) =>
-          sectionData.sectionValues.includes(request._id)
+          flatten(sectionData.sectionValues).includes(request._id)
             ? [...sectionIds, sectionData.sectionId]
             : sectionIds,
         [],

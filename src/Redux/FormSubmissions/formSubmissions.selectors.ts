@@ -7,7 +7,8 @@ type SubmissionState = {
   [formId: string]: { [formInstanceId: string]: TFormInstance };
 };
 
-const submissionsState = (state): SubmissionState => state.submissions || {};
+export const submissionsState = (state): SubmissionState =>
+  state.submissions || {};
 
 export const makeSelectSubmissions = () =>
   createSelector(

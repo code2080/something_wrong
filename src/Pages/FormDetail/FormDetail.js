@@ -40,6 +40,7 @@ import FormInfoPage from './pages/formInfo.page';
 import ActivitiesPage from './pages/activities.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
+import ObjectRequestsPage from './pages/objectRequests.page';
 
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
@@ -162,6 +163,9 @@ const FormPage = () => {
             <ConstraintManagerPage />
           </Tabs.TabPane>
         )}
+        <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
+          <ObjectRequestsPage />
+        </Tabs.TabPane>
       </TEAntdTabBar>
     </div>
   );
