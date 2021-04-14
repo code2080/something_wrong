@@ -274,7 +274,10 @@ const mergeAndMakeUniqOptions = (
     (Array.isArray(updatedOptions) && updatedOptions.length) ||
     (Array.isArray(currentOptions) && currentOptions.length)
   )
-    return _.uniq([...(updatedOptions || []), ...(currentOptions || [])]);
+    return _.uniqBy(
+      [...(updatedOptions || []), ...(currentOptions || [])],
+      'value',
+    );
   return [
     ...Object.keys(updatedOptions || {}),
     ...Object.keys(currentOptions || {}),
@@ -286,7 +289,7 @@ const mergeAndMakeUniqOptions = (
           ...(updatedOptions ? updatedOptions[key] || [] : []),
           ...(currentOptions ? currentOptions[key] || [] : []),
         ],
-        (obj) => obj.value,
+        'value',
       ),
     }),
     {},
