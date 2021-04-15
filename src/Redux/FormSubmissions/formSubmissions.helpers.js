@@ -50,7 +50,7 @@ const extractValuesFromSectionData = (sectionData) => {
 
 export const getSubmissionValues = (formInstance) =>
   formInstance
-    ? Object.entries(formInstance.values).reduce(
+    ? Object.entries(formInstance.values || {}).reduce(
         (values, [sectionId, sectionData]) => [
           ...values,
           {
