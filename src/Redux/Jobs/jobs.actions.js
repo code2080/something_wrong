@@ -6,6 +6,7 @@ import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.const
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
+import { selectCurrentConstraintConfigurationForForm } from '../ConstraintConfigurations/constraintConfigurations.selectors';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
@@ -93,11 +94,16 @@ export const createJob = ({
   const {
     auth: { coreUserId },
   } = storeState;
+  const currentConstraintConfiguration = selectCurrentConstraintConfigurationForForm(
+    storeState,
+    formId,
+  );
   const job = new Job({
     activities,
     type,
     formId,
     formInstanceIds,
+    constraintConfigurationId: currentConstraintConfiguration?._id || null,
     userId: coreUserId,
   });
   dispatch(

@@ -13,6 +13,7 @@ export class Job {
   customerSignature;
   username;
   password;
+  constraintConfigurationId;
   status;
   reservationMode;
   score;
@@ -29,6 +30,7 @@ export class Job {
     customerSignature,
     username,
     password,
+    constraintConfigurationId,
     status = jobStatus.NOT_STARTED,
     score = { initial: null, current: null },
     reservationMode,
@@ -44,6 +46,7 @@ export class Job {
     this.customerSignature = customerSignature;
     this.username = username;
     this.password = password;
+    this.constraintConfigurationId = constraintConfigurationId;
     this.status = status;
     this.score = score;
     this.reservationMode = reservationMode;

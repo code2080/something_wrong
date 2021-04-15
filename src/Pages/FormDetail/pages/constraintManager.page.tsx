@@ -18,7 +18,7 @@ import {
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
-import { selectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+import { makeSelectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
   ConstraintConfiguration,
   ConstraintInstance,
@@ -51,8 +51,14 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
+  const selectConstraintConfigurationsForForm = useMemo(
+    () => makeSelectConstraintConfigurationsForForm(),
+    [],
+  );
   const constrConfs: TConstraintConfiguration[] = Object.values(
-    useSelector(selectConstraintConfigurationsForForm(formId)),
+    useSelector((state) =>
+      selectConstraintConfigurationsForForm(state, formId),
+    ),
   );
 
   /**
