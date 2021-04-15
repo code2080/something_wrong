@@ -185,6 +185,7 @@ const ConstraintManagerPage = () => {
               pagination={false}
             />
           </Collapse.Panel>
+{/*           
           <Collapse.Panel
             key='CUSTOM'
             header='Custom constraints'
@@ -204,7 +205,7 @@ const ConstraintManagerPage = () => {
               rowKey='constraintId'
               pagination={false}
             />
-          </Collapse.Panel>
+          </Collapse.Panel> */}
         </Collapse>
       )}
       {_.isEmpty(constrConfs) && !constrConf && (
