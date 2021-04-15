@@ -218,6 +218,7 @@ const FormInstanceAssignment = ({
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       trigger='click'
       placement='rightTop'
+      onClick={(e) => e.stopPropagation()}
     >
       <div className='assignment--wrapper'>
         <AssignedAvatars assignees={assignees} selfUID={selfUID} />
