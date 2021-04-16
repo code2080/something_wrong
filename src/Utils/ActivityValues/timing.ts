@@ -63,7 +63,11 @@ export const fvLengthValue = (
 ): FormattedValue[] | null => {
   try {
     const { value, extId } = activityValue;
-    const { days, hours, minutes } = minToHourMinDisplay(value);
+    if (isNaN(value as number)) {
+      console.log(`${value} is not a number in length field`);
+      return null;
+    }
+    const { days, hours, minutes } = minToHourMinDisplay(value as number);
     const fv = days ? `${days}d, ${hours}:${minutes}` : `${hours}:${minutes}`;
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {

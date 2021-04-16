@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import _, { flatten } from 'lodash';
 
 import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.helpers';
-import { makeSelectSubmissions } from '../FormSubmissions/formSubmissions.selectors';
 
 const selectObjectRequestsState = (state) => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) =>

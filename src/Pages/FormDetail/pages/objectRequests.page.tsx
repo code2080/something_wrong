@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { capitalize, keyBy } from 'lodash';
+import { capitalize } from 'lodash';
 
 // COMPONENTS
 import { Button } from 'antd';
-import { ColumnProps } from 'antd/table/Column';
+import { ColumnType } from 'antd/lib/table/interface.d';
 import { MoreOutlined } from '@ant-design/icons';
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane';
@@ -17,7 +17,7 @@ import {
   ObjectRequestStatusIcon,
   ObjectRequestType,
   ObjectRequestLabel,
-} from '. ./../../Components/Elements/ObjectRequestValue';
+} from '../../../Components/Elements/ObjectRequestValue';
 import ObjectRequestDropdown from '../../../Components/Elements/DatasourceInner/ObjectRequestDropdown';
 
 // CONSTANTS
@@ -47,7 +47,7 @@ const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
   return sectionName;
 };
 
-const objReqColumns: ColumnProps<any>[] = [
+const objReqColumns: ColumnType<any>[] = [
   {
     title: 'Status',
     key: 'status',
@@ -170,17 +170,15 @@ const ObjectRequestsPage = () => {
   const { formId } = useParams();
   const requests = useSelector(selectFormObjectRequest(formId));
   return (
-    <div>
-      <DynamicTable
-        columns={objReqColumns}
-        dataSource={requests}
-        rowKey='_id'
-        pagination={false}
-        expandedRowRender={(request: ObjectRequest) => (
-          <ExpandedPane columns={fieldColumns(request)} row={request} />
-        )}
-      />
-    </div>
+    <DynamicTable
+      columns={objReqColumns}
+      dataSource={requests}
+      rowKey='_id'
+      pagination={false}
+      expandedRowRender={(request: ObjectRequest) => (
+        <ExpandedPane columns={fieldColumns(request)} row={request} />
+      )}
+    />
   );
 };
 
