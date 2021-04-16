@@ -29,7 +29,10 @@ const extractValuesFromSectionData = (sectionData) => {
       return Object.values(sectionData).reduce(
         (values, row) => [
           ...values,
-          ...row.reduce((elVals, element) => [...elVals, element.value], []),
+          ...row.values.reduce(
+            (elVals, element) => [...elVals, element.value],
+            [],
+          ),
         ],
         [],
       );
