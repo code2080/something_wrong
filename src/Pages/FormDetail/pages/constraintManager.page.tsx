@@ -28,12 +28,12 @@ import {
 } from '../../../Types/ConstraintConfiguration.type';
 import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
 
-
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-
+import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
+import { hasPermission } from '../../../Redux/Auth/auth.selectors';
 const getConstrOfType = (
   type: string,
   config: TConstraintConfiguration | null,
@@ -59,6 +59,7 @@ const ConstraintManagerPage = () => {
     useSelector(selectConstraintConfigurationsForForm(formId)),
   );
   const activityDesign = useSelector(selectDesignForForm)(formId);
+  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const tecoreAPI = useTECoreAPI();
   /**
    * STATE
@@ -66,6 +67,17 @@ const ConstraintManagerPage = () => {
   const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
     null,
   );
+  const [fields, setFields] = useState<any>();
+
+  useEffect(() => {
+    const typeExtIds = Object.keys(activityDesign.objects);
+    tecoreAPI.getFieldIds({
+      typeExtIds,
+      callback: (result) => {
+        return setFields(result);
+      },
+    });
+  }, [activityDesign?.objects, tecoreAPI]);
 
   useEffect(
     () => {
@@ -124,7 +136,8 @@ const ConstraintManagerPage = () => {
       constraints: (allConstraints || [])
         .filter(
           (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT || constraint.type === EConstraintType.OTHER,
+            constraint.type === EConstraintType.DEFAULT ||
+            constraint.type === EConstraintType.OTHER,
         )
         .map((constraint: TConstraint) =>
           ConstraintInstance.createFromConstraint(constraint),
@@ -143,12 +156,6 @@ const ConstraintManagerPage = () => {
     setConstrConf(constrConf[0]);
     dispatch(deleteConstraintConfiguration(constrConf));
   };
-
-  const handleGetExtIdParameter = () => {
-    const activityDesignObj = Object.keys(activityDesign.objects)
-    const parameterObjs = tecoreAPI.getFieldIdsForObjects(activityDesignObj)
-    return parameterObjs
-  }
 
   const defaultConstraints = useMemo(
     () => getConstrOfType('DEFAULT', constrConf, allConstraints),
@@ -178,34 +185,37 @@ const ConstraintManagerPage = () => {
               columns={constraintManagerTableColumns(
                 handleUpdConstrConf,
                 allConstraints,
-                handleGetExtIdParameter,
+                fields,
+                activityDesign.objects,
               )}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
             />
           </Collapse.Panel>
-{/*           
-          <Collapse.Panel
-            key='CUSTOM'
-            header='Custom constraints'
-            extra={
-              <Button onClick={handleAddCustomConstraint} size='small'>
-                Add new custom constraint
-              </Button>
-            }
-          >
-            <Table
-              columns={constraintManagerTableColumns(
-                handleUpdConstrConf,
-                allConstraints,
-                handleGetExtIdParameter,
-              )}
-              dataSource={customConstraints}
-              rowKey='constraintId'
-              pagination={false}
-            />
-          </Collapse.Panel> */}
+          {hasAEBetaPermission && (
+            <Collapse.Panel
+              key='CUSTOM'
+              header='Custom constraints'
+              extra={
+                <Button onClick={handleAddCustomConstraint} size='small'>
+                  Add new custom constraint
+                </Button>
+              }
+            >
+              <Table
+                columns={constraintManagerTableColumns(
+                  handleUpdConstrConf,
+                  allConstraints,
+                  fields,
+                  activityDesign.objects,
+                )}
+                dataSource={customConstraints}
+                rowKey='constraintId'
+                pagination={false}
+              />
+            </Collapse.Panel>
+          )}
         </Collapse>
       )}
       {_.isEmpty(constrConfs) && !constrConf && (
@@ -217,12 +227,6 @@ const ConstraintManagerPage = () => {
             Create now
           </Button>
         </Empty>
-      )}
-      {!constrConf && !_.isEmpty(constrConfs) && (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description='No constraint configurations selected'
-        />
       )}
     </div>
   );

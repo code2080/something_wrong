@@ -1,45 +1,54 @@
-import { Cascader } from 'antd';
-import { useEffect, useState } from 'react';
+// import { Select } from 'antd';
+
+// const { Option } = Select;
 
 type Props = {
-  getExtIdParams: any;
+  paramFields: any;
+  availableOperators: string[];
+  activityDesignObj: any;
 };
 
-const ParameterCascader = ({ getExtIdParams }: Props) => {
-  const [options, setOptions] = useState<any[]>([]);
-  useEffect(() => {
-    const exec = async () => {
-      const parameterObjects = await getExtIdParams();
-      const option = Object.keys(parameterObjects).map((extId: any) => ({
-        value: extId,
-        label: extId,
-        children: Object.keys(parameterObjects[extId]).map((type: any) => ({
-          value: type,
-          label: type,
-        })),
-      }));
+const ParameterCascader = ({
+  paramFields,
+  availableOperators,
+  activityDesignObj,
+}: Props) => {
+  // To be implemented
+  console.log(paramFields, activityDesignObj, availableOperators);
 
-      setOptions(option);
-    };
-    exec();
-  }, []);
   return (
-    <div>
-      <Cascader
-        options={options}
-        size='small'
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-      />
-      <Cascader
-        options={options}
-        size='small'
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-      />
-    </div>
+    <div></div>
+    // <div>
+    //   <Cascader
+    //     options={options}
+    //     size='small'
+    //     getPopupContainer={() =>
+    //       document.getElementById('te-prefs-lib') as HTMLElement
+    //     }
+    //   />
+    //   {' '}
+    //   <Select
+    //     placeholder='Operator'
+    //     size='small'
+    //     getPopupContainer={() =>
+    //       document.getElementById('te-prefs-lib') as HTMLElement
+    //     }
+    //   >
+    //       {availableOperators.map((operator) => (
+    //           <Option key={operator} value={operator}>
+    //               {operator}
+    //           </Option>
+    //       ))}
+    //   </Select>
+    //   {' '}
+    //   <Cascader
+    //     options={options}
+    //     size='small'
+    //     getPopupContainer={() =>
+    //       document.getElementById('te-prefs-lib') as HTMLElement
+    //     }
+    //   />
+    // </div>
   );
 };
 
