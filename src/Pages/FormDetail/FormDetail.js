@@ -45,6 +45,7 @@ import ObjectRequestsPage from './pages/objectRequests.page';
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 import {
   AEBETA_PERMISSION,
@@ -68,6 +69,8 @@ const FormPage = () => {
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
   );
+  const reqs = useSelector(selectFormObjectRequest(formId));
+  const formHasObjReqs = !_.isEmpty(reqs);
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -85,7 +88,6 @@ const FormPage = () => {
     dispatch(loadFilter({ filterId: `${formId}_SUBMISSIONS` }));
     dispatch(loadFilter({ filterId: `${formId}_ACTIVITIES` }));
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     form.reservationmode &&
       teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({
         mode: form.reservationmode,
@@ -150,6 +152,11 @@ const FormPage = () => {
         <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
           <SubmissionsPage />
         </Tabs.TabPane>
+        {formHasObjReqs && (
+          <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
+            <ObjectRequestsPage />
+          </Tabs.TabPane>
+        )}
         <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
           <ActivitiesPage />
         </Tabs.TabPane>
@@ -163,9 +170,6 @@ const FormPage = () => {
             <ConstraintManagerPage />
           </Tabs.TabPane>
         )}
-        <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
-          <ObjectRequestsPage />
-        </Tabs.TabPane>
       </TEAntdTabBar>
     </div>
   );
