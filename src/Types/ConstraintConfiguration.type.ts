@@ -34,6 +34,6 @@ export class ConstraintConfiguration {
     formId: obj.formId,
     name: obj.name,
     description: obj.description || null,
-    constraints: obj.constraints || [],
+    constraints: obj.constraints || {},
   });
 }
