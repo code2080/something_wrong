@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const sortAlpha = (a: string | null, b: string | null) => {
+export const sortAlpha = (a?: string | null, b?: string | null) => {
   if (a == null) {
     return -1;
   } else if (b == null) {

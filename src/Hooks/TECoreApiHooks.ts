@@ -33,11 +33,12 @@ export const fetchLabelsFromExtIds = (
     const extIdProps = await teCoreAPI.getExtIdProps(nonNullPayload);
     dispatch(setTEDataForValues(extIdProps));
   }
-
   const payloadExtids = _.flatMap(payload);
-  const missingExtIdsInStore = !payloadExtids.every((extId) =>
-    extIds.includes((extId as TEObject).id ?? (extId as string)),
+  const missingExtIdsInStore = !payloadExtids.every(
+    (extId) =>
+      extId && extIds.includes((extId as TEObject).id ?? (extId as string)),
   );
+
   if (!_.isEmpty(payloadExtids) && missingExtIdsInStore) exec(payload);
 };
 
