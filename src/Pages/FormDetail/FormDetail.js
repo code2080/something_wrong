@@ -48,7 +48,7 @@ import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 import {
-  AEBETA_PERMISSION,
+  ASSISTED_SCHEDULING_PERMISSION_NAME,
   AE_ACTIVITY_PERMISSION,
 } from '../../Constants/permissions.constants';
 import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
@@ -65,9 +65,11 @@ const FormPage = () => {
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
-  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
+  );
+  const hasAssistedSchedulingPermission = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
@@ -165,7 +167,7 @@ const FormPage = () => {
             <ActivityDesignPage />
           </Tabs.TabPane>
         )}
-        {hasAEBetaPermission && (
+        {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
           <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
             <ConstraintManagerPage />
           </Tabs.TabPane>
