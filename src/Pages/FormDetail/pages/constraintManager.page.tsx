@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
 import _ from 'lodash';
-import { Button, Empty, Collapse, Table } from 'antd';
+import { Button, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -86,6 +86,7 @@ const ConstraintManagerPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [constrConfs.length],
   );
+
   /**
    * EVENT HANDLERS
    */
@@ -143,7 +144,10 @@ const ConstraintManagerPage = () => {
           ConstraintInstance.createFromConstraint(constraint),
         ),
     });
+
     dispatch(createConstraintConfigurations(newConstrConf));
+
+    if (constrConf) setConstrConf(constrConf[0]);
   };
 
   const handleSaveConstrConf = () => {
@@ -152,7 +156,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleDeleteConstrconf = () => {
-    if (!constrConf) return;
+    if (!constrConf || constrConfs.length === 1) return;
     setConstrConf(constrConf[0]);
     dispatch(deleteConstraintConfiguration(constrConf));
   };
@@ -165,6 +169,12 @@ const ConstraintManagerPage = () => {
     () => getConstrOfType('OTHER', constrConf, allConstraints),
     [constrConf, allConstraints],
   );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (_.isEmpty(constrConfs) && !constrConf) handleCreateConstrConf();
+    if (constrConf) setConstrConf(constrConf);
+  });
 
   return (
     <div className='constraint-manager--wrapper'>
@@ -217,16 +227,6 @@ const ConstraintManagerPage = () => {
             </Collapse.Panel>
           )}
         </Collapse>
-      )}
-      {_.isEmpty(constrConfs) && !constrConf && (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description='No constraint configurations exist for this form'
-        >
-          <Button size='small' type='primary' onClick={handleCreateConstrConf}>
-            Create now
-          </Button>
-        </Empty>
       )}
     </div>
   );
