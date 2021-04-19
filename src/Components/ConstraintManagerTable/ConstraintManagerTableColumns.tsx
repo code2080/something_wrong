@@ -1,5 +1,6 @@
-/* eslint-disable react/prop-types */
-import { Switch, InputNumber, Select } from 'antd';
+import { Switch, InputNumber /* , Select */ } from 'antd';
+import type { TConstraint } from '../../Types/Constraint.type';
+import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
@@ -22,20 +23,19 @@ const renderConstraintParameters = (
     allConstraints,
   );
 
-  if (operators?.length)
-    return (
-      <ParameterCascader
-        paramFields={paramFields}
-        availableOperators={operators}
-        activityDesignObj={activityDesignObj}
-      />
-    );
-
-  return <Select size='small' disabled defaultValue='false' />;
+  return operators?.length ? (
+    <ParameterCascader
+      paramFields={paramFields}
+      availableOperators={operators}
+      activityDesignObj={activityDesignObj}
+    />
+  ) : (
+    <div></div>
+  );
 };
 const constraintManagerTableColumns = (
-  onUpdateValue,
-  allConstraints,
+  onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
+  allConstraints: TConstraint[],
   paramFields,
   activityDesignObj,
 ) => [
@@ -43,12 +43,12 @@ const constraintManagerTableColumns = (
     title: 'Active',
     dataIndex: 'isActive',
     key: 'isActive',
-    render: (isActive, ci) => (
+    render: (isActive: boolean, constraintInstance: TConstraintInstance) => (
       <Switch
         checked={isActive}
         size='small'
         onChange={(checked) =>
-          onUpdateValue(ci.constraintId, 'isActive', checked)
+          onUpdateValue(constraintInstance.constraintId, 'isActive', checked)
         }
       />
     ),
@@ -97,6 +97,7 @@ const constraintManagerTableColumns = (
     title: 'Weight',
     dataIndex: undefined,
     key: 'weight',
+    // eslint-disable-next-line react/prop-types
     render: ({ constraintId, weight, isHardConstraint }) => (
       <InputNumber
         min={1}
