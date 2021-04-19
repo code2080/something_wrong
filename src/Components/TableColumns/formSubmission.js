@@ -41,9 +41,8 @@ export const formSubmission = {
   ACTION_BUTTON: {
     title: '',
     key: 'actions',
-    dataIndex: null,
     fixedWidth: 40,
-    render: (_, formInstance) => (
+    render: (formInstance) => (
       <SubmissionActionButton formInstance={formInstance} />
     ),
   },
@@ -86,15 +85,19 @@ export const formSubmission = {
   ASSIGNMENT: {
     title: 'Assigned to',
     key: 'assignedTo',
-    dataIndex: 'teCoreProps.assignedTo',
     fixedWidth: 85,
-    render: (assignedTo, formInstance) => (
-      <FormInstanceAssignment
-        assignedTo={assignedTo}
-        formId={formInstance.formId}
-        formInstanceId={formInstance._id}
-      />
-    ),
+    render: (formInstance) => {
+      const {
+        teCoreProps: { assignedTo },
+      } = formInstance;
+      return (
+        <FormInstanceAssignment
+          assignedTo={assignedTo}
+          formId={formInstance.formId}
+          formInstanceId={formInstance._id}
+        />
+      );
+    },
   },
   SCHEDULE_LINK: {
     title: 'Schedule link',
@@ -113,12 +116,13 @@ export const formSubmission = {
   IS_STARRED: (dispatch, disabled) => ({
     title: 'Is starred',
     key: 'isStarred',
-    dataIndex: 'teCoreProps.isStarred',
+    dataIndex: 'teCoreProps',
     sorter: (a, b) =>
       sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
     align: 'center',
     fixedWidth: 100,
-    render: (isStarred, item) => {
+    render: (teCoreProps, item) => {
+      const { isStarred } = teCoreProps;
       const iconProps = {
         style: { fontSize: '0.9rem', color: themeColors.jungleGreen },
         onClick: (e) => {
