@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import { Button, Collapse, Table } from 'antd';
@@ -134,7 +134,7 @@ const ConstraintManagerPage = () => {
     e.stopPropagation();
   };
 
-  const handleCreateConstrConf = () => {
+  const handleCreateConstrConf = useCallback(() => {
     const newConstrConf = ConstraintConfiguration.create({
       formId,
       name: 'New constraint configuration',
@@ -152,7 +152,7 @@ const ConstraintManagerPage = () => {
     dispatch(createConstraintConfigurations(newConstrConf));
 
     if (constrConf) setConstrConf(constrConf[0]);
-  };
+  }, [allConstraints, constrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
     if (!constrConf) return;
@@ -174,11 +174,10 @@ const ConstraintManagerPage = () => {
     [constrConf, allConstraints],
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (_.isEmpty(constrConfs) && !constrConf) handleCreateConstrConf();
     if (constrConf) setConstrConf(constrConf);
-  });
+  }, [constrConfs, constrConf, handleCreateConstrConf]);
 
   return (
     <div className='constraint-manager--wrapper'>
