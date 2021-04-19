@@ -13,7 +13,7 @@ const App = () => {
       {toolbarContent}
       <TEPrefsLib
         coreAPI={{
-          setToolbarContent: content => setToolbarContent(content),
+          setToolbarContent: (content) => setToolbarContent(content),
         }}
         env='amLocalhost'
       />
