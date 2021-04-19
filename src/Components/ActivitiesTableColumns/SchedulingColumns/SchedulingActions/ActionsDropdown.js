@@ -31,9 +31,9 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
-import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
+import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -45,7 +45,6 @@ const mapStateToProps = (state, { activity }) => {
       activity.formInstanceId,
       activity.formId,
     ),
-    formInstance: state.submissions[activity.formId][activity.formInstanceId],
   };
 };
 
@@ -59,14 +58,12 @@ const mapActionsToProps = {
 const activityActions = {
   SCHEDULE_ALL: {
     label: 'Schedule submission',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SCHEDULE: {
     label: 'Schedule activity',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SELECT: {
@@ -108,11 +105,14 @@ const ActivityActionsDropdown = ({
   updateActivity,
   updateActivities,
   teCoreAPI,
-  formInstance,
   setFormInstanceSchedulingProgress,
   abortJob,
 }) => {
+  const selectFormInstance = useMemo(() => makeSelectFormInstance, []);
   const { formInstanceId, formId } = activity;
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, { formId, formInstanceId }),
+  );
   const [formType, reservationMode] = useSelector((state) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -153,11 +153,12 @@ const ActivityActionsDropdown = ({
   const updateSchedulingProgress = useCallback(() => {
     if (
       mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED &&
-      formInstance.teCoreProps.schedulingProgress ===
+      formInstance?.teCoreProps?.schedulingProgress ===
         teCoreSchedulingProgress.NOT_SCHEDULED
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
@@ -171,11 +172,12 @@ const ActivityActionsDropdown = ({
     }
     if (
       mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY &&
-      formInstance.teCoreProps.schedulingProgress !==
+      formInstance?.teCoreProps?.schedulingProgress !==
         teCoreSchedulingProgress.SCHEDULING_FINISHED
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
@@ -188,9 +190,9 @@ const ActivityActionsDropdown = ({
       });
     }
   }, [
-    formInstance.teCoreProps.schedulingProgress,
+    formInstance?.teCoreProps?.schedulingProgress,
     formInstanceId,
-    mSStatus.status,
+    mSStatus?.status,
     setFormInstanceSchedulingProgress,
   ]);
 
@@ -312,7 +314,6 @@ ActivityActionsDropdown.propTypes = {
   updateActivity: PropTypes.func.isRequired,
   updateActivities: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
-  formInstance: PropTypes.object.isRequired,
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,

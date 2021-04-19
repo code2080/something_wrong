@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectExtIds } from '../Redux/TE/te.selectors';
 import { setTEDataForValues } from '../Redux/TE/te.actions';
-import { initialState as initialPayload } from '../Redux/TE/te.helpers';
 import { TECoreAPIContext } from '../Components/TECoreAPI/context';
 import { TECoreAPI } from '../Types/TECoreAPI';
 import _ from 'lodash';
@@ -26,17 +25,20 @@ export const fetchLabelsFromExtIds = (
   payload: GetExtIdPropsPayload,
 ) => {
   async function exec(payload: GetExtIdPropsPayload) {
-    const extIdProps = await teCoreAPI.getExtIdProps({
-      ...initialPayload,
-      ...payload,
-    });
+    const nonNullPayload = {
+      objects: _.compact(payload.objects),
+      types: _.compact(payload.types),
+      fields: _.compact(payload.fields),
+    } as GetExtIdPropsPayload;
+    const extIdProps = await teCoreAPI.getExtIdProps(nonNullPayload);
     dispatch(setTEDataForValues(extIdProps));
   }
-
   const payloadExtids = _.flatMap(payload);
-  const missingExtIdsInStore = !payloadExtids.every((extId) =>
-    extIds.includes((extId as TEObject).id ?? (extId as string)),
+  const missingExtIdsInStore = !payloadExtids.every(
+    (extId) =>
+      extId && extIds.includes((extId as TEObject).id ?? (extId as string)),
   );
+
   if (!_.isEmpty(payloadExtids) && missingExtIdsInStore) exec(payload);
 };
 

@@ -1,5 +1,4 @@
-/* eslint-disable no-extra-boolean-cast */
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import _ from 'lodash';
 import { Button, Collapse, Table } from 'antd';
@@ -18,8 +17,7 @@ import {
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
-import { selectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
-
+import { makeSelectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
   ConstraintConfiguration,
   ConstraintInstance,
@@ -55,8 +53,14 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
+  const selectConstraintConfigurationsForForm = useMemo(
+    () => makeSelectConstraintConfigurationsForForm(),
+    [],
+  );
   const constrConfs: TConstraintConfiguration[] = Object.values(
-    useSelector(selectConstraintConfigurationsForForm(formId)),
+    useSelector((state) =>
+      selectConstraintConfigurationsForForm(state, formId),
+    ),
   );
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));

@@ -77,6 +77,8 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 };
 
 export const activityIsReadOnly = (status) =>
+  // TODO: Temporarily disables editing activities until we ensure it works again
+  true ||
   [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
@@ -204,18 +206,21 @@ const extractValueFromActivity = (
       extId: 'tagId',
       value: activity.tagId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
     {
       extId: 'submitter',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
     {
       extId: 'primaryObject',
       value: activity.formInstanceId,
       type: ActivityValueType.OTHER,
+      formId: activity.formId,
     },
-  ] as ActivityValue[];
+  ] as (ActivityValue & { formId?: string })[];
   // Get all the activity values
   const values = [
     ...activity.timing,
@@ -260,14 +265,30 @@ const extractValueFromActivity = (
   return [options, matches];
 };
 
-const mergeAndMakeUniqOptions = (a, b) => {
-  if ((Array.isArray(a) && a.length) || (Array.isArray(b) && b.length))
-    return _.uniqBy([...(a || []), ...(b || [])], 'value');
-  return [...Object.keys(a || {}), ...Object.keys(b || {})].reduce(
+const mergeAndMakeUniqOptions = (
+  updatedOptions,
+  currentOptions,
+): { [key: string]: any } | any[] => {
+  if (_.isEmpty(updatedOptions) && _.isEmpty(currentOptions)) return [];
+  if (
+    (Array.isArray(updatedOptions) && updatedOptions.length) ||
+    (Array.isArray(currentOptions) && currentOptions.length)
+  )
+    return _.uniqBy(
+      [...(updatedOptions || []), ...(currentOptions || [])],
+      'value',
+    );
+  return [
+    ...Object.keys(updatedOptions || {}),
+    ...Object.keys(currentOptions || {}),
+  ].reduce(
     (tot, key) => ({
       ...tot,
       [key]: _.uniqBy(
-        [...(a ? a[key] || [] : []), ...(b ? b[key] || [] : [])],
+        [
+          ...(updatedOptions ? updatedOptions[key] || [] : []),
+          ...(currentOptions ? currentOptions[key] || [] : []),
+        ],
         'value',
       ),
     }),
@@ -288,29 +309,41 @@ export const getFilterPropsForActivities = (activities: any) => {
   /**
    * @TODO WE SHOULD ADD BACK GROUP, SUBMITTER, ETC AS THESE ARE NOT EXTIDS
    */
-  const extIds = getAllExtIdsFromActivityValues(actArr[0]);
+  const availableProperties = getAllExtIdsFromActivityValues(actArr[0]);
 
   // Iterate over each activity and get its formatted value together with the activity id
-  const retVal = actArr.reduce(
-    (tot, activity) => {
-      const [options, matches] = extractValueFromActivity(activity, extIds);
-      const updOptions = extIds.reduce(
-        (tot, extId) => ({
-          ...tot,
-          [extId]: mergeAndMakeUniqOptions(tot[extId], options[extId]),
-        }),
-        tot.options,
+  return actArr.reduce(
+    (props, activity) => {
+      const [currentOptions, currentMatches] = extractValueFromActivity(
+        activity,
+        availableProperties,
       );
-      const updMatches = [...Object.keys(tot.matches), ...matches].reduce(
+
+      const updOptions = availableProperties.reduce(
+        (updatedOptions, property) => ({
+          ...updatedOptions,
+          [property]: mergeAndMakeUniqOptions(
+            updatedOptions[property],
+            currentOptions[property],
+          ),
+        }),
+        props.options,
+      );
+
+      const updMatches = [
+        ...Object.keys(props.matches),
+        ...currentMatches,
+      ].reduce(
         (tot, matchKey) => ({
           ...tot,
           [matchKey]: [
             ...(tot[matchKey] || []),
-            ...(matches.indexOf(matchKey) > -1 ? [activity._id] : []),
+            ...(currentMatches.includes(matchKey) ? [activity._id] : []),
           ],
         }),
-        tot.matches,
+        props.matches,
       );
+
       return {
         options: updOptions,
         matches: updMatches,
@@ -318,5 +351,4 @@ export const getFilterPropsForActivities = (activities: any) => {
     },
     { options: {}, matches: {} },
   );
-  return retVal;
 };

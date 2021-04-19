@@ -17,6 +17,7 @@ const DateTimeEdit = ({ value, setValue, onFinish }) => (
     allowClear={false}
     onChange={(val) => setValue(val.toISOString())}
     onOk={() => onFinish()}
+    editable={false}
   />
 );
 

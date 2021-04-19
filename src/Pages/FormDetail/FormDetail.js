@@ -30,7 +30,7 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
-import { selectForm } from '../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
@@ -40,13 +40,15 @@ import FormInfoPage from './pages/formInfo.page';
 import ActivitiesPage from './pages/activities.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
+import ObjectRequestsPage from './pages/objectRequests.page';
 
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 import {
-  AEBETA_PERMISSION,
+  ASSISTED_SCHEDULING_PERMISSION_NAME,
   AE_ACTIVITY_PERMISSION,
 } from '../../Constants/permissions.constants';
 import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
@@ -58,14 +60,19 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams();
-  const form = useSelector(selectForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
-  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
   );
+  const hasAssistedSchedulingPermission = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
+  const reqs = useSelector(selectFormObjectRequest(formId));
+  const formHasObjReqs = !_.isEmpty(reqs);
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -83,7 +90,6 @@ const FormPage = () => {
     dispatch(loadFilter({ filterId: `${formId}_SUBMISSIONS` }));
     dispatch(loadFilter({ filterId: `${formId}_ACTIVITIES` }));
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     form.reservationmode &&
       teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({
         mode: form.reservationmode,
@@ -148,6 +154,11 @@ const FormPage = () => {
         <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
           <SubmissionsPage />
         </Tabs.TabPane>
+        {formHasObjReqs && (
+          <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
+            <ObjectRequestsPage />
+          </Tabs.TabPane>
+        )}
         <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
           <ActivitiesPage />
         </Tabs.TabPane>
@@ -156,7 +167,7 @@ const FormPage = () => {
             <ActivityDesignPage />
           </Tabs.TabPane>
         )}
-        {hasAEBetaPermission && (
+        {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
           <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
             <ConstraintManagerPage />
           </Tabs.TabPane>

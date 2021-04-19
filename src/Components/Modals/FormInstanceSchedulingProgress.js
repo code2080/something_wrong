@@ -37,6 +37,7 @@ const FormInstanceSchedulingStatusProcess = ({
   return (
     <AntModal
       getContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
       visible={visible}
       onCancel={onClose}
       onOk={onSubmit}
