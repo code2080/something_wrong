@@ -77,9 +77,7 @@ const ConstraintManagerPage = () => {
     const typeExtIds = Object.keys(activityDesign.objects);
     tecoreAPI.getFieldIds({
       typeExtIds,
-      callback: (result) => {
-        return setFields(result);
-      },
+      callback: (result) => setFields(result),
     });
   }, [activityDesign?.objects, tecoreAPI]);
 
@@ -109,26 +107,33 @@ const ConstraintManagerPage = () => {
     });
   };
 
-  const handleUpdConstrConf = (
-    constraintId: string,
-    prop: string,
-    value: any,
-  ): void => {
-    if (!constrConf) return;
-    const { constraints } = constrConf;
+  const handleUpdConstrConf = useCallback(
+    (constraintId: string, prop: string, value: any): void => {
+      if (!constrConf) return;
+      const { constraints } = constrConf;
 
-    setConstrConf({
-      ...constrConf,
-      constraints: constraints.map((constraintInstance) =>
-        constraintInstance.constraintId === constraintId
-          ? {
-              ...constraintInstance,
-              [prop]: value,
-            }
-          : constraintInstance,
+      setConstrConf({
+        ...constrConf,
+        constraints: constraints.map((constraintInstance) =>
+          constraintInstance.constraintId === constraintId
+            ? { ...constraintInstance, [prop]: value }
+            : constraintInstance,
+        ),
+      });
+    },
+    [constrConf],
+  );
+
+  const constraintManagercolumns = useMemo(
+    () =>
+      constraintManagerTableColumns(
+        handleUpdConstrConf,
+        allConstraints,
+        fields,
+        activityDesign.objects,
       ),
-    });
-  };
+    [handleUpdConstrConf, allConstraints, fields, activityDesign.objects],
+  );
 
   const handleAddCustomConstraint = (e) => {
     e.stopPropagation();
@@ -195,12 +200,7 @@ const ConstraintManagerPage = () => {
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
-              columns={constraintManagerTableColumns(
-                handleUpdConstrConf,
-                allConstraints,
-                fields,
-                activityDesign.objects,
-              )}
+              columns={constraintManagercolumns}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
@@ -217,12 +217,7 @@ const ConstraintManagerPage = () => {
               }
             >
               <Table
-                columns={constraintManagerTableColumns(
-                  handleUpdConstrConf,
-                  allConstraints,
-                  fields,
-                  activityDesign.objects,
-                )}
+                columns={constraintManagercolumns}
                 dataSource={customConstraints}
                 rowKey='constraintId'
                 pagination={false}
