@@ -78,6 +78,7 @@ const FormInstanceAcceptanceStatus = ({
       onOk={onSubmitAcceptanceStatusCallback}
       onCancel={onClose}
       getContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
       id='acceptanceStatusModal'
       destroyOnClose
     >

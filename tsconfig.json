@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "esnext",
-    "allowJs": false,
+    "module": "es2020",
+    "allowJs": true,
     "checkJs": false,
     "jsx": "react-jsx",
     "noEmit": true,

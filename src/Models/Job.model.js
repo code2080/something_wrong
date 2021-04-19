@@ -13,7 +13,9 @@ export class Job {
   customerSignature;
   username;
   password;
+  constraintConfigurationId;
   status;
+  reservationMode;
   score;
 
   constructor({
@@ -28,8 +30,10 @@ export class Job {
     customerSignature,
     username,
     password,
+    constraintConfigurationId,
     status = jobStatus.NOT_STARTED,
     score = { initial: null, current: null },
+    reservationMode,
   }) {
     this._id = _id;
     this.activities = activities;
@@ -42,7 +46,9 @@ export class Job {
     this.customerSignature = customerSignature;
     this.username = username;
     this.password = password;
+    this.constraintConfigurationId = constraintConfigurationId;
     this.status = status;
     this.score = score;
+    this.reservationMode = reservationMode;
   }
 }

@@ -12,10 +12,11 @@ import {
 // COMPONENTS
 import BaseSection from '../../../Components/Sections/BaseSection';
 import FormInstanceToolbar from '../../../Components/FormInstanceToolbar/FormInstanceToolbar';
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
-import { selectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
-import { selectActivitiesForFormInstanceId } from '../../../Redux/Activities/activities.selectors';
+
 // SELECTORS
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
+import { selectActivitiesForFormInstanceId } from '../../../Redux/Activities/activities.selectors';
 import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 import { selectFormInstanceObjectRequests } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
 
@@ -24,13 +25,19 @@ import './submissions.detail.page.scss';
 
 // HOOKS
 import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
+
+// TYPES
 import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
 
 const SubmissionsDetailPage = ({ formInstanceId }) => {
   const { formId } = useParams();
   const dispatch = useDispatch();
-  const form = useSelector(selectForm)(formId);
-  const formInstance = useSelector(selectFormInstance)(formId, formInstanceId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, { formId, formInstanceId }),
+  );
   const activities = useSelector(selectActivitiesForFormInstanceId)(
     formId,
     formInstanceId,
@@ -69,7 +76,9 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
         submissionValues: formInstance.values,
         activities,
       }),
-    [form.sections, objectRequests, formInstance.values, activities],
+    // TODO: memoize and readd dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [form],
   );
   useFetchLabelsFromExtIds(payload);
 

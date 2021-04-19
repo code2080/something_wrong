@@ -2,15 +2,11 @@ import { weekdayEnums } from '../../../../Constants/weekDays.constants';
 
 // TYPES
 type Props = {
-  value: string;
+  value: string | null;
   extId: string;
   activityId: string;
 };
 
-const WeekdayValue = ({ value }: Props) => {
-  const formattedValue = value ? weekdayEnums[value] : 'N/A';
-
-  return formattedValue;
-};
+const WeekdayValue = ({ value }: Props) => (value ? weekdayEnums[value] : '');
 
 export default WeekdayValue;

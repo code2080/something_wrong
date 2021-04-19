@@ -29,7 +29,10 @@ const extractValuesFromSectionData = (sectionData) => {
       return Object.values(sectionData).reduce(
         (values, row) => [
           ...values,
-          ...row.reduce((elVals, element) => [...elVals, element.value], []),
+          ...row.values.reduce(
+            (elVals, element) => [...elVals, element.value],
+            [],
+          ),
         ],
         [],
       );
@@ -50,7 +53,7 @@ const extractValuesFromSectionData = (sectionData) => {
 
 export const getSubmissionValues = (formInstance) =>
   formInstance
-    ? Object.entries(formInstance.values).reduce(
+    ? Object.entries(formInstance.values || {}).reduce(
         (values, [sectionId, sectionData]) => [
           ...values,
           {

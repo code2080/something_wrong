@@ -78,6 +78,7 @@ const FilterModal = ({
       title='Filter submissions'
       wrapClassName='filter-modal--wrapper'
       getContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
       visible={isVisible}
       onOk={onSaveAndClose}
       onCancel={onCancel}

@@ -78,7 +78,7 @@ const ActivitiesToolbar = ({
         onClick={() => onScheduleActivities(allActivities)}
         disabled={!allActivities?.length || !hasSchedulingPermissions}
       >
-        Schedule all activities
+        Schedule activities
       </Button>
       <Divider type='vertical' />
       <Popover

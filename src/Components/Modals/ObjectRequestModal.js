@@ -42,6 +42,7 @@ const ObjectRequestModal = ({ onClose, visible, request }) => {
       title={'Object request details'}
       visible={visible}
       getContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib')}
       closable
       footer={null}
       maskClosable

@@ -164,6 +164,7 @@ function createThunkAction({
         if (successNotification) {
           notification.success({
             getContainer: () => document.getElementById('te-prefs-lib'),
+            getPopupContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation completed',
             description: successNotification,
           });
@@ -200,6 +201,7 @@ function createThunkAction({
         if (successNotification) {
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
+            getPopupContainer: () => document.getElementById('te-prefs-lib'),
             message: 'Operation failed',
             description: error.toString(),
             duration: 15,
@@ -227,6 +229,7 @@ function createThunkAction({
         if (typeof failure === 'function') {
           notification.error({
             getContainer: () => document.getElementById('te-prefs-lib'),
+            getPopupContainer: () => document.getElementById('te-prefs-lib'),
             message: 'API call failed',
             description: (
               <p>
