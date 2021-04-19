@@ -170,6 +170,7 @@ const ObjectRequestsPage = () => {
     <DynamicTable
       columns={objReqColumns}
       dataSource={requests}
+      datasourceId={`OBJREQS_${formId}`}
       rowKey='_id'
       pagination={false}
       expandedRowRender={(request: ObjectRequest) => (
