@@ -1,5 +1,7 @@
-/* eslint-disable react/prop-types */
-import { Switch, InputNumber } from 'antd';
+import { Switch, InputNumber /* , Select */ } from 'antd';
+import type { TConstraint } from '../../Types/Constraint.type';
+import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
+import ParameterCascader from './Components/ParameterCascader';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   const constraint = allConstraints.find(
@@ -9,17 +11,44 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   return constraint[prop];
 };
 
-const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
+const renderConstraintParameters = (
+  paramFields,
+  allConstraints,
+  constraintId,
+  activityDesignObj,
+) => {
+  const operators = getPropFromConstraint(
+    constraintId,
+    'allowedOperators',
+    allConstraints,
+  );
+
+  return operators?.length ? (
+    <ParameterCascader
+      paramFields={paramFields}
+      availableOperators={operators}
+      activityDesignObj={activityDesignObj}
+    />
+  ) : (
+    <div></div>
+  );
+};
+const constraintManagerTableColumns = (
+  onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
+  allConstraints: TConstraint[],
+  paramFields,
+  activityDesignObj,
+) => [
   {
     title: 'Active',
     dataIndex: 'isActive',
     key: 'isActive',
-    render: (isActive, ci) => (
+    render: (isActive: boolean, constraintInstance: TConstraintInstance) => (
       <Switch
         checked={isActive}
         size='small'
         onChange={(checked) =>
-          onUpdateValue(ci.constraintId, 'isActive', checked)
+          onUpdateValue(constraintInstance.constraintId, 'isActive', checked)
         }
       />
     ),
@@ -31,17 +60,24 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     render: (constraintId) =>
       getPropFromConstraint(constraintId, 'name', allConstraints),
   },
-  {
+  /* {
     title: 'Description',
     dataIndex: 'constraintId',
     key: 'description',
     render: (constraintId) =>
       getPropFromConstraint(constraintId, 'description', allConstraints),
-  },
+  }, */
   {
     title: 'Parameters',
-    dataIndex: 'parameters',
+    dataIndex: 'constraintId',
     key: 'parameters',
+    render: (constraintId) =>
+      renderConstraintParameters(
+        paramFields,
+        allConstraints,
+        constraintId,
+        activityDesignObj,
+      ),
   },
   {
     title: 'Hard Constraint',
@@ -61,6 +97,7 @@ const constraintManagerTableColumns = (onUpdateValue, allConstraints) => [
     title: 'Weight',
     dataIndex: undefined,
     key: 'weight',
+    // eslint-disable-next-line react/prop-types
     render: ({ constraintId, weight, isHardConstraint }) => (
       <InputNumber
         min={1}

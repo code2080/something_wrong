@@ -5,7 +5,7 @@ export type TConstraintInstance = {
   isActive: boolean;
   isHardConstraint: boolean;
   weight?: number;
-  parameters: string[];
+  parameters: {};
   operator: EConstraintOperators;
 };
 
@@ -15,7 +15,7 @@ export class ConstraintInstance {
     isActive: obj.type === EConstraintType.DEFAULT,
     isHardConstraint: obj.isHardConstraint,
     weight: obj.weight,
-    parameters: [],
+    parameters: obj.parameters,
     operator: EConstraintOperators['<'],
   });
 }
@@ -34,6 +34,6 @@ export class ConstraintConfiguration {
     formId: obj.formId,
     name: obj.name,
     description: obj.description || null,
-    constraints: obj.constraints || [],
+    constraints: obj.constraints || {},
   });
 }

@@ -33,7 +33,7 @@ export const teCoreCallnames = {
   SET_FORM_TYPE: 'setFormType',
   SET_RESERVATION_MODE: 'setReservationMode',
   VALIDATE_RESERVATIONS: 'validateReservations',
-  GET_FIELDIDS_FOR_OBJECTS: 'getFieldIdsForObjects',
+  GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
 };
 
 export const teCoreActions = {
@@ -192,11 +192,12 @@ export const teCoreActions = {
       callback({ res: { invalidReservations: [] } });
     },
   },
-  GET_FIELDIDS_FOR_OBJECTS: {
-    callname: teCoreCallnames.GET_FIELDIDS_FOR_OBJECTS,
-    mockFunction: async (objectExtIds) => {
-      if (_.isEmpty(objectExtIds)) return null;
-      return objectExtIds.reduce(
+  GET_FIELDIDS_FOR_TYPES: {
+    callname: teCoreCallnames.GET_FIELDIDS_FOR_TYPES,
+    mockFunction: (typeExtIds, callback) => {
+      if (_.isEmpty(typeExtIds)) return null;
+      callback();
+      const res = typeExtIds.reduce(
         (labels, extId) => ({
           ...labels,
           extId: {
@@ -206,6 +207,7 @@ export const teCoreActions = {
         }),
         {},
       );
+      callback(res);
     },
   },
 };
