@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 const SelectOrg = ({ organizations, onSelectOrg }) => (
   <Form.Item label='Select your organization:'>
     <Select
-      value={undefined}
+      value={null}
       placeholder='Select your organization...'
       onChange={onSelectOrg}
       showSearch
