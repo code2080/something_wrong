@@ -1,6 +1,6 @@
- import { Select, Cascader } from 'antd';
+import { Select, Cascader } from 'antd';
 
- const { Option } = Select;
+const { Option } = Select;
 
 type Props = {
   paramFields: any;
@@ -16,15 +16,14 @@ const ParameterCascader = ({
   // To be implemented
   console.log(paramFields, activityDesignObj, availableOperators);
 
-  const options = 
-    Object.keys(activityDesignObj).map(objField => ({
-      value: objField,
-      label: objField,
-      children: Object.keys(paramFields[objField]).map(field => ({
-        value: field,
-        label: field
-      }))
-    }));
+  const options = Object.keys(activityDesignObj).map((objField) => ({
+    value: objField,
+    label: objField,
+    children: Object.keys(paramFields[objField]).map((field) => ({
+      value: field,
+      label: field,
+    })),
+  }));
 
   return (
     <div>
@@ -34,8 +33,7 @@ const ParameterCascader = ({
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
-      />
-      {' '}
+      />{' '}
       <Select
         placeholder='Operator'
         size='small'
@@ -43,13 +41,12 @@ const ParameterCascader = ({
           document.getElementById('te-prefs-lib') as HTMLElement
         }
       >
-           {availableOperators.map((operator) => (
-              <Option key={operator} value={operator}>
-                  {operator}
-              </Option>
-          ))}
-      </Select>
-      {' '}
+        {availableOperators.map((operator) => (
+          <Option key={operator} value={operator}>
+            {operator}
+          </Option>
+        ))}
+      </Select>{' '}
       <Cascader
         options={options}
         size='small'

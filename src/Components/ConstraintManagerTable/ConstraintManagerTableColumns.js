@@ -21,8 +21,7 @@ const renderConstraintParameters = (
     'allowedOperators',
     allConstraints,
   );
-  if(!paramFields)
-    return;
+  if (!paramFields) return;
 
   if (operators?.length)
     return (
