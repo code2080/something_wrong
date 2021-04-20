@@ -18,10 +18,14 @@ export default {
   },
 };
 
-export const Button = () => {
+export const Button = (args) => {
   const [isActive, setIsActive] = useState(false);
   return (
-    <FilterButton isActive={isActive} onClick={() => setIsActive(!isActive)} />
+    <FilterButton
+      {...args}
+      isActive={isActive}
+      onClick={() => setIsActive(!isActive)}
+    />
   );
 };
 
