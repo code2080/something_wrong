@@ -18,11 +18,9 @@ const TimeSlotColumn = ({ event, timeslots }) => {
   );
   const tooltipTitle = useMemo(() => {
     if (timeslot) {
-      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime)
-        .utc()
-        .format(TIME_FORMAT)} - ${moment(timeslot.endTime)
-        .utc()
-        .format(TIME_FORMAT)}`;
+      return `Timeslot ${timeslot.label}: ${moment(timeslot.startTime).format(
+        TIME_FORMAT,
+      )} - ${moment(timeslot.endTime).format(TIME_FORMAT)}`;
     }
     return 'Timeslot could not be found';
   }, [timeslot]);
