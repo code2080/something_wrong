@@ -238,8 +238,9 @@ const getPayloadForConnectedSection = (element, values) =>
   }, []);
 
 const getPayloadForSection = (element, section, values) => {
-  if (!values[section._id] && process.env.NODE_ENV === 'development') {
-    console.log('No values for section ID', section._id, values, section);
+  if (!values || !values[section._id]) {
+    process.env.NODE_ENV === 'development' &&
+      console.log('No values for section ID', section._id, values, section);
     return [];
   }
   const sectionType = determineSectionType(section);
