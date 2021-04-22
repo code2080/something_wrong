@@ -77,6 +77,7 @@ const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
             <div
               key='el-0'
               className='base-activity-col__modal--submission-value'
+              style={{ wordBreak: 'break-all' }}
             >
               {JSON.stringify(renderedSubmissionValue)}
             </div>

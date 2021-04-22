@@ -82,6 +82,9 @@ const renderObjectValue = (activityValue, activity) => {
         value={activityValue.value}
         extId={activityValue.extId}
         activityId={activity._id}
+        formId={activity.formId}
+        elementId={activityValue.elementId}
+        sectionId={activityValue.sectionId}
       />
     ),
   });

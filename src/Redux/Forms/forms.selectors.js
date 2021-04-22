@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 
@@ -55,3 +56,14 @@ export const selectSectionHasAvailabilityCalendar = (sectionElements) =>
         elements.map[elem.elementId].type === 'ELEMENT_TYPE_CALENDAR',
     ),
   );
+
+export const selectElementType = (formId, sectionId, elementId) =>
+  createSelector(formState, elementState, (forms, elements) => {
+    const form = forms[formId];
+    if (!form) return null;
+    const section = form.sections.find(({ _id }) => _id === sectionId);
+    if (!section) return null;
+    const element = section.elements.find(({ _id }) => _id === elementId);
+    if (!element) return null;
+    return get(elements.map, [element.elementId, 'type']);
+  });
