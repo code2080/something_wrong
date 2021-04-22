@@ -84,6 +84,23 @@ const connectedSectionColumns = {
       },
     },
   ],
+
+  TEMPLATES: (section) => [
+    {
+      title: section.datasource,
+      key: section._id,
+      render: (value) => <span>{value.templateVal} </span>,
+    },
+  ],
+
+  GROUPS: (section) => [
+    {
+      title: section.datasource,
+      key: section._id,
+      render: (value) => <span>{value.groupVal}</span>,
+    },
+  ],
+
   TIMESLOT: (timeslots) => [
     {
       title: 'Timeslot',
@@ -102,6 +119,7 @@ const connectedSectionColumns = {
       },
     },
   ],
+
   SCHEDULING: (_sectionId, _formInstanceId, _formId) => [], // TODO: Reenable this after we've built support for new data format
   // [
   //   {
@@ -120,6 +138,10 @@ const connectedSectionColumns = {
   //     ),
   //   },
   // ],
+};
+
+const invalidIndex = (index) => {
+  return index === -1;
 };
 
 /**
@@ -289,6 +311,8 @@ export const transformSectionToTableColumns = (
           formInstanceId,
           formId,
         ),
+        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
         ..._elementColumns,
       ];
     case SECTION_AVAILABILITY:
@@ -321,7 +345,7 @@ const transformVerticalSectionValuesToTableRows = (
       return data;
     // Find the element idx
     const elementIdx = values.findIndex((el) => el.elementId === col.dataIndex);
-    if (elementIdx === -1) return data;
+    if (invalidIndex(elementIdx)) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
   return [{ ..._data, rowKey: sectionId }];
@@ -348,13 +372,38 @@ const transformConnectedSectionValuesToTableRows = (values, columns) => {
       const elementIdx = values[eventId].values.findIndex(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (invalidIndex(elementIdx)) return eventValues;
       return {
         ...eventValues,
         [col.dataIndex]: values[eventId].values[elementIdx].value,
       };
     }, {});
+    const _templates = columns.reduce((templates, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return templates;
+
+      return {
+        ...templates,
+        templateVal: values[eventId].template,
+      };
+    }, {});
+
+    const _groups = columns.reduce((groups, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return groups;
+      return {
+        ...groups,
+        groupVal: values[eventId].groups,
+      };
+    }, {});
+
     return {
+      ..._groups,
+      ..._templates,
       ..._eventValues,
       startTime: values[eventId].startTime,
       endTime: values[eventId].endTime,
@@ -385,13 +434,39 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
       const elementIdx = values[eventId].values.findIndex(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (invalidIndex(elementIdx)) return eventValues;
       return {
         ...eventValues,
         [col.dataIndex]: values[eventId].values[elementIdx].value,
       };
     }, {});
+
+    const _templates = columns.reduce((templates, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return templates;
+
+      return {
+        ...templates,
+        templateVal: values[eventId].template,
+      };
+    }, {});
+
+    const _groups = columns.reduce((groups, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return groups;
+      return {
+        ...groups,
+        groupVal: values[eventId].groups,
+      };
+    }, {});
+
     return {
+      ..._groups,
+      ..._templates,
       ..._eventValues,
       rowKey: eventId,
     };
