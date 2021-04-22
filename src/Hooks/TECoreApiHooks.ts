@@ -50,5 +50,5 @@ export const useFetchLabelsFromExtIds = (payload: GetExtIdPropsPayload) => {
   useEffect(() => {
     fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, payload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teCoreAPI, dispatch, payload]);
+  }, [payload]);
 };
