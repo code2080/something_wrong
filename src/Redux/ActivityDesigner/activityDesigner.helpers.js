@@ -151,7 +151,7 @@ const findFirstRepeatingSection = (formSections, mapping) =>
 
 export const getElementsForMapping = (formSections, mapping) => {
   if (!formSections || !formSections.length || !mapping) return [];
-  // Ensure only one repeating sectionn can be used
+  // Ensure only one repeating section can be used
   const firstRepeatingSection = findFirstRepeatingSection(
     formSections,
     mapping,
@@ -172,7 +172,15 @@ export const getElementsForMapping = (formSections, mapping) => {
         isDisabled = true;
       }
 
-      return {
+      const activities = {
+        value: section?.activityTemplatesSettings._id,
+        label: section?.activityTemplatesSettings.datasource,
+      };
+      const groups = {
+        value: section?.groupManagementSettings._id,
+        label: section?.groupManagementSettings.datasource,
+      };
+      const mappedElementsObj = {
         value: section._id,
         label: section.name,
         disabled: isDisabled,
@@ -181,6 +189,8 @@ export const getElementsForMapping = (formSections, mapping) => {
           label: element.label,
         })),
       };
+      mappedElementsObj.children.push(activities, groups);
+      return mappedElementsObj;
     }),
   ];
 };
