@@ -181,7 +181,7 @@ export const renderElementValue = (value, element) => {
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
       if (!value || !value.startTime) return null;
-      return getLocalDate(value).format('[Week] w / gggg');
+      return getLocalDate(value).format('[Week] W / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} element={element} />;
