@@ -89,7 +89,8 @@ const connectedSectionColumns = {
     {
       title: section.datasource,
       key: section._id,
-      render: (value) => <span>{value.templateVal} </span>,
+      dataIndex: 'templateVal',
+      render: (templateValue) => <span>{templateValue} </span>,
     },
   ],
 
@@ -97,7 +98,8 @@ const connectedSectionColumns = {
     {
       title: section.datasource,
       key: section._id,
-      render: (value) => <span>{value.groupVal}</span>,
+      dataIndex: 'grooupVal',
+      render: (groupValue) => <span>{groupValue}</span>,
     },
   ],
 
@@ -203,7 +205,7 @@ export const renderElementValue = (value, element) => {
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
       if (!value || !value.startTime) return null;
-      return getLocalDate(value).format('[Week] w / gggg');
+      return getLocalDate(value).format('[Week] W / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} element={element} />;
@@ -430,22 +432,21 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
     return [];
   const _data = (Object.keys(values) || []).map((eventId) => {
     const _eventValues = columns.reduce((eventValues, col) => {
-      // Find the element index
-      const elementIdx = values[eventId].values.findIndex(
+      const element = values[eventId].values.find(
         (el) => el.elementId === col.dataIndex,
       );
-      if (invalidIndex(elementIdx)) return eventValues;
+      if (!element) return eventValues;
       return {
         ...eventValues,
-        [col.dataIndex]: values[eventId].values[elementIdx].value,
+        [col.dataIndex]: element.value,
       };
     }, {});
 
     const _templates = columns.reduce((templates, col) => {
-      const elementIdx = values[eventId].values.findIndex(
+      const element = values[eventId].values.find(
         (el) => el.elementId === col.dataIndex,
       );
-      if (invalidIndex(elementIdx)) return templates;
+      if (!element) return templates;
 
       return {
         ...templates,

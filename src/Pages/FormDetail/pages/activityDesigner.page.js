@@ -117,7 +117,7 @@ const ActivityDesignPage = () => {
   /**
    * MEMOIZED VARS
    */
-  const hasReservations = useMemo(
+  const hasActivities = useMemo(
     () =>
       (Object.keys(activities || {}) || []).reduce(
         (number, formInstanceId) =>
@@ -240,6 +240,7 @@ const ActivityDesignPage = () => {
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            disabled={hasActivities}
           >
             <Button type='link' size='small'>
               Reset configuration...
@@ -252,13 +253,13 @@ const ActivityDesignPage = () => {
               size='small'
               onClick={onSaveDesign}
               loading={isSaving}
-              disabled={!designIsValid}
+              disabled={!designIsValid || hasActivities}
             >
               Save
             </Button>
           </div>
         </div>
-        {hasReservations && <HasReservationsAlert formId={formId} />}
+        {hasActivities && <HasReservationsAlert formId={formId} />}
         <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>
@@ -268,7 +269,7 @@ const ActivityDesignPage = () => {
             mapping={design}
             onChange={updateTimingDesignCallback}
             formSections={form.sections}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -281,7 +282,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             typeOptions={typeOptions}
             onChange={updateObjectDesignCallback}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -294,7 +295,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             fieldOptions={fieldOptions}
             onChange={updateFieldDesignCallback}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
       </div>
