@@ -161,6 +161,7 @@ export const getElementsForMapping = (formSections, mapping) => {
       value: 'scopedObject',
       label: 'Primary object',
     },
+
     ...formSections.map((section) => {
       const sectionType = determineSectionType(section);
       let isDisabled = false;
@@ -172,14 +173,6 @@ export const getElementsForMapping = (formSections, mapping) => {
         isDisabled = true;
       }
 
-      const activities = {
-        value: section?.activityTemplatesSettings._id,
-        label: section?.activityTemplatesSettings.datasource,
-      };
-      const groups = {
-        value: section?.groupManagementSettings._id,
-        label: section?.groupManagementSettings.datasource,
-      };
       const mappedElementsObj = {
         value: section._id,
         label: section.name,
@@ -189,8 +182,23 @@ export const getElementsForMapping = (formSections, mapping) => {
           label: element.label,
         })),
       };
-      mappedElementsObj.children.push(activities, groups);
+
+      // mappedElementsObj.children.push(activities, groups);
       return mappedElementsObj;
+    }),
+    ...formSections.map((section) => {
+      const activities = {
+        value: section?.activityTemplatesSettings._id,
+        label: section?.activityTemplatesSettings.datasource,
+      };
+      return activities;
+    }),
+    ...formSections.map((section) => {
+      const groups = {
+        value: section?.groupManagementSettings._id,
+        label: section?.groupManagementSettings.datasource,
+      };
+      return groups;
     }),
   ];
 };
