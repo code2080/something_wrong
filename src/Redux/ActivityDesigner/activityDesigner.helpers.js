@@ -183,20 +183,19 @@ export const getElementsForMapping = (formSections, mapping) => {
         })),
       };
 
-      // mappedElementsObj.children.push(activities, groups);
       return mappedElementsObj;
     }),
     ...formSections.map((section) => {
       const activities = {
         value: section?.activityTemplatesSettings._id,
-        label: section?.activityTemplatesSettings.datasource,
+        label: 'Activity template',
       };
       return activities;
     }),
     ...formSections.map((section) => {
       const groups = {
         value: section?.groupManagementSettings._id,
-        label: section?.groupManagementSettings.datasource,
+        label: 'Groups',
       };
       return groups;
     }),
