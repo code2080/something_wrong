@@ -160,11 +160,11 @@ export const getElementsForMapping = (formSections, mapping) => {
       label: 'Primary object',
     },
     {
-      value: firstRepeatingSection?.activityTemplatesSettings._id,
+      value: firstRepeatingSection?.activityTemplatesSettings?._id,
       label: 'Activity template',
     },
     {
-      value: firstRepeatingSection?.groupManagementSettings._id,
+      value: firstRepeatingSection?.groupManagementSettings?._id,
       label: 'Groups',
     },
     ...elementOptions,
