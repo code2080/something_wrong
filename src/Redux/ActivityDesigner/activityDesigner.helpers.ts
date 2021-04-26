@@ -75,7 +75,7 @@ export const createNewMappingFromTemplate = (template, extId, formId) =>
  */
 const validateAllKeysOnProp = (prop, minLength = 1) => {
   const keys = Object.keys(prop);
-  if (minLength > 0 && (!keys || !keys.length >= minLength)) return false;
+  if (minLength > 0 && (!keys || !(keys.length >= minLength))) return false;
   return !keys.some((key) => prop[key] == null);
 };
 
