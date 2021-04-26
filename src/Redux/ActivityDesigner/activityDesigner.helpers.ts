@@ -136,8 +136,12 @@ export const getElementsForMapping = (formSections, mapping) => {
 
   const elementOptions = formSections.map((section) => {
     const sectionType = determineSectionType(section);
-    const isReccuring = (sectionType) => (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED)
-    const isDisabled = firstRepeatingSection && isReccuring(sectionType) && section._id !== firstRepeatingSection._id
+    const isReccuring = (sectionType) =>
+      sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED;
+    const isDisabled =
+      firstRepeatingSection &&
+      isReccuring(sectionType) &&
+      section._id !== firstRepeatingSection._id;
 
     return {
       value: section._id,
@@ -148,7 +152,7 @@ export const getElementsForMapping = (formSections, mapping) => {
         label: element.label,
       })),
     };
-  }),
+  });
 
   return [
     {
@@ -195,17 +199,17 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
       const children =
         sectionType === SECTION_CONNECTED
           ? [
-            { value: 'startTime', label: 'Event start time' },
-            { value: 'endTime', label: 'Event end time' },
-            ...section.elements.map((element) => ({
+              { value: 'startTime', label: 'Event start time' },
+              { value: 'endTime', label: 'Event end time' },
+              ...section.elements.map((element) => ({
+                value: element._id,
+                label: element.label,
+              })),
+            ]
+          : section.elements.map((element) => ({
               value: element._id,
               label: element.label,
-            })),
-          ]
-          : section.elements.map((element) => ({
-            value: element._id,
-            label: element.label,
-          }));
+            }));
 
       return {
         value: section._id,
