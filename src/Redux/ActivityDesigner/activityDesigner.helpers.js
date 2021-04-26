@@ -156,49 +156,37 @@ export const getElementsForMapping = (formSections, mapping) => {
     formSections,
     mapping,
   );
+
+  const elementOptions = formSections.map((section) => {
+    const sectionType = determineSectionType(section);
+    const isReccuring = (sectionType) => (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED)
+    const isDisabled = firstRepeatingSection && isReccuring(sectionType) && section._id !== firstRepeatingSection._id
+
+    return {
+      value: section._id,
+      label: section.name,
+      disabled: isDisabled,
+      children: section.elements.map((element) => ({
+        value: element._id,
+        label: element.label,
+      })),
+    };
+  }),
+
   return [
     {
       value: 'scopedObject',
       label: 'Primary object',
     },
-
-    ...formSections.map((section) => {
-      const sectionType = determineSectionType(section);
-      let isDisabled = false;
-      if (
-        firstRepeatingSection &&
-        (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
-        section._id !== firstRepeatingSection._id
-      ) {
-        isDisabled = true;
-      }
-
-      const mappedElementsObj = {
-        value: section._id,
-        label: section.name,
-        disabled: isDisabled,
-        children: section.elements.map((element) => ({
-          value: element._id,
-          label: element.label,
-        })),
-      };
-
-      return mappedElementsObj;
-    }),
-    ...formSections.map((section) => {
-      const activities = {
-        value: section?.activityTemplatesSettings._id,
-        label: 'Activity template',
-      };
-      return activities;
-    }),
-    ...formSections.map((section) => {
-      const groups = {
-        value: section?.groupManagementSettings._id,
-        label: 'Groups',
-      };
-      return groups;
-    }),
+    {
+      value: firstRepeatingSection?.activityTemplatesSettings._id,
+      label: 'Activity template',
+    },
+    {
+      value: firstRepeatingSection?.groupManagementSettings._id,
+      label: 'Groups',
+    },
+    ...elementOptions,
   ];
 };
 
@@ -230,17 +218,17 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
       const children =
         sectionType === SECTION_CONNECTED
           ? [
-              { value: 'startTime', label: 'Event start time' },
-              { value: 'endTime', label: 'Event end time' },
-              ...section.elements.map((element) => ({
-                value: element._id,
-                label: element.label,
-              })),
-            ]
-          : section.elements.map((element) => ({
+            { value: 'startTime', label: 'Event start time' },
+            { value: 'endTime', label: 'Event end time' },
+            ...section.elements.map((element) => ({
               value: element._id,
               label: element.label,
-            }));
+            })),
+          ]
+          : section.elements.map((element) => ({
+            value: element._id,
+            label: element.label,
+          }));
 
       return {
         value: section._id,
