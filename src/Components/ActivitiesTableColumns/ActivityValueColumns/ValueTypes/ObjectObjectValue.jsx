@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 import { useSelector } from 'react-redux';
+import isNil from 'lodash/isNil';
 
 // COMPONENTS
 import EllipsisRenderer from '../../../TableColumns/Components/EllipsisRenderer';
@@ -12,24 +13,23 @@ import { selectElementType } from '../../../../Redux/Forms/forms.selectors';
 // CONSTANTS
 import { elementTypes } from '../../../../Constants/elementTypes.constants';
 
-const standardizeValue = (value) => (Array.isArray(value) ? value : [value]);
+const standardizeValue = (value) =>
+  (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));
+
 const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   const elementType = useSelector(
     selectElementType(formId, sectionId, elementId),
   );
-
   const stdValue = standardizeValue(value);
   const labels = useSelector(selectMultipleExtIdLabels)(
     stdValue.map((val) => ({ field: 'objects', extId: val })),
   );
+
   if (elementType === elementTypes.ELEMENT_TYPE_DATASOURCE) {
-    const _value = Array.isArray(value) ? value : [value];
-    return _value.map((item, itemIndex) =>
+    return stdValue.map((item, itemIndex) =>
       item.split(',').map((val, valIndex) => {
         return (
-          <>
-            <DatasourceReadonly key={`${itemIndex}_${valIndex}`} value={val} />
-          </>
+          <DatasourceReadonly key={`${itemIndex}_${valIndex}`} value={val} />
         );
       }),
     );
