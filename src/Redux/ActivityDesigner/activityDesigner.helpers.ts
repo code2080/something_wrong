@@ -1,4 +1,3 @@
-import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   activityTimeModes,
@@ -45,28 +44,6 @@ export const validateTemplateAgainstMapping = (template, mapping) => {
   return true;
 };
 
-export const createNewMappingFromTemplate = (template, extId, formId) =>
-  new ActivityDesign({
-    name: template.name,
-    reservationTemplateExtId: extId,
-    formId,
-    objects: (template.objects || []).reduce(
-      (objs, el) => ({ ...objs, [el]: null }),
-      {},
-    ),
-    fields: (template.fields || []).reduce(
-      (objs, el) => ({ ...objs, [el]: null }),
-      {},
-    ),
-    propSettings: [...template.objects, ...template.fields].reduce(
-      (propSettings, prop) => ({
-        ...propSettings,
-        [prop]: template.propSettings[prop],
-      }),
-      {},
-    ),
-  });
-
 /**
  * @function validateAllKeysOnProp
  * @description validates an object has minLength keys and all keys have a value
@@ -75,7 +52,7 @@ export const createNewMappingFromTemplate = (template, extId, formId) =>
  */
 const validateAllKeysOnProp = (prop, minLength = 1) => {
   const keys = Object.keys(prop);
-  if (minLength > 0 && (!keys || !keys.length >= minLength)) return false;
+  if (minLength > 0 && (!keys || !(keys.length >= minLength))) return false;
   return !keys.some((key) => prop[key] == null);
 };
 
@@ -151,37 +128,46 @@ const findFirstRepeatingSection = (formSections, mapping) =>
 
 export const getElementsForMapping = (formSections, mapping) => {
   if (!formSections || !formSections.length || !mapping) return [];
-  // Ensure only one repeating sectionn can be used
+  // Ensure only one repeating section can be used
   const firstRepeatingSection = findFirstRepeatingSection(
     formSections,
     mapping,
   );
+
+  const elementOptions = formSections.map((section) => {
+    const sectionType = determineSectionType(section);
+    const isReccuring = (sectionType) =>
+      sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED;
+    const isDisabled =
+      firstRepeatingSection &&
+      isReccuring(sectionType) &&
+      section._id !== firstRepeatingSection._id;
+
+    return {
+      value: section._id,
+      label: section.name,
+      disabled: isDisabled,
+      children: section.elements.map((element) => ({
+        value: element._id,
+        label: element.label,
+      })),
+    };
+  });
+
   return [
     {
       value: 'scopedObject',
       label: 'Primary object',
     },
-    ...formSections.map((section) => {
-      const sectionType = determineSectionType(section);
-      let isDisabled = false;
-      if (
-        firstRepeatingSection &&
-        (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
-        section._id !== firstRepeatingSection._id
-      ) {
-        isDisabled = true;
-      }
-
-      return {
-        value: section._id,
-        label: section.name,
-        disabled: isDisabled,
-        children: section.elements.map((element) => ({
-          value: element._id,
-          label: element.label,
-        })),
-      };
-    }),
+    {
+      value: firstRepeatingSection?.activityTemplatesSettings?._id,
+      label: 'Activity template',
+    },
+    {
+      value: firstRepeatingSection?.groupManagementSettings?._id,
+      label: 'Groups',
+    },
+    ...elementOptions,
   ];
 };
 
