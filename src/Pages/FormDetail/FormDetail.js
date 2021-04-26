@@ -131,7 +131,7 @@ const FormPage = () => {
     console.log({ extIds: activityPayload });
     fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activities, dispatch, teCoreAPI]);
+  }, [activities]);
   // ****
 
   // Effect to get all TE values into redux state
