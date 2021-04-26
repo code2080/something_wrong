@@ -1,4 +1,3 @@
-import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   activityTimeModes,
@@ -44,28 +43,6 @@ export const validateTemplateAgainstMapping = (template, mapping) => {
   if (!_settingsMatch) return false;
   return true;
 };
-
-export const createNewMappingFromTemplate = (template, extId, formId) =>
-  new ActivityDesign({
-    name: template.name,
-    reservationTemplateExtId: extId,
-    formId,
-    objects: (template.objects || []).reduce(
-      (objs, el) => ({ ...objs, [el]: null }),
-      {},
-    ),
-    fields: (template.fields || []).reduce(
-      (objs, el) => ({ ...objs, [el]: null }),
-      {},
-    ),
-    propSettings: [...template.objects, ...template.fields].reduce(
-      (propSettings, prop) => ({
-        ...propSettings,
-        [prop]: template.propSettings[prop],
-      }),
-      {},
-    ),
-  });
 
 /**
  * @function validateAllKeysOnProp
