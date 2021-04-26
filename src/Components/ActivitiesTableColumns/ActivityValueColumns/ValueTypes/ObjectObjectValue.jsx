@@ -29,7 +29,10 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
     return stdValue.map((item, itemIndex) =>
       item.split(',').map((val, valIndex) => {
         return (
-          <DatasourceReadonly key={`${itemIndex}_${valIndex}`} value={val} />
+          <DatasourceReadonly
+            key={`${itemIndex}_${valIndex}`}
+            value={labels[val]}
+          />
         );
       }),
     );
