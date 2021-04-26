@@ -87,7 +87,7 @@ const mapActivityValueToTEValue = (
   const { value, type, extId } = activityValue;
   switch (type) {
     case ActivityValueType.FIELD:
-      return new TEField(extId, value as string[]);
+      return new TEField(extId, [value] as string[]);
     case ActivityValueType.OBJECT: {
       // Array means it's an array of objectextids, object means that it's an objectfilter
       return Array.isArray(value)

@@ -98,8 +98,9 @@ const connectedSectionColumns = {
     {
       title: section.datasource,
       key: section._id,
-      dataIndex: 'grooupVal',
-      render: (groupValue) => <span>{groupValue}</span>,
+      dataIndex: 'groupVal',
+      render: (groupValue) =>
+        groupValue && <span>{groupValue.join(', ')}</span>,
     },
   ],
 
