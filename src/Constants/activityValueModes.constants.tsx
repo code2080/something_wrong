@@ -1,3 +1,5 @@
+import { FormOutlined, UserOutlined } from '@ant-design/icons';
+
 export enum ActivityValueMode {
   FROM_SUBMISSION = 'FROM_SUBMISSION',
   MANUAL = 'MANUAL',
@@ -6,10 +8,10 @@ export enum ActivityValueMode {
 export const activityValueModeProps = {
   [ActivityValueMode.FROM_SUBMISSION]: {
     label: 'From submission',
-    icon: 'form',
+    icon: <FormOutlined />,
   },
   [ActivityValueMode.MANUAL]: {
     label: 'Manual',
-    icon: 'user',
+    icon: <UserOutlined />,
   },
 };
