@@ -7,6 +7,7 @@ type Props = {
   activityId: string;
 };
 
-const WeekdayValue = ({ value }: Props) => (value ? weekdayEnums[value] : '');
+const WeekdayValue = ({ value }: Props) =>
+  value ? weekdayEnums[value] || 'N/A' : '';
 
 export default WeekdayValue;
