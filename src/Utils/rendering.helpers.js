@@ -85,24 +85,30 @@ const connectedSectionColumns = {
     },
   ],
 
-  TEMPLATES: (section) => [
-    {
-      title: section.datasource,
-      key: section._id,
-      dataIndex: 'templateVal',
-      render: (templateValue) => <span>{templateValue} </span>,
-    },
-  ],
+  TEMPLATES: (section) =>
+    section.datasource
+      ? [
+          {
+            title: section.datasource,
+            key: section._id,
+            dataIndex: 'templateVal',
+            render: (templateValue) => <span>{templateValue} </span>,
+          },
+        ]
+      : [],
 
-  GROUPS: (section) => [
-    {
-      title: section.datasource,
-      key: section._id,
-      dataIndex: 'groupVal',
-      render: (groupValue) =>
-        groupValue && <span>{groupValue.join(', ')}</span>,
-    },
-  ],
+  GROUPS: (section) =>
+    section.datasource
+      ? [
+          {
+            title: section.datasource,
+            key: section._id,
+            dataIndex: 'groupVal',
+            render: (groupValue) =>
+              groupValue && <span>{groupValue.join(', ')}</span>,
+          },
+        ]
+      : [],
 
   TIMESLOT: (timeslots) => [
     {
