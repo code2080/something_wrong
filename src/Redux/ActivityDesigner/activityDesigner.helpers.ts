@@ -91,23 +91,32 @@ export const validateDesign = (formId, designState) => {
 
 const findFirstRepeatingSection = (formSections, mapping) =>
   [
-    ...(Object.keys(mapping.timing) || []).reduce((sections, timingKey) => {
-      const timing = mapping.timing[timingKey];
-      if (timing && timing[0] && timing[1]) return [...sections, timing[0]];
-      return sections;
-    }, []),
-    ...(Object.keys(mapping.objects) || []).reduce((sections, objectKey) => {
-      const object = mapping.objects[objectKey];
-      if (object && object[0] && object[1]) return [...sections, object[0]];
-      return sections;
-    }, []),
-    ...(Object.keys(mapping.fields) || []).reduce((sections, fieldKey) => {
-      const field = mapping.fields[fieldKey];
-      if (field && field[0] && field[1]) return [...sections, field[0]];
-      return sections;
-    }, []),
+    ...(Object.keys(mapping.timing) || []).reduce<any[]>(
+      (sections, timingKey) => {
+        const timing = mapping.timing[timingKey];
+        if (timing && timing[0] && timing[1]) return [...sections, timing[0]];
+        return sections;
+      },
+      [],
+    ),
+    ...(Object.keys(mapping.objects) || []).reduce<any[]>(
+      (sections, objectKey) => {
+        const object = mapping.objects[objectKey];
+        if (object && object[0] && object[1]) return [...sections, object[0]];
+        return sections;
+      },
+      [],
+    ),
+    ...(Object.keys(mapping.fields) || []).reduce<any[]>(
+      (sections, fieldKey) => {
+        const field = mapping.fields[fieldKey];
+        if (field && field[0] && field[1]) return [...sections, field[0]];
+        return sections;
+      },
+      [],
+    ),
   ]
-    .reduce((sections, sectionId) => {
+    .reduce<any[]>((sections, sectionId) => {
       const sectionIdx = formSections.findIndex((el) => el._id === sectionId);
       if (sectionIdx > -1) return [...sections, formSections[sectionIdx]];
       return sections;
