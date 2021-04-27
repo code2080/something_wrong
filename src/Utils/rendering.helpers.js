@@ -36,6 +36,15 @@ import {
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 
+export const LabelRenderer = ({ type, extId }) => {
+  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
+  useFetchLabelsFromExtIds(payload);
+  const label = useSelector((state) => state.te.extIdProps[type][extId]);
+  if (!extId || !type) return 'N/A';
+  if (label?.label) return label.label;
+  return extId;
+};
+
 const unformattedValue = (value) => (
   <div
     style={{
@@ -103,8 +112,8 @@ const connectedSectionColumns = {
       dataIndex: 'groupVal',
       render: (groupValue) =>
         groupValue &&
-        groupValue.map((grpval) => (
-          <LabelRenderer extId={grpval} key={grpval} type='objects' />
+        groupValue.map((groupVal) => (
+          <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
         )),
     },
   ],
@@ -529,13 +538,4 @@ export const transformSectionValuesToTableRows = (
     default:
       return [];
   }
-};
-
-export const LabelRenderer = ({ type, extId }) => {
-  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
-  useFetchLabelsFromExtIds(payload);
-  const label = useSelector((state) => state.te.extIdProps[type][extId]);
-  if (!extId || !type) return 'N/A';
-  if (label?.label) return label.label;
-  return extId;
 };
