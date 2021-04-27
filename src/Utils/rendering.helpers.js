@@ -94,29 +94,35 @@ const connectedSectionColumns = {
     },
   ],
 
-  TEMPLATES: (section) => [
-    {
-      title: <LabelRenderer extId={section.datasource} type='types' />,
-      key: section._id,
-      dataIndex: 'templateVal',
-      render: (templateValue) => (
-        <LabelRenderer extId={templateValue} type='objects' />
-      ),
-    },
-  ],
+  TEMPLATES: (section) =>
+    section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'templateVal',
+            render: (templateValue) => (
+              <LabelRenderer extId={templateValue} type='objects' />
+            ),
+          },
+        ]
+      : [],
 
-  GROUPS: (section) => [
-    {
-      title: <LabelRenderer extId={section.datasource} type='types' />,
-      key: section._id,
-      dataIndex: 'groupVal',
-      render: (groupValue) =>
-        groupValue &&
-        groupValue.map((groupVal) => (
-          <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
-        )),
-    },
-  ],
+  GROUPS: (section) =>
+    section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'groupVal',
+            render: (groupValue) =>
+              groupValue &&
+              groupValue.map((groupVal) => (
+                <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
+              )),
+          },
+        ]
+      : [],
 
   TIMESLOT: (timeslots) => [
     {
