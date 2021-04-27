@@ -6,7 +6,11 @@ import {
 export type TECoreAPI = {
   populateSelection(payload: PopulateSelectionPayload): void;
   getExtIdProps(payload: GetExtIdPropsPayload): any;
-  getCurrentUser({ callback }: { callback: (user: string) => void }): void;
+  getCurrentUser({
+    callback,
+  }: {
+    callback: (user: { userId: string }) => void;
+  }): void;
   getFieldIds({
     typeExtIds,
     callback,
