@@ -37,6 +37,7 @@ const MultiRowParameter = ({
             disabled={disabled}
             size='small'
             type='link'
+            danger
             icon={<DeleteOutlined />}
             onClick={() => onRemoveParameter(idx)}
           />

@@ -88,8 +88,8 @@ const ActivityTagListItem = ({
               onClick={onStartEditMode}
             />
             <Button
-              className='danger'
               size='small'
+              danger
               icon={<DeleteOutlined />}
               onClick={onDeleteActivityTag}
             />
