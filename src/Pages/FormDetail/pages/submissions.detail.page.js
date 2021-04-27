@@ -28,7 +28,6 @@ import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
 
 // TYPES
 import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
-import { selectMultipleExtIdLabels } from '../../../Redux/TE/te.selectors';
 
 const SubmissionsDetailPage = ({ formInstanceId }) => {
   const { formId } = useParams();
