@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Cascader, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const MultiRowParameter = ({
   values,
@@ -36,7 +37,7 @@ const MultiRowParameter = ({
             disabled={disabled}
             size='small'
             type='link'
-            icon='delete'
+            icon={<DeleteOutlined />}
             onClick={() => onRemoveParameter(idx)}
           />
         </div>
