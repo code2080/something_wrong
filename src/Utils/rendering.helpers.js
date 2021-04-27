@@ -87,20 +87,25 @@ const connectedSectionColumns = {
 
   TEMPLATES: (section) => [
     {
-      title: section.datasource,
+      title: <LabelRenderer extId={section.datasource} type='types' />,
       key: section._id,
       dataIndex: 'templateVal',
-      render: (templateValue) => <span>{templateValue} </span>,
+      render: (templateValue) => (
+        <LabelRenderer extId={templateValue} type='objects' />
+      ),
     },
   ],
 
   GROUPS: (section) => [
     {
-      title: section.datasource,
+      title: <LabelRenderer extId={section.datasource} type='types' />,
       key: section._id,
       dataIndex: 'groupVal',
       render: (groupValue) =>
-        groupValue && <span>{groupValue.join(', ')}</span>,
+        groupValue &&
+        groupValue.map((grpval) => (
+          <LabelRenderer extId={grpval} key={grpval} type='objects' />
+        )),
     },
   ],
 
@@ -293,6 +298,10 @@ export const transformSectionToTableColumns = (
           ...connectedSectionColumns.TIMESLOT(
             section.calendarSettings.timeslots,
           ),
+          ...connectedSectionColumns.TEMPLATES(
+            section.activityTemplatesSettings,
+          ),
+          ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
           ..._elementColumns,
         ];
       }
@@ -303,6 +312,8 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TIMEINFO,
+        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
         ..._elementColumns,
       ];
     }
@@ -525,6 +536,6 @@ export const LabelRenderer = ({ type, extId }) => {
   useFetchLabelsFromExtIds(payload);
   const label = useSelector((state) => state.te.extIdProps[type][extId]);
   if (!extId || !type) return 'N/A';
-  if (label) return label.label || 'N/A';
+  if (label?.label) return label.label;
   return extId;
 };
