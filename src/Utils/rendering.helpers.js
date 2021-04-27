@@ -86,7 +86,7 @@ const connectedSectionColumns = {
   ],
 
   TEMPLATES: (section) =>
-    section.datasource
+    section?.datasource
       ? [
           {
             title: section.datasource,
@@ -98,7 +98,7 @@ const connectedSectionColumns = {
       : [],
 
   GROUPS: (section) =>
-    section.datasource
+    section?.datasource
       ? [
           {
             title: section.datasource,
