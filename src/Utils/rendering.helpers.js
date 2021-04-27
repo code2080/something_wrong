@@ -36,6 +36,15 @@ import {
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 
+export const LabelRenderer = ({ type, extId }) => {
+  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
+  useFetchLabelsFromExtIds(payload);
+  const label = useSelector((state) => state.te.extIdProps[type][extId]);
+  if (!extId || !type) return 'N/A';
+  if (label?.label) return label.label;
+  return extId;
+};
+
 const unformattedValue = (value) => (
   <div
     style={{
@@ -89,10 +98,12 @@ const connectedSectionColumns = {
     section?.datasource
       ? [
           {
-            title: section.datasource,
+            title: <LabelRenderer extId={section.datasource} type='types' />,
             key: section._id,
             dataIndex: 'templateVal',
-            render: (templateValue) => <span>{templateValue} </span>,
+            render: (templateValue) => (
+              <LabelRenderer extId={templateValue} type='objects' />
+            ),
           },
         ]
       : [],
@@ -101,11 +112,14 @@ const connectedSectionColumns = {
     section?.datasource
       ? [
           {
-            title: section.datasource,
+            title: <LabelRenderer extId={section.datasource} type='types' />,
             key: section._id,
             dataIndex: 'groupVal',
             render: (groupValue) =>
-              groupValue && <span>{groupValue.join(', ')}</span>,
+              groupValue &&
+              groupValue.map((groupVal) => (
+                <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
+              )),
           },
         ]
       : [],
@@ -299,6 +313,10 @@ export const transformSectionToTableColumns = (
           ...connectedSectionColumns.TIMESLOT(
             section.calendarSettings.timeslots,
           ),
+          ...connectedSectionColumns.TEMPLATES(
+            section.activityTemplatesSettings,
+          ),
+          ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
           ..._elementColumns,
         ];
       }
@@ -309,6 +327,8 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TIMEINFO,
+        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
         ..._elementColumns,
       ];
     }
@@ -524,13 +544,4 @@ export const transformSectionValuesToTableRows = (
     default:
       return [];
   }
-};
-
-export const LabelRenderer = ({ type, extId }) => {
-  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
-  useFetchLabelsFromExtIds(payload);
-  const label = useSelector((state) => state.te.extIdProps[type][extId]);
-  if (!extId || !type) return 'N/A';
-  if (label) return label.label || 'N/A';
-  return extId;
 };

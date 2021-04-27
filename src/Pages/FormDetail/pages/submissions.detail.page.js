@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
@@ -82,7 +82,20 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
   );
   useFetchLabelsFromExtIds(payload);
 
-  // State var to hold active tab
+  const labelPayload = useMemo(() => {
+    return {
+      types: form.sections.reduce(
+        (val, section) => [
+          ...val,
+          section?.activityTemplatesSettings?.datasource,
+          section?.groupManagementSettings?.datasource,
+        ],
+        [],
+      ),
+    };
+  }, [form.sections]);
+  useFetchLabelsFromExtIds(labelPayload);
+
   const baseSections = form.sections.map((section) => (
     <BaseSection
       section={section}
