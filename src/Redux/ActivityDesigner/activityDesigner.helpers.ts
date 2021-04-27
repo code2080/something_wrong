@@ -204,11 +204,13 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
               ...section.elements.map((element) => ({
                 value: element._id,
                 label: element.label,
+                elementId: element.elementId,
               })),
             ]
           : section.elements.map((element) => ({
               value: element._id,
               label: element.label,
+              elementId: element.elementId,
             }));
 
       return {

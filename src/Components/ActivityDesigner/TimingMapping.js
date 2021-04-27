@@ -15,6 +15,8 @@ import {
 // STYLES
 import './Mapping.scss';
 import MultiRowParameter from './MultiRowParameter';
+import { getElementTypeFromId } from '../../Utils/elements.helpers';
+import { elementTypes } from '../../Constants/elementTypes.constants';
 
 const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const timingMode = useMemo(() => _.get(mapping, 'timing.mode', null), [
@@ -39,6 +41,29 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     const value = _.get(mapping, 'timing.dateRanges', []);
     if (!value || !value.length) return;
     onChange('dateRanges', [...value.slice(0, idx), ...value.slice(idx + 1)]);
+  };
+  const sections = getElementsForTimingMapping[timingMode](
+    formSections,
+    mapping,
+  );
+
+  const filterOnElementTypes = ({ types = [], sections }) => {
+    if (_.isEmpty(types) || _.isEmpty(sections)) return sections;
+    return sections
+      .reduce(
+        (filteredSections, section) => [
+          ...filteredSections,
+          {
+            ...section,
+            children: section.children.filter(({ elementId }) => {
+              const elementType = getElementTypeFromId(elementId);
+              return types.includes(elementType);
+            }),
+          },
+        ],
+        [],
+      )
+      .filter((s) => !_.isEmpty(s.children));
   };
 
   return (
@@ -70,10 +95,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -88,10 +110,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
@@ -110,10 +129,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -128,10 +144,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
@@ -146,10 +159,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
@@ -168,10 +178,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={sections}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
@@ -183,10 +190,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Padding</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_PADDING],
+                sections,
+              })}
               value={_.get(mapping, 'timing.padding', null)}
               onChange={(val) => onChange('padding', val)}
               placeholder='Select an element'
@@ -198,10 +205,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Weekday</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_DAY_PICKER],
+                sections,
+              })}
               value={_.get(mapping, 'timing.weekday', null)}
               onChange={(val) => onChange('weekday', val)}
               placeholder='Select an element'
@@ -213,10 +220,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Exact time</div>
             <Cascader
-              options={getElementsForTimingMapping[timingMode](
-                formSections,
-                mapping,
-              )}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_INPUT_TIME],
+                sections,
+              })}
               value={_.get(mapping, 'timing.time', null)}
               onChange={(val) => onChange('time', val)}
               placeholder='Select an element'
@@ -227,10 +234,14 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           </div>
           <MultiRowParameter
             values={_.get(mapping, 'timing.dateRanges', [])}
-            options={getElementsForTimingMapping[timingMode](
-              formSections,
-              mapping,
-            )}
+            options={filterOnElementTypes({
+              types: [
+                elementTypes.ELEMENT_TYPE_WEEK_PICKER,
+                elementTypes.ELEMENT_TYPE_INPUT_DATE_RANGE,
+                elementTypes.ELEMENT_TYPE_INPUT_DATE,
+              ],
+              sections,
+            })}
             onUpdateValue={onSequenceModeTimingParameterUpdateValue}
             onAddParameter={onSequenceModeTimingParameterAdd}
             onRemoveParameter={onSequenceModeTimingParameterDelete}
