@@ -87,8 +87,8 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
       types: form.sections.reduce(
         (val, section) => [
           ...val,
-          section.activityTemplatesSettings.datasource,
-          section.groupManagementSettings.datasource,
+          section?.activityTemplatesSettings?.datasource,
+          section?.groupManagementSettings?.datasource,
         ],
         [],
       ),
