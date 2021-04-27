@@ -95,14 +95,7 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
       ),
     };
   }, [form.sections]);
-
   useFetchLabelsFromExtIds(labelPayload);
-  useSelector(selectMultipleExtIdLabels)(
-    labelPayload.types.map((type) => ({
-      extId: type,
-      field: 'types',
-    })),
-  );
 
   const baseSections = form.sections.map((section) => (
     <BaseSection
