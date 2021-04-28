@@ -106,13 +106,13 @@ const mapActivityValueToTEValue = (
 
 export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
-): { fields: TEField[]; objects: [TEObject | TEObjectFilter] } =>
+): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } =>
   _(activityValues)
     .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
-    .reduce<any>(
+    .reduce<{ fields: TEField[]; objects: (TEObject | TEObjectFilter)[] }>(
       (
-        payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
+        payload: { fields: TEField[]; objects: (TEObjectFilter | TEObject)[] },
         value: TEField | TEObjectFilter | TEObject[] | null,
       ) => {
         if (value instanceof TEField) {
