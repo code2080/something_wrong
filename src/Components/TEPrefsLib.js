@@ -53,7 +53,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
       prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
     window.tePrefsHeight = height;
-  }, []);
+  });
 
   return (
     <Provider store={store}>
