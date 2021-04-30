@@ -44,9 +44,7 @@ const getActivityDataSource = (activities = {}, visibleActivities) => {
 };
 
 const calculateAvailableTableHeight = () => {
-  const el = document.getElementById('te-prefs-lib');
-  const height = el.clientHeight;
-  return height - 110;
+  return window.tePrefsHeight - 110;
 };
 
 const ActivitiesPage = () => {
