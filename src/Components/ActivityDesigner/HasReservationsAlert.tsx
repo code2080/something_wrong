@@ -36,7 +36,7 @@ const HasReservationsAlert = ({ formId }) => {
     dispatch(deleteActivities(formId));
   };
 
-  const handleDeleteReservations = (responses = []) => {
+  const handleDeleteReservations = (responses: any[] = []) => {
     // Check result parameter to see if everything went well or not
     responses.forEach((res) => {
       if (!res?.result?.details) {
@@ -84,7 +84,9 @@ const HasReservationsAlert = ({ formId }) => {
             okText='Yes'
             cancelText='No'
             visible={visible}
-            getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             onConfirm={() => handleConfirm(true)}
             onCancel={() => handleConfirm(false)}
           >
