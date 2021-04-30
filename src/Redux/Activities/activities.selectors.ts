@@ -78,10 +78,10 @@ export const selectTECorePayloadForActivity = createSelector(
       reservationMode: form.reservationMode,
       formType: form.formType,
       startTime: activity.timing.find(
-        (act: ActivityValue) => act.extId === 'startTime',
+        (act: ActivityValue) => act?.extId === 'startTime',
       )?.value as string,
       endTime: activity.timing.find(
-        (act: ActivityValue) => act.extId === 'endTime',
+        (act: ActivityValue) => act?.extId === 'endTime',
       )?.value as string,
     } as PopulateSelectionPayload;
   },

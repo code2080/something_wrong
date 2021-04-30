@@ -8,7 +8,7 @@ export const getNormalizedActivityValue = (
 ) => {
   if (activityValue) return activityValue;
   const payload = type === 'VALUE' ? activity.values : activity.timing;
-  return payload.find((el) => el.extId === prop);
+  return payload.find((el) => el?.extId === prop);
 };
 
 export const resetView = () => ({

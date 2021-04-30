@@ -145,21 +145,35 @@ export const getElementsForMapping = (formSections, mapping) => {
 
   const elementOptions = formSections.map((section) => {
     const sectionType = determineSectionType(section);
-    const isReccuring = (sectionType) =>
+    const isReccuring =
       sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED;
     const isDisabled =
       firstRepeatingSection &&
-      isReccuring(sectionType) &&
+      isReccuring &&
       section._id !== firstRepeatingSection._id;
 
     return {
       value: section._id,
       label: section.name,
       disabled: isDisabled,
-      children: section.elements.map((element) => ({
-        value: element._id,
-        label: element.label,
-      })),
+      children: [
+        ...(isReccuring
+          ? [
+              {
+                value: 'templates',
+                label: 'Activity template',
+              },
+              {
+                value: 'groups',
+                label: 'Groups',
+              },
+            ]
+          : []),
+        ...section.elements.map((element) => ({
+          value: element._id,
+          label: element.label,
+        })),
+      ],
     };
   });
 
@@ -167,14 +181,6 @@ export const getElementsForMapping = (formSections, mapping) => {
     {
       value: 'scopedObject',
       label: 'Primary object',
-    },
-    {
-      value: firstRepeatingSection?.activityTemplatesSettings?._id,
-      label: 'Activity template',
-    },
-    {
-      value: firstRepeatingSection?.groupManagementSettings?._id,
-      label: 'Groups',
     },
     ...elementOptions,
   ];
