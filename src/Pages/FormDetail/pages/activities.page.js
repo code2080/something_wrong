@@ -52,7 +52,6 @@ const calculateAvailableTableHeight = () => {
 const ActivitiesPage = () => {
   const { formId } = useParams();
   const dispatch = useDispatch();
-  const mixpanel = useMixpanel();
 
   /**
    * SELECTORS
@@ -138,10 +137,6 @@ const ActivitiesPage = () => {
   );
 
   const onScheduleActivities = async (activities) => {
-    mixpanel?.track('scheduleActivities', {
-      formId,
-      nrOfActivities: Object.values(activities || {}).flat().length,
-    });
     await handleScheduleActivities(activities);
     onDeselectAll();
   };

@@ -34,6 +34,7 @@ import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -108,6 +109,7 @@ const ActivityActionsDropdown = ({
   setFormInstanceSchedulingProgress,
   abortJob,
 }) => {
+  const mixpanel = useMixpanel();
   const selectFormInstance = useMemo(() => makeSelectFormInstance, []);
   const { formInstanceId, formId } = activity;
   const formInstance = useSelector((state) =>
@@ -196,11 +198,19 @@ const ActivityActionsDropdown = ({
     setFormInstanceSchedulingProgress,
   ]);
 
+  const trackScheduleActivities = (activities = []) => {
+    mixpanel?.track('scheduleActivitiesAction', {
+      formId: activities?.[0]?.formId,
+      nrOfActivities: activities.length,
+    });
+  };
+
   const handleMenuClick = useCallback(
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
+          trackScheduleActivities(activities);
           scheduleActivities(
             activities.filter(
               (a) => a.activityStatus !== activityStatuses.SCHEDULED,
@@ -213,6 +223,7 @@ const ActivityActionsDropdown = ({
           updateSchedulingProgress();
           break;
         case 'SCHEDULE':
+          trackScheduleActivities([activity]);
           scheduleActivities(
             [activity],
             formType,
@@ -249,6 +260,7 @@ const ActivityActionsDropdown = ({
           break;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       abortJob,
       activities,
