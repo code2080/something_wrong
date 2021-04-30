@@ -145,11 +145,11 @@ export const getElementsForMapping = (formSections, mapping) => {
 
   const elementOptions = formSections.map((section) => {
     const sectionType = determineSectionType(section);
-    const isReccuring = (sectionType) =>
+    const isReccuring =
       sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED;
     const isDisabled =
       firstRepeatingSection &&
-      isReccuring(sectionType) &&
+      isReccuring &&
       section._id !== firstRepeatingSection._id;
 
     return {
@@ -157,7 +157,7 @@ export const getElementsForMapping = (formSections, mapping) => {
       label: section.name,
       disabled: isDisabled,
       children: [
-        ...(isReccuring(sectionType)
+        ...(isReccuring
           ? [
               {
                 value: 'templates',
