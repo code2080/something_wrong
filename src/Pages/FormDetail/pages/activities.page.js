@@ -25,6 +25,7 @@ import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
+import { useMixpanel } from '../../../Hooks/TECoreApiHooks';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -51,6 +52,7 @@ const calculateAvailableTableHeight = () => {
 const ActivitiesPage = () => {
   const { formId } = useParams();
   const dispatch = useDispatch();
+  const mixpanel = useMixpanel();
 
   /**
    * SELECTORS
@@ -136,6 +138,10 @@ const ActivitiesPage = () => {
   );
 
   const onScheduleActivities = async (activities) => {
+    mixpanel?.track('scheduleActivities', {
+      formId,
+      nrOfActivities: Object.values(activities || {}).flat().length,
+    });
     await handleScheduleActivities(activities);
     onDeselectAll();
   };
