@@ -70,7 +70,7 @@ const ActivitiesToolbar = ({
         onClick={() => onScheduleActivities(activities)}
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
-        Schedule seletected activities
+        Schedule selected activities
       </Button>
       <Button
         size='small'
