@@ -189,6 +189,19 @@ const extractPayloadFromObjectRequests = (requests) =>
     { objects: [] },
   );
 
+const extractPayloadFromTemplatesAndGroups = (sections: Array<any>) => {
+  return {
+    types: sections.reduce(
+      (val: any, section: any) => [
+        ...val,
+        section?.activityTemplatesSettings?.datasource,
+        section?.groupManagementSettings?.datasource,
+      ],
+      [],
+    ),
+  };
+};
+
 const mergePayloads = (payloads) =>
   payloads.reduce((combinedPayload, payload) => {
     const payloadWithCorrectFields = { ...initialState, ...payload };
@@ -293,11 +306,16 @@ export const getExtIdPropsPayload = ({
   const objectRequestsPayload = extractPayloadFromObjectRequests(
     objectRequests,
   );
+  const templateAndGroupPayload = extractPayloadFromTemplatesAndGroups(
+    sections,
+  );
+
   return mergePayloads([
     submissionPayload,
     activitiesPayload,
     objectScopePayload,
     objectRequestsPayload,
+    templateAndGroupPayload,
   ]);
 };
 export const getLabelsForDatasource = (payload, state) =>
