@@ -2,7 +2,6 @@
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 
-
 /**
  * @function determineContentOfValue
  * @description asserts which type of content the activityValue.value contains
