@@ -15,8 +15,9 @@ export default {
   input: 'src/index.js',
   output: [
     {
+      name: 'ActivityManager',
       file: pkg.main,
-      format: 'cjs',
+      format: 'umd',
       sourcemap: false,
       exports: 'auto',
     },
