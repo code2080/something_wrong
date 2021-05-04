@@ -190,11 +190,10 @@ const extractPayloadFromObjectRequests = (requests) =>
   );
 
 const extractPayloadFromTemplatesAndGroups = (
-  sections: Array<any>,
-  submissionValues: Array<any>,
+  sections: any[],
+  submissionValues: any[],
 ) => {
   if (!sections || !submissionValues) return;
-
   const row = sections.map((section) => {
     return submissionValues[section._id];
   })[0];
@@ -202,7 +201,7 @@ const extractPayloadFromTemplatesAndGroups = (
   const rows = Object.keys(row);
   return {
     types: sections.reduce(
-      (val: Array<any>, section: any) => [
+      (val: any[], section: any) => [
         ...val,
         section?.activityTemplatesSettings?.datasource,
         section?.groupManagementSettings?.datasource,
@@ -210,12 +209,18 @@ const extractPayloadFromTemplatesAndGroups = (
       [],
     ),
     objects: sections.reduce(
-      (val: Array<any>, section: any) => [
+      (val: any[], section: any) => [
         ...val,
         rows
-          .map((row) => submissionValues[section._id][row]?.groups)
+          .map((row) =>
+            submissionValues[section._id][row]?.groups?.map(
+              (groupVal) => groupVal,
+            ),
+          )
           .filter(Boolean),
-        rows.map((row) => submissionValues[section._id][row]?.template),
+        rows
+          .map((row) => submissionValues[section._id][row]?.template)
+          .filter(Boolean),
       ],
       [],
     ),
