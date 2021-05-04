@@ -8,6 +8,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import url from '@rollup/plugin-url';
 import svgr from '@svgr/rollup';
 import PrefixWrap from 'postcss-prefixwrap';
+import { terser } from 'rollup-plugin-terser';
 
 import pkg from './package.json';
 
@@ -52,5 +53,6 @@ export default {
       include: 'node_modules/**',
     }),
     resolve(),
+    process.env.BUILD !== 'development' && terser(),
   ],
 };
