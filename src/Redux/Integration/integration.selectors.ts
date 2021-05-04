@@ -189,13 +189,33 @@ const extractPayloadFromObjectRequests = (requests) =>
     { objects: [] },
   );
 
-const extractPayloadFromTemplatesAndGroups = (sections: Array<any>) => {
+const extractPayloadFromTemplatesAndGroups = (
+  sections: any,
+  submissionValues: Array<any>,
+) => {
+  if (!sections || !submissionValues) return;
+
+  const row = sections.map((section) => {
+    return submissionValues[section._id];
+  })[0];
+  if (!row) return;
+  const rows = Object.keys(row);
   return {
     types: sections.reduce(
       (val: any, section: any) => [
         ...val,
         section?.activityTemplatesSettings?.datasource,
         section?.groupManagementSettings?.datasource,
+      ],
+      [],
+    ),
+    objects: sections.reduce(
+      (val, section) => [
+        ...val,
+        rows
+          .map((row) => submissionValues[section._id][row]?.groups)
+          .filter(Boolean),
+        rows.map((row) => submissionValues[section._id][row]?.template),
       ],
       [],
     ),
@@ -308,8 +328,8 @@ export const getExtIdPropsPayload = ({
   );
   const templateAndGroupPayload = extractPayloadFromTemplatesAndGroups(
     sections,
+    submissionValues,
   );
-
   return mergePayloads([
     submissionPayload,
     activitiesPayload,
