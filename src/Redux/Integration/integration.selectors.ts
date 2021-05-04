@@ -190,7 +190,7 @@ const extractPayloadFromObjectRequests = (requests) =>
   );
 
 const extractPayloadFromTemplatesAndGroups = (
-  sections: any,
+  sections: Array<any>,
   submissionValues: Array<any>,
 ) => {
   if (!sections || !submissionValues) return;
@@ -202,7 +202,7 @@ const extractPayloadFromTemplatesAndGroups = (
   const rows = Object.keys(row);
   return {
     types: sections.reduce(
-      (val: any, section: any) => [
+      (val: Array<any>, section: any) => [
         ...val,
         section?.activityTemplatesSettings?.datasource,
         section?.groupManagementSettings?.datasource,
@@ -210,7 +210,7 @@ const extractPayloadFromTemplatesAndGroups = (
       [],
     ),
     objects: sections.reduce(
-      (val, section) => [
+      (val: Array<any>, section: any) => [
         ...val,
         rows
           .map((row) => submissionValues[section._id][row]?.groups)
