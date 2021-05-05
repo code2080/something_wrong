@@ -19,7 +19,9 @@ const ParameterCascader = ({
   const options = Object.keys(activityDesignObj).map((objField) => ({
     value: objField,
     label: objField,
-    children: Object.keys(paramFields[objField]).map((field) => ({
+    children: Object.keys(
+      paramFields[objField] ?? { [objField]: objField },
+    ).map((field) => ({
       value: field,
       label: field,
     })),
