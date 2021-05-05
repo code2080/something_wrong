@@ -25,7 +25,6 @@ import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
-import { useMixpanel } from '../../../Hooks/TECoreApiHooks';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
