@@ -191,39 +191,34 @@ const extractPayloadFromObjectRequests = (requests) =>
 
 const extractPayloadFromTemplatesAndGroups = (
   sections: any[],
-  submissionValues: any[],
+  submissionValues: { [sectionId: string]: any }[],
 ) => {
   if (!sections || !submissionValues) return;
-  const row = sections.map((section) => {
-    return submissionValues[section._id];
-  })[0];
-  if (!row) return;
-  const rows = Object.keys(row);
+  const arraySubmissionValues = Array.isArray(submissionValues)
+    ? submissionValues
+    : [submissionValues];
+  const objects = sections
+    .filter((section) => determineSectionType(section) !== SECTION_VERTICAL)
+    .map((s) => s._id)
+    .flatMap((sectionId) =>
+      arraySubmissionValues.map((values) => values?.[sectionId]),
+    )
+    .map((rowsObj) => Object.values(rowsObj))
+    .flatMap((rows) =>
+      rows.map((row: any) => [row.template, ...(row.groups ?? [])]),
+    )
+    .flat()
+    .filter(Boolean);
   return {
-    types: sections.reduce(
-      (val: any[], section: any) => [
+    types: sections.reduce<string[]>(
+      (val: string[], section: any) => [
         ...val,
         section?.activityTemplatesSettings?.datasource,
         section?.groupManagementSettings?.datasource,
       ],
       [],
     ),
-    objects: sections.reduce(
-      (val: any[], section: any) => [
-        ...val,
-        rows
-          .map((row) =>
-            submissionValues[section._id][row]?.groups?.map(
-              (groupVal) => groupVal,
-            ),
-          )
-          .filter(Boolean),
-        rows
-          .map((row) => submissionValues[section._id][row]?.template)
-          .filter(Boolean),
-      ],
-      [],
-    ),
+    objects,
   };
 };
 
