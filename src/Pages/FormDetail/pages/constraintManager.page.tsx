@@ -1,5 +1,4 @@
-/* eslint-disable no-extra-boolean-cast */
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import { Button, Collapse, Table } from 'antd';
@@ -78,9 +77,7 @@ const ConstraintManagerPage = () => {
     const typeExtIds = Object.keys(activityDesign.objects);
     tecoreAPI.getFieldIds({
       typeExtIds,
-      callback: (result) => {
-        return setFields(result);
-      },
+      callback: (result) => setFields(result),
     });
   }, [activityDesign?.objects, tecoreAPI]);
 
@@ -110,32 +107,39 @@ const ConstraintManagerPage = () => {
     });
   };
 
-  const handleUpdConstrConf = (
-    constraintId: string,
-    prop: string,
-    value: any,
-  ): void => {
-    if (!constrConf) return;
-    const { constraints } = constrConf;
+  const handleUpdConstrConf = useCallback(
+    (constraintId: string, prop: string, value: any): void => {
+      if (!constrConf) return;
+      const { constraints } = constrConf;
 
-    setConstrConf({
-      ...constrConf,
-      constraints: constraints.map((constraintInstance) =>
-        constraintInstance.constraintId === constraintId
-          ? {
-              ...constraintInstance,
-              [prop]: value,
-            }
-          : constraintInstance,
+      setConstrConf({
+        ...constrConf,
+        constraints: constraints.map((constraintInstance) =>
+          constraintInstance.constraintId === constraintId
+            ? { ...constraintInstance, [prop]: value }
+            : constraintInstance,
+        ),
+      });
+    },
+    [constrConf],
+  );
+
+  const constraintManagercolumns = useMemo(
+    () =>
+      constraintManagerTableColumns(
+        handleUpdConstrConf,
+        allConstraints,
+        fields,
+        activityDesign.objects,
       ),
-    });
-  };
+    [handleUpdConstrConf, allConstraints, fields, activityDesign.objects],
+  );
 
   const handleAddCustomConstraint = (e) => {
     e.stopPropagation();
   };
 
-  const handleCreateConstrConf = () => {
+  const handleCreateConstrConf = useCallback(() => {
     const newConstrConf = ConstraintConfiguration.create({
       formId,
       name: 'New constraint configuration',
@@ -153,7 +157,7 @@ const ConstraintManagerPage = () => {
     dispatch(createConstraintConfigurations(newConstrConf));
 
     if (constrConf) setConstrConf(constrConf[0]);
-  };
+  }, [allConstraints, constrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
     if (!constrConf) return;
@@ -175,11 +179,10 @@ const ConstraintManagerPage = () => {
     [constrConf, allConstraints],
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (_.isEmpty(constrConfs) && !constrConf) handleCreateConstrConf();
     if (constrConf) setConstrConf(constrConf);
-  });
+  }, [constrConfs, constrConf, handleCreateConstrConf]);
 
   return (
     <div className='constraint-manager--wrapper'>
@@ -197,12 +200,7 @@ const ConstraintManagerPage = () => {
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
-              columns={constraintManagerTableColumns(
-                handleUpdConstrConf,
-                allConstraints,
-                fields,
-                activityDesign.objects,
-              )}
+              columns={constraintManagercolumns}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
@@ -219,12 +217,7 @@ const ConstraintManagerPage = () => {
               }
             >
               <Table
-                columns={constraintManagerTableColumns(
-                  handleUpdConstrConf,
-                  allConstraints,
-                  fields,
-                  activityDesign.objects,
-                )}
+                columns={constraintManagercolumns}
                 dataSource={customConstraints}
                 rowKey='constraintId'
                 pagination={false}

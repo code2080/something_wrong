@@ -10,7 +10,7 @@ export default {
 
 export const TimeEdit = (args) => {
   const [value, setValue] = useState(moment());
-  return <DateTimeEdit value={value} setValue={setValue} {...args} />;
+  return <DateTimeEdit {...args} value={value} setValue={setValue} />;
 };
 
 TimeEdit.args = { onFinish: () => console.log('finished') };

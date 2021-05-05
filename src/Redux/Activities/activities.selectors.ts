@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
 import { TActivity } from '../../Types/Activity.type';
 import { PopulateSelectionPayload } from '../../Types/TECorePayloads.type';
 import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
@@ -7,7 +6,7 @@ import { ActivityValue } from '../../Types/ActivityValue.type';
 
 // TYPES
 type TActivityMap = {
-  [formId: string]: TActivity[];
+  [formId: string]: { [formInstanceId: string]: TActivity[] };
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
@@ -17,8 +16,7 @@ export const makeSelectActivitiesForForm = () =>
   createSelector(
     activityStateSelector,
     (_: any, formId: string) => formId,
-    (activities: TActivityMap, formId: string): TActivity[] =>
-      activities[formId] || [],
+    (activities: TActivityMap, formId: string) => activities[formId] || {},
   );
 
 export const selectActivitiesForFormAndIds = createSelector(
@@ -46,7 +44,7 @@ export const selectActivitiesForFormInstanceId = createSelector(
   (activities: TActivityMap) => (
     formId: string,
     formInstanceId: string,
-  ): TActivity[] => _.get(activities, `${formId}.${formInstanceId}`, []),
+  ): TActivity[] => activities?.[formId]?.[formInstanceId] ?? [],
 );
 
 export const selectActivity = createSelector(
@@ -56,11 +54,8 @@ export const selectActivity = createSelector(
     formInstanceId: string,
     activityId: string,
   ) => {
-    const activitiesForFormInstance: TActivity[] = _.get(
-      activities,
-      `${formId}.${formInstanceId}`,
-      [],
-    );
+    const activitiesForFormInstance: TActivity[] =
+      activities?.[formId]?.[formInstanceId] ?? [];
     return activitiesForFormInstance.find((a) => a._id === activityId);
   },
 );
@@ -83,10 +78,10 @@ export const selectTECorePayloadForActivity = createSelector(
       reservationMode: form.reservationMode,
       formType: form.formType,
       startTime: activity.timing.find(
-        (act: ActivityValue) => act.extId === 'startTime',
+        (act: ActivityValue) => act?.extId === 'startTime',
       )?.value as string,
       endTime: activity.timing.find(
-        (act: ActivityValue) => act.extId === 'endTime',
+        (act: ActivityValue) => act?.extId === 'endTime',
       )?.value as string,
     } as PopulateSelectionPayload;
   },

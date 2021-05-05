@@ -36,8 +36,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
           payload: { userId: user.userId },
         }),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [teCoreAPI]);
 
   useEffect(() => {
     window.tePrefsLibStore.dispatch({
@@ -53,7 +52,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
       prefsRef.current && prefsRef.current.getBoundingClientRect();
     window.tePrefsOffset = [x, y];
     window.tePrefsHeight = height;
-  }, []);
+  });
 
   return (
     <Provider store={store}>

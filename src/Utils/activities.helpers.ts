@@ -87,7 +87,7 @@ const mapActivityValueToTEValue = (
   const { value, type, extId } = activityValue;
   switch (type) {
     case ActivityValueType.FIELD:
-      return new TEField(extId, value as string[]);
+      return new TEField(extId, [value] as string[]);
     case ActivityValueType.OBJECT: {
       // Array means it's an array of objectextids, object means that it's an objectfilter
       return Array.isArray(value)
@@ -106,13 +106,13 @@ const mapActivityValueToTEValue = (
 
 export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
-): { fields: TEField[]; objects: [TEObject | TEObjectFilter] } =>
+): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } =>
   _(activityValues)
     .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
-    .reduce<any>(
+    .reduce<{ fields: TEField[]; objects: (TEObject | TEObjectFilter)[] }>(
       (
-        payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
+        payload: { fields: TEField[]; objects: (TEObjectFilter | TEObject)[] },
         value: TEField | TEObjectFilter | TEObject[] | null,
       ) => {
         if (value instanceof TEField) {
@@ -128,7 +128,10 @@ export const extractValuesFromActivityValues = (
         } else if (Array.isArray(value)) {
           return {
             ...payload,
-            objects: [...payload.objects, ...value],
+            objects: [
+              ...payload.objects,
+              ...value.filter((obj) => obj.id != null),
+            ],
           };
         } else {
           return payload;

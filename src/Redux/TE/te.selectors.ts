@@ -7,7 +7,7 @@ export const selectExtIds = createSelector(selectExtIdProps, (extIdProps) =>
   _.flatMapDeep<string>(extIdProps).reduce(
     (extIds, extIdTypes: any) => [
       ...extIds,
-      ...(Object.values(extIdTypes) as string[]),
+      ...(Object.keys(extIdTypes) as string[]),
     ],
     <string[]>[],
   ),

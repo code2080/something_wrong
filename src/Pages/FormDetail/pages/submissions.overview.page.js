@@ -190,7 +190,6 @@ const SubmissionsOverviewPage = () => {
         rowKey='_id'
         onRow={(formInstance) => ({
           onClick: (e) => {
-            console.log('test');
             const list = traversedClassList(e.target);
             const hasFormInstance =
               formInstance && formInstance.formId && formInstance._id;

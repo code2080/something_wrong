@@ -14,6 +14,13 @@ export const selectObjectRequestsList = () =>
     return objectRequest.list;
   });
 
+export const selectObjectRequestById = (objectRequestId: string) =>
+  createSelector(selectObjectRequestsState, (objectRequest):
+    | ObjectRequest
+    | undefined => {
+    return objectRequest.list.find(({ _id }) => _id === objectRequestId);
+  });
+
 export const selectFormObjectRequest = (formId: string) =>
   createSelector(
     selectObjectRequestsList(),

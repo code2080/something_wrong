@@ -66,7 +66,6 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   // Effect to get all TE values into redux state
   const payload = useMemo(
     () =>
@@ -82,7 +81,6 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
   );
   useFetchLabelsFromExtIds(payload);
 
-  // State var to hold active tab
   const baseSections = form.sections.map((section) => (
     <BaseSection
       section={section}

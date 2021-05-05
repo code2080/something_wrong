@@ -1,11 +1,10 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { capitalize } from 'lodash';
 
 // COMPONENTS
 import { Button } from 'antd';
-import { ColumnType } from 'antd/lib/table/interface.d';
+import type { ColumnType } from 'antd/lib/table/interface';
 import { MoreOutlined } from '@ant-design/icons';
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPane';
@@ -35,8 +34,7 @@ import { sortAlpha } from '../../../Components/TableColumns/Helpers/_sorters';
 import '../../../Components/TableColumns/Components/ExpandedPane.scss';
 
 const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
-  // @ts-ignore
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const sectionIds: string[] = useSelector(
     getSectionsForObjectRequest(request),
   );
@@ -166,13 +164,13 @@ const fieldColumns = (request: ObjectRequest) =>
   }));
 
 const ObjectRequestsPage = () => {
-  // @ts-ignore
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const requests = useSelector(selectFormObjectRequest(formId));
   return (
     <DynamicTable
       columns={objReqColumns}
       dataSource={requests}
+      datasourceId={`OBJREQS_${formId}`}
       rowKey='_id'
       pagination={false}
       expandedRowRender={(request: ObjectRequest) => (
