@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import { Switch, InputNumber /* , Select */ } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
 import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
@@ -23,15 +24,18 @@ const renderConstraintParameters = (
     allConstraints,
   );
 
-  return operators?.length ? (
+  const parameters = getPropFromConstraint(
+    constraintId,
+    'parameters',
+    allConstraints,
+  );
+  return !isEmpty(parameters) ? (
     <ParameterCascader
       paramFields={paramFields}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
     />
-  ) : (
-    <div></div>
-  );
+  ) : null;
 };
 const constraintManagerTableColumns = (
   onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
