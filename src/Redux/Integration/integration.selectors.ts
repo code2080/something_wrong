@@ -197,18 +197,29 @@ const extractPayloadFromTemplatesAndGroups = (
   const arraySubmissionValues = Array.isArray(submissionValues)
     ? submissionValues
     : [submissionValues];
-  const objects = sections
+
+  const valuesForSections = sections
     .filter((section) => determineSectionType(section) !== SECTION_VERTICAL)
     .map((s) => s._id)
     .flatMap((sectionId) =>
       arraySubmissionValues.map((values) => values?.[sectionId]),
-    )
+    ) as {
+    [eventIdOrRowIdx: string]: {
+      id: string;
+      values: any[];
+      template?: string;
+      groups?: string[];
+    };
+  }[];
+
+  const objects = valuesForSections
     .map((rowsObj) => Object.values(rowsObj))
     .flatMap((rows) =>
       rows.map((row: any) => [row.template, ...(row.groups ?? [])]),
     )
     .flat()
     .filter(Boolean);
+
   return {
     types: sections.reduce<string[]>(
       (val: string[], section: any) => [
