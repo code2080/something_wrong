@@ -354,4 +354,14 @@ describe('getExtIdPropsPayload', () => {
 
     expect(payload).toEqual(expected);
   });
+
+  test('should handle undefined', () => {
+    const expected = { objects: [], types: [], fields: [] };
+    const payload = getExtIdPropsPayload({
+      sections: undefined,
+      submissionValues: undefined,
+    });
+
+    expect(payload).toEqual(expected);
+  });
 });

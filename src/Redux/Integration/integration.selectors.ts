@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
 import { Field, selectExtIdLabel } from '../TE/te.selectors';
 import {
@@ -11,7 +12,8 @@ import {
   SECTION_TABLE,
   SECTION_CONNECTED,
 } from '../../Constants/sectionTypes.constants';
-import { initialState } from '../TE/te.helpers';
+import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
+import { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 
 const selectIntegration = (state) => state.integration;
 const selectReservationModes = (state) => state.integration.reservationModes;
@@ -129,7 +131,7 @@ const extractPayloadFromElements = (elements) =>
           ...elementsPayload,
           [fieldName]: [...elementsPayload[fieldName], element.extId],
         };
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 
 const getExtIdPairsForActivity = (values) => {
   // Each value contains the type of the values within, and the values (extIds) themselves
@@ -173,7 +175,7 @@ const extractPayloadFromActivities = (activities) => {
           ],
         }
       : newPayloadWithExtId;
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 };
 
 const extractPayloadFromObjectRequests = (requests) =>
@@ -192,8 +194,8 @@ const extractPayloadFromObjectRequests = (requests) =>
 const extractPayloadFromTemplatesAndGroups = (
   sections: any[],
   submissionValues: { [sectionId: string]: any }[],
-) => {
-  if (!sections || !submissionValues) return;
+): Partial<GetExtIdPropsPayload> => {
+  if (!sections || !submissionValues) return {};
   const arraySubmissionValues = Array.isArray(submissionValues)
     ? submissionValues
     : [submissionValues];
@@ -235,7 +237,7 @@ const extractPayloadFromTemplatesAndGroups = (
 
 const mergePayloads = (payloads) =>
   payloads.reduce((combinedPayload, payload) => {
-    const payloadWithCorrectFields = { ...initialState, ...payload };
+    const payloadWithCorrectFields = { ...emptyExtIdPropsPayload, ...payload };
     return {
       ...combinedPayload,
       fields: _.uniq([
@@ -251,7 +253,7 @@ const mergePayloads = (payloads) =>
         ...payloadWithCorrectFields.types,
       ]),
     };
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 
 const getValueFromElement = (el) => {
   if (Array.isArray(el.value)) return el.value;
@@ -330,6 +332,8 @@ export const getExtIdPropsPayload = ({
   objectRequests = [],
   objectScope = null,
 }) => {
+  if (isEmpty(sections) || isEmpty(submissionValues))
+    return emptyExtIdPropsPayload;
   const elements = getAllElementsFromSections(sections, submissionValues);
   const submissionPayload = extractPayloadFromElements(elements);
   const activitiesPayload = extractPayloadFromActivities(activities);
