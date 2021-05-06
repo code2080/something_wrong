@@ -220,6 +220,7 @@ const ConstraintManagerPage = () => {
         onSaveConstraintConfiguration={handleSaveConstrConf}
         onUpdConstrConfName={handleUpdConstrConfName}
         onDeleteConstraintConfiguration={handleDeleteConstrconf}
+        isSaved={!isUnsaved}
       />
       {localConstrConf && (
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>

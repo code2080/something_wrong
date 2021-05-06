@@ -1,4 +1,3 @@
-import React from 'react';
 import { Select, Button, Typography, Popconfirm } from 'antd';
 
 // STYLES
@@ -16,6 +15,7 @@ type Props = {
   onCreateNew: () => void;
   onDeleteConstraintConfiguration: () => void;
   onSaveConstraintConfiguration: () => void;
+  isSaved: boolean;
 };
 
 const { Paragraph } = Typography;
@@ -29,6 +29,7 @@ const ConstraintManagerTopBar = ({
   selConstrName,
   onDeleteConstraintConfiguration,
   onSaveConstraintConfiguration,
+  isSaved,
 }: Props) => {
   return (
     <div className='constraint-manager-top-bar--wrapper'>
@@ -78,7 +79,11 @@ const ConstraintManagerTopBar = ({
         >
           <Button size='small'>Delete</Button>
         </Popconfirm>
-        <Button size='small' onClick={onSaveConstraintConfiguration}>
+        <Button
+          size='small'
+          disabled={isSaved}
+          onClick={onSaveConstraintConfiguration}
+        >
           Save
         </Button>
       </div>
