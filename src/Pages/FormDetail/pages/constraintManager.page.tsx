@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
+import last from 'lodash/last';
 import { Button, Collapse, Table, Alert } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -88,7 +89,7 @@ const ConstraintManagerPage = () => {
 
   useEffect(
     () => {
-      setConstrConf(constrConfs.slice(-1)[0]);
+      setConstrConf(last(constrConfs) || null);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [constrConfs.length],
