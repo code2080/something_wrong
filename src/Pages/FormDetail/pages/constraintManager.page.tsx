@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
 import last from 'lodash/last';
-import { Button, Collapse, Table, Alert } from 'antd';
+import { Button, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -200,9 +200,6 @@ const ConstraintManagerPage = () => {
     [localConstrConf, allConstraints],
   );
 
-  const checkIfSaved = () => {
-    if (isUnsaved) return <Alert message='You have unsaved changes' banner />;
-  };
   useEffect(() => {
     if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
     if (localConstrConf) setConstrConf(localConstrConf);
@@ -210,7 +207,6 @@ const ConstraintManagerPage = () => {
 
   return (
     <div className='constraint-manager--wrapper'>
-      {checkIfSaved()}
       <ConstraintManagerTopBar
         constraintConfigurations={constrConfs}
         selectedCID={localConstrConf ? localConstrConf._id : null}

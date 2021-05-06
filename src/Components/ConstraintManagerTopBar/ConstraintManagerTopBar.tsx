@@ -32,7 +32,10 @@ const ConstraintManagerTopBar = ({
   isSaved,
 }: Props) => {
   return (
-    <div className='constraint-manager-top-bar--wrapper'>
+    <div
+      className='constraint-manager-top-bar--wrapper'
+      style={isSaved ? {} : { backgroundColor: 'yellow' }}
+    >
       <div className='constraint-manager-top-bar--selections'>
         <span>Select constraint configuration: </span>
         <Select
@@ -54,6 +57,7 @@ const ConstraintManagerTopBar = ({
         <Button size='small' type='link' onClick={onCreateNew}>
           Create new...
         </Button>
+        {!isSaved && <span>You have unsaved changed</span>}
       </div>
       <div className='constraint-manager-top-bar--buttons'>
         {
