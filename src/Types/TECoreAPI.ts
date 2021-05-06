@@ -3,6 +3,10 @@ import {
   PopulateSelectionPayload,
 } from './TECorePayloads.type';
 
+export type getFieldIdsReturn = {
+  [typeExtId: string]: { [fieldExtId: string]: string };
+};
+
 export type TECoreAPI = {
   populateSelection(payload: PopulateSelectionPayload): void;
   getExtIdProps(payload: GetExtIdPropsPayload): any;
@@ -11,15 +15,14 @@ export type TECoreAPI = {
   }: {
     callback: (user: { userId: string }) => void;
   }): void;
+
   getFieldIds({
     typeExtIds,
     callback,
   }: {
     typeExtIds: string[];
-    callback: (results: {
-      [typeExtId: string]: { [fieldExtId: string]: string };
-    }) => void;
-  });
+    callback: (results: getFieldIdsReturn) => void;
+  }): void;
   // To be extended
   [apiCall: string]: any;
 };

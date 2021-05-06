@@ -66,7 +66,6 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   // Effect to get all TE values into redux state
   const payload = useMemo(
     () =>
@@ -81,20 +80,6 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     [form],
   );
   useFetchLabelsFromExtIds(payload);
-
-  const labelPayload = useMemo(() => {
-    return {
-      types: form.sections.reduce(
-        (val, section) => [
-          ...val,
-          section?.activityTemplatesSettings?.datasource,
-          section?.groupManagementSettings?.datasource,
-        ],
-        [],
-      ),
-    };
-  }, [form.sections]);
-  useFetchLabelsFromExtIds(labelPayload);
 
   const baseSections = form.sections.map((section) => (
     <BaseSection

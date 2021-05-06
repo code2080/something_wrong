@@ -36,8 +36,7 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
           payload: { userId: user.userId },
         }),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [teCoreAPI]);
 
   useEffect(() => {
     window.tePrefsLibStore.dispatch({

@@ -32,6 +32,7 @@ import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
 import { hasPermission } from '../../../Redux/Auth/auth.selectors';
+import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
 const getConstrOfType = (
   type: string,
   config: TConstraintConfiguration | null,
@@ -71,7 +72,7 @@ const ConstraintManagerPage = () => {
   const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
     null,
   );
-  const [fields, setFields] = useState<any>();
+  const [fields, setFields] = useState<getFieldIdsReturn>({});
 
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);

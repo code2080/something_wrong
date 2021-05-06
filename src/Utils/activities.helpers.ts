@@ -128,7 +128,10 @@ export const extractValuesFromActivityValues = (
         } else if (Array.isArray(value)) {
           return {
             ...payload,
-            objects: [...payload.objects, ...value],
+            objects: [
+              ...payload.objects,
+              ...value.filter((obj) => obj.id != null),
+            ],
           };
         } else {
           return payload;
