@@ -1,16 +1,17 @@
 import { Activity } from '../../Models/Activity.model';
 import * as types from './activities.actionTypes';
-import { ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS } from '../ActivityGroup/activityGroup.actionTypes';
+import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
+import _ from 'lodash';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ASSIGN_ACTIVITIES_TO_GROUP_SUCCESS:
+    case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
       const { activities: activityObjs } = action.payload;
       const activities = activityObjs.map((el) => new Activity(el));
@@ -96,7 +97,32 @@ const reducer = (state = initialState, action) => {
       const activities = updateActivitiesForForm(activitityObjs);
       return {
         ...state,
-        [formId]: activities,
+        [formId]: {
+          ...state[formId],
+          ...Object.keys(activities).reduce((results, formInstanceId) => {
+            const oldActivities = _.get(state, [formId, formInstanceId], []);
+            const oldActivityIds = oldActivities.map(({ _id }) => _id);
+            const newActivities = _.remove(
+              activities[formInstanceId],
+              (item) => !oldActivityIds.includes(item._id),
+            );
+
+            return {
+              ...results,
+              // TO KEEP ACTIVITY INDEX
+              [formInstanceId]: [
+                ...oldActivities.map((activity) => {
+                  const foundActivity = activities[formInstanceId].find(
+                    (a) => a._id === activity._id,
+                  );
+                  if (foundActivity) return foundActivity;
+                  return activity;
+                }),
+                ...newActivities,
+              ],
+            };
+          }, {}),
+        },
       };
     }
 

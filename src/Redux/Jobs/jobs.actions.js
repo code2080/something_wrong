@@ -6,7 +6,7 @@ import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.const
 import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
-import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
+import { selectCurrentConstraintConfigurationForForm } from '../ConstraintConfigurations/constraintConfigurations.selectors';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
@@ -24,7 +24,6 @@ export const fetchAllJobs = () =>
   asyncAction.GET({
     flow: fetchAllJobsFlow,
     endpoint: `${getEnvParams().AM_BE_URL}jobs?limit=200`,
-    permission: AEBETA_PERMISSION,
   });
 
 export const updateJobFromWS = (job) => ({
@@ -95,12 +94,16 @@ export const createJob = ({
   const {
     auth: { coreUserId },
   } = storeState;
-  // const { formPeriod } = storeState.forms[formId];
+  const currentConstraintConfiguration = selectCurrentConstraintConfigurationForForm(
+    storeState,
+    formId,
+  );
   const job = new Job({
     activities,
     type,
     formId,
     formInstanceIds,
+    constraintConfigurationId: currentConstraintConfiguration?._id || null,
     userId: coreUserId,
   });
   dispatch(
@@ -109,7 +112,6 @@ export const createJob = ({
       endpoint: `${getEnvParams().AM_BE_URL}jobs`,
       params: job,
       postAction: { callback, meta, activities },
-      permission: AEBETA_PERMISSION,
     }),
   );
 };
@@ -129,6 +131,5 @@ export const abortJob = ({ jobId, formId }) => async (dispatch) =>
       flow: abortJobFlow,
       endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
       params: { formId },
-      permission: AEBETA_PERMISSION,
     }),
   );

@@ -1,17 +1,21 @@
+import { get } from 'lodash';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 
 import { formStatus } from '../../Constants/formStatuses.constants';
 
-const formState = (state) => state.forms;
+const formState = (state) => state.forms || {};
 const elementState = (state) => state.elements;
 
-export const selectForm = createSelector(formState, (forms) => (formId) =>
-  forms[formId],
-);
+export const makeSelectForm = () =>
+  createSelector(
+    formState,
+    (_, formId) => formId,
+    (forms, formId) => forms[formId],
+  );
 
 export const selectAllForms = createSelector(formState, (forms) =>
-  (Object.keys(forms) || [])
+  Object.keys(forms)
     .map((key) => forms[key])
     .filter((form) => form.status !== formStatus.ARCHIVED)
     .sort(
@@ -52,3 +56,14 @@ export const selectSectionHasAvailabilityCalendar = (sectionElements) =>
         elements.map[elem.elementId].type === 'ELEMENT_TYPE_CALENDAR',
     ),
   );
+
+export const selectElementType = (formId, sectionId, elementId) =>
+  createSelector(formState, elementState, (forms, elements) => {
+    const form = forms[formId];
+    if (!form) return null;
+    const section = form.sections.find(({ _id }) => _id === sectionId);
+    if (!section) return null;
+    const element = section.elements.find(({ _id }) => _id === elementId);
+    if (!element) return null;
+    return get(elements.map, [element.elementId, 'type']);
+  });

@@ -1,8 +1,15 @@
 import _ from 'lodash';
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 import { TActivity } from '../../Types/Activity.type';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { ActivityValue, ValueType } from '../../Types/ActivityValue.type';
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
+import { extractValuesFromActivityValues } from '../activities.helpers';
+import {
+  GetExtIdPropsPayload,
+  TEField,
+  TEObject,
+  TEObjectFilter,
+} from '../../Types/TECorePayloads.type';
 
 const filterTypes = {
   CATEGORIES: 'CATEGORIES',
@@ -15,13 +22,11 @@ const filterTypes = {
  * @param {Activity} activity
  * @returns string
  */
-export const determineTimeModeForActivity = (activity: TActivity) => {
-  try {
-    const aV = activity.timing.find((el) => el.extId === 'mode');
-    return aV.value;
-  } catch (error) {
-    return null;
-  }
+export const determineTimeModeForActivity = (
+  activity: TActivity,
+): ValueType => {
+  const aV = activity.timing.find((el) => el.extId === 'mode');
+  return aV?.value ?? null;
 };
 
 /**
@@ -76,16 +81,13 @@ export const normalizeFilterValues = (value: any[]) => {
   return normalizedValues;
 };
 
-const fvForActivityGroup = (
-  groupId: string | null | undefined,
-  formId: string,
-) => {
-  if (!groupId) return 'N/A';
+const fvForActivityTag = (tagId: string | null | undefined, formId: string) => {
+  if (!tagId) return 'N/A';
   const storeState = (window as any).tePrefsLibStore.getState();
-  const activityGroups = _.get(storeState, `activityGroups.${formId}`, []);
-  const activityGroup = activityGroups.find((el) => el._id === groupId);
-  if (!activityGroup) return 'N/A';
-  return activityGroup.name;
+  const activityTags = _.get(storeState, `activityTags.${formId}`, []);
+  const activityTag = activityTags.find((el) => el._id === tagId);
+  if (!activityTag) return 'N/A';
+  return activityTag.name;
 };
 
 const fvForSubmitter = (formInstanceId: string, formId: string) => {
@@ -113,8 +115,8 @@ const fvForPrimaryObject = (formInstanceId: string, formId: string) => {
 export const getFVForOtherValue = (activityValue: any): any[] | null => {
   const { value, extId, formId } = activityValue;
   switch (extId) {
-    case 'groupId': {
-      const fv = fvForActivityGroup(value, formId);
+    case 'tagId': {
+      const fv = fvForActivityTag(value, formId);
       return [{ value: `${extId}/${value}`, label: fv }];
     }
 
@@ -131,4 +133,51 @@ export const getFVForOtherValue = (activityValue: any): any[] | null => {
     default:
       return null;
   }
+};
+
+const extractExtIdsFromValues = (values: {
+  fields: TEField[];
+  objects: (TEObject | TEObjectFilter)[];
+}): GetExtIdPropsPayload => {
+  const [objectIds, objFilters]: [any[], any[]] = _.partition(
+    values.objects,
+    (obj) => obj instanceof TEObject,
+  );
+  const objFilterData = objFilters.reduce<{
+    fields: TEField[];
+    types: string[];
+  }>(
+    (objFilterData, objFilter: TEObjectFilter) => ({
+      fields: [...objFilterData.fields, ...objFilter.fields],
+      types: [...objFilterData.types, objFilter.type],
+    }),
+    { fields: [], types: [] },
+  );
+  const fieldIds = [...values.fields, ...objFilterData.fields].map(
+    (f) => f.fieldExtId,
+  );
+  const objectTypes = objectIds.map((obj: TEObject) => obj.type);
+  return {
+    objects: _.uniqWith(
+      objectIds as TEObject[],
+      (o1, o2) => o1.type === o2.type && o1.id === o2.id,
+    ),
+    fields: _.uniq(fieldIds),
+    types: _.uniq([...objFilterData.types, ...objectTypes]),
+  };
+};
+
+export const getExtIdsFromActivities = (
+  activities: TActivity[],
+): GetExtIdPropsPayload => {
+  if (_.isEmpty(activities)) return { objects: [], fields: [], types: [] };
+  const activityValues = _(activities)
+    .flatMap()
+    .map((a) => a.values as ActivityValue[])
+    .flatMap()
+    .value();
+
+  const values = extractValuesFromActivityValues(activityValues);
+  const extIds = extractExtIdsFromValues(values);
+  return extIds;
 };

@@ -36,6 +36,15 @@ import {
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 
+export const LabelRenderer = ({ type, extId }) => {
+  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
+  useFetchLabelsFromExtIds(payload);
+  const label = useSelector((state) => state.te.extIdProps[type][extId]);
+  if (!extId || !type) return 'N/A';
+  if (label?.label) return label.label;
+  return extId;
+};
+
 const unformattedValue = (value) => (
   <div
     style={{
@@ -84,6 +93,37 @@ const connectedSectionColumns = {
       },
     },
   ],
+
+  TEMPLATES: (section) =>
+    section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'templateVal',
+            render: (templateValue) => (
+              <LabelRenderer extId={templateValue} type='objects' />
+            ),
+          },
+        ]
+      : [],
+
+  GROUPS: (section) =>
+    section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'groupVal',
+            render: (groupValue) =>
+              groupValue &&
+              groupValue.map((groupVal) => (
+                <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
+              )),
+          },
+        ]
+      : [],
+
   TIMESLOT: (timeslots) => [
     {
       title: 'Timeslot',
@@ -102,6 +142,7 @@ const connectedSectionColumns = {
       },
     },
   ],
+
   SCHEDULING: (_sectionId, _formInstanceId, _formId) => [], // TODO: Reenable this after we've built support for new data format
   // [
   //   {
@@ -120,6 +161,10 @@ const connectedSectionColumns = {
   //     ),
   //   },
   // ],
+};
+
+const invalidIndex = (index) => {
+  return index === -1;
 };
 
 /**
@@ -181,7 +226,7 @@ export const renderElementValue = (value, element) => {
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
       if (!value || !value.startTime) return null;
-      return getLocalDate(value).format('[Week] w / gggg');
+      return getLocalDate(value).format('[Week] W / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} element={element} />;
@@ -268,6 +313,10 @@ export const transformSectionToTableColumns = (
           ...connectedSectionColumns.TIMESLOT(
             section.calendarSettings.timeslots,
           ),
+          ...connectedSectionColumns.TEMPLATES(
+            section.activityTemplatesSettings,
+          ),
+          ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
           ..._elementColumns,
         ];
       }
@@ -278,6 +327,8 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TIMEINFO,
+        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
         ..._elementColumns,
       ];
     }
@@ -289,6 +340,8 @@ export const transformSectionToTableColumns = (
           formInstanceId,
           formId,
         ),
+        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
         ..._elementColumns,
       ];
     case SECTION_AVAILABILITY:
@@ -321,7 +374,7 @@ const transformVerticalSectionValuesToTableRows = (
       return data;
     // Find the element idx
     const elementIdx = values.findIndex((el) => el.elementId === col.dataIndex);
-    if (elementIdx === -1) return data;
+    if (invalidIndex(elementIdx)) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
   return [{ ..._data, rowKey: sectionId }];
@@ -348,13 +401,38 @@ const transformConnectedSectionValuesToTableRows = (values, columns) => {
       const elementIdx = values[eventId].values.findIndex(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (invalidIndex(elementIdx)) return eventValues;
       return {
         ...eventValues,
         [col.dataIndex]: values[eventId].values[elementIdx].value,
       };
     }, {});
+    const _templates = columns.reduce((templates, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return templates;
+
+      return {
+        ...templates,
+        templateVal: values[eventId].template,
+      };
+    }, {});
+
+    const _groups = columns.reduce((groups, col) => {
+      const elementIdx = values[eventId].values.findIndex(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (invalidIndex(elementIdx)) return groups;
+      return {
+        ...groups,
+        groupVal: values[eventId].groups,
+      };
+    }, {});
+
     return {
+      ..._groups,
+      ..._templates,
       ..._eventValues,
       startTime: values[eventId].startTime,
       endTime: values[eventId].endTime,
@@ -381,17 +459,42 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
     return [];
   const _data = (Object.keys(values) || []).map((eventId) => {
     const _eventValues = columns.reduce((eventValues, col) => {
-      // Find the element index
+      const element = values[eventId].values.find(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (!element) return eventValues;
+      return {
+        ...eventValues,
+        [col.dataIndex]: element.value,
+      };
+    }, {});
+
+    const _templates = columns.reduce((templates, col) => {
+      const element = values[eventId].values.find(
+        (el) => el.elementId === col.dataIndex,
+      );
+      if (!element) return templates;
+
+      return {
+        ...templates,
+        templateVal: values[eventId].template,
+      };
+    }, {});
+
+    const _groups = columns.reduce((groups, col) => {
       const elementIdx = values[eventId].values.findIndex(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (invalidIndex(elementIdx)) return groups;
       return {
-        ...eventValues,
-        [col.dataIndex]: values[eventId].values[elementIdx].value,
+        ...groups,
+        groupVal: values[eventId].groups,
       };
     }, {});
+
     return {
+      ..._groups,
+      ..._templates,
       ..._eventValues,
       rowKey: eventId,
     };
@@ -441,12 +544,4 @@ export const transformSectionValuesToTableRows = (
     default:
       return [];
   }
-};
-
-export const LabelRenderer = ({ type, extId }) => {
-  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
-  useFetchLabelsFromExtIds(payload);
-  const label = useSelector((state) => state.te.extIdProps[type][extId]);
-  if (!extId || !type) return 'N/A';
-  return label && (label.label || extId || 'N/A');
 };

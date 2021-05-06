@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
-import { Icon } from '@ant-design/compatible';
 
 // CONSTANTS
 import {
@@ -38,7 +37,7 @@ const BaseActivityColIcon = ({ valueMode, submissionValueType }) => {
         title={value.tooltip}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <Icon type={value.icon} />
+        {value.icon}
       </Tooltip>
     </div>
   );

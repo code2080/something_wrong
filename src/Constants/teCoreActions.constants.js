@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import _ from 'lodash';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { reservationTemplates } from '../Mock/ReservationTemplates';
 import { reservationTypes } from '../Mock/ReservationTypes';
@@ -32,6 +33,7 @@ export const teCoreCallnames = {
   SET_FORM_TYPE: 'setFormType',
   SET_RESERVATION_MODE: 'setReservationMode',
   VALIDATE_RESERVATIONS: 'validateReservations',
+  GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
 };
 
 export const teCoreActions = {
@@ -83,7 +85,7 @@ export const teCoreActions = {
   },
   DELETE_RESERVATIONS: {
     callname: teCoreCallnames.DELETE_RESERVATIONS,
-    mock: ({ activities, callback: cbFn }) =>
+    mockFunction: ({ activities, callback: cbFn }) =>
       cbFn({
         activityIds: activities.map((activity) => activity.id),
         result: true,
@@ -188,6 +190,24 @@ export const teCoreActions = {
     mockFunction: ({ reservationIds, callback }) => {
       console.log('No validation on mock');
       callback({ res: { invalidReservations: [] } });
+    },
+  },
+  GET_FIELDIDS_FOR_TYPES: {
+    callname: teCoreCallnames.GET_FIELDIDS_FOR_TYPES,
+    mockFunction: (typeExtIds, callback) => {
+      if (_.isEmpty(typeExtIds)) return null;
+      callback();
+      const res = typeExtIds.reduce(
+        (labels, extId) => ({
+          ...labels,
+          extId: {
+            [`${extId}-fieldId`]: `${extId}-fieldLabel`,
+            [`${extId}-field2Id`]: `${extId}-field2Label`,
+          },
+        }),
+        {},
+      );
+      callback(res);
     },
   },
 };

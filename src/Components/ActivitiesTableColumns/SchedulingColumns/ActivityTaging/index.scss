@@ -1,6 +1,10 @@
 @import '../../../../Styles/globals.scss';
 
-.activity-group-popover--wrapper {
+.activity-tag {
+  overflow: hidden;
+}
+
+.activity-tag-popover--wrapper {
   .ant-popover-title {
     padding-left: 6px !important;
     padding-right: 6px !important;
@@ -10,7 +14,7 @@
   }
 }
 
-.activity-group--button {
+.activity-tag--button {
   .ant-btn {
     font-size: 0.7rem;
     border: none;
@@ -24,8 +28,8 @@
   }
 }
 
-.activity-group--popover {
-  .activity-group--row {
+.activity-tag--popover {
+  .activity-tag--row {
     margin-bottom: 0.3rem;
 
     .header {
@@ -36,11 +40,11 @@
   }
 }
 
-.activity-group--list {
+.activity-tag--list {
   margin-top: 0.3rem;
 }
 
-.acitivity-group--list-item {
+.acitivity-tag--list-item {
   display: flex;
   transition: all 0.2s;
   cursor: pointer;
@@ -49,15 +53,11 @@
     background: rgba($jungleGreen, 0.1);
   }
 
-  .activity-group--btns {
+  .activity-tag--btns {
     margin-left: auto;
     .ant-btn {
       border: none !important;
       background: transparent !important;
-
-      &.danger {
-        color: $bittersweet;
-      }
 
       &.success {
         color: $jungleGreen;

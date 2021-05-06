@@ -6,17 +6,22 @@ import { activityValueValidations } from '../Constants/activityValueValidations.
 import { ActivityValueValidation } from '../Models/ActivityValueValidation.model';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 
-export const validateGeneralValue = (activityValue) => {
-  if (activityValue.value !== null && activityValue.value !== undefined) {
-    return new ActivityValueValidation({
-      status: activityValueStatuses.READY_FOR_SCHEDULING,
-    });
-  }
+export const validateGeneralValue = (_activityValue) => {
+  // TODO: Reenable when we're improving the logic to consider mandatory values
+  // if (activityValue.value !== null && activityValue.value !== undefined) {
+  //   return new ActivityValueValidation({
+  //     status: activityValueStatuses.READY_FOR_SCHEDULING,
+  //   });
+  // }
+  // return new ActivityValueValidation({
+  //   status: activityValueStatuses.MISSING_DATA,
+  //   errorCode: activityValueValidations.MISSING_VALUE,
+  //   errorMessage:
+  //     'The value has an incorrect format, please update it manually',
+  // });
+
   return new ActivityValueValidation({
-    status: activityValueStatuses.MISSING_DATA,
-    errorCode: activityValueValidations.MISSING_VALUE,
-    errorMessage:
-      'The value has an incorrect format, please update it manually',
+    status: activityValueStatuses.READY_FOR_SCHEDULING,
   });
 };
 

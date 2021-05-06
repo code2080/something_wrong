@@ -29,6 +29,8 @@ const fieldOptions = [
 ];
 const mappingOptions = (disabled) => [
   { value: 'scopedObject', label: 'Primary object' },
+  { value: 'groups', label: 'Groups' },
+  { value: 'template', label: 'Activity Template' },
   {
     value: '5f4f4df052717b0020dd1748',
     label: 'Activities section',
@@ -41,9 +43,10 @@ const mappingOptions = (disabled) => [
     ],
   },
 ];
+
 export const Mapping = (args) => {
   const [mapping, setMapping] = useState({});
-  return <FieldMapping onChange={setMapping} mapping={mapping} {...args} />;
+  return <FieldMapping {...args} onChange={setMapping} mapping={mapping} />;
 };
 
 Mapping.args = {

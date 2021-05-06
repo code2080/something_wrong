@@ -31,7 +31,10 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
-import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
+import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
+import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -43,7 +46,6 @@ const mapStateToProps = (state, { activity }) => {
       activity.formInstanceId,
       activity.formId,
     ),
-    formInstance: state.submissions[activity.formId][activity.formInstanceId],
   };
 };
 
@@ -56,15 +58,13 @@ const mapActionsToProps = {
 
 const activityActions = {
   SCHEDULE_ALL: {
-    label: 'Schedule all activities',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    label: 'Schedule submission',
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SCHEDULE: {
     label: 'Schedule activity',
-    filterFn: (activity) =>
-      !activity.reservationId && !activityIsReadOnly(activity.activityStatus),
+    filterFn: (activity) => !activity.reservationId,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SELECT: {
@@ -106,15 +106,22 @@ const ActivityActionsDropdown = ({
   updateActivity,
   updateActivities,
   teCoreAPI,
-  formInstance,
   setFormInstanceSchedulingProgress,
   abortJob,
 }) => {
+  const mixpanel = useMixpanel();
+  const selectFormInstance = useMemo(() => makeSelectFormInstance, []);
   const { formInstanceId, formId } = activity;
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, { formId, formInstanceId }),
+  );
   const [formType, reservationMode] = useSelector((state) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
+  const hasAssistedSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
 
   const onFinishScheduleMultiple = useCallback(
     (schedulingReturns) => {
@@ -148,11 +155,12 @@ const ActivityActionsDropdown = ({
   const updateSchedulingProgress = useCallback(() => {
     if (
       mSStatus.status === manualSchedulingFormStatuses.NOT_STARTED &&
-      formInstance.teCoreProps.schedulingProgress ===
+      formInstance?.teCoreProps?.schedulingProgress ===
         teCoreSchedulingProgress.NOT_SCHEDULED
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
@@ -166,11 +174,12 @@ const ActivityActionsDropdown = ({
     }
     if (
       mSStatus.status === manualSchedulingFormStatuses.ONE_AWAY &&
-      formInstance.teCoreProps.schedulingProgress !==
+      formInstance?.teCoreProps?.schedulingProgress !==
         teCoreSchedulingProgress.SCHEDULING_FINISHED
     ) {
       Modal.confirm({
         getContainer: () => document.getElementById('te-prefs-lib'),
+        getPopupContainer: () => document.getElementById('te-prefs-lib'),
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
@@ -183,17 +192,25 @@ const ActivityActionsDropdown = ({
       });
     }
   }, [
-    formInstance.teCoreProps.schedulingProgress,
+    formInstance?.teCoreProps?.schedulingProgress,
     formInstanceId,
-    mSStatus.status,
+    mSStatus?.status,
     setFormInstanceSchedulingProgress,
   ]);
+
+  const trackScheduleActivities = (activities = []) => {
+    mixpanel?.track('scheduleActivitiesAction', {
+      formId: activities?.[0]?.formId,
+      nrOfActivities: activities.length,
+    });
+  };
 
   const handleMenuClick = useCallback(
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
+          trackScheduleActivities(activities);
           scheduleActivities(
             activities.filter(
               (a) => a.activityStatus !== activityStatuses.SCHEDULED,
@@ -206,6 +223,7 @@ const ActivityActionsDropdown = ({
           updateSchedulingProgress();
           break;
         case 'SCHEDULE':
+          trackScheduleActivities([activity]);
           scheduleActivities(
             [activity],
             formType,
@@ -242,6 +260,7 @@ const ActivityActionsDropdown = ({
           break;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       abortJob,
       activities,
@@ -264,13 +283,20 @@ const ActivityActionsDropdown = ({
         {Object.keys(activityActions)
           .filter((key) => activityActions[key].filterFn(activity))
           .map((key) => (
-            <Menu.Item key={key}>{activityActions[key].label}</Menu.Item>
+            <Menu.Item
+              disabled={
+                ['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
+                !hasAssistedSchedulingPermissions
+              }
+              key={key}
+            >
+              {activityActions[key].label}
+            </Menu.Item>
           ))}
       </Menu>
     ),
-    [handleMenuClick, activity],
+    [handleMenuClick, activity, hasAssistedSchedulingPermissions],
   );
-
   return (
     <Dropdown
       overlay={menu}
@@ -300,7 +326,6 @@ ActivityActionsDropdown.propTypes = {
   updateActivity: PropTypes.func.isRequired,
   updateActivities: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
-  formInstance: PropTypes.object.isRequired,
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,

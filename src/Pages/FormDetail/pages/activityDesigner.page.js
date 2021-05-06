@@ -12,8 +12,8 @@ import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
 
 // SELECTORS
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
-import { selectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
   selectValidTypesOnReservationMode,
@@ -63,8 +63,15 @@ const ActivityDesignPage = () => {
   /**
    * SELECTORS
    */
-  const form = useSelector(selectForm)(formId);
-  const activities = useSelector(selectActivitiesForForm)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
   const validTypes = useSelector(selectValidTypesOnReservationMode)(
     form.reservationMode,
   );
@@ -110,7 +117,7 @@ const ActivityDesignPage = () => {
   /**
    * MEMOIZED VARS
    */
-  const hasReservations = useMemo(
+  const hasActivities = useMemo(
     () =>
       (Object.keys(activities || {}) || []).reduce(
         (number, formInstanceId) =>
@@ -233,6 +240,7 @@ const ActivityDesignPage = () => {
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            disabled={hasActivities}
           >
             <Button type='link' size='small'>
               Reset configuration...
@@ -245,13 +253,13 @@ const ActivityDesignPage = () => {
               size='small'
               onClick={onSaveDesign}
               loading={isSaving}
-              disabled={!designIsValid}
+              disabled={!designIsValid || hasActivities}
             >
               Save
             </Button>
           </div>
         </div>
-        {hasReservations && <HasReservationsAlert formId={formId} />}
+        {hasActivities && <HasReservationsAlert formId={formId} />}
         <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>
@@ -261,7 +269,7 @@ const ActivityDesignPage = () => {
             mapping={design}
             onChange={updateTimingDesignCallback}
             formSections={form.sections}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -274,7 +282,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             typeOptions={typeOptions}
             onChange={updateObjectDesignCallback}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -287,7 +295,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             fieldOptions={fieldOptions}
             onChange={updateFieldDesignCallback}
-            disabled={hasReservations}
+            disabled={hasActivities}
           />
         </div>
       </div>

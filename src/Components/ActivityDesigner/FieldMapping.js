@@ -97,9 +97,11 @@ const FieldMapping = ({
 
   // Memoized values
   const fields = useMemo(() => _.get(mapping, 'fields', {}), [mapping]);
+
   const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [
     mapping,
   ]);
+
   return (
     <div className='object-mapping--wrapper'>
       {(Object.keys(fields) || []).map((key) => (
@@ -125,7 +127,7 @@ const FieldMapping = ({
         <Select
           disabled={disabled}
           placeholder='Add new field'
-          value={undefined}
+          value={null}
           onChange={onAddField}
           size='small'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}

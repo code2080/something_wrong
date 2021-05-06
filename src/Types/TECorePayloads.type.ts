@@ -1,5 +1,3 @@
-import { MomentInput } from 'moment';
-
 export class TEField {
   fieldExtId: string;
   values: string[];
@@ -28,10 +26,16 @@ export class TEObject {
 }
 
 export type PopulateSelectionPayload = {
-  objects: [TEObject | TEObjectFilter];
+  objects: (TEObject | TEObjectFilter)[];
   fields: TEField[];
   formType: 'REGULAR' | 'AVAILABILITY';
   reservationMode: string;
-  startTime?: MomentInput;
-  endTime?: MomentInput;
+  startTime?: string;
+  endTime?: string;
+};
+
+export type GetExtIdPropsPayload = {
+  objects: (TEObject | string)[];
+  fields: string[];
+  types: string[];
 };

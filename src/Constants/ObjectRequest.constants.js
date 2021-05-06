@@ -4,6 +4,7 @@ import {
   CloseOutlined,
   SwapOutlined,
 } from '@ant-design/icons';
+import { themeColors } from './themeColors.constants';
 
 export const RequestStatus = {
   PENDING: 'pending',
@@ -15,8 +16,12 @@ export const RequestStatus = {
 const styleAddOn = { color: 'rgba(255,0,0, 0.8)', marginRight: '0.2rem' };
 export const requestStatusToIcon = {
   [RequestStatus.PENDING]: <QuestionOutlined style={styleAddOn} />,
-  [RequestStatus.ACCEPTED]: <CheckOutlined />,
-  [RequestStatus.DECLINED]: <CloseOutlined />,
+  [RequestStatus.ACCEPTED]: (
+    <CheckOutlined style={{ color: themeColors.jungleGreen }} />
+  ),
+  [RequestStatus.DECLINED]: (
+    <CloseOutlined style={{ color: themeColors.bittersweet }} />
+  ),
   [RequestStatus.REPLACED]: <SwapOutlined />,
 };
 

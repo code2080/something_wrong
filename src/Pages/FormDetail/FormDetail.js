@@ -11,6 +11,7 @@ import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 // HOOKS
 import {
   useFetchLabelsFromExtIds,
+  fetchLabelsFromExtIds,
   useTECoreAPI,
 } from '../../Hooks/TECoreApiHooks';
 
@@ -22,15 +23,14 @@ import {
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
-import { fetchActivityGroupsForForm } from '../../Redux/ActivityGroup/activityGroup.actions';
+import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
-import { selectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
-import { selectForm } from '../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
@@ -40,27 +40,45 @@ import FormInfoPage from './pages/formInfo.page';
 import ActivitiesPage from './pages/activities.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
+import ObjectRequestsPage from './pages/objectRequests.page';
 
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
+import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
-import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
+import {
+  ASSISTED_SCHEDULING_PERMISSION_NAME,
+  AE_ACTIVITY_PERMISSION,
+} from '../../Constants/permissions.constants';
+import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
+import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
+import { selectExtIds } from '../../Redux/TE/te.selectors';
+import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams();
-  const form = useSelector(selectForm)(formId);
-  const submissions = useSelector(selectSubmissions)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
-  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
+  const hasActivityDesignPermission = useSelector(
+    hasPermission(AE_ACTIVITY_PERMISSION),
+  );
+  const hasAssistedSchedulingPermission = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
+  const reqs = useSelector(selectFormObjectRequest(formId));
+  const formHasObjReqs = !_.isEmpty(reqs);
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(formId));
     dispatch(fetchActivitiesForForm(formId));
-    dispatch(fetchActivityGroupsForForm(formId));
+    dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
     dispatch(
@@ -72,7 +90,6 @@ const FormPage = () => {
     dispatch(loadFilter({ filterId: `${formId}_SUBMISSIONS` }));
     dispatch(loadFilter({ filterId: `${formId}_ACTIVITIES` }));
     teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     form.reservationmode &&
       teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({
         mode: form.reservationmode,
@@ -81,15 +98,9 @@ const FormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
-  const payload = useMemo(() => {
+  const submissionPayload = useMemo(() => {
     const sections = form.sections;
-    const submissionValues = submissions.reduce(
-      (acc, submission) => ({
-        ...acc,
-        ...submission.values,
-      }),
-      {},
-    );
+    const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
@@ -105,8 +116,26 @@ const FormPage = () => {
     };
   }, [submissions, form]);
 
+  // **** Test sending objects with type to core to see if this helps with DEV-7663
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
+  const extIds = useSelector(selectExtIds);
+
+  useEffect(() => {
+    const activityPayload = getExtIdsFromActivities(activities);
+    console.log({ extIds: activityPayload });
+    fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activities]);
+  // ****
+
   // Effect to get all TE values into redux state
-  useFetchLabelsFromExtIds(payload);
+  useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EVENT HANDLERS
@@ -117,7 +146,7 @@ const FormPage = () => {
 
   return (
     <div className='form--wrapper'>
-      {hasAEBetaPermission && <JobToolbar />}
+      <JobToolbar />
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
         <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
           <FormInfoPage />
@@ -125,13 +154,20 @@ const FormPage = () => {
         <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
           <SubmissionsPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES'>
+        {formHasObjReqs && (
+          <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
+            <ObjectRequestsPage />
+          </Tabs.TabPane>
+        )}
+        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
           <ActivitiesPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
-          <ActivityDesignPage />
-        </Tabs.TabPane>
-        {hasAEBetaPermission && (
+        {hasActivityDesignPermission && (
+          <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
+            <ActivityDesignPage />
+          </Tabs.TabPane>
+        )}
+        {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
           <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
             <ConstraintManagerPage />
           </Tabs.TabPane>

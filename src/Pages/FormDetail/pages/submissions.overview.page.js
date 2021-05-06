@@ -12,13 +12,16 @@ import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { selectForm } from '../../../Redux/Forms/forms.selectors';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
-import { selectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
+import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
 
 // ACTIONS
-import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
+import {
+  setBreadcrumbs,
+  setFormDetailTab,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -49,8 +52,10 @@ const SubmissionsOverviewPage = () => {
   /**
    * SELECTORS
    */
-  const form = useSelector(selectForm)(formId);
-  const submissions = useSelector(selectSubmissions)(formId);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
   const filters = useSelector(selectFilter)(
@@ -86,6 +91,16 @@ const SubmissionsOverviewPage = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
+
+  useEffect(() => {
+    dispatch(
+      setBreadcrumbs([
+        { path: '/forms', label: 'Forms' },
+        { path: `/forms/${formId}`, label: form.name },
+      ]),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(
@@ -175,12 +190,11 @@ const SubmissionsOverviewPage = () => {
         rowKey='_id'
         onRow={(formInstance) => ({
           onClick: (e) => {
-            traversedClassList(e.target).includes(
-              'ant-table-column-has-actions',
-            ) &&
-              formInstance &&
-              formInstance.formId &&
-              formInstance._id &&
+            const list = traversedClassList(e.target);
+            const hasFormInstance =
+              formInstance && formInstance.formId && formInstance._id;
+            list.includes('ant-table-cell') &&
+              hasFormInstance &&
               dispatch(setFormDetailTab('SUBMISSIONS', formInstance._id));
           },
         })}

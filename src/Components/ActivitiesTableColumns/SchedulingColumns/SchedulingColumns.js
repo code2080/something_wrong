@@ -1,11 +1,11 @@
 import {
-  sortByActivityGroup,
+  sortByActivityTag,
   sortByElementHtml,
 } from '../../../Utils/sorting.helpers';
 import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
-import ActivityGroup from './ActivityGrouping';
+import ActivityTag from './ActivityTaging';
 
 export const SchedulingColumns = [
   {
@@ -20,16 +20,16 @@ export const SchedulingColumns = [
     ),
   },
   {
-    title: 'Group',
-    key: 'activityGroup',
+    title: 'Tag',
+    key: 'activityTag',
     dataIndex: undefined,
     fixedWidth: 150,
     render: (activity) => (
-      <SortableTableCell className={`activityGrouping${activity._id}`}>
-        <ActivityGroup activities={[activity]} />
+      <SortableTableCell className={`activityTag${activity._id}`}>
+        <ActivityTag activities={[activity]} />
       </SortableTableCell>
     ),
-    sorter: (a, b) => sortByActivityGroup(a, b),
+    sorter: (a, b) => sortByActivityTag(a, b),
   },
   {
     title: 'Status',

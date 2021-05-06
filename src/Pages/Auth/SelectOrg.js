@@ -10,12 +10,12 @@ const mapStateToProps = (state) => ({
 const SelectOrg = ({ organizations, onSelectOrg }) => (
   <Form.Item label='Select your organization:'>
     <Select
-      value={undefined}
+      value={null}
       placeholder='Select your organization...'
       onChange={onSelectOrg}
       showSearch
       filterOption={(input, option) =>
-        option.props.children.toLowerCase().includes(input.toLowerCase())
+        option.children.toLowerCase().includes(input.toLowerCase())
       }
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
       style={{ minWidth: '100%' }}

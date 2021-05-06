@@ -232,6 +232,7 @@ export const updateActivities = (formId, formInstanceId, activities) =>
       formInstanceId,
       activities,
     },
+    isParallel: true,
   });
 
 export const setSchedulingStatusOfActivitiesFlow = {

@@ -10,16 +10,16 @@ import {
 
 // ACTIONS
 import {
-  updateActivityGroup,
-  assignActivityToGroup,
-  deleteActivityGroup,
-} from '../../../../Redux/ActivityGroup/activityGroup.actions';
+  updateActivityTag,
+  assignActivityToTag,
+  deleteActivityTag,
+} from '../../../../Redux/ActivityTag/activityTag.actions';
 
 // TYPES
-import { TActivityGroup } from '../../../../Types/ActivityGroup.type';
+import { TActivityTag } from '../../../../Types/ActivityTag.type';
 
 type Props = {
-  activityGroup: TActivityGroup;
+  activityTag: TActivityTag;
   activityIds: string[];
   isSelected: boolean;
 };
@@ -29,8 +29,8 @@ enum EModes {
   EDIT = 'EDIT',
 }
 
-const ActivityGroupListItem = ({
-  activityGroup,
+const ActivityTagListItem = ({
+  activityTag,
   activityIds,
   isSelected,
 }: Props) => {
@@ -39,84 +39,73 @@ const ActivityGroupListItem = ({
    * STATE
    */
   const [mode, setMode] = useState(EModes.VIEW);
-  const [newGroupName, setNewGroupName] = useState(activityGroup.name);
+  const [newTagName, setNewTagName] = useState(activityTag.name);
 
   /**
    * EVENT HANDLERS
    */
-  const onDeleteActivityGroup = () => {
+  const onDeleteActivityTag = () => {
     setMode(EModes.VIEW);
-    dispatch(deleteActivityGroup(activityGroup.formId, activityGroup._id));
+    dispatch(deleteActivityTag(activityTag.formId, activityTag._id));
   };
 
-  const onUpdateActivityGroup = () => {
+  const onUpdateActivityTag = () => {
     dispatch(
-      updateActivityGroup(
-        activityGroup.formId,
-        activityGroup._id,
-        newGroupName,
-      ),
+      updateActivityTag(activityTag.formId, activityTag._id, newTagName),
     );
     setMode(EModes.VIEW);
   };
 
   const onStartEditMode = () => {
-    setNewGroupName(activityGroup.name);
+    setNewTagName(activityTag.name);
     setMode(EModes.EDIT);
   };
 
   const onResetMode = () => {
-    setNewGroupName(activityGroup.name);
+    setNewTagName(activityTag.name);
     setMode(EModes.VIEW);
   };
 
-  const onAssignActivityToGroup = () => {
+  const onAssignActivityToTag = () => {
     dispatch(
-      assignActivityToGroup(
-        activityGroup.formId,
-        activityGroup._id,
-        activityIds,
-      ),
+      assignActivityToTag(activityTag.formId, activityTag._id, activityIds),
     );
     setMode(EModes.VIEW);
   };
 
   return (
-    <div className='acitivity-group--list-item'>
-      <Radio checked={isSelected} onChange={onAssignActivityToGroup} />
+    <div className='acitivity-tag--list-item'>
+      <Radio checked={isSelected} onChange={onAssignActivityToTag} />
       {mode === EModes.VIEW && (
         <>
-          <div
-            className='activity-group--name'
-            onClick={onAssignActivityToGroup}
-          >
-            {activityGroup.name}
+          <div className='activity-tag--name' onClick={onAssignActivityToTag}>
+            {activityTag.name}
           </div>
-          <div className='activity-group--btns'>
+          <div className='activity-tag--btns'>
             <Button
               size='small'
               icon={<EditOutlined />}
               onClick={onStartEditMode}
             />
             <Button
-              className='danger'
               size='small'
+              danger
               icon={<DeleteOutlined />}
-              onClick={onDeleteActivityGroup}
+              onClick={onDeleteActivityTag}
             />
           </div>
         </>
       )}
       {mode === EModes.EDIT && (
         <>
-          <div className='activity-group--name'>
+          <div className='activity-tag--name'>
             <Input
               size='small'
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
+              value={newTagName}
+              onChange={(e) => setNewTagName(e.target.value)}
             />
           </div>
-          <div className='activity-group--btns'>
+          <div className='activity-tag--btns'>
             <Button
               className='danger'
               size='small'
@@ -127,7 +116,7 @@ const ActivityGroupListItem = ({
               className='success'
               size='small'
               icon={<CheckOutlined />}
-              onClick={onUpdateActivityGroup}
+              onClick={onUpdateActivityTag}
             />
           </div>
         </>
@@ -136,4 +125,4 @@ const ActivityGroupListItem = ({
   );
 };
 
-export default ActivityGroupListItem;
+export default ActivityTagListItem;

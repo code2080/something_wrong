@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Popover, Input, Button, Popconfirm } from 'antd';
+import { Form, Input, Button, Popconfirm } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
@@ -67,18 +67,14 @@ const SchedulingCheckbox = ({ activity }) => {
   const { formId } = useParams();
 
   const [showInvertedState, setShowInvertedState] = useState(false);
-  const [
-    showConfirmSchedulingPopover,
-    setShowConfirmSchedulingPopover,
-  ] = useState(false);
-  const onUpdateSchedulingStatus = (reservationId) => {
+  const onUpdateSchedulingStatus = () => {
     dispatch(
       setSchedulingStatusOfActivities(formId, [
         {
           activityId: activity._id,
           activityStatus: activityStatuses.SCHEDULED,
           errorDetails: null,
-          reservationId: reservationId || null,
+          reservationId: null,
         },
       ]),
     );
@@ -101,7 +97,6 @@ const SchedulingCheckbox = ({ activity }) => {
     activity.activityStatus,
     showInvertedState,
   );
-
   return (
     <div
       onMouseEnter={() => setShowInvertedState(true)}
@@ -109,33 +104,18 @@ const SchedulingCheckbox = ({ activity }) => {
       className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus}`}
     >
       {activity.activityStatus !== activityStatuses.SCHEDULED && (
-        <Popover
-          content={
-            <MarkAsScheduledPopover
-              onConfirm={onUpdateSchedulingStatus}
-              onCancel={() => setShowConfirmSchedulingPopover(false)}
-            />
+        <Button
+          size='small'
+          icon={
+            derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
+              <MinusSquareOutlined />
+            ) : (
+              <CheckSquareOutlined />
+            )
           }
-          title='Mark as scheduled'
-          visible={showConfirmSchedulingPopover}
-          onVisibleChange={(visible) =>
-            setShowConfirmSchedulingPopover(visible)
-          }
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
-          trigger={'click'}
-        >
-          <Button
-            size='small'
-            icon={
-              derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
-                <MinusSquareOutlined />
-              ) : (
-                <CheckSquareOutlined />
-              )
-            }
-            className={derivedSchedulingStatus}
-          />
-        </Popover>
+          onClick={onUpdateSchedulingStatus}
+          className={derivedSchedulingStatus}
+        />
       )}
       {activity.activityStatus === activityStatuses.SCHEDULED && (
         <Popconfirm

@@ -1,8 +1,7 @@
-/* eslint-disable no-extra-boolean-cast */
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
-import { Button, Empty, Collapse, Table, Alert } from 'antd';
+import { Button, Collapse, Table, Alert } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -18,7 +17,7 @@ import {
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
-import { selectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+import { makeSelectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
   ConstraintConfiguration,
   ConstraintInstance,
@@ -29,9 +28,13 @@ import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
 
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
-
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
+import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
+import { hasPermission } from '../../../Redux/Auth/auth.selectors';
+import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
 const getConstrOfType = (
-  type: string = 'DEFAULT',
+  type: string,
   config: TConstraintConfiguration | null,
   allConstraints: TConstraint[],
 ): TConstraintInstance[] => {
@@ -51,16 +54,33 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
-  const constrConfs: TConstraintConfiguration[] = Object.values(
-    useSelector(selectConstraintConfigurationsForForm(formId)),
+  const selectConstraintConfigurationsForForm = useMemo(
+    () => makeSelectConstraintConfigurationsForForm(),
+    [],
   );
-
+  const constrConfs: TConstraintConfiguration[] = Object.values(
+    useSelector((state) =>
+      selectConstraintConfigurationsForForm(state, formId),
+    ),
+  );
+  const activityDesign = useSelector(selectDesignForForm)(formId);
+  const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
+  const tecoreAPI = useTECoreAPI();
   /**
    * STATE
    */
   const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
     null,
   );
+  const [fields, setFields] = useState<getFieldIdsReturn>({});
+
+  useEffect(() => {
+    const typeExtIds = Object.keys(activityDesign.objects);
+    tecoreAPI.getFieldIds({
+      typeExtIds,
+      callback: (result) => setFields(result),
+    });
+  }, [activityDesign?.objects, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);
 
@@ -98,46 +118,57 @@ const ConstraintManagerPage = () => {
     });
   };
 
-  const handleUpdConstrConf = (
-    constraintId: string,
-    prop: string,
-    value: any,
-  ): void => {
-    if (!constrConf) return;
-    const { constraints } = constrConf;
+  const handleUpdConstrConf = useCallback(
+    (constraintId: string, prop: string, value: any): void => {
+      if (!constrConf) return;
+      const { constraints } = constrConf;
 
-    setConstrConf({
-      ...constrConf,
-      constraints: constraints.map((constraintInstance) =>
-        constraintInstance.constraintId === constraintId
-          ? {
-              ...constraintInstance,
-              [prop]: value,
-            }
-          : constraintInstance,
+      setConstrConf({
+        ...constrConf,
+        constraints: constraints.map((constraintInstance) =>
+          constraintInstance.constraintId === constraintId
+            ? { ...constraintInstance, [prop]: value }
+            : constraintInstance,
+        ),
+      });
+    },
+    [constrConf],
+  );
+
+  const constraintManagercolumns = useMemo(
+    () =>
+      constraintManagerTableColumns(
+        handleUpdConstrConf,
+        allConstraints,
+        fields,
+        activityDesign.objects,
       ),
-    });
-  };
+    [handleUpdConstrConf, allConstraints, fields, activityDesign.objects],
+  );
 
   const handleAddCustomConstraint = (e) => {
     e.stopPropagation();
   };
 
-  const handleCreateConstrConf = () => {
+  const handleCreateConstrConf = useCallback(() => {
     const newConstrConf = ConstraintConfiguration.create({
       formId,
       name: 'New constraint configuration',
       constraints: (allConstraints || [])
         .filter(
           (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT,
+            constraint.type === EConstraintType.DEFAULT ||
+            constraint.type === EConstraintType.OTHER,
         )
         .map((constraint: TConstraint) =>
           ConstraintInstance.createFromConstraint(constraint),
         ),
     });
+
     dispatch(createConstraintConfigurations(newConstrConf));
-  };
+
+    if (constrConf) setConstrConf(constrConf[0]);
+  }, [allConstraints, constrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
     if (!constrConf) return;
@@ -147,7 +178,7 @@ const ConstraintManagerPage = () => {
   };
 
   const handleDeleteConstrconf = () => {
-    if (!constrConf) return;
+    if (!constrConf || constrConfs.length === 1) return;
     setConstrConf(constrConf[0]);
     dispatch(deleteConstraintConfiguration(constrConf));
   };
@@ -164,6 +195,10 @@ const ConstraintManagerPage = () => {
   const checkIfSaved = () => {
     if (isUnsaved) return <Alert message='You have unsaved changes' banner />;
   };
+  useEffect(() => {
+    if (_.isEmpty(constrConfs) && !constrConf) handleCreateConstrConf();
+    if (constrConf) setConstrConf(constrConf);
+  }, [constrConfs, constrConf, handleCreateConstrConf]);
 
   return (
     <div className='constraint-manager--wrapper'>
@@ -182,51 +217,31 @@ const ConstraintManagerPage = () => {
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table
-              columns={constraintManagerTableColumns(
-                handleUpdConstrConf,
-                allConstraints,
-              )}
+              columns={constraintManagercolumns}
               dataSource={defaultConstraints}
               rowKey='constraintId'
               pagination={false}
             />
           </Collapse.Panel>
-          <Collapse.Panel
-            key='CUSTOM'
-            header='Custom constraints'
-            extra={
-              <Button onClick={handleAddCustomConstraint} size='small'>
-                Add new custom constraint
-              </Button>
-            }
-          >
-            <Table
-              columns={constraintManagerTableColumns(
-                handleUpdConstrConf,
-                allConstraints,
-              )}
-              dataSource={customConstraints}
-              rowKey='constraintId'
-              pagination={false}
-            />
-          </Collapse.Panel>
+          {hasAEBetaPermission && (
+            <Collapse.Panel
+              key='CUSTOM'
+              header='Custom constraints'
+              extra={
+                <Button onClick={handleAddCustomConstraint} size='small'>
+                  Add new custom constraint
+                </Button>
+              }
+            >
+              <Table
+                columns={constraintManagercolumns}
+                dataSource={customConstraints}
+                rowKey='constraintId'
+                pagination={false}
+              />
+            </Collapse.Panel>
+          )}
         </Collapse>
-      )}
-      {_.isEmpty(constrConfs) && !constrConf && (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description='No constraint configurations exist for this form'
-        >
-          <Button size='small' type='primary' onClick={handleCreateConstrConf}>
-            Create now
-          </Button>
-        </Empty>
-      )}
-      {!constrConf && !_.isEmpty(constrConfs) && (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description='No constraint configurations selected'
-        />
       )}
     </div>
   );

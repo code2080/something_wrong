@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.18",
+  "version": "0.10.34",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -15,8 +15,8 @@
   "scripts": {
     "test": "cross-env CI=1 react-scripts test --env=jsdom --passWithNoTests",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rollup -c",
-    "start": "rollup -c -w",
+    "build": "rm -rf dist && rollup -c",
+    "start": "rollup -c -w --environment BUILD:development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:diff": "f(){ eslint $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"([^/])(src).*(.[jt]sx?)$)\");};f",
     "modified": "f(){  echo $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"([^/])(src).*(.[jt]sx?)$)\");};f",
@@ -28,6 +28,7 @@
     "prettier:fix": "prettier ./src --write",
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
+    "ts:lint": "tsc --noemit -p tsconfig.json",
     "prepare": "husky install && yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
@@ -92,6 +93,7 @@
     "@storybook/react": "^6.1.18",
     "@svgr/rollup": "^5.5.0",
     "@types/jest": "^26.0.20",
+    "@types/lodash": "^4.14.168",
     "@types/node": "^14.14.27",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
@@ -131,6 +133,7 @@
     "rollup-plugin-less": "^1.1.3",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.32.7",
     "sass-loader": "^10",
     "storybook": "^6.1.18",
@@ -145,6 +148,7 @@
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "@ant-design/compatible": "^1.0.8",
+    "@ant-design/icons": "^4.6.2",
     "antd": "^4.1.0",
     "axios": "^0.21.1",
     "bufferutil": "^4.0.3",
@@ -159,7 +163,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "socket.io-client": "^3.1.1",
+    "socket.io-client": "^4.0.1",
     "utf-8-validate": "^5.0.4",
     "virtualizedtableforantd4": "^1.1.2"
   }

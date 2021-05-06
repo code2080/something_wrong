@@ -125,7 +125,7 @@ const ObjectMapping = ({
         <Select
           disabled={disabled}
           placeholder='Add new object'
-          value={undefined}
+          value={null}
           onChange={onAddObject}
           size='small'
           getPopupContainer={() => document.getElementById('te-prefs-lib')}

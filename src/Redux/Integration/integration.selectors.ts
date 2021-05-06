@@ -1,6 +1,7 @@
 import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
-import { selectExtIdLabel } from '../TE/te.selectors';
+import { Field, selectExtIdLabel } from '../TE/te.selectors';
 import {
   datasourceValueTypes,
   mapValueTypeToFieldName,
@@ -11,7 +12,8 @@ import {
   SECTION_TABLE,
   SECTION_CONNECTED,
 } from '../../Constants/sectionTypes.constants';
-import { initialState } from '../TE/te.helpers';
+import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
+import { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 
 const selectIntegration = (state) => state.integration;
 const selectReservationModes = (state) => state.integration.reservationModes;
@@ -43,7 +45,11 @@ export const selectValidFieldsOnReservationMode = createSelector(
  * @param {String} datasource the selected datasource
  */
 
-export const getTECoreAPIPayload = (value, datasource, objectRequests = []) => {
+export const getTECoreAPIPayload = (
+  value,
+  datasource,
+  objectRequests = <any[]>[],
+) => {
   /**
    * No value or datasource is a no-op
    */
@@ -125,7 +131,7 @@ const extractPayloadFromElements = (elements) =>
           ...elementsPayload,
           [fieldName]: [...elementsPayload[fieldName], element.extId],
         };
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 
 const getExtIdPairsForActivity = (values) => {
   // Each value contains the type of the values within, and the values (extIds) themselves
@@ -169,7 +175,7 @@ const extractPayloadFromActivities = (activities) => {
           ],
         }
       : newPayloadWithExtId;
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 };
 
 const extractPayloadFromObjectRequests = (requests) =>
@@ -185,9 +191,53 @@ const extractPayloadFromObjectRequests = (requests) =>
     { objects: [] },
   );
 
+const extractPayloadFromTemplatesAndGroups = (
+  sections: any[],
+  submissionValues: { [sectionId: string]: any }[],
+): Partial<GetExtIdPropsPayload> => {
+  if (!sections || !submissionValues) return {};
+  const arraySubmissionValues = Array.isArray(submissionValues)
+    ? submissionValues
+    : [submissionValues];
+
+  const valuesForSections = sections
+    .filter((section) => determineSectionType(section) !== SECTION_VERTICAL)
+    .map((s) => s._id)
+    .flatMap((sectionId) =>
+      arraySubmissionValues.map((values) => values?.[sectionId]),
+    ) as {
+    [eventIdOrRowIdx: string]: {
+      id: string;
+      values: any[];
+      template?: string;
+      groups?: string[];
+    };
+  }[];
+
+  const objects = valuesForSections
+    .map((rowsObj) => Object.values(rowsObj))
+    .flatMap((rows) =>
+      rows.map((row: any) => [row.template, ...(row.groups ?? [])]),
+    )
+    .flat()
+    .filter(Boolean);
+
+  return {
+    types: sections.reduce<string[]>(
+      (val: string[], section: any) => [
+        ...val,
+        section?.activityTemplatesSettings?.datasource,
+        section?.groupManagementSettings?.datasource,
+      ],
+      [],
+    ),
+    objects,
+  };
+};
+
 const mergePayloads = (payloads) =>
   payloads.reduce((combinedPayload, payload) => {
-    const payloadWithCorrectFields = { ...initialState, ...payload };
+    const payloadWithCorrectFields = { ...emptyExtIdPropsPayload, ...payload };
     return {
       ...combinedPayload,
       fields: _.uniq([
@@ -203,7 +253,7 @@ const mergePayloads = (payloads) =>
         ...payloadWithCorrectFields.types,
       ]),
     };
-  }, initialState);
+  }, emptyExtIdPropsPayload);
 
 const getValueFromElement = (el) => {
   if (Array.isArray(el.value)) return el.value;
@@ -218,38 +268,36 @@ const getPayloadForVerticalSection = (element, values) =>
       getTECoreAPIPayload(getValueFromElement(el), element.datasource),
     );
 
-const getPayloadForTableSection = (element, values, state) =>
-  Object.keys(values).reduce((allRows, rowKey) => {
+const getPayloadForTableSection = (element, values) =>
+  Object.keys(values).reduce<any[]>((allRows, rowKey) => {
     const rowValues = values[rowKey]?.values || [];
-    return [
-      ...allRows,
-      ...getPayloadForVerticalSection(element, rowValues, state),
-    ];
+    return [...allRows, ...getPayloadForVerticalSection(element, rowValues)];
   }, []);
 
-const getPayloadForConnectedSection = (element, values, state) =>
-  Object.keys(values).reduce((allEvents, eventId) => {
+const getPayloadForConnectedSection = (element, values) =>
+  Object.keys(values).reduce<any[]>((allEvents, eventId) => {
     const event = values[eventId];
     return [
       ...allEvents,
-      ...getPayloadForVerticalSection(element, event.values, state),
+      ...getPayloadForVerticalSection(element, event.values),
     ];
   }, []);
 
-const getPayloadForSection = (element, section, values, state) => {
-  if (!values[section._id] && process.env.NODE_ENV === 'development') {
-    console.log('No values for section ID', section._id, values, section);
+const getPayloadForSection = (element, section, values) => {
+  if (!values || !values[section._id]) {
+    process.env.NODE_ENV === 'development' &&
+      console.log('No values for section ID', section._id, values, section);
     return [];
   }
   const sectionType = determineSectionType(section);
   if (sectionType === SECTION_VERTICAL) {
-    return getPayloadForVerticalSection(element, values[section._id], state);
+    return getPayloadForVerticalSection(element, values[section._id]);
   }
   if (sectionType === SECTION_CONNECTED) {
-    return getPayloadForConnectedSection(element, values[section._id], state);
+    return getPayloadForConnectedSection(element, values[section._id]);
   }
   if (sectionType === SECTION_TABLE) {
-    return getPayloadForTableSection(element, values[section._id], state);
+    return getPayloadForTableSection(element, values[section._id]);
   }
   return [];
 };
@@ -268,7 +316,11 @@ const getAllElementsFromSections = (sections, submissionValues) =>
   sections.reduce(
     (elements, section) => [
       ...elements,
-      ...getElementsFromSection(section, submissionValues),
+      ...(Array.isArray(submissionValues)
+        ? submissionValues
+            .map((values) => getElementsFromSection(section, values))
+            .flat()
+        : getElementsFromSection(section, submissionValues)),
     ],
     [],
   );
@@ -280,6 +332,8 @@ export const getExtIdPropsPayload = ({
   objectRequests = [],
   objectScope = null,
 }) => {
+  if (isEmpty(sections) || isEmpty(submissionValues))
+    return emptyExtIdPropsPayload;
   const elements = getAllElementsFromSections(sections, submissionValues);
   const submissionPayload = extractPayloadFromElements(elements);
   const activitiesPayload = extractPayloadFromActivities(activities);
@@ -287,11 +341,16 @@ export const getExtIdPropsPayload = ({
   const objectRequestsPayload = extractPayloadFromObjectRequests(
     objectRequests,
   );
+  const templateAndGroupPayload = extractPayloadFromTemplatesAndGroups(
+    sections,
+    submissionValues,
+  );
   return mergePayloads([
     submissionPayload,
     activitiesPayload,
     objectScopePayload,
     objectRequestsPayload,
+    templateAndGroupPayload,
   ]);
 };
 export const getLabelsForDatasource = (payload, state) =>
@@ -305,7 +364,7 @@ export const getLabelsForDatasource = (payload, state) =>
       (prev, curr) => ({
         ...prev,
         [curr.extId]: selectExtIdLabel(state)(
-          mapValueTypeToFieldName(curr.valueType),
+          mapValueTypeToFieldName(curr.valueType) as Field,
           curr.extId,
         ),
       }),

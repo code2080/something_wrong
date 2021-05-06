@@ -10,7 +10,7 @@ import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activities from './Activities/activities.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
-import activityGroups from './ActivityGroup/activityGroup.reducer';
+import activityTags from './ActivityTag/activityTag.reducer';
 import constraintConfigurations from './ConstraintConfigurations/constraintConfigurations.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import jobs from './Jobs/jobs.reducer';
@@ -31,7 +31,7 @@ const appReducer = combineReducers({
   submissions,
   activities,
   activityDesigner,
-  activityGroups,
+  activityTags,
   constraintConfigurations,
   jobs,
   manualSchedulings,

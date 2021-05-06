@@ -1,5 +1,3 @@
-import { Icon } from '@ant-design/compatible';
-
 // COMPONENTS
 import SubmissionActionButton from './Components/SubmissionActionButton';
 import StatusLabel from '../StatusLabel/StatusLabel';
@@ -7,6 +5,7 @@ import AcceptanceStatus from './Components/AcceptanceStatus';
 import FormInstanceAssignment from './Components/FormInstanceAssignment';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import DateTime from '../Common/DateTime';
+import { StarOutlined, StarFilled } from '@ant-design/icons';
 
 // SORTERS
 import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
@@ -42,31 +41,32 @@ export const formSubmission = {
   ACTION_BUTTON: {
     title: '',
     key: 'actions',
-    dataIndex: null,
     fixedWidth: 40,
-    render: (_, formInstance) => (
+    render: (formInstance) => (
       <SubmissionActionButton formInstance={formInstance} />
     ),
   },
   SCHEDULING_PROGRESS: {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
-    dataIndex: 'teCoreProps.schedulingProgress',
-    render: (val) =>
-      val ? (
+    dataIndex: 'teCoreProps',
+    render: (teCoreProps) =>
+      teCoreProps ? (
         <StatusLabel
-          color={teCoreSchedulingProgressProps[val].color}
+          color={
+            teCoreSchedulingProgressProps[teCoreProps.schedulingProgress].color
+          }
           className='no-margin'
         >
-          {teCoreSchedulingProgressProps[val].label}
+          {teCoreSchedulingProgressProps[teCoreProps.schedulingProgress].label}
         </StatusLabel>
       ) : (
         'N/A'
       ),
-    sorter: (a, b) =>
+    sorter: (lSubmission, rSubmission) =>
       sortAlpha(
-        a.teCoreProps.schedulingProgress,
-        b.teCoreProps.schedulingProgress,
+        lSubmission.teCoreProps.schedulingProgress,
+        rSubmission.teCoreProps.schedulingProgress,
       ),
   },
   ACCEPTANCE_STATUS: {
@@ -85,15 +85,19 @@ export const formSubmission = {
   ASSIGNMENT: {
     title: 'Assigned to',
     key: 'assignedTo',
-    dataIndex: 'teCoreProps.assignedTo',
     fixedWidth: 85,
-    render: (assignedTo, formInstance) => (
-      <FormInstanceAssignment
-        assignedTo={assignedTo}
-        formId={formInstance.formId}
-        formInstanceId={formInstance._id}
-      />
-    ),
+    render: (formInstance) => {
+      const {
+        teCoreProps: { assignedTo },
+      } = formInstance;
+      return (
+        <FormInstanceAssignment
+          assignedTo={assignedTo}
+          formId={formInstance.formId}
+          formInstanceId={formInstance._id}
+        />
+      );
+    },
   },
   SCHEDULE_LINK: {
     title: 'Schedule link',
@@ -112,17 +116,16 @@ export const formSubmission = {
   IS_STARRED: (dispatch, disabled) => ({
     title: 'Is starred',
     key: 'isStarred',
-    dataIndex: 'teCoreProps.isStarred',
+    dataIndex: 'teCoreProps',
     sorter: (a, b) =>
       sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
     align: 'center',
     fixedWidth: 100,
-    render: (isStarred, item) => (
-      <Icon
-        style={{ fontSize: '0.9rem', color: themeColors.jungleGreen }}
-        type='star'
-        theme={isStarred ? 'filled' : 'outlined'}
-        onClick={(e) => {
+    render: (teCoreProps, item) => {
+      const { isStarred } = teCoreProps;
+      const iconProps = {
+        style: { fontSize: '0.9rem', color: themeColors.jungleGreen },
+        onClick: (e) => {
           e.preventDefault();
           e.stopPropagation();
           if (!disabled) {
@@ -133,8 +136,13 @@ export const formSubmission = {
               }),
             );
           }
-        }}
-      />
-    ),
+        },
+      };
+      return isStarred ? (
+        <StarFilled {...iconProps} />
+      ) : (
+        <StarOutlined {...iconProps} />
+      );
+    },
   }),
 };

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -32,7 +32,6 @@ import { fetchElements } from '../../Redux/Elements/elements.actions';
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = (state) => ({
   isLoading: loadingSelector(state),
-  forms: selectAllForms(state),
   user: state.auth.user,
 });
 
@@ -49,7 +48,6 @@ const mapActionsToProps = {
 };
 
 const FormList = ({
-  forms,
   user,
   isLoading,
   fetchForms,
@@ -63,6 +61,7 @@ const FormList = ({
   setBreadcrumbs,
   history,
 }) => {
+  const forms = useSelector(selectAllForms);
   const objectScopes = useMemo(
     () => ({
       types: _.uniq(
@@ -127,7 +126,6 @@ const FormList = ({
 
 FormList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
-  forms: PropTypes.array,
   user: PropTypes.object,
   fetchForms: PropTypes.func.isRequired,
   fetchElements: PropTypes.func.isRequired,

@@ -6,15 +6,19 @@ import { SelectOutlined } from '@ant-design/icons';
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { selectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
+import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
+import { useMemo } from 'react';
 
 const SelectActivityButton = ({ activity }) => {
   const teCoreAPI = useTECoreAPI();
-  const formInstance = useSelector(selectFormInstance)(
-    activity.formId,
-    activity.formInstanceId,
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, {
+      formId: activity.formId,
+      formInstanceId: activity.formInstanceId,
+    }),
   );
   const formInstanceRequests = useSelector(
     selectFormInstanceObjectRequests(formInstance),

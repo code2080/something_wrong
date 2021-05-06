@@ -1,6 +1,10 @@
 import moment from 'moment';
 import { TActivity } from '../../Types/Activity.type';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import {
+  ActivityValue,
+  DateRangeValue,
+  PaddingValue,
+} from '../../Types/ActivityValue.type';
 import {
   DATE_FORMAT,
   TIME_FORMAT,
@@ -12,19 +16,21 @@ import { weekdayEnums } from '../../Constants/weekDays.constants';
 
 import { determineTimeModeForActivity } from './helpers';
 
+type FormattedValue = { value: string; label: string };
+
 export const fvTimeSlotStartTimeValue = (
   activityValue: ActivityValue,
   activity: TActivity,
-): any[] | null => {
+): FormattedValue[] | null => {
   try {
     const endTime = activity.timing.find((el) => el.extId === 'endTime');
     const length = activity.timing.find((el) => el.extId === 'length');
     if (!endTime || !length || !activityValue.value) return null;
     const { value, extId } = activityValue;
-    const fv = `${moment(value).format(DATE_FORMAT)} ${moment(value).format(
-      TIME_FORMAT,
-    )} - ${moment(endTime.value)
-      .subtract(length.value, 'hours')
+    const fv = `${moment(value as string).format(DATE_FORMAT)} ${moment(
+      value as string,
+    ).format(TIME_FORMAT)} - ${moment(endTime.value as string)
+      .subtract(length.value as number, 'hours')
       .format(TIME_FORMAT)}`;
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {
@@ -35,27 +41,33 @@ export const fvTimeSlotStartTimeValue = (
 export const fvTimeSlotEndTimeValue = (
   activityValue: ActivityValue,
   activity: TActivity,
-): any[] | null => {
+): FormattedValue[] | null => {
   try {
     const startTime = activity.timing.find((el) => el.extId === 'startTime');
     const length = activity.timing.find((el) => el.extId === 'length');
     if (!startTime || !length || !activityValue.value) return null;
     const { value, extId } = activityValue;
-    const fv = `${moment(startTime.value).format(DATE_FORMAT)} ${moment(
-      startTime.value,
-    )
-      .add(length.value, 'hours')
-      .format(TIME_FORMAT)} - ${moment(value).format(TIME_FORMAT)}`;
+    const fv = `${moment(startTime.value as string).format(
+      DATE_FORMAT,
+    )} ${moment(startTime.value as string)
+      .add(length.value as number, 'hours')
+      .format(TIME_FORMAT)} - ${moment(value as string).format(TIME_FORMAT)}`;
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {
     return null;
   }
 };
 
-export const fvLengthValue = (activityValue: ActivityValue): any[] | null => {
+export const fvLengthValue = (
+  activityValue: ActivityValue,
+): FormattedValue[] | null => {
   try {
     const { value, extId } = activityValue;
-    const { days, hours, minutes } = minToHourMinDisplay(value);
+    if (isNaN(value as number)) {
+      console.log(`${value} is not a number in length field`);
+      return null;
+    }
+    const { days, hours, minutes } = minToHourMinDisplay(value as number);
     const fv = days ? `${days}d, ${hours}:${minutes}` : `${hours}:${minutes}`;
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {
@@ -65,9 +77,12 @@ export const fvLengthValue = (activityValue: ActivityValue): any[] | null => {
 
 export const fvDateRangesValue = (
   activityValue: ActivityValue,
-): any[] | null => {
+): FormattedValue[] | null => {
   try {
-    const { value, extId } = activityValue;
+    const { value, extId } = activityValue as {
+      value: DateRangeValue;
+      extId: string;
+    };
     if (!value || !value.startTime) return null;
     const { startTime, endTime } = value;
     const fv = `${moment(startTime).format(DATE_FORMAT)} - ${moment(
@@ -79,12 +94,18 @@ export const fvDateRangesValue = (
   }
 };
 
-export const fvPaddingValue = (activityValue: ActivityValue): any[] | null => {
+export const fvPaddingValue = (
+  activityValue: ActivityValue,
+): FormattedValue[] | null => {
   try {
-    const { value, extId } = activityValue;
+    const { value, extId } = activityValue as {
+      value: PaddingValue;
+      extId: string;
+    };
     // At least one padding variable is mandatory, otherwise null value (in itself not a failed validation)
-    if (!value || (!value.before && !value.after))
+    if (!value?.before && !value?.after) {
       return [{ value: `${extId}/N/A`, label: 'N/A' }];
+    }
     const { before, after } = value;
     const b = minToHourMinDisplay(before);
     const a = minToHourMinDisplay(after);
@@ -124,24 +145,28 @@ export const fvExactTimeModeTimeValue = (
   try {
     const { value, extId } = activityValue;
     if (value == null || value === undefined) return null;
-    const fv = moment(value).format(DATE_TIME_FORMAT);
+    const fv = moment(value as string).format(DATE_TIME_FORMAT);
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {
     return null;
   }
 };
 
-export const fvTimeValue = (activityValue: ActivityValue): any[] | null => {
+export const fvTimeValue = (
+  activityValue: ActivityValue,
+): FormattedValue[] | null => {
   try {
     const { value, extId } = activityValue;
-    const fv = value ? moment(value).format(DATE_TIME_FORMAT) : 'N/A';
+    const fv = value ? moment(value as string).format(DATE_TIME_FORMAT) : 'N/A';
     return [{ value: `${extId}/${fv}`, label: fv }];
   } catch (error) {
     return null;
   }
 };
 
-export const fvWeekdayValue = (activityValue: ActivityValue): any[] | null => {
+export const fvWeekdayValue = (
+  activityValue: ActivityValue,
+): FormattedValue[] | null => {
   try {
     const { value, extId } = activityValue;
     const fv = value ? weekdayEnums[value] : 'N/A';
@@ -161,7 +186,7 @@ export const fvWeekdayValue = (activityValue: ActivityValue): any[] | null => {
 export const getFVForTimingValue = (
   activityValue: ActivityValue,
   activity: TActivity,
-): any[] | null => {
+): FormattedValue[] | null => {
   try {
     // Determine time mode
     const timeMode = determineTimeModeForActivity(activity);

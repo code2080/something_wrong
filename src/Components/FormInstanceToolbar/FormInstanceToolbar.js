@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
 import ScopedObject from '../FormToolbar/ScopedObject';
@@ -16,16 +16,19 @@ import {
 import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
 import useFormInstanceSchedulingProcessModal from '../Modals/useFormInstanceSchedulingProcessModal';
 import useFormInstanceAcceptanceStatusModal from '../Modals/useFormInstanceAcceptanceStatusModal';
+import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { useMemo } from 'react';
+import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 
-const mapStateToProps = (state, ownProps) => {
-  const { formId, formInstanceId } = ownProps;
-  return {
-    formInstance: state.submissions[formId][formInstanceId],
-    formType: state.forms[formId].formType,
-  };
-};
+const FormInstanceToolbar = ({ formId, formInstanceId }) => {
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const selectForm = useMemo(() => makeSelectForm(), []);
 
-const FormInstanceToolbar = ({ formInstance, formType }) => {
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, { formId, formInstanceId }),
+  );
+  const { formType } = useSelector((state) => selectForm(state, formId));
+
   const [
     SchedulingStatusProcessModal,
     openSchedulingStatusProcessModal,
@@ -116,8 +119,8 @@ const FormInstanceToolbar = ({ formInstance, formType }) => {
 };
 
 FormInstanceToolbar.propTypes = {
-  formInstance: PropTypes.object.isRequired,
-  formType: PropTypes.string.isRequired,
+  formInstanceId: PropTypes.string.isRequired,
+  formId: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToProps, null)(FormInstanceToolbar);
+export default FormInstanceToolbar;

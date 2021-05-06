@@ -55,13 +55,16 @@ const ConstraintManagerTopBar = ({
         </Button>
       </div>
       <div className='constraint-manager-top-bar--buttons'>
-        <Paragraph
-          editable={{
-            onChange: onUpdConstrConfName,
-          }}
-        >
-          {selConstrName}
-        </Paragraph>
+        {
+          <Paragraph
+            editable={{
+              onChange: onUpdConstrConfName,
+              tooltip: false,
+            }}
+          >
+            {selConstrName}
+          </Paragraph>
+        }
         <Popconfirm
           title='Are you sure you want to delete the configuration?'
           placement='top'

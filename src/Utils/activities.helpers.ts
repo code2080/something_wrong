@@ -28,13 +28,9 @@ export const ensureBackwardsCompatibleValueRow = (valueRow) => {
   return valueRow;
 };
 
-export const getTimingModeForActivity = (activity) => {
-  try {
-    const aV = activity.timing.find((el) => el.extId === 'mode');
-    return aV.value;
-  } catch (error) {
-    return null;
-  }
+export const getTimingModeForActivity = (activity: TActivity) => {
+  const aV = activity.timing.find((el) => el.extId === 'mode');
+  return aV?.value ?? null;
 };
 
 /**
@@ -81,6 +77,8 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 };
 
 export const activityIsReadOnly = (status) =>
+  // TODO: Temporarily disables editing activities until we ensure it works again
+  true ||
   [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
@@ -89,7 +87,7 @@ const mapActivityValueToTEValue = (
   const { value, type, extId } = activityValue;
   switch (type) {
     case ActivityValueType.FIELD:
-      return new TEField(extId, value as string[]);
+      return new TEField(extId, [value] as string[]);
     case ActivityValueType.OBJECT: {
       // Array means it's an array of objectextids, object means that it's an objectfilter
       return Array.isArray(value)
@@ -108,13 +106,13 @@ const mapActivityValueToTEValue = (
 
 export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
-): { fields: TEField[]; objects: [TEObject | TEObjectFilter] } =>
+): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } =>
   _(activityValues)
-    .filter((av) => av.value)
+    .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
-    .reduce(
+    .reduce<{ fields: TEField[]; objects: (TEObject | TEObjectFilter)[] }>(
       (
-        payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
+        payload: { fields: TEField[]; objects: (TEObjectFilter | TEObject)[] },
         value: TEField | TEObjectFilter | TEObject[] | null,
       ) => {
         if (value instanceof TEField) {
@@ -130,7 +128,10 @@ export const extractValuesFromActivityValues = (
         } else if (Array.isArray(value)) {
           return {
             ...payload,
-            objects: [...payload.objects, ...value],
+            objects: [
+              ...payload.objects,
+              ...value.filter((obj) => obj.id != null),
+            ],
           };
         } else {
           return payload;
@@ -149,7 +150,7 @@ const getAllExtIdsFromActivityValues = (
   const extIds = allActivityValues
     .filter((el) => el.extId && el.extId !== '$init')
     .map((el) => el.extId);
-  return [...extIds, 'groupId', 'submitter', 'primaryObject'];
+  return [...extIds, 'tagId', 'submitter', 'primaryObject'];
 };
 
 const extractMatchesFromFormattedOptions = (
@@ -198,12 +199,15 @@ const createUniqOptions = (option) => {
   );
 };
 
-const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
+const extractValueFromActivity = (
+  activity: TActivity,
+  extIds: string[],
+): [{ [extId: string]: any }, any[]] => {
   // Add constants from the activity
   const consts = [
     {
-      extId: 'groupId',
-      value: activity.groupId,
+      extId: 'tagId',
+      value: activity.tagId,
       type: ActivityValueType.OTHER,
       formId: activity.formId,
     },
@@ -219,18 +223,22 @@ const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
       type: ActivityValueType.OTHER,
       formId: activity.formId,
     },
-  ];
-
+  ] as (ActivityValue & { formId?: string })[];
   // Get all the activity values
-  const values = [...activity.timing, ...activity.values, ...consts].filter(
-    (el) => extIds.indexOf(el.extId) > -1,
-  );
-  // Product a non unique ret val
-  const retVal = values.reduce(
+  const values = [
+    ...activity.timing,
+    ...activity.values,
+    ...consts,
+  ].filter((value) => extIds.includes(value.extId));
+  // Produce a non unique ret val
+  const retVal = values.reduce<{
+    options: { [extid: string]: any[] };
+    matches: string[];
+  }>(
     (tot, activityValue) => {
       const { extId } = activityValue;
       const formattedOptions: any = derivedFormattedValueForActivityValue(
-        activityValue,
+        activityValue as ActivityValue,
         activity,
       );
       if (!formattedOptions) return tot;
@@ -260,14 +268,30 @@ const extractValueFromActivity = (activity: TActivity, extIds: string[]) => {
   return [options, matches];
 };
 
-const mergeAndMakeUniqOptions = (a, b) => {
-  if ((Array.isArray(a) && a.length) || (Array.isArray(b) && b.length))
-    return _.uniqBy([...(a || []), ...(b || [])], 'value');
-  return [...Object.keys(a || {}), ...Object.keys(b || {})].reduce(
+const mergeAndMakeUniqOptions = (
+  updatedOptions,
+  currentOptions,
+): { [key: string]: any } | any[] => {
+  if (_.isEmpty(updatedOptions) && _.isEmpty(currentOptions)) return [];
+  if (
+    (Array.isArray(updatedOptions) && updatedOptions.length) ||
+    (Array.isArray(currentOptions) && currentOptions.length)
+  )
+    return _.uniqBy(
+      [...(updatedOptions || []), ...(currentOptions || [])],
+      'value',
+    );
+  return [
+    ...Object.keys(updatedOptions || {}),
+    ...Object.keys(currentOptions || {}),
+  ].reduce(
     (tot, key) => ({
       ...tot,
       [key]: _.uniqBy(
-        [...(a ? a[key] || [] : []), ...(b ? b[key] || [] : [])],
+        [
+          ...(updatedOptions ? updatedOptions[key] || [] : []),
+          ...(currentOptions ? currentOptions[key] || [] : []),
+        ],
         'value',
       ),
     }),
@@ -288,29 +312,41 @@ export const getFilterPropsForActivities = (activities: any) => {
   /**
    * @TODO WE SHOULD ADD BACK GROUP, SUBMITTER, ETC AS THESE ARE NOT EXTIDS
    */
-  const extIds = getAllExtIdsFromActivityValues(actArr[0]);
+  const availableProperties = getAllExtIdsFromActivityValues(actArr[0]);
 
   // Iterate over each activity and get its formatted value together with the activity id
-  const retVal = actArr.reduce(
-    (tot, activity) => {
-      const [options, matches] = extractValueFromActivity(activity, extIds);
-      const updOptions = extIds.reduce(
-        (tot, extId) => ({
-          ...tot,
-          [extId]: mergeAndMakeUniqOptions(tot[extId], options[extId]),
-        }),
-        tot.options,
+  return actArr.reduce(
+    (props, activity) => {
+      const [currentOptions, currentMatches] = extractValueFromActivity(
+        activity,
+        availableProperties,
       );
-      const updMatches = [...Object.keys(tot.matches), ...matches].reduce(
+
+      const updOptions = availableProperties.reduce(
+        (updatedOptions, property) => ({
+          ...updatedOptions,
+          [property]: mergeAndMakeUniqOptions(
+            updatedOptions[property],
+            currentOptions[property],
+          ),
+        }),
+        props.options,
+      );
+
+      const updMatches = [
+        ...Object.keys(props.matches),
+        ...currentMatches,
+      ].reduce(
         (tot, matchKey) => ({
           ...tot,
           [matchKey]: [
             ...(tot[matchKey] || []),
-            ...(matches.indexOf(matchKey) > -1 ? [activity._id] : []),
+            ...(currentMatches.includes(matchKey) ? [activity._id] : []),
           ],
         }),
-        tot.matches,
+        props.matches,
       );
+
       return {
         options: updOptions,
         matches: updMatches,
@@ -318,5 +354,4 @@ export const getFilterPropsForActivities = (activities: any) => {
     },
     { options: {}, matches: {} },
   );
-  return retVal;
 };
