@@ -3,7 +3,7 @@ import { Select, Button, Typography, Popconfirm, Popover } from 'antd';
 // STYLES
 import './ConstraintManagerTopBar.scss';
 import { gold } from '@ant-design/colors';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
@@ -37,7 +37,16 @@ const ConstraintManagerTopBar = ({
   return (
     <div
       className='constraint-manager-top-bar--wrapper'
-      style={isSaved ? {} : { backgroundColor: warningCol }}
+      style={
+        isSaved
+          ? {}
+          : {
+              backgroundColor: warningCol,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }
+      }
     >
       <div className='constraint-manager-top-bar--selections'>
         <span>Select constraint configuration: </span>
