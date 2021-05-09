@@ -2,6 +2,7 @@ import { Select, Button, Typography, Popconfirm } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
+import { gold } from '@ant-design/colors';
 
 // TYPES
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
@@ -31,10 +32,11 @@ const ConstraintManagerTopBar = ({
   onSaveConstraintConfiguration,
   isSaved,
 }: Props) => {
+  const warningCol = gold[5];
   return (
     <div
       className='constraint-manager-top-bar--wrapper'
-      style={isSaved ? {} : { backgroundColor: 'yellow' }}
+      style={isSaved ? {} : { backgroundColor: warningCol }}
     >
       <div className='constraint-manager-top-bar--selections'>
         <span>Select constraint configuration: </span>
