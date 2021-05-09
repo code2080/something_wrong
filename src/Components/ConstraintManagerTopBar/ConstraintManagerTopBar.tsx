@@ -1,8 +1,9 @@
-import { Select, Button, Typography, Popconfirm } from 'antd';
+import { Select, Button, Typography, Popconfirm, Popover } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
 import { gold } from '@ant-design/colors';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
@@ -59,7 +60,12 @@ const ConstraintManagerTopBar = ({
         <Button size='small' type='link' onClick={onCreateNew}>
           Create new...
         </Button>
-        {!isSaved && <span>You have unsaved changed</span>}
+        {!isSaved && (
+          <span>
+            {' '}
+            <ExclamationCircleOutlined /> Unsaved changes
+          </span>
+        )}
       </div>
       <div className='constraint-manager-top-bar--buttons'>
         {
