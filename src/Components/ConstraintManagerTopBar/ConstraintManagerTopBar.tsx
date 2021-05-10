@@ -1,4 +1,4 @@
-import { Select, Button, Typography, Popconfirm, Popover } from 'antd';
+import { Select, Button, Typography, Popconfirm } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
