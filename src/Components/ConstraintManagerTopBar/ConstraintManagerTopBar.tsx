@@ -42,9 +42,6 @@ const ConstraintManagerTopBar = ({
           ? {}
           : {
               backgroundColor: warningCol,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
             }
       }
     >
@@ -72,7 +69,7 @@ const ConstraintManagerTopBar = ({
         {!isSaved && (
           <span>
             {' '}
-            <ExclamationCircleOutlined /> Unsaved changes
+            <ExclamationCircleOutlined /> You have unsaved changes
           </span>
         )}
       </div>
