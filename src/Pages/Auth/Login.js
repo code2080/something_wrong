@@ -79,7 +79,7 @@ const LoginPage = ({
 
   const handleSelectOrg = useCallback(
     (organizationId) => {
-      selectOrgForUser({ organizationId });
+      selectOrgForUser({ organizationId, app: 'tePref' });
     },
     [selectOrgForUser],
   );
