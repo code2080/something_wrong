@@ -137,11 +137,11 @@ const selectOrgForUserFlow = {
   }),
 };
 
-export const selectOrgForUser = ({ organizationId }) =>
+export const selectOrgForUser = ({ organizationId, app }) =>
   asyncAction.POST({
     flow: selectOrgForUserFlow,
     endpoint: `${getEnvParams().AUTH_URL}auth/change-organization`,
-    params: { organizationId },
+    params: { organizationId, app },
   });
 
 export const logout = () => async (dispatch) => {
