@@ -1,14 +1,9 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
 import { sortByElementHtml } from './sorting.helpers';
-
-// HOOKS
-import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
 
 // COMPONENTS
 import Datasource from '../Components/Elements/Datasource';
@@ -24,6 +19,7 @@ import Padding from '../Components/Elements/Padding';
 // import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
+import LabelRenderer from './LabelRenderer';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -35,15 +31,6 @@ import {
 } from '../Constants/sectionTypes.constants';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
-
-export const LabelRenderer = ({ type, extId }) => {
-  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
-  useFetchLabelsFromExtIds(payload);
-  const label = useSelector((state) => state.te.extIdProps[type][extId]);
-  if (!extId || !type) return 'N/A';
-  if (label?.label) return label.label;
-  return extId;
-};
 
 const unformattedValue = (value) => (
   <div

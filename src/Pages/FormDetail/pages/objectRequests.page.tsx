@@ -26,7 +26,7 @@ import {
 } from '../../../Constants/ObjectRequest.constants';
 
 // UTILS
-import { LabelRenderer } from '../../../Utils/rendering.helpers';
+import LabelRenderer from '../../../Utils/LabelRenderer';
 import { ObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.types';
 import { sortAlpha } from '../../../Components/TableColumns/Helpers/_sorters';
 

@@ -14,7 +14,7 @@ import {
   ObjectRequestType,
   ObjectRequestStatusIcon,
 } from '../Elements/ObjectRequestValue';
-import { LabelRenderer } from '../../Utils/rendering.helpers';
+import LabelRenderer from '../../Utils/LabelRenderer';
 
 // CONSTANTS
 import {
