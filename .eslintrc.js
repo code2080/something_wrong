@@ -26,24 +26,30 @@ module.exports = {
       version: '17',
     },
   },
-  // Disabled advanced ts linting for later
-  // overrides: [
-  //   {
-  //     files: ['**/*.ts', '**/*.tsx'],
-  //     extends: [
-  //       'plugin:@typescript-eslint/recommended',
-  //       'plugin:@typescript-eslint/recommended-requiring-type-checking',
-  //     ],
-  //     parserOptions: {
-  //       tsconfigRootDir: __dirname,
-  //       project: ['./tsconfig.json'],
-  //     },
-  //     rules: {
-  //       '@typescript-eslint/no-extra-semi': 0,
-  //     }
-  //   }
-  // ],
-
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        // disable no undef as TS already checks this.
+        'no-undef': 'off',
+      },
+    },
+    // Disabled advanced ts linting for later
+    //   {
+    //     files: ['**/*.ts', '**/*.tsx'],
+    //     extends: [
+    //       'plugin:@typescript-eslint/recommended',
+    //       'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    //     ],
+    //     parserOptions: {
+    //       tsconfigRootDir: __dirname,
+    //       project: ['./tsconfig.json'],
+    //     },
+    //     rules: {
+    //       '@typescript-eslint/no-extra-semi': 0,
+    //     }
+    //   }
+  ],
   rules: {
     // allow specifying true explicitly for boolean props
     'react/jsx-boolean-value': ['error'],
