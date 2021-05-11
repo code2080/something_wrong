@@ -1,8 +1,14 @@
 import { createSelector } from 'reselect';
 import { TActivity } from '../../Types/Activity.type';
-import { PopulateSelectionPayload } from '../../Types/TECorePayloads.type';
+import {
+  PopulateSelectionPayload,
+  TEObject,
+  TEObjectFilter,
+} from '../../Types/TECorePayloads.type';
 import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
 import { ActivityValue } from '../../Types/ActivityValue.type';
+import partition from 'lodash/partition';
+import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
 
 // TYPES
 type TActivityMap = {
@@ -60,21 +66,54 @@ export const selectActivity = createSelector(
   },
 );
 
+const hydrateObjectRequests = (
+  valuepayload: Pick<PopulateSelectionPayload, 'objects' | 'fields'>,
+  objReqs: ObjectRequest[],
+) => {
+  const [objFilters, objs]: [any[], any[]] = partition(
+    valuepayload.objects,
+    (obj) => obj instanceof TEObjectFilter,
+  );
+  const withObjReqs = {
+    ...valuepayload,
+    objects: [
+      ...(objFilters as TEObjectFilter[]),
+      ...(objs as TEObject[]).map((obj) => {
+        const objReq = objReqs.find((req: ObjectRequest) => req._id === obj.id);
+        return objReq
+          ? ({
+              ...obj,
+              id: objReq?.replacementObjectExtId ?? obj.id,
+            } as TEObject)
+          : obj;
+      }),
+    ],
+  };
+  return withObjReqs;
+};
+
 export const selectTECorePayloadForActivity = createSelector(
   (state: any) => state,
-  (state) => (formId, formInstanceId, activityId, _objectRequests) => {
+  (state) => (
+    formId: string,
+    formInstanceId: string,
+    activityId: string,
+    objectRequests: ObjectRequest[],
+  ) => {
     const form = state.forms[formId];
-    const activitiesForFormInstance = state.activities[formId][formInstanceId];
+    const activitiesForFormInstance = state.activities[formId][
+      formInstanceId
+    ] as TActivity[];
     const activity = activitiesForFormInstance.find(
       (el) => el._id === activityId,
-    ) as TActivity;
+    );
     if (!activity) return null;
 
     const activityValues = activity.values || [];
     const valuepayload = extractValuesFromActivityValues(activityValues);
-
+    const withObjReqs = hydrateObjectRequests(valuepayload, objectRequests);
     return {
-      ...valuepayload,
+      ...withObjReqs,
       reservationMode: form.reservationMode,
       formType: form.formType,
       startTime: activity.timing.find(
