@@ -95,7 +95,7 @@ const ActivitiesToolbar = ({
           Tag selected activities
         </Button>
       </Popover>
-      <ActivityFiltering />
+      {/* <ActivityFiltering /> */}
     </div>
   );
 };
