@@ -8,10 +8,10 @@ import { renderComponent } from '../Helpers/rendering';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 const BaseActivityColValue = ({ activityValue, activity }) => {
-  const component = useMemo(() => renderComponent(activityValue, activity), [
-    activityValue,
-    activity,
-  ]);
+  const component = useMemo(
+    () => renderComponent(activityValue, activity),
+    [activityValue, activity],
+  );
   if (
     component.status === activityValueStatuses.READY_FOR_SCHEDULING &&
     component.renderedComponent

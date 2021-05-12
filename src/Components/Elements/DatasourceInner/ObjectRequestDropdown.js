@@ -67,24 +67,27 @@ const ObjectRequestDropdown = ({ request, children }) => {
     </Menu>
   );
 
-  const onHandledObjectRequest = (request) => (action) => (response = {}) => {
-    dispatch(setExternalAction(null));
-    if (!response || !request) {
-      // api call failed (or was cancelled)
-      return;
-    }
-    const { extid, fields } = response;
+  const onHandledObjectRequest =
+    (request) =>
+    (action) =>
+    (response = {}) => {
+      dispatch(setExternalAction(null));
+      if (!response || !request) {
+        // api call failed (or was cancelled)
+        return;
+      }
+      const { extid, fields } = response;
 
-    const updatedObjectRequest = {
-      ...request,
-      replacementObjectExtId: extid,
-      status: objectRequestActionToStatus[action] || request.status,
+      const updatedObjectRequest = {
+        ...request,
+        replacementObjectExtId: extid,
+        status: objectRequestActionToStatus[action] || request.status,
+      };
+
+      const label = fields[0].values[0];
+      dispatch(setExtIdPropsForObject(extid, { label }));
+      updateObjectRequest(updatedObjectRequest)(dispatch);
     };
-
-    const label = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extid, { label }));
-    updateObjectRequest(updatedObjectRequest)(dispatch);
-  };
 
   return (
     <Dropdown
