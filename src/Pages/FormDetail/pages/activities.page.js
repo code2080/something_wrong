@@ -102,10 +102,12 @@ const ActivitiesPage = () => {
     [activities, visibleActivities],
   );
 
-  useEffect(() => {
-    const { options, matches } = getFilterPropsForActivities(activities);
-    dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  }, [activities, dispatch, formId]);
+  // TODO: Fix this!! DEV-8479
+  // useEffect(() => {
+  //   console.log('Running filterprops');
+  //   const { options, matches } = getFilterPropsForActivities(activities);
+  //   dispatch(setActivityFilter({ filterId: formId, options, matches }));
+  // }, [activities, dispatch, formId]);
 
   /**
    * STATE
@@ -147,6 +149,7 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
+
       <Table
         scroll={{ y: yScroll }}
         components={tableComponents}
