@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
@@ -39,7 +39,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     showDetails,
   }) => (
     <Menu
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       onClick={objectRequestOnClick({
         dispatch,
         teCoreAPI,
@@ -53,7 +55,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
         Execute request...
       </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce(
+      {_.flatMap(objectRequestActions as { [ACTION: string]: string }).reduce<
+        any[]
+      >(
         (items, action) =>
           objectRequestActionCondition(request)[action]
             ? [
@@ -69,7 +73,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     </Menu>
   );
 
-  const onHandledObjectRequest = (request) => (action) => (response = {}) => {
+  const onHandledObjectRequest = (request) => (action) => (
+    response: any = {},
+  ) => {
     dispatch(setExternalAction(null));
     if (!response || !request) {
       // api call failed (or was cancelled)
@@ -90,7 +96,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
 
   return (
     <Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       overlay={objectRequestDropdownMenu({
         coreCallback: onHandledObjectRequest(request),
         request,
