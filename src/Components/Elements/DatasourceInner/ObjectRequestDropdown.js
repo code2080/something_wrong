@@ -22,6 +22,8 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+import ObjectRequestValue from '../ObjectRequestValue';
+import { DownOutlined } from '@ant-design/icons';
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
@@ -105,7 +107,12 @@ const ObjectRequestDropdown = ({ request, children }) => {
       }
     >
       <div className='dd-trigger' ref={spotlightRef}>
-        {children}
+        {children || (
+          <div className='element__datasource--inner'>
+            <ObjectRequestValue request={request} />
+            <DownOutlined />
+          </div>
+        )}
         <ObjectRequestModal
           onClose={() => setDetailsModalVisible(false)}
           request={request}
