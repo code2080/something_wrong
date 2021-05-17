@@ -309,41 +309,6 @@ export const scheduleActivities = (
   );
 };
 
-/**
- * @function updateActivityWithSchedulingResult
- * @description create a new activity with the result of a scheduling return
- * @param {Object<Activity>} activity the original activity
- * @param {Object<SchedulingReturn>} schedulingReturn the scheduling return
- */
-
-export const updateActivityWithSchedulingResult = (
-  activity,
-  schedulingReturn,
-) => {
-  const {
-    status: activityStatus,
-    reservationId,
-    errorCode,
-    errorMessage,
-  } = schedulingReturn;
-
-  let errorDetails = null;
-  if (activityStatus === activityStatuses.FAILED) {
-    errorDetails = new SchedulingError({
-      message: errorMessage,
-      code: errorCode,
-    });
-  }
-
-  return {
-    ...activity,
-    activityStatus,
-    reservationId,
-    errorDetails,
-    schedulingTimestamp: moment.utc(),
-  };
-};
-
 export const updateActivitiesWithSchedulingResults = (
   activities,
   schedulingReturns,
@@ -360,14 +325,13 @@ export const updateActivitiesWithSchedulingResults = (
       },
     } = response;
 
-    let errorDetails = null;
-    if (activityStatus === activityStatuses.FAILED) {
-      errorDetails = new SchedulingError({
-        message: errorMessage,
-        code: errorCode,
-      });
-    }
-
+    const errorDetails =
+      activityStatus === activityStatuses.FAILED
+        ? new SchedulingError({
+            message: errorMessage,
+            code: errorCode,
+          })
+        : null;
     return {
       ...a,
       activityStatus,
