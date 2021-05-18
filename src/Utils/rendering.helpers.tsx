@@ -1,6 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
-import styles from '../Styles/GroupRequestStyle.module.scss';
+import styles from '../Styles/requestStyle.module.scss';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
@@ -83,7 +83,7 @@ const connectedSectionColumns = {
     },
   ],
 
-  TEMPLATES: (section) =>
+  TEMPLATES: (section, objectRequests) =>
     section?.datasource
       ? [
           {
@@ -91,7 +91,25 @@ const connectedSectionColumns = {
             key: section._id,
             dataIndex: 'templateVal',
             render: (templateValue) => {
-              return <LabelRenderer extId={templateValue} type='objects' />;
+              if (
+                templateValue &&
+                !_.isEmpty(objectRequests) &&
+                objectRequests.find((request) => request._id === templateValue) // Should be updated later on.
+              ) {
+                return (
+                  <ObjectRequestDropdown
+                    request={templateValue}
+                    key={templateValue}
+                  />
+                );
+              }
+              return (
+                <LabelRenderer
+                  extId={templateValue}
+                  key={templateValue}
+                  type='objects'
+                />
+              );
             },
           },
         ]
@@ -104,9 +122,9 @@ const connectedSectionColumns = {
             key: section._id,
             dataIndex: 'groupVal',
             render: (groupValue) => {
-              if (groupValue)
+              if (groupValue && !_.isEmpty(objectRequests))
                 return (
-                  <div className={`grp-request ${styles.groupReqStyle}`}>
+                  <div className={`group-request ${styles.requestStyle}`}>
                     {groupValue &&
                       groupValue.map((groupVal) => {
                         const req = objectRequests.find(
@@ -322,6 +340,7 @@ export const transformSectionToTableColumns = (
           ),
           ...connectedSectionColumns.TEMPLATES(
             section.activityTemplatesSettings,
+            objectRequests,
           ),
           ...connectedSectionColumns.GROUPS(
             section.groupManagementSettings,
@@ -338,10 +357,13 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TIMEINFO,
-        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.TEMPLATES(
+          section.activityTemplatesSettings,
+          objectRequests,
+        ),
         ...connectedSectionColumns.GROUPS(
           section.groupManagementSettings,
-          null,
+          objectRequests,
         ),
         ..._elementColumns,
       ];
@@ -354,7 +376,10 @@ export const transformSectionToTableColumns = (
           formInstanceId,
           formId,
         ),
-        ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
+        ...connectedSectionColumns.TEMPLATES(
+          section.activityTemplatesSettings,
+          objectRequests,
+        ),
         ...connectedSectionColumns.GROUPS(
           section.groupManagementSettings,
           objectRequests,
