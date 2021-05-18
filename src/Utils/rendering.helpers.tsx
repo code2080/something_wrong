@@ -106,8 +106,8 @@ const connectedSectionColumns = {
             render: (groupValue) => {
               if (groupValue)
                 return (
-
-                    groupValue &&
+                  <div className={`grp-request ${styles.groupReqStyle}`}>
+                    {groupValue &&
                       groupValue.map((groupVal) => {
                         const req = objectRequests.find(
                           (request) => request._id === groupVal,
@@ -121,8 +121,8 @@ const connectedSectionColumns = {
                             type='objects'
                           />
                         );
-                      })
-
+                      })}{' '}
+                  </div>
                 );
             },
           },
