@@ -225,9 +225,11 @@ const extractValueFromActivity = (
     },
   ] as (ActivityValue & { formId?: string })[];
   // Get all the activity values
-  const values = [...activity.timing, ...activity.values, ...consts].filter(
-    (value) => extIds.includes(value.extId),
-  );
+  const values = [
+    ...activity.timing,
+    ...activity.values,
+    ...consts,
+  ].filter((value) => extIds.includes(value.extId));
   // Produce a non unique ret val
   const retVal = values.reduce<{
     options: { [extid: string]: any[] };

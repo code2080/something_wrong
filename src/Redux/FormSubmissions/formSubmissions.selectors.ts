@@ -16,9 +16,9 @@ export const makeSelectSubmissions = () =>
     (_, formId: string) => formId,
     (submissions, formId) => {
       const submissionsForForm = submissions[formId] || {};
-      return _.flatMap<TFormInstance>(submissionsForForm).sort(
-        (a: any, b: any) => sortTime(a.updatedAt, b.updatedAt),
-      );
+      return _.flatMap<TFormInstance>(
+        submissionsForForm,
+      ).sort((a: any, b: any) => sortTime(a.updatedAt, b.updatedAt));
     },
   );
 

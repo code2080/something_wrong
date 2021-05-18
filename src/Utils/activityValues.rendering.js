@@ -293,11 +293,9 @@ const getRenderPayloadForPaddingValue = (activityValue) => {
     });
   }
   // Both are set
-  const {
-    days: bD,
-    hours: bH,
-    minutes: bM,
-  } = minToHourMinDisplay(value.before);
+  const { days: bD, hours: bH, minutes: bM } = minToHourMinDisplay(
+    value.before,
+  );
   const { days: aD, hours: aH, minutes: aM } = minToHourMinDisplay(value.after);
   return createRenderPayload({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
