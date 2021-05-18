@@ -33,6 +33,7 @@ import {
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 import ObjectRequestDropdown from '../Components/Elements/DatasourceInner/ObjectRequestDropdown';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 const unformattedValue = (value) => (
   <div
@@ -83,7 +84,7 @@ const connectedSectionColumns = {
     },
   ],
 
-  TEMPLATES: (section, objectRequests) =>
+  TEMPLATES: (section, objectRequests: ObjectRequest[] = []) =>
     section?.datasource
       ? [
           {
@@ -91,16 +92,12 @@ const connectedSectionColumns = {
             key: section._id,
             dataIndex: 'templateVal',
             render: (templateValue) => {
-              if (
-                templateValue &&
-                !_.isEmpty(objectRequests) &&
-                objectRequests.find((request) => request._id === templateValue) // Should be updated later on.
-              ) {
-                const request = objectRequests.find(
-                  (request) => request._id === templateValue,
-                );
+              const request = objectRequests.find(
+                (request) => request._id === templateValue,
+              );
+              if (templateValue && !_.isEmpty(objectRequests) && request) {
                 return (
-                  <ObjectRequestDropdown request={request} key={request} />
+                  <ObjectRequestDropdown request={request} key={request._id} />
                 );
               }
               return (
