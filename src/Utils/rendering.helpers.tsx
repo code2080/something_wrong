@@ -1,5 +1,6 @@
 import moment from 'moment';
-import _, { isEmpty } from 'lodash';
+import _ from 'lodash';
+import styles from '../Styles/GroupRequestStyle.module.scss';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
@@ -20,8 +21,6 @@ import Padding from '../Components/Elements/Padding';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
 import LabelRenderer from './LabelRenderer';
-import { Button } from 'antd';
-import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -34,10 +33,6 @@ import {
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
 import ObjectRequestDropdown from '../Components/Elements/DatasourceInner/ObjectRequestDropdown';
-import ObjectRequestValue, {
-  ObjectRequestLabel,
-} from '../Components/Elements/ObjectRequestValue';
-import DatasourceObjectInner from '../Components/Elements/DatasourceInner/DatasourceObjectInner';
 
 const unformattedValue = (value) => (
   <div
@@ -57,7 +52,7 @@ const connectedSectionColumns = {
       key: 'startTime',
       dataIndex: 'startTime',
       fixedWidth: 130,
-      render: (val, item = {}) => (
+      render: (val, item: any) => (
         <SortableTableCell className={`startTime_${item.rowKey}`}>
           <DateTime value={val} format={DATE_TIME_FORMAT} />
         </SortableTableCell>
@@ -74,7 +69,7 @@ const connectedSectionColumns = {
       key: 'endTime',
       dataIndex: 'endTime',
       fixedWidth: 80,
-      render: (val, item = {}) => (
+      render: (val, item: any) => (
         <SortableTableCell className={`endTime_${item.rowKey}`}>
           <DateTime value={val} format={TIME_FORMAT} />
         </SortableTableCell>
@@ -111,21 +106,23 @@ const connectedSectionColumns = {
             render: (groupValue) => {
               if (groupValue)
                 return (
-                  groupValue &&
-                  groupValue.map((groupVal) => {
-                    const req = objectRequests.find(
-                      (request) => request._id === groupVal,
-                    );
-                    return req ? (
-                      <ObjectRequestDropdown request={req} key={req._id} />
-                    ) : (
-                      <LabelRenderer
-                        extId={groupVal}
-                        key={groupVal}
-                        type='objects'
-                      />
-                    );
-                  })
+
+                    groupValue &&
+                      groupValue.map((groupVal) => {
+                        const req = objectRequests.find(
+                          (request) => request._id === groupVal,
+                        );
+                        return req ? (
+                          <ObjectRequestDropdown request={req} key={req._id} />
+                        ) : (
+                          <LabelRenderer
+                            extId={groupVal}
+                            key={groupVal}
+                            type='objects'
+                          />
+                        );
+                      })
+
                 );
             },
           },
@@ -138,7 +135,7 @@ const connectedSectionColumns = {
       title: 'Timeslot',
       key: 'timeslot',
       dataIndex: null,
-      render: (event, item = {}) => (
+      render: (event, item: any) => (
         <SortableTableCell className={`timeslot_${item.rowKey}`}>
           <TimeSlotColumn event={event} timeslots={timeslots} />
         </SortableTableCell>
@@ -292,7 +289,7 @@ export const transformSectionToTableColumns = (
               title: el.label,
               key: el._id,
               dataIndex: el._id,
-              render: (value, item = {}) => (
+              render: (value, item: any) => (
                 <SortableTableCell
                   className={`element_${el._id}_${item.rowKey}`}
                 >
@@ -326,7 +323,10 @@ export const transformSectionToTableColumns = (
           ...connectedSectionColumns.TEMPLATES(
             section.activityTemplatesSettings,
           ),
-          ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
+          ...connectedSectionColumns.GROUPS(
+            section.groupManagementSettings,
+            null,
+          ),
           ..._elementColumns,
         ];
       }
@@ -339,7 +339,10 @@ export const transformSectionToTableColumns = (
         ),
         ...connectedSectionColumns.TIMEINFO,
         ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
-        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
+        ...connectedSectionColumns.GROUPS(
+          section.groupManagementSettings,
+          null,
+        ),
         ..._elementColumns,
       ];
     }
@@ -477,8 +480,8 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-const transformAvailabilityCalendarToTableRows = (values) => [
-  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map((item) => ({
+const transformAvailabilityCalendarToTableRows = (values: any) => [
+  ..._.flatten(Object.values(_.get(values, '[0].value'))).map((item: any) => ({
     ...item,
     rowKey: item.eventId,
   })),
