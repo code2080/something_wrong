@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { /* useDispatch, */ useSelector } from 'react-redux';
 import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
+import _, { pick } from 'lodash';
 import { Table } from 'antd';
 
 // COMPONENtS
@@ -25,6 +25,7 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
+import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -57,8 +58,15 @@ const ActivitiesPage = () => {
     () => makeSelectActivitiesForForm(),
     [],
   );
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
+
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
+
+  const activities = useSelector((state) => {
+    const _activities = selectActivitiesForForm(state, formId);
+    return pick(_activities, submissions.map(({ _id }) => _id));
+  }
   );
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
