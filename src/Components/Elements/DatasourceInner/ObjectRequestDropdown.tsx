@@ -117,7 +117,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     >
       <div className='dd-trigger' ref={spotlightRef}>
         {children || (
-          <div className={`element__datasource--inner ${styles.test}`}>
+          <div
+            className={`element__datasource--inner ${styles.dataSourceInner}`}
+          >
             <ObjectRequestValue request={request} />
             <DownOutlined />
           </div>
