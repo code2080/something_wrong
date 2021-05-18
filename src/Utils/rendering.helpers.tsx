@@ -96,11 +96,11 @@ const connectedSectionColumns = {
                 !_.isEmpty(objectRequests) &&
                 objectRequests.find((request) => request._id === templateValue) // Should be updated later on.
               ) {
+                const request = objectRequests.find(
+                  (request) => request._id === templateValue,
+                );
                 return (
-                  <ObjectRequestDropdown
-                    request={templateValue}
-                    key={templateValue}
-                  />
+                  <ObjectRequestDropdown request={request} key={request} />
                 );
               }
               return (
@@ -496,7 +496,6 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
       rowKey: eventId,
     };
   });
-  console.log({ _data }, { columns });
   return _data;
 };
 
