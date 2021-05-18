@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { /* useDispatch, */ useSelector } from 'react-redux';
 import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -17,10 +17,10 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
+// import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
 
 // ACTIONS
-import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
+// import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
@@ -48,7 +48,7 @@ const calculateAvailableTableHeight = () => {
 
 const ActivitiesPage = () => {
   const { formId } = useParams();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   /**
    * SELECTORS
@@ -102,10 +102,12 @@ const ActivitiesPage = () => {
     [activities, visibleActivities],
   );
 
-  useEffect(() => {
-    const { options, matches } = getFilterPropsForActivities(activities);
-    dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  }, [activities, dispatch, formId]);
+  // TODO: Fix this!! DEV-8479
+  // useEffect(() => {
+  //   console.log('Running filterprops');
+  //   const { options, matches } = getFilterPropsForActivities(activities);
+  //   dispatch(setActivityFilter({ filterId: formId, options, matches }));
+  // }, [activities, dispatch, formId]);
 
   /**
    * STATE
@@ -147,6 +149,7 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
+
       <Table
         scroll={{ y: yScroll }}
         components={tableComponents}

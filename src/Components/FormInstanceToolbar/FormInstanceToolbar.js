@@ -29,14 +29,10 @@ const FormInstanceToolbar = ({ formId, formInstanceId }) => {
   );
   const { formType } = useSelector((state) => selectForm(state, formId));
 
-  const [
-    SchedulingStatusProcessModal,
-    openSchedulingStatusProcessModal,
-  ] = useFormInstanceSchedulingProcessModal();
-  const [
-    AcceptanceStatusProcessModal,
-    openAcceptanceStatusProcessModal,
-  ] = useFormInstanceAcceptanceStatusModal();
+  const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] =
+    useFormInstanceSchedulingProcessModal();
+  const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] =
+    useFormInstanceAcceptanceStatusModal();
   return (
     <div className='toolbar--wrapper'>
       <div className='toolbar--section-flex'>

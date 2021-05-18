@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
+import styles from './ObjectRequestDropdown.module.scss';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -116,7 +117,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
     >
       <div className='dd-trigger' ref={spotlightRef}>
         {children || (
-          <div className='element__datasource--inner'>
+          <div className={`element__datasource--inner ${styles.test}`}>
             <ObjectRequestValue request={request} />
             <DownOutlined />
           </div>

@@ -37,7 +37,11 @@ export default {
       extract: 'te-prefs-lib.css',
       extensions: ['.css', '.scss', '.less'],
       use: [['less', { javascriptEnabled: true }], ['sass']],
-      plugins: [PrefixWrap('.te-prefs-lib')],
+      plugins: [
+        PrefixWrap('.te-prefs-lib', {
+          blacklist: ['.*.module.s?css$'],
+        }),
+      ],
       sourceMap: false,
     }),
     url(),

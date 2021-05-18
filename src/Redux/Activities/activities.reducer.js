@@ -37,12 +37,8 @@ const reducer = (state = initialState, action) => {
 
     case types.REORDER_ACTIVITIES_REQUEST: {
       // Optimistic reordering before BE returns
-      const {
-        formId,
-        formInstanceId,
-        sourceIdx,
-        destinationIdx,
-      } = action.payload;
+      const { formId, formInstanceId, sourceIdx, destinationIdx } =
+        action.payload;
       if (sourceIdx === destinationIdx) return state;
       const activities = state[formId][formInstanceId];
       /**

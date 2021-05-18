@@ -19,45 +19,46 @@ export const makeSelectActivitiesForForm = () =>
     (activities: TActivityMap, formId: string) => activities[formId] || {},
   );
 
-export const selectActivitiesForFormAndIds = createSelector(
-  activityStateSelector,
-  (activities) => (formId: string, activityIds: string[]) => {
-    const activitiesRaw = activities[formId] || {};
-    const matchingActivities = Object.keys(activitiesRaw).reduce(
-      (activities: TActivity[], formInstanceId: string) => {
-        const activitiesForFormInstance = activitiesRaw[formInstanceId];
-        return [
-          ...activities,
-          ...activitiesForFormInstance.filter((act: TActivity) =>
-            activityIds.includes(act._id),
-          ),
-        ];
-      },
-      [],
-    );
-    return matchingActivities;
-  },
-);
+export const makeSelectActivitiesForFormAndIds = () =>
+  createSelector(
+    activityStateSelector,
+    (
+      _: any,
+      { formId, activityIds }: { formId: string; activityIds: string[] },
+    ) => ({ formId, activityIds }),
+    (activities, { formId, activityIds }) => {
+      const activitiesRaw = activities[formId] || {};
+      const matchingActivities = Object.keys(activitiesRaw).reduce(
+        (activities: TActivity[], formInstanceId: string) => {
+          const activitiesForFormInstance = activitiesRaw[formInstanceId];
+          return [
+            ...activities,
+            ...activitiesForFormInstance.filter((act: TActivity) =>
+              activityIds.includes(act._id),
+            ),
+          ];
+        },
+        [],
+      );
+      return matchingActivities;
+    },
+  );
 
 export const selectActivitiesForFormInstanceId = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) => (
-    formId: string,
-    formInstanceId: string,
-  ): TActivity[] => activities?.[formId]?.[formInstanceId] ?? [],
+  (activities: TActivityMap) =>
+    (formId: string, formInstanceId: string): TActivity[] =>
+      activities?.[formId]?.[formInstanceId] ?? [],
 );
 
 export const selectActivity = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) => (
-    formId: string,
-    formInstanceId: string,
-    activityId: string,
-  ) => {
-    const activitiesForFormInstance: TActivity[] =
-      activities?.[formId]?.[formInstanceId] ?? [];
-    return activitiesForFormInstance.find((a) => a._id === activityId);
-  },
+  (activities: TActivityMap) =>
+    (formId: string, formInstanceId: string, activityId: string) => {
+      const activitiesForFormInstance: TActivity[] =
+        activities?.[formId]?.[formInstanceId] ?? [];
+      return activitiesForFormInstance.find((a) => a._id === activityId);
+    },
 );
 
 export const selectTECorePayloadForActivity = createSelector(
