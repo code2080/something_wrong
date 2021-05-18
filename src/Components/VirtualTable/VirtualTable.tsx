@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { VariableSizeGrid as Grid } from 'react-window';
+import PropTypes from 'prop-types';
 import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
 import { Table } from 'antd';
+
+import "./VirtualTable.scss";
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   // eslint-disable-next-line react/prop-types
@@ -47,7 +49,7 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
     { scrollbarSize, ref, onScroll }: any,
   ) => {
     ref.current = connectObject;
-    const totalHeight = rawData.length * 54;
+    const totalHeight = rawData.length * 30;
 
     const Cell = ({ rowIndex, columnIndex }) => {
       const rowData = rawData[rowIndex] as any;
@@ -73,7 +75,7 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
         }}
         height={scroll!.y as number}
         rowCount={rawData.length}
-        rowHeight={() => 54}
+        rowHeight={() => 30}
         width={tableWidth}
         onScroll={onScroll}
       >
@@ -111,7 +113,10 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   );
 };
 VirtualTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape(Table.proptypes)).isRequired,
+  items: PropTypes.array,
+};
+VirtualTable.defaultProps = {
+  items: [],
 };
 
 export default VirtualTable;
