@@ -1,5 +1,5 @@
 import moment from 'moment';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
@@ -20,6 +20,8 @@ import Padding from '../Components/Elements/Padding';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
 import LabelRenderer from './LabelRenderer';
+import { Button } from 'antd';
+import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -31,6 +33,11 @@ import {
 } from '../Constants/sectionTypes.constants';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
+import ObjectRequestDropdown from '../Components/Elements/DatasourceInner/ObjectRequestDropdown';
+import ObjectRequestValue, {
+  ObjectRequestLabel,
+} from '../Components/Elements/ObjectRequestValue';
+import DatasourceObjectInner from '../Components/Elements/DatasourceInner/DatasourceObjectInner';
 
 const unformattedValue = (value) => (
   <div
@@ -88,28 +95,43 @@ const connectedSectionColumns = {
             title: <LabelRenderer extId={section.datasource} type='types' />,
             key: section._id,
             dataIndex: 'templateVal',
-            render: (templateValue) => (
-              <LabelRenderer extId={templateValue} type='objects' />
-            ),
+            render: (templateValue) => {
+              return <LabelRenderer extId={templateValue} type='objects' />;
+            },
           },
         ]
       : [],
-
-  GROUPS: (section) =>
-    section?.datasource
+  GROUPS: (section, objectRequests) => {
+    return section?.datasource
       ? [
           {
             title: <LabelRenderer extId={section.datasource} type='types' />,
             key: section._id,
             dataIndex: 'groupVal',
-            render: (groupValue) =>
-              groupValue &&
-              groupValue.map((groupVal) => (
-                <LabelRenderer extId={groupVal} key={groupVal} type='objects' />
-              )),
+            render: (groupValue) => {
+              if (groupValue)
+                return (
+                  groupValue &&
+                  groupValue.map((groupVal) => {
+                    const req = objectRequests.find(
+                      (request) => request._id === groupVal,
+                    );
+                    return req ? (
+                      <ObjectRequestDropdown request={req} key={req._id} />
+                    ) : (
+                      <LabelRenderer
+                        extId={groupVal}
+                        key={groupVal}
+                        type='objects'
+                      />
+                    );
+                  })
+                );
+            },
           },
         ]
-      : [],
+      : [];
+  },
 
   TIMESLOT: (timeslots) => [
     {
@@ -258,6 +280,7 @@ export const transformSectionToTableColumns = (
   sectionType,
   formInstanceId,
   formId,
+  objectRequests,
 ) => {
   const _elementColumns = section.elements.reduce(
     (cols, el) =>
@@ -307,6 +330,7 @@ export const transformSectionToTableColumns = (
           ..._elementColumns,
         ];
       }
+
       return [
         ...connectedSectionColumns.SCHEDULING(
           section._id,
@@ -328,7 +352,10 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TEMPLATES(section.activityTemplatesSettings),
-        ...connectedSectionColumns.GROUPS(section.groupManagementSettings),
+        ...connectedSectionColumns.GROUPS(
+          section.groupManagementSettings,
+          objectRequests,
+        ),
         ..._elementColumns,
       ];
     case SECTION_AVAILABILITY:
@@ -394,32 +421,10 @@ const transformConnectedSectionValuesToTableRows = (values, columns) => {
         [col.dataIndex]: values[eventId].values[elementIdx].value,
       };
     }, {});
-    const _templates = columns.reduce((templates, col) => {
-      const elementIdx = values[eventId].values.findIndex(
-        (el) => el.elementId === col.dataIndex,
-      );
-      if (invalidIndex(elementIdx)) return templates;
-
-      return {
-        ...templates,
-        templateVal: values[eventId].template,
-      };
-    }, {});
-
-    const _groups = columns.reduce((groups, col) => {
-      const elementIdx = values[eventId].values.findIndex(
-        (el) => el.elementId === col.dataIndex,
-      );
-      if (invalidIndex(elementIdx)) return groups;
-      return {
-        ...groups,
-        groupVal: values[eventId].groups,
-      };
-    }, {});
 
     return {
-      ..._groups,
-      ..._templates,
+      groupVal: values[eventId]?.groups,
+      templateVal: values[eventId].template,
       ..._eventValues,
       startTime: values[eventId].startTime,
       endTime: values[eventId].endTime,
@@ -456,36 +461,14 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
       };
     }, {});
 
-    const _templates = columns.reduce((templates, col) => {
-      const element = values[eventId].values.find(
-        (el) => el.elementId === col.dataIndex,
-      );
-      if (!element) return templates;
-
-      return {
-        ...templates,
-        templateVal: values[eventId].template,
-      };
-    }, {});
-
-    const _groups = columns.reduce((groups, col) => {
-      const elementIdx = values[eventId].values.findIndex(
-        (el) => el.elementId === col.dataIndex,
-      );
-      if (invalidIndex(elementIdx)) return groups;
-      return {
-        ...groups,
-        groupVal: values[eventId].groups,
-      };
-    }, {});
-
     return {
-      ..._groups,
-      ..._templates,
+      groupVal: values[eventId]?.groups,
+      templateVal: values[eventId]?.template,
       ..._eventValues,
       rowKey: eventId,
     };
   });
+  console.log({ _data }, { columns });
   return _data;
 };
 

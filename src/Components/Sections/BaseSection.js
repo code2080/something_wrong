@@ -35,10 +35,16 @@ const mapStateToProps = (state, ownProps) => {
  * @todo
  * 3) Add styling to improve section separation
  */
-const BaseSection = ({ section, values, formId, formInstanceId }) => {
+
+const BaseSection = ({
+  section,
+  values,
+  formId,
+  formInstanceId,
+  objectRequests,
+}) => {
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
-
   // Memoized var holding the columns
   const _columns = useMemo(
     () =>
@@ -47,8 +53,9 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
         sectionType,
         formInstanceId,
         formId,
+        objectRequests,
       ),
-    [formId, formInstanceId, section, sectionType],
+    [formId, formInstanceId, section, sectionType, objectRequests],
   );
 
   // Memoized var holding the transformed section values
@@ -59,8 +66,9 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
         _columns,
         section._id,
         sectionType,
+        objectRequests,
       ),
-    [_columns, section._id, sectionType, values],
+    [_columns, section._id, sectionType, values, objectRequests],
   );
   if (_.isEmpty(_columns)) return null;
   return (
@@ -88,6 +96,7 @@ BaseSection.propTypes = {
   values: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   formId: PropTypes.string.isRequired,
   formInstanceId: PropTypes.string.isRequired,
+  objectRequests: PropTypes.object,
 };
 
 export default withRouter(connect(mapStateToProps, null)(BaseSection));
