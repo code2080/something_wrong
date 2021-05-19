@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 // COMPONENTS
 import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
+import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // STYLES
 import '../../Styles/Toolbar.scss';
@@ -20,7 +21,7 @@ import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissi
 import { useMemo } from 'react';
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 
-const FormInstanceToolbar = ({ formId, formInstanceId }) => {
+const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const selectForm = useMemo(() => makeSelectForm(), []);
 
@@ -37,6 +38,10 @@ const FormInstanceToolbar = ({ formId, formInstanceId }) => {
     AcceptanceStatusProcessModal,
     openAcceptanceStatusProcessModal,
   ] = useFormInstanceAcceptanceStatusModal();
+  const request = objectRequests.find(
+    (request: any) => request._id === formInstance.scopedObject,
+  );
+
   return (
     <div className='toolbar--wrapper'>
       <div className='toolbar--section-flex'>
@@ -45,7 +50,11 @@ const FormInstanceToolbar = ({ formId, formInstanceId }) => {
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Primary object:</span>
-        <ScopedObject objectExtId={formInstance.scopedObject} />
+        {request ? (
+          <ObjectRequestDropdown request={request} />
+        ) : (
+          <ScopedObject objectExtId={formInstance.scopedObject} />
+        )}
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Form type:</span>
@@ -121,6 +130,7 @@ const FormInstanceToolbar = ({ formId, formInstanceId }) => {
 FormInstanceToolbar.propTypes = {
   formInstanceId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
+  objectRequests: PropTypes.array,
 };
 
 export default FormInstanceToolbar;

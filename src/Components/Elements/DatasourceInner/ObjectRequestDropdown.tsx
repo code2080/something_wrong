@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
+import styles from './objectInner.module.scss';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -22,6 +23,9 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+
+import ObjectRequestValue from '../ObjectRequestValue';
+import { DownOutlined } from '@ant-design/icons';
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
@@ -111,7 +115,12 @@ const ObjectRequestDropdown = ({ request, children }) => {
       }
     >
       <div className='dd-trigger' ref={spotlightRef}>
-        {children}
+        {children || (
+          <div className={`element__datasource--inner ${styles.innerStyle}`}>
+            <ObjectRequestValue request={request} />
+            <DownOutlined />
+          </div>
+        )}
         <ObjectRequestModal
           onClose={() => setDetailsModalVisible(false)}
           request={request}
