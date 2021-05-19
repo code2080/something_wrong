@@ -5,7 +5,7 @@ import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
 import { Table } from 'antd';
 
-import "./VirtualTable.scss";
+import './VirtualTable.scss';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   // eslint-disable-next-line react/prop-types
