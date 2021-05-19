@@ -27,18 +27,14 @@ import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissi
  * 3) Add styling to improve section separation
  */
 
-const BaseSection = ({ section, objectRequests }) => {
+const BaseSection = ({ section, formInstanceId, formId, objectRequests }) => {
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
-  const { formId, formInstanceId } = useParams();
   const selectSubmission = useMemo(() => makeSelectFormInstance(), []);
-  const submission = useSelector((state) =>
-    selectSubmission(state, { formId, formInstanceId }),
-  );
-  const submissionValues = useMemo(
-    () => submission.values[section._id] || [],
-    [submission.values, section._id],
-  );
+  const submissionValues = useSelector((state) => {
+    const submission = selectSubmission(state, { formId, formInstanceId });
+    return submission.values?.[section._id] || [];
+  });
 
   // Memoized var holding the columns
   const _columns = useMemo(
@@ -88,6 +84,8 @@ const BaseSection = ({ section, objectRequests }) => {
 
 BaseSection.propTypes = {
   section: PropTypes.object.isRequired,
+  formId: PropTypes.string,
+  formInstanceId: PropTypes.string,
   objectRequests: PropTypes.object,
 };
 
