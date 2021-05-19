@@ -114,6 +114,7 @@ export const updateTimingPropOnActivityDesign = (design, formId, prop, value) =>
     ...design,
     formId: formId,
     name: `Mapping for ${formId}`,
+    isEditable: false,
     timing: {
       ...design.timing,
       [prop]: value,
