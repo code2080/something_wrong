@@ -69,12 +69,11 @@ const objReqColumns: ColumnType<any>[] = [
   {
     title: 'Primary object',
     key: 'scopedObject',
-    dataIndex: 'scopedObject',
     sorter: (a: ObjectRequest, b: ObjectRequest) =>
       sortAlpha(a.scopedObject, b.scopedObject),
-    render: (scopedObject: string) => (
-      <LabelRenderer extId={scopedObject} type='objects' />
-    ),
+    render: (request: ObjectRequest) => {
+      return <ObjectRequestDropdown request={request} />;
+    },
   },
   {
     title: 'Section',
