@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { /* useDispatch, */ useSelector } from 'react-redux';
-import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
-import { Table } from 'antd';
+import _, { pick } from 'lodash';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
-import ColumnHeader from '../../../Components/ActivitiesTableColumns/new/ColumnHeader';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -25,6 +22,8 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
+import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -57,9 +56,18 @@ const ActivitiesPage = () => {
     () => makeSelectActivitiesForForm(),
     [],
   );
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
-  );
+
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
+
+  const activities = useSelector((state) => {
+    const _activities = selectActivitiesForForm(state, formId);
+    return pick(
+      _activities,
+      submissions.map(({ _id }) => _id),
+    );
+  });
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
@@ -83,11 +91,6 @@ const ActivitiesPage = () => {
   });
 
   const [yScroll] = useState(calculateAvailableTableHeight());
-
-  const [virtualTable] = useVT(
-    () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
-    [],
-  );
 
   /**
    * MEMOIZED PROPS
@@ -125,16 +128,6 @@ const ActivitiesPage = () => {
     setSelectedRowKeys([]);
   };
 
-  const tableComponents = useMemo(
-    () => ({
-      ...virtualTable,
-      header: {
-        cell: ColumnHeader,
-      },
-    }),
-    [virtualTable],
-  );
-
   const onScheduleActivities = async (activities) => {
     await handleScheduleActivities(activities);
     onDeselectAll();
@@ -149,10 +142,8 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
-
-      <Table
+      <VirtualTable
         scroll={{ y: yScroll }}
-        components={tableComponents}
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
@@ -161,7 +152,6 @@ const ActivitiesPage = () => {
           selectedRowKeys,
           onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
         }}
-        pagination={false}
       />
     </>
   );

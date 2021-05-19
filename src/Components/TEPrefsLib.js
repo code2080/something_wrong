@@ -10,9 +10,15 @@ import { SET_ENVIRONMENT, SET_CORE_USER } from '../Redux/Auth/auth.actionTypes';
 
 // COMPONENTS
 import TEPrefsLibRouter from './TEPrefsLibRouter';
+import { ConfigProvider } from 'antd';
 
 // STYLES
 import './TEPrefsLib.scss';
+
+const antdConfig = {
+  dropdownMatchSelectWidth: false,
+  getPopupContainer: () => document.getElementById('te-prefs-lib'),
+};
 
 // Configure store and attach to window object
 const store = configureStore();
@@ -57,19 +63,21 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI} mixpanel={mixpanel}>
-        <div
-          className='te-prefs-lib'
-          id='te-prefs-lib'
-          ref={prefsRef}
-          onScroll={() => {
-            window.tePrefsScroll = prefsRef.current && [
-              prefsRef.current.scrollLeft,
-              prefsRef.current.scrollTop,
-            ];
-          }}
-        >
-          <TEPrefsLibRouter />
-        </div>
+        <ConfigProvider {...antdConfig}>
+          <div
+            className='te-prefs-lib'
+            id='te-prefs-lib'
+            ref={prefsRef}
+            onScroll={() => {
+              window.tePrefsScroll = prefsRef.current && [
+                prefsRef.current.scrollLeft,
+                prefsRef.current.scrollTop,
+              ];
+            }}
+          >
+            <TEPrefsLibRouter />
+          </div>
+        </ConfigProvider>
       </TECoreAPIProvider>
     </Provider>
   );
