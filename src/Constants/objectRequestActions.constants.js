@@ -62,83 +62,78 @@ export const objectRequestActionIcon = {
   [objectRequestActions.DETAILS]: <InfoCircleOutlined />,
 };
 
-export const objectRequestOnClick = ({
-  request,
-  coreCallback,
-  dispatch,
-  teCoreAPI,
-  spotlightRef,
-  showDetails,
-}) => ({ key }) => {
-  let payload = {
-    callback: coreCallback(key),
+export const objectRequestOnClick =
+  ({ request, coreCallback, dispatch, teCoreAPI, spotlightRef, showDetails }) =>
+  ({ key }) => {
+    let payload = {
+      callback: coreCallback(key),
+    };
+    const objectRequestActionClickFunc = {
+      [objectRequestActions.ACCEPT]: () => {
+        payload = {
+          ...payload,
+          extId: request.objectExtId,
+          fields: request.objectRequest,
+          objectType: request.datasource,
+          requestType: request.type,
+        };
+        dispatch(setExternalAction(spotlightRef));
+        teCoreAPI[teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST](payload);
+      },
+      [objectRequestActions.DECLINE]: () => {
+        const declinedRequest = {
+          ...request,
+          status: RequestStatus.DECLINED,
+        };
+        updateObjectRequest(declinedRequest)(dispatch);
+      },
+      [objectRequestActions.REPLACE]: () => {
+        payload = {
+          ...payload,
+          objectExtId: request.replacementObjectExtId || request.objectExtId,
+          typeExtId: request.datasource,
+        };
+        dispatch(setExternalAction(spotlightRef));
+        teCoreAPI[teCoreCallnames.REQUEST_REPLACE_OBJECT](payload);
+      },
+      [objectRequestActions.REVERT]: () => {
+        const revertedRequest = {
+          ...request,
+          status: RequestStatus.PENDING,
+          replacementObjectExtId: null,
+        };
+        updateObjectRequest(revertedRequest)(dispatch);
+      },
+      [objectRequestActions.SELECT]: () => {
+        payload = getTECoreAPIPayload(
+          request.replacementObjectExtId || request.objectExtId,
+          `${request.datasource},object`,
+        );
+        teCoreAPI[teCoreCallnames.SELECT_OBJECT](payload);
+      },
+      [objectRequestActions.FILTER]: () => {
+        payload = {
+          type: request.datasource,
+          searchString: '',
+          categories: Object.entries(request.objectRequest).reduce(
+            (categories, [fieldExtId, filterValue]) =>
+              _.isEmpty(filterValue)
+                ? categories
+                : [
+                    ...categories,
+                    {
+                      id: fieldExtId,
+                      values: [filterValue],
+                    },
+                  ],
+            [],
+          ),
+        };
+        teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
+      },
+      [objectRequestActions.DETAILS]: () => {
+        showDetails();
+      },
+    };
+    objectRequestActionClickFunc[key]();
   };
-  const objectRequestActionClickFunc = {
-    [objectRequestActions.ACCEPT]: () => {
-      payload = {
-        ...payload,
-        extId: request.objectExtId,
-        fields: request.objectRequest,
-        objectType: request.datasource,
-        requestType: request.type,
-      };
-      dispatch(setExternalAction(spotlightRef));
-      teCoreAPI[teCoreCallnames.REQUEST_HANDLE_OBJECT_REQUEST](payload);
-    },
-    [objectRequestActions.DECLINE]: () => {
-      const declinedRequest = {
-        ...request,
-        status: RequestStatus.DECLINED,
-      };
-      updateObjectRequest(declinedRequest)(dispatch);
-    },
-    [objectRequestActions.REPLACE]: () => {
-      payload = {
-        ...payload,
-        objectExtId: request.replacementObjectExtId || request.objectExtId,
-        typeExtId: request.datasource,
-      };
-      dispatch(setExternalAction(spotlightRef));
-      teCoreAPI[teCoreCallnames.REQUEST_REPLACE_OBJECT](payload);
-    },
-    [objectRequestActions.REVERT]: () => {
-      const revertedRequest = {
-        ...request,
-        status: RequestStatus.PENDING,
-        replacementObjectExtId: null,
-      };
-      updateObjectRequest(revertedRequest)(dispatch);
-    },
-    [objectRequestActions.SELECT]: () => {
-      payload = getTECoreAPIPayload(
-        request.replacementObjectExtId || request.objectExtId,
-        `${request.datasource},object`,
-      );
-      teCoreAPI[teCoreCallnames.SELECT_OBJECT](payload);
-    },
-    [objectRequestActions.FILTER]: () => {
-      payload = {
-        type: request.datasource,
-        searchString: '',
-        categories: Object.entries(request.objectRequest).reduce(
-          (categories, [fieldExtId, filterValue]) =>
-            _.isEmpty(filterValue)
-              ? categories
-              : [
-                  ...categories,
-                  {
-                    id: fieldExtId,
-                    values: [filterValue],
-                  },
-                ],
-          [],
-        ),
-      };
-      teCoreAPI[teCoreCallnames.FILTER_OBJECTS](payload);
-    },
-    [objectRequestActions.DETAILS]: () => {
-      showDetails();
-    },
-  };
-  objectRequestActionClickFunc[key]();
-};

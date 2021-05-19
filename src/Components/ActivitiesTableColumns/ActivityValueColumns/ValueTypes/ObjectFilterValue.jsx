@@ -12,9 +12,10 @@ import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 
 const ObjectFilterValue = ({ value }) => {
   const [visIdx, setVisIdx] = useState(0);
-  const normalizedFilterValues = useMemo(() => normalizeFilterValues(value), [
-    value,
-  ]);
+  const normalizedFilterValues = useMemo(
+    () => normalizeFilterValues(value),
+    [value],
+  );
   const labels = useSelector(selectMultipleExtIdLabels)(
     normalizedFilterValues.map((val) => ({
       field: 'fields',

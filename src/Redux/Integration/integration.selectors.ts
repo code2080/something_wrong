@@ -338,9 +338,8 @@ export const getExtIdPropsPayload = ({
   const submissionPayload = extractPayloadFromElements(elements);
   const activitiesPayload = extractPayloadFromActivities(activities);
   const objectScopePayload = objectScope ? { types: [objectScope] } : {};
-  const objectRequestsPayload = extractPayloadFromObjectRequests(
-    objectRequests,
-  );
+  const objectRequestsPayload =
+    extractPayloadFromObjectRequests(objectRequests);
   const templateAndGroupPayload = extractPayloadFromTemplatesAndGroups(
     sections,
     submissionValues,
