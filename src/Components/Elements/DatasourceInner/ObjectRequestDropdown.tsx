@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
@@ -37,7 +37,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     showDetails,
   }) => (
     <Menu
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       onClick={objectRequestOnClick({
         dispatch,
         teCoreAPI,
@@ -52,7 +54,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
       </span>
       <Menu.Divider />
       {_.flatMap(objectRequestActions).reduce(
-        (items, action) =>
+        (items: any, action: any) =>
           objectRequestActionCondition(request)[action]
             ? [
                 ...items,
@@ -67,31 +69,32 @@ const ObjectRequestDropdown = ({ request, children }) => {
     </Menu>
   );
 
-  const onHandledObjectRequest =
-    (request) =>
-    (action) =>
-    (response = {}) => {
-      dispatch(setExternalAction(null));
-      if (!response || !request) {
-        // api call failed (or was cancelled)
-        return;
-      }
-      const { extid, fields } = response;
+  const onHandledObjectRequest = (request) => (action) => (
+    response: any = {},
+  ) => {
+    dispatch(setExternalAction(null));
+    if (!response || !request) {
+      // api call failed (or was cancelled)
+      return;
+    }
+    const { extid, fields } = response;
 
-      const updatedObjectRequest = {
-        ...request,
-        replacementObjectExtId: extid,
-        status: objectRequestActionToStatus[action] || request.status,
-      };
-
-      const label = fields[0].values[0];
-      dispatch(setExtIdPropsForObject(extid, { label }));
-      updateObjectRequest(updatedObjectRequest)(dispatch);
+    const updatedObjectRequest = {
+      ...request,
+      replacementObjectExtId: extid,
+      status: objectRequestActionToStatus[action] || request.status,
     };
+
+    const label = fields[0].values[0];
+    dispatch(setExtIdPropsForObject(extid, { label }));
+    updateObjectRequest(updatedObjectRequest)(dispatch);
+  };
 
   return (
     <Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       overlay={objectRequestDropdownMenu({
         coreCallback: onHandledObjectRequest(request),
         request,
