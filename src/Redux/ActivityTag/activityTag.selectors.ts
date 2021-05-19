@@ -13,10 +13,7 @@ export const selectActivityTag = createSelector(
   activityTagStateSelector,
   (activityTags) => (formId: string, activityTagId: string | null) => {
     if (!formId || !activityTagId) return null;
-    const activityTagsForForm = activityTags[formId];
-    const activityTag = activityTagsForForm.find(
-      (el: TActivityTag) => el._id === activityTagId,
-    );
-    return activityTag;
+    const activityTagsForForm = (activityTags[formId] ?? []) as TActivityTag[];
+    return activityTagsForForm.find((tag) => tag._id === activityTagId) || null;
   },
 );
