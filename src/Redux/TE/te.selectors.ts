@@ -42,20 +42,18 @@ export const selectExtIdLabel = createSelector(
    * @important extIdProps must be populated by using teCoreAPI.getExtIdProps() first (recommend using useFetchLabelsFromExtids hook)
    */
   selectExtIdProps,
-  (extIdProps) =>
-    (field: Field, extId: string, fallbackVal = extId) =>
-      getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
+  (extIdProps) => (field: Field, extId: string, fallbackVal = extId) =>
+    getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
 );
 
 export const selectMultipleExtIdLabels = createSelector(
   selectExtIdProps,
-  (extIdProps) =>
-    (extIds: ExtIdLabelPayload[]): { [extId: string]: string } =>
-      extIds.reduce(
-        (idLabelMap, extId) => ({
-          ...idLabelMap,
-          [extId.extId]: getLabelFromExtId(extIdProps, extId),
-        }),
-        {},
-      ),
+  (extIdProps) => (extIds: ExtIdLabelPayload[]): { [extId: string]: string } =>
+    extIds.reduce(
+      (idLabelMap, extId) => ({
+        ...idLabelMap,
+        [extId.extId]: getLabelFromExtId(extIdProps, extId),
+      }),
+      {},
+    ),
 );

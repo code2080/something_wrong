@@ -46,19 +46,23 @@ export const makeSelectActivitiesForFormAndIds = () =>
 
 export const selectActivitiesForFormInstanceId = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) =>
-    (formId: string, formInstanceId: string): TActivity[] =>
-      activities?.[formId]?.[formInstanceId] ?? [],
+  (activities: TActivityMap) => (
+    formId: string,
+    formInstanceId: string,
+  ): TActivity[] => activities?.[formId]?.[formInstanceId] ?? [],
 );
 
 export const selectActivity = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) =>
-    (formId: string, formInstanceId: string, activityId: string) => {
-      const activitiesForFormInstance: TActivity[] =
-        activities?.[formId]?.[formInstanceId] ?? [];
-      return activitiesForFormInstance.find((a) => a._id === activityId);
-    },
+  (activities: TActivityMap) => (
+    formId: string,
+    formInstanceId: string,
+    activityId: string,
+  ) => {
+    const activitiesForFormInstance: TActivity[] =
+      activities?.[formId]?.[formInstanceId] ?? [];
+    return activitiesForFormInstance.find((a) => a._id === activityId);
+  },
 );
 
 export const selectTECorePayloadForActivity = createSelector(
