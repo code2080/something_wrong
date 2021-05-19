@@ -39,10 +39,10 @@ export const useJobWSAPI = () => {
       const jobId = job ? job._id : null;
       console.log(`Received job update: ${jobId}`);
       // Set the active job id and form id
-      setActiveJobId(jobId);
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
-      dispatch(fetchActivitiesForForm(formId));
+      activeJobId !== null && dispatch(fetchActivitiesForForm(formId));
+      setActiveJobId(jobId);
     });
     return () => {
       // When component unmounts, close the connection
