@@ -25,6 +25,7 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -65,6 +66,7 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   );
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const [formType, reservationMode] = useSelector((state) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -93,8 +95,11 @@ const ActivitiesPage = () => {
    * MEMOIZED PROPS
    */
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
+        : [],
+    [design, objectRequests],
   );
 
   const tableDataSource = useMemo(

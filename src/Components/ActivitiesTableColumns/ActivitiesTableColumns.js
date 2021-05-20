@@ -6,10 +6,13 @@ import TitleCell from './new/TitleCell';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from './StaticColumns/StaticColumns';
+import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // SORTERS
-
-export const createActivitiesTableColumnsFromMapping = (design) => {
+export const createActivitiesTableColumnsFromMapping = (
+  design,
+  objectRequests,
+) => {
   const allActivityValues = [
     ...Object.keys(design.objects).map((objKey) => ['types', objKey]),
     ...Object.keys(design.fields).map((fieldKey) => ['fields', fieldKey]),
@@ -21,14 +24,24 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
         displayName: 'ActivityCol',
-        render: (activity) => (
-          <ColumnWrapper
-            activity={activity}
-            type='VALUE'
-            prop={extId}
-            mapping={design}
-          />
-        ),
+        render: (activity) => {
+          const activitSubValues = activity.values.flatMap((activityVal) =>
+            activityVal.submissionValue.map((subVal) => subVal),
+          );
+          const request = objectRequests.find((req) =>
+            activitSubValues.map((val) => req._id === val),
+          );
+          return request ? (
+            <ObjectRequestDropdown request={request} />
+          ) : (
+            <ColumnWrapper
+              activity={activity}
+              type='VALUE'
+              prop={extId}
+              mapping={design}
+            />
+          );
+        },
       },
     ],
     [],
