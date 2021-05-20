@@ -16,6 +16,7 @@ import { toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/fo
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { themeColors } from '../../Constants/themeColors.constants';
+import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 export const formSubmission = {
   NAME: {
@@ -31,12 +32,21 @@ export const formSubmission = {
     render: (val) => <DateTime value={val} />,
     sorter: (a, b) => sortTime(a.submittedAt, b.submittedAt),
   },
-  SCOPED_OBJECT: {
-    title: 'Primary object',
-    key: 'scopedObject',
-    dataIndex: 'scopedObject',
-    render: (val) => <ScopedObject objectExtId={val} />,
-    sorter: (a, b) => sortAlpha(a.scopedObject, b.scopedObject),
+  SCOPED_OBJECT: (objectRequests) => {
+    return {
+      title: 'Primary object',
+      key: 'scopedObject',
+      dataIndex: 'scopedObject',
+      render: (val) => {
+        const request = objectRequests.find((request) => request._id === val);
+        return request ? (
+          <ObjectRequestDropdown request={request} />
+        ) : (
+          <ScopedObject objectExtId={val} />
+        );
+      },
+      sorter: (a, b) => sortAlpha(a.scopedObject, b.scopedObject),
+    };
   },
   ACTION_BUTTON: {
     title: '',
