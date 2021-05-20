@@ -22,8 +22,9 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+import { closeAllDropdown } from '../../../Utils/dom.helper';
 
-const ObjectRequestDropdown = ({ request, children }) => {
+const ObjectRequestDropdown = ({ request, readonly, children }) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const spotlightRef = useRef(null);
@@ -38,32 +39,37 @@ const ObjectRequestDropdown = ({ request, children }) => {
   }) => (
     <Menu
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      onClick={objectRequestOnClick({
-        dispatch,
-        teCoreAPI,
-        coreCallback,
-        request,
-        spotlightRef,
-        showDetails,
-      })}
+      onClick={e => {
+        closeAllDropdown();
+        objectRequestOnClick({
+          dispatch,
+          teCoreAPI,
+          coreCallback,
+          request,
+          spotlightRef,
+          showDetails,
+        })(e);
+      }}
     >
       <span style={{ padding: '5px 12px', cursor: 'default' }}>
         Execute request...
       </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce(
-        (items, action) =>
-          objectRequestActionCondition(request)[action]
-            ? [
-                ...items,
-                <Menu.Item key={action}>
-                  {objectRequestActionIcon[action]}{' '}
-                  {objectRequestActionLabels[action]}
-                </Menu.Item>,
-              ]
-            : items,
-        [],
-      )}
+      {_.flatMap(objectRequestActions)
+        .filter(item => readonly ? item === objectRequestActions.DETAILS : true)
+        .reduce(
+          (items, action) =>
+            objectRequestActionCondition(request)[action]
+              ? [
+                  ...items,
+                  <Menu.Item key={action}>
+                    {objectRequestActionIcon[action]}{' '}
+                    {objectRequestActionLabels[action]}
+                  </Menu.Item>,
+                ]
+              : items,
+          [],
+        )}
     </Menu>
   );
 
@@ -122,6 +128,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
 ObjectRequestDropdown.propTypes = {
   request: PropTypes.object,
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
+  readonly: PropTypes.bool,
 };
 
 export default ObjectRequestDropdown;
