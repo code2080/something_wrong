@@ -92,15 +92,13 @@ const connectedSectionColumns = {
             key: section._id,
             dataIndex: 'templateVal',
             render: (templateValue) => {
+              if (!templateValue) return null;
               const request = objectRequests.find(
                 (request) => request._id === templateValue,
               );
-              if (templateValue && !_.isEmpty(objectRequests) && request) {
-                return (
-                  <ObjectRequestDropdown request={request} key={request._id} />
-                );
-              }
-              return (
+              return request ? (
+                <ObjectRequestDropdown request={request} key={request._id} />
+              ) : (
                 <LabelRenderer
                   extId={templateValue}
                   key={templateValue}
@@ -111,7 +109,7 @@ const connectedSectionColumns = {
           },
         ]
       : [],
-  GROUPS: (section, objectRequests) => {
+  GROUPS: (section, objectRequests: ObjectRequest[] = []) => {
     return section?.datasource
       ? [
           {
@@ -341,7 +339,7 @@ export const transformSectionToTableColumns = (
           ),
           ...connectedSectionColumns.GROUPS(
             section.groupManagementSettings,
-            null,
+            objectRequests,
           ),
           ..._elementColumns,
         ];
