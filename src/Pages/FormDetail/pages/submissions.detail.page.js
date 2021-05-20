@@ -18,7 +18,7 @@ import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { makeSelectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectActivitiesForFormInstanceId } from '../../../Redux/Activities/activities.selectors';
 import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
-import { selectFormInstanceObjectRequests } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // STYLES
 import './submissions.detail.page.scss';
@@ -42,9 +42,7 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     formId,
     formInstanceId,
   );
-  const objectRequests = useSelector(
-    selectFormInstanceObjectRequests(formInstance),
-  );
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
 
   // Effect to update breadcrumbs
   useEffect(() => {
@@ -80,13 +78,13 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     [form],
   );
   useFetchLabelsFromExtIds(payload);
-
   const baseSections = form.sections.map((section) => (
     <BaseSection
       section={section}
       key={section._id}
       formId={formId}
       formInstanceId={formInstanceId}
+      objectRequests={objectRequests}
     />
   ));
 

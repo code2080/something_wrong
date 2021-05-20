@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
+import styles from './ObjectRequestDropdown.module.scss';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -22,6 +23,8 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+import ObjectRequestValue from '../ObjectRequestValue';
+import { DownOutlined } from '@ant-design/icons';
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
@@ -37,7 +40,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     showDetails,
   }) => (
     <Menu
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       onClick={objectRequestOnClick({
         dispatch,
         teCoreAPI,
@@ -51,7 +56,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
         Execute request...
       </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce(
+      {_.flatMap(objectRequestActions as { [ACTION: string]: string }).reduce<
+        any[]
+      >(
         (items, action) =>
           objectRequestActionCondition(request)[action]
             ? [
@@ -70,7 +77,7 @@ const ObjectRequestDropdown = ({ request, children }) => {
   const onHandledObjectRequest =
     (request) =>
     (action) =>
-    (response = {}) => {
+    (response: any = {}) => {
       dispatch(setExternalAction(null));
       if (!response || !request) {
         // api call failed (or was cancelled)
@@ -91,7 +98,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
 
   return (
     <Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       overlay={objectRequestDropdownMenu({
         coreCallback: onHandledObjectRequest(request),
         request,
@@ -108,7 +117,14 @@ const ObjectRequestDropdown = ({ request, children }) => {
       }
     >
       <div className='dd-trigger' ref={spotlightRef}>
-        {children}
+        {children || (
+          <div
+            className={`element__datasource--inner ${styles.dataSourceInner}`}
+          >
+            <ObjectRequestValue request={request} />
+            <DownOutlined />
+          </div>
+        )}
         <ObjectRequestModal
           onClose={() => setDetailsModalVisible(false)}
           request={request}
