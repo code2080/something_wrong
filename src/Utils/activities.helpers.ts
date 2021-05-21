@@ -128,10 +128,10 @@ export const extractValuesFromActivityValues = (
         } else if (Array.isArray(value)) {
           return {
             ...payload,
-            objects: [
-              ...payload.objects,
-              ...value.filter((obj) => obj.id != null),
-            ],
+            objects: _.uniqBy(
+              [...payload.objects, ...value.filter((obj) => obj.id != null)],
+              'id',
+            ),
           };
         } else {
           return payload;
