@@ -212,9 +212,7 @@ const ActivityActionsDropdown = ({
         case 'SCHEDULE_ALL':
           trackScheduleActivities(activities);
           scheduleActivities(
-            activities.filter(
-              (a) => a.activityStatus !== activityStatuses.SCHEDULED,
-            ),
+            activities,
             formType,
             reservationMode,
             teCoreAPI[activityActions[key].callname],
