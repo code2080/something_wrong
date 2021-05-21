@@ -106,8 +106,8 @@ const mapActivityValueToTEValue = (
 
 export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
-): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } =>
-  _(activityValues)
+): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } => {
+  const payload = _(activityValues)
     .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
     .reduce<{ fields: TEField[]; objects: (TEObject | TEObjectFilter)[] }>(
@@ -139,6 +139,20 @@ export const extractValuesFromActivityValues = (
       },
       { fields: [], objects: [] },
     );
+  const [objFilters, objects]: [any, any] = _.partition(
+    payload.objects,
+    (obj) => obj instanceof TEObjectFilter,
+  );
+
+  // DEV-8061: Remove all duplicated TEObjects
+  return {
+    ...payload,
+    objects: [
+      ...(objFilters as TEObjectFilter[]),
+      ..._.uniqBy(objects as TEObject[], 'id'),
+    ],
+  };
+};
 
 const getAllExtIdsFromActivityValues = (
   sampleActivity: TActivity,
