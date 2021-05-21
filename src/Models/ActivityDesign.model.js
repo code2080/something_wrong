@@ -9,7 +9,15 @@ export class ActivityDesign {
   propSettings;
   isEditable;
 
-  constructor({ name, formId, timing, objects, fields, propSettings, isEditable }) {
+  constructor({
+    name,
+    formId,
+    timing,
+    objects,
+    fields,
+    propSettings,
+    isEditable,
+  }) {
     this.name = name;
     this.formId = formId;
     this.timing = new ActivityTiming(timing || {});
