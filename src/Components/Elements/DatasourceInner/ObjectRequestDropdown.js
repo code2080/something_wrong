@@ -24,7 +24,7 @@ import {
 } from '../../../Constants/objectRequestActions.constants';
 import { closeAllDropdown } from '../../../Utils/dom.helper';
 
-const ObjectRequestDropdown = ({ request, readonly, children }) => {
+const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const spotlightRef = useRef(null);
@@ -56,7 +56,6 @@ const ObjectRequestDropdown = ({ request, readonly, children }) => {
       </span>
       <Menu.Divider />
       {_.flatMap(objectRequestActions)
-        .filter(item => readonly ? item === objectRequestActions.DETAILS : true)
         .reduce(
           (items, action) =>
             objectRequestActionCondition(request)[action]
@@ -128,7 +127,6 @@ const ObjectRequestDropdown = ({ request, readonly, children }) => {
 ObjectRequestDropdown.propTypes = {
   request: PropTypes.object,
   children: PropTypes.oneOfType([PropTypes.node, PropTypes.array]),
-  readonly: PropTypes.bool,
 };
 
 export default ObjectRequestDropdown;
