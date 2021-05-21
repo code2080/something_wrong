@@ -197,7 +197,6 @@ export const scheduleActivities = (
             : null,
       };
     });
-
   // filter invalidate activities
   const [noResultActivities, validatedActivities] = _.partition(
     preprocessingMap,
@@ -209,6 +208,8 @@ export const scheduleActivities = (
   }));
 
   if ((failedActivities || []).length > 0) cFn(failedActivities);
+
+  const hydrateObjectRequests = (activities) => {};
 
   // Edge case: all activities have schedulingAlgorithm EXACT
   if (
@@ -237,7 +238,7 @@ export const scheduleActivities = (
   const a = preprocessingMap.filter((a) => a.validates).map((a) => a.activity);
   return (
     a.length &&
-    window.tePrefsLibStore.dispatch(
+    (window as any).tePrefsLibStore.dispatch(
       createJob({
         activities: a,
         type: getBindingSchedulingAlgorithm(a),
