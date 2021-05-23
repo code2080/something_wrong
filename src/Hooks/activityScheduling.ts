@@ -41,9 +41,10 @@ const useActivityScheduling = ({
   const teCoreAPI = useTECoreAPI();
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
-  const indexedFormInstances = useMemo(() => keyBy(submissions, '_id'), [
-    submissions,
-  ]);
+  const indexedFormInstances = useMemo(
+    () => keyBy(submissions, '_id'),
+    [submissions],
+  );
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],

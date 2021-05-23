@@ -42,7 +42,6 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     formId,
     formInstanceId,
   );
-
   const objectRequests = useSelector(selectFormObjectRequest(formId));
 
   // Effect to update breadcrumbs
@@ -79,13 +78,13 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
     [form],
   );
   useFetchLabelsFromExtIds(payload);
-
   const baseSections = form.sections.map((section) => (
     <BaseSection
       section={section}
       key={section._id}
       formId={formId}
       formInstanceId={formInstanceId}
+      objectRequests={objectRequests}
     />
   ));
 

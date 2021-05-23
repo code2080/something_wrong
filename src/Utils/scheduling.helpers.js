@@ -81,27 +81,6 @@ export const determineSchedulingAlgorithmForActivityValue = (
   return schedulingAlgorithms.EXACT;
 };
 
-/**
- * @function parseTECoreResultToScheduleReturn
- * @description transform a single TECoreSchedulingReturn into PIC native SchedulingReturn
- * @param {Object<TECoreAPISchedulingReturn>} teCoreReturn unprocessed return from TE Core
- * @returns SchedulingReturn
- */
-const parseTECoreResultToScheduleReturn = (teCoreReturn) =>
-  new SchedulingReturn({
-    status:
-      teCoreReturn.failures.length === 0
-        ? activityStatuses.SCHEDULED
-        : activityStatuses.FAILED,
-    reservationId: teCoreReturn.newIds[0],
-    errorCode: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.references[0]
-      : 0,
-    errorMessage: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.reservation
-      : '',
-  });
-
 const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
   teCoreReturns.map((el) => {
     const status =
@@ -176,44 +155,6 @@ const getBindingSchedulingAlgorithm = (activities) => {
     return schedulingAlgorithms.BEST_FIT_OBJECT;
   }
   return schedulingAlgorithms.BEST_FIT_TIME;
-};
-
-export const scheduleActivity = async (
-  activity,
-  teCoreScheduleFn,
-  callback,
-) => {
-  // Validate the activity
-  if (!validateActivity(activity)) {
-    return new SchedulingReturn({
-      status: activityStatuses.VALIDATION_ERROR,
-      errorCode: activityStatuses.VALIDATION_ERROR,
-      errorMessage:
-        activityStatusProps[activityStatuses.VALIDATION_ERROR].label,
-    });
-  }
-  const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(activity);
-
-  // Special case: EVERTHING is schedulingAlgorithms.EXACT
-  if (schedulingAlgorithm === schedulingAlgorithms.EXACT) {
-    const reservation = formatActivityForExactScheduling(activity);
-    return teCoreScheduleFn({
-      reservation,
-      callback: (teCoreResult) =>
-        callback(parseTECoreResultToScheduleReturn(teCoreResult)),
-    });
-  }
-
-  return window.tePrefsLibStore.dispatch(
-    createJob({
-      activities: [activity],
-      type: schedulingAlgorithm,
-      formId: activity.formId,
-      formInstanceIds: [activity.formInstanceId],
-      callback,
-      meta: { schedulingMode: schedulingModes.SINGLE },
-    }),
-  );
 };
 
 export const scheduleActivities = (

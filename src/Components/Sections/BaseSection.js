@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -20,24 +19,21 @@ import './BaseSection.scss';
 
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
-
-// CONSTANTS
-const mapStateToProps = (state, ownProps) => {
-  const { formId, formInstanceId, section } = ownProps;
-  return {
-    values: state.submissions[formId][formInstanceId].values[section._id] || [],
-    formId,
-    formInstanceId,
-  };
-};
+import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 /**
  * @todo
  * 3) Add styling to improve section separation
  */
-const BaseSection = ({ section, values, formId, formInstanceId }) => {
+
+const BaseSection = ({ section, formInstanceId, formId, objectRequests }) => {
   // Memoized value of the section type
   const sectionType = determineSectionType(section);
+  const selectSubmission = useMemo(() => makeSelectFormInstance(), []);
+  const submissionValues = useSelector((state) => {
+    const submission = selectSubmission(state, { formId, formInstanceId });
+    return submission.values?.[section._id] || [];
+  });
 
   // Memoized var holding the columns
   const _columns = useMemo(
@@ -47,20 +43,22 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
         sectionType,
         formInstanceId,
         formId,
+        objectRequests,
       ),
-    [formId, formInstanceId, section, sectionType],
+    [formId, formInstanceId, section, sectionType, objectRequests],
   );
 
   // Memoized var holding the transformed section values
   const _data = useMemo(
     () =>
       transformSectionValuesToTableRows(
-        values,
+        submissionValues,
         _columns,
         section._id,
         sectionType,
+        objectRequests,
       ),
-    [_columns, section._id, sectionType, values],
+    [_columns, section._id, sectionType, submissionValues, objectRequests],
   );
   if (_.isEmpty(_columns)) return null;
   return (
@@ -85,9 +83,9 @@ const BaseSection = ({ section, values, formId, formInstanceId }) => {
 
 BaseSection.propTypes = {
   section: PropTypes.object.isRequired,
-  values: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-  formId: PropTypes.string.isRequired,
-  formInstanceId: PropTypes.string.isRequired,
+  formId: PropTypes.string,
+  formInstanceId: PropTypes.string,
+  objectRequests: PropTypes.object,
 };
 
-export default withRouter(connect(mapStateToProps, null)(BaseSection));
+export default BaseSection;

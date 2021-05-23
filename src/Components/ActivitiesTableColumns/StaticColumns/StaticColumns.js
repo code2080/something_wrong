@@ -6,11 +6,12 @@ export const StaticColumns = [
   {
     title: 'Submission',
     key: 'formInstanceId',
-    dataIndex: 'formInstanceId',
-    render: (formInstanceId, activity) => (
-      <SortableTableCell className={`formInstanceId_${formInstanceId}`}>
+    render: (activity) => (
+      <SortableTableCell
+        className={`formInstanceId_${activity.formInstanceId}`}
+      >
         <SubmissionColumn
-          formInstanceId={formInstanceId}
+          formInstanceId={activity.formInstanceId}
           activityId={activity._id}
         />
       </SortableTableCell>

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
-import styles from './objectInner.module.scss';
+import styles from './ObjectRequestDropdown.module.scss';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -23,7 +23,6 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
-
 import ObjectRequestValue from '../ObjectRequestValue';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -57,8 +56,10 @@ const ObjectRequestDropdown = ({ request, children }) => {
         Execute request...
       </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce(
-        (items: any, action: any) =>
+      {_.flatMap(objectRequestActions as { [ACTION: string]: string }).reduce<
+        any[]
+      >(
+        (items, action) =>
           objectRequestActionCondition(request)[action]
             ? [
                 ...items,
@@ -73,26 +74,27 @@ const ObjectRequestDropdown = ({ request, children }) => {
     </Menu>
   );
 
-  const onHandledObjectRequest = (request) => (action) => (
-    response: any = {},
-  ) => {
-    dispatch(setExternalAction(null));
-    if (!response || !request) {
-      // api call failed (or was cancelled)
-      return;
-    }
-    const { extid, fields } = response;
+  const onHandledObjectRequest =
+    (request) =>
+    (action) =>
+    (response: any = {}) => {
+      dispatch(setExternalAction(null));
+      if (!response || !request) {
+        // api call failed (or was cancelled)
+        return;
+      }
+      const { extid, fields } = response;
 
-    const updatedObjectRequest = {
-      ...request,
-      replacementObjectExtId: extid,
-      status: objectRequestActionToStatus[action] || request.status,
+      const updatedObjectRequest = {
+        ...request,
+        replacementObjectExtId: extid,
+        status: objectRequestActionToStatus[action] || request.status,
+      };
+
+      const label = fields[0].values[0];
+      dispatch(setExtIdPropsForObject(extid, { label }));
+      updateObjectRequest(updatedObjectRequest)(dispatch);
     };
-
-    const label = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extid, { label }));
-    updateObjectRequest(updatedObjectRequest)(dispatch);
-  };
 
   return (
     <Dropdown
@@ -116,7 +118,9 @@ const ObjectRequestDropdown = ({ request, children }) => {
     >
       <div className='dd-trigger' ref={spotlightRef}>
         {children || (
-          <div className={`element__datasource--inner ${styles.innerStyle}`}>
+          <div
+            className={`element__datasource--inner ${styles.dataSourceInner}`}
+          >
             <ObjectRequestValue request={request} />
             <DownOutlined />
           </div>

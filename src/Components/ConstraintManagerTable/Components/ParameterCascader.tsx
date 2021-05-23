@@ -13,9 +13,6 @@ const ParameterCascader = ({
   availableOperators,
   activityDesignObj,
 }: Props) => {
-  // To be implemented
-  console.log(paramFields, activityDesignObj, availableOperators);
-
   const options = Object.keys(activityDesignObj).map((objField) => ({
     value: objField,
     label: objField,
