@@ -52,23 +52,19 @@ export const makeSelectActivitiesForFormAndIds = () =>
 
 export const selectActivitiesForFormInstanceId = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) => (
-    formId: string,
-    formInstanceId: string,
-  ): TActivity[] => activities?.[formId]?.[formInstanceId] ?? [],
+  (activities: TActivityMap) =>
+    (formId: string, formInstanceId: string): TActivity[] =>
+      activities?.[formId]?.[formInstanceId] ?? [],
 );
 
 export const selectActivity = createSelector(
   activityStateSelector,
-  (activities: TActivityMap) => (
-    formId: string,
-    formInstanceId: string,
-    activityId: string,
-  ) => {
-    const activitiesForFormInstance: TActivity[] =
-      activities?.[formId]?.[formInstanceId] ?? [];
-    return activitiesForFormInstance.find((a) => a._id === activityId);
-  },
+  (activities: TActivityMap) =>
+    (formId: string, formInstanceId: string, activityId: string) => {
+      const activitiesForFormInstance: TActivity[] =
+        activities?.[formId]?.[formInstanceId] ?? [];
+      return activitiesForFormInstance.find((a) => a._id === activityId);
+    },
 );
 
 const hydrateObjectRequests = (
@@ -99,34 +95,35 @@ const hydrateObjectRequests = (
 
 export const selectTECorePayloadForActivity = createSelector(
   (state: any) => state,
-  (state) => (
-    formId: string,
-    formInstanceId: string,
-    activityId: string,
-    objectRequests: ObjectRequest[],
-  ) => {
-    const form = state.forms[formId];
-    const activitiesForFormInstance = state.activities[formId][
-      formInstanceId
-    ] as TActivity[];
-    const activity = activitiesForFormInstance.find(
-      (el) => el._id === activityId,
-    );
-    if (!activity) return null;
+  (state) =>
+    (
+      formId: string,
+      formInstanceId: string,
+      activityId: string,
+      objectRequests: ObjectRequest[],
+    ) => {
+      const form = state.forms[formId];
+      const activitiesForFormInstance = state.activities[formId][
+        formInstanceId
+      ] as TActivity[];
+      const activity = activitiesForFormInstance.find(
+        (el) => el._id === activityId,
+      );
+      if (!activity) return null;
 
-    const activityValues = activity.values || [];
-    const valuepayload = extractValuesFromActivityValues(activityValues);
-    const withObjReqs = hydrateObjectRequests(valuepayload, objectRequests);
-    return {
-      ...withObjReqs,
-      reservationMode: form.reservationMode,
-      formType: form.formType,
-      startTime: activity.timing.find(
-        (act: ActivityValue) => act?.extId === 'startTime',
-      )?.value as string,
-      endTime: activity.timing.find(
-        (act: ActivityValue) => act?.extId === 'endTime',
-      )?.value as string,
-    } as PopulateSelectionPayload;
-  },
+      const activityValues = activity.values || [];
+      const valuepayload = extractValuesFromActivityValues(activityValues);
+      const withObjReqs = hydrateObjectRequests(valuepayload, objectRequests);
+      return {
+        ...withObjReqs,
+        reservationMode: form.reservationMode,
+        formType: form.formType,
+        startTime: activity.timing.find(
+          (act: ActivityValue) => act?.extId === 'startTime',
+        )?.value as string,
+        endTime: activity.timing.find(
+          (act: ActivityValue) => act?.extId === 'endTime',
+        )?.value as string,
+      } as PopulateSelectionPayload;
+    },
 );
