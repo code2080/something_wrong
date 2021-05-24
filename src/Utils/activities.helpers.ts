@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { replace } from 'lodash';
 // CONSTANTS
 import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
@@ -79,9 +79,13 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
 export const hydrateObjectRequests = (activity: any, objectRequests: any[]) => {
   return {
     ...activity,
-    values: activity.values.flatMap((value) => {
-      const objReq = objectRequests.find((req) => req._id === value.value[0]);
-      if (objReq) value.value[0] = objReq.replacementObjectExtId;
+    values: activity.values.flatMap((val) => {
+      const objReq = objectRequests.find((req) =>
+        val.value.map((val: string) => req._id === val),
+      );
+      const replacementIdx = val.value.indexOf(objReq._id);
+      if (objReq) val.value[replacementIdx] = objReq.replacementObjectExtId;
+      else val.value[replacementIdx] = null;
       return [...activity.values];
     }),
   };
