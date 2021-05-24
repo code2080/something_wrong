@@ -4,7 +4,10 @@ import _ from 'lodash';
 // HELPERS
 import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import { validateTiming, validateValue } from './activityValues.validation';
-import { getTimingModeForActivity } from './activities.helpers';
+import {
+  getTimingModeForActivity,
+  hydrateObjectRequests,
+} from './activities.helpers';
 
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
@@ -22,6 +25,7 @@ import {
 } from '../Constants/activityStatuses.constants';
 import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 /**
  * @function createSchedulingReturns
@@ -158,13 +162,15 @@ const getBindingSchedulingAlgorithm = (activities) => {
 };
 
 export const scheduleActivities = (
-  activities,
+  activities: any[],
   formType,
   reservationMode,
   teCoreScheduleFn,
   cFn,
+  objRequests: ObjectRequest[],
 ) => {
   // Preprocess all activities
+
   const preprocessingMap = activities
     .map((a) => {
       const validates = validateActivity(a);
@@ -196,6 +202,9 @@ export const scheduleActivities = (
             ? formatActivityForExactScheduling(a.activity)
             : null,
       };
+    })
+    .map((a) => {
+      return hydrateObjectRequests(a, objRequests);
     });
   // filter invalidate activities
   const [noResultActivities, validatedActivities] = _.partition(
@@ -208,8 +217,6 @@ export const scheduleActivities = (
   }));
 
   if ((failedActivities || []).length > 0) cFn(failedActivities);
-
-  const hydrateObjectRequests = (activities) => {};
 
   // Edge case: all activities have schedulingAlgorithm EXACT
   if (
