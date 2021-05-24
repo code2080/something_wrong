@@ -631,7 +631,7 @@ describe('Activity helpers tests', () => {
           {
             type: 'object',
             extId: 'room',
-            value: [null],
+            value: ['6081300ca46eac0022a5f434'],
             submissionValue: ['6081300ca46eac0022a5f434'],
             submissionValueType: 'OBJECT',
             valueMode: 'FROM_SUBMISSION',

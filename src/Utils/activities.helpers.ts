@@ -81,11 +81,11 @@ export const hydrateObjectRequests = (activity: any, objectRequests: any[]) => {
     ...activity,
     values: activity.values.flatMap((val) => {
       const objReq = objectRequests.find((req) =>
-        val.value.map((val: string) => req._id === val),
+        val?.value.map((val: string) => req._id === val),
       );
       const replacementIdx = val.value.indexOf(objReq._id);
-      if (objReq) val.value[replacementIdx] = objReq.replacementObjectExtId;
-      else val.value[replacementIdx] = null;
+      if (objReq.replacementObjectExtId)
+        val.value[replacementIdx] = objReq.replacementObjectExtId;
       return [...activity.values];
     }),
   };
