@@ -11,6 +11,7 @@ import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activitie
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
@@ -73,6 +74,7 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   );
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const [formType, reservationMode] = useSelector((state) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -96,8 +98,11 @@ const ActivitiesPage = () => {
    * MEMOIZED PROPS
    */
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
+        : [],
+    [design, objectRequests],
   );
 
   const tableDataSource = useMemo(

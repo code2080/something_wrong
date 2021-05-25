@@ -44,28 +44,29 @@ const createConstraintsConfigurationsFlow = {
   }),
 };
 
-export const createConstraintConfigurations =
-  (constrConf, callback = null) =>
-  async (dispatch) => {
-    const { formId, description, constraints } = constrConf;
-    const constraintConfiguration = new ConstraintConfiguration({
-      name: 'New constraint configuration',
-      formId,
-      description: description || ' ',
-      constraints,
-      constraintConfigurationId: ' ',
-    });
-    dispatch(
-      asyncAction.POST({
-        flow: createConstraintsConfigurationsFlow,
-        endpoint: `${
-          getEnvParams().AM_BE_URL
-        }forms/${formId}/constraint-configurations`,
-        params: constraintConfiguration,
-        postAction: { callback },
-      }),
-    );
-  };
+export const createConstraintConfigurations = (
+  constrConf,
+  callback = null,
+) => async (dispatch) => {
+  const { formId, description, constraints } = constrConf;
+  const constraintConfiguration = new ConstraintConfiguration({
+    name: 'New constraint configuration',
+    formId,
+    description: description || ' ',
+    constraints,
+    constraintConfigurationId: ' ',
+  });
+  dispatch(
+    asyncAction.POST({
+      flow: createConstraintsConfigurationsFlow,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations`,
+      params: constraintConfiguration,
+      postAction: { callback },
+    }),
+  );
+};
 
 const updateConstraintConfigurationFlow = {
   request: () => ({
@@ -81,38 +82,40 @@ const updateConstraintConfigurationFlow = {
   }),
 };
 
-export const updateConstraintConfiguration =
-  (consConf) => async (dispatch, getState) => {
-    const storeState = await getState();
-    const { name, description, _id, formId, constraints } = consConf;
-    const constraintConfigurationId = _id;
-    const {
-      auth: { coreUserId },
-    } = storeState;
-    const constraintConfiguration = new ConstraintConfiguration({
-      constraintConfigurationId,
-      name,
-      formId,
-      constraints,
-      description,
-      timestamps: opts.timestamps,
-      userId: coreUserId,
-    });
-    constraintConfiguration.constraintConfigurationId = _id;
-    dispatch(
-      asyncAction.PATCH({
-        flow: updateConstraintConfigurationFlow,
-        endpoint: `${
-          getEnvParams().AM_BE_URL
-        }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
-        params: {
-          constraintConfigurationId,
-          formId,
-          constraintConfiguration,
-        },
-      }),
-    );
-  };
+export const updateConstraintConfiguration = (consConf) => async (
+  dispatch,
+  getState,
+) => {
+  const storeState = await getState();
+  const { name, description, _id, formId, constraints } = consConf;
+  const constraintConfigurationId = _id;
+  const {
+    auth: { coreUserId },
+  } = storeState;
+  const constraintConfiguration = new ConstraintConfiguration({
+    constraintConfigurationId,
+    name,
+    formId,
+    constraints,
+    description,
+    timestamps: opts.timestamps,
+    userId: coreUserId,
+  });
+  constraintConfiguration.constraintConfigurationId = _id;
+  dispatch(
+    asyncAction.PATCH({
+      flow: updateConstraintConfigurationFlow,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
+      params: {
+        constraintConfigurationId,
+        formId,
+        constraintConfiguration,
+      },
+    }),
+  );
+};
 
 const deleteConstraintConfigurationFlow = {
   request: () => ({
@@ -128,20 +131,21 @@ const deleteConstraintConfigurationFlow = {
   }),
 };
 
-export const deleteConstraintConfiguration =
-  (constraintConfiguration) => async (dispatch) => {
-    const { _id, formId } = constraintConfiguration;
-    const constraintConfigurationId = _id;
-    dispatch(
-      asyncAction.DELETE({
-        flow: deleteConstraintConfigurationFlow,
-        endpoint: `${
-          getEnvParams().AM_BE_URL
-        }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
-        params: {
-          constraintConfigurationId,
-          formId,
-        },
-      }),
-    );
-  };
+export const deleteConstraintConfiguration = (
+  constraintConfiguration,
+) => async (dispatch) => {
+  const { _id, formId } = constraintConfiguration;
+  const constraintConfigurationId = _id;
+  dispatch(
+    asyncAction.DELETE({
+      flow: deleteConstraintConfigurationFlow,
+      endpoint: `${
+        getEnvParams().AM_BE_URL
+      }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
+      params: {
+        constraintConfigurationId,
+        formId,
+      },
+    }),
+  );
+};

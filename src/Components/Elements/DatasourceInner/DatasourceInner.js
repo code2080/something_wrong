@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import styles from './objectInner.module.scss';
 
 // COMPONENTS
 import DatasourceFilterInner from './DatasourceFilterInner';
@@ -12,7 +13,11 @@ const DatasourceEmptyInner = () => (
 const DatasourceInner = ({ elType, labels, payload, menu }) => {
   if (elType === 'EMPTY' || _.isEmpty(labels)) return <DatasourceEmptyInner />;
   if (elType === 'OBJECT')
-    return <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu} />;
+    return (
+      <div className={`element__datasource--inner ${styles.innerStyle}`}>
+        <DatasourceObjectInner labels={_.flatMap(labels)} menu={menu} />{' '}
+      </div>
+    );
   if (elType === 'FILTER')
     return (
       <DatasourceFilterInner labels={labels} payload={payload} menu={menu} />

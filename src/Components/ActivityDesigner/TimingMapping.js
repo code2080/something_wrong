@@ -19,10 +19,9 @@ import { getElementTypeFromId } from '../../Utils/elements.helpers';
 import { elementTypes } from '../../Constants/elementTypes.constants';
 
 const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
-  const timingMode = useMemo(
-    () => _.get(mapping, 'timing.mode', null),
-    [mapping],
-  );
+  const timingMode = useMemo(() => _.get(mapping, 'timing.mode', null), [
+    mapping,
+  ]);
 
   const onSequenceModeTimingParameterUpdateValue = (idx, value) => {
     const currValue = _.get(mapping, 'timing.dateRanges', []);

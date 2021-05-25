@@ -98,10 +98,9 @@ const FieldMapping = ({
   // Memoized values
   const fields = useMemo(() => _.get(mapping, 'fields', {}), [mapping]);
 
-  const propSettings = useMemo(
-    () => _.get(mapping, 'propSettings', {}),
-    [mapping],
-  );
+  const propSettings = useMemo(() => _.get(mapping, 'propSettings', {}), [
+    mapping,
+  ]);
 
   return (
     <div className='object-mapping--wrapper'>

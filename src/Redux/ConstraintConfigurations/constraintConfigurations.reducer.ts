@@ -24,8 +24,9 @@ const reducer = (state = {}, action) => {
           ...consConf,
           [constraintConfig.formId]: {
             ...consConf[constraintConfig.formId],
-            [constraintConfig._id]:
-              ConstraintConfiguration.create(constraintConfig),
+            [constraintConfig._id]: ConstraintConfiguration.create(
+              constraintConfig,
+            ),
           },
         }),
         state,
@@ -36,8 +37,9 @@ const reducer = (state = {}, action) => {
       const {
         payload: { actionMeta: _, ...constrConfObj },
       } = action;
-      const constraintConfiguration =
-        ConstraintConfiguration.create(constrConfObj);
+      const constraintConfiguration = ConstraintConfiguration.create(
+        constrConfObj,
+      );
       Object.assign(constraintConfiguration, {
         constraintConfigurationId: constraintConfiguration._id,
       });
@@ -55,8 +57,9 @@ const reducer = (state = {}, action) => {
       const {
         payload: { actionMeta: _, ...constraintConfObj },
       } = action;
-      const constraintConfiguration =
-        ConstraintConfiguration.create(constraintConfObj);
+      const constraintConfiguration = ConstraintConfiguration.create(
+        constraintConfObj,
+      );
       constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {
         ...state,
