@@ -42,12 +42,27 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
             value={labels[val]}
           />
         );
-      })}
+      }),
     );
   }
 
-  const formattedValue = stdValue.map((val) => labels[val] || val).join(', ');
-  return <EllipsisRenderer text={formattedValue} />;
+  const [requests, values] = _.partition(stdValue, (value) =>
+    _.find(objectRequests, ['_id', value]),
+  );
+
+  const formattedValue = values.map((val) => labels[val] || val).join(', ');
+
+  const requestComponents = requests
+    .map((reqId) => _.find(objectRequests, ['_id', reqId]))
+    .map((request) => (
+      <ObjectRequestDropdown request={request} key={request._id} />
+    ));
+  return (
+    <>
+      {requestComponents}
+      {!_.isEmpty(formattedValue) && <EllipsisRenderer text={formattedValue} />}
+    </>
+  );
 };
 
 ObjectObjectValue.propTypes = {

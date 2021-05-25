@@ -24,24 +24,14 @@ export const createActivitiesTableColumnsFromMapping = (
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
         displayName: 'ActivityCol',
-        render: (activity) => {
-          const activitSubValues = activity.values.flatMap((activityVal) =>
-            activityVal.submissionValue.map((subVal) => subVal),
-          );
-          const request = objectRequests.find((req) =>
-            activitSubValues.map((val) => req._id === val),
-          );
-          return request ? (
-            <ObjectRequestDropdown request={request} />
-          ) : (
-            <ColumnWrapper
-              activity={activity}
-              type='VALUE'
-              prop={extId}
-              mapping={design}
-            />
-          );
-        },
+        render: (activity) => (
+          <ColumnWrapper
+            activity={activity}
+            type='VALUE'
+            prop={extId}
+            mapping={design}
+          />
+        ),
       },
     ],
     [],
