@@ -16,7 +16,7 @@ import { toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/fo
 // CONSTANTS
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { themeColors } from '../../Constants/themeColors.constants';
-import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
+import ObjectRequestValue from '../Elements/ObjectRequestValue';
 
 export const formSubmission = {
   NAME: {
@@ -40,7 +40,7 @@ export const formSubmission = {
       render: (val) => {
         const request = objectRequests.find((request) => request._id === val);
         return request ? (
-          <ObjectRequestDropdown request={request} />
+          <ObjectRequestValue request={request} />
         ) : (
           <ScopedObject objectExtId={val} />
         );

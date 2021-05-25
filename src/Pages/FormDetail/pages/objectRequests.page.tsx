@@ -12,7 +12,7 @@ import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPa
 import { getSectionsForObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { selectSectionDesign } from '../../../Redux/Forms/forms.selectors';
-import {
+import ObjectRequestValue, {
   ObjectRequestStatusIcon,
   ObjectRequestType,
   ObjectRequestLabel,
@@ -72,7 +72,7 @@ const objReqColumns: ColumnType<any>[] = [
     sorter: (a: ObjectRequest, b: ObjectRequest) =>
       sortAlpha(a.scopedObject, b.scopedObject),
     render: (request: ObjectRequest) => {
-      return <ObjectRequestDropdown request={request} />;
+      return <ObjectRequestValue request={request} />;
     },
   },
   {

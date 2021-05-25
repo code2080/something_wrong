@@ -13,7 +13,7 @@ import './SubmissionColumn.scss';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 import { useMemo } from 'react';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import ObjectRequestDropdown from '../../Elements/DatasourceInner/ObjectRequestDropdown';
+import ObjectRequestValue from '../../Elements/ObjectRequestValue';
 
 // TYPES
 type Props = {
@@ -51,7 +51,7 @@ const SubmissionColumn = ({ formInstanceId }: Props) => {
       <div className='submitter--row'>{`${firstName} ${lastName}`}</div>
       <div className='primary-object--row'>
         <span>Primary object:&nbsp;</span>
-        {request ? <ObjectRequestDropdown request={request} /> : primaryObject}
+        {request ? <ObjectRequestValue request={request} /> : primaryObject}
       </div>
     </div>
   );
