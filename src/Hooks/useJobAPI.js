@@ -15,6 +15,7 @@ export const useJobWSAPI = () => {
 
   const stopJob = () => {
     if (activeJobId && formId) {
+      console.log({ activeJobId });
       dispatch(abortJob({ jobId: activeJobId, formId }));
     }
   };
@@ -38,11 +39,11 @@ export const useJobWSAPI = () => {
     socket.current.on('jobUpdate', ({ job }) => {
       const jobId = job ? job._id : null;
       console.log(`Received job update: ${jobId}`);
+      setActiveJobId(jobId);
       // Set the active job id and form id
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
-      activeJobId !== null && dispatch(fetchActivitiesForForm(formId));
-      setActiveJobId(jobId);
+      job && dispatch(fetchActivitiesForForm(formId));
     });
     return () => {
       // When component unmounts, close the connection
