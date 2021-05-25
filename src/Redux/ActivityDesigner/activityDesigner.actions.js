@@ -7,6 +7,7 @@ import {
   UPDATE_MAPPING_FOR_FORM_REQUEST,
   UPDATE_MAPPING_FOR_FORM_SUCCESS,
   UPDATE_MAPPING_FOR_FORM_FAILURE,
+  UNLOCK_ACTIVITY_DESIGN,
 } from './activityDesigner.actionTypes';
 
 const fetchMappingsFlow = {
@@ -46,3 +47,9 @@ export const updateDesign = (mapping) =>
     endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
     params: { mapping },
   });
+
+export const unlockActivityDesigner = ({ formId }) => ({
+  type: UNLOCK_ACTIVITY_DESIGN,
+  payload: { formId }
+})
+
