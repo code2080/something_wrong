@@ -333,7 +333,10 @@ describe('Activity helpers tests', () => {
           type: 'NEW_OBJECT',
         },
       ];
-      const hydratedActivity = hydrateObjectRequests(activity, objectRequests);
+      const hydratedActivity = hydrateObjectRequests(
+        activity as any,
+        objectRequests as any[],
+      );
       expect(hydratedActivity).toEqual(expected);
     });
 
@@ -668,7 +671,10 @@ describe('Activity helpers tests', () => {
           type: 'NEW_OBJECT',
         },
       ];
-      const hydratedActivity = hydrateObjectRequests(activity, objectRequests);
+      const hydratedActivity = hydrateObjectRequests(
+        activity as any,
+        objectRequests as any[],
+      );
       expect(hydratedActivity).toEqual(expected);
     });
   });
