@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 import { useSelector } from 'react-redux';
@@ -12,11 +13,15 @@ import { selectElementType } from '../../../../Redux/Forms/forms.selectors';
 
 // CONSTANTS
 import { elementTypes } from '../../../../Constants/elementTypes.constants';
+import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
 
 const standardizeValue = (value) =>
   (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));
 
 const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
+
   const elementType = useSelector(
     selectElementType(formId, sectionId, elementId),
   );
@@ -28,13 +33,16 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   if (elementType === elementTypes.ELEMENT_TYPE_DATASOURCE) {
     return stdValue.map((item, itemIndex) =>
       item.split(',').map((val, valIndex) => {
-        return (
+        const request = _.find(objectRequests, ['_id', val]);
+        return request ? (
+          <ObjectRequestDropdown request={request} />
+        ) : (
           <DatasourceReadonly
             key={`${itemIndex}_${valIndex}`}
             value={labels[val]}
           />
         );
-      }),
+      })}
     );
   }
 
