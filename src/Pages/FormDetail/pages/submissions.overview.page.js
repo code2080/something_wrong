@@ -40,6 +40,7 @@ import { formatElementValue } from '../../../Utils/elements.helpers';
 import { teCoreCallnames } from '../../../Constants/teCoreActions.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFilter.interface';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
@@ -63,7 +64,7 @@ const SubmissionsOverviewPage = () => {
     FormSubmissionFilterInterface,
   );
   const userId = useSelector(selectAuthedUserId);
-
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   /**
    * STATE
    */
@@ -126,15 +127,14 @@ const SubmissionsOverviewPage = () => {
         tableColumns.formSubmission.NAME,
         tableColumns.formSubmission.SUBMISSION_DATE,
         tableColumns.formSubmission.IS_STARRED(dispatch, isSaving),
-        tableColumns.formSubmission.SCOPED_OBJECT,
+        tableColumns.formSubmission.SCOPED_OBJECT(objectRequests),
         tableColumns.formSubmission.ACCEPTANCE_STATUS,
         tableColumns.formSubmission.SCHEDULING_PROGRESS,
         form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
         ..._cols,
         tableColumns.formSubmission.ACTION_BUTTON,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
       ]),
-    [dispatch, isSaving, form.objectScope, _cols],
+    [dispatch, isSaving, objectRequests, form.objectScope, _cols],
   );
 
   const filteredDatasource = useMemo(() => {

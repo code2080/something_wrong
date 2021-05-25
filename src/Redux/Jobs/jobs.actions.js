@@ -74,39 +74,39 @@ const createJobFlow = {
   },
 };
 
-export const createJob =
-  ({
-    activities = [],
-    type = schedulingAlgorithms.UNKNOWN,
+export const createJob = ({
+  activities = [],
+  type = schedulingAlgorithms.UNKNOWN,
+  formId,
+  formInstanceIds = [],
+  callback = null,
+  meta = {},
+}) => async (dispatch, getState) => {
+  const storeState = await getState();
+  const {
+    auth: { coreUserId },
+  } = storeState;
+  const currentConstraintConfiguration = selectCurrentConstraintConfigurationForForm(
+    storeState,
     formId,
-    formInstanceIds = [],
-    callback = null,
-    meta = {},
-  }) =>
-  async (dispatch, getState) => {
-    const storeState = await getState();
-    const {
-      auth: { coreUserId },
-    } = storeState;
-    const currentConstraintConfiguration =
-      selectCurrentConstraintConfigurationForForm(storeState, formId);
-    const job = new Job({
-      activities,
-      type,
-      formId,
-      formInstanceIds,
-      constraintConfigurationId: currentConstraintConfiguration?._id || null,
-      userId: coreUserId,
-    });
-    dispatch(
-      asyncAction.POST({
-        flow: createJobFlow,
-        endpoint: `${getEnvParams().AM_BE_URL}jobs`,
-        params: job,
-        postAction: { callback, meta, activities },
-      }),
-    );
-  };
+  );
+  const job = new Job({
+    activities,
+    type,
+    formId,
+    formInstanceIds,
+    constraintConfigurationId: currentConstraintConfiguration?._id || null,
+    userId: coreUserId,
+  });
+  dispatch(
+    asyncAction.POST({
+      flow: createJobFlow,
+      endpoint: `${getEnvParams().AM_BE_URL}jobs`,
+      params: job,
+      postAction: { callback, meta, activities },
+    }),
+  );
+};
 
 const abortJobFlow = {
   request: () => ({ type: types.ABORT_JOB_REQUEST }),
@@ -117,13 +117,11 @@ const abortJobFlow = {
   failure: (err) => ({ type: types.ABORT_JOB_FAILURE, payload: { ...err } }),
 };
 
-export const abortJob =
-  ({ jobId, formId }) =>
-  async (dispatch) =>
-    dispatch(
-      asyncAction.POST({
-        flow: abortJobFlow,
-        endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
-        params: { formId },
-      }),
-    );
+export const abortJob = ({ jobId, formId }) => async (dispatch) =>
+  dispatch(
+    asyncAction.POST({
+      flow: abortJobFlow,
+      endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
+      params: { formId },
+    }),
+  );

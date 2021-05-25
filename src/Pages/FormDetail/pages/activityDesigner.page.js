@@ -25,7 +25,10 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // ACTIONS
-import { updateDesign } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
+import {
+  updateDesign,
+  unlockActivityDesigner,
+} from '../../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
@@ -127,6 +130,8 @@ const ActivityDesignPage = () => {
     [activities],
   );
 
+  const isEditable = useMemo(() => storeDesign.isEditable, [storeDesign]);
+
   const mappingOptions = useMemo(
     () => getElementsForMapping(form.sections, design),
     [form, design],
@@ -169,6 +174,8 @@ const ActivityDesignPage = () => {
   const onSaveDesign = () => {
     if (designIsValid) dispatch(updateDesign(design));
   };
+
+  const onUnlockClick = () => dispatch(unlockActivityDesigner({ formId }));
 
   // Callback for reset meun clicks
   const onResetMenuClick = useCallback(
@@ -240,7 +247,7 @@ const ActivityDesignPage = () => {
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           >
             <Button type='link' size='small'>
               Reset configuration...
@@ -248,15 +255,27 @@ const ActivityDesignPage = () => {
           </Dropdown>
           <div style={{ marginLeft: 'auto', display: 'flex' }}>
             <MappingStatus status={designIsValid} />
-            <Button
-              type='primary'
-              size='small'
-              onClick={onSaveDesign}
-              loading={isSaving}
-              disabled={!designIsValid || hasActivities}
-            >
-              Save
-            </Button>
+            {!isEditable ? (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onUnlockClick}
+                loading={isSaving}
+                disabled={hasActivities}
+              >
+                Unlock
+              </Button>
+            ) : (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onSaveDesign}
+                loading={isSaving}
+                disabled={!designIsValid || hasActivities || !isEditable}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </div>
         {hasActivities && <HasReservationsAlert formId={formId} />}
@@ -269,7 +288,7 @@ const ActivityDesignPage = () => {
             mapping={design}
             onChange={updateTimingDesignCallback}
             formSections={form.sections}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -282,7 +301,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             typeOptions={typeOptions}
             onChange={updateObjectDesignCallback}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -295,7 +314,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             fieldOptions={fieldOptions}
             onChange={updateFieldDesignCallback}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
       </div>

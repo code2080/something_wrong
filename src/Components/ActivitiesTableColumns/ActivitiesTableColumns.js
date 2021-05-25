@@ -6,10 +6,13 @@ import TitleCell from './new/TitleCell';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from './StaticColumns/StaticColumns';
+import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // SORTERS
-
-export const createActivitiesTableColumnsFromMapping = (design) => {
+export const createActivitiesTableColumnsFromMapping = (
+  design,
+  objectRequests,
+) => {
   const allActivityValues = [
     ...Object.keys(design.objects).map((objKey) => ['types', objKey]),
     ...Object.keys(design.fields).map((fieldKey) => ['fields', fieldKey]),
