@@ -45,7 +45,7 @@ const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
   return sectionName;
 };
 
-const objReqColumns: ColumnType<any>[] = [
+const objReqColumns = (objReqs: ObjectRequest[]): ColumnType<any>[] => [
   {
     title: 'Status',
     key: 'status',
@@ -69,10 +69,16 @@ const objReqColumns: ColumnType<any>[] = [
   {
     title: 'Primary object',
     key: 'scopedObject',
+    dataIndex: 'scopedObject',
     sorter: (a: ObjectRequest, b: ObjectRequest) =>
       sortAlpha(a.scopedObject, b.scopedObject),
-    render: (request: ObjectRequest) => {
-      return <ObjectRequestValue request={request} />;
+    render: (primaryObject: string) => {
+      const req = objReqs.find((request) => request._id === primaryObject);
+      return req ? (
+        <ObjectRequestValue request={req} />
+      ) : (
+        <LabelRenderer extId={primaryObject} type='objects' />
+      );
     },
   },
   {
@@ -167,7 +173,7 @@ const ObjectRequestsPage = () => {
   const requests = useSelector(selectFormObjectRequest(formId));
   return (
     <DynamicTable
-      columns={objReqColumns}
+      columns={objReqColumns(requests)}
       dataSource={requests}
       datasourceId={`OBJREQS_${formId}`}
       rowKey='_id'

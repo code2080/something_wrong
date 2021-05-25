@@ -16,7 +16,7 @@
   .primary-object--row {
     font-size: 0.55rem;
     margin-top: -0.2rem;
-
+    display: flex;
     span {
       color: $secondary;
     }

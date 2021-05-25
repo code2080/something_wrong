@@ -2,14 +2,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectLabelField } from '../../Redux/Integration/integration.selectors';
 import { selectObjectRequestById } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // COMPONENTS
-import {
-  objectRequestTypeToText,
-  RequestType,
-} from '../../Constants/ObjectRequest.constants';
+import DatasourceObjectRequest from "../../Components/Elements/DatasourceInner/DatasourceObjectRequest";
 
 // STYLES
 import './DatasourceReadonly.scss';
@@ -19,30 +15,17 @@ interface Props {
 }
 const DatasourceReadonly = ({ value }: Props) => {
   const foundObjectRequest = useSelector(selectObjectRequestById(value));
-  const labeledField: string = useSelector(
-    selectLabelField(foundObjectRequest?.datasource),
-  );
 
   if (!foundObjectRequest) {
     return <div className='datasource--readonly'>{value}</div>;
   }
 
   return (
-    <div className='datasource--readonly'>
-      <span
-        style={{
-          color:
-            foundObjectRequest.type === RequestType.MISSING_OBJECT
-              ? 'red'
-              : 'green',
-        }}
-      >
-        {objectRequestTypeToText[foundObjectRequest.type]}
-        &nbsp;
-      </span>
-      {foundObjectRequest.objectRequest[labeledField] || value}
+    <div className="datasource--readonly">
+      <DatasourceObjectRequest request={foundObjectRequest} readonly />
     </div>
   );
+
 };
 
 export default DatasourceReadonly;
