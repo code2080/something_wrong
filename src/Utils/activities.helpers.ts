@@ -11,6 +11,7 @@ import {
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 // FUNCTIONS
 /**
@@ -76,17 +77,21 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
   });
 };
 
-export const hydrateObjectRequests = (activity: any, objectRequests: any[]) => {
+export const hydrateObjectRequests = (
+  activity: TActivity,
+  objectRequests: ObjectRequest[],
+) => {
   return {
     ...activity,
     values: activity.values.map((av: ActivityValue) => ({
       ...av,
       value: Array.isArray(av.value)
-        ? av.value.map(
-            (val) =>
-              _.find(objectRequests, ['_id', val])?.replacementObjectExtId ??
-              val,
-          )
+        ? av.value
+            .map((val) => {
+              const req = _.find(objectRequests, ['_id', val]);
+              return req ? req.replacementObjectExtId : val;
+            })
+            .filter((val) => val != null)
         : av.value,
     })),
   };
