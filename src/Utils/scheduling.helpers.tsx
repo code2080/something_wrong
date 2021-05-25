@@ -26,6 +26,7 @@ import {
 import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
+import { TActivity } from '../Types/Activity.type';
 
 /**
  * @function createSchedulingReturns
@@ -167,7 +168,7 @@ export const scheduleActivities = (
   reservationMode,
   teCoreScheduleFn,
   cFn,
-  objRequests: ObjectRequest[],
+  objRequests: ObjectRequest[] = [],
 ) => {
   // Preprocess all activities
 
@@ -175,8 +176,8 @@ export const scheduleActivities = (
     .map((a) => {
       const validates = validateActivity(a);
       return {
-        activity: a,
-        activityId: a._id,
+        activity: hydrateObjectRequests(a, objRequests) as TActivity,
+        activityId: a._id as string,
         validates,
         result: validates
           ? null
@@ -189,7 +190,8 @@ export const scheduleActivities = (
       };
     })
     .map((a) => {
-      if (!a.validates) return a;
+      if (!a.validates)
+        return { ...a, schedulingAlgorithm: null, reservation: null };
       const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(
         a.activity,
       );
@@ -202,9 +204,6 @@ export const scheduleActivities = (
             ? formatActivityForExactScheduling(a.activity)
             : null,
       };
-    })
-    .map((a) => {
-      return hydrateObjectRequests(a, objRequests);
     });
   // filter invalidate activities
   const [noResultActivities, validatedActivities] = _.partition(
