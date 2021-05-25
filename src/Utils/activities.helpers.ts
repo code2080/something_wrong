@@ -76,6 +76,22 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
   });
 };
 
+export const hydrateObjectRequests = (activity: any, objectRequests: any[]) => {
+  return {
+    ...activity,
+    values: activity.values.map((av: ActivityValue) => ({
+      ...av,
+      value: Array.isArray(av.value)
+        ? av.value.map(
+            (val) =>
+              _.find(objectRequests, ['_id', val])?.replacementObjectExtId ??
+              val,
+          )
+        : av.value,
+    })),
+  };
+};
+
 export const activityIsReadOnly = (status) =>
   // TODO: Temporarily disables editing activities until we ensure it works again
   true ||

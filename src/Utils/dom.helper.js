@@ -12,4 +12,4 @@ export const closeAllDropdown = () => {
       dropdown.classList.add('ant-dropdown-hidden');
     }
   }
-}
+};
