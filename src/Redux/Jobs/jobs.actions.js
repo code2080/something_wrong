@@ -33,23 +33,15 @@ export const updateJobFromWS = (job) => ({
 
 const createJobFlow = {
   request: (params, postAction) => {
-    const { callback, meta, activities } = postAction;
-    if (meta.schedulingMode === schedulingModes.SINGLE) {
-      callback(
-        new SchedulingReturn({
+    const { callback, activities } = postAction;
+    callback(
+      activities.map((a) => ({
+        activityId: a._id,
+        result: new SchedulingReturn({
           status: activityStatuses.QUEUED,
         }),
-      );
-    } else {
-      callback(
-        activities.map((a) => ({
-          activityId: a._id,
-          result: new SchedulingReturn({
-            status: activityStatuses.QUEUED,
-          }),
-        })),
-      );
-    }
+      })),
+    );
     return { type: types.CREATE_JOB_REQUEST };
   },
   success: (response, _params, _postAction) => ({
