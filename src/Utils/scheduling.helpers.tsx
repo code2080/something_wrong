@@ -168,7 +168,7 @@ export const scheduleActivities = (
   reservationMode,
   teCoreScheduleFn,
   cFn,
-  objRequests: ObjectRequest[] = [],
+  objRequests: ObjectRequest[],
 ) => {
   // Preprocess all activities
 
