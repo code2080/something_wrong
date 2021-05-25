@@ -62,13 +62,10 @@ const ActivitiesPage = () => {
 
   const submissions = useSelector((state) => selectSubmissions(state, formId));
 
-  const activities = useSelector((state) => {
-    const _activities = selectActivitiesForForm(state, formId);
-    return pick(
-      _activities,
-      submissions.map(({ _id }) => _id),
-    );
-  });
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
+
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(

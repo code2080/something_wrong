@@ -9,6 +9,8 @@ import { extractValuesFromActivityValues } from '../../Utils/activities.helpers'
 import { ActivityValue } from '../../Types/ActivityValue.type';
 import partition from 'lodash/partition';
 import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
+import { TFormInstance } from '../../Types/FormInstance.type';
+import { pick } from 'lodash';
 
 // TYPES
 type TActivityMap = {
@@ -21,8 +23,17 @@ const activityStateSelector = (state: any): TActivityMap =>
 export const makeSelectActivitiesForForm = () =>
   createSelector(
     activityStateSelector,
+    (state) => state.submissions,
     (_: any, formId: string) => formId,
-    (activities: TActivityMap, formId: string) => activities[formId] || {},
+    (
+      activities: TActivityMap,
+      submissions: { [formId: string]: TFormInstance },
+      formId: string,
+    ) => {
+      const formSubmissions = submissions?.[formId];
+      const formActivities = activities[formId] || {};
+      return pick(formActivities, Object.keys(formSubmissions || {}));
+    },
   );
 
 export const makeSelectActivitiesForFormAndIds = () =>
