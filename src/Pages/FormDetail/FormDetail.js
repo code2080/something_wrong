@@ -56,6 +56,15 @@ import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
 import { selectExtIds } from '../../Redux/TE/te.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
+export const TAB_CONSTANT = {
+  FORM_INFO: 'FORM_INFO' ,
+  SUBMISSIONS: 'SUBMISSIONS' ,
+  OBJECT_REQUESTS: 'OBJECT_REQUESTS' ,
+  ACTIVITIES: 'ACTIVITIES' ,
+  ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER' ,
+  CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER' ,
+}
+
 const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
@@ -148,27 +157,27 @@ const FormPage = () => {
     <div className='form--wrapper'>
       <JobToolbar />
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
-        <Tabs.TabPane tab='FORM INFO' key='FORM_INFO'>
+        <Tabs.TabPane tab='FORM INFO' key={TAB_CONSTANT.FORM_INFO}>
           <FormInfoPage />
         </Tabs.TabPane>
-        <Tabs.TabPane tab='SUBMISSIONS' key='SUBMISSIONS'>
+        <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
           <SubmissionsPage />
         </Tabs.TabPane>
         {formHasObjReqs && (
-          <Tabs.TabPane tab='OBJECT REQUESTS' key='OBJECT_REQUESTS'>
+          <Tabs.TabPane tab='OBJECT REQUESTS' key={TAB_CONSTANT.OBJECT_REQUESTS}>
             <ObjectRequestsPage />
           </Tabs.TabPane>
         )}
-        <Tabs.TabPane tab='ACTIVITIES' key='ACTIVITIES' forceRender>
+        <Tabs.TabPane tab='ACTIVITIES' key={TAB_CONSTANT.ACTIVITIES} forceRender>
           <ActivitiesPage />
         </Tabs.TabPane>
         {hasActivityDesignPermission && (
-          <Tabs.TabPane tab='ACTIVITY DESIGNER' key='ACTIVITY_DESIGNER'>
-            <ActivityDesignPage />
+          <Tabs.TabPane tab='ACTIVITY DESIGNER' key={TAB_CONSTANT.ACTIVITY_DESIGNER}>
+            { selectedFormDetailTab === TAB_CONSTANT.ACTIVITY_DESIGNER && <ActivityDesignPage />}
           </Tabs.TabPane>
         )}
         {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
-          <Tabs.TabPane tab='CONSTRAINT MANAGER' key='CONSTRAINT_MANAGER'>
+          <Tabs.TabPane tab='CONSTRAINT MANAGER' key={TAB_CONSTANT.CONSTRAINT_MANAGER}>
             <ConstraintManagerPage />
           </Tabs.TabPane>
         )}
