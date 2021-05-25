@@ -64,8 +64,10 @@ const SubmissionActionButton = ({
     (submission) => submission.reviewLink,
   );
   // State var to hold modal's visibility
-  const [isAcceptanceStatusModalOpen, setIsAcceptanceStatusModalOpen] =
-    useState(false);
+  const [
+    isAcceptanceStatusModalOpen,
+    setIsAcceptanceStatusModalOpen,
+  ] = useState(false);
 
   const setFormInstanceSchedulingProgressCallback = useCallback(
     (schedulingProgress) => {

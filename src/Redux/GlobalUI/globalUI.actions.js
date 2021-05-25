@@ -70,24 +70,26 @@ const updateViewFlow = {
   failure: (err) => ({ type: UPDATE_VIEW_FAILURE, payload: { ...err } }),
 };
 
-export const updateView =
-  (datasourceId, visibleCols) => (dispatch, getState) => {
-    const { VIEWS_URL, APP_NAME } = getEnvParams();
-    const storeState = getState();
-    const {
-      auth: {
-        user: { id, organizationId },
-      },
-    } = storeState;
-    dispatch(
-      asyncAction.PUT({
-        flow: updateViewFlow,
-        endpoint: `${VIEWS_URL}tables/${APP_NAME}/${datasourceId}/${organizationId}/${id}`,
-        params: { columns: visibleCols, datasourceId, pageSize: 100 },
-        requiresAuth: false,
-      }),
-    );
-  };
+export const updateView = (datasourceId, visibleCols) => (
+  dispatch,
+  getState,
+) => {
+  const { VIEWS_URL, APP_NAME } = getEnvParams();
+  const storeState = getState();
+  const {
+    auth: {
+      user: { id, organizationId },
+    },
+  } = storeState;
+  dispatch(
+    asyncAction.PUT({
+      flow: updateViewFlow,
+      endpoint: `${VIEWS_URL}tables/${APP_NAME}/${datasourceId}/${organizationId}/${id}`,
+      params: { columns: visibleCols, datasourceId, pageSize: 100 },
+      requiresAuth: false,
+    }),
+  );
+};
 
 export const setFormDetailTab = (tab, submission = null) => ({
   type: SET_FORM_DETAIL_TAB,
