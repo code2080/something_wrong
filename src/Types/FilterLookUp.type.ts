@@ -1,7 +1,14 @@
+type lookupType = {
+  [id: string]: {
+    activityIds: string[];
+    label?: string;
+  };
+};
+
 type FilterLookUpMap = {
-  submitter: { [submitterId: string]: string[] };
-  tag: { [tagId: string]: string[] };
-  primaryObject: { [primaryObjId: string]: string[] };
+  submitter: lookupType;
+  tag: lookupType;
+  primaryObject: lookupType;
 };
 
 export default FilterLookUpMap;

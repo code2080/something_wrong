@@ -9,10 +9,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import {
-  makeSelectSelectedFilterValues,
-  selectVisibleActivitiesForForm,
-} from '../../../Redux/Filters/filters.selectors';
+import { makeSelectSelectedFilterValues } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
 // HELPERS
@@ -28,28 +25,8 @@ import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { getFilterLookupMap } from '../../../Utils/activities.helpers';
-import { TActivity } from '../../../Types/Activity.type';
 import { setFormLookupMap } from '../../../Redux/Filters/filters.actions';
-import { allowedNodeEnvironmentFlags } from 'node:process';
-
-const getActivityDataSource = (activities = {}, visibleActivities) => {
-  // Order by formInstanceId and then sequenceIdx or idx
-  return (Object.keys(activities) || []).reduce<TActivity[]>(
-    (a, formInstanceId) => {
-      const formInstanceActivities = activities[formInstanceId].filter((el) => {
-        if (visibleActivities === 'ALL') return true;
-        return visibleActivities.indexOf(el._id) > -1;
-      });
-      const orderedFormInstanceActivities = _.orderBy(
-        formInstanceActivities,
-        ['sequenceIdx'],
-        ['asc'],
-      );
-      return [...a, ...orderedFormInstanceActivities];
-    },
-    [],
-  );
-};
+import { selectActivityTagsForForm } from '../../../Redux/ActivityTag/activityTag.selectors';
 
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
@@ -65,6 +42,8 @@ const ActivitiesPage = () => {
   const selectedFilterValues = useSelector((state) =>
     selectSelectedFilterValues(state, formId),
   );
+
+  const activityTags = useSelector(selectActivityTagsForForm)(formId);
 
   /**
    * SELECTORS
@@ -123,7 +102,9 @@ const ActivitiesPage = () => {
       getFilterLookupMap(
         _.keyBy(submissions, '_id'),
         Object.values(activities).flat(),
+        activityTags,
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [activities, submissions],
   );
 
@@ -133,11 +114,9 @@ const ActivitiesPage = () => {
 
   const visibleActivities = Object.entries(selectedFilterValues).flatMap(
     ([property, values]) =>
-      values.flatMap((value) => {
-        const propVals = filterMap?.[property];
-        const result = propVals?.[value] ?? [];
-        return result;
-      }),
+      values.flatMap(
+        (value) => filterMap?.[property]?.[value]?.activityIds ?? [],
+      ),
   );
 
   const tableDataSource = useMemo(() => {

@@ -5,9 +5,10 @@ import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
 import type FilterLookupMap from '../../Types/FilterLookUp.type';
 import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
 import { useParams } from 'react-router-dom';
+import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -33,13 +34,24 @@ const FilterModal = ({
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
 
   const ModalBody = () => {
+    const valuesWithNoLabel = Object.values(filterLookupMap).flatMap((values) =>
+      Object.entries(values)
+        .filter(([_, { label }]) => !label)
+        .flatMap(([id]) => id),
+    );
+    const labels = useSelector(selectMultipleExtIdLabels)(
+      valuesWithNoLabel.map((id) => ({ field: 'objects', extId: id })),
+    );
     const availableValuesForSubmitter = Object.entries(
       filterLookupMap,
     ).reduce<any>((filterMap, [key, values]) => {
-      const ids = Object.keys(values);
+      const idsAndLabels = Object.entries(values);
       return {
         ...filterMap,
-        [key]: ids.map((id) => ({ value: id, label: id })),
+        [key]: idsAndLabels.map(([id, { label }]) => ({
+          value: id,
+          label: label ?? labels[id],
+        })),
       };
     }, {});
 

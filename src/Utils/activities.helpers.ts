@@ -373,20 +373,33 @@ export const getFilterPropsForActivities = (activities: any) => {
 const getValuesForActivity = (
   activity: TActivity,
   submission: TFormInstance,
+  activityTags: any,
 ) => {
   return activity && submission
     ? {
         id: activity._id,
-        submitter: submission.recipientId,
-        primaryObject: submission.scopedObject,
-        tag: activity.tagId,
+        submitter: {
+          id: submission.recipientId,
+          label: `${submission.firstName} ${submission.lastName}`,
+        },
+        primaryObject: { id: submission.scopedObject },
+        tag: {
+          id: activity.tagId,
+          label: activityTags[activity.tagId as string]?.name ?? 'N/A',
+        },
       }
     : null;
 };
 
 const mergeSimpleData = (currentSubmissionData, newSubmitter, id: string) => ({
   ...currentSubmissionData,
-  [newSubmitter]: [...(currentSubmissionData?.[newSubmitter] || []), id],
+  [newSubmitter.id]: {
+    label: newSubmitter.label,
+    activityIds: [
+      ...(currentSubmissionData?.[newSubmitter.id]?.activityIds || []),
+      id,
+    ],
+  },
 });
 
 const mergeSimpleDataField =
@@ -397,11 +410,16 @@ const mergeSimpleDataField =
 export const getFilterLookupMap = (
   submissions: { [id: string]: TFormInstance },
   activities: TActivity[],
+  activityTags: any,
 ): FilterLookUpMap => {
   // Map activities to filter values
   const filterValues = _.compact(
     activities.map((activity) =>
-      getValuesForActivity(activity, submissions[activity.formInstanceId]),
+      getValuesForActivity(
+        activity,
+        submissions[activity.formInstanceId],
+        activityTags,
+      ),
     ),
   );
   // Merge the filter values into a lookup map
