@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo, useCallback, useContext, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Menu, Dropdown, Button } from 'antd';
@@ -10,7 +17,7 @@ import FieldMapping from '../../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
-import { TabContext } from '../../../Components/TEAntdTabBar/index'
+import { TabContext } from '../../../Components/TEAntdTabBar/index';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
@@ -175,8 +182,8 @@ const ActivityDesignPage = () => {
           if (designIsValid) dispatch(updateDesign(designRef.current));
         });
       }
-    }
-  }, [])
+    };
+  }, []);
 
   /**
    * EVENT HANDLERS
@@ -186,15 +193,15 @@ const ActivityDesignPage = () => {
   const updateTimingDesignCallback = (prop, value) => {
     setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
     setModified(true);
-  }
+  };
   const updateObjectDesignCallback = (objectDesign) => {
     setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
     setModified(true);
-  }
+  };
   const updateFieldDesignCallback = (fieldDesign) => {
     setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
     setModified(true);
-  }
+  };
 
   // Callback to save mapping
   const onSaveDesign = () => {
@@ -202,7 +209,7 @@ const ActivityDesignPage = () => {
   };
 
   const onUnlockClick = () => {
-    dispatch(unlockActivityDesigner({ formId }))
+    dispatch(unlockActivityDesigner({ formId }));
     setModified(true);
   };
 
