@@ -11,6 +11,8 @@ import {
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
+import { TFormInstance } from '../Types/FormInstance.type';
+import type FilterLookUpMap from '../Types/FilterLookUp.type';
 
 // FUNCTIONS
 /**
@@ -366,4 +368,53 @@ export const getFilterPropsForActivities = (activities: any) => {
     },
     { options: {}, matches: {} },
   );
+};
+
+const getValuesForActivity = (
+  activity: TActivity,
+  submission: TFormInstance,
+) => {
+  return activity && submission
+    ? {
+        id: activity._id,
+        submitter: submission.recipientId,
+        primaryObject: submission.scopedObject,
+        tag: activity.tagId,
+      }
+    : null;
+};
+
+const mergeSimpleData = (currentSubmissionData, newSubmitter, id: string) => ({
+  ...currentSubmissionData,
+  [newSubmitter]: [...(currentSubmissionData?.[newSubmitter] || []), id],
+});
+
+const mergeSimpleDataField =
+  (currentData, newData) => (field: 'tag' | 'submitter' | 'primaryObject') => {
+    return mergeSimpleData(currentData[field], newData[field], newData.id);
+  };
+
+export const getFilterLookupMap = (
+  submissions: { [id: string]: TFormInstance },
+  activities: TActivity[],
+): FilterLookUpMap => {
+  // Map activities to filter values
+  const filterValues = _.compact(
+    activities.map((activity) =>
+      getValuesForActivity(activity, submissions[activity.formInstanceId]),
+    ),
+  );
+  // Merge the filter values into a lookup map
+  return filterValues.reduce<FilterLookUpMap>((mergedFilters, filterValue) => {
+    const curriedMergeSimpleDataOfField = mergeSimpleDataField(
+      mergedFilters,
+      filterValue,
+    );
+    return {
+      ...mergedFilters,
+      submitter: curriedMergeSimpleDataOfField('submitter'),
+      tag: curriedMergeSimpleDataOfField('tag'),
+      primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
+    };
+  }, <FilterLookUpMap>{});
 };
