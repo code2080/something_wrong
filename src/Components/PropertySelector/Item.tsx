@@ -4,19 +4,19 @@ type Props = {
   property: TProperty;
   onSelect: (selectedValue: string) => void;
   isSelected: boolean;
-  hasHeading: boolean;
+  hasHeading?: boolean;
 };
 
 const PropertySelectorItem = ({
   property,
   onSelect,
   isSelected,
-  hasHeading,
+  hasHeading = false,
 }: Props) => {
   return (
     <div
       className={`property-selector--item ${
-        isSelected ? 'active' : 'inactive'
+        isSelected ? 'isActive' : 'inactive'
       } ${hasHeading ? 'has-heading' : 'no-heading'}`}
       onClick={() => onSelect(property.value)}
     >

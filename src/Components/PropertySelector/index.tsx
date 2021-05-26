@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 // COMPONENTS
 import PropertySelectorItem from './Item';
 import PropertySelectorHeadingItem from './HeadingItem';
@@ -8,7 +6,7 @@ import PropertySelectorHeadingItem from './HeadingItem';
 import './index.scss';
 
 // TYPES
-import { EPropertyType, TProperty } from '../../Types/property.type';
+import { TProperty } from '../../Types/property.type';
 
 type Props = {
   properties: TProperty[];
@@ -24,17 +22,12 @@ const PropertySelector = ({
   emptyText,
   title,
 }: Props) => {
-  const hasHeadings: boolean = useMemo(
-    () => properties.some((p) => p.type === EPropertyType.HEADING),
-    [properties],
-  );
-
   return (
     <div className='property-selector--outer'>
       {title && <div className='property-selector--title'>{title}</div>}
       <div
         className={`property-selector--wrapper ${
-          selectedPropertyValue ? 'active' : 'inactive'
+          selectedPropertyValue ? 'isActive' : 'inactive'
         }`}
       >
         {(!properties || !properties.length) && (
@@ -43,19 +36,27 @@ const PropertySelector = ({
           </div>
         )}
         {properties.map((property) => {
-          if (property.type === EPropertyType.HEADING)
-            return (
+          return property.children ? (
+            <>
               <PropertySelectorHeadingItem
                 property={property}
                 key={property.value}
               />
-            );
-          return (
+              {property.children.map((prop) => (
+                <PropertySelectorItem
+                  property={prop}
+                  onSelect={onSelect}
+                  isSelected={prop.value === selectedPropertyValue}
+                  hasHeading
+                  key={prop.value}
+                />
+              ))}
+            </>
+          ) : (
             <PropertySelectorItem
               property={property}
               onSelect={onSelect}
               isSelected={property.value === selectedPropertyValue}
-              hasHeading={hasHeadings}
               key={property.value}
             />
           );
