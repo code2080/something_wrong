@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
 // COMPONENTS
-import ConfirmLeaveTabModal from '../../Components/ConfirmLeaveTabModal/ConfirmLeaveTabModal'
+import ConfirmLeaveTabModal from '../../Components/ConfirmLeaveTabModal/ConfirmLeaveTabModal';
 
 // STYLES
 import './index.scss';
@@ -19,16 +19,16 @@ const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children }) => {
   const [callback, setCallBack] = useState();
 
   const handleSave = () => {
-    setOpen(false)
+    setOpen(false);
     callback();
-  }
+  };
 
   const triggerConfirm = (callback) => {
     setOpen(true);
     setCallBack(() => () => callback());
-  }
+  };
 
-  const handleCancel = () => setOpen(false)
+  const handleCancel = () => setOpen(false);
 
   return (
     <TabContext.Provider value={{ triggerConfirm }}>
@@ -38,9 +38,13 @@ const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children }) => {
         onChange={onChange}
         renderTabBar={renderTabBar}
         animated={false}
-      >  
+      >
         {children}
-        <ConfirmLeaveTabModal handleSave={handleSave} handleCancel={handleCancel} isOpen={isOpen} />
+        <ConfirmLeaveTabModal
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+          isOpen={isOpen}
+        />
       </Tabs>
     </TabContext.Provider>
   );

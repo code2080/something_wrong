@@ -71,10 +71,8 @@ const ConstraintManagerPage = () => {
   /**
    * STATE
    */
-  const [
-    localConstrConf,
-    setConstrConf,
-  ] = useState<TConstraintConfiguration | null>(null);
+  const [localConstrConf, setConstrConf] =
+    useState<TConstraintConfiguration | null>(null);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectObjectRequestById } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // COMPONENTS
-import DatasourceObjectRequest from "../../Components/Elements/DatasourceInner/DatasourceObjectRequest";
+import DatasourceObjectRequest from '../../Components/Elements/DatasourceInner/DatasourceObjectRequest';
 
 // STYLES
 import './DatasourceReadonly.scss';
@@ -21,11 +21,10 @@ const DatasourceReadonly = ({ value }: Props) => {
   }
 
   return (
-    <div className="datasource--readonly">
+    <div className='datasource--readonly'>
       <DatasourceObjectRequest request={foundObjectRequest} readonly />
     </div>
   );
-
 };
 
 export default DatasourceReadonly;

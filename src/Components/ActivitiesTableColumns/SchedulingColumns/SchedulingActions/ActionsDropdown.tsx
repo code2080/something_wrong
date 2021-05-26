@@ -304,7 +304,9 @@ const ActivityActionsDropdown = ({
     <Dropdown
       overlay={menu}
       trigger={['click']}
-      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
     >
       {buttonType === 'ellipsis' ? (
         <Button type='link' icon={<EllipsisOutlined />} size='small' />
