@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Menu, Dropdown, Button } from 'antd';
@@ -10,6 +17,7 @@ import FieldMapping from '../../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
+import { TabContext } from '../../../Components/TEAntdTabBar/index';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
@@ -62,6 +70,7 @@ const ActivityDesignPage = () => {
   const { formId } = useParams();
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
+  const tabContext = useContext(TabContext);
 
   /**
    * SELECTORS
@@ -89,8 +98,11 @@ const ActivityDesignPage = () => {
    * STATE VARS
    */
   const [design, setDesign] = useState(storeDesign);
+  const [isModified, setModified] = useState(false);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
+  const designRef = useRef();
+  const isModifiedRef = useRef();
 
   /**
    * EFFECTS
@@ -158,24 +170,48 @@ const ActivityDesignPage = () => {
     return true;
   }, [design]);
 
+  useEffect(() => {
+    designRef.current = design;
+    isModifiedRef.current = isModified;
+  }, [design, isModified]);
+
+  useEffect(() => {
+    return () => {
+      if (isModifiedRef.current) {
+        tabContext.triggerConfirm(() => {
+          if (designIsValid) dispatch(updateDesign(designRef.current));
+        });
+      }
+    };
+  }, []);
+
   /**
    * EVENT HANDLERS
    */
 
   // Event handlers for updating the various props on the design
-  const updateTimingDesignCallback = (prop, value) =>
+  const updateTimingDesignCallback = (prop, value) => {
     setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
-  const updateObjectDesignCallback = (objectDesign) =>
+    setModified(true);
+  };
+  const updateObjectDesignCallback = (objectDesign) => {
     setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
-  const updateFieldDesignCallback = (fieldDesign) =>
+    setModified(true);
+  };
+  const updateFieldDesignCallback = (fieldDesign) => {
     setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
+    setModified(true);
+  };
 
   // Callback to save mapping
   const onSaveDesign = () => {
     if (designIsValid) dispatch(updateDesign(design));
   };
 
-  const onUnlockClick = () => dispatch(unlockActivityDesigner({ formId }));
+  const onUnlockClick = () => {
+    dispatch(unlockActivityDesigner({ formId }));
+    setModified(true);
+  };
 
   // Callback for reset meun clicks
   const onResetMenuClick = useCallback(

@@ -13,6 +13,7 @@ import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import { TFormInstance } from '../Types/FormInstance.type';
 import type FilterLookUpMap from '../Types/FilterLookUp.type';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 // FUNCTIONS
 /**
@@ -76,6 +77,26 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
       console.log('Found these invalid activities:', invalidActivityIds);
     },
   });
+};
+
+export const hydrateObjectRequests = (
+  activity: TActivity,
+  objectRequests: ObjectRequest[],
+) => {
+  return {
+    ...activity,
+    values: activity.values.map((av: ActivityValue) => ({
+      ...av,
+      value: Array.isArray(av.value)
+        ? av.value
+            .map((val) => {
+              const req = _.find(objectRequests, ['_id', val]);
+              return req ? req.replacementObjectExtId : val;
+            })
+            .filter((val) => val != null)
+        : av.value,
+    })),
+  };
 };
 
 export const activityIsReadOnly = (status) =>

@@ -11,6 +11,7 @@ import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activitie
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { makeSelectSelectedFilterValues } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
@@ -57,19 +58,15 @@ const ActivitiesPage = () => {
 
   const submissions = useSelector((state) => selectSubmissions(state, formId));
 
-  const activities = useSelector((state) => {
-    // const _activities =
-    return selectActivitiesForForm(state, formId);
-    // return pick(
-    //   _activities,
-    //   submissions.map(({ _id }) => _id),
-    // );
-  });
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
+
   const design = useSelector(selectDesignForForm)(formId);
-  // const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -93,8 +90,11 @@ const ActivitiesPage = () => {
    * MEMOIZED PROPS
    */
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
+        : [],
+    [design, objectRequests],
   );
 
   const filterMap = useMemo(
