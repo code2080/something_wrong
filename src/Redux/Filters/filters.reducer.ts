@@ -1,3 +1,4 @@
+import FilterLookUpMap from '../../Types/FilterLookUp.type';
 import * as types from './filters.actionTypes';
 
 // eslint-disable-next-line no-undef
@@ -79,6 +80,17 @@ const reducer = (state = {}, action) => {
       };
     }
 
+    case types.SET_FORM_LOOKUPMAP: {
+      if (!action) return state;
+      const { formId, lookupMap } = action.payload;
+      return {
+        ...state,
+        [formId]: {
+          ...(state[formId] || {}),
+          filterLookup: lookupMap,
+        },
+      } as { [formId: string]: { filterLookup: FilterLookUpMap } };
+    }
     default:
       return state;
   }

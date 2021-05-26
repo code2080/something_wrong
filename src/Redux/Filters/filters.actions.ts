@@ -4,6 +4,7 @@ import {
   EActivityFilterType,
 } from '../../Types/ActivityFilter.interface';
 import { TProperty } from '../../Types/property.type';
+import FilterLookUpMap from '../../Types/FilterLookUp.type';
 import * as types from './filters.actionTypes';
 
 // TYPES
@@ -43,6 +44,16 @@ type TActionSetActivityFilterInclusion = {
   filterId: string;
   inclusion: EActivityFilterInclusion;
 };
+
+type TActionSetActivityLookupMap = {
+  formId: string;
+  lookupMap: FilterLookUpMap;
+};
+
+export const setFormLookupMap = (payload: TActionSetActivityLookupMap) => ({
+  type: types.SET_FORM_LOOKUPMAP,
+  payload,
+});
 
 export const loadFilter = ({ filterId }: TActionLoadFilter) => ({
   type: types.LOAD_FILTER,

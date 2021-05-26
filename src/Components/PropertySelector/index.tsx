@@ -1,6 +1,7 @@
 // COMPONENTS
 import PropertySelectorItem from './Item';
 import PropertySelectorHeadingItem from './HeadingItem';
+import _ from 'lodash';
 
 // STYLES
 import './index.scss';
@@ -22,6 +23,10 @@ const PropertySelector = ({
   emptyText,
   title,
 }: Props) => {
+  const filteredProperties = properties.filter(
+    (prop) => !prop.children || !_.isEmpty(prop.children),
+  );
+
   return (
     <div className='property-selector--outer'>
       {title && <div className='property-selector--title'>{title}</div>}
@@ -30,13 +35,13 @@ const PropertySelector = ({
           selectedPropertyValue ? 'isActive' : 'inactive'
         }`}
       >
-        {(!properties || !properties.length) && (
+        {_.isEmpty(filteredProperties) && (
           <div className='property-selector--empty'>
             {emptyText || 'No items available'}
           </div>
         )}
-        {properties.map((property) => {
-          return property.children ? (
+        {filteredProperties.map((property) => {
+          return Array.isArray(property.children) ? (
             <>
               <PropertySelectorHeadingItem
                 property={property}

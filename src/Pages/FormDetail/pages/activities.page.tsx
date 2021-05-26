@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { /* useDispatch, */ useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -26,6 +26,7 @@ import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { getFilterLookupMap } from '../../../Utils/activities.helpers';
 import { TActivity } from '../../../Types/Activity.type';
+import { setFormLookupMap } from '../../../Redux/Filters/filters.actions';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -52,7 +53,7 @@ const calculateAvailableTableHeight = () => {
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   /**
    * SELECTORS
@@ -111,14 +112,13 @@ const ActivitiesPage = () => {
     [activities, visibleActivities],
   );
 
-  const filterLookUp = useMemo(
-    () =>
-      getFilterLookupMap(
-        _.keyBy(submissions, '_id'),
-        Object.values(activities).flat(),
-      ),
-    [activities, submissions],
-  );
+  useEffect(() => {
+    const filterMap = getFilterLookupMap(
+      _.keyBy(submissions, '_id'),
+      Object.values(activities).flat(),
+    );
+    dispatch(setFormLookupMap({ formId, lookupMap: filterMap }));
+  }, [activities, dispatch, formId, submissions]);
 
   /**
    * STATE

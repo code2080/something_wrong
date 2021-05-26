@@ -5,8 +5,19 @@ import {
   EActivityFilterMode,
 } from '../../Types/ActivityFilter.interface';
 import { TActivity } from '../../Types/Activity.type';
+import FilterLookUpMap from '../../Types/FilterLookUp.type';
 
 const filterstate = (state) => state.filters;
+
+export const makeSelectFormLookupMap = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): FilterLookUpMap => {
+      if (!filters || !formId) return {} as FilterLookUpMap;
+      return filters[formId]?.filterLookup ?? ({} as FilterLookUpMap);
+    },
+  );
 
 export const selectFilter = createSelector(
   filterstate,

@@ -1,4 +1,4 @@
-type TProp = {
+export type TProp = {
   label: string;
   value: string;
 };
