@@ -1,10 +1,8 @@
-export enum EPropertyType {
-  VALUE = 'VALUE',
-  HEADING = 'HEADING',
-}
-
-export type TProperty = {
+export type TProp = {
   label: string;
   value: string;
-  type?: EPropertyType | null;
+};
+
+export type TProperty = TProp & {
+  children?: TProp[];
 };

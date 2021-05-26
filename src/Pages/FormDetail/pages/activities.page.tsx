@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { /* useDispatch, */ useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import _, { pick } from 'lodash';
+import _ from 'lodash';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -9,7 +9,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
+import { makeSelectSelectedFilterValues } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
@@ -25,30 +25,26 @@ import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
-
-const getActivityDataSource = (activities = {}, visibleActivities) => {
-  // Order by formInstanceId and then sequenceIdx or idx
-  return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId].filter((el) => {
-      if (visibleActivities === 'ALL') return true;
-      return visibleActivities.indexOf(el._id) > -1;
-    });
-    const orderedFormInstanceActivities = _.orderBy(
-      formInstanceActivities,
-      ['sequenceIdx'],
-      ['asc'],
-    );
-    return [...a, ...orderedFormInstanceActivities];
-  }, []);
-};
+import { getFilterLookupMap } from '../../../Utils/activities.helpers';
+import { setFormLookupMap } from '../../../Redux/Filters/filters.actions';
+import { selectActivityTagsForForm } from '../../../Redux/ActivityTag/activityTag.selectors';
 
 const calculateAvailableTableHeight = () => {
-  return window.tePrefsHeight - 110;
+  return (window as any).tePrefsHeight - 110;
 };
 
 const ActivitiesPage = () => {
-  const { formId } = useParams();
-  // const dispatch = useDispatch();
+  const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch();
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  const activityTags = useSelector(selectActivityTagsForForm)(formId);
 
   /**
    * SELECTORS
@@ -67,18 +63,17 @@ const ActivitiesPage = () => {
   );
 
   const design = useSelector(selectDesignForForm)(formId);
-  const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
-  );
+  ) as boolean;
   const objectRequests = useSelector(selectFormObjectRequest(formId));
-  const [formType, reservationMode] = useSelector((state) => {
+  const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
 
   useEffect(() => {
-    getExtIdsFromActivities(activities);
+    getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
   /**
    * HOOKS
@@ -102,22 +97,39 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
-  const tableDataSource = useMemo(
-    () => getActivityDataSource(activities, visibleActivities),
-    [activities, visibleActivities],
+  const filterMap = useMemo(
+    () =>
+      getFilterLookupMap(
+        _.keyBy(submissions, '_id'),
+        Object.values(activities).flat(),
+        activityTags,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activities, submissions],
   );
 
-  // TODO: Fix this!! DEV-8479
-  // useEffect(() => {
-  //   console.log('Running filterprops');
-  //   const { options, matches } = getFilterPropsForActivities(activities);
-  //   dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  // }, [activities, dispatch, formId]);
+  useEffect(() => {
+    dispatch(setFormLookupMap({ formId, lookupMap: filterMap }));
+  }, [dispatch, filterMap, formId]);
+
+  const visibleActivities = Object.entries(selectedFilterValues).flatMap(
+    ([property, values]) =>
+      values.flatMap(
+        (value) => filterMap?.[property]?.[value]?.activityIds ?? [],
+      ),
+  );
+
+  const tableDataSource = useMemo(() => {
+    const allActivities = Object.values(activities).flat();
+    return _.isEmpty(visibleActivities)
+      ? allActivities
+      : allActivities.filter(({ _id }) => visibleActivities.includes(_id));
+  }, [activities, visibleActivities]);
 
   /**
    * STATE
    */
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   /**
    * EVENT HANDLERS
@@ -149,10 +161,11 @@ const ActivitiesPage = () => {
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
-        loading={isLoading && (activities || []).length === 0}
+        loading={isLoading && !activities?.length}
         rowSelection={{
           selectedRowKeys,
-          onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
+          onChange: (selectedRowKeys) =>
+            setSelectedRowKeys(selectedRowKeys as string[]),
         }}
       />
     </>

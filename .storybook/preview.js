@@ -3,8 +3,8 @@ import '!style-loader!css-loader!sass-loader!../dist/te-prefs-lib.css';
 
 export const decorators = [
   (Story) => (
-    <div className="te-prefs-lib" id="te-prefs-lib">
+    <div className='te-prefs-lib' id='te-prefs-lib' style={{ height: '100vh' }}>
       <Story />
     </div>
-  )
+  ),
 ];

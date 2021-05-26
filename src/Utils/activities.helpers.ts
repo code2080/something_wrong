@@ -11,6 +11,8 @@ import {
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
+import { TFormInstance } from '../Types/FormInstance.type';
+import type FilterLookUpMap from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 // FUNCTIONS
@@ -387,4 +389,71 @@ export const getFilterPropsForActivities = (activities: any) => {
     },
     { options: {}, matches: {} },
   );
+};
+
+const getValuesForActivity = (
+  activity: TActivity,
+  submission: TFormInstance,
+  activityTags: any,
+) => {
+  return activity && submission
+    ? {
+        id: activity._id,
+        submitter: {
+          id: submission.recipientId,
+          label: `${submission.firstName} ${submission.lastName}`,
+        },
+        primaryObject: { id: submission.scopedObject },
+        tag: {
+          id: activity.tagId,
+          label: activityTags[activity.tagId as string]?.name ?? 'N/A',
+        },
+      }
+    : null;
+};
+
+const mergeSimpleData = (currentSubmissionData, newSubmitter, id: string) => ({
+  ...currentSubmissionData,
+  [newSubmitter.id]: {
+    label: newSubmitter.label,
+    activityIds: [
+      ...(currentSubmissionData?.[newSubmitter.id]?.activityIds || []),
+      id,
+    ],
+  },
+});
+
+const mergeSimpleDataField =
+  (currentData, newData) => (field: 'tag' | 'submitter' | 'primaryObject') => {
+    return mergeSimpleData(currentData[field], newData[field], newData.id);
+  };
+
+export const getFilterLookupMap = (
+  submissions: { [id: string]: TFormInstance },
+  activities: TActivity[],
+  activityTags: any,
+): FilterLookUpMap => {
+  // Map activities to filter values
+  const filterValues = _.compact(
+    activities.map((activity) =>
+      getValuesForActivity(
+        activity,
+        submissions[activity.formInstanceId],
+        activityTags,
+      ),
+    ),
+  );
+  // Merge the filter values into a lookup map
+  return filterValues.reduce<FilterLookUpMap>((mergedFilters, filterValue) => {
+    const curriedMergeSimpleDataOfField = mergeSimpleDataField(
+      mergedFilters,
+      filterValue,
+    );
+    return {
+      ...mergedFilters,
+      submitter: curriedMergeSimpleDataOfField('submitter'),
+      tag: curriedMergeSimpleDataOfField('tag'),
+      primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
+    };
+  }, <FilterLookUpMap>{});
 };
