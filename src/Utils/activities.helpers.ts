@@ -406,7 +406,7 @@ const getValuesForActivity = (
         primaryObject: { id: submission.scopedObject },
         tag: {
           id: activity.tagId,
-          label: activityTags[activity.tagId as string]?.name ?? 'N/A',
+          label: _.find(activityTags, ['_id', activity.tagId])?.name ?? 'N/A',
         },
       }
     : null;
