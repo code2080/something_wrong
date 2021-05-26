@@ -50,6 +50,5 @@ export const updateDesign = (mapping) =>
 
 export const unlockActivityDesigner = ({ formId }) => ({
   type: UNLOCK_ACTIVITY_DESIGN,
-  payload: { formId }
-})
-
+  payload: { formId },
+});

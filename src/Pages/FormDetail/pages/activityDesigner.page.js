@@ -25,7 +25,10 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // ACTIONS
-import { updateDesign, unlockActivityDesigner } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
+import {
+  updateDesign,
+  unlockActivityDesigner,
+} from '../../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
@@ -252,29 +255,27 @@ const ActivityDesignPage = () => {
           </Dropdown>
           <div style={{ marginLeft: 'auto', display: 'flex' }}>
             <MappingStatus status={designIsValid} />
-            {
-              !isEditable ? (
-                <Button
-                  type='primary'
-                  size='small'
-                  onClick={onUnlockClick}
-                  loading={isSaving}
-                  disabled={hasActivities}
-                >
-                  Unlock
-                </Button>
-              ) : (
-                <Button
-                  type='primary'
-                  size='small'
-                  onClick={onSaveDesign}
-                  loading={isSaving}
-                  disabled={!designIsValid || hasActivities || !isEditable}
-                >
-                  Save
-                </Button>
-              )
-            }
+            {!isEditable ? (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onUnlockClick}
+                loading={isSaving}
+                disabled={hasActivities}
+              >
+                Unlock
+              </Button>
+            ) : (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onSaveDesign}
+                loading={isSaving}
+                disabled={!designIsValid || hasActivities || !isEditable}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </div>
         {hasActivities && <HasReservationsAlert formId={formId} />}
