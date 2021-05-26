@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { /* useDispatch, */ useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import _, { pick } from 'lodash';
+import _ from 'lodash';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -24,29 +24,34 @@ import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { getFilterLookupMap } from '../../../Utils/activities.helpers';
+import { TActivity } from '../../../Types/Activity.type';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
-  return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId].filter((el) => {
-      if (visibleActivities === 'ALL') return true;
-      return visibleActivities.indexOf(el._id) > -1;
-    });
-    const orderedFormInstanceActivities = _.orderBy(
-      formInstanceActivities,
-      ['sequenceIdx'],
-      ['asc'],
-    );
-    return [...a, ...orderedFormInstanceActivities];
-  }, []);
+  return (Object.keys(activities) || []).reduce<TActivity[]>(
+    (a, formInstanceId) => {
+      const formInstanceActivities = activities[formInstanceId].filter((el) => {
+        if (visibleActivities === 'ALL') return true;
+        return visibleActivities.indexOf(el._id) > -1;
+      });
+      const orderedFormInstanceActivities = _.orderBy(
+        formInstanceActivities,
+        ['sequenceIdx'],
+        ['asc'],
+      );
+      return [...a, ...orderedFormInstanceActivities];
+    },
+    [],
+  );
 };
 
 const calculateAvailableTableHeight = () => {
-  return window.tePrefsHeight - 110;
+  return (window as any).tePrefsHeight - 110;
 };
 
 const ActivitiesPage = () => {
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   // const dispatch = useDispatch();
 
   /**
@@ -62,24 +67,25 @@ const ActivitiesPage = () => {
   const submissions = useSelector((state) => selectSubmissions(state, formId));
 
   const activities = useSelector((state) => {
-    const _activities = selectActivitiesForForm(state, formId);
-    return pick(
-      _activities,
-      submissions.map(({ _id }) => _id),
-    );
+    // const _activities =
+    return selectActivitiesForForm(state, formId);
+    // return pick(
+    //   _activities,
+    //   submissions.map(({ _id }) => _id),
+    // );
   });
   const design = useSelector(selectDesignForForm)(formId);
   const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
-  );
-  const [formType, reservationMode] = useSelector((state) => {
+  ) as boolean;
+  const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
 
   useEffect(() => {
-    getExtIdsFromActivities(activities);
+    getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
   /**
    * HOOKS
@@ -105,17 +111,19 @@ const ActivitiesPage = () => {
     [activities, visibleActivities],
   );
 
-  // TODO: Fix this!! DEV-8479
-  // useEffect(() => {
-  //   console.log('Running filterprops');
-  //   const { options, matches } = getFilterPropsForActivities(activities);
-  //   dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  // }, [activities, dispatch, formId]);
+  const filterLookUp = useMemo(
+    () =>
+      getFilterLookupMap(
+        _.keyBy(submissions, '_id'),
+        Object.values(activities).flat(),
+      ),
+    [activities, submissions],
+  );
 
   /**
    * STATE
    */
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   /**
    * EVENT HANDLERS
@@ -147,10 +155,11 @@ const ActivitiesPage = () => {
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
-        loading={isLoading && (activities || []).length === 0}
+        loading={isLoading && !activities?.length}
         rowSelection={{
           selectedRowKeys,
-          onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
+          onChange: (selectedRowKeys) =>
+            setSelectedRowKeys(selectedRowKeys as string[]),
         }}
       />
     </>
