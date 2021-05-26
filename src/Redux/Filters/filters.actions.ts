@@ -50,6 +50,17 @@ type TActionSetActivityLookupMap = {
   lookupMap: FilterLookUpMap;
 };
 
+type TActionSetSelectedFilterValues = {
+  filterValues: { [property: string]: string[] };
+  formId: string;
+};
+export const setSelectedFilterValues = (
+  payload: TActionSetSelectedFilterValues,
+) => ({
+  type: types.SET_SELECTED_FILTER_VALUES,
+  payload,
+});
+
 export const setFormLookupMap = (payload: TActionSetActivityLookupMap) => ({
   type: types.SET_FORM_LOOKUPMAP,
   payload,

@@ -91,6 +91,18 @@ const reducer = (state = {}, action) => {
         },
       } as { [formId: string]: { filterLookup: FilterLookUpMap } };
     }
+    case types.SET_SELECTED_FILTER_VALUES: {
+      if (!action) return state;
+      const { filterValues, formId } = action.payload;
+      return {
+        ...state,
+        [formId]: {
+          ...(state[formId] ?? {}),
+          filterValues,
+        },
+      };
+    }
+
     default:
       return state;
   }

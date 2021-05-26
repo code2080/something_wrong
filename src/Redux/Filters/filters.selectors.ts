@@ -9,6 +9,18 @@ import FilterLookUpMap from '../../Types/FilterLookUp.type';
 
 const filterstate = (state) => state.filters;
 
+type SelectedFilterValues = { [property: string]: string[] };
+
+export const makeSelectSelectedFilterValues = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): SelectedFilterValues => {
+      if (!filters || !formId) return {} as SelectedFilterValues;
+      return filters[formId]?.filterValues ?? ({} as SelectedFilterValues);
+    },
+  );
+
 export const makeSelectFormLookupMap = () =>
   createSelector(
     filterstate,

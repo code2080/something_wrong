@@ -9,7 +9,10 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
+import {
+  makeSelectSelectedFilterValues,
+  selectVisibleActivitiesForForm,
+} from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 
 // HELPERS
@@ -27,6 +30,7 @@ import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmis
 import { getFilterLookupMap } from '../../../Utils/activities.helpers';
 import { TActivity } from '../../../Types/Activity.type';
 import { setFormLookupMap } from '../../../Redux/Filters/filters.actions';
+import { allowedNodeEnvironmentFlags } from 'node:process';
 
 const getActivityDataSource = (activities = {}, visibleActivities) => {
   // Order by formInstanceId and then sequenceIdx or idx
@@ -54,6 +58,13 @@ const calculateAvailableTableHeight = () => {
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
 
   /**
    * SELECTORS
@@ -76,7 +87,7 @@ const ActivitiesPage = () => {
     // );
   });
   const design = useSelector(selectDesignForForm)(formId);
-  const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
+  // const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
@@ -107,18 +118,34 @@ const ActivitiesPage = () => {
     [design],
   );
 
-  const tableDataSource = useMemo(
-    () => getActivityDataSource(activities, visibleActivities),
-    [activities, visibleActivities],
+  const filterMap = useMemo(
+    () =>
+      getFilterLookupMap(
+        _.keyBy(submissions, '_id'),
+        Object.values(activities).flat(),
+      ),
+    [activities, submissions],
   );
 
   useEffect(() => {
-    const filterMap = getFilterLookupMap(
-      _.keyBy(submissions, '_id'),
-      Object.values(activities).flat(),
-    );
     dispatch(setFormLookupMap({ formId, lookupMap: filterMap }));
-  }, [activities, dispatch, formId, submissions]);
+  }, [dispatch, filterMap, formId]);
+
+  const visibleActivities = Object.entries(selectedFilterValues).flatMap(
+    ([property, values]) =>
+      values.flatMap((value) => {
+        const propVals = filterMap?.[property];
+        const result = propVals?.[value] ?? [];
+        return result;
+      }),
+  );
+
+  const tableDataSource = useMemo(() => {
+    const allActivities = Object.values(activities).flat();
+    return _.isEmpty(visibleActivities)
+      ? allActivities
+      : allActivities.filter(({ _id }) => visibleActivities.includes(_id));
+  }, [activities, visibleActivities]);
 
   /**
    * STATE

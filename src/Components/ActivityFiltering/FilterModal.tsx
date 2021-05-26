@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
 import type FilterLookupMap from '../../Types/FilterLookUp.type';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
+import { useParams } from 'react-router-dom';
+
 const propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
@@ -21,12 +25,14 @@ const FilterModal = ({
   onClose = _.noop,
   filterLookupMap,
 }: Props) => {
+  const dispatch = useDispatch();
+  const { formId } = useParams<{ formId: string }>();
+  const [selectedValues, setSelectedValues] = useState<{
+    [property: string]: string[];
   }>({});
-  const [selectedProperty, setSelectedProperty] =
-  useState<string | null>(null);
-  
+  const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
+
   const ModalBody = () => {
-    
     const availableValuesForSubmitter = Object.entries(
       filterLookupMap,
     ).reduce<any>((filterMap, [key, values]) => {
@@ -110,9 +116,11 @@ const FilterModal = ({
       </div>
     );
   };
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
+    dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
     onClose();
-  };
+  }, [dispatch, formId, onClose, selectedValues]);
+
   return (
     <Modal
       title='Filter activities'
