@@ -43,7 +43,6 @@ const ActivitiesPage = () => {
   const selectedFilterValues = useSelector((state) =>
     selectSelectedFilterValues(state, formId),
   );
-
   const activityTags = useSelector(selectActivityTagsForForm)(formId);
 
   /**
@@ -53,14 +52,12 @@ const ActivitiesPage = () => {
     () => makeSelectActivitiesForForm(),
     [],
   );
-
-  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-
-  const submissions = useSelector((state) => selectSubmissions(state, formId));
-
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
+
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
 
   const design = useSelector(selectDesignForForm)(formId);
   const isLoading = useSelector(
