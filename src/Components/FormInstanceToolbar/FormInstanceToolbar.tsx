@@ -30,14 +30,10 @@ const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
   );
   const { formType } = useSelector((state) => selectForm(state, formId));
 
-  const [
-    SchedulingStatusProcessModal,
-    openSchedulingStatusProcessModal,
-  ] = useFormInstanceSchedulingProcessModal();
-  const [
-    AcceptanceStatusProcessModal,
-    openAcceptanceStatusProcessModal,
-  ] = useFormInstanceAcceptanceStatusModal();
+  const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] =
+    useFormInstanceSchedulingProcessModal();
+  const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] =
+    useFormInstanceAcceptanceStatusModal();
   const request = objectRequests.find(
     (request: any) => request._id === formInstance.scopedObject,
   );

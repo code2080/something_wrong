@@ -66,22 +66,20 @@ const findTypesOnReservationModeFlow = {
   }),
 };
 
-export const findTypesOnReservationMode = (reservationMode) => (
-  dispatch,
-  getState,
-) => {
-  const storeState = getState();
-  const organizationId = _.get(storeState, 'auth.user.organizationId', null);
-  return dispatch(
-    asyncAction.GET({
-      flow: findTypesOnReservationModeFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/types/${encodeURIComponent(
-        reservationMode,
-      )}`,
-      params: { reservationMode },
-    }),
-  );
-};
+export const findTypesOnReservationMode =
+  (reservationMode) => (dispatch, getState) => {
+    const storeState = getState();
+    const organizationId = _.get(storeState, 'auth.user.organizationId', null);
+    return dispatch(
+      asyncAction.GET({
+        flow: findTypesOnReservationModeFlow,
+        endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/types/${encodeURIComponent(
+          reservationMode,
+        )}`,
+        params: { reservationMode },
+      }),
+    );
+  };
 
 const findFieldsOnReservationModeFlow = {
   request: () => ({ type: types.FETCH_FIELDS_ON_RESERVATION_MODE_REQUEST }),
@@ -95,19 +93,17 @@ const findFieldsOnReservationModeFlow = {
   }),
 };
 
-export const findFieldsOnReservationMode = (reservationMode) => (
-  dispatch,
-  getState,
-) => {
-  const storeState = getState();
-  const organizationId = _.get(storeState, 'auth.user.organizationId', null);
-  return dispatch(
-    asyncAction.GET({
-      flow: findFieldsOnReservationModeFlow,
-      endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/fields/${encodeURIComponent(
-        reservationMode,
-      )}`,
-      params: { reservationMode: reservationMode },
-    }),
-  );
-};
+export const findFieldsOnReservationMode =
+  (reservationMode) => (dispatch, getState) => {
+    const storeState = getState();
+    const organizationId = _.get(storeState, 'auth.user.organizationId', null);
+    return dispatch(
+      asyncAction.GET({
+        flow: findFieldsOnReservationModeFlow,
+        endpoint: `integration-service/service/tePref/integration/${organizationId}/reservation/fields/${encodeURIComponent(
+          reservationMode,
+        )}`,
+        params: { reservationMode: reservationMode },
+      }),
+    );
+  };

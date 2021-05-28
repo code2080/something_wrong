@@ -5,19 +5,43 @@ import {
   EActivityFilterMode,
 } from '../../Types/ActivityFilter.interface';
 import { TActivity } from '../../Types/Activity.type';
+import FilterLookUpMap from '../../Types/FilterLookUp.type';
 
 const filterstate = (state) => state.filters;
 
+type SelectedFilterValues = { [property: string]: string[] };
+
+export const makeSelectSelectedFilterValues = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): SelectedFilterValues => {
+      if (!filters || !formId) return {} as SelectedFilterValues;
+      return filters[formId]?.filterValues ?? ({} as SelectedFilterValues);
+    },
+  );
+
+export const makeSelectFormLookupMap = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): FilterLookUpMap => {
+      if (!filters || !formId) return {} as FilterLookUpMap;
+      return filters[formId]?.filterLookup ?? ({} as FilterLookUpMap);
+    },
+  );
+
 export const selectFilter = createSelector(
   filterstate,
-  (filters) => (filterId, filterInterface = {}) => {
-    if (!filters) return filterInterface;
-    const f = filters[filterId];
-    return {
-      ...filterInterface,
-      ...(f || {}),
-    };
-  },
+  (filters) =>
+    (filterId, filterInterface = {}) => {
+      if (!filters) return filterInterface;
+      const f = filters[filterId];
+      return {
+        ...filterInterface,
+        ...(f || {}),
+      };
+    },
 );
 
 export const selectActivityFilterOptionsForForm = createSelector(

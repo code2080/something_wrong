@@ -57,13 +57,13 @@ import { selectExtIds } from '../../Redux/TE/te.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 export const TAB_CONSTANT = {
-  FORM_INFO: 'FORM_INFO' ,
-  SUBMISSIONS: 'SUBMISSIONS' ,
-  OBJECT_REQUESTS: 'OBJECT_REQUESTS' ,
-  ACTIVITIES: 'ACTIVITIES' ,
-  ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER' ,
-  CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER' ,
-}
+  FORM_INFO: 'FORM_INFO',
+  SUBMISSIONS: 'SUBMISSIONS',
+  OBJECT_REQUESTS: 'OBJECT_REQUESTS',
+  ACTIVITIES: 'ACTIVITIES',
+  ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
+  CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER',
+};
 
 const FormPage = () => {
   const dispatch = useDispatch();
@@ -164,20 +164,35 @@ const FormPage = () => {
           <SubmissionsPage />
         </Tabs.TabPane>
         {formHasObjReqs && (
-          <Tabs.TabPane tab='OBJECT REQUESTS' key={TAB_CONSTANT.OBJECT_REQUESTS}>
+          <Tabs.TabPane
+            tab='OBJECT REQUESTS'
+            key={TAB_CONSTANT.OBJECT_REQUESTS}
+          >
             <ObjectRequestsPage />
           </Tabs.TabPane>
         )}
-        <Tabs.TabPane tab='ACTIVITIES' key={TAB_CONSTANT.ACTIVITIES} forceRender>
+        <Tabs.TabPane
+          tab='ACTIVITIES'
+          key={TAB_CONSTANT.ACTIVITIES}
+          forceRender
+        >
           <ActivitiesPage />
         </Tabs.TabPane>
         {hasActivityDesignPermission && (
-          <Tabs.TabPane tab='ACTIVITY DESIGNER' key={TAB_CONSTANT.ACTIVITY_DESIGNER}>
-            { selectedFormDetailTab === TAB_CONSTANT.ACTIVITY_DESIGNER && <ActivityDesignPage />}
+          <Tabs.TabPane
+            tab='ACTIVITY DESIGNER'
+            key={TAB_CONSTANT.ACTIVITY_DESIGNER}
+          >
+            {selectedFormDetailTab === TAB_CONSTANT.ACTIVITY_DESIGNER && (
+              <ActivityDesignPage />
+            )}
           </Tabs.TabPane>
         )}
         {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
-          <Tabs.TabPane tab='CONSTRAINT MANAGER' key={TAB_CONSTANT.CONSTRAINT_MANAGER}>
+          <Tabs.TabPane
+            tab='CONSTRAINT MANAGER'
+            key={TAB_CONSTANT.CONSTRAINT_MANAGER}
+          >
             <ConstraintManagerPage />
           </Tabs.TabPane>
         )}

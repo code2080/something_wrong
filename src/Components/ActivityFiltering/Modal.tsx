@@ -21,7 +21,7 @@ import {
 
 // COMPONENTS
 import PropertySelector from '../PropertySelector';
-import { EPropertyType, TProperty } from '../../Types/property.type';
+import { TProperty } from '../../Types/property.type';
 
 // CONSTANTS
 import TimingNameMap from '../../Constants/activityDesignTimingMap.constants';
@@ -71,11 +71,7 @@ const createPropertySelectorProperties = (
       ({ value }) => !selectedOptions.includes(value),
     );
     if (!filteredOptions || !filteredOptions.length) return tot;
-    return [
-      ...tot,
-      { value: key, label: key, type: EPropertyType.HEADING },
-      ...filteredOptions,
-    ];
+    return [...tot, { value: key, label: key }, ...filteredOptions];
   }, []);
 };
 
@@ -85,7 +81,7 @@ const generateSelectedValuesFromFilter = (filterValues): TProperty[] => {
       if (!filterValues[key] || !filterValues[key].length) return tot;
       return [
         ...tot,
-        { value: key, label: key, type: EPropertyType.HEADING },
+        { value: key, label: key },
         ...filterValues[key].map((el) => {
           const splitEl = el.split('/');
           const nEl = splitEl.length - 1;
@@ -93,7 +89,7 @@ const generateSelectedValuesFromFilter = (filterValues): TProperty[] => {
           for (let i = 1; i <= nEl; i += 1) {
             label = label !== '' ? label + ': ' + splitEl[i] : splitEl[i];
           }
-          return { value: el, label, type: EPropertyType.VALUE };
+          return { value: el, label };
         }),
       ];
     },

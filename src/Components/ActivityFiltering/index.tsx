@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';
-import ActivityFilterModal from './Modal';
+import FilterModal from './FilterModal';
 
 // STYLES
 import './index.scss';
+import { makeSelectFormLookupMap } from '../../Redux/Filters/filters.selectors';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ActivityFiltering = () => {
   const [showModal, setShowModal] = useState(false);
+  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+  const { formId } = useParams<{ formId: string }>();
+  const filterData = useSelector((state) => selectFormLookupMap(state, formId));
 
   return (
     <div className='activity-filtering--wrapper'>
@@ -16,9 +22,10 @@ const ActivityFiltering = () => {
         onClick={() => setShowModal(!showModal)}
         isActive={showModal}
       />
-      <ActivityFilterModal
+      <FilterModal
         isVisible={showModal}
         onClose={() => setShowModal(false)}
+        filterLookupMap={filterData}
       />
     </div>
   );

@@ -16,7 +16,7 @@
 
   &:hover,
   &:active,
-  &.active {
+  &.isActive {
     border-color: $jungleGreen;
   }
   .property-selector--item {
@@ -25,7 +25,7 @@
     color: $secondary;
 
     &:hover,
-    &.active {
+    &.isActive {
       background: rgba($jungleGreen, 0.2);
       color: $black;
     }

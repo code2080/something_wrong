@@ -1,4 +1,5 @@
 import { Select, Cascader } from 'antd';
+import { staticDesignObj } from '../static_params';
 
 const { Option } = Select;
 
@@ -13,7 +14,8 @@ const ParameterCascader = ({
   availableOperators,
   activityDesignObj,
 }: Props) => {
-  const options = Object.keys(activityDesignObj).map((objField) => ({
+  console.log({ activityDesignObj });
+  const options = Object.keys(staticDesignObj).map((objField) => ({
     value: objField,
     label: objField,
     children: Object.keys(
