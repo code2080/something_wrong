@@ -12,7 +12,7 @@ export const SchedulingColumns = [
     title: '',
     key: 'activityScheduling',
     dataIndex: undefined,
-    fixedWidth: 90,
+    width: 90,
     render: (activity) => (
       <SortableTableCell className={`activityScheduling_${activity._id}`}>
         <SchedulingActions activity={activity} />
@@ -23,7 +23,7 @@ export const SchedulingColumns = [
     title: 'Tag',
     key: 'activityTag',
     dataIndex: undefined,
-    fixedWidth: 150,
+    width: 100,
     render: (activity) => (
       <SortableTableCell className={`activityTag${activity._id}`}>
         <ActivityTag activities={[activity]} />
@@ -35,7 +35,7 @@ export const SchedulingColumns = [
     title: 'Status',
     key: 'activityStatus',
     dataIndex: null,
-    fixedWidth: 150,
+    width: 110,
     render: (activity) => (
       <SortableTableCell className={`activityStatus_${activity._id}`}>
         <ActivityStatusCol activity={activity} />
