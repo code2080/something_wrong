@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -24,10 +24,6 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
-import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
-import { getFilterLookupMap } from '../../../Utils/activities.helpers';
-import { setFormLookupMap } from '../../../Redux/Filters/filters.actions';
-import { selectActivityTagsForForm } from '../../../Redux/ActivityTag/activityTag.selectors';
 
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
@@ -35,7 +31,6 @@ const calculateAvailableTableHeight = () => {
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
-  const dispatch = useDispatch();
   const selectSelectedFilterValues = useMemo(
     () => makeSelectSelectedFilterValues(),
     [],
@@ -43,7 +38,6 @@ const ActivitiesPage = () => {
   const selectedFilterValues = useSelector((state) =>
     selectSelectedFilterValues(state, formId),
   );
-  const activityTags = useSelector(selectActivityTagsForForm)(formId);
 
   /**
    * SELECTORS
@@ -55,9 +49,6 @@ const ActivitiesPage = () => {
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
-
-  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-  const submissions = useSelector((state) => selectSubmissions(state, formId));
 
   const design = useSelector(selectDesignForForm)(formId);
   const isLoading = useSelector(
@@ -94,20 +85,17 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
-  const filterMap = useMemo(
-    () =>
-      getFilterLookupMap(
-        _.keyBy(submissions, '_id'),
-        Object.values(activities).flat(),
-        activityTags,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activities, submissions],
-  );
-
-  useEffect(() => {
-    dispatch(setFormLookupMap({ formId, lookupMap: filterMap }));
-  }, [dispatch, filterMap, formId]);
+  const filterMap = {}; // useSelector(...)
+  //  useMemo(
+  //   () =>
+  //     getFilterLookupMap(
+  //       _.keyBy(submissions, '_id'),
+  //       Object.values(activities).flat(),
+  //       activityTags,
+  //     ),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [activities, submissions],
+  // );
 
   const visibleActivities = Object.entries(selectedFilterValues).flatMap(
     ([property, values]) =>

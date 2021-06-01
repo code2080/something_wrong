@@ -24,7 +24,10 @@ import {
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
-import { loadFilter } from '../../Redux/Filters/filters.actions';
+import {
+  loadFilter,
+  fetchLookupMap,
+} from '../../Redux/Filters/filters.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
@@ -90,6 +93,7 @@ const FormPage = () => {
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
+    dispatch(fetchLookupMap({ formId }));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
