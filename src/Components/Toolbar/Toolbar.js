@@ -69,8 +69,8 @@ const Toolbar = ({
   const isModifiedRef = useRef();
 
   useEffect(() => {
-    isModifiedRef.current = isModified
-  }, [isModified])
+    isModifiedRef.current = isModified;
+  }, [isModified]);
   const logOutCallback = async () => {
     await logout();
     history.push('/');
@@ -92,7 +92,7 @@ const Toolbar = ({
     if (isModifiedRef.current) {
       triggerConfirm(() => history.push(path));
     } else {
-      history.push(path)
+      history.push(path);
     }
   };
 

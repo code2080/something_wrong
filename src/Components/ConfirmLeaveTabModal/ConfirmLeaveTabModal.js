@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'antd';
 
-const ConfirmLeaveTabModal = ({ isOpen = false, handleCancel, handleSave, handleLeave }) => {
+const ConfirmLeaveTabModal = ({
+  isOpen = false,
+  handleCancel,
+  handleSave,
+  handleLeave,
+}) => {
   return (
     <Modal
       title='Confirm leaving'

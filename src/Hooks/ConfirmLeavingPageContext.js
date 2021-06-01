@@ -16,13 +16,13 @@ export const ConfirmLeavingPageProvider = ({ children }) => {
     setOpen(false);
     setIsModified(false);
     if (executeFuncBeforeLeave) executeFuncBeforeLeave();
-    setExecuteFuncBeforeLeave()
+    setExecuteFuncBeforeLeave();
     callback();
   };
 
   const triggerConfirm = (callback) => {
     setOpen(true);
-    setCallBack(() => callback)
+    setCallBack(() => callback);
   };
 
   const handleCancel = () => setOpen(false);
@@ -35,12 +35,14 @@ export const ConfirmLeavingPageProvider = ({ children }) => {
   };
 
   return (
-    <ConfirmLeavingPageContext.Provider value={{
-      triggerConfirm,
-      isModified,
-      setIsModified,
-      setExecuteFuncBeforeLeave
-    }}>
+    <ConfirmLeavingPageContext.Provider
+      value={{
+        triggerConfirm,
+        isModified,
+        setIsModified,
+        setExecuteFuncBeforeLeave,
+      }}
+    >
       {children}
       <ConfirmLeaveTabModal
         handleSave={handleSave}
@@ -54,6 +56,6 @@ export const ConfirmLeavingPageProvider = ({ children }) => {
 
 ConfirmLeavingPageProvider.propTypes = {
   children: PropTypes.node.isRequired,
-}
+};
 
 export default { ConfirmLeavingPageProvider, ConfirmLeavingPageContext };

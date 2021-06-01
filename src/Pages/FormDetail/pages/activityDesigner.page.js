@@ -30,7 +30,7 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 
 // HOOKS
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
-import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext'
+import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
 
 // ACTIONS
 import {
@@ -179,9 +179,9 @@ const ActivityDesignPage = () => {
   // Callback to save mapping
   const onSaveDesign = () => {
     if (designIsValid) {
-      dispatch(updateDesign(designRef.current))
+      dispatch(updateDesign(designRef.current));
       leavingPageContext.setIsModified(false);
-    };
+    }
   };
 
   // Event handlers for updating the various props on the design

@@ -12,17 +12,16 @@ const renderTabBar = (props, DefaultTabBar) => (
   <DefaultTabBar {...props} className={`${props.className} teantd-tabbar`} />
 );
 
-
 const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children }) => {
   const { isModified, triggerConfirm } = useContext(ConfirmLeavingPageContext);
-  
+
   const handleOnChange = (key) => {
     if (isModified) {
       triggerConfirm(() => onChange(key));
     } else {
       onChange(key);
     }
-  }
+  };
 
   return (
     <Tabs
