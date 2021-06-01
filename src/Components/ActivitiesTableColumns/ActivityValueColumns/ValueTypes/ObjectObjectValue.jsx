@@ -35,7 +35,7 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
       item.split(',').map((val, valIndex) => {
         const request = _.find(objectRequests, ['_id', val]);
         return request ? (
-          <ObjectRequestDropdown request={request} />
+          <ObjectRequestDropdown key={request._id} request={request} />
         ) : (
           <DatasourceReadonly
             key={`${itemIndex}_${valIndex}`}
