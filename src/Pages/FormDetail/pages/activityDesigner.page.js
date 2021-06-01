@@ -3,8 +3,8 @@ import {
   useEffect,
   useMemo,
   useCallback,
-  useContext,
   useRef,
+  useContext,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -17,7 +17,6 @@ import FieldMapping from '../../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
-import { TabContext } from '../../../Components/TEAntdTabBar/index';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
@@ -31,6 +30,7 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 
 // HOOKS
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
 
 // ACTIONS
 import {
@@ -70,7 +70,7 @@ const ActivityDesignPage = () => {
   const { formId } = useParams();
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
-  const tabContext = useContext(TabContext);
+  const leavingPageContext = useContext(ConfirmLeavingPageContext);
 
   /**
    * SELECTORS
@@ -98,11 +98,9 @@ const ActivityDesignPage = () => {
    * STATE VARS
    */
   const [design, setDesign] = useState(storeDesign);
-  const [isModified, setModified] = useState(false);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
   const designRef = useRef();
-  const isModifiedRef = useRef();
 
   /**
    * EFFECTS
@@ -172,45 +170,40 @@ const ActivityDesignPage = () => {
 
   useEffect(() => {
     designRef.current = design;
-    isModifiedRef.current = isModified;
-  }, [design, isModified]);
-
-  useEffect(() => {
-    return () => {
-      if (isModifiedRef.current) {
-        tabContext.triggerConfirm(() => {
-          if (designIsValid) dispatch(updateDesign(designRef.current));
-        });
-      }
-    };
-  }, []);
+  }, [design]);
 
   /**
    * EVENT HANDLERS
    */
 
+  // Callback to save mapping
+  const onSaveDesign = () => {
+    if (designIsValid) {
+      dispatch(updateDesign(designRef.current));
+      leavingPageContext.setIsModified(false);
+    }
+  };
+
   // Event handlers for updating the various props on the design
   const updateTimingDesignCallback = (prop, value) => {
     setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
-    setModified(true);
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
   };
   const updateObjectDesignCallback = (objectDesign) => {
     setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
-    setModified(true);
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
   };
   const updateFieldDesignCallback = (fieldDesign) => {
     setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
-    setModified(true);
-  };
-
-  // Callback to save mapping
-  const onSaveDesign = () => {
-    if (designIsValid) dispatch(updateDesign(design));
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
   };
 
   const onUnlockClick = () => {
     dispatch(unlockActivityDesigner({ formId }));
-    setModified(true);
+    leavingPageContext.setIsModified(true);
   };
 
   // Callback for reset meun clicks

@@ -11,6 +11,7 @@ import { SET_ENVIRONMENT, SET_CORE_USER } from '../Redux/Auth/auth.actionTypes';
 // COMPONENTS
 import TEPrefsLibRouter from './TEPrefsLibRouter';
 import { ConfigProvider } from 'antd';
+import { ConfirmLeavingPageProvider } from '../Hooks/ConfirmLeavingPageContext';
 
 // STYLES
 import './TEPrefsLib.scss';
@@ -75,7 +76,9 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
               ];
             }}
           >
-            <TEPrefsLibRouter />
+            <ConfirmLeavingPageProvider>
+              <TEPrefsLibRouter />
+            </ConfirmLeavingPageProvider>
           </div>
         </ConfigProvider>
       </TECoreAPIProvider>

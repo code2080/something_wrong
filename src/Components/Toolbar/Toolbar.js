@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useContext, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Breadcrumb } from 'antd';
 // COMPONENTS
 import ActionsButton from './ActionsButton';
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
+import { ConfirmLeavingPageContext } from '../../Hooks/ConfirmLeavingPageContext';
 
 // ACTIONS
 import { logout } from '../../Redux/Auth/auth.actions';
@@ -64,6 +65,12 @@ const Toolbar = ({
   history,
   logout,
 }) => {
+  const { isModified, triggerConfirm } = useContext(ConfirmLeavingPageContext);
+  const isModifiedRef = useRef();
+
+  useEffect(() => {
+    isModifiedRef.current = isModified;
+  }, [isModified]);
   const logOutCallback = async () => {
     await logout();
     history.push('/');
@@ -81,7 +88,13 @@ const Toolbar = ({
         break;
     }
   };
-  const onHandleBreadrumbsClick = (path) => history.push(path);
+  const onHandleBreadcrumbsClick = (path) => {
+    if (isModifiedRef.current) {
+      triggerConfirm(() => history.push(path));
+    } else {
+      history.push(path);
+    }
+  };
 
   const renderedToolbar = (
     <div className='top-toolbar--wrapper'>
@@ -94,7 +107,7 @@ const Toolbar = ({
                 className='top-toolbar--breadcrumbs__item'
                 onClick={() => {
                   if (typeof el.onClick === 'function') el.onClick();
-                  onHandleBreadrumbsClick(el.path);
+                  onHandleBreadcrumbsClick(el.path);
                 }}
               >
                 {el.label}
