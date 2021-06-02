@@ -55,10 +55,9 @@ const fetchActivitiesForFormFlow = {
 };
 
 export const fetchActivitiesForForm = (formId) =>
-  asyncAction.GET({
+  asyncAction.POST({
     flow: fetchActivitiesForFormFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
-    params: { formId },
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
   });
 
 const fetchActivitiesForFormInstanceFlow = {
