@@ -6,9 +6,9 @@ import { TProperty, TProp } from '../../Types/property.type';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
 import { useParams } from 'react-router-dom';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
+import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -128,8 +128,9 @@ const FilterModal = ({
       </div>
     );
   };
+
   const handleClose = useCallback(() => {
-    dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
+    dispatch(setSelectedFilterValues({ formId, selectedValues }));
     onClose();
   }, [dispatch, formId, onClose, selectedValues]);
 
