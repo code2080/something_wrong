@@ -9,7 +9,10 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { makeSelectSelectedFilterValues } from '../../../Redux/Filters/filters.selectors';
+import {
+  makeSelectFormLookupMap,
+  makeSelectSelectedFilterValues,
+} from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
@@ -42,6 +45,8 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
+  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],
@@ -85,18 +90,7 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
-  const filterMap = {}; // useSelector(...)
-  //  useMemo(
-  //   () =>
-  //     getFilterLookupMap(
-  //       _.keyBy(submissions, '_id'),
-  //       Object.values(activities).flat(),
-  //       activityTags,
-  //     ),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [activities, submissions],
-  // );
-
+  const filterMap = useSelector((state) => selectFormLookupMap(state, formId));
   const visibleActivities = Object.entries(selectedFilterValues).flatMap(
     ([property, values]) =>
       values.flatMap(
