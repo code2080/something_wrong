@@ -7,6 +7,7 @@ import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import { TProperty } from '../../Types/property.type';
 import * as types from './filters.actionTypes';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 // TYPES
 type TActionLoadFilter = {
@@ -56,25 +57,28 @@ type TActionSetSelectedFilterValues = {
 };
 
 const setSelectedFilterValuesFlow = {
-  request: () => ({ type: types.LOAD_SELECTED_FILTER_VALUES_REQUEST }),
+  request: () => ({ type: types.SET_SELECTED_FILTER_VALUES_REQUEST }),
   success: (response) => ({
-    type: types.LOAD_SELECTED_FILTER_VALUES_SUCCESS,
+    type: types.SET_SELECTED_FILTER_VALUES_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: types.LOAD_SELECTED_FILTER_VALUES_FAILURE,
+    type: types.SET_SELECTED_FILTER_VALUES_FAILURE,
     payload: { ...err },
   }),
 };
 
-export const setSelectedFilterValues = (
-  payload: TActionSetSelectedFilterValues,
-) =>
-  asyncAction.POST({
+export const setSelectedFilterValues = (payload: {
+  formId: string;
+  selectedValues: TActivityFilterQuery;
+}) => {
+  const { formId = '' } = payload;
+  return asyncAction.POST({
     flow: setSelectedFilterValuesFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/:formId/activities/filters`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     payload,
   });
+};
 
 const fetchLookupMapFlow = {
   request: () => ({ type: types.FETCH_FORM_LOOKUPMAP_REQUEST }),
