@@ -87,7 +87,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [formId]: {
           ...(state[formId] || {}),
-          filterLookup: lookupMap,
+          filterLookup: new FilterLookUpMap(lookupMap),
         },
       } as { [formId: string]: { filterLookup: FilterLookUpMap } };
     }

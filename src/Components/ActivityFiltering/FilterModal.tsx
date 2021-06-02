@@ -3,7 +3,7 @@ import { Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
-import type FilterLookupMap from '../../Types/FilterLookUp.type';
+import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
@@ -19,7 +19,7 @@ const propTypes = {
 type Props = {
   isVisible?: boolean;
   onClose?(): void;
-  filterLookupMap: FilterLookupMap;
+  filterLookupMap: TFilterLookUpMap;
 };
 const FilterModal = ({
   isVisible = false,
