@@ -3,35 +3,54 @@ import { Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
-import type FilterLookupMap from '../../Types/FilterLookUp.type';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
 import { useParams } from 'react-router-dom';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
+import {
+  fetchLookupMap,
+  setSelectedFilterValues,
+} from '../../Redux/Filters/filters.actions';
+import {
+  makeSelectFormLookupMap,
+  makeSelectSelectedFilterValues,
+} from '../../Redux/Filters/filters.selectors';
 
 const propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
-  filterLookupMap: PropTypes.object.isRequired,
 };
 
 type Props = {
   isVisible?: boolean;
   onClose?(): void;
-  filterLookupMap: FilterLookupMap;
 };
-const FilterModal = ({
-  isVisible = false,
-  onClose = _.noop,
-  filterLookupMap,
-}: Props) => {
+const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-  const [selectedValues, setSelectedValues] = useState<{
+  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+  const filterLookupMap = useSelector((state) =>
+    selectFormLookupMap(state, formId),
+  );
+
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const currentlySelectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  const [localSelectedValues, setLocalSelectedValues] = useState<{
     [property: string]: string[];
-  }>({});
+  }>(currentlySelectedFilterValues);
+
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
+
+  useEffect(
+    () => isVisible && dispatch(fetchLookupMap({ formId })),
+    [dispatch, formId, isVisible],
+  );
 
   const ModalBody = () => {
     const valuesWithNoLabel = Object.values(filterLookupMap).flatMap((values) =>
@@ -66,11 +85,11 @@ const FilterModal = ({
     const availableSubmitters: TProp[] = selectedProperty
       ? availableValuesForSubmitter[selectedProperty as string].filter(
           ({ value }: TProp) =>
-            !selectedValues[selectedProperty]?.includes(value),
+            !localSelectedValues[selectedProperty]?.includes(value),
         )
       : [];
 
-    const selectedSubmitters = Object.entries(selectedValues).map(
+    const selectedSubmitters = Object.entries(localSelectedValues).map(
       ([property, values]) =>
         ({
           ...(availProps.find((prop) => prop.value === property) as TProp),
@@ -92,10 +111,10 @@ const FilterModal = ({
         <PropertySelector
           properties={availableSubmitters}
           onSelect={(value) =>
-            setSelectedValues({
-              ...selectedValues,
+            setLocalSelectedValues({
+              ...localSelectedValues,
               [selectedProperty as string]: [
-                ...(selectedValues[selectedProperty as string] ?? []),
+                ...(localSelectedValues[selectedProperty as string] ?? []),
                 value,
               ],
             })
@@ -110,7 +129,7 @@ const FilterModal = ({
         <PropertySelector
           properties={selectedSubmitters}
           onSelect={(removedValue) => {
-            const obj = Object.entries(selectedValues).reduce<any>(
+            const obj = Object.entries(localSelectedValues).reduce<any>(
               (newSelected, [property, values]) => ({
                 ...newSelected,
                 [property]: [
@@ -120,7 +139,7 @@ const FilterModal = ({
               }),
               {},
             );
-            setSelectedValues(obj);
+            setLocalSelectedValues(obj);
           }}
           emptyText='No filters selected'
           title='Selected filters'
@@ -128,22 +147,32 @@ const FilterModal = ({
       </div>
     );
   };
-  const handleClose = useCallback(() => {
-    dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
+
+  const handleCancel = useCallback(() => {
+    setLocalSelectedValues(currentlySelectedFilterValues);
     onClose();
-  }, [dispatch, formId, onClose, selectedValues]);
+  }, [currentlySelectedFilterValues, onClose]);
+
+  const handleOk = useCallback(() => {
+    !_.isEqual(localSelectedValues, currentlySelectedFilterValues) &&
+      dispatch(
+        setSelectedFilterValues({ formId, filterValues: localSelectedValues }),
+      );
+    onClose();
+  }, [
+    localSelectedValues,
+    currentlySelectedFilterValues,
+    dispatch,
+    formId,
+    onClose,
+  ]);
 
   return (
     <Modal
       title='Filter activities'
       visible={isVisible}
-      onOk={handleClose}
-      onCancel={handleClose}
-      footer={[
-        <Button key='ok' onClick={handleClose}>
-          OK
-        </Button>,
-      ]}
+      onOk={handleOk}
+      onCancel={handleCancel}
       width={800}
       getContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement

@@ -65,6 +65,7 @@ module.exports = {
     // https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#eslint
     'react/jsx-uses-react': 0,
     'react/react-in-jsx-scope': 0,
+    'import/no-cycle': 'warn',
 
     /* [Typescript overrides] */
     // note you must disable the base rule as it can report incorrect errors,
@@ -76,6 +77,5 @@ module.exports = {
     ],
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
-    'import/no-cycle': 'warn',
   },
 };

@@ -5,7 +5,7 @@ import {
   EActivityFilterMode,
 } from '../../Types/ActivityFilter.interface';
 import { TActivity } from '../../Types/Activity.type';
-import FilterLookUpMap from '../../Types/FilterLookUp.type';
+import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 
 const filterstate = (state) => state.filters;
 
@@ -25,9 +25,9 @@ export const makeSelectFormLookupMap = () =>
   createSelector(
     filterstate,
     (_, formId: string) => formId,
-    (filters, formId): FilterLookUpMap => {
-      if (!filters || !formId) return {} as FilterLookUpMap;
-      return filters[formId]?.filterLookup ?? ({} as FilterLookUpMap);
+    (filters, formId): TFilterLookUpMap => {
+      if (!filters || !formId) return {} as TFilterLookUpMap;
+      return filters[formId]?.filterLookup ?? ({} as TFilterLookUpMap);
     },
   );
 

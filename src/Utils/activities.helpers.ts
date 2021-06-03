@@ -12,7 +12,7 @@ import {
 import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import { TFormInstance } from '../Types/FormInstance.type';
-import type FilterLookUpMap from '../Types/FilterLookUp.type';
+import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 // FUNCTIONS
@@ -432,7 +432,7 @@ export const getFilterLookupMap = (
   submissions: { [id: string]: TFormInstance },
   activities: TActivity[],
   activityTags: any,
-): FilterLookUpMap => {
+): TFilterLookUpMap => {
   // Map activities to filter values
   const filterValues = _.compact(
     activities.map((activity) =>
@@ -444,7 +444,7 @@ export const getFilterLookupMap = (
     ),
   );
   // Merge the filter values into a lookup map
-  return filterValues.reduce<FilterLookUpMap>((mergedFilters, filterValue) => {
+  return filterValues.reduce<TFilterLookUpMap>((mergedFilters, filterValue) => {
     const curriedMergeSimpleDataOfField = mergeSimpleDataField(
       mergedFilters,
       filterValue,
@@ -455,5 +455,5 @@ export const getFilterLookupMap = (
       tag: curriedMergeSimpleDataOfField('tag'),
       primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
     };
-  }, <FilterLookUpMap>{});
+  }, <TFilterLookUpMap>{});
 };

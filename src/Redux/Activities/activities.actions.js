@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import _ from 'lodash';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import {
@@ -42,23 +43,26 @@ import {
   revertActivityValueToSubmission,
 } from './activities.helpers';
 
-const fetchActivitiesForFormFlow = {
-  request: () => ({ type: FETCH_ACTIVITIES_FOR_FORM_REQUEST }),
+const fetchActivitiesForFormFlow = (formId) => ({
+  request: () => ({
+    type: FETCH_ACTIVITIES_FOR_FORM_REQUEST,
+    payload: { actionMeta: { formId } },
+  }),
   success: (response) => ({
     type: FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-    payload: { ...response },
+    payload: { ...response, actionMeta: { formId } },
   }),
   failure: (err) => ({
     type: FETCH_ACTIVITIES_FOR_FORM_FAILURE,
-    payload: { ...err },
+    payload: { ...err, actionMeta: { formId } },
   }),
-};
+});
 
-export const fetchActivitiesForForm = (formId) =>
-  asyncAction.GET({
-    flow: fetchActivitiesForFormFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
-    params: { formId },
+export const fetchActivitiesForForm = (formId, filter) =>
+  asyncAction.POST({
+    flow: fetchActivitiesForFormFlow(formId),
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
+    params: { filter: _.isEmpty(filter) ? undefined : filter },
   });
 
 const fetchActivitiesForFormInstanceFlow = {

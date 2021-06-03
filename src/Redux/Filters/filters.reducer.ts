@@ -80,17 +80,18 @@ const reducer = (state = {}, action) => {
       };
     }
 
-    case types.SET_FORM_LOOKUPMAP: {
+    case types.FETCH_FORM_LOOKUPMAP_SUCCESS: {
       if (!action) return state;
       const { formId, lookupMap } = action.payload;
       return {
         ...state,
         [formId]: {
           ...(state[formId] || {}),
-          filterLookup: lookupMap,
+          filterLookup: new FilterLookUpMap(lookupMap),
         },
       } as { [formId: string]: { filterLookup: FilterLookUpMap } };
     }
+
     case types.SET_SELECTED_FILTER_VALUES: {
       if (!action) return state;
       const { filterValues, formId } = action.payload;
