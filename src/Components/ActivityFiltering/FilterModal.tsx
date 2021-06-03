@@ -3,35 +3,41 @@ import { Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
-import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
-import { setSelectedFilterValues } from '../../Redux/Filters/filters.actions';
+import {
+  fetchLookupMap,
+  setSelectedFilterValues,
+} from '../../Redux/Filters/filters.actions';
+import { makeSelectFormLookupMap } from '../../Redux/Filters/filters.selectors';
 
 const propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
-  filterLookupMap: PropTypes.object.isRequired,
 };
 
 type Props = {
   isVisible?: boolean;
   onClose?(): void;
-  filterLookupMap: TFilterLookUpMap;
 };
-const FilterModal = ({
-  isVisible = false,
-  onClose = _.noop,
-  filterLookupMap,
-}: Props) => {
+const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
+  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+  const filterLookupMap = useSelector((state) =>
+    selectFormLookupMap(state, formId),
+  );
   const [selectedValues, setSelectedValues] = useState<{
     [property: string]: string[];
   }>({});
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
+
+  useEffect(
+    () => isVisible && dispatch(fetchLookupMap({ formId })),
+    [dispatch, formId, isVisible],
+  );
 
   const ModalBody = () => {
     const valuesWithNoLabel = Object.values(filterLookupMap).flatMap((values) =>
