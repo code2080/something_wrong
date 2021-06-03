@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
 import { TProperty, TProp } from '../../Types/property.type';
@@ -15,6 +15,8 @@ import {
   makeSelectFormLookupMap,
   makeSelectSelectedFilterValues,
 } from '../../Redux/Filters/filters.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
+import { AEBETA_PERMISSION } from '../../Constants/permissions.constants';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -61,18 +63,20 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     const labels = useSelector(selectMultipleExtIdLabels)(
       valuesWithNoLabel.map((id) => ({ field: 'objects', extId: id })),
     );
-    const availableValuesForSubmitter = Object.entries(
-      filterLookupMap,
-    ).reduce<any>((filterMap, [key, values]) => {
-      const idsAndLabels = Object.entries(values);
-      return {
-        ...filterMap,
-        [key]: idsAndLabels.map(([id, { label }]) => ({
-          value: id,
-          label: label ?? labels[id],
-        })),
-      };
-    }, {});
+    const hasAEBeta = useSelector(hasPermission(AEBETA_PERMISSION));
+    const releasedProps = ['submitter', 'tag', 'primaryObject'];
+    const availableValuesForSubmitter = Object.entries(filterLookupMap)
+      .filter(([prop]) => hasAEBeta || releasedProps.includes(prop))
+      .reduce<any>((filterMap, [key, values]) => {
+        const idsAndLabels = Object.entries(values);
+        return {
+          ...filterMap,
+          [key]: idsAndLabels.map(([id, { label }]) => ({
+            value: id,
+            label: label ?? labels[id],
+          })),
+        };
+      }, {});
 
     const availProps = Object.keys(availableValuesForSubmitter).map(
       (key) =>
