@@ -135,7 +135,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     );
   };
 
-  const handleClose = useCallback(() => {
+  const handleOk = useCallback(() => {
     dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
     onClose();
   }, [dispatch, formId, onClose, selectedValues]);
@@ -144,10 +144,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     <Modal
       title='Filter activities'
       visible={isVisible}
-      onOk={handleClose}
-      onCancel={handleClose}
+      onOk={handleOk}
+      onCancel={onClose}
       footer={[
-        <Button key='ok' onClick={handleClose}>
+        <Button key='ok' onClick={handleOk}>
           OK
         </Button>,
       ]}
