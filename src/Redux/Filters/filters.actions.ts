@@ -52,33 +52,13 @@ type TActionSetActivityLookupMap = {
 };
 
 type TActionSetSelectedFilterValues = {
-  filterValues: { [property: string]: string[] };
+  filterValues: TActivityFilterQuery;
   formId: string;
 };
 
-const setSelectedFilterValuesFlow = {
-  request: () => ({ type: types.SET_SELECTED_FILTER_VALUES_REQUEST }),
-  success: (response) => ({
-    type: types.SET_SELECTED_FILTER_VALUES_SUCCESS,
-    payload: { ...response },
-  }),
-  failure: (err) => ({
-    type: types.SET_SELECTED_FILTER_VALUES_FAILURE,
-    payload: { ...err },
-  }),
-};
-
-export const setSelectedFilterValues = (payload: {
-  formId: string;
-  selectedValues: TActivityFilterQuery;
-}) => {
-  const { formId = '' } = payload;
-  return asyncAction.POST({
-    flow: setSelectedFilterValuesFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
-    payload,
-  });
-};
+export const setSelectedFilterValues = (
+  payload: TActionSetSelectedFilterValues,
+) => ({ type: types.SET_SELECTED_FILTER_VALUES, payload });
 
 const fetchLookupMapFlow = {
   request: () => ({ type: types.FETCH_FORM_LOOKUPMAP_REQUEST }),

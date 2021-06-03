@@ -130,7 +130,7 @@ const FilterModal = ({
   };
 
   const handleClose = useCallback(() => {
-    dispatch(setSelectedFilterValues({ formId, selectedValues }));
+    dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
     onClose();
   }, [dispatch, formId, onClose, selectedValues]);
 

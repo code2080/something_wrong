@@ -58,6 +58,7 @@ import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.s
 import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
 import { selectExtIds } from '../../Redux/TE/te.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -86,10 +87,22 @@ const FormPage = () => {
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
 
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  useEffect(
+    () => dispatch(fetchActivitiesForForm(formId, selectedFilterValues)),
+    [dispatch, formId, selectedFilterValues],
+  );
+
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(formId));
-    dispatch(fetchActivitiesForForm(formId));
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));

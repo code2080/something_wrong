@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -9,19 +8,11 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import {
-  makeSelectFormLookupMap,
-  makeSelectSelectedFilterValues,
-} from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-// import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
-
-// ACTIONS
-// import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
@@ -34,19 +25,10 @@ const calculateAvailableTableHeight = () => {
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
-  const selectSelectedFilterValues = useMemo(
-    () => makeSelectSelectedFilterValues(),
-    [],
-  );
-  const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId),
-  );
 
   /**
    * SELECTORS
    */
-  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
-
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],
@@ -90,20 +72,10 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
-  const filterMap = useSelector((state) => selectFormLookupMap(state, formId));
-  const visibleActivities = Object.entries(selectedFilterValues).flatMap(
-    ([property, values]) =>
-      values.flatMap(
-        (value) => filterMap?.[property]?.[value]?.activityIds ?? [],
-      ),
+  const tableDataSource = useMemo(
+    () => Object.values(activities).flat(),
+    [activities],
   );
-
-  const tableDataSource = useMemo(() => {
-    const allActivities = Object.values(activities).flat();
-    return _.isEmpty(visibleActivities)
-      ? allActivities
-      : allActivities.filter(({ _id }) => visibleActivities.includes(_id));
-  }, [activities, visibleActivities]);
 
   /**
    * STATE

@@ -80,8 +80,25 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
+      const {
+        payload: {
+          activities: activitityObjs,
+          actionMeta: { formId },
+        },
+      } = action;
+
+      const activities = updateActivitiesForForm(activitityObjs);
+
+      return {
+        ...state,
+        [formId]: {
+          ...activities,
+        },
+      };
+    }
+
     case types.REORDER_ACTIVITIES_SUCCESS:
-    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS:
     case types.UPDATE_ACTIVITIES_SUCCESS:
     case ABORT_JOB_SUCCESS: {
       const {
