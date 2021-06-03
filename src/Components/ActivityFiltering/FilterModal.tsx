@@ -11,7 +11,10 @@ import {
   fetchLookupMap,
   setSelectedFilterValues,
 } from '../../Redux/Filters/filters.actions';
-import { makeSelectFormLookupMap } from '../../Redux/Filters/filters.selectors';
+import {
+  makeSelectFormLookupMap,
+  makeSelectSelectedFilterValues,
+} from '../../Redux/Filters/filters.selectors';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -29,9 +32,19 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
   );
-  const [selectedValues, setSelectedValues] = useState<{
+
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const currentlySelectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  const [localSelectedValues, setLocalSelectedValues] = useState<{
     [property: string]: string[];
-  }>({});
+  }>(currentlySelectedFilterValues);
+
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
 
   useEffect(
@@ -72,11 +85,11 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     const availableSubmitters: TProp[] = selectedProperty
       ? availableValuesForSubmitter[selectedProperty as string].filter(
           ({ value }: TProp) =>
-            !selectedValues[selectedProperty]?.includes(value),
+            !localSelectedValues[selectedProperty]?.includes(value),
         )
       : [];
 
-    const selectedSubmitters = Object.entries(selectedValues).map(
+    const selectedSubmitters = Object.entries(localSelectedValues).map(
       ([property, values]) =>
         ({
           ...(availProps.find((prop) => prop.value === property) as TProp),
@@ -98,10 +111,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
         <PropertySelector
           properties={availableSubmitters}
           onSelect={(value) =>
-            setSelectedValues({
-              ...selectedValues,
+            setLocalSelectedValues({
+              ...localSelectedValues,
               [selectedProperty as string]: [
-                ...(selectedValues[selectedProperty as string] ?? []),
+                ...(localSelectedValues[selectedProperty as string] ?? []),
                 value,
               ],
             })
@@ -116,7 +129,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
         <PropertySelector
           properties={selectedSubmitters}
           onSelect={(removedValue) => {
-            const obj = Object.entries(selectedValues).reduce<any>(
+            const obj = Object.entries(localSelectedValues).reduce<any>(
               (newSelected, [property, values]) => ({
                 ...newSelected,
                 [property]: [
@@ -126,7 +139,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
               }),
               {},
             );
-            setSelectedValues(obj);
+            setLocalSelectedValues(obj);
           }}
           emptyText='No filters selected'
           title='Selected filters'
@@ -135,22 +148,31 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     );
   };
 
-  const handleOk = useCallback(() => {
-    dispatch(setSelectedFilterValues({ formId, filterValues: selectedValues }));
+  const handleCancel = useCallback(() => {
+    setLocalSelectedValues(currentlySelectedFilterValues);
     onClose();
-  }, [dispatch, formId, onClose, selectedValues]);
+  }, [currentlySelectedFilterValues, onClose]);
+
+  const handleOk = useCallback(() => {
+    !_.isEqual(localSelectedValues, currentlySelectedFilterValues) &&
+      dispatch(
+        setSelectedFilterValues({ formId, filterValues: localSelectedValues }),
+      );
+    onClose();
+  }, [
+    localSelectedValues,
+    currentlySelectedFilterValues,
+    dispatch,
+    formId,
+    onClose,
+  ]);
 
   return (
     <Modal
       title='Filter activities'
       visible={isVisible}
       onOk={handleOk}
-      onCancel={onClose}
-      footer={[
-        <Button key='ok' onClick={handleOk}>
-          OK
-        </Button>,
-      ]}
+      onCancel={handleCancel}
       width={800}
       getContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
