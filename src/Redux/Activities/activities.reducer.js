@@ -115,9 +115,8 @@ const reducer = (state = initialState, action) => {
           ...Object.keys(activities).reduce((results, formInstanceId) => {
             const oldActivities = _.get(state, [formId, formInstanceId], []);
             const oldActivityIds = oldActivities.map(({ _id }) => _id);
-            const newActivities = _.remove(
-              activities[formInstanceId],
-              (item) => !oldActivityIds.includes(item._id),
+            const newActivities = _.filter(activities[formInstanceId], (item) =>
+              oldActivityIds.includes(item._id),
             );
 
             return {
