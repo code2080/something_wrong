@@ -614,141 +614,141 @@ const submissions = [
   },
 ] as TFormInstance[];
 
-const getObjectData = (objects: ActivityValue[]) => {
-  return objects.map(({ extId, value }) => {
-    const objIds = Array.isArray(value) ? (value as string[]) : null;
-    const objFilter = (value as CategoryField).categories ?? null;
-    return {
-      type: extId,
-      objIds,
-      objFilter,
-    };
-  });
-};
+// const getObjectData = (objects: ActivityValue[]) => {
+//   return objects.map(({ extId, value }) => {
+//     const objIds = Array.isArray(value) ? (value as string[]) : null;
+//     const objFilter = (value as CategoryField).categories ?? null;
+//     return {
+//       type: extId,
+//       objIds,
+//       objFilter,
+//     };
+//   });
+// };
 
-const getLength = (timing: ActivityValue[]) => {
-  const wrappedTiming = _(timing);
-  const length = wrappedTiming.find(['extId', 'length'])?.value as
-    | number
-    | null;
-  const startTime = wrappedTiming.find(['extId', 'startTime'])?.value as
-    | string
-    | null;
-  const endTime = wrappedTiming.find(['extId', 'endTime'])?.value as
-    | string
-    | null;
-  const duration = moment.duration(moment(endTime).diff(moment(startTime)));
+// const getLength = (timing: ActivityValue[]) => {
+//   const wrappedTiming = _(timing);
+//   const length = wrappedTiming.find(['extId', 'length'])?.value as
+//     | number
+//     | null;
+//   const startTime = wrappedTiming.find(['extId', 'startTime'])?.value as
+//     | string
+//     | null;
+//   const endTime = wrappedTiming.find(['extId', 'endTime'])?.value as
+//     | string
+//     | null;
+//   const duration = moment.duration(moment(endTime).diff(moment(startTime)));
 
-  return length ?? duration.asMinutes();
-};
+//   return length ?? duration.asMinutes();
+// };
 
-const getValuesForActivity = (
-  activity: TActivity,
-  submission: TFormInstance,
-) => {
-  const [fields, objects] = _.partition(
-    activity.values,
-    (value) => value.type === 'field',
-  );
+// const getValuesForActivity = (
+//   activity: TActivity,
+//   submission: TFormInstance,
+// ) => {
+//   const [fields, objects] = _.partition(
+//     activity.values,
+//     (value) => value.type === 'field',
+//   );
 
-  const objectData = getObjectData(objects);
+//   const objectData = getObjectData(objects);
 
-  const timingData = activity.timing;
+//   const timingData = activity.timing;
 
-  const length = getLength(timingData);
+//   const length = getLength(timingData);
 
-  return {
-    id: activity._id,
-    submitter: submission.recipientId,
-    primaryObject: submission.scopedObject,
-    tag: activity.tagId,
-    fields: fields.map((field) => ({
-      type: field.extId,
-      value: field.value,
-    })),
-    objectData,
-    timing: {
-      length: length,
-      startTime: _(timingData).find(['extId', 'startTime']).value,
-      endTime: _(timingData).find(['extId', 'endTime']).value,
-    },
-  };
-};
+//   return {
+//     id: activity._id,
+//     submitter: submission.recipientId,
+//     primaryObject: submission.scopedObject,
+//     tag: activity.tagId,
+//     fields: fields.map((field) => ({
+//       type: field.extId,
+//       value: field.value,
+//     })),
+//     objectData,
+//     timing: {
+//       length: length,
+//       startTime: _(timingData).find(['extId', 'startTime']).value,
+//       endTime: _(timingData).find(['extId', 'endTime']).value,
+//     },
+//   };
+// };
 
-const mergeSimpleData = (currentSubmissionData, newSubmitter, id) => ({
-  ...currentSubmissionData,
-  [newSubmitter]: [...(currentSubmissionData?.[newSubmitter] || []), id],
-});
+// const mergeSimpleData = (currentSubmissionData, newSubmitter, id) => ({
+//   ...currentSubmissionData,
+//   [newSubmitter]: [...(currentSubmissionData?.[newSubmitter] || []), id],
+// });
 
-const mergeSimpleDataField = (currentData, newData) => (field) => {
-  return mergeSimpleData(currentData[field], newData[field], newData.id);
-};
+// const mergeSimpleDataField = (currentData, newData) => (field) => {
+//   return mergeSimpleData(currentData[field], newData[field], newData.id);
+// };
 
-const mergeReservationFields = (currentFields, newFields, id) => {
-  const mappedFieldValues = _.keyBy(
-    newFields.map((field) => ({ ...field, id })),
-    'type',
-  );
-  const lol = {
-    ...currentFields,
-    // [newFields.type]: newFields.
-  };
-  return lol;
-};
+// const mergeReservationFields = (currentFields, newFields, id) => {
+//   const mappedFieldValues = _.keyBy(
+//     newFields.map((field) => ({ ...field, id })),
+//     'type',
+//   );
+//   const lol = {
+//     ...currentFields,
+//     // [newFields.type]: newFields.
+//   };
+//   return lol;
+// };
 
-type FilterLookUpMap = {
-  submitter: { [submitterId: string]: string[] };
-  tag: { [tagId: string]: string[] };
-  primaryObject: { [primaryObjId: string]: string[] };
-  // fields: { [type: string]: { [value: string]: string[] } };
-};
+// type FilterLookUpMap = {
+//   submitter: { [submitterId: string]: string[] };
+//   tag: { [tagId: string]: string[] };
+//   primaryObject: { [primaryObjId: string]: string[] };
+//   // fields: { [type: string]: { [value: string]: string[] } };
+// };
 
-const localGetFilterLookupMap = (
-  submissions: { [id: string]: TFormInstance },
-  activities: TActivity[],
-): FilterLookUpMap => {
-  // Map activities to filter values
-  const filterValues = activities.map((activity) =>
-    getValuesForActivity(activity, submissions[activity.formInstanceId]),
-  );
+// const localGetFilterLookupMap = (
+//   submissions: { [id: string]: TFormInstance },
+//   activities: TActivity[],
+// ): FilterLookUpMap => {
+//   // Map activities to filter values
+//   const filterValues = activities.map((activity) =>
+//     getValuesForActivity(activity, submissions[activity.formInstanceId]),
+//   );
 
-  // Merge the filter values into a lookup map
-  const filterLookupMap = filterValues.reduce<FilterLookUpMap>(
-    (mergedFilters, filterValue) => {
-      const curriedMergeSimpleDataOfField = mergeSimpleDataField(
-        mergedFilters,
-        filterValue,
-      );
-      return {
-        ...mergedFilters,
-        submitter: curriedMergeSimpleDataOfField('submitter'),
-        tag: curriedMergeSimpleDataOfField('tag'),
-        primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
-        fields: mergeReservationFields(
-          mergedFilters.fields,
-          filterValue.fields,
-          filterValue.id,
-        ),
-      };
-    },
-    <FilterLookUpMap>{},
-  );
-  return filterLookupMap;
-};
-const submissionMap = _.keyBy(submissions, '_id');
-const result = localGetFilterLookupMap(
-  submissionMap,
-  Object.values(activities).flat(),
-);
+//   // Merge the filter values into a lookup map
+//   const filterLookupMap = filterValues.reduce<FilterLookUpMap>(
+//     (mergedFilters, filterValue) => {
+//       const curriedMergeSimpleDataOfField = mergeSimpleDataField(
+//         mergedFilters,
+//         filterValue,
+//       );
+//       return {
+//         ...mergedFilters,
+//         submitter: curriedMergeSimpleDataOfField('submitter'),
+//         tag: curriedMergeSimpleDataOfField('tag'),
+//         primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
+//         fields: mergeReservationFields(
+//           mergedFilters.fields,
+//           filterValue.fields,
+//           filterValue.id,
+//         ),
+//       };
+//     },
+//     <FilterLookUpMap>{},
+//   );
+//   return filterLookupMap;
+// };
+// const submissionMap = _.keyBy(submissions, '_id');
+// const result = localGetFilterLookupMap(
+//   submissionMap,
+//   Object.values(activities).flat(),
+// );
 describe.skip('testar lite', () => {
-  test('testar', () => {
-    const submissionMap = _.keyBy(submissions, '_id');
-    const result = localGetFilterLookupMap(
-      submissionMap,
-      Object.values(activities).flat(),
-    );
-    console.log({ result });
-  });
+  // test('testar', () => {
+  //   const submissionMap = _.keyBy(submissions, '_id');
+  //   const result = localGetFilterLookupMap(
+  //     submissionMap,
+  //     Object.values(activities).flat(),
+  //   );
+  //   console.log({ result });
+  // });
 
   test('almost a real test', () => {
     const expected = {
