@@ -11,8 +11,8 @@ import { TProperty } from '../../Types/property.type';
 
 type Props = {
   properties: TProperty[];
-  onSelect: (selectedPropertyValue: string) => void;
-  selectedPropertyValue?: string | null;
+  onSelect({ parent, selected }: { parent?: string; selected: string }): void;
+  selectedPropertyValue?: { parent?: string; selected: string } | null;
   emptyText?: string;
   title?: string;
 };
@@ -51,9 +51,13 @@ const PropertySelector = ({
                 <PropertySelectorItem
                   property={prop}
                   onSelect={onSelect}
-                  isSelected={prop.value === selectedPropertyValue}
+                  isSelected={
+                    selectedPropertyValue?.parent === property.value &&
+                    selectedPropertyValue?.selected === prop.value
+                  }
                   hasHeading
                   key={prop.value}
+                  parent={property.value}
                 />
               ))}
             </>
@@ -61,7 +65,10 @@ const PropertySelector = ({
             <PropertySelectorItem
               property={property}
               onSelect={onSelect}
-              isSelected={property.value === selectedPropertyValue}
+              isSelected={
+                !selectedPropertyValue?.parent &&
+                property.value === selectedPropertyValue?.selected
+              }
               key={property.value}
             />
           );

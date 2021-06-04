@@ -2,9 +2,10 @@
 import { TProperty } from '../../Types/property.type';
 type Props = {
   property: TProperty;
-  onSelect: (selectedValue: string) => void;
+  onSelect({ parent, selected }: { parent?: string; selected: string }): void;
   isSelected: boolean;
   hasHeading?: boolean;
+  parent?: string;
 };
 
 const PropertySelectorItem = ({
@@ -12,13 +13,14 @@ const PropertySelectorItem = ({
   onSelect,
   isSelected,
   hasHeading = false,
+  parent,
 }: Props) => {
   return (
     <div
       className={`property-selector--item ${
         isSelected ? 'isActive' : 'inactive'
       } ${hasHeading ? 'has-heading' : 'no-heading'}`}
-      onClick={() => onSelect(property.value)}
+      onClick={() => onSelect({ parent, selected: property.value })}
     >
       {property.label}
     </div>
