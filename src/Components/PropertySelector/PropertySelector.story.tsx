@@ -1,7 +1,6 @@
 import PropSelector from './index';
 import _ from 'lodash';
 import { useState } from 'react';
-import { string } from 'prop-types';
 
 export default {
   title: 'Activity Manager/Components/PropertySelector',
@@ -465,13 +464,17 @@ export default {
 
 // FiltersV2.args = {};
 
-type SelectedValues = {
-  [prop: string]:
-    | string[]
-    | {
-        [type: string]: (string | number | { id: string; values: string[] })[];
-      };
-};
+type SelectedValues = Partial<{
+  submitter: string[];
+  tag: string[];
+  primaryObject: string[];
+  objects: {
+    [typeExtId: string]: (string | { fieldExtId: string; values: string[] })[];
+  };
+  fields: {
+    [fieldExtId: string]: string[];
+  };
+}>;
 
 type Selection = {
   parent?: string;
@@ -489,25 +492,150 @@ export const FiltersV3 = (args) => {
     },
   } as { [prop: string]: string[] | { [prop: string]: string[] } };
 
+  const filterMap = {
+    submitter: {
+      kalle: ['actitityB'],
+    },
+    tag: {
+      tagA: ['actitityB'],
+    },
+    objects: {
+      room: {
+        SALM1011: ['actitityB'],
+      },
+    },
+    reservationFields: {
+      rescomment: {
+        Testarlite: ['ActivityA'],
+      },
+    },
+    objectFields: {
+      room: {
+        roomtype: {
+          Datorsal: ['ActivityA'],
+        },
+      },
+    },
+  };
+
+  const filterQuery = {
+    submitter: ['kalle'],
+    tag: ['tagA'],
+    objects: {
+      room: ['SALM1011', { id: 'roomtype', values: ['Datorsal'] }],
+    },
+
+    fields: {
+      rescomment: ['Testarlite'],
+    },
+  };
+  const actualData = {
+    objects: {
+      room: [
+        {
+          type: 'room.type',
+          values: ['Testar lite bara'],
+        },
+        'MHusSal2011',
+      ],
+      tag: ['tagA'],
+    },
+    fields: {
+      'res.comment': ['Testar lite', 'Testar inte alls'],
+    },
+    submitter: ['6093a60ecdb17300258c7ae4', '6093a60ecdb17300258c7ae5'],
+    tag: ['6093a60ecdb17300258c7235'],
+    primaryObject: ['courseevt_BI1143-40049-VT2021'],
+  };
+  const res = Object.entries(actualData).flatMap(([prop, values]) => {
+    if (!values) return [];
+    if (Array.isArray(values)) {
+      // Array of values
+      return values.flatMap((value) => filterMap[prop][value]);
+    } else {
+      return Object.entries(values).flatMap(([type, vals]) =>
+        vals.flatMap((valOrFilter) => {
+          if (typeof valOrFilter === 'string') {
+            return filterMap[prop]?.[type]?.[valOrFilter];
+          } else {
+            return valOrFilter.values.flatMap(
+              (v) => filterMap?.objectFields?.[type][valOrFilter.id][v],
+            );
+          }
+        }),
+      );
+    }
+  });
+
+  const result = ['ActivityA', 'ActivityB'];
+
+  // switch (selectedProperty.parent) {
+  //   case undefined: {
+  //     return [...selectedValues[selectedProperty.selected], selection.selected];
+  //   }
+  //   case 'object': {
+  //     break;
+  //   }
+  //   case 'fields': {
+  //     break;
+  //   }
+  // }
+  // Object.entries(asd) => [prop, values]
+
+  const crazyOutput = {
+    undefined: {
+      submitter: {
+        undefined: ['submitterA'],
+      },
+      tag: {
+        undefined: ['tagA'],
+      },
+    },
+    objects: {
+      room: {
+        undefined: ['roomABC'],
+        roomtype: ['datorsal'],
+      },
+    },
+  };
+
   const outputWithFilters = {
     submitter: ['idA', 'idB', 'idC'],
     tag: ['idA', 'idB', 'idC'],
     primaryObject: ['idA', 'idB', 'idC'],
-    objects: {
-      room: [
-        'idA',
-        'idB',
-        'idC',
-        { id: 'room.type', values: ['Computer Lab', 'Auditorium'] },
-      ],
-      tag: ['idA', 'idB', 'idC'],
-    },
-    reservationFields: {
-      comment: ['test'],
-      needstechincal: ['1', '0'],
-      seats: [120, 10],
-    },
-  } as SelectedValues;
+    objects: [
+      {
+        type: 'room',
+        values: [
+          'idA',
+          'idB',
+          'idC',
+          { id: 'room.type', values: ['Computer Lab', 'Auditorium'] },
+        ],
+      },
+      { type: 'tag', values: ['idA', 'idB', 'idC'] },
+    ],
+    fields: [
+      { type: 'comment', values: ['test'] },
+      { type: 'needstechnical', values: ['1', '0'] },
+      { type: 'seats', values: ['120', '10'] },
+    ],
+    // {
+    //   room: [
+    //     'idA',
+    //     'idB',
+    //     'idC',
+    //     { id: 'room.type', values: ['Computer Lab', 'Auditorium'] },
+    //   ],
+    //   tag: ['idA', 'idB', 'idC'],
+    // },
+    // fields: {
+    //   comment: ['test'],
+    //   needstechincal: ['1', '0'],
+    //   seats: ['120', '10'],
+    // },
+  };
+  //  as SelectedValues;
 
   const [selectedProperty, setSelectedProperty] =
     useState<Selection | null>(null);
@@ -624,32 +752,84 @@ export const FiltersV3 = (args) => {
   const handleSelectValue = (selection: Selection) => {
     if (!selectedProperty) return;
 
-    const newSelectedValues = selectedProperty.parent
+    const insertValue = (currentValues, newValue): any[] =>
+      currentValues.find((val) => val.type === newValue.type)
+        ? currentValues.map((val) =>
+            val.type === newValue.type
+              ? {
+                  ...val,
+                  values: _.uniq([...val.values, ...newValue.values]),
+                }
+              : val,
+          )
+        : [...currentValues, newValue];
+
+    const selectedValue = selection.parent
+      ? { type: selection.parent, values: [selection.selected] }
+      : selection.selected;
+
+    const nextSelectedValues = selectedProperty.parent
       ? {
           ...selectedValues,
           [selectedProperty.parent]: {
-            ...(selectedValues[selectedProperty.parent] ?? []),
-            [selectedProperty.selected]: _.uniq([
-              ...(selectedValues[selectedProperty.parent]?.[
-                selectedProperty.selected
-              ] ?? []),
-
-              selection.parent
-                ? { type: selection.parent, value: selection.selected }
-                : selection.selected,
-            ]),
+            ...(selectedValues[selectedProperty.parent] || {}),
+            [selectedProperty.selected]: [
+              ...(typeof selectedValue === 'string'
+                ? _.uniq([
+                    ...(selectedValues[selectedProperty.parent]?.[
+                      selectedProperty.selected
+                    ] || []),
+                    selectedValue,
+                  ])
+                : insertValue(
+                    selectedValues[selectedProperty.parent]?.[
+                      selectedProperty.selected
+                    ] || [],
+                    selectedValue,
+                  )),
+            ],
           },
         }
-      : {
+      : ({
           ...selectedValues,
-          [selectedProperty.selected]: _.uniqBy([
-            ...(selectedValues[selectedProperty.selected] ?? []),
-            selection.parent
-              ? { type: selection.parent, value: selection.selected }
-              : selection.selected,
-          ], (leftVal, rightVal) => leftVal.type === rightVal.type && ),
-        };
-    setSelectedValues(newSelectedValues);
+          [selectedProperty.selected]: _.uniq([
+            ...(selectedValues[selectedProperty.selected] || []),
+            selection.selected,
+          ]),
+        } as SelectedValues);
+
+    const handleDeselectValue = (deselected: Selection) => {};
+
+    // const newSelectedValues = selectedProperty.parent
+    //   ? {
+    //       ...selectedValues,
+    //       [selectedProperty.parent]: {
+    //         ...(selectedValues[selectedProperty.parent] ?? []),
+    //         [selectedProperty.selected]: _.uniq([
+    //           ...(selectedValues[selectedProperty.parent]?.[
+    //             selectedProperty.selected
+    //           ] ?? []),
+
+    //           selection.parent
+    //             ? { type: selection.parent, value: selection.selected }
+    //             : selection.selected,
+    //         ]),
+    //       },
+    //     }
+    //   : {
+    //       ...selectedValues,
+    //       [selectedProperty.selected]: _.uniqBy(
+    //         [
+    //           ...(selectedValues[selectedProperty.selected] ?? []),
+    //           selection.parent
+    //             ? { type: selection.parent, value: selection.selected }
+    //             : selection.selected,
+    //         ],
+    //         (leftVal, rightVal) =>
+    //           leftVal?.type === rightVal?.type && leftVal?.value,
+    //       ),
+    //     };
+    setSelectedValues(nextSelectedValues);
   };
 
   const selectedSubmitters = [];
