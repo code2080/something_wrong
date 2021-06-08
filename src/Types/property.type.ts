@@ -1,6 +1,6 @@
 export type TProp = {
   label: string;
-  value: string;
+  value: string | string[];
 };
 
 export type TProperty = TProp & {

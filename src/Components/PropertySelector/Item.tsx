@@ -2,10 +2,16 @@
 import { TProperty } from '../../Types/property.type';
 type Props = {
   property: TProperty;
-  onSelect({ parent, selected }: { parent?: string; selected: string }): void;
+  onSelect({
+    parent,
+    selected,
+  }: {
+    parent?: string | string[];
+    selected: string | string[];
+  }): void;
   isSelected: boolean;
   hasHeading?: boolean;
-  parent?: string;
+  parent?: string | string[];
 };
 
 const PropertySelectorItem = ({

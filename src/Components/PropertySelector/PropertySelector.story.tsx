@@ -1,5 +1,5 @@
 import PropSelector from './index';
-import _ from 'lodash';
+import _, { values } from 'lodash';
 import { useState } from 'react';
 
 export default {
@@ -465,32 +465,6 @@ export default {
 // FiltersV2.args = {};
 
 export const FiltersV3 = (args) => {
-  const filterMap = {
-    submitter: {
-      kalle: ['actitityB'],
-    },
-    tag: {
-      tagA: ['actitityB'],
-    },
-    objects: {
-      room: {
-        SALM1011: ['actitityB'],
-      },
-    },
-    reservationFields: {
-      rescomment: {
-        Testarlite: ['ActivityA'],
-      },
-    },
-    objectFields: {
-      room: {
-        roomtype: {
-          Datorsal: ['ActivityA'],
-        },
-      },
-    },
-  };
-
   type TProp = {
     value: string | string[];
     label: string;
@@ -526,6 +500,34 @@ export const FiltersV3 = (args) => {
     useState<Selection | null>(null);
   const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
 
+  const filterMap = {
+    submitter: {
+      kalle: ['actitityB'],
+    },
+    tag: {
+      tagA: ['actitityB'],
+    },
+    primaryObject: {
+      SALM1011: ['actitityB'],
+    },
+    objects: {
+      room: {
+        SALM1011: ['actitityB'],
+      },
+    },
+    reservationFields: {
+      rescomment: {
+        Testarlite: ['ActivityA'],
+      },
+    },
+    objectFields: {
+      room: {
+        roomtype: {
+          Datorsal: ['ActivityA'],
+        },
+      },
+    },
+  };
   const input = {
     submitter: [
       {
@@ -624,9 +626,58 @@ export const FiltersV3 = (args) => {
       : input[property.selected];
   };
 
-  const availableSubmitters = selectedProperty
-    ? getAvailableValues(input, selectedProperty)
+  const hideSelectedValues = (availableValues) => {
+    if (!selectedProperty) return availableValues;
+    const currentlySelectedValues =
+      (selectedProperty.parent
+        ? selectedValues[selectedProperty.parent]?.[selectedProperty.selected]
+        : selectedValues[selectedProperty.selected]) ?? [];
+    const basicFilteredAvailableValues = availableValues.filter(({ value }) =>
+      selectedProperty.parent
+        ? !currentlySelectedValues.includes(value)
+        : !currentlySelectedValues.includes(value),
+    );
+
+    return basicFilteredAvailableValues.map((value) => ({
+      ...value,
+      children: value.children?.filter(
+        (child) =>
+          !currentlySelectedValues
+            .find((selectedValue) => selectedValue.fieldExtId === value.value)
+            ?.values.includes(child.value),
+      ),
+    }));
+  };
+
+  const availableValues = selectedProperty
+    ? hideSelectedValues(getAvailableValues(input, selectedProperty))
     : [];
+
+  const availableVals = [
+    {
+      value: 'MHusSal2011',
+      label: 'Sal 2011',
+    },
+    {
+      value: 'room.type',
+      label: 'Type',
+      children: [
+        {
+          value: 'Testar lite bara',
+          label: 'Testar lite bara',
+        },
+      ],
+    },
+  ];
+  const selectedVals = {
+    room: [
+      {
+        fieldExtId: 'room.type',
+        values: ['Testar lite bara'],
+      },
+    ],
+  };
+  // Selectedvalues, vs available values vs selectedproperty
 
   const isFilter = (selection: string | Field) => typeof selection !== 'string';
 
@@ -797,7 +848,7 @@ export const FiltersV3 = (args) => {
       />
       <PropSelector
         {...args}
-        properties={availableSubmitters}
+        properties={availableValues}
         onSelect={handleSelectValue({
           add: true,
           selectedProperty: selectedProperty as Selection,

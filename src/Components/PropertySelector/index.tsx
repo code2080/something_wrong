@@ -45,7 +45,11 @@ const PropertySelector = ({
             <>
               <PropertySelectorHeadingItem
                 property={property}
-                key={property.value}
+                key={
+                  Array.isArray(property.value)
+                    ? property.value.join(',')
+                    : property.value
+                }
               />
               {property.children.map((prop) => (
                 <PropertySelectorItem
@@ -56,7 +60,11 @@ const PropertySelector = ({
                     selectedPropertyValue?.selected === prop.value
                   }
                   hasHeading
-                  key={prop.value}
+                  key={
+                    Array.isArray(prop.value)
+                      ? prop.value.join(',')
+                      : prop.value
+                  }
                   parent={property.value}
                 />
               ))}
@@ -69,7 +77,11 @@ const PropertySelector = ({
                 !selectedPropertyValue?.parent &&
                 property.value === selectedPropertyValue?.selected
               }
-              key={property.value}
+              key={
+                Array.isArray(property.value)
+                  ? property.value.join(',')
+                  : property.value
+              }
             />
           );
         })}
