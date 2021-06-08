@@ -834,7 +834,7 @@ const result = localGetFilterLookupMap(
 );
 
 console.log({ result });
-describe('testar lite', () => {
+describe.skip('testar lite', () => {
   test('testar', () => {
     const submissionMap = _.keyBy(submissions, '_id');
     const result = localGetFilterLookupMap(
