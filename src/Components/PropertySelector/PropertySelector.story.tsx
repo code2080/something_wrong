@@ -520,7 +520,7 @@ export const FiltersV3 = (args) => {
         Testarlite: ['ActivityA'],
       },
     },
-    objectFields: {
+    objectFilters: {
       room: {
         roomtype: {
           Datorsal: ['ActivityA'],

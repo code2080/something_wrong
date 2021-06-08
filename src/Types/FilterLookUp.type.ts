@@ -22,7 +22,7 @@ export type TFilterLookUpMap = Partial<{
   readonly primaryObject: LookupType;
   readonly objects: ObjectLookupType;
   readonly fields: FieldLookupType;
-  readonly objectFields: ObjectFilterLookupType;
+  readonly objectFilters: ObjectFilterLookupType;
 }>;
 
 class FilterLookUpMap implements TFilterLookUpMap {
@@ -31,7 +31,7 @@ class FilterLookUpMap implements TFilterLookUpMap {
   readonly primaryObject: LookupType;
   readonly objects: ObjectLookupType;
   readonly fields: FieldLookupType;
-  readonly objectFields: ObjectFilterLookupType;
+  readonly objectFilters: ObjectFilterLookupType;
 
   constructor({
     submitter = {},
@@ -39,21 +39,21 @@ class FilterLookUpMap implements TFilterLookUpMap {
     primaryObject = {},
     objects = {},
     reservationFields: fields = {},
-    objectFields = {},
+    objectFilters = {},
   }: {
     submitter: LookupType;
     tag: LookupType;
     primaryObject: LookupType;
     objects: ObjectLookupType;
     reservationFields: FieldLookupType;
-    objectFields: ObjectFilterLookupType;
+    objectFilters: ObjectFilterLookupType;
   }) {
     this.submitter = submitter;
     this.tag = tag;
     this.primaryObject = primaryObject;
     this.objects = objects;
     this.fields = fields;
-    this.objectFields = objectFields;
+    this.objectFilters = objectFilters;
   }
 }
 
