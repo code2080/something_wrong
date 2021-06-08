@@ -666,6 +666,7 @@ const getValuesForActivity = (
       type: field.extId,
       value: field.value,
     })),
+    objects,
     objectData,
     timing: {
       length: length,
@@ -684,29 +685,114 @@ const mergeSimpleDataField = (currentData, newData) => (field) => {
   return mergeSimpleData(currentData[field], newData[field], newData.id);
 };
 
-const mergeReservationFields = (currentFields, newFields, id) => {
-  const mappedFieldValues = _.keyBy(
-    newFields.map((field) => ({ ...field, id })),
-    'type',
-  );
-  const lol = {
-    ...currentFields,
-    // [newFields.type]: newFields.
-  };
-  return lol;
+const mergeReservationFields = (currentFields, newFields, activityId) => {
+  const returnObj = newFields.reduce((acc, field) => {
+    return {
+      reservationFields: {
+        [field?.type]: {
+          ...(acc[field?.type] ?? {}),
+          ...{[field?.value]: [activityId]}
+        }
+      }
+    }
+  }, {})
+  return returnObj;
 };
 
 type FilterLookUpMap = {
   submitter: { [submitterId: string]: string[] };
   tag: { [tagId: string]: string[] };
   primaryObject: { [primaryObjId: string]: string[] };
-  // fields: { [type: string]: { [value: string]: string[] } };
+  fields: { [type: string]: { [value: string]: string[] } };
+  objects: any[]; // { [prop: string]: {type:string, values:string[]} };
+};
+type ActivityIdList = string[];
+
+type LookupType = {
+  [id: string]: ActivityIdList;
 };
 
+type ObjectLookupType = {
+  [typeExtId: string]: { [objectExtId: string]: ActivityIdList };
+};
+
+type FieldLookupType = {
+  [fieldExtId: string]: { [fieldValue: string]: ActivityIdList };
+};
+
+type ObjectFilterLookupType = {
+  [typeExtId: string]: FieldLookupType;
+};
+
+type TFilterLookUpMap = Partial<{
+  readonly submitter: LookupType;
+  readonly tag: LookupType;
+  readonly primaryObject: LookupType;
+  readonly objects: ObjectLookupType;
+  readonly reservationFields: FieldLookupType;
+  readonly objectFilters: ObjectFilterLookupType;
+}>;
+
+const mergeObjects = (
+  currentObjs,
+  newObj,
+  field,
+  activityId,
+): { objects: ObjectLookupType; objectFilters: ObjectFilterLookupType } => {
+  const returnObj = newObj.reduce((val, obj) => {
+    if (obj.objFilter)
+      return {
+        ...val,
+        objectFilters: {
+          ...(val.objectFilters ?? {}),
+          [obj?.type]: {
+            ...(val[obj?.type] ?? {}),
+            ...obj.objFilter.reduce(
+              (acc, objFilt) => ({
+                ...acc,
+                [objFilt.id]: {
+                  ...(acc[objFilt.id] || {}),
+                  ...objFilt.values.reduce(
+                    (acc, val) => ({
+                      ...acc,
+                      [val]: [...(acc[val] || []), activityId],
+                    }),
+                    {},
+                  ),
+                },
+              }),
+              {},
+            ),
+          },
+        },
+      };
+    else if (obj.objIds)
+      return {
+        ...val,
+        objects: {
+          ...(val.objects ?? {}),
+          [obj?.type]: {
+            ...(val[obj?.type] ?? {}),
+            ...obj.objIds.reduce(
+              (acc, objId) => ({
+                ...acc,
+                [objId]: [activityId],
+              }),
+              {},
+            ),
+          },
+        },
+      };
+    else return { ...val };
+  }, {});
+
+  console.log(returnObj);
+  return returnObj;
+};
 const localGetFilterLookupMap = (
   submissions: { [id: string]: TFormInstance },
   activities: TActivity[],
-): FilterLookUpMap => {
+): TFilterLookUpMap => {
   // Map activities to filter values
   const filterValues = activities.map((activity) =>
     getValuesForActivity(activity, submissions[activity.formInstanceId]),
@@ -725,22 +811,31 @@ const localGetFilterLookupMap = (
         tag: curriedMergeSimpleDataOfField('tag'),
         primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
         fields: mergeReservationFields(
-          mergedFilters.fields,
-          filterValue.fields,
-          filterValue.id,
+          mergedFilters?.fields,
+          filterValue?.fields,
+          filterValue?.id,
+        ),
+        ...mergeObjects(
+          mergedFilters,
+          filterValue?.objectData,
+          'object',
+          filterValue?.id,
         ),
       };
     },
-    <FilterLookUpMap>{},
+    <TFilterLookUpMap>{},
   );
   return filterLookupMap;
 };
+
 const submissionMap = _.keyBy(submissions, '_id');
 const result = localGetFilterLookupMap(
   submissionMap,
   Object.values(activities).flat(),
 );
-describe.skip('testar lite', () => {
+
+console.log({ result });
+describe('testar lite', () => {
   test('testar', () => {
     const submissionMap = _.keyBy(submissions, '_id');
     const result = localGetFilterLookupMap(
