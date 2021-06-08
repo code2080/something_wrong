@@ -211,7 +211,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     ),
   );
   const activityTags = useSelector(selectActivityTagsForForm)(formId).reduce(
-    (tagsMap, tag) => ({ ...tagsMap, [tag.id]: tag.name }),
+    (tagsMap, tag) => ({ ...tagsMap, null: 'N/A', [tag._id]: tag.name }),
     {},
   );
 
