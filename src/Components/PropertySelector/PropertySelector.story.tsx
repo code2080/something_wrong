@@ -465,16 +465,6 @@ export default {
 // FiltersV2.args = {};
 
 export const FiltersV3 = (args) => {
-  const output = {
-    submitter: ['idA', 'idB', 'idC'],
-    tag: ['idA', 'idB', 'idC'],
-    primaryObject: ['idA', 'idB', 'idC'],
-    objects: {
-      room: ['idA', 'idB', 'idC'],
-      tag: ['idA', 'idB', 'idC'],
-    },
-  } as { [prop: string]: string[] | { [prop: string]: string[] } };
-
   const filterMap = {
     submitter: {
       kalle: ['actitityB'],
@@ -500,125 +490,6 @@ export const FiltersV3 = (args) => {
       },
     },
   };
-
-  const filterQuery = {
-    submitter: ['kalle'],
-    tag: ['tagA'],
-    objects: {
-      room: ['SALM1011', { id: 'roomtype', values: ['Datorsal'] }],
-    },
-
-    fields: {
-      rescomment: ['Testarlite'],
-    },
-  };
-  const actualData = {
-    objects: {
-      room: [
-        {
-          type: 'room.type',
-          values: ['Testar lite bara'],
-        },
-        'MHusSal2011',
-      ],
-      tag: ['tagA'],
-    },
-    fields: {
-      'res.comment': ['Testar lite', 'Testar inte alls'],
-    },
-    submitter: ['6093a60ecdb17300258c7ae4', '6093a60ecdb17300258c7ae5'],
-    tag: ['6093a60ecdb17300258c7235'],
-    primaryObject: ['courseevt_BI1143-40049-VT2021'],
-  };
-  const res = Object.entries({} || actualData).flatMap(([prop, values]) => {
-    if (!values) return [];
-    if (Array.isArray(values)) {
-      // Array of values
-      return values.flatMap((value) => filterMap[prop][value]);
-    } else {
-      return Object.entries(values).flatMap(([type, vals]) =>
-        vals.flatMap((valOrFilter) => {
-          if (typeof valOrFilter === 'string') {
-            return filterMap[prop]?.[type]?.[valOrFilter];
-          } else {
-            return valOrFilter.values.flatMap(
-              (v) => filterMap?.objectFields?.[type][valOrFilter.id][v],
-            );
-          }
-        }),
-      );
-    }
-  });
-
-  const result = ['ActivityA', 'ActivityB'];
-
-  // switch (selectedProperty.parent) {
-  //   case undefined: {
-  //     return [...selectedValues[selectedProperty.selected], selection.selected];
-  //   }
-  //   case 'object': {
-  //     break;
-  //   }
-  //   case 'fields': {
-  //     break;
-  //   }
-  // }
-  // Object.entries(asd) => [prop, values]
-
-  const crazyOutput = {
-    undefined: {
-      submitter: {
-        undefined: ['submitterA'],
-      },
-      tag: {
-        undefined: ['tagA'],
-      },
-    },
-    objects: {
-      room: {
-        undefined: ['roomABC'],
-        roomtype: ['datorsal'],
-      },
-    },
-  };
-
-  const outputWithFilters = {
-    submitter: ['idA', 'idB', 'idC'],
-    tag: ['idA', 'idB', 'idC'],
-    primaryObject: ['idA', 'idB', 'idC'],
-    objects: [
-      {
-        type: 'room',
-        values: [
-          'idA',
-          'idB',
-          'idC',
-          { id: 'room.type', values: ['Computer Lab', 'Auditorium'] },
-        ],
-      },
-      { type: 'tag', values: ['idA', 'idB', 'idC'] },
-    ],
-    fields: [
-      { type: 'comment', values: ['test'] },
-      { type: 'needstechnical', values: ['1', '0'] },
-      { type: 'seats', values: ['120', '10'] },
-    ],
-    // {
-    //   room: [
-    //     'idA',
-    //     'idB',
-    //     'idC',
-    //     { id: 'room.type', values: ['Computer Lab', 'Auditorium'] },
-    //   ],
-    //   tag: ['idA', 'idB', 'idC'],
-    // },
-    // fields: {
-    //   comment: ['test'],
-    //   needstechincal: ['1', '0'],
-    //   seats: ['120', '10'],
-    // },
-  };
-  //  as SelectedValues;
 
   type TProp = {
     value: string | string[];
@@ -757,6 +628,8 @@ export const FiltersV3 = (args) => {
     ? getAvailableValues(input, selectedProperty)
     : [];
 
+  const isFilter = (selection: string | Field) => typeof selection !== 'string';
+
   const getNextSelectedValues = (
     selectedProperty: Selection,
     currentValues: SelectedValues,
@@ -792,9 +665,6 @@ export const FiltersV3 = (args) => {
                 : val,
             )
           : [...currentValues, newValue];
-
-      const isFilter = (selection: string | Field) =>
-        typeof selection !== 'string';
 
       if (isFilter(selectedValue))
         return insertValueIntoFilter(
@@ -850,71 +720,71 @@ export const FiltersV3 = (args) => {
         selection,
         add,
       );
-      console.log({ selectedValues, nextSelectedValues });
 
       setSelectedValues(nextSelectedValues);
     };
 
-  const exampleData = {
-    submitter: ['6093a60ecdb17300258c7ae4', '6093a60ecdb17300258c7ae5'],
-    tag: ['6093a60ecdb17300258c7235'],
-    primaryObject: ['courseevt_BI1143-40049-VT2021'],
-    objects: {
-      room: [
-        'MHusSal2011',
-        {
-          type: 'room.type',
-          values: ['Testar lite bara'],
-        },
-      ],
-      tag: ['tagA'],
-    },
-    fields: {
-      'res.comment': ['Testar inte alls', 'Testar lite'],
-    },
-  } as SelectedValues;
+  const getSimplePropName = (prop: string, exceptions: string[] = []) =>
+    exceptions.includes(prop) ? _.startCase(prop) : null;
 
-  const selectedSubmitters = [
-    {
-      value: ['submitter'],
-      label: 'Submitter',
-      children: [{ value: '6093a60ecdb17300258c7ae4', label: 'submitter A' }],
-    },
-    {
-      value: ['objects', 'room', 'room.type'],
-      label: 'Room > Type',
-      children: [
-        {
-          value: 'Testar lite bara',
-          label: 'Testar lite bara',
-        },
-      ],
-    },
-    {
-      value: ['objects', 'room'],
-      label: 'Room',
-      children: [
-        {
-          value: 'MHusSal2011',
-          label: 'Sal 2011',
-        },
-      ],
-    },
-    {
-      value: ['fields', 'res.comment'],
-      label: 'Fields > Comment',
-      children: [
-        {
-          value: 'Testar inte alls',
-          label: 'Testar inte alls',
-        },
-        {
-          value: 'Testar lite',
-          label: 'Testar lite',
-        },
-      ],
-    },
-  ];
+  const joinSelectionHeaderLabel = (
+    labels: (string | null)[],
+    delimiter = ' > ',
+  ) => _.compact(labels).join(delimiter);
+
+  const getRenderPayloadForSelectedValues = (selectedValues: SelectedValues) =>
+    Object.entries(selectedValues).flatMap(([property, values]) => {
+      if (!values) return [];
+      return Array.isArray(values)
+        ? {
+            value: [property],
+            label: _.startCase(property),
+            children: values.flatMap(
+              (simpleValue: string) =>
+                input[property]?.find((v) => v.value === simpleValue) ?? [],
+            ),
+          }
+        : Object.entries(values).flatMap(([type, valsOrFilters]) => {
+            const [filters = [], vals = []]: [any[], any[]] = _.partition(
+              valsOrFilters,
+              isFilter,
+            );
+            return [
+              ...filters.flatMap((filter: Field) => {
+                return {
+                  value: [property, type, filter.fieldExtId],
+                  label: joinSelectionHeaderLabel([
+                    getSimplePropName(property, nestedProps),
+                    input[property]?.find((v) => v.value === type)?.label ??
+                      'N/A',
+                    input[property]
+                      ?.find((v) => v.value === type)
+                      ?.children?.find(
+                        (child) => child.value === filter.fieldExtId,
+                      )?.label ?? 'N/A',
+                  ]),
+                  children: filter.values.flatMap((filterValue) => ({
+                    value: filterValue,
+                    label: filterValue,
+                  })),
+                } as TProperty;
+              }),
+              {
+                value: [property, type],
+                label: joinSelectionHeaderLabel([
+                  getSimplePropName(property, nestedProps),
+                  input[property]?.find((v) => v.value === type)?.label ??
+                    'N/A',
+                ]),
+                children: vals.map((val: string) => ({
+                  label: val,
+                  value: val,
+                })),
+              } as TProperty,
+            ];
+          });
+    });
+
   return (
     <div style={{ display: 'flex' }}>
       <PropSelector
@@ -941,7 +811,7 @@ export const FiltersV3 = (args) => {
       />
       <PropSelector
         {...args}
-        properties={selectedSubmitters}
+        properties={getRenderPayloadForSelectedValues(selectedValues)}
         onSelect={(selection) => {
           const [property, type, fieldExtId] = selection.parent ?? [];
           handleSelectValue({
