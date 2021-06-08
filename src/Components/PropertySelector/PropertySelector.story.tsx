@@ -464,23 +464,6 @@ export default {
 
 // FiltersV2.args = {};
 
-type SelectedValues = Partial<{
-  submitter: string[];
-  tag: string[];
-  primaryObject: string[];
-  objects: {
-    [typeExtId: string]: (string | { fieldExtId: string; values: string[] })[];
-  };
-  fields: {
-    [fieldExtId: string]: string[];
-  };
-}>;
-
-type Selection = {
-  parent?: string;
-  selected: string;
-};
-
 export const FiltersV3 = (args) => {
   const output = {
     submitter: ['idA', 'idB', 'idC'],
@@ -547,7 +530,7 @@ export const FiltersV3 = (args) => {
     tag: ['6093a60ecdb17300258c7235'],
     primaryObject: ['courseevt_BI1143-40049-VT2021'],
   };
-  const res = Object.entries(actualData).flatMap(([prop, values]) => {
+  const res = Object.entries({} || actualData).flatMap(([prop, values]) => {
     if (!values) return [];
     if (Array.isArray(values)) {
       // Array of values
@@ -637,6 +620,37 @@ export const FiltersV3 = (args) => {
   };
   //  as SelectedValues;
 
+  type TProp = {
+    value: string | string[];
+    label: string;
+  };
+
+  type TProperty = TProp & {
+    children?: (TProp & { children?: TProp[] })[];
+  };
+  type InputType = {
+    [property: string]: TProperty[];
+  };
+
+  type Field = { fieldExtId: string; values: string[] };
+
+  type SelectedValues = Partial<{
+    submitter: string[];
+    tag: string[];
+    primaryObject: string[];
+    objects: {
+      [typeExtId: string]: (string | Field)[];
+    };
+    fields: {
+      [fieldExtId: string]: string[];
+    };
+  }>;
+
+  type Selection = {
+    parent?: string;
+    selected: string;
+  };
+
   const [selectedProperty, setSelectedProperty] =
     useState<Selection | null>(null);
   const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
@@ -712,22 +726,16 @@ export const FiltersV3 = (args) => {
         ],
       },
     ],
-  } as {
-    [property: string]: {
-      value: string;
-      label: string;
-      children?: { value: string; label: string }[];
-    }[];
-  };
+  } as InputType;
 
-  const getSimpleProp = (prop) => ({
+  const getSimpleProp = (prop: string): TProp => ({
     label: _.startCase(prop),
     value: prop,
   });
 
-  const getNestedProp = (prop) => (values) => ({
+  const getNestedProp = (prop: string) => (values: TProperty[]) => ({
     ...getSimpleProp(prop),
-    children: values.map((vals) => _.omit(vals, 'children')),
+    children: values.map((vals) => _.omit(vals, 'children') as TProp),
   });
 
   const nestedProps = ['fields', 'objects'];
@@ -738,7 +746,7 @@ export const FiltersV3 = (args) => {
       : getSimpleProp(property),
   );
 
-  const getAvailableValues = (input, property: Selection) => {
+  const getAvailableValues = (input: InputType, property: Selection) => {
     return property.parent
       ? _.find(input[property.parent], ['value', property.selected])
           ?.children ?? []
@@ -749,90 +757,164 @@ export const FiltersV3 = (args) => {
     ? getAvailableValues(input, selectedProperty)
     : [];
 
-  const handleSelectValue = (selection: Selection) => {
-    if (!selectedProperty) return;
+  const getNextSelectedValues = (
+    selectedProperty: Selection,
+    currentValues: SelectedValues,
+    selection: Selection,
+    add = true,
+  ): SelectedValues => {
+    const addNewValue = (
+      currentValues: (string | Field)[] = [],
+      selection: Selection,
+    ) => {
+      const selectedValue = selection.parent
+        ? ({
+            fieldExtId: selection.parent,
+            values: [selection.selected],
+          } as Field)
+        : selection.selected;
 
-    const insertValue = (currentValues, newValue): any[] =>
-      currentValues.find((val) => val.type === newValue.type)
-        ? currentValues.map((val) =>
-            val.type === newValue.type
-              ? {
-                  ...val,
-                  values: _.uniq([...val.values, ...newValue.values]),
-                }
-              : val,
-          )
-        : [...currentValues, newValue];
+      const insertValueIntoFilter = (
+        currentValues: Field[],
+        newValue: Field,
+      ): any[] =>
+        currentValues.find(
+          (val: Field) => val.fieldExtId === newValue.fieldExtId,
+        )
+          ? currentValues.map((val: Field) =>
+              val.fieldExtId === newValue.fieldExtId
+                ? {
+                    ...val,
+                    values: add
+                      ? _.uniq([...val.values, ...newValue.values])
+                      : val.values.filter((v) => !val.values.includes(v)),
+                  }
+                : val,
+            )
+          : [...currentValues, newValue];
 
-    const selectedValue = selection.parent
-      ? { type: selection.parent, values: [selection.selected] }
-      : selection.selected;
+      const isFilter = (selection: string | Field) =>
+        typeof selection !== 'string';
 
-    const nextSelectedValues = selectedProperty.parent
-      ? {
-          ...selectedValues,
-          [selectedProperty.parent]: {
-            ...(selectedValues[selectedProperty.parent] || {}),
-            [selectedProperty.selected]: [
-              ...(typeof selectedValue === 'string'
-                ? _.uniq([
-                    ...(selectedValues[selectedProperty.parent]?.[
-                      selectedProperty.selected
-                    ] || []),
-                    selectedValue,
-                  ])
-                : insertValue(
-                    selectedValues[selectedProperty.parent]?.[
-                      selectedProperty.selected
-                    ] || [],
-                    selectedValue,
-                  )),
-            ],
-          },
-        }
-      : ({
-          ...selectedValues,
-          [selectedProperty.selected]: _.uniq([
-            ...(selectedValues[selectedProperty.selected] || []),
+      if (isFilter(selectedValue))
+        return insertValueIntoFilter(
+          currentValues as Field[],
+          selectedValue as Field,
+        );
+      return add
+        ? _.uniq([...(currentValues as string[]), selectedValue as string])
+        : (currentValues as string[]).filter(
+            (v: string) => v !== (selectedValue as string),
+          );
+    };
+
+    if (selectedProperty.parent) {
+      return {
+        ...currentValues,
+        [selectedProperty.parent]: {
+          ...(currentValues[selectedProperty.parent] || {}),
+          [selectedProperty.selected]: addNewValue(
+            currentValues[selectedProperty.parent]?.[selectedProperty.selected],
+            selection,
+          ),
+        },
+      };
+    }
+    return {
+      ...currentValues,
+      [selectedProperty.selected]: add
+        ? _.uniq([
+            ...(currentValues[selectedProperty.selected] || []),
             selection.selected,
-          ]),
-        } as SelectedValues);
-
-    const handleDeselectValue = (deselected: Selection) => {};
-
-    // const newSelectedValues = selectedProperty.parent
-    //   ? {
-    //       ...selectedValues,
-    //       [selectedProperty.parent]: {
-    //         ...(selectedValues[selectedProperty.parent] ?? []),
-    //         [selectedProperty.selected]: _.uniq([
-    //           ...(selectedValues[selectedProperty.parent]?.[
-    //             selectedProperty.selected
-    //           ] ?? []),
-
-    //           selection.parent
-    //             ? { type: selection.parent, value: selection.selected }
-    //             : selection.selected,
-    //         ]),
-    //       },
-    //     }
-    //   : {
-    //       ...selectedValues,
-    //       [selectedProperty.selected]: _.uniqBy(
-    //         [
-    //           ...(selectedValues[selectedProperty.selected] ?? []),
-    //           selection.parent
-    //             ? { type: selection.parent, value: selection.selected }
-    //             : selection.selected,
-    //         ],
-    //         (leftVal, rightVal) =>
-    //           leftVal?.type === rightVal?.type && leftVal?.value,
-    //       ),
-    //     };
-    setSelectedValues(nextSelectedValues);
+          ])
+        : (currentValues[selectedProperty.selected] || []).filter(
+            (v: string) => v !== selection.selected,
+          ),
+    };
   };
 
-  const selectedSubmitters = [];
+  const handleSelectValue =
+    ({
+      selectedProperty,
+      add = true,
+    }: {
+      selectedProperty: Selection;
+      add?: boolean;
+    }) =>
+    (selection: Selection) => {
+      if (!selectedProperty) return;
+
+      const nextSelectedValues = getNextSelectedValues(
+        selectedProperty,
+        selectedValues,
+        selection,
+        add,
+      );
+      console.log({ selectedValues, nextSelectedValues });
+
+      setSelectedValues(nextSelectedValues);
+    };
+
+  const exampleData = {
+    submitter: ['6093a60ecdb17300258c7ae4', '6093a60ecdb17300258c7ae5'],
+    tag: ['6093a60ecdb17300258c7235'],
+    primaryObject: ['courseevt_BI1143-40049-VT2021'],
+    objects: {
+      room: [
+        'MHusSal2011',
+        {
+          type: 'room.type',
+          values: ['Testar lite bara'],
+        },
+      ],
+      tag: ['tagA'],
+    },
+    fields: {
+      'res.comment': ['Testar inte alls', 'Testar lite'],
+    },
+  } as SelectedValues;
+
+  const selectedSubmitters = [
+    {
+      value: ['submitter'],
+      label: 'Submitter',
+      children: [{ value: '6093a60ecdb17300258c7ae4', label: 'submitter A' }],
+    },
+    {
+      value: ['objects', 'room', 'room.type'],
+      label: 'Room > Type',
+      children: [
+        {
+          value: 'Testar lite bara',
+          label: 'Testar lite bara',
+        },
+      ],
+    },
+    {
+      value: ['objects', 'room'],
+      label: 'Room',
+      children: [
+        {
+          value: 'MHusSal2011',
+          label: 'Sal 2011',
+        },
+      ],
+    },
+    {
+      value: ['fields', 'res.comment'],
+      label: 'Fields > Comment',
+      children: [
+        {
+          value: 'Testar inte alls',
+          label: 'Testar inte alls',
+        },
+        {
+          value: 'Testar lite',
+          label: 'Testar lite',
+        },
+      ],
+    },
+  ];
   return (
     <div style={{ display: 'flex' }}>
       <PropSelector
@@ -846,7 +928,10 @@ export const FiltersV3 = (args) => {
       <PropSelector
         {...args}
         properties={availableSubmitters}
-        onSelect={handleSelectValue}
+        onSelect={handleSelectValue({
+          add: true,
+          selectedProperty: selectedProperty as Selection,
+        })}
         emptyText={
           selectedProperty
             ? 'No more values available'
@@ -857,7 +942,16 @@ export const FiltersV3 = (args) => {
       <PropSelector
         {...args}
         properties={selectedSubmitters}
-        onSelect={(removedValue) => removedValue}
+        onSelect={(selection) => {
+          const [property, type, fieldExtId] = selection.parent ?? [];
+          handleSelectValue({
+            add: false,
+            selectedProperty: {
+              parent: type ? property : undefined,
+              selected: type ?? property,
+            },
+          })({ parent: fieldExtId, selected: selection.selected });
+        }}
         emptyText='No filters selected'
         title='Selected filters'
       />
