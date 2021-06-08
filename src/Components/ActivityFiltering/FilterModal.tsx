@@ -68,7 +68,7 @@ type AvailableProperties =
   | 'primaryObject'
   | 'objects'
   | 'fields'
-  | 'objectFields'
+  | 'objectFilters'
   | string;
 
 const getLabelForValue = ({
@@ -85,7 +85,7 @@ const getLabelForValue = ({
   primaryObject: (val) => extIdLabels[val],
   objects: (val) => extIdLabels[val],
   fields: (val) => extIdLabels[val],
-  objectFields: (val) => extIdLabels[val],
+  objectFilters: (val) => extIdLabels[val],
 
   object: (val) => extIdLabels[val],
   field: (val) => extIdLabels[val],
@@ -111,7 +111,7 @@ const filterMap = {
       Testarlite: ['ActivityA'],
     },
   },
-  objectFields: {
+  objectFilters: {
     room: {
       roomtype: {
         Datorsal: ['ActivityA'],
@@ -129,7 +129,7 @@ const getLabelsFromProp = {
         extId: v,
       })),
     ]),
-  objectFields: (val) =>
+  objectFilters: (val) =>
     Object.entries(val).flatMap(([type, values]) => [
       { field: 'types', extId: type },
       ...Object.keys(values as any).map((v) => ({ field: 'fields', extId: v })),
@@ -187,7 +187,7 @@ const mapFilterMapToPropSelectorInput = (
 ): InputType => {
   return Object.entries(filterMap || {}).reduce<InputType>(
     (inputValues, [property, values]) => {
-      const isObjectFields = property === 'objectFields';
+      const isObjectFields = property === 'objectFilters';
       const newValues = mapValuesToTProperty(values, property, labels);
       const mergedObjects =
         newValues.map((value) => {
@@ -210,7 +210,7 @@ const mapFilterMapToPropSelectorInput = (
           ? mergedObjects
           : [
               ...(inputValues[
-                property === 'objectFields' ? 'objects' : property
+                property === 'objectFilters' ? 'objects' : property
               ] || []),
               ...newValues,
             ],
