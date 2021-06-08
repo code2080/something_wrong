@@ -691,11 +691,11 @@ const mergeReservationFields = (currentFields, newFields, activityId) => {
       reservationFields: {
         [field?.type]: {
           ...(acc[field?.type] ?? {}),
-          ...{[field?.value]: [activityId]}
-        }
-      }
-    }
-  }, {})
+          ...{ [field?.value]: [activityId] },
+        },
+      },
+    };
+  }, {});
   return returnObj;
 };
 
@@ -786,7 +786,6 @@ const mergeObjects = (
     else return { ...val };
   }, {});
 
-  console.log(returnObj);
   return returnObj;
 };
 const localGetFilterLookupMap = (
