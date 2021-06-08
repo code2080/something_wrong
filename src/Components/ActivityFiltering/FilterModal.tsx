@@ -91,35 +91,6 @@ const getLabelForValue = ({
   field: (val) => extIdLabels[val],
 });
 
-const filterMap = {
-  submitter: {
-    kalle: ['actitityB'],
-  },
-  tag: {
-    tagA: ['actitityB'],
-  },
-  primaryObject: {
-    SALM1011: ['actitityB'],
-  },
-  objects: {
-    room: {
-      SALM1011: ['actitityB'],
-    },
-  },
-  fields: {
-    rescomment: {
-      Testarlite: ['ActivityA'],
-    },
-  },
-  objectFilters: {
-    room: {
-      roomtype: {
-        Datorsal: ['ActivityA'],
-      },
-    },
-  },
-};
-
 const getLabelsFromProp = {
   objects: (val) =>
     Object.entries(val).flatMap(([type, values]) => [
@@ -223,11 +194,10 @@ const mapFilterMapToPropSelectorInput = (
 const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-  // const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
-  const filterLookupMap = filterMap;
-  // useSelector((state) =>
-  //   selectFormLookupMap(state, formId),
-  // );
+  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+  const filterLookupMap = useSelector((state) =>
+    selectFormLookupMap(state, formId),
+  );
   const teCorePayload = useMemo(
     () => getTECorePayload(filterLookupMap),
     [filterLookupMap],
