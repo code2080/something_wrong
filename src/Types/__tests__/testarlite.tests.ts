@@ -1,5 +1,7 @@
-import _, { compact, partition } from 'lodash';
 import { ActivityValue, CategoryField } from '../ActivityValue.type';
+import _ from 'lodash';
+// import moment from 'moment';
+// import { ActivityValue, CategoryField } from '../ActivityValue.type';
 import { TActivity } from '../../Types/Activity.type';
 import { TFormInstance } from '../../Types/FormInstance.type';
 import { getFilterLookupMap } from '../../Utils/activities.helpers';
@@ -711,7 +713,7 @@ const getValuesForActivity = (
   activity: TActivity,
   submission: TFormInstance,
 ) => {
-  const [fields, objects] = partition(
+  const [fields, objects] = _.partition(
     activity.values,
     (value) => value.type === 'field',
   );
@@ -747,7 +749,7 @@ const localGetFilterLookupMap = ({
   submissions: { [submissionId: string]: TFormInstance };
 }) => {
   // Map activities to filter values
-  const filterValues = compact(
+  const filterValues = _.compact(
     activities.map((activity) =>
       getValuesForActivity(activity, submissions[activity.formInstanceId]),
     ),
