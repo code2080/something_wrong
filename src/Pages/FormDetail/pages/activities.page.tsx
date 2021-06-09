@@ -6,7 +6,10 @@ import { useParams } from 'react-router-dom';
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 
 // ACTIONS
-import { setActivitySorting, resetActivitySorting } from '../../../Redux/GlobalUI/globalUI.actions';
+import {
+  setActivitySorting,
+  resetActivitySorting,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -25,7 +28,7 @@ import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
 };
- 
+
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();

@@ -62,7 +62,10 @@ export const fetchActivitiesForForm = (formId, filter, sorting) =>
   asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
-    params: { filter: _.isEmpty(filter) ? undefined : filter, sorting: sorting == null ? undefined : sorting },
+    params: {
+      filter: _.isEmpty(filter) ? undefined : filter,
+      sorting: sorting == null ? undefined : sorting,
+    },
   });
 
 const fetchActivitiesForFormInstanceFlow = {

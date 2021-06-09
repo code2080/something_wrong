@@ -31,7 +31,10 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 // SELECTORS
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
-import { makeSelectSortingForActivities, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import {
+  makeSelectSortingForActivities,
+  selectFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // PAGES
@@ -87,7 +90,7 @@ const FormPage = () => {
   );
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
-  
+
   // Select filters
   const selectSelectedFilterValues = useMemo(
     () => makeSelectSelectedFilterValues(),
@@ -99,15 +102,18 @@ const FormPage = () => {
 
   // Select sorting
   const selectActivitySorting = useMemo(
-    () => makeSelectSortingForActivities(), 
-    []
+    () => makeSelectSortingForActivities(),
+    [],
   );
-  const selectedSorting = useSelector(
-    (state) => selectActivitySorting(state, formId),
+  const selectedSorting = useSelector((state) =>
+    selectActivitySorting(state, formId),
   );
 
   useEffect(
-    () => dispatch(fetchActivitiesForForm(formId, selectedFilterValues, selectedSorting)),
+    () =>
+      dispatch(
+        fetchActivitiesForForm(formId, selectedFilterValues, selectedSorting),
+      ),
     [dispatch, formId, selectedFilterValues, selectedSorting],
   );
 
