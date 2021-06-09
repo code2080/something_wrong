@@ -252,10 +252,12 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     selectSelectedFilterValues(state, formId),
   );
 
-  const [localSelectedValues, setLocalSelectedValues] = useState<SelectedValues>(currentlySelectedFilterValues);
+  const [localSelectedValues, setLocalSelectedValues] =
+    useState<SelectedValues>(currentlySelectedFilterValues);
 
-  const [selectedProperty, setSelectedProperty] =
-    useState<Selection | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
+    null,
+  );
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
@@ -292,7 +294,9 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
       if (!selectedProperty) return availableValues;
       const currentlySelectedValues =
         (selectedProperty.parent
-          ? localSelectedValues[selectedProperty.parent]?.[selectedProperty.selected]
+          ? localSelectedValues[selectedProperty.parent]?.[
+              selectedProperty.selected
+            ]
           : localSelectedValues[selectedProperty.selected]) ?? [];
       const basicFilteredAvailableValues = availableValues.filter(({ value }) =>
         selectedProperty.parent
