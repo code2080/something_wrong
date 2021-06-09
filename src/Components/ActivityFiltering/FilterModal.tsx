@@ -1,4 +1,4 @@
-import _, { isObject } from 'lodash';
+import _ from 'lodash';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
@@ -82,13 +82,13 @@ const getLabelForValue = ({
 }) => ({
   submitter: (val) => submitterLabels[val] ?? val,
   tag: (val) => tagLabels[val] ?? val,
-  primaryObject: (val) => extIdLabels[val],
-  objects: (val) => extIdLabels[val],
-  fields: (val) => extIdLabels[val],
-  objectFilters: (val) => extIdLabels[val],
+  primaryObject: (val) => extIdLabels[val] ?? val,
+  objects: (val) => extIdLabels[val] ?? val,
+  fields: (val) => extIdLabels[val] ?? val,
+  objectFilters: (val) => extIdLabels[val] ?? val,
 
-  object: (val) => extIdLabels[val],
-  field: (val) => extIdLabels[val],
+  object: (val) => extIdLabels[val] ?? val,
+  field: (val) => extIdLabels[val] ?? val,
 });
 
 const getLabelsFromProp = {
@@ -140,9 +140,9 @@ const mapValuesToTProperty = (
           value: key,
           label: Array.isArray(val)
             ? property === 'objects'
-              ? getLabelForValue(labels).object(key)
+              ? getLabelForValue(labels).object(key) ?? key
               : key
-            : getLabelForValue(labels).field(key),
+            : getLabelForValue(labels).field(key) ?? key,
           children: Array.isArray(val)
             ? undefined
             : Object.keys(val as any).flatMap((k) => ({
@@ -152,39 +152,43 @@ const mapValuesToTProperty = (
         })),
   }));
 
+// TODO: Where is fields? DONE
+// TODO: Where is the objects (only filters showing up) DONE
+// TODO: Actually filter the activities/fix route validation
+
 const mapFilterMapToPropSelectorInput = (
   filterMap: TFilterLookUpMap,
   labels,
 ): InputType => {
   return Object.entries(filterMap || {}).reduce<InputType>(
     (inputValues, [property, values]) => {
-      const isObjectFields = property === 'objectFilters';
+      const isObjectFilter = property === 'objectFilters';
       const newValues = mapValuesToTProperty(values, property, labels);
-      const mergedObjects =
-        newValues.map((value) => {
-          const existingVal = inputValues.objects?.find(
-            (v) => v.value === value.value,
-          );
-          return existingVal
-            ? {
-                ...existingVal,
-                children: [
-                  ...(existingVal?.children ?? []),
-                  ...(value.children ?? []),
-                ],
-              }
-            : value;
-        }) ?? [];
+      const index = isObjectFilter ? 'objects' : property;
+      const currentValues = inputValues[index] ?? [];
+      // Merge all values with the same key. Merge the children
+      const mergedValues = currentValues.map((currentValue) => {
+        const newValue = newValues.find((v) => v.value === currentValue.value);
+        const mergedChildren = [
+          ...(currentValue.children ?? []),
+          ...(newValue?.children ?? []),
+        ];
+        return newValue
+          ? {
+              ...currentValue,
+              children: _.isEmpty(mergedChildren) ? undefined : mergedChildren,
+            }
+          : currentValue;
+      });
+      // Any value that was not merged also needs to be added
+      const nonMergedValues = newValues.filter(
+        (newVal) =>
+          !mergedValues.find((mergedVal) => mergedVal.value === newVal.value),
+      );
+
       return {
         ...inputValues,
-        [isObjectFields ? 'objects' : property]: isObjectFields
-          ? mergedObjects
-          : [
-              ...(inputValues[
-                property === 'objectFilters' ? 'objects' : property
-              ] || []),
-              ...newValues,
-            ],
+        [index]: [...mergedValues, ...nonMergedValues],
       };
     },
     {},
