@@ -252,13 +252,12 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     selectSelectedFilterValues(state, formId),
   );
 
-  const [localSelectedValues, setLocalSelectedValues] = useState<{
-    [property: string]: string[];
-  }>(currentlySelectedFilterValues);
+  const [localSelectedValues, setLocalSelectedValues] =
+    useState<SelectedValues>(currentlySelectedFilterValues);
 
-  const [selectedProperty, setSelectedProperty] =
-    useState<Selection | null>(null);
-  const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
+  const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
+    null,
+  );
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
@@ -295,8 +294,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
       if (!selectedProperty) return availableValues;
       const currentlySelectedValues =
         (selectedProperty.parent
-          ? selectedValues[selectedProperty.parent]?.[selectedProperty.selected]
-          : selectedValues[selectedProperty.selected]) ?? [];
+          ? localSelectedValues[selectedProperty.parent]?.[
+              selectedProperty.selected
+            ]
+          : localSelectedValues[selectedProperty.selected]) ?? [];
       const basicFilteredAvailableValues = availableValues.filter(({ value }) =>
         selectedProperty.parent
           ? !currentlySelectedValues.includes(value)
@@ -409,12 +410,12 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
 
         const nextSelectedValues = getNextSelectedValues(
           selectedProperty,
-          selectedValues,
+          localSelectedValues,
           selection,
           add,
         );
 
-        setSelectedValues(nextSelectedValues);
+        setLocalSelectedValues(nextSelectedValues);
       };
 
     const getSimplePropName = (prop: string, exceptions: string[] = []) =>
@@ -513,7 +514,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
           title='Available filters'
         />
         <PropertySelector
-          properties={getRenderPayloadForSelectedValues(selectedValues)}
+          properties={getRenderPayloadForSelectedValues(localSelectedValues)}
           onSelect={(selection) => {
             const [property, type, fieldExtId] = selection.parent ?? [];
             handleSelectValue({
