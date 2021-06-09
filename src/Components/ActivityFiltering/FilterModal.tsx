@@ -19,6 +19,7 @@ import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -40,17 +41,17 @@ type InputType = {
 
 type Field = { fieldExtId: string; values: string[] };
 
-type SelectedValues = Partial<{
-  submitter: string[];
-  tag: string[];
-  primaryObject: string[];
-  objects: {
-    [typeExtId: string]: (string | Field)[];
-  };
-  fields: {
-    [fieldExtId: string]: string[];
-  };
-}>;
+// type SelectedValues = Partial<{
+//   submitter: string[];
+//   tag: string[];
+//   primaryObject: string[];
+//   objects: {
+//     [typeExtId: string]: (string | Field)[];
+//   };
+//   fields: {
+//     [fieldExtId: string]: string[];
+//   };
+// }>;
 
 type Selection = {
   parent?: string;
@@ -239,7 +240,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     [activityTags, labels, submissions],
   );
 
-  const input = useMemo(
+  const input = useMemo<InputType>(
     () => mapFilterMapToPropSelectorInput(filterLookupMap, labelsObject),
     [filterLookupMap, labelsObject],
   );
@@ -253,11 +254,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   );
 
   const [localSelectedValues, setLocalSelectedValues] =
-    useState<SelectedValues>(currentlySelectedFilterValues);
+    useState<TActivityFilterQuery>(currentlySelectedFilterValues);
 
-  const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
-    null,
-  );
+  const [selectedProperty, setSelectedProperty] =
+    useState<Selection | null>(null);
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
@@ -324,10 +324,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
 
     const getNextSelectedValues = (
       selectedProperty: Selection,
-      currentValues: SelectedValues,
+      currentValues: TActivityFilterQuery,
       selection: Selection,
       add = true,
-    ): SelectedValues => {
+    ): TActivityFilterQuery => {
       const addNewValue = (
         currentValues: (string | Field)[] = [],
         selection: Selection,
@@ -437,7 +437,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     };
 
     const getRenderPayloadForSelectedValues = (
-      selectedValues: SelectedValues,
+      selectedValues: TActivityFilterQuery,
     ) =>
       Object.entries(selectedValues).flatMap(([property, values]) => {
         if (!values) return [];
@@ -446,7 +446,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
               value: [property],
               label: _.startCase(property),
               children: values.flatMap(
-                (simpleValue: string) =>
+                (simpleValue) =>
                   input[property]?.find((v) => v.value === simpleValue) ?? [],
               ),
             }

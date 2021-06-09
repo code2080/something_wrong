@@ -6,7 +6,6 @@ import FilterModal from './FilterModal';
 
 // STYLES
 import './index.scss';
-import { useParams } from 'react-router-dom';
 
 const ActivityFiltering = () => {
   const [showModal, setShowModal] = useState(false);
