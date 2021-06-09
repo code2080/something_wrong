@@ -1,7 +1,3 @@
-import {
-  sortByActivityTag,
-  sortByElementHtml,
-} from '../../../Utils/sorting.helpers';
 import ActivityStatusCol from './StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
@@ -29,7 +25,7 @@ export const SchedulingColumns = [
         <ActivityTag activities={[activity]} />
       </SortableTableCell>
     ),
-    sorter: (a, b) => sortByActivityTag(a, b),
+    sorter: true,
   },
   {
     title: 'Status',
@@ -41,11 +37,6 @@ export const SchedulingColumns = [
         <ActivityStatusCol activity={activity} />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(
-        `.activityStatus_${a._id}`,
-        `.activityStatus_${b._id}`,
-      );
-    },
+    sorter: true,
   },
 ];

@@ -87,6 +87,35 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.SET_SORTING_FOR_ACTIVITIES: {
+      const {
+        payload: { formId, columnKey, direction },
+      } = action;
+      return {
+        ...state,
+        activitySorting: {
+          ...state.activitySorting,
+          [formId]: {
+            key: columnKey,
+            direction,
+          },
+        },
+      };
+    }
+
+    case types.RESET_SORTING_FOR_ACTIVITIES: {
+      const {
+        payload: { formId },
+      } = action;
+      return {
+        ...state,
+        activitySorting: {
+          ...state.activitySorting,
+          [formId]: null,
+        },
+      };
+    }
+
     default:
       return state;
   }

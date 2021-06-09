@@ -16,3 +16,9 @@ export const selectVisibleColsForDatasourceId = createSelector(
   globalUIState,
   (uiState) => (datasourceId: string) => uiState.tableViews[datasourceId] || {},
 );
+
+export const makeSelectSortingForActivities = () => createSelector(
+  globalUIState,
+  (_, formId: string) => formId,
+  (uiState, formId) => uiState.activitySorting[formId] || null,
+);

@@ -41,13 +41,3 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
   ];
 };
 
-/*
-sorter: (a, b) => {
-        return sortByElementDeepHtml(
-          `.extId_${extId.replace(/\./g, '-')}_${a._id} .base-activity-col--wrapper`,
-          `.extId_${extId.replace(/\./g, '-')}_${b._id} .base-activity-col--wrapper`
-        );
-      },
-
-        <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
-*/

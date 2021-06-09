@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
+
+// ACTIONS
+import { setActivitySorting, resetActivitySorting } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -22,9 +25,10 @@ import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
 };
-
+ 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch();
 
   /**
    * SELECTORS
@@ -98,6 +102,16 @@ const ActivitiesPage = () => {
     onDeselectAll();
   };
 
+  const onSortActivities = (sorter): void => {
+    if (sorter && sorter.columnKey) {
+      if (sorter.order) {
+        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
+      } else {
+        dispatch(resetActivitySorting(formId));
+      }
+    }
+  };
+
   return (
     <>
       <ActivitiesToolbar
@@ -118,6 +132,7 @@ const ActivitiesPage = () => {
           onChange: (selectedRowKeys) =>
             setSelectedRowKeys(selectedRowKeys as string[]),
         }}
+        onChange={(pagination, filters, sorter) => onSortActivities(sorter)}
       />
     </>
   );
