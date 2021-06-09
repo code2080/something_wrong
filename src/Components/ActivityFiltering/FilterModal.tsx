@@ -425,6 +425,16 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
       delimiter = ' > ',
     ) => _.compact(labels).join(delimiter);
 
+    const getLabelFromInput = (val: string, property: string, type: string) => {
+      const value = input?.[property]?.find((v) => v.value === type);
+      return (
+        (value?.children
+          ? value?.children?.find((v) => v.value === val)
+          : value
+        )?.label ?? val
+      );
+    };
+
     const getRenderPayloadForSelectedValues = (
       selectedValues: SelectedValues,
     ) =>
@@ -472,8 +482,8 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
                       'N/A',
                   ]),
                   children: vals.map((val: string) => ({
-                    label: val,
                     value: val,
+                    label: getLabelFromInput(val, property, type),
                   })),
                 } as TProperty,
               ];
