@@ -10,7 +10,6 @@ import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const filterstate = (state) => state.filters;
 
-
 export const makeSelectSelectedFilterValues = () =>
   createSelector(
     filterstate,

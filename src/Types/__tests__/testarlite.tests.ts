@@ -691,9 +691,10 @@ const mergeSimpleData = (currentSubmissionData, newSubmitter, id: string) => ({
   [newSubmitter.id]: [...(currentSubmissionData?.[newSubmitter.id] || []), id],
 });
 
-const mergeSimpleDataField = (currentData, newData) => (
-  field: 'tag' | 'submitter' | 'primaryObject' | 'objects',
-) => mergeSimpleData(currentData[field], newData[field], newData.id);
+const mergeSimpleDataField =
+  (currentData, newData) =>
+  (field: 'tag' | 'submitter' | 'primaryObject' | 'objects') =>
+    mergeSimpleData(currentData[field], newData[field], newData.id);
 
 const getObjectData = (objects: ActivityValue[]) =>
   objects.map(({ extId, value }) => {
@@ -709,7 +710,6 @@ const getObjectData = (objects: ActivityValue[]) =>
 const getValuesForActivity = (
   activity: TActivity,
   submission: TFormInstance,
- 
 ) => {
   const [fields, objects] = partition(
     activity.values,
@@ -742,20 +742,14 @@ const getValuesForActivity = (
 const localGetFilterLookupMap = ({
   activities,
   submissions,
- 
 }: {
   activities: TActivity[];
   submissions: { [submissionId: string]: TFormInstance };
-  
 }) => {
   // Map activities to filter values
   const filterValues = compact(
     activities.map((activity) =>
-      getValuesForActivity(
-        activity,
-        submissions[activity.formInstanceId],
-      
-      ),
+      getValuesForActivity(activity, submissions[activity.formInstanceId]),
     ),
   );
 
@@ -790,25 +784,20 @@ const localGetFilterLookupMap = ({
   }, <TFilterLookUpMap>{});
 };
 
-
 const submissionMap = _.keyBy(submissions, '_id');
-const result = localGetFilterLookupMap(
-  {
-    submissions: submissionMap, activities:
-    Object.values(activities).flat(),
-  }
-);
+const result = localGetFilterLookupMap({
+  submissions: submissionMap,
+  activities: Object.values(activities).flat(),
+});
 
 console.log({ result });
 describe.skip('testar lite', () => {
   test('testar', () => {
     const submissionMap = _.keyBy(submissions, '_id');
-    const result = localGetFilterLookupMap(
-      {
-        submissions: submissionMap, activities:
-        Object.values(activities).flat(),
-      }
-    );
+    const result = localGetFilterLookupMap({
+      submissions: submissionMap,
+      activities: Object.values(activities).flat(),
+    });
     console.log({ result });
   });
 
