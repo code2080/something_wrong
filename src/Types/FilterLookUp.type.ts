@@ -38,14 +38,14 @@ class FilterLookUpMap implements TFilterLookUpMap {
     tag = {},
     primaryObject = {},
     objects = {},
-    reservationFields: fields = {},
+    fields = {},
     objectFilters = {},
   }: {
     submitter: LookupType;
     tag: LookupType;
     primaryObject: LookupType;
     objects: ObjectLookupType;
-    reservationFields: FieldLookupType;
+    fields: FieldLookupType;
     objectFilters: ObjectFilterLookupType;
   }) {
     this.submitter = submitter;

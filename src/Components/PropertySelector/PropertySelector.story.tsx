@@ -1,5 +1,5 @@
 import PropSelector from './index';
-import _, { values } from 'lodash';
+import _ from 'lodash';
 import { useState } from 'react';
 
 export default {
@@ -500,34 +500,6 @@ export const FiltersV3 = (args) => {
     useState<Selection | null>(null);
   const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
 
-  const filterMap = {
-    submitter: {
-      kalle: ['actitityB'],
-    },
-    tag: {
-      tagA: ['actitityB'],
-    },
-    primaryObject: {
-      SALM1011: ['actitityB'],
-    },
-    objects: {
-      room: {
-        SALM1011: ['actitityB'],
-      },
-    },
-    reservationFields: {
-      rescomment: {
-        Testarlite: ['ActivityA'],
-      },
-    },
-    objectFilters: {
-      room: {
-        roomtype: {
-          Datorsal: ['ActivityA'],
-        },
-      },
-    },
-  };
   const input = {
     submitter: [
       {
@@ -653,30 +625,6 @@ export const FiltersV3 = (args) => {
     ? hideSelectedValues(getAvailableValues(input, selectedProperty))
     : [];
 
-  const availableVals = [
-    {
-      value: 'MHusSal2011',
-      label: 'Sal 2011',
-    },
-    {
-      value: 'room.type',
-      label: 'Type',
-      children: [
-        {
-          value: 'Testar lite bara',
-          label: 'Testar lite bara',
-        },
-      ],
-    },
-  ];
-  const selectedVals = {
-    room: [
-      {
-        fieldExtId: 'room.type',
-        values: ['Testar lite bara'],
-      },
-    ],
-  };
   // Selectedvalues, vs available values vs selectedproperty
 
   const isFilter = (selection: string | Field) => typeof selection !== 'string';

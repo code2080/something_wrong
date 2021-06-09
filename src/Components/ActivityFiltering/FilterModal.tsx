@@ -1,4 +1,4 @@
-import _, { isObject } from 'lodash';
+import _ from 'lodash';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
 import PropertySelector from '../PropertySelector';
@@ -19,6 +19,7 @@ import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -40,17 +41,17 @@ type InputType = {
 
 type Field = { fieldExtId: string; values: string[] };
 
-type SelectedValues = Partial<{
-  submitter: string[];
-  tag: string[];
-  primaryObject: string[];
-  objects: {
-    [typeExtId: string]: (string | Field)[];
-  };
-  fields: {
-    [fieldExtId: string]: string[];
-  };
-}>;
+// type SelectedValues = Partial<{
+//   submitter: string[];
+//   tag: string[];
+//   primaryObject: string[];
+//   objects: {
+//     [typeExtId: string]: (string | Field)[];
+//   };
+//   fields: {
+//     [fieldExtId: string]: string[];
+//   };
+// }>;
 
 type Selection = {
   parent?: string;
@@ -82,13 +83,13 @@ const getLabelForValue = ({
 }) => ({
   submitter: (val) => submitterLabels[val] ?? val,
   tag: (val) => tagLabels[val] ?? val,
-  primaryObject: (val) => extIdLabels[val],
-  objects: (val) => extIdLabels[val],
-  fields: (val) => extIdLabels[val],
-  objectFilters: (val) => extIdLabels[val],
+  primaryObject: (val) => extIdLabels[val] ?? val,
+  objects: (val) => extIdLabels[val] ?? val,
+  fields: (val) => extIdLabels[val] ?? val,
+  objectFilters: (val) => extIdLabels[val] ?? val,
 
-  object: (val) => extIdLabels[val],
-  field: (val) => extIdLabels[val],
+  object: (val) => extIdLabels[val] ?? val,
+  field: (val) => extIdLabels[val] ?? val,
 });
 
 const getLabelsFromProp = {
@@ -140,9 +141,9 @@ const mapValuesToTProperty = (
           value: key,
           label: Array.isArray(val)
             ? property === 'objects'
-              ? getLabelForValue(labels).object(key)
+              ? getLabelForValue(labels).object(key) ?? key
               : key
-            : getLabelForValue(labels).field(key),
+            : getLabelForValue(labels).field(key) ?? key,
           children: Array.isArray(val)
             ? undefined
             : Object.keys(val as any).flatMap((k) => ({
@@ -152,39 +153,43 @@ const mapValuesToTProperty = (
         })),
   }));
 
+// TODO: Where is fields? DONE
+// TODO: Where is the objects (only filters showing up) DONE
+// TODO: Actually filter the activities/fix route validation
+
 const mapFilterMapToPropSelectorInput = (
   filterMap: TFilterLookUpMap,
   labels,
 ): InputType => {
   return Object.entries(filterMap || {}).reduce<InputType>(
     (inputValues, [property, values]) => {
-      const isObjectFields = property === 'objectFilters';
+      const isObjectFilter = property === 'objectFilters';
       const newValues = mapValuesToTProperty(values, property, labels);
-      const mergedObjects =
-        newValues.map((value) => {
-          const existingVal = inputValues.objects?.find(
-            (v) => v.value === value.value,
-          );
-          return existingVal
-            ? {
-                ...existingVal,
-                children: [
-                  ...(existingVal?.children ?? []),
-                  ...(value.children ?? []),
-                ],
-              }
-            : value;
-        }) ?? [];
+      const index = isObjectFilter ? 'objects' : property;
+      const currentValues = inputValues[index] ?? [];
+      // Merge all values with the same key. Merge the children
+      const mergedValues = currentValues.map((currentValue) => {
+        const newValue = newValues.find((v) => v.value === currentValue.value);
+        const mergedChildren = [
+          ...(currentValue.children ?? []),
+          ...(newValue?.children ?? []),
+        ];
+        return newValue
+          ? {
+              ...currentValue,
+              children: _.isEmpty(mergedChildren) ? undefined : mergedChildren,
+            }
+          : currentValue;
+      });
+      // Any value that was not merged also needs to be added
+      const nonMergedValues = newValues.filter(
+        (newVal) =>
+          !mergedValues.find((mergedVal) => mergedVal.value === newVal.value),
+      );
+
       return {
         ...inputValues,
-        [isObjectFields ? 'objects' : property]: isObjectFields
-          ? mergedObjects
-          : [
-              ...(inputValues[
-                property === 'objectFilters' ? 'objects' : property
-              ] || []),
-              ...newValues,
-            ],
+        [index]: [...mergedValues, ...nonMergedValues],
       };
     },
     {},
@@ -235,7 +240,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     [activityTags, labels, submissions],
   );
 
-  const input = useMemo(
+  const input = useMemo<InputType>(
     () => mapFilterMapToPropSelectorInput(filterLookupMap, labelsObject),
     [filterLookupMap, labelsObject],
   );
@@ -248,13 +253,11 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     selectSelectedFilterValues(state, formId),
   );
 
-  const [localSelectedValues, setLocalSelectedValues] = useState<{
-    [property: string]: string[];
-  }>(currentlySelectedFilterValues);
+  const [localSelectedValues, setLocalSelectedValues] =
+    useState<TActivityFilterQuery>(currentlySelectedFilterValues);
 
   const [selectedProperty, setSelectedProperty] =
     useState<Selection | null>(null);
-  const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
@@ -291,8 +294,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
       if (!selectedProperty) return availableValues;
       const currentlySelectedValues =
         (selectedProperty.parent
-          ? selectedValues[selectedProperty.parent]?.[selectedProperty.selected]
-          : selectedValues[selectedProperty.selected]) ?? [];
+          ? localSelectedValues[selectedProperty.parent]?.[
+              selectedProperty.selected
+            ]
+          : localSelectedValues[selectedProperty.selected]) ?? [];
       const basicFilteredAvailableValues = availableValues.filter(({ value }) =>
         selectedProperty.parent
           ? !currentlySelectedValues.includes(value)
@@ -319,10 +324,10 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
 
     const getNextSelectedValues = (
       selectedProperty: Selection,
-      currentValues: SelectedValues,
+      currentValues: TActivityFilterQuery,
       selection: Selection,
       add = true,
-    ): SelectedValues => {
+    ): TActivityFilterQuery => {
       const addNewValue = (
         currentValues: (string | Field)[] = [],
         selection: Selection,
@@ -405,12 +410,12 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
 
         const nextSelectedValues = getNextSelectedValues(
           selectedProperty,
-          selectedValues,
+          localSelectedValues,
           selection,
           add,
         );
 
-        setSelectedValues(nextSelectedValues);
+        setLocalSelectedValues(nextSelectedValues);
       };
 
     const getSimplePropName = (prop: string, exceptions: string[] = []) =>
@@ -421,8 +426,18 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
       delimiter = ' > ',
     ) => _.compact(labels).join(delimiter);
 
+    const getLabelFromInput = (val: string, property: string, type: string) => {
+      const value = input?.[property]?.find((v) => v.value === type);
+      return (
+        (value?.children
+          ? value?.children?.find((v) => v.value === val)
+          : value
+        )?.label ?? val
+      );
+    };
+
     const getRenderPayloadForSelectedValues = (
-      selectedValues: SelectedValues,
+      selectedValues: TActivityFilterQuery,
     ) =>
       Object.entries(selectedValues).flatMap(([property, values]) => {
         if (!values) return [];
@@ -431,7 +446,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
               value: [property],
               label: _.startCase(property),
               children: values.flatMap(
-                (simpleValue: string) =>
+                (simpleValue) =>
                   input[property]?.find((v) => v.value === simpleValue) ?? [],
               ),
             }
@@ -468,8 +483,8 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
                       'N/A',
                   ]),
                   children: vals.map((val: string) => ({
-                    label: val,
                     value: val,
+                    label: getLabelFromInput(val, property, type),
                   })),
                 } as TProperty,
               ];
@@ -499,7 +514,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
           title='Available filters'
         />
         <PropertySelector
-          properties={getRenderPayloadForSelectedValues(selectedValues)}
+          properties={getRenderPayloadForSelectedValues(localSelectedValues)}
           onSelect={(selection) => {
             const [property, type, fieldExtId] = selection.parent ?? [];
             handleSelectValue({

@@ -6,18 +6,17 @@ import {
 } from '../../Types/ActivityFilter.interface';
 import { TActivity } from '../../Types/Activity.type';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const filterstate = (state) => state.filters;
-
-type SelectedFilterValues = { [property: string]: string[] };
 
 export const makeSelectSelectedFilterValues = () =>
   createSelector(
     filterstate,
     (_, formId: string) => formId,
-    (filters, formId): SelectedFilterValues => {
-      if (!filters || !formId) return {} as SelectedFilterValues;
-      return filters[formId]?.filterValues ?? ({} as SelectedFilterValues);
+    (filters, formId): TActivityFilterQuery => {
+      if (!filters || !formId) return {} as TActivityFilterQuery;
+      return filters[formId]?.filterValues ?? ({} as TActivityFilterQuery);
     },
   );
 
