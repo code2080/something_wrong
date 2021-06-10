@@ -24,6 +24,7 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import _ from 'lodash';
 
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
@@ -79,9 +80,20 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
+  const sortOrder = useSelector(
+    (state: any) => state?.globalUI?.activitySorting?.[formId]?.sortOrder,
+  );
+
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
+
   const tableDataSource = useMemo(
-    () => Object.values(activities).flat(),
-    [activities],
+    () =>
+      _.compact(
+        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
+          allActivities,
+      ),
+    [allActivities, keyedActivities, sortOrder],
   );
 
   /**
