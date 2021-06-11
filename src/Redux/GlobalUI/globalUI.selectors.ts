@@ -17,9 +17,15 @@ export const selectVisibleColsForDatasourceId = createSelector(
   (uiState) => (datasourceId: string) => uiState.tableViews[datasourceId] || {},
 );
 
-export const makeSelectSortingForActivities = () =>
+export const makeSelectSortParamsForActivities = () =>
   createSelector(
     globalUIState,
     (_, formId: string) => formId,
-    (uiState, formId) => uiState.activitySorting[formId] || null,
+    (uiState, formId) => uiState.activitySorting[formId]?.sortParams || null,
+  );
+export const makeSelectSortOrderForActivities = () =>
+  createSelector(
+    globalUIState,
+    (_, formId: string) => formId,
+    (uiState, formId) => uiState.activitySorting[formId]?.sortOrder || null,
   );

@@ -25,6 +25,8 @@ import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import _ from 'lodash';
+import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
+import { TActivity } from '../../../Types/Activity.type';
 
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
@@ -80,8 +82,13 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
-  const sortOrder = useSelector(
-    (state: any) => state?.globalUI?.activitySorting?.[formId]?.sortOrder,
+  const selectActivitySortingOrder = useMemo(
+    () => makeSelectSortOrderForActivities(),
+    [],
+  );
+
+  const sortOrder = useSelector((state) =>
+    selectActivitySortingOrder(state, formId),
   );
 
   const allActivities = Object.values(activities).flat();
@@ -89,7 +96,7 @@ const ActivitiesPage = () => {
 
   const tableDataSource = useMemo(
     () =>
-      _.compact(
+      _.compact<TActivity>(
         sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
           allActivities,
       ),

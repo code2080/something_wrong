@@ -32,7 +32,7 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import {
-  makeSelectSortingForActivities,
+  makeSelectSortParamsForActivities,
   selectFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
@@ -101,20 +101,25 @@ const FormPage = () => {
   );
 
   // Select sorting
-  const selectActivitySorting = useMemo(
-    () => makeSelectSortingForActivities(),
+  const selectActivityParamSorting = useMemo(
+    () => makeSelectSortParamsForActivities(),
     [],
   );
-  const selectedSorting = useSelector((state) =>
-    selectActivitySorting(state, formId),
+
+  const selectedSortingParams = useSelector((state) =>
+    selectActivityParamSorting(state, formId),
   );
 
   useEffect(
     () =>
       dispatch(
-        fetchActivitiesForForm(formId, selectedFilterValues, selectedSorting),
+        fetchActivitiesForForm(
+          formId,
+          selectedFilterValues,
+          selectedSortingParams,
+        ),
       ),
-    [dispatch, formId, selectedFilterValues, selectedSorting],
+    [dispatch, formId, selectedFilterValues, selectedSortingParams],
   );
 
   useEffect(() => {

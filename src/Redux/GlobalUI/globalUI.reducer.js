@@ -92,13 +92,14 @@ const reducer = (state = initialState, action) => {
       const {
         payload: { formId, columnKey, direction },
       } = action;
+      const key = columnKey;
       return {
         ...state,
         activitySorting: {
           ...state.activitySorting,
           [formId]: {
-            key: columnKey,
-            direction,
+            ...state.activitySorting[formId],
+            sortParams: { key, direction },
           },
         },
       };
