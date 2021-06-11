@@ -45,7 +45,7 @@ const FormInstanceSchedulingStatusProcess = ({
         loading: saving,
       }}
       destroyOnClose
-      title="Set scheduling process"
+      title='Set scheduling process'
     >
       <Form.Item label='Set scheduling process'>
         <Select
