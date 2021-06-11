@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
+
+// ACTIONS
+import {
+  setActivitySorting,
+  resetActivitySorting,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -18,6 +24,9 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import _ from 'lodash';
+import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
+import { TActivity } from '../../../Types/Activity.type';
 
 const calculateAvailableTableHeight = () => {
   return (window as any).tePrefsHeight - 110;
@@ -25,6 +34,7 @@ const calculateAvailableTableHeight = () => {
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch();
 
   /**
    * SELECTORS
@@ -72,9 +82,25 @@ const ActivitiesPage = () => {
     [design, objectRequests],
   );
 
+  const selectActivitySortingOrder = useMemo(
+    () => makeSelectSortOrderForActivities(),
+    [],
+  );
+
+  const sortOrder = useSelector((state) =>
+    selectActivitySortingOrder(state, formId),
+  );
+
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
+
   const tableDataSource = useMemo(
-    () => Object.values(activities).flat(),
-    [activities],
+    () =>
+      _.compact<TActivity>(
+        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
+          allActivities,
+      ),
+    [allActivities, keyedActivities, sortOrder],
   );
 
   /**
@@ -98,6 +124,16 @@ const ActivitiesPage = () => {
     onDeselectAll();
   };
 
+  const onSortActivities = (sorter): void => {
+    if (sorter && sorter.columnKey) {
+      if (sorter.order) {
+        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
+      } else {
+        dispatch(resetActivitySorting(formId));
+      }
+    }
+  };
+
   return (
     <>
       <ActivitiesToolbar
@@ -118,6 +154,7 @@ const ActivitiesPage = () => {
           onChange: (selectedRowKeys) =>
             setSelectedRowKeys(selectedRowKeys as string[]),
         }}
+        onChange={(pagination, filters, sorter) => onSortActivities(sorter)}
       />
     </>
   );

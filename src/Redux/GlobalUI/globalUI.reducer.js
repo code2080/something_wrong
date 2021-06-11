@@ -1,3 +1,4 @@
+import { FETCH_ACTIVITIES_FOR_FORM_SUCCESS } from '../Activities/activities.actionTypes';
 import * as types from './globalUI.actionTypes';
 
 // INITIAL STATE
@@ -87,6 +88,54 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.SET_SORTING_FOR_ACTIVITIES: {
+      const {
+        payload: { formId, columnKey, direction },
+      } = action;
+      const key = columnKey;
+      return {
+        ...state,
+        activitySorting: {
+          ...state.activitySorting,
+          [formId]: {
+            ...state.activitySorting[formId],
+            sortParams: { key, direction },
+          },
+        },
+      };
+    }
+
+    case types.RESET_SORTING_FOR_ACTIVITIES: {
+      const {
+        payload: { formId },
+      } = action;
+      return {
+        ...state,
+        activitySorting: {
+          ...state.activitySorting,
+          [formId]: null,
+        },
+      };
+    }
+
+    case FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
+      const {
+        payload: {
+          activities,
+          actionMeta: { formId },
+        },
+      } = action;
+      return {
+        ...state,
+        activitySorting: {
+          ...state.activitySorting,
+          [formId]: {
+            ...state.activitySorting[formId],
+            sortOrder: activities.map((a) => a._id),
+          },
+        },
+      };
+    }
     default:
       return state;
   }

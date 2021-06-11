@@ -58,13 +58,17 @@ const fetchActivitiesForFormFlow = (formId) => ({
   }),
 });
 
-export const fetchActivitiesForForm = (formId, filter) =>
-  asyncAction.POST({
+export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
+  const sorting = sortingParam;
+  return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
-    params: { filter: _.isEmpty(filter) ? undefined : filter },
+    params: {
+      filter: _.isEmpty(filter) ? undefined : filter,
+      sorting: sorting == null ? undefined : sorting,
+    },
   });
-
+};
 const fetchActivitiesForFormInstanceFlow = {
   request: () => ({ type: FETCH_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST }),
   success: (response) => ({

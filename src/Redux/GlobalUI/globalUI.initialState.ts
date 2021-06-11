@@ -10,4 +10,5 @@ export default {
   selectedFormDetailTab: EFormDetailTabs.SUBMISSIONS,
   selectedFormDetailSubmission: null,
   tabHistory: [],
+  activitySorting: {},
 };
