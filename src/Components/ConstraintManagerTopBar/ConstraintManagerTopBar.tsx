@@ -1,8 +1,9 @@
-import React from 'react';
 import { Select, Button, Typography, Popconfirm } from 'antd';
 
 // STYLES
 import './ConstraintManagerTopBar.scss';
+import { gold } from '@ant-design/colors';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
@@ -16,6 +17,7 @@ type Props = {
   onCreateNew: () => void;
   onDeleteConstraintConfiguration: () => void;
   onSaveConstraintConfiguration: () => void;
+  isSaved: boolean;
 };
 
 const { Paragraph } = Typography;
@@ -29,9 +31,20 @@ const ConstraintManagerTopBar = ({
   selConstrName,
   onDeleteConstraintConfiguration,
   onSaveConstraintConfiguration,
+  isSaved,
 }: Props) => {
+  const warningCol = gold[2];
   return (
-    <div className='constraint-manager-top-bar--wrapper'>
+    <div
+      className='constraint-manager-top-bar--wrapper'
+      style={
+        isSaved
+          ? {}
+          : {
+              backgroundColor: warningCol,
+            }
+      }
+    >
       <div className='constraint-manager-top-bar--selections'>
         <span>Select constraint configuration: </span>
         <Select
@@ -53,6 +66,12 @@ const ConstraintManagerTopBar = ({
         <Button size='small' type='link' onClick={onCreateNew}>
           Create new...
         </Button>
+        {!isSaved && (
+          <span>
+            {' '}
+            <ExclamationCircleOutlined /> You have unsaved changes
+          </span>
+        )}
       </div>
       <div className='constraint-manager-top-bar--buttons'>
         {
@@ -78,7 +97,11 @@ const ConstraintManagerTopBar = ({
         >
           <Button size='small'>Delete</Button>
         </Popconfirm>
-        <Button size='small' onClick={onSaveConstraintConfiguration}>
+        <Button
+          size='small'
+          disabled={isSaved}
+          onClick={onSaveConstraintConfiguration}
+        >
           Save
         </Button>
       </div>

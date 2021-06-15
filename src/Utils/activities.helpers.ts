@@ -11,6 +11,9 @@ import {
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
+import { TFormInstance } from '../Types/FormInstance.type';
+import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 // FUNCTIONS
 /**
@@ -76,6 +79,26 @@ export const validateScheduledActivities = (activities, teCoreAPI) => {
   });
 };
 
+export const hydrateObjectRequests = (
+  activity: TActivity,
+  objectRequests: ObjectRequest[],
+) => {
+  return {
+    ...activity,
+    values: activity.values.map((av: ActivityValue) => ({
+      ...av,
+      value: Array.isArray(av.value)
+        ? av.value
+            .map((val) => {
+              const req = _.find(objectRequests, ['_id', val]);
+              return req ? req.replacementObjectExtId : val;
+            })
+            .filter((val) => val != null)
+        : av.value,
+    })),
+  };
+};
+
 export const activityIsReadOnly = (status) =>
   // TODO: Temporarily disables editing activities until we ensure it works again
   true ||
@@ -87,7 +110,7 @@ const mapActivityValueToTEValue = (
   const { value, type, extId } = activityValue;
   switch (type) {
     case ActivityValueType.FIELD:
-      return new TEField(extId, value as string[]);
+      return new TEField(extId, [value] as string[]);
     case ActivityValueType.OBJECT: {
       // Array means it's an array of objectextids, object means that it's an objectfilter
       return Array.isArray(value)
@@ -106,13 +129,13 @@ const mapActivityValueToTEValue = (
 
 export const extractValuesFromActivityValues = (
   activityValues: ActivityValue[],
-): { fields: TEField[]; objects: [TEObject | TEObjectFilter] } =>
-  _(activityValues)
+): { fields: TEField[]; objects: (TEObject | TEObjectFilter)[] } => {
+  const payload = _(activityValues)
     .filter((av: ActivityValue) => !!av.value)
     .map(mapActivityValueToTEValue)
-    .reduce<any>(
+    .reduce<{ fields: TEField[]; objects: (TEObject | TEObjectFilter)[] }>(
       (
-        payload: { fields: TEField[]; objects: [TEObjectFilter | TEObject] },
+        payload: { fields: TEField[]; objects: (TEObjectFilter | TEObject)[] },
         value: TEField | TEObjectFilter | TEObject[] | null,
       ) => {
         if (value instanceof TEField) {
@@ -128,7 +151,10 @@ export const extractValuesFromActivityValues = (
         } else if (Array.isArray(value)) {
           return {
             ...payload,
-            objects: [...payload.objects, ...value],
+            objects: _.uniqBy(
+              [...payload.objects, ...value.filter((obj) => obj.id != null)],
+              'id',
+            ),
           };
         } else {
           return payload;
@@ -136,6 +162,20 @@ export const extractValuesFromActivityValues = (
       },
       { fields: [], objects: [] },
     );
+  const [objFilters, objects]: [any, any] = _.partition(
+    payload.objects,
+    (obj) => obj instanceof TEObjectFilter,
+  );
+
+  // DEV-8061: Remove all duplicated TEObjects
+  return {
+    ...payload,
+    objects: [
+      ...(objFilters as TEObjectFilter[]),
+      ..._.uniqBy(objects as TEObject[], 'id'),
+    ],
+  };
+};
 
 const getAllExtIdsFromActivityValues = (
   sampleActivity: TActivity,
@@ -222,11 +262,9 @@ const extractValueFromActivity = (
     },
   ] as (ActivityValue & { formId?: string })[];
   // Get all the activity values
-  const values = [
-    ...activity.timing,
-    ...activity.values,
-    ...consts,
-  ].filter((value) => extIds.includes(value.extId));
+  const values = [...activity.timing, ...activity.values, ...consts].filter(
+    (value) => extIds.includes(value.extId),
+  );
   // Produce a non unique ret val
   const retVal = values.reduce<{
     options: { [extid: string]: any[] };
@@ -351,4 +389,71 @@ export const getFilterPropsForActivities = (activities: any) => {
     },
     { options: {}, matches: {} },
   );
+};
+
+const getValuesForActivity = (
+  activity: TActivity,
+  submission: TFormInstance,
+  activityTags: any,
+) => {
+  return activity && submission
+    ? {
+        id: activity._id,
+        submitter: {
+          id: submission.recipientId,
+          label: `${submission.firstName} ${submission.lastName}`,
+        },
+        primaryObject: { id: submission.scopedObject },
+        tag: {
+          id: activity.tagId,
+          label: _.find(activityTags, ['_id', activity.tagId])?.name ?? 'N/A',
+        },
+      }
+    : null;
+};
+
+const mergeSimpleData = (currentSubmissionData, newSubmitter, id: string) => ({
+  ...currentSubmissionData,
+  [newSubmitter.id]: {
+    label: newSubmitter.label,
+    activityIds: [
+      ...(currentSubmissionData?.[newSubmitter.id]?.activityIds || []),
+      id,
+    ],
+  },
+});
+
+const mergeSimpleDataField =
+  (currentData, newData) => (field: 'tag' | 'submitter' | 'primaryObject') => {
+    return mergeSimpleData(currentData[field], newData[field], newData.id);
+  };
+
+export const getFilterLookupMap = (
+  submissions: { [id: string]: TFormInstance },
+  activities: TActivity[],
+  activityTags: any,
+): TFilterLookUpMap => {
+  // Map activities to filter values
+  const filterValues = _.compact(
+    activities.map((activity) =>
+      getValuesForActivity(
+        activity,
+        submissions[activity.formInstanceId],
+        activityTags,
+      ),
+    ),
+  );
+  // Merge the filter values into a lookup map
+  return filterValues.reduce<TFilterLookUpMap>((mergedFilters, filterValue) => {
+    const curriedMergeSimpleDataOfField = mergeSimpleDataField(
+      mergedFilters,
+      filterValue,
+    );
+    return {
+      ...mergedFilters,
+      submitter: curriedMergeSimpleDataOfField('submitter'),
+      tag: curriedMergeSimpleDataOfField('tag'),
+      primaryObject: curriedMergeSimpleDataOfField('primaryObject'),
+    };
+  }, <TFilterLookUpMap>{});
 };

@@ -1,6 +1,8 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
+import last from 'lodash/last';
 import { Button, Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -32,6 +34,7 @@ import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
 import { hasPermission } from '../../../Redux/Auth/auth.selectors';
+import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
 const getConstrOfType = (
   type: string,
   config: TConstraintConfiguration | null,
@@ -68,10 +71,9 @@ const ConstraintManagerPage = () => {
   /**
    * STATE
    */
-  const [constrConf, setConstrConf] = useState<TConstraintConfiguration | null>(
-    null,
-  );
-  const [fields, setFields] = useState<any>();
+  const [localConstrConf, setConstrConf] =
+    useState<TConstraintConfiguration | null>(null);
+  const [fields, setFields] = useState<getFieldIdsReturn>({});
 
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
@@ -81,13 +83,28 @@ const ConstraintManagerPage = () => {
     });
   }, [activityDesign?.objects, tecoreAPI]);
 
+  const [isUnsaved, setIsUnsaved] = useState(false);
+
   useEffect(
     () => {
-      setConstrConf(constrConfs.slice(-1)[0]);
+      setConstrConf(last(constrConfs) || null);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [constrConfs.length],
   );
+
+  useEffect(() => {
+    const currentConstrConf = constrConfs.find(
+      (c) => c._id === localConstrConf?._id,
+    );
+    const configIsChanged = !isEqual(currentConstrConf, localConstrConf);
+    setIsUnsaved(configIsChanged);
+  }, [
+    localConstrConf,
+    localConstrConf?.constraints,
+    localConstrConf?.name,
+    constrConfs,
+  ]);
 
   /**
    * EVENT HANDLERS
@@ -100,20 +117,20 @@ const ConstraintManagerPage = () => {
   };
 
   const handleUpdConstrConfName = (value: string) => {
-    if (!constrConf) return;
+    if (!localConstrConf) return;
     setConstrConf({
-      ...constrConf,
+      ...localConstrConf,
       name: value,
     });
   };
 
   const handleUpdConstrConf = useCallback(
     (constraintId: string, prop: string, value: any): void => {
-      if (!constrConf) return;
-      const { constraints } = constrConf;
+      if (!localConstrConf) return;
+      const { constraints } = localConstrConf;
 
       setConstrConf({
-        ...constrConf,
+        ...localConstrConf,
         constraints: constraints.map((constraintInstance) =>
           constraintInstance.constraintId === constraintId
             ? { ...constraintInstance, [prop]: value }
@@ -121,7 +138,7 @@ const ConstraintManagerPage = () => {
         ),
       });
     },
-    [constrConf],
+    [localConstrConf],
   );
 
   const constraintManagercolumns = useMemo(
@@ -156,47 +173,50 @@ const ConstraintManagerPage = () => {
 
     dispatch(createConstraintConfigurations(newConstrConf));
 
-    if (constrConf) setConstrConf(constrConf[0]);
-  }, [allConstraints, constrConf, dispatch, formId]);
+    if (localConstrConf) setConstrConf(localConstrConf[0]);
+  }, [allConstraints, localConstrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
-    if (!constrConf) return;
-    dispatch(updateConstraintConfiguration(constrConf));
+    if (!localConstrConf) return;
+    dispatch(updateConstraintConfiguration(localConstrConf)).then(
+      setIsUnsaved(false),
+    );
   };
 
   const handleDeleteConstrconf = () => {
-    if (!constrConf || constrConfs.length === 1) return;
-    setConstrConf(constrConf[0]);
-    dispatch(deleteConstraintConfiguration(constrConf));
+    if (!localConstrConf || constrConfs.length === 1) return;
+    setConstrConf(localConstrConf[0]);
+    dispatch(deleteConstraintConfiguration(localConstrConf));
   };
 
   const defaultConstraints = useMemo(
-    () => getConstrOfType('DEFAULT', constrConf, allConstraints),
-    [constrConf, allConstraints],
+    () => getConstrOfType('DEFAULT', localConstrConf, allConstraints),
+    [localConstrConf, allConstraints],
   );
   const customConstraints = useMemo(
-    () => getConstrOfType('OTHER', constrConf, allConstraints),
-    [constrConf, allConstraints],
+    () => getConstrOfType('OTHER', localConstrConf, allConstraints),
+    [localConstrConf, allConstraints],
   );
 
   useEffect(() => {
-    if (_.isEmpty(constrConfs) && !constrConf) handleCreateConstrConf();
-    if (constrConf) setConstrConf(constrConf);
-  }, [constrConfs, constrConf, handleCreateConstrConf]);
+    if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
+    if (localConstrConf) setConstrConf(localConstrConf);
+  }, [constrConfs, localConstrConf, handleCreateConstrConf]);
 
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
         constraintConfigurations={constrConfs}
-        selectedCID={constrConf ? constrConf._id : null}
-        selConstrName={constrConf ? constrConf.name : null}
+        selectedCID={localConstrConf ? localConstrConf._id : null}
+        selConstrName={localConstrConf ? localConstrConf.name : null}
         onSelect={handleSelectConstrConf}
         onCreateNew={handleCreateConstrConf}
         onSaveConstraintConfiguration={handleSaveConstrConf}
         onUpdConstrConfName={handleUpdConstrConfName}
         onDeleteConstraintConfiguration={handleDeleteConstrconf}
+        isSaved={!isUnsaved}
       />
-      {constrConf && (
+      {localConstrConf && (
         <Collapse defaultActiveKey={['DEFAULT', 'CUSTOM']} bordered={false}>
           <Collapse.Panel key='DEFAULT' header='Default constraints'>
             <Table

@@ -215,13 +215,15 @@ const DynamicTableHOC = ({
     () => shouldShowFilterBar(showFilter, onSearch, _cols),
     [showFilter, onSearch, _cols],
   );
-  const _tableComponents = useMemo(() => getTableComponents(draggable), [
-    draggable,
-  ]);
+  const _tableComponents = useMemo(
+    () => getTableComponents(draggable),
+    [draggable],
+  );
 
-  const otherProps = useMemo(() => (rowSelection ? { rowSelection } : {}), [
-    rowSelection,
-  ]);
+  const otherProps = useMemo(
+    () => (rowSelection ? { rowSelection } : {}),
+    [rowSelection],
+  );
 
   return (
     <div className={`${className || ''} dynamic-table--wrapper`}>

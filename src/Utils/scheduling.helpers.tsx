@@ -4,7 +4,10 @@ import _ from 'lodash';
 // HELPERS
 import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import { validateTiming, validateValue } from './activityValues.validation';
-import { getTimingModeForActivity } from './activities.helpers';
+import {
+  getTimingModeForActivity,
+  hydrateObjectRequests,
+} from './activities.helpers';
 
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
@@ -22,6 +25,8 @@ import {
 } from '../Constants/activityStatuses.constants';
 import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
+import { TActivity } from '../Types/Activity.type';
 
 /**
  * @function createSchedulingReturns
@@ -80,27 +85,6 @@ export const determineSchedulingAlgorithmForActivityValue = (
    */
   return schedulingAlgorithms.EXACT;
 };
-
-/**
- * @function parseTECoreResultToScheduleReturn
- * @description transform a single TECoreSchedulingReturn into PIC native SchedulingReturn
- * @param {Object<TECoreAPISchedulingReturn>} teCoreReturn unprocessed return from TE Core
- * @returns SchedulingReturn
- */
-const parseTECoreResultToScheduleReturn = (teCoreReturn) =>
-  new SchedulingReturn({
-    status:
-      teCoreReturn.failures.length === 0
-        ? activityStatuses.SCHEDULED
-        : activityStatuses.FAILED,
-    reservationId: teCoreReturn.newIds[0],
-    errorCode: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.references[0]
-      : 0,
-    errorMessage: teCoreReturn.failures[0]
-      ? teCoreReturn.failures[0].result.reservation
-      : '',
-  });
 
 const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
   teCoreReturns.map((el) => {
@@ -178,58 +162,22 @@ const getBindingSchedulingAlgorithm = (activities) => {
   return schedulingAlgorithms.BEST_FIT_TIME;
 };
 
-export const scheduleActivity = async (
-  activity,
-  teCoreScheduleFn,
-  callback,
-) => {
-  // Validate the activity
-  if (!validateActivity(activity)) {
-    return new SchedulingReturn({
-      status: activityStatuses.VALIDATION_ERROR,
-      errorCode: activityStatuses.VALIDATION_ERROR,
-      errorMessage:
-        activityStatusProps[activityStatuses.VALIDATION_ERROR].label,
-    });
-  }
-  const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(activity);
-
-  // Special case: EVERTHING is schedulingAlgorithms.EXACT
-  if (schedulingAlgorithm === schedulingAlgorithms.EXACT) {
-    const reservation = formatActivityForExactScheduling(activity);
-    return teCoreScheduleFn({
-      reservation,
-      callback: (teCoreResult) =>
-        callback(parseTECoreResultToScheduleReturn(teCoreResult)),
-    });
-  }
-
-  return window.tePrefsLibStore.dispatch(
-    createJob({
-      activities: [activity],
-      type: schedulingAlgorithm,
-      formId: activity.formId,
-      formInstanceIds: [activity.formInstanceId],
-      callback,
-      meta: { schedulingMode: schedulingModes.SINGLE },
-    }),
-  );
-};
-
 export const scheduleActivities = (
-  activities,
+  activities: any[],
   formType,
   reservationMode,
   teCoreScheduleFn,
   cFn,
+  objRequests: ObjectRequest[],
 ) => {
   // Preprocess all activities
+
   const preprocessingMap = activities
     .map((a) => {
       const validates = validateActivity(a);
       return {
-        activity: a,
-        activityId: a._id,
+        activity: hydrateObjectRequests(a, objRequests) as TActivity,
+        activityId: a._id as string,
         validates,
         result: validates
           ? null
@@ -242,7 +190,8 @@ export const scheduleActivities = (
       };
     })
     .map((a) => {
-      if (!a.validates) return a;
+      if (!a.validates)
+        return { ...a, schedulingAlgorithm: null, reservation: null };
       const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(
         a.activity,
       );
@@ -256,7 +205,6 @@ export const scheduleActivities = (
             : null,
       };
     });
-
   // filter invalidate activities
   const [noResultActivities, validatedActivities] = _.partition(
     preprocessingMap,
@@ -296,7 +244,7 @@ export const scheduleActivities = (
   const a = preprocessingMap.filter((a) => a.validates).map((a) => a.activity);
   return (
     a.length &&
-    window.tePrefsLibStore.dispatch(
+    (window as any).tePrefsLibStore.dispatch(
       createJob({
         activities: a,
         type: getBindingSchedulingAlgorithm(a),
@@ -307,41 +255,6 @@ export const scheduleActivities = (
       }),
     )
   );
-};
-
-/**
- * @function updateActivityWithSchedulingResult
- * @description create a new activity with the result of a scheduling return
- * @param {Object<Activity>} activity the original activity
- * @param {Object<SchedulingReturn>} schedulingReturn the scheduling return
- */
-
-export const updateActivityWithSchedulingResult = (
-  activity,
-  schedulingReturn,
-) => {
-  const {
-    status: activityStatus,
-    reservationId,
-    errorCode,
-    errorMessage,
-  } = schedulingReturn;
-
-  let errorDetails = null;
-  if (activityStatus === activityStatuses.FAILED) {
-    errorDetails = new SchedulingError({
-      message: errorMessage,
-      code: errorCode,
-    });
-  }
-
-  return {
-    ...activity,
-    activityStatus,
-    reservationId,
-    errorDetails,
-    schedulingTimestamp: moment.utc(),
-  };
 };
 
 export const updateActivitiesWithSchedulingResults = (
@@ -360,14 +273,13 @@ export const updateActivitiesWithSchedulingResults = (
       },
     } = response;
 
-    let errorDetails = null;
-    if (activityStatus === activityStatuses.FAILED) {
-      errorDetails = new SchedulingError({
-        message: errorMessage,
-        code: errorCode,
-      });
-    }
-
+    const errorDetails =
+      activityStatus === activityStatuses.FAILED
+        ? new SchedulingError({
+            message: errorMessage,
+            code: errorCode,
+          })
+        : null;
     return {
       ...a,
       activityStatus,

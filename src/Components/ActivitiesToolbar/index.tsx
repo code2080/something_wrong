@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
+import { makeSelectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // COMPONENTS
@@ -18,6 +18,7 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
+import { useMemo } from 'react';
 
 type Props = {
   selectedRowKeys: string[];
@@ -41,9 +42,15 @@ const ActivitiesToolbar = ({
   allActivities,
 }: Props) => {
   const { formId }: { formId: string } = useParams();
-  const activities: TActivity[] = useSelector(selectActivitiesForFormAndIds)(
-    formId,
-    selectedRowKeys,
+  const selectActivitiesForFormAndIds = useMemo(
+    () => makeSelectActivitiesForFormAndIds(),
+    [],
+  );
+  const activities: TActivity[] = useSelector((state) =>
+    selectActivitiesForFormAndIds(state, {
+      formId,
+      activityIds: selectedRowKeys,
+    }),
   );
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
@@ -70,7 +77,7 @@ const ActivitiesToolbar = ({
         onClick={() => onScheduleActivities(activities)}
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
-        Schedule seletected activities
+        Schedule selected activities
       </Button>
       <Button
         size='small'

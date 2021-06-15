@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
+import styles from './ObjectRequestDropdown.module.scss';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -22,6 +23,9 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+import { closeAllDropdown } from '../../../Utils/dom.helper';
+import ObjectRequestValue from '../ObjectRequestValue';
+import { DownOutlined } from '@ant-design/icons';
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();
@@ -37,21 +41,28 @@ const ObjectRequestDropdown = ({ request, children }) => {
     showDetails,
   }) => (
     <Menu
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      onClick={objectRequestOnClick({
-        dispatch,
-        teCoreAPI,
-        coreCallback,
-        request,
-        spotlightRef,
-        showDetails,
-      })}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
+      onClick={(e) => {
+        closeAllDropdown();
+        objectRequestOnClick({
+          dispatch,
+          teCoreAPI,
+          coreCallback,
+          request,
+          spotlightRef,
+          showDetails,
+        })(e);
+      }}
     >
       <span style={{ padding: '5px 12px', cursor: 'default' }}>
         Execute request...
       </span>
       <Menu.Divider />
-      {_.flatMap(objectRequestActions).reduce(
+      {_.flatMap(objectRequestActions as { [ACTION: string]: string }).reduce<
+        any[]
+      >(
         (items, action) =>
           objectRequestActionCondition(request)[action]
             ? [
@@ -67,28 +78,33 @@ const ObjectRequestDropdown = ({ request, children }) => {
     </Menu>
   );
 
-  const onHandledObjectRequest = (request) => (action) => (response = {}) => {
-    dispatch(setExternalAction(null));
-    if (!response || !request) {
-      // api call failed (or was cancelled)
-      return;
-    }
-    const { extid, fields } = response;
+  const onHandledObjectRequest =
+    (request) =>
+    (action) =>
+    (response: any = {}) => {
+      dispatch(setExternalAction(null));
+      if (!response || !request) {
+        // api call failed (or was cancelled)
+        return;
+      }
+      const { extid, fields } = response;
 
-    const updatedObjectRequest = {
-      ...request,
-      replacementObjectExtId: extid,
-      status: objectRequestActionToStatus[action] || request.status,
+      const updatedObjectRequest = {
+        ...request,
+        replacementObjectExtId: extid,
+        status: objectRequestActionToStatus[action] || request.status,
+      };
+
+      const label = fields[0].values[0];
+      dispatch(setExtIdPropsForObject(extid, { label }));
+      updateObjectRequest(updatedObjectRequest)(dispatch);
     };
-
-    const label = fields[0].values[0];
-    dispatch(setExtIdPropsForObject(extid, { label }));
-    updateObjectRequest(updatedObjectRequest)(dispatch);
-  };
 
   return (
     <Dropdown
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       overlay={objectRequestDropdownMenu({
         coreCallback: onHandledObjectRequest(request),
         request,
@@ -105,7 +121,14 @@ const ObjectRequestDropdown = ({ request, children }) => {
       }
     >
       <div className='dd-trigger' ref={spotlightRef}>
-        {children}
+        {children || (
+          <div
+            className={`element__datasource--inner ${styles.dataSourceInner}`}
+          >
+            <ObjectRequestValue request={request} />
+            <DownOutlined />
+          </div>
+        )}
         <ObjectRequestModal
           onClose={() => setDetailsModalVisible(false)}
           request={request}

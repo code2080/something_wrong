@@ -12,7 +12,6 @@ import {
 } from '../../../../Constants/activityTimeModes.constants';
 import TimingNameMap from '../../../../Constants/activityDesignTimingMap.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
-import { sortByElementHtml } from '../../../../Utils/sorting.helpers';
 
 const timingCols = {
   mode: (mapping) => ({
@@ -31,9 +30,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(`.mode_${a._id}`, `.mode_${b._id}`);
-    },
+    sorter: true,
   }),
   startTimeExact: (mapping) => ({
     title: 'Start time',
@@ -51,9 +48,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(`.startTime_${a._id}`, `.startTime_${b._id}`);
-    },
+    sorter: true,
   }),
   endTimeExact: (mapping) => ({
     title: 'End time',
@@ -71,9 +66,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(`.endTime_${a._id}`, `.endTime_${b._id}`);
-    },
+    sorter: true,
   }),
   startTimeTimeslots: (mapping) => ({
     title: 'Start after or at:',
@@ -91,12 +84,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(
-        `.startTimeOrAt_${a._id}`,
-        `.startTimeOrAt_${b._id}`,
-      );
-    },
+    sorter: true,
   }),
   endTimeTimeslots: (mapping) => ({
     title: 'End before or at:',
@@ -114,12 +102,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => {
-      return sortByElementHtml(
-        `.endTimeOrAt_${a._id}`,
-        `.endTimeOrAt_${b._id}`,
-      );
-    },
+    sorter: true,
   }),
   length: (mapping) => ({
     title: 'Length',
@@ -136,7 +119,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => sortByElementHtml(`.length_${a._id}`, `.length_${b._id}`),
+    sorter: true,
   }),
   padding: (mapping) => ({
     title: 'Padding',
@@ -153,8 +136,6 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) =>
-      sortByElementHtml(`.padding_${a._id}`, `.padding_${b._id}`),
   }),
   weekday: (mapping) => ({
     title: 'Weekday',
@@ -171,8 +152,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) =>
-      sortByElementHtml(`.weekday_${a._id}`, `.weekday_${b._id}`),
+    sorter: true,
   }),
   dateRanges: (mapping) => ({
     title: 'Date ranges',
@@ -189,8 +169,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) =>
-      sortByElementHtml(`.dateRanges_${a._id}`, `.dateRanges_${b._id}`),
+    sorter: true,
   }),
   time: (mapping) => ({
     title: 'Exact time',
@@ -207,7 +186,7 @@ const timingCols = {
         />
       </SortableTableCell>
     ),
-    sorter: (a, b) => sortByElementHtml(`.time_${a._id}`, `.time_${b._id}`),
+    sorter: true,
   }),
 };
 
@@ -226,6 +205,8 @@ export const TimingColumns = {
     const mappedKeys = Object.keys(timing).filter(
       (key) => timing[key] && timing[key].length && key !== 'mode',
     );
-    return mappedKeys.map((key) => timingCols[key](mapping));
+    return mappedKeys
+      .map((key) => timingCols?.[key]?.(mapping))
+      .filter(Boolean);
   },
 };

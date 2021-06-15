@@ -12,7 +12,7 @@ import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPa
 import { getSectionsForObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { selectSectionDesign } from '../../../Redux/Forms/forms.selectors';
-import {
+import ObjectRequestValue, {
   ObjectRequestStatusIcon,
   ObjectRequestType,
   ObjectRequestLabel,
@@ -26,7 +26,7 @@ import {
 } from '../../../Constants/ObjectRequest.constants';
 
 // UTILS
-import { LabelRenderer } from '../../../Utils/rendering.helpers';
+import LabelRenderer from '../../../Utils/LabelRenderer';
 import { ObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.types';
 import { sortAlpha } from '../../../Components/TableColumns/Helpers/_sorters';
 
@@ -45,7 +45,7 @@ const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
   return sectionName;
 };
 
-const objReqColumns: ColumnType<any>[] = [
+const objReqColumns = (objReqs: ObjectRequest[]): ColumnType<any>[] => [
   {
     title: 'Status',
     key: 'status',
@@ -72,9 +72,14 @@ const objReqColumns: ColumnType<any>[] = [
     dataIndex: 'scopedObject',
     sorter: (a: ObjectRequest, b: ObjectRequest) =>
       sortAlpha(a.scopedObject, b.scopedObject),
-    render: (scopedObject: string) => (
-      <LabelRenderer extId={scopedObject} type='objects' />
-    ),
+    render: (primaryObject: string) => {
+      const req = objReqs.find((request) => request._id === primaryObject);
+      return req ? (
+        <ObjectRequestValue request={req} />
+      ) : (
+        <LabelRenderer extId={primaryObject} type='objects' />
+      );
+    },
   },
   {
     title: 'Section',
@@ -168,7 +173,7 @@ const ObjectRequestsPage = () => {
   const requests = useSelector(selectFormObjectRequest(formId));
   return (
     <DynamicTable
-      columns={objReqColumns}
+      columns={objReqColumns(requests)}
       dataSource={requests}
       datasourceId={`OBJREQS_${formId}`}
       rowKey='_id'

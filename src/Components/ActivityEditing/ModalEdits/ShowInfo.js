@@ -18,10 +18,10 @@ import {
 } from '../../../Constants/activityStatuses.constants';
 
 const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
-  const component = useMemo(() => renderComponent(activityValue, activity), [
-    activity,
-    activityValue,
-  ]);
+  const component = useMemo(
+    () => renderComponent(activityValue, activity),
+    [activity, activityValue],
+  );
   const renderedSubmissionValue = useMemo(
     () =>
       renderSubmissionValue(
@@ -77,6 +77,7 @@ const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
             <div
               key='el-0'
               className='base-activity-col__modal--submission-value'
+              style={{ wordBreak: 'break-all' }}
             >
               {JSON.stringify(renderedSubmissionValue)}
             </div>

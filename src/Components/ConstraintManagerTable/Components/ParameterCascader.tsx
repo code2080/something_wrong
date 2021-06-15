@@ -1,6 +1,7 @@
-// import { Select } from 'antd';
+import { Select, Cascader } from 'antd';
+import { staticDesignObj } from '../static_params';
 
-// const { Option } = Select;
+const { Option } = Select;
 
 type Props = {
   paramFields: any;
@@ -13,42 +14,48 @@ const ParameterCascader = ({
   availableOperators,
   activityDesignObj,
 }: Props) => {
-  // To be implemented
-  console.log(paramFields, activityDesignObj, availableOperators);
+  console.log({ activityDesignObj });
+  const options = Object.keys(staticDesignObj).map((objField) => ({
+    value: objField,
+    label: objField,
+    children: Object.keys(
+      paramFields[objField] ?? { [objField]: objField },
+    ).map((field) => ({
+      value: field,
+      label: field,
+    })),
+  }));
 
   return (
-    <div></div>
-    // <div>
-    //   <Cascader
-    //     options={options}
-    //     size='small'
-    //     getPopupContainer={() =>
-    //       document.getElementById('te-prefs-lib') as HTMLElement
-    //     }
-    //   />
-    //   {' '}
-    //   <Select
-    //     placeholder='Operator'
-    //     size='small'
-    //     getPopupContainer={() =>
-    //       document.getElementById('te-prefs-lib') as HTMLElement
-    //     }
-    //   >
-    //       {availableOperators.map((operator) => (
-    //           <Option key={operator} value={operator}>
-    //               {operator}
-    //           </Option>
-    //       ))}
-    //   </Select>
-    //   {' '}
-    //   <Cascader
-    //     options={options}
-    //     size='small'
-    //     getPopupContainer={() =>
-    //       document.getElementById('te-prefs-lib') as HTMLElement
-    //     }
-    //   />
-    // </div>
+    <div>
+      <Cascader
+        options={options}
+        size='small'
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+      />{' '}
+      <Select
+        placeholder='Operator'
+        size='small'
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+      >
+        {availableOperators.map((operator) => (
+          <Option key={operator} value={operator}>
+            {operator}
+          </Option>
+        ))}
+      </Select>{' '}
+      <Cascader
+        options={options}
+        size='small'
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+      />
+    </div>
   );
 };
 

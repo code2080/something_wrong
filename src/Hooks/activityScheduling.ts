@@ -10,7 +10,6 @@ import {
 import { updateActivities } from '../Redux/Activities/activities.actions';
 
 // CONSTANTS
-import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 
@@ -26,6 +25,7 @@ import { EActivityStatus } from '../Types/ActivityStatus.enum';
 
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
+import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 type Props = {
   formType: string;
@@ -39,11 +39,13 @@ const useActivityScheduling = ({
 }: Props) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
-  const indexedFormInstances = useMemo(() => keyBy(submissions, '_id'), [
-    submissions,
-  ]);
+  const indexedFormInstances = useMemo(
+    () => keyBy(submissions, '_id'),
+    [submissions],
+  );
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],
@@ -89,9 +91,7 @@ const useActivityScheduling = ({
 
   const handleScheduleActivities = async (activities) => {
     const groupedActivities = groupBy(
-      activities.filter(
-        (activity) => activity.activityStatus !== activityStatuses.SCHEDULED,
-      ),
+      activities,
       ({ formInstanceId }) => formInstanceId,
     );
     openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
@@ -119,6 +119,7 @@ const useActivityScheduling = ({
                 );
                 resolve(null);
               },
+              objectRequests,
             );
           });
         }),

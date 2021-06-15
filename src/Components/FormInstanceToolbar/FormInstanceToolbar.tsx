@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
 import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
+import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // STYLES
 import '../../Styles/Toolbar.scss';
@@ -16,24 +17,27 @@ import {
 import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
 import useFormInstanceSchedulingProcessModal from '../Modals/useFormInstanceSchedulingProcessModal';
 import useFormInstanceAcceptanceStatusModal from '../Modals/useFormInstanceAcceptanceStatusModal';
+import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { useMemo } from 'react';
+import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 
-const mapStateToProps = (state, ownProps) => {
-  const { formId, formInstanceId } = ownProps;
-  return {
-    formInstance: state.submissions[formId][formInstanceId],
-    formType: state.forms[formId].formType,
-  };
-};
+const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const selectForm = useMemo(() => makeSelectForm(), []);
 
-const FormInstanceToolbar = ({ formInstance, formType }) => {
-  const [
-    SchedulingStatusProcessModal,
-    openSchedulingStatusProcessModal,
-  ] = useFormInstanceSchedulingProcessModal();
-  const [
-    AcceptanceStatusProcessModal,
-    openAcceptanceStatusProcessModal,
-  ] = useFormInstanceAcceptanceStatusModal();
+  const formInstance = useSelector((state) =>
+    selectFormInstance(state, { formId, formInstanceId }),
+  );
+  const { formType } = useSelector((state) => selectForm(state, formId));
+
+  const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] =
+    useFormInstanceSchedulingProcessModal();
+  const [AcceptanceStatusProcessModal, openAcceptanceStatusProcessModal] =
+    useFormInstanceAcceptanceStatusModal();
+  const request = objectRequests.find(
+    (request: any) => request._id === formInstance.scopedObject,
+  );
+
   return (
     <div className='toolbar--wrapper'>
       <div className='toolbar--section-flex'>
@@ -42,7 +46,11 @@ const FormInstanceToolbar = ({ formInstance, formType }) => {
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Primary object:</span>
-        <ScopedObject objectExtId={formInstance.scopedObject} />
+        {request ? (
+          <ObjectRequestDropdown request={request} />
+        ) : (
+          <ScopedObject objectExtId={formInstance.scopedObject} />
+        )}
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Form type:</span>
@@ -116,8 +124,9 @@ const FormInstanceToolbar = ({ formInstance, formType }) => {
 };
 
 FormInstanceToolbar.propTypes = {
-  formInstance: PropTypes.object.isRequired,
-  formType: PropTypes.string.isRequired,
+  formInstanceId: PropTypes.string.isRequired,
+  formId: PropTypes.string.isRequired,
+  objectRequests: PropTypes.array,
 };
 
-export default connect(mapStateToProps, null)(FormInstanceToolbar);
+export default FormInstanceToolbar;

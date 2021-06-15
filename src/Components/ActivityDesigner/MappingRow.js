@@ -105,15 +105,14 @@ const MappingRow = ({
           disabled={disabled}
         />
       </div>
-      <div className='object-mapping-row--delete'>
-        <Button
-          disabled={disabled}
-          size='small'
-          type='link'
-          icon={<DeleteOutlined />}
-          onClick={onRemoveTEProp}
-        />
-      </div>
+      <Button
+        disabled={disabled}
+        size='small'
+        type='link'
+        danger
+        icon={<DeleteOutlined />}
+        onClick={onRemoveTEProp}
+      />
     </div>
   );
 };

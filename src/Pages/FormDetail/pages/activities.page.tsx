@@ -1,55 +1,39 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useVT } from 'virtualizedtableforantd4';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
-import { Table } from 'antd';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
-import ColumnHeader from '../../../Components/ActivitiesTableColumns/new/ColumnHeader';
+
+// ACTIONS
+import {
+  setActivitySorting,
+  resetActivitySorting,
+} from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
-
-// ACTIONS
-import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
-
-const getActivityDataSource = (activities = {}, visibleActivities) => {
-  // Order by formInstanceId and then sequenceIdx or idx
-  return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId].filter((el) => {
-      if (visibleActivities === 'ALL') return true;
-      return visibleActivities.indexOf(el._id) > -1;
-    });
-    const orderedFormInstanceActivities = _.orderBy(
-      formInstanceActivities,
-      ['sequenceIdx'],
-      ['asc'],
-    );
-    return [...a, ...orderedFormInstanceActivities];
-  }, []);
-};
+import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import _ from 'lodash';
+import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
+import { TActivity } from '../../../Types/Activity.type';
 
 const calculateAvailableTableHeight = () => {
-  const el = document.getElementById('te-prefs-lib');
-  const height = el.clientHeight;
-  return height - 110;
+  return (window as any).tePrefsHeight - 110;
 };
 
 const ActivitiesPage = () => {
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
 
   /**
@@ -62,18 +46,19 @@ const ActivitiesPage = () => {
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
+
   const design = useSelector(selectDesignForForm)(formId);
-  const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
-  );
-  const [formType, reservationMode] = useSelector((state) => {
+  ) as boolean;
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
 
   useEffect(() => {
-    getExtIdsFromActivities(activities);
+    getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
   /**
    * HOOKS
@@ -86,33 +71,42 @@ const ActivitiesPage = () => {
 
   const [yScroll] = useState(calculateAvailableTableHeight());
 
-  const [virtualTable] = useVT(
-    () => ({ scroll: { y: yScroll }, overscanRowCount: 30 }),
-    [],
-  );
-
   /**
    * MEMOIZED PROPS
    */
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
+        : [],
+    [design, objectRequests],
   );
+
+  const selectActivitySortingOrder = useMemo(
+    () => makeSelectSortOrderForActivities(),
+    [],
+  );
+
+  const sortOrder = useSelector((state) =>
+    selectActivitySortingOrder(state, formId),
+  );
+
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
 
   const tableDataSource = useMemo(
-    () => getActivityDataSource(activities, visibleActivities),
-    [activities, visibleActivities],
+    () =>
+      _.compact<TActivity>(
+        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
+          allActivities,
+      ),
+    [allActivities, keyedActivities, sortOrder],
   );
-
-  useEffect(() => {
-    const { options, matches } = getFilterPropsForActivities(activities);
-    dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  }, [activities, dispatch, formId]);
 
   /**
    * STATE
    */
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   /**
    * EVENT HANDLERS
@@ -125,19 +119,19 @@ const ActivitiesPage = () => {
     setSelectedRowKeys([]);
   };
 
-  const tableComponents = useMemo(
-    () => ({
-      ...virtualTable,
-      header: {
-        cell: ColumnHeader,
-      },
-    }),
-    [virtualTable],
-  );
-
   const onScheduleActivities = async (activities) => {
     await handleScheduleActivities(activities);
     onDeselectAll();
+  };
+
+  const onSortActivities = (sorter): void => {
+    if (sorter && sorter.columnKey) {
+      if (sorter.order) {
+        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
+      } else {
+        dispatch(resetActivitySorting(formId));
+      }
+    }
   };
 
   return (
@@ -149,18 +143,18 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
-      <Table
+      <VirtualTable
         scroll={{ y: yScroll }}
-        components={tableComponents}
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
-        loading={isLoading && (activities || []).length === 0}
+        loading={isLoading && !activities?.length}
         rowSelection={{
           selectedRowKeys,
-          onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
+          onChange: (selectedRowKeys) =>
+            setSelectedRowKeys(selectedRowKeys as string[]),
         }}
-        pagination={false}
+        onChange={(pagination, filters, sorter) => onSortActivities(sorter)}
       />
     </>
   );

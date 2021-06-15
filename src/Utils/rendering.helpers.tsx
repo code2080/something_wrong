@@ -1,14 +1,10 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
+import styles from '../Styles/requestStyle.module.scss';
 
 // HELPERS
 import { getElementTypeFromId } from './elements.helpers';
 import { sortByElementHtml } from './sorting.helpers';
-
-// HOOKS
-import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
 
 // COMPONENTS
 import Datasource from '../Components/Elements/Datasource';
@@ -24,6 +20,7 @@ import Padding from '../Components/Elements/Padding';
 // import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
+import LabelRenderer from './LabelRenderer';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -35,6 +32,8 @@ import {
 } from '../Constants/sectionTypes.constants';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import { getLocalDate } from './moment.helpers';
+import ObjectRequestDropdown from '../Components/Elements/DatasourceInner/ObjectRequestDropdown';
+import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 
 const unformattedValue = (value) => (
   <div
@@ -54,7 +53,7 @@ const connectedSectionColumns = {
       key: 'startTime',
       dataIndex: 'startTime',
       fixedWidth: 130,
-      render: (val, item = {}) => (
+      render: (val, item: any) => (
         <SortableTableCell className={`startTime_${item.rowKey}`}>
           <DateTime value={val} format={DATE_TIME_FORMAT} />
         </SortableTableCell>
@@ -71,7 +70,7 @@ const connectedSectionColumns = {
       key: 'endTime',
       dataIndex: 'endTime',
       fixedWidth: 80,
-      render: (val, item = {}) => (
+      render: (val, item: any) => (
         <SortableTableCell className={`endTime_${item.rowKey}`}>
           <DateTime value={val} format={TIME_FORMAT} />
         </SortableTableCell>
@@ -84,12 +83,72 @@ const connectedSectionColumns = {
       },
     },
   ],
+
+  TEMPLATES: (section, objectRequests: ObjectRequest[] = []) =>
+    section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'templateVal',
+            render: (templateValue) => {
+              if (!templateValue) return null;
+              const request = objectRequests.find(
+                (request) => request._id === templateValue,
+              );
+              return request ? (
+                <ObjectRequestDropdown request={request} key={request._id} />
+              ) : (
+                <LabelRenderer
+                  extId={templateValue}
+                  key={templateValue}
+                  type='objects'
+                />
+              );
+            },
+          },
+        ]
+      : [],
+  GROUPS: (section, objectRequests: ObjectRequest[] = []) => {
+    return section?.datasource
+      ? [
+          {
+            title: <LabelRenderer extId={section.datasource} type='types' />,
+            key: section._id,
+            dataIndex: 'groupVal',
+            render: (groupValue) => {
+              if (groupValue && !_.isEmpty(objectRequests))
+                return (
+                  <div className={`group-request ${styles.requestStyle}`}>
+                    {groupValue &&
+                      groupValue.map((groupVal) => {
+                        const req = objectRequests.find(
+                          (request) => request._id === groupVal,
+                        );
+                        return req ? (
+                          <ObjectRequestDropdown request={req} key={req._id} />
+                        ) : (
+                          <LabelRenderer
+                            extId={groupVal}
+                            key={groupVal}
+                            type='objects'
+                          />
+                        );
+                      })}{' '}
+                  </div>
+                );
+            },
+          },
+        ]
+      : [];
+  },
+
   TIMESLOT: (timeslots) => [
     {
       title: 'Timeslot',
       key: 'timeslot',
       dataIndex: null,
-      render: (event, item = {}) => (
+      render: (event, item: any) => (
         <SortableTableCell className={`timeslot_${item.rowKey}`}>
           <TimeSlotColumn event={event} timeslots={timeslots} />
         </SortableTableCell>
@@ -102,6 +161,7 @@ const connectedSectionColumns = {
       },
     },
   ],
+
   SCHEDULING: (_sectionId, _formInstanceId, _formId) => [], // TODO: Reenable this after we've built support for new data format
   // [
   //   {
@@ -120,6 +180,10 @@ const connectedSectionColumns = {
   //     ),
   //   },
   // ],
+};
+
+const invalidIndex = (index) => {
+  return index === -1;
 };
 
 /**
@@ -181,7 +245,7 @@ export const renderElementValue = (value, element) => {
 
     case elementTypes.ELEMENT_TYPE_WEEK_PICKER:
       if (!value || !value.startTime) return null;
-      return getLocalDate(value).format('[Week] w / gggg');
+      return getLocalDate(value).format('[Week] W / gggg');
 
     case elementTypes.ELEMENT_TYPE_PADDING:
       return <Padding value={value} element={element} />;
@@ -226,6 +290,7 @@ export const transformSectionToTableColumns = (
   sectionType,
   formInstanceId,
   formId,
+  objectRequests,
 ) => {
   const _elementColumns = section.elements.reduce(
     (cols, el) =>
@@ -237,7 +302,7 @@ export const transformSectionToTableColumns = (
               title: el.label,
               key: el._id,
               dataIndex: el._id,
-              render: (value, item = {}) => (
+              render: (value, item: any) => (
                 <SortableTableCell
                   className={`element_${el._id}_${item.rowKey}`}
                 >
@@ -268,9 +333,18 @@ export const transformSectionToTableColumns = (
           ...connectedSectionColumns.TIMESLOT(
             section.calendarSettings.timeslots,
           ),
+          ...connectedSectionColumns.TEMPLATES(
+            section.activityTemplatesSettings,
+            objectRequests,
+          ),
+          ...connectedSectionColumns.GROUPS(
+            section.groupManagementSettings,
+            objectRequests,
+          ),
           ..._elementColumns,
         ];
       }
+
       return [
         ...connectedSectionColumns.SCHEDULING(
           section._id,
@@ -278,6 +352,14 @@ export const transformSectionToTableColumns = (
           formId,
         ),
         ...connectedSectionColumns.TIMEINFO,
+        ...connectedSectionColumns.TEMPLATES(
+          section.activityTemplatesSettings,
+          objectRequests,
+        ),
+        ...connectedSectionColumns.GROUPS(
+          section.groupManagementSettings,
+          objectRequests,
+        ),
         ..._elementColumns,
       ];
     }
@@ -288,6 +370,14 @@ export const transformSectionToTableColumns = (
           section._id,
           formInstanceId,
           formId,
+        ),
+        ...connectedSectionColumns.TEMPLATES(
+          section.activityTemplatesSettings,
+          objectRequests,
+        ),
+        ...connectedSectionColumns.GROUPS(
+          section.groupManagementSettings,
+          objectRequests,
         ),
         ..._elementColumns,
       ];
@@ -321,7 +411,7 @@ const transformVerticalSectionValuesToTableRows = (
       return data;
     // Find the element idx
     const elementIdx = values.findIndex((el) => el.elementId === col.dataIndex);
-    if (elementIdx === -1) return data;
+    if (invalidIndex(elementIdx)) return data;
     return { ...data, [col.dataIndex]: values[elementIdx].value };
   }, {});
   return [{ ..._data, rowKey: sectionId }];
@@ -348,13 +438,16 @@ const transformConnectedSectionValuesToTableRows = (values, columns) => {
       const elementIdx = values[eventId].values.findIndex(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (invalidIndex(elementIdx)) return eventValues;
       return {
         ...eventValues,
         [col.dataIndex]: values[eventId].values[elementIdx].value,
       };
     }, {});
+
     return {
+      groupVal: values[eventId]?.groups,
+      templateVal: values[eventId].template,
       ..._eventValues,
       startTime: values[eventId].startTime,
       endTime: values[eventId].endTime,
@@ -381,17 +474,19 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
     return [];
   const _data = (Object.keys(values) || []).map((eventId) => {
     const _eventValues = columns.reduce((eventValues, col) => {
-      // Find the element index
-      const elementIdx = values[eventId].values.findIndex(
+      const element = values[eventId].values.find(
         (el) => el.elementId === col.dataIndex,
       );
-      if (elementIdx === -1) return eventValues;
+      if (!element) return eventValues;
       return {
         ...eventValues,
-        [col.dataIndex]: values[eventId].values[elementIdx].value,
+        [col.dataIndex]: element.value,
       };
     }, {});
+
     return {
+      groupVal: values[eventId]?.groups,
+      templateVal: values[eventId]?.template,
       ..._eventValues,
       rowKey: eventId,
     };
@@ -404,8 +499,8 @@ const transformTableSectionValuesToTableRows = (values, columns) => {
  * @description transform Availability Calendar events to table rows
  * @param {Array} values the values object to transform the data from
  */
-const transformAvailabilityCalendarToTableRows = (values) => [
-  ..._.flatten(Object.values(_.get(values, '[0].value'), {})).map((item) => ({
+const transformAvailabilityCalendarToTableRows = (values: any) => [
+  ..._.flatten(Object.values(_.get(values, '[0].value'))).map((item: any) => ({
     ...item,
     rowKey: item.eventId,
   })),
@@ -441,13 +536,4 @@ export const transformSectionValuesToTableRows = (
     default:
       return [];
   }
-};
-
-export const LabelRenderer = ({ type, extId }) => {
-  const payload = useMemo(() => ({ [type]: [extId] }), [type, extId]);
-  useFetchLabelsFromExtIds(payload);
-  const label = useSelector((state) => state.te.extIdProps[type][extId]);
-  if (!extId || !type) return 'N/A';
-  if (label) return label.label || 'N/A';
-  return extId;
 };

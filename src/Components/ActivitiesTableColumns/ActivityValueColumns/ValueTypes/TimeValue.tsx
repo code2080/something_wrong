@@ -1,17 +1,17 @@
 import moment from 'moment';
-import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
+import { TIME_FORMAT } from '../../../../Constants/common.constants';
 
 // TYPES
 type Props = {
   value: string;
-  extId: string;
-  activityId: string;
 };
 
 const TimeValue = ({ value }: Props) => {
-  const formattedValue = value ? moment(value).format(DATE_TIME_FORMAT) : 'N/A';
-
-  return formattedValue;
+  const parsedValue = moment(value, 'YYYY-MM-DDTHH:mm:ss.SSSZ', true);
+  const formattedValue = parsedValue.isValid()
+    ? parsedValue
+    : moment().startOf('day').add(value, 'minutes');
+  return value ? formattedValue.format(TIME_FORMAT) : 'N/A';
 };
 
 export default TimeValue;

@@ -16,34 +16,63 @@ import {
   activityStatuses,
 } from '../../../../Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
+import { useState } from 'react';
+import EditableText from '../../../EditableText/EditableText';
+import { useDispatch } from 'react-redux';
+import { updateActivity } from '../../../../Redux/Activities/activities.actions';
 
-const PopoverContent = ({ activity }) => (
-  <div className='activity-col--popover'>
-    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
-      <Form.Item label='Status'>
-        <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
-          {activityStatusProps[activity.activityStatus].label}
-        </StatusLabel>
-      </Form.Item>
-      {activity.activityStatus === activityStatuses.FAILED && (
-        <Form.Item label='Error'>
-          {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
-            activity,
-            'errorDetails.code',
-            '',
-          )})`}
+const PopoverContent = ({ activity, onUpdate }) => {
+  const [reservationId, setReservationId] = useState(activity.reservationId);
+
+  const onUpdateReservationId = (value) => {
+    setReservationId(value);
+    onUpdate({
+      ...activity,
+      reservationId: value,
+    });
+  };
+
+  return (
+    <div className='activity-col--popover'>
+      <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+        <Form.Item label='Status'>
+          <StatusLabel
+            color={activityStatusProps[activity.activityStatus].color}
+          >
+            {activityStatusProps[activity.activityStatus].label}
+          </StatusLabel>
         </Form.Item>
-      )}
-      <Form.Item label='Time'>
-        <div className='ant-form-text'>
-          {activity.schedulingTimestamp
-            ? moment.utc(activity.schedulingTimestamp).format(DATE_TIME_FORMAT)
-            : 'N/A'}
-        </div>
-      </Form.Item>
-    </Form>
-  </div>
-);
+        {activity.activityStatus === activityStatuses.FAILED && (
+          <Form.Item label='Error'>
+            {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
+              activity,
+              'errorDetails.code',
+              '',
+            )})`}
+          </Form.Item>
+        )}
+        <Form.Item label='Time'>
+          <div className='ant-form-text'>
+            {activity.schedulingTimestamp
+              ? moment
+                  .utc(activity.schedulingTimestamp)
+                  .format(DATE_TIME_FORMAT)
+              : 'N/A'}
+          </div>
+        </Form.Item>
+        {activity.activityStatus === activityStatuses.SCHEDULED && (
+          <Form.Item label='ID'>
+            <EditableText
+              value={reservationId}
+              onChange={onUpdateReservationId}
+              placeholder='N/A'
+            />
+          </Form.Item>
+        )}
+      </Form>
+    </div>
+  );
+};
 
 const StatusText = ({ activity }) => {
   switch (activity.activityStatus) {
@@ -60,11 +89,16 @@ const StatusText = ({ activity }) => {
 };
 
 const ActivityStatusCol = ({ activity }) => {
+  const dispatch = useDispatch();
+  const onUpdate = (updatedActivity) => {
+    dispatch(updateActivity(updatedActivity));
+  };
+
   return (
     <div className='activity-status-column'>
       <Popover
         title='Scheduling information'
-        content={<PopoverContent activity={activity} />}
+        content={<PopoverContent activity={activity} onUpdate={onUpdate} />}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
         <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
@@ -77,6 +111,7 @@ const ActivityStatusCol = ({ activity }) => {
 
 PopoverContent.propTypes = {
   activity: PropTypes.object.isRequired,
+  onUpdate: PropTypes.func,
 };
 
 StatusText.propTypes = {

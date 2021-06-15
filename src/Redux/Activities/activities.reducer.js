@@ -37,12 +37,8 @@ const reducer = (state = initialState, action) => {
 
     case types.REORDER_ACTIVITIES_REQUEST: {
       // Optimistic reordering before BE returns
-      const {
-        formId,
-        formInstanceId,
-        sourceIdx,
-        destinationIdx,
-      } = action.payload;
+      const { formId, formInstanceId, sourceIdx, destinationIdx } =
+        action.payload;
       if (sourceIdx === destinationIdx) return state;
       const activities = state[formId][formInstanceId];
       /**
@@ -84,8 +80,25 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
+      const {
+        payload: {
+          activities: activitityObjs,
+          actionMeta: { formId },
+        },
+      } = action;
+
+      const activities = updateActivitiesForForm(activitityObjs);
+
+      return {
+        ...state,
+        [formId]: {
+          ...activities,
+        },
+      };
+    }
+
     case types.REORDER_ACTIVITIES_SUCCESS:
-    case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS:
     case types.UPDATE_ACTIVITIES_SUCCESS:
     case ABORT_JOB_SUCCESS: {
       const {
@@ -102,7 +115,7 @@ const reducer = (state = initialState, action) => {
           ...Object.keys(activities).reduce((results, formInstanceId) => {
             const oldActivities = _.get(state, [formId, formInstanceId], []);
             const oldActivityIds = oldActivities.map(({ _id }) => _id);
-            const newActivities = _.remove(
+            const newActivities = _.filter(
               activities[formInstanceId],
               (item) => !oldActivityIds.includes(item._id),
             );
