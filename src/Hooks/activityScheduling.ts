@@ -10,7 +10,6 @@ import {
 import { updateActivities } from '../Redux/Activities/activities.actions';
 
 // CONSTANTS
-import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 
@@ -92,9 +91,7 @@ const useActivityScheduling = ({
 
   const handleScheduleActivities = async (activities) => {
     const groupedActivities = groupBy(
-      activities.filter(
-        (activity) => activity.activityStatus !== activityStatuses.SCHEDULED,
-      ),
+      activities,
       ({ formInstanceId }) => formInstanceId,
     );
     openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
