@@ -23,6 +23,7 @@ import {
   objectRequestActionCondition,
   objectRequestOnClick,
 } from '../../../Constants/objectRequestActions.constants';
+import { closeAllDropdown } from '../../../Utils/dom.helper';
 import ObjectRequestValue from '../ObjectRequestValue';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -43,14 +44,17 @@ const ObjectRequestDropdown = ({ request, children }) => {
       getPopupContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
       }
-      onClick={objectRequestOnClick({
-        dispatch,
-        teCoreAPI,
-        coreCallback,
-        request,
-        spotlightRef,
-        showDetails,
-      })}
+      onClick={(e) => {
+        closeAllDropdown();
+        objectRequestOnClick({
+          dispatch,
+          teCoreAPI,
+          coreCallback,
+          request,
+          spotlightRef,
+          showDetails,
+        })(e);
+      }}
     >
       <span style={{ padding: '5px 12px', cursor: 'default' }}>
         Execute request...

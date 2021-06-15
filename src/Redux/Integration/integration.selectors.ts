@@ -53,7 +53,7 @@ export const getTECoreAPIPayload = (
   /**
    * No value or datasource is a no-op
    */
-  if (!value || !datasource) return null;
+  if (!value || !datasource) return [];
   /**
    * Datasource is stored as a string
    */

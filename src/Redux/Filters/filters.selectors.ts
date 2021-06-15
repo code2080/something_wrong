@@ -5,8 +5,30 @@ import {
   EActivityFilterMode,
 } from '../../Types/ActivityFilter.interface';
 import { TActivity } from '../../Types/Activity.type';
+import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const filterstate = (state) => state.filters;
+
+export const makeSelectSelectedFilterValues = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): TActivityFilterQuery => {
+      if (!filters || !formId) return {} as TActivityFilterQuery;
+      return filters[formId]?.filterValues ?? ({} as TActivityFilterQuery);
+    },
+  );
+
+export const makeSelectFormLookupMap = () =>
+  createSelector(
+    filterstate,
+    (_, formId: string) => formId,
+    (filters, formId): TFilterLookUpMap => {
+      if (!filters || !formId) return {} as TFilterLookUpMap;
+      return filters[formId]?.filterLookup ?? ({} as TFilterLookUpMap);
+    },
+  );
 
 export const selectFilter = createSelector(
   filterstate,

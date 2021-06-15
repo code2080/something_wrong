@@ -8,7 +8,6 @@ import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from './StaticColumns/StaticColumns';
 
 // SORTERS
-
 export const createActivitiesTableColumnsFromMapping = (design) => {
   const allActivityValues = [
     ...Object.keys(design.objects).map((objKey) => ['types', objKey]),
@@ -41,14 +40,3 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
     ...StaticColumns,
   ];
 };
-
-/*
-sorter: (a, b) => {
-        return sortByElementDeepHtml(
-          `.extId_${extId.replace(/\./g, '-')}_${a._id} .base-activity-col--wrapper`,
-          `.extId_${extId.replace(/\./g, '-')}_${b._id} .base-activity-col--wrapper`
-        );
-      },
-
-        <SortableTableCell className={`extId_${extId.replace(/\./g, '-')}_${activity._id}`}>
-*/

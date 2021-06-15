@@ -28,5 +28,7 @@ export const derivedFormattedValueForActivityValue = (
       return getFVForFieldValue(activityValue);
     case ActivityValueType.OTHER:
       return getFVForOtherValue(activityValue);
+    default:
+      return null;
   }
 };

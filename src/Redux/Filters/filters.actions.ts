@@ -3,8 +3,11 @@ import {
   EActivityFilterMode,
   EActivityFilterType,
 } from '../../Types/ActivityFilter.interface';
+import { asyncAction } from '../../Utils/actionHelpers';
+import { getEnvParams } from '../../configs';
 import { TProperty } from '../../Types/property.type';
 import * as types from './filters.actionTypes';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 // TYPES
 type TActionLoadFilter = {
@@ -42,6 +45,40 @@ type TActionSetActivityFilterMode = {
 type TActionSetActivityFilterInclusion = {
   filterId: string;
   inclusion: EActivityFilterInclusion;
+};
+
+type TActionSetActivityLookupMap = {
+  formId: string;
+};
+
+type TActionSetSelectedFilterValues = {
+  filterValues: TActivityFilterQuery;
+  formId: string;
+};
+
+export const setSelectedFilterValues = (
+  payload: TActionSetSelectedFilterValues,
+) => ({ type: types.SET_SELECTED_FILTER_VALUES, payload });
+
+const fetchLookupMapFlow = {
+  request: () => ({ type: types.FETCH_FORM_LOOKUPMAP_REQUEST }),
+  success: (response) => ({
+    type: types.FETCH_FORM_LOOKUPMAP_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: types.FETCH_FORM_LOOKUPMAP_FAILURE,
+    payload: { ...err },
+  }),
+};
+
+export const fetchLookupMap = (payload: TActionSetActivityLookupMap) => {
+  const { formId = '' } = payload;
+  return asyncAction.GET({
+    flow: fetchLookupMapFlow,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
+    params: { formId },
+  });
 };
 
 export const loadFilter = ({ filterId }: TActionLoadFilter) => ({
@@ -87,9 +124,8 @@ export const setActivityFilterMode = ({
 });
 
 export const setActivityFilterInclusion = ({
-  filterId,
-  inclusion,
+  filterId: _,
+  inclusion: __,
 }: TActionSetActivityFilterInclusion) => ({
   type: types.SET_ACTIVITY_FILTER_INCLUSION,
-  payload: { filterId, inclusion },
 });

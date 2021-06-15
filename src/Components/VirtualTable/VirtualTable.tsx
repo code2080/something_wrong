@@ -1,19 +1,32 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, Key } from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
 import { Table } from 'antd';
+import SelectionColumn from './SelectionColumn';
 
 import './VirtualTable.scss';
+import { ColumnType } from 'antd/lib/table';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
-  // eslint-disable-next-line react/prop-types
-  const { columns, scroll } = props;
+  const { columns, scroll, rowSelection, rowKey, dataSource } = props;
   const [tableWidth, setTableWidth] = useState(0);
 
-  const widthColumnCount = columns!.filter(({ width }) => !width).length;
-  const mergedColumns = columns!.map((column) => {
+  const columnswithSelection = [
+    SelectionColumn({
+      rowSelection,
+      dataSource,
+      rowKey: rowKey as Key | undefined,
+    }),
+    ...(columns ?? []),
+  ].filter(Boolean) as ColumnType<object>[];
+
+  const widthColumnCount = columnswithSelection!.filter(
+    ({ width }) => !width,
+  ).length;
+
+  const mergedColumns = columnswithSelection!.map((column) => {
     if (column.width) {
       return column;
     }

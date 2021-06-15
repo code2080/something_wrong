@@ -1,53 +1,40 @@
 import { useEffect, useMemo, useState } from 'react';
-import { /* useDispatch, */ useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import _, { pick } from 'lodash';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 
+// ACTIONS
+import {
+  setActivitySorting,
+  resetActivitySorting,
+} from '../../../Redux/GlobalUI/globalUI.actions';
+
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectVisibleActivitiesForForm } from '../../../Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-// import { getFilterPropsForActivities } from '../../../Utils/activities.helpers';
-
-// ACTIONS
-// import { setActivityFilter } from '../../../Redux/Filters/filters.actions';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
-import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
-
-const getActivityDataSource = (activities = {}, visibleActivities) => {
-  // Order by formInstanceId and then sequenceIdx or idx
-  return (Object.keys(activities) || []).reduce((a, formInstanceId) => {
-    const formInstanceActivities = activities[formInstanceId].filter((el) => {
-      if (visibleActivities === 'ALL') return true;
-      return visibleActivities.indexOf(el._id) > -1;
-    });
-    const orderedFormInstanceActivities = _.orderBy(
-      formInstanceActivities,
-      ['sequenceIdx'],
-      ['asc'],
-    );
-    return [...a, ...orderedFormInstanceActivities];
-  }, []);
-};
+import _ from 'lodash';
+import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
+import { TActivity } from '../../../Types/Activity.type';
 
 const calculateAvailableTableHeight = () => {
-  return window.tePrefsHeight - 110;
+  return (window as any).tePrefsHeight - 110;
 };
 
 const ActivitiesPage = () => {
-  const { formId } = useParams();
-  // const dispatch = useDispatch();
+  const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch();
 
   /**
    * SELECTORS
@@ -56,30 +43,22 @@ const ActivitiesPage = () => {
     () => makeSelectActivitiesForForm(),
     [],
   );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
 
-  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-
-  const submissions = useSelector((state) => selectSubmissions(state, formId));
-
-  const activities = useSelector((state) => {
-    const _activities = selectActivitiesForForm(state, formId);
-    return pick(
-      _activities,
-      submissions.map(({ _id }) => _id),
-    );
-  });
   const design = useSelector(selectDesignForForm)(formId);
-  const visibleActivities = useSelector(selectVisibleActivitiesForForm)(formId);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
-  );
-  const [formType, reservationMode] = useSelector((state) => {
+  ) as boolean;
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
 
   useEffect(() => {
-    getExtIdsFromActivities(activities);
+    getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
   /**
    * HOOKS
@@ -96,26 +75,38 @@ const ActivitiesPage = () => {
    * MEMOIZED PROPS
    */
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design, true) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
+        : [],
+    [design, objectRequests],
   );
+
+  const selectActivitySortingOrder = useMemo(
+    () => makeSelectSortOrderForActivities(),
+    [],
+  );
+
+  const sortOrder = useSelector((state) =>
+    selectActivitySortingOrder(state, formId),
+  );
+
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
 
   const tableDataSource = useMemo(
-    () => getActivityDataSource(activities, visibleActivities),
-    [activities, visibleActivities],
+    () =>
+      _.compact<TActivity>(
+        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
+          allActivities,
+      ),
+    [allActivities, keyedActivities, sortOrder],
   );
-
-  // TODO: Fix this!! DEV-8479
-  // useEffect(() => {
-  //   console.log('Running filterprops');
-  //   const { options, matches } = getFilterPropsForActivities(activities);
-  //   dispatch(setActivityFilter({ filterId: formId, options, matches }));
-  // }, [activities, dispatch, formId]);
 
   /**
    * STATE
    */
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   /**
    * EVENT HANDLERS
@@ -133,6 +124,16 @@ const ActivitiesPage = () => {
     onDeselectAll();
   };
 
+  const onSortActivities = (sorter): void => {
+    if (sorter && sorter.columnKey) {
+      if (sorter.order) {
+        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
+      } else {
+        dispatch(resetActivitySorting(formId));
+      }
+    }
+  };
+
   return (
     <>
       <ActivitiesToolbar
@@ -147,11 +148,13 @@ const ActivitiesPage = () => {
         columns={tableColumns}
         dataSource={tableDataSource}
         rowKey='_id'
-        loading={isLoading && (activities || []).length === 0}
+        loading={isLoading && !activities?.length}
         rowSelection={{
           selectedRowKeys,
-          onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
+          onChange: (selectedRowKeys) =>
+            setSelectedRowKeys(selectedRowKeys as string[]),
         }}
+        onChange={(pagination, filters, sorter) => onSortActivities(sorter)}
       />
     </>
   );

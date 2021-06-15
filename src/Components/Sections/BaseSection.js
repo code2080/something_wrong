@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 

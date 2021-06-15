@@ -8,7 +8,7 @@ import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // COMPONENTS
 import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
-// import ActivityFiltering from '../ActivityFiltering';
+import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES
 import './index.scss';
@@ -102,7 +102,7 @@ const ActivitiesToolbar = ({
           Tag selected activities
         </Button>
       </Popover>
-      {/* <ActivityFiltering /> */}
+      <ActivityFiltering />
     </div>
   );
 };

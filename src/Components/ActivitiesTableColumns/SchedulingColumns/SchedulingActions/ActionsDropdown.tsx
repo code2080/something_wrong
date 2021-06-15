@@ -35,6 +35,8 @@ import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
+import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import { TActivity } from '../../../../Types/Activity.type';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -109,13 +111,14 @@ const ActivityActionsDropdown = ({
   setFormInstanceSchedulingProgress,
   abortJob,
 }) => {
-  const mixpanel = useMixpanel();
-  const selectFormInstance = useMemo(() => makeSelectFormInstance, []);
   const { formInstanceId, formId } = activity;
+  const mixpanel = useMixpanel();
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
-  const [formType, reservationMode] = useSelector((state) => {
+  const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
@@ -159,8 +162,8 @@ const ActivityActionsDropdown = ({
         teCoreSchedulingProgress.NOT_SCHEDULED
     ) {
       Modal.confirm({
-        getContainer: () => document.getElementById('te-prefs-lib'),
-        getPopupContainer: () => document.getElementById('te-prefs-lib'),
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the first row of this submission as scheduled. Do you want to update the scheduling status to in progress?',
@@ -178,8 +181,8 @@ const ActivityActionsDropdown = ({
         teCoreSchedulingProgress.SCHEDULING_FINISHED
     ) {
       Modal.confirm({
-        getContainer: () => document.getElementById('te-prefs-lib'),
-        getPopupContainer: () => document.getElementById('te-prefs-lib'),
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
         title: 'Do you want to update the scheduling progress?',
         content:
           'You just marked the last row of this submission as scheduled. Do you want to update the scheduling status to completed?',
@@ -198,11 +201,24 @@ const ActivityActionsDropdown = ({
     setFormInstanceSchedulingProgress,
   ]);
 
-  const trackScheduleActivities = (activities = []) => {
+  const trackScheduleActivities = (activities: TActivity[] = []) => {
     mixpanel?.track('scheduleActivitiesAction', {
-      formId: activities?.[0]?.formId,
+      formId: _.first(activities)?.formId,
       nrOfActivities: activities.length,
     });
+  };
+
+  const handleScheduleActivities = (activities: TActivity[], key: string) => {
+    trackScheduleActivities(activities);
+    scheduleActivities(
+      activities,
+      formType,
+      reservationMode,
+      teCoreAPI[activityActions[key].callname],
+      onFinishScheduleMultiple,
+      objectRequests,
+    );
+    updateSchedulingProgress();
   };
 
   const handleMenuClick = useCallback(
@@ -210,26 +226,15 @@ const ActivityActionsDropdown = ({
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
-          trackScheduleActivities(activities);
-          scheduleActivities(
-            activities,
-            formType,
-            reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple,
+          handleScheduleActivities(
+            activities.filter(
+              (a) => a.activityStatus !== activityStatuses.SCHEDULED,
+            ),
+            key,
           );
-          updateSchedulingProgress();
           break;
         case 'SCHEDULE':
-          trackScheduleActivities([activity]);
-          scheduleActivities(
-            [activity],
-            formType,
-            reservationMode,
-            teCoreAPI[activityActions[key].callname],
-            onFinishScheduleMultiple,
-          );
-          updateSchedulingProgress();
+          handleScheduleActivities([activity], key);
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({
@@ -299,7 +304,9 @@ const ActivityActionsDropdown = ({
     <Dropdown
       overlay={menu}
       trigger={['click']}
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
     >
       {buttonType === 'ellipsis' ? (
         <Button type='link' icon={<EllipsisOutlined />} size='small' />

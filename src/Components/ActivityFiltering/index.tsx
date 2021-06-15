@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';
-import ActivityFilterModal from './Modal';
+import FilterModal from './FilterModal';
 
 // STYLES
 import './index.scss';
@@ -16,10 +16,7 @@ const ActivityFiltering = () => {
         onClick={() => setShowModal(!showModal)}
         isActive={showModal}
       />
-      <ActivityFilterModal
-        isVisible={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <FilterModal isVisible={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

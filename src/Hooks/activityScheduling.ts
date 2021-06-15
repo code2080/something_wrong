@@ -25,6 +25,7 @@ import { EActivityStatus } from '../Types/ActivityStatus.enum';
 
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
+import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 type Props = {
   formType: string;
@@ -38,6 +39,7 @@ const useActivityScheduling = ({
 }: Props) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const indexedFormInstances = useMemo(
@@ -117,6 +119,7 @@ const useActivityScheduling = ({
                 );
                 resolve(null);
               },
+              objectRequests,
             );
           });
         }),

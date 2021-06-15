@@ -13,6 +13,8 @@ import {
   UPDATE_VIEW_FAILURE,
   SET_FORM_DETAIL_TAB,
   GO_TO_PREVIOUS_TAB,
+  SET_SORTING_FOR_ACTIVITIES,
+  RESET_SORTING_FOR_ACTIVITIES,
 } from './globalUI.actionTypes';
 
 export const setBreadcrumbs = (fragments) => ({
@@ -96,4 +98,14 @@ export const setFormDetailTab = (tab, submission = null) => ({
 
 export const goToPreviousTab = () => ({
   type: GO_TO_PREVIOUS_TAB,
+});
+
+export const setActivitySorting = (formId, columnKey, direction) => ({
+  type: SET_SORTING_FOR_ACTIVITIES,
+  payload: { formId, columnKey, direction },
+});
+
+export const resetActivitySorting = (formId) => ({
+  type: RESET_SORTING_FOR_ACTIVITIES,
+  payload: { formId },
 });

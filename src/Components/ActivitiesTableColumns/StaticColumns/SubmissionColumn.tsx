@@ -12,6 +12,8 @@ import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
 import './SubmissionColumn.scss';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 import { useMemo } from 'react';
+import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import ObjectRequestValue from '../../Elements/ObjectRequestValue';
 
 // TYPES
 type Props = {
@@ -28,6 +30,8 @@ const SubmissionColumn = ({ formInstanceId }: Props) => {
       formInstanceId,
     }),
   );
+
+  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const primaryObject = useSelector(selectExtIdLabel)(
     'objects',
     scopedObject as string,
@@ -40,12 +44,14 @@ const SubmissionColumn = ({ formInstanceId }: Props) => {
     dispatch(setFormDetailTab(EFormDetailTabs.SUBMISSIONS, formInstanceId));
   };
 
+  const request = objectRequests.find((req) => req._id === primaryObject);
+
   return (
     <div className='submission-column--wrapper' onClick={onClick}>
       <div className='submitter--row'>{`${firstName} ${lastName}`}</div>
       <div className='primary-object--row'>
         <span>Primary object:&nbsp;</span>
-        {primaryObject}
+        {request ? <ObjectRequestValue request={request} /> : primaryObject}
       </div>
     </div>
   );

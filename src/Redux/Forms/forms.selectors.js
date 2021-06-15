@@ -11,7 +11,7 @@ export const makeSelectForm = () =>
   createSelector(
     formState,
     (_, formId) => formId,
-    (forms, formId) => forms[formId],
+    (forms, formId) => forms[formId] ?? {},
   );
 
 export const selectAllForms = createSelector(formState, (forms) =>

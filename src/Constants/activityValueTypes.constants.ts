@@ -1,5 +1,6 @@
 export enum ActivityValueType {
   OBJECT = 'object',
+  FILTER = 'filter',
   FIELD = 'field',
   TIMING = 'timing',
   OTHER = 'other',

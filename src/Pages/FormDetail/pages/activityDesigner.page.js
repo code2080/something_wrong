@@ -1,4 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+  useContext,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Menu, Dropdown, Button } from 'antd';
@@ -23,9 +30,13 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 
 // HOOKS
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
 
 // ACTIONS
-import { updateDesign } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
+import {
+  updateDesign,
+  unlockActivityDesigner,
+} from '../../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
   findTypesOnReservationMode,
   findFieldsOnReservationMode,
@@ -59,6 +70,7 @@ const ActivityDesignPage = () => {
   const { formId } = useParams();
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
+  const leavingPageContext = useContext(ConfirmLeavingPageContext);
 
   /**
    * SELECTORS
@@ -88,6 +100,7 @@ const ActivityDesignPage = () => {
   const [design, setDesign] = useState(storeDesign);
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
+  const designRef = useRef();
 
   /**
    * EFFECTS
@@ -127,6 +140,8 @@ const ActivityDesignPage = () => {
     [activities],
   );
 
+  const isEditable = useMemo(() => storeDesign.isEditable, [storeDesign]);
+
   const mappingOptions = useMemo(
     () => getElementsForMapping(form.sections, design),
     [form, design],
@@ -153,21 +168,42 @@ const ActivityDesignPage = () => {
     return true;
   }, [design]);
 
+  useEffect(() => {
+    designRef.current = design;
+  }, [design]);
+
   /**
    * EVENT HANDLERS
    */
 
-  // Event handlers for updating the various props on the design
-  const updateTimingDesignCallback = (prop, value) =>
-    setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
-  const updateObjectDesignCallback = (objectDesign) =>
-    setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
-  const updateFieldDesignCallback = (fieldDesign) =>
-    setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
-
   // Callback to save mapping
   const onSaveDesign = () => {
-    if (designIsValid) dispatch(updateDesign(design));
+    if (designIsValid) {
+      dispatch(updateDesign(designRef.current));
+      leavingPageContext.setIsModified(false);
+    }
+  };
+
+  // Event handlers for updating the various props on the design
+  const updateTimingDesignCallback = (prop, value) => {
+    setDesign(updateTimingPropOnActivityDesign(design, formId, prop, value));
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
+  };
+  const updateObjectDesignCallback = (objectDesign) => {
+    setDesign(updateObjectPropOnActivityDesign(design, formId, objectDesign));
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
+  };
+  const updateFieldDesignCallback = (fieldDesign) => {
+    setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
+  };
+
+  const onUnlockClick = () => {
+    dispatch(unlockActivityDesigner({ formId }));
+    leavingPageContext.setIsModified(true);
   };
 
   // Callback for reset meun clicks
@@ -240,7 +276,7 @@ const ActivityDesignPage = () => {
             overlay={resetMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           >
             <Button type='link' size='small'>
               Reset configuration...
@@ -248,15 +284,27 @@ const ActivityDesignPage = () => {
           </Dropdown>
           <div style={{ marginLeft: 'auto', display: 'flex' }}>
             <MappingStatus status={designIsValid} />
-            <Button
-              type='primary'
-              size='small'
-              onClick={onSaveDesign}
-              loading={isSaving}
-              disabled={!designIsValid || hasActivities}
-            >
-              Save
-            </Button>
+            {!isEditable ? (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onUnlockClick}
+                loading={isSaving}
+                disabled={hasActivities}
+              >
+                Unlock
+              </Button>
+            ) : (
+              <Button
+                type='primary'
+                size='small'
+                onClick={onSaveDesign}
+                loading={isSaving}
+                disabled={!designIsValid || hasActivities || !isEditable}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </div>
         {hasActivities && <HasReservationsAlert formId={formId} />}
@@ -269,7 +317,7 @@ const ActivityDesignPage = () => {
             mapping={design}
             onChange={updateTimingDesignCallback}
             formSections={form.sections}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -282,7 +330,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             typeOptions={typeOptions}
             onChange={updateObjectDesignCallback}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
         <div className='activity-designer--type-header'>
@@ -295,7 +343,7 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             fieldOptions={fieldOptions}
             onChange={updateFieldDesignCallback}
-            disabled={hasActivities}
+            disabled={hasActivities || !isEditable}
           />
         </div>
       </div>

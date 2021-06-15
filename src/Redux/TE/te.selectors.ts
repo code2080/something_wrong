@@ -18,7 +18,7 @@ export type Field = 'types' | 'fields' | 'objects';
 type ExtIdLabelPayload = {
   field: Field;
   extId: string;
-  fallbackVal: string;
+  fallbackVal?: string;
 };
 
 const getLabelFromExtId = (

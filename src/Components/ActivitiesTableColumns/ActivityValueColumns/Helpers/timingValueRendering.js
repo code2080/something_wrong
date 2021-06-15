@@ -11,10 +11,7 @@ import WeekdayValue from '../ValueTypes/WeekdayValue';
 
 // CONSTANTS
 import { activityTimeModes } from '../../../../Constants/activityTimeModes.constants';
-import {
-  DATE_FORMAT,
-  TIME_FORMAT,
-} from '../../../../Constants/common.constants';
+import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 // HELPERS
@@ -49,7 +46,7 @@ export const determineTimeModeForActivity = (activity) => {
  * @returns {Object} schedulingValuePayload
  */
 
-const renderTimeSlotStartTimeValue = (
+const renderTimeSlotEndTimeValue = (
   activityValue,
   timingValues,
   activityId,
@@ -71,13 +68,7 @@ const renderTimeSlotStartTimeValue = (
     ],
     renderedComponent: (
       <TimeSlotTimeValue
-        formattedValue={`${moment(activityValue.value).format(
-          DATE_FORMAT,
-        )} ${moment(activityValue.value).format(TIME_FORMAT)} - ${moment(
-          endTime.value,
-        )
-          .subtract(length.value, 'hours')
-          .format(TIME_FORMAT)}`}
+        formattedValue={`${moment(endTime.value).format(DATE_TIME_FORMAT)}`}
         extId={activityValue.extId}
         activityId={activityId}
       />
@@ -92,7 +83,7 @@ const renderTimeSlotStartTimeValue = (
  * @param {Object} timingValues all timing values
  * @returns {Object} schedulingValuePayload
  */
-const renderTimeSlotEndTimeValue = (
+const renderTimeSlotStartTimeValue = (
   activityValue,
   timingValues,
   activityId,
@@ -115,13 +106,7 @@ const renderTimeSlotEndTimeValue = (
     ],
     renderedComponent: (
       <TimeSlotTimeValue
-        formattedValue={`${moment(startTime.value).format(
-          DATE_FORMAT,
-        )} ${moment(startTime.value)
-          .add(length.value, 'hours')
-          .format(TIME_FORMAT)} - ${moment(activityValue.value).format(
-          TIME_FORMAT,
-        )}`}
+        formattedValue={`${moment(startTime.value).format(DATE_TIME_FORMAT)}`}
         extId={activityValue.extId}
         activityId={activityId}
       />

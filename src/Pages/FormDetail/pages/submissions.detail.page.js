@@ -93,6 +93,7 @@ const SubmissionsDetailPage = ({ formInstanceId }) => {
       <FormInstanceToolbar
         formId={formInstance.formId}
         formInstanceId={formInstance._id}
+        objectRequests={objectRequests}
       />
       {baseSections}
     </div>
