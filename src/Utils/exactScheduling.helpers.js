@@ -1,3 +1,4 @@
+import uniq from 'lodash/uniq';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TECoreFieldModel,
@@ -36,8 +37,8 @@ const mergeActivityValuesForObjects = (objects) => {
     }),
     {},
   );
-  return Object.keys(mergedObjectMap).map(
-    (key) => new TECoreObjectModel({ extId: key, value: mergedObjectMap[key] }),
+  return Object.entries(mergedObjectMap).map(
+    ([extId, values]) => new TECoreObjectModel({ extId, value: uniq(values) }),
   );
 };
 
