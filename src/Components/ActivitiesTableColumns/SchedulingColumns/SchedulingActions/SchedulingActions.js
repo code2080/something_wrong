@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';
-
+import JointTeachingButton from './JointTeachingIcon';
 // CONSTANTS
 import { activityStatuses } from '../../../../Constants/activityStatuses.constants';
 
@@ -19,6 +19,7 @@ const SchedulingActions = ({ activity }) => {
       )}
       <SchedulingCheckbox activity={activity} />
       <SelectActivityButton activity={activity} />
+      <JointTeachingButton />
       <ActionsDropdown buttonType='ellipsis' activity={activity} />
     </div>
   );
