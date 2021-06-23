@@ -2,12 +2,18 @@ import React, { SetStateAction, useState } from 'react';
 import { Button, Popover } from 'antd';
 
 type Props = {
-  hoverContent?: string;
+  hoverContent?: string | null;
   clickContent?: any;
   icon?: any;
+  style?: object;
 };
 
-const HoverAndClickPopOver = ({ hoverContent, clickContent, icon }: Props) => {
+const HoverAndClickPopOver = ({
+  hoverContent,
+  clickContent,
+  icon,
+  style,
+}: Props) => {
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
 
@@ -34,14 +40,7 @@ const HoverAndClickPopOver = ({ hoverContent, clickContent, icon }: Props) => {
         visible={clicked}
         onVisibleChange={handleClickChange}
       >
-        <Button
-          style={{
-            padding: 0,
-            border: 'none',
-            background: 'none',
-          }}
-          icon={icon}
-        ></Button>
+        <Button style={style || undefined} icon={icon}></Button>
       </Popover>
     </Popover>
   );

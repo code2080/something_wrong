@@ -1,38 +1,64 @@
+import PropTypes from 'prop-types';
 import { RiShareBoxFill } from 'react-icons/ri';
-import { Button, Popover } from 'antd';
+import { ShrinkOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import HoverAndClickPopOver from '../../ActivityValueColumns/Helpers/HoverAndClickPopOver';
 import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
-const JointTeachingIcon = (jointTeachingProps) => {
-  const [jointTeachingObj, setJointTeachingObj] = useSelector();
+const JointTeachingIcon = ({ activity }) => {
+  const [teachingObject, setTeachingObject] = useState(null);
 
-  if (!jointTeachingProps) return;
+  const handleSelectJointTeachObj = (jointTeachingObj): void => {
+    setTeachingObject(jointTeachingObj);
+  };
+
+  const handleResetJointTeachObj = () => {
+    setTeachingObject(null);
+  };
+
   const hoverContent = 'Click to indicate joint teaching';
   const clickContent = (
     <SelectWithDeleteOption
-      placeholder={'Placeholder'}
       header={'Select joint teaching object'}
+      selectedValue={teachingObject}
+      onSelect={handleSelectJointTeachObj}
+      onDelete={handleResetJointTeachObj}
     />
   );
   const icon = <RiShareBoxFill />;
 
-  if (jointTeachingProps?.hasJointTeaching)
+  if (!activity) return;
+  if (teachingObject) {
     return (
-      <Popover content={'Click to indicate joint teaching'}>
-        <Button
+      <>
+        <HoverAndClickPopOver
+          hoverContent={teachingObject}
+          clickContent={clickContent}
+          icon={icon}
           style={{
-            padding: 0,
             border: 'none',
             background: 'none',
+            color: '#40a9ff',
           }}
-          icon={<RiShareBoxFill size='large' />}
-        ></Button>
-      </Popover>
+        />
+      </>
     );
-
-  if (jointTeachingProps?.isMerged)
-    return <Button icon={<RiShareBoxFill size='large' color='green' />} />;
+  }
+  if (activity?.isMerged)
+    return (
+      <>
+        <Button
+          icon={<ShrinkOutlined />}
+          disabled
+          style={{
+            border: 'none',
+            color: 'green',
+            background: 'none',
+          }}
+        />
+      </>
+    );
 
   return (
     <>
@@ -40,9 +66,17 @@ const JointTeachingIcon = (jointTeachingProps) => {
         hoverContent={hoverContent}
         clickContent={clickContent}
         icon={icon}
+        style={{
+          border: 'none',
+          background: 'none',
+        }}
       />
     </>
   );
+};
+
+JointTeachingIcon.propTypes = {
+  activity: PropTypes.object,
 };
 
 export default JointTeachingIcon;

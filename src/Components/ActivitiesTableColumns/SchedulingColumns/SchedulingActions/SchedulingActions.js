@@ -19,7 +19,7 @@ const SchedulingActions = ({ activity }) => {
       )}
       <SchedulingCheckbox activity={activity} />
       <SelectActivityButton activity={activity} />
-      <JointTeachingIcon />
+      <JointTeachingIcon activity={activity} />
       <ActionsDropdown buttonType='ellipsis' activity={activity} />
     </div>
   );
