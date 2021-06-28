@@ -9,6 +9,7 @@ import { useState } from 'react';
 const JointTeachingIcon = ({ activity }) => {
   const [teachingObject, setTeachingObject] = useState(null);
 
+  if (!activity) return null;
   const handleSelectJointTeachObj = (jointTeachingObj): void => {
     setTeachingObject(jointTeachingObj);
   };
@@ -28,7 +29,6 @@ const JointTeachingIcon = ({ activity }) => {
   );
   const icon = <RiShareBoxFill />;
 
-  if (!activity) return;
   if (teachingObject) {
     return (
       <>
@@ -69,6 +69,7 @@ const JointTeachingIcon = ({ activity }) => {
         style={{
           border: 'none',
           background: 'none',
+          color: '#e7eff0',
         }}
       />
     </>
