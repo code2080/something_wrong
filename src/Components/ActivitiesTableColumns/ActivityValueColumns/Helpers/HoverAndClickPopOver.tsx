@@ -26,7 +26,16 @@ const HoverAndClickPopOver = ({
     setClicked(visible);
     setHovered(false);
   };
-
+  const origStyle = style;
+  hovered || clicked
+    ? (style = {
+        border: 'none',
+        background: 'none',
+        color: '#40a9ff',
+        height: '24px',
+        marginLeft: '0.4rem',
+      })
+    : (style = origStyle);
   return (
     <Popover
       content={hoverContent}

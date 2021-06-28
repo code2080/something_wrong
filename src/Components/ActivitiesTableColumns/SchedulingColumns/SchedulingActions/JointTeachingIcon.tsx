@@ -40,6 +40,8 @@ const JointTeachingIcon = ({ activity }) => {
             border: 'none',
             background: 'none',
             color: '#40a9ff',
+            height: '24px',
+            marginLeft: '0.4rem',
           }}
         />
       </>
@@ -55,6 +57,7 @@ const JointTeachingIcon = ({ activity }) => {
             border: 'none',
             color: 'green',
             background: 'none',
+            marginLeft: '0.4rem',
           }}
         />
       </>
@@ -68,8 +71,9 @@ const JointTeachingIcon = ({ activity }) => {
         icon={icon}
         style={{
           border: 'none',
-          background: 'none',
-          color: '#e7eff0',
+          background: '#e7eff0',
+          height: '24px',
+          marginLeft: '0.4rem',
         }}
       />
     </>
