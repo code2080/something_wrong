@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
+    "baseUrl": "./src",
     "module": "esnext",
     "allowJs": false,
     "checkJs": false,
@@ -19,5 +20,5 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src"]
+  "include": ["src", "./jest-setup.ts"]
 }
