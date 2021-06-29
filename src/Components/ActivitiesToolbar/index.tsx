@@ -56,6 +56,28 @@ const ActivitiesToolbar = ({
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
 
+  const TagSelectedActivitiesButton = () =>
+    !selectedRowKeys?.length ? (
+      <Button size='small' type='link' disabled>
+        Tag selected activities
+      </Button>
+    ) : (
+      <Popover
+        overlayClassName='activity-tag-popover--wrapper'
+        title='Tag activity'
+        content={<ActivityTagPopover activities={activities} />}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+        trigger='click'
+        placement='rightTop'
+      >
+        <Button size='small' type='link'>
+          Tag selected activities
+        </Button>
+      </Popover>
+    );
+
   return (
     <div className='activities-toolbar--wrapper'>
       Activities selected:&nbsp; {selectedRowKeys?.length ?? 0}
@@ -88,20 +110,8 @@ const ActivitiesToolbar = ({
         Schedule activities
       </Button>
       <Divider type='vertical' />
-      <Popover
-        overlayClassName='activity-tag-popover--wrapper'
-        title='Tag activity'
-        content={<ActivityTagPopover activities={activities} />}
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-        trigger='hover'
-        placement='rightTop'
-      >
-        <Button size='small' type='link' disabled={!selectedRowKeys?.length}>
-          Tag selected activities
-        </Button>
-      </Popover>
+      <TagSelectedActivitiesButton />
+    
       <ActivityFiltering />
     </div>
   );
