@@ -1,15 +1,35 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import PropTypes from 'prop-types';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { ShrinkOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import HoverAndClickPopOver from '../../ActivityValueColumns/Helpers/HoverAndClickPopOver';
 import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { useSelector } from 'react-redux';
+
+import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
+import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import _ from 'lodash';
 
 const JointTeachingIcon = ({ activity }) => {
+  if (!activity?.formId) return null;
+  const { formId }: { formId: string } = activity;
+
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const selectForm = useMemo(() => makeSelectForm(), []);
+
+  const form = useSelector((state) => selectForm(state, formId));
+  const submissions = useSelector((state) => selectSubmissions(state, formId));
+
+  const scopedObjectIds = useMemo(
+    () =>
+      form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
+    [form, submissions],
+  );
   const [teachingObject, setTeachingObject] = useState(null);
 
-  if (!activity) return null;
   const handleSelectJointTeachObj = (jointTeachingObj): void => {
     setTeachingObject(jointTeachingObj);
   };
@@ -25,6 +45,7 @@ const JointTeachingIcon = ({ activity }) => {
       selectedValue={teachingObject}
       onSelect={handleSelectJointTeachObj}
       onDelete={handleResetJointTeachObj}
+      selectValues={scopedObjectIds}
     />
   );
   const icon = <RiShareBoxFill />;

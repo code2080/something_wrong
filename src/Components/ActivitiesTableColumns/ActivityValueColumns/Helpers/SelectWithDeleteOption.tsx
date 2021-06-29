@@ -1,6 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Select } from 'antd';
-import { useState } from 'react';
 const { Option } = Select;
 
 type Props = {
@@ -9,6 +8,7 @@ type Props = {
   onSelect: (jointTeachingObj) => void;
   onDelete: () => void;
   selectedValue: string | undefined | null;
+  selectValues: (string | null)[];
 };
 
 const SelectWithDeleteOption = ({
@@ -17,6 +17,7 @@ const SelectWithDeleteOption = ({
   onSelect,
   onDelete,
   selectedValue,
+  selectValues,
 }: Props) => {
   return (
     <>
@@ -30,9 +31,11 @@ const SelectWithDeleteOption = ({
         placeholder={placeholder}
         onChange={onSelect}
       >
-        <Option value='Test1'>Testing1</Option>
-        <Option value='Test2'>Testing2</Option>
-        <Option value='Test3'>Testing3</Option>
+        {(selectValues as any)?.map((val: string) => (
+          <Select.Option key={val} value={val as string}>
+            {val}
+          </Select.Option>
+        ))}
       </Select>
       <Button
         icon={<DeleteOutlined style={{ border: 'none' }} />}
