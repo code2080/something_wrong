@@ -1,5 +1,8 @@
 import JointTeachingIcon from '../JointTeachingIcon';
+import mockStore from '../TestHelpers/TestHelpers';
+import configureStore from '../../../../../Redux/store';
 import React from 'react';
+import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
@@ -500,22 +503,34 @@ const fakeActivityWithMerged = {
   sequenceIdx: 0,
 };
 
+const initialState = {};
+const store = configureStore(initialState, mockStore);
+
 describe('JointTeachingIcon test', () => {
   describe('Render unmerged joint teaching icon', () => {
     beforeEach(() =>
       render(
-        <>
+        <Provider store={store}>
           <JointTeachingIcon activity={fakeActivity} />
-        </>,
+        </Provider>,
       ),
     );
 
     it('Renders without error', () => {
-      render(<JointTeachingIcon activity={fakeActivity} />);
+      render(
+        <Provider store={store}>
+          <JointTeachingIcon activity={fakeActivity} />,
+        </Provider>,
+      );
     });
 
     it('Returns null if no activity', () => {
-      const { container } = render(<JointTeachingIcon activity={undefined} />);
+      const { container } = render(
+        <Provider store={store}>
+          <JointTeachingIcon activity={undefined} />
+        </Provider>,
+      );
+
       expect(container.innerHTML).toBe('');
     });
 
@@ -543,13 +558,17 @@ describe('JointTeachingIcon test', () => {
   describe('Rendering icon with merge activities', () => {
     beforeEach(() =>
       render(
-        <>
+        <Provider store={store}>
           <JointTeachingIcon activity={fakeActivityWithMerged} />
-        </>,
+        </Provider>,
       ),
     );
     it('Renders without error', () => {
-      render(<JointTeachingIcon activity={fakeActivityWithMerged} />);
+      render(
+        <Provider store={store}>
+          <JointTeachingIcon activity={fakeActivityWithMerged} />
+        </Provider>,
+      );
     });
     it('Test rendering merged icon', () => {
       expect(screen.getByRole('button')).toBeDisabled();
