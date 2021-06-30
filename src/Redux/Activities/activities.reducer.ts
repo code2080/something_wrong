@@ -10,7 +10,12 @@ import { updateActivitiesForForm } from './activities.helpers';
 import _ from 'lodash';
 import { TActivity } from 'Types/Activity.type';
 
-const reducer = (state: { [formId: string]: { [formInstanceId: string]: TActivity[]}} = initialState, action) => {
+const reducer = (
+  state: {
+    [formId: string]: { [formInstanceId: string]: TActivity[] };
+  } = initialState,
+  action,
+) => {
   switch (action.type) {
     case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
@@ -50,8 +55,8 @@ const reducer = (state: { [formId: string]: { [formInstanceId: string]: TActivit
        */
       const direction = destinationIdx - sourceIdx;
       const updActivities = activities.map((activity) => {
-        if(!activity.sequenceIdx) {
-          return activity
+        if (!activity.sequenceIdx) {
+          return activity;
         }
         // If it's the moved activity
         if (activity.sequenceIdx === sourceIdx)
@@ -258,7 +263,7 @@ const reducer = (state: { [formId: string]: { [formInstanceId: string]: TActivit
       } = action;
       return {
         ...state,
-        [formId]: _.omit(state[formId], formInstanceId)
+        [formId]: _.omit(state[formId], formInstanceId),
       };
     }
 
