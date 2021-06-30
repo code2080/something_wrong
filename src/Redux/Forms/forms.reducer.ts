@@ -6,7 +6,7 @@ import Form from '../../Models/Form.model';
 // INITIAL STATE
 import initialState from './forms.initialState';
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: { [formId: string]: any } = initialState, action) => {
   switch (action.type) {
     case types.FETCH_FORMS_SUCCESS: {
       if (
