@@ -258,16 +258,7 @@ const reducer = (state: { [formId: string]: { [formInstanceId: string]: TActivit
       } = action;
       return {
         ...state,
-        [formId]: Object.values(state[formId]).flat().reduce<{[formInstanceId: string]: TActivity[]}>((results, activity) => {
-          if (activity.formInstanceId === formInstanceId) return results;
-          return {
-            ...results,
-            [activity.formInstanceId]: [
-              ...(results[activity.formInstanceId] ?? []),
-              activity
-            ]
-          };
-        }, {}),
+        [formId]: _.omit(state[formId], formInstanceId)
       };
     }
 
