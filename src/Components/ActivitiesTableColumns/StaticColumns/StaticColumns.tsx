@@ -10,10 +10,7 @@ export const StaticColumns = [
       <SortableTableCell
         className={`formInstanceId_${activity.formInstanceId}`}
       >
-        <SubmissionColumn
-          formInstanceId={activity.formInstanceId}
-          activityId={activity._id}
-        />
+        <SubmissionColumn formInstanceId={activity.formInstanceId} />
       </SortableTableCell>
     ),
     sorter: (a, b) => {

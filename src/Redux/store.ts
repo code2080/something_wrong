@@ -3,7 +3,7 @@ import rootReducer from './rootReducer';
 import thunk from 'redux-thunk';
 
 const configureStore = (initialState: any = {}) => {
-  const enhancers = (<any[]>[]);
+  const enhancers = <any[]>[];
   const middleware = [thunk];
 
   if (process.env.NODE_ENV === 'development') {

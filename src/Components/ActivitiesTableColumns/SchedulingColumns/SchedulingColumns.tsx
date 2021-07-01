@@ -30,7 +30,7 @@ export const SchedulingColumns = [
   {
     title: 'Status',
     key: 'activityStatus',
-    dataIndex: null,
+    dataIndex: undefined,
     width: 110,
     render: (activity) => (
       <SortableTableCell className={`activityStatus_${activity._id}`}>
