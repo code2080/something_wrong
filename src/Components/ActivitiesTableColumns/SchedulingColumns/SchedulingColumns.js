@@ -3,17 +3,22 @@ import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
 import ActivityTag from './ActivityTaging';
 
-export const SchedulingColumns = [
+export const SchedulingColumns = (selectedRowKeys = []) => [
   {
     title: '',
     key: 'activityScheduling',
     dataIndex: undefined,
     width: 90,
-    render: (activity) => (
-      <SortableTableCell className={`activityScheduling_${activity._id}`}>
-        <SchedulingActions activity={activity} />
-      </SortableTableCell>
-    ),
+    render: (activity) => {
+      return (
+        <SortableTableCell className={`activityScheduling_${activity._id}`}>
+          <SchedulingActions
+            activity={activity}
+            selectedRowKeys={selectedRowKeys}
+          />
+        </SortableTableCell>
+      );
+    },
   },
   {
     title: 'Tag',

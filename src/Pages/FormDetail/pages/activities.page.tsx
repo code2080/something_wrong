@@ -15,7 +15,6 @@ import {
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
-import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
@@ -51,7 +50,6 @@ const ActivitiesPage = () => {
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
-  const objectRequests = useSelector(selectFormObjectRequest(formId));
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -72,15 +70,18 @@ const ActivitiesPage = () => {
   const [yScroll] = useState(calculateAvailableTableHeight());
 
   /**
+   * STATE
+   */
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+
+  /**
    * MEMOIZED PROPS
    */
-  const tableColumns = useMemo(
-    () =>
-      design
-        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
-        : [],
-    [design, objectRequests],
-  );
+  const tableColumns = useMemo(() => {
+    return design
+      ? createActivitiesTableColumnsFromMapping(design, selectedRowKeys)
+      : [];
+  }, [design, selectedRowKeys]);
 
   const selectActivitySortingOrder = useMemo(
     () => makeSelectSortOrderForActivities(),
@@ -102,11 +103,6 @@ const ActivitiesPage = () => {
       ),
     [allActivities, keyedActivities, sortOrder],
   );
-
-  /**
-   * STATE
-   */
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   /**
    * EVENT HANDLERS

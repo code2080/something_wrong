@@ -11,7 +11,7 @@ import { activityStatuses } from '../../../../Constants/activityStatuses.constan
 // STYLES
 import './SchedulingActions.scss';
 
-const SchedulingActions = ({ activity }) => {
+const SchedulingActions = ({ activity, selectedRowKeys }) => {
   return (
     <div className='scheduling-actions-column--wrapper'>
       {activity.activityStatus === activityStatuses.COMPLETED && (
@@ -19,7 +19,10 @@ const SchedulingActions = ({ activity }) => {
       )}
       <SchedulingCheckbox activity={activity} />
       <SelectActivityButton activity={activity} />
-      <JointTeachingIcon activity={activity} />
+      <JointTeachingIcon
+        activity={activity}
+        selectedRowKeys={selectedRowKeys}
+      />
       <ActionsDropdown buttonType='ellipsis' activity={activity} />
     </div>
   );
@@ -27,6 +30,7 @@ const SchedulingActions = ({ activity }) => {
 
 SchedulingActions.propTypes = {
   activity: PropTypes.object.isRequired,
+  selectedRowKeys: PropTypes.array,
 };
 
 export default SchedulingActions;

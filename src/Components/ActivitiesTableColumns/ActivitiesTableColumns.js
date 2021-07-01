@@ -8,7 +8,10 @@ import { SchedulingColumns } from './SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from './StaticColumns/StaticColumns';
 
 // SORTERS
-export const createActivitiesTableColumnsFromMapping = (design) => {
+export const createActivitiesTableColumnsFromMapping = (
+  design,
+  selectedRowKeys = [],
+) => {
   const allActivityValues = [
     ...Object.keys(design.objects).map((objKey) => ['types', objKey]),
     ...Object.keys(design.fields).map((fieldKey) => ['fields', fieldKey]),
@@ -32,9 +35,8 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
     ],
     [],
   );
-
   return [
-    ...SchedulingColumns,
+    ...SchedulingColumns(selectedRowKeys),
     ...TimingColumns[design.timing.mode](design),
     ...activityValueColumns,
     ...StaticColumns,

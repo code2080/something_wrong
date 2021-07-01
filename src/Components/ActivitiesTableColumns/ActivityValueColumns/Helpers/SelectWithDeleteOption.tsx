@@ -1,6 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Select } from 'antd';
-const { Option } = Select;
 
 type Props = {
   header: string;
