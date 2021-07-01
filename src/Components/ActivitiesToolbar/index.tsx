@@ -18,10 +18,11 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
-import { useMemo } from 'react';
+import { Key, useMemo } from 'react';
+import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
 
 type Props = {
-  selectedRowKeys: string[];
+  selectedRowKeys: Key[];
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onScheduleActivities: (activities) => void;
@@ -46,10 +47,10 @@ const ActivitiesToolbar = ({
     () => makeSelectActivitiesForFormAndIds(),
     [],
   );
-  const activities: TActivity[] = useSelector((state) =>
+  const selectedActivities: TActivity[] = useSelector((state) =>
     selectActivitiesForFormAndIds(state, {
       formId,
-      activityIds: selectedRowKeys,
+      activityIds: selectedRowKeys as string[],
     }),
   );
   const hasSchedulingPermissions = useSelector(
@@ -65,7 +66,7 @@ const ActivitiesToolbar = ({
       <Popover
         overlayClassName='activity-tag-popover--wrapper'
         title='Tag activity'
-        content={<ActivityTagPopover activities={activities} />}
+        content={<ActivityTagPopover activities={selectedActivities} />}
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
@@ -96,7 +97,7 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onScheduleActivities(activities)}
+        onClick={() => onScheduleActivities(selectedActivities)}
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
         Schedule selected activities
@@ -111,7 +112,10 @@ const ActivitiesToolbar = ({
       </Button>
       <Divider type='vertical' />
       <TagSelectedActivitiesButton />
-    
+      <JointTeachingGroupMerger
+        activities={selectedActivities}
+        formId={formId}
+      />
       <ActivityFiltering />
     </div>
   );
