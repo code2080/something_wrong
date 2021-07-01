@@ -1,6 +1,9 @@
 // COMPONENTS
 import ColumnWrapper from './new/ColumnWrapper';
 import TitleCell from './new/TitleCell';
+import ActivityStatusCol from '../../Components/ActivitiesTableColumns/SchedulingColumns/StatusCol/ActivityStatusCol';
+import SortableTableCell from '../../Components/DynamicTable/SortableTableCell';
+import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging';
 
 // COLUMNS
 import { Field } from 'Redux/TE/te.selectors';
@@ -39,10 +42,31 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
   );
 
   return [
+    {
+      title: 'Tag',
+      key: 'activityTag',
+      dataIndex: undefined,
+      width: 100,
+      render: (activity) => (
+        <SortableTableCell className={`activityTag${activity._id}`}>
+          <ActivityTag activities={[activity]} />
+        </SortableTableCell>
+      ),
+      sorter: true,
+    },
+    {
+      title: 'Status',
+      key: 'activityStatus',
+      dataIndex: undefined,
+      width: 110,
+      render: (activity) => (
+        <SortableTableCell className={`activityStatus_${activity._id}`}>
+          <ActivityStatusCol activity={activity} />
+        </SortableTableCell>
+      ),
+      sorter: true,
+    },
     ...TimingColumns[design.timing.mode](design),
     ...activityValueColumns,
   ];
-  // ...SchedulingColumns,
-  // ...TimingColumns[design.timing.mode](design),
-  // ...StaticColumns,
 };
