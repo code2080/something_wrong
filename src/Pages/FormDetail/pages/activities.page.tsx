@@ -2,6 +2,8 @@ import { Key, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
+import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -126,6 +128,10 @@ const ActivitiesPage = () => {
         onSort={onSortActivities}
         selectedActivities={selectedRowKeys}
         onSelect={setSelectedRowKeys}
+        additionalColumns={{
+          pre: SchedulingColumns,
+          post: StaticColumns,
+        }}
       />
     </>
   );

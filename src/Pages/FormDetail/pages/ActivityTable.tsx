@@ -4,7 +4,7 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
-import type { SorterResult } from 'antd/lib/table/interface';
+import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 
 type Props = {
   design: any;
@@ -13,6 +13,7 @@ type Props = {
   isLoading?: boolean;
   onSelect?(selectedRowKeys: Key[]): void;
   onSort?(sorter: SorterResult<object> | SorterResult<object>[]): void;
+  additionalColumns?: { pre?: ColumnsType<object>; post?: ColumnsType<object> };
 };
 
 const ActivityTable = ({
@@ -22,6 +23,10 @@ const ActivityTable = ({
   selectedActivities = [],
   onSelect = _.noop,
   onSort = _.noop,
+  additionalColumns = {
+    pre: [],
+    post: [],
+  },
   ...props
 }: Props) => {
   const calculateAvailableTableHeight = () => {
@@ -36,7 +41,11 @@ const ActivityTable = ({
   return (
     <VirtualTable
       scroll={{ y: yScroll }}
-      columns={tableColumns}
+      columns={[
+        ...(additionalColumns.pre ?? []),
+        ...tableColumns,
+        ...(additionalColumns.post ?? []),
+      ]}
       dataSource={activities}
       rowKey='_id'
       loading={isLoading && !activities?.length}
