@@ -20,7 +20,7 @@ const ActivityTable = ({
   design,
   activities,
   isLoading = false,
-  selectedActivities = [],
+  selectedActivities,
   onSelect = _.noop,
   onSort = _.noop,
   additionalColumns = {
@@ -49,10 +49,12 @@ const ActivityTable = ({
       dataSource={activities}
       rowKey='_id'
       loading={isLoading && !activities?.length}
-      rowSelection={{
-        selectedRowKeys: selectedActivities,
-        onChange: (selectedRowKeys) => onSelect(selectedRowKeys as Key[]),
-      }}
+      rowSelection={
+        selectedActivities && {
+          selectedRowKeys: selectedActivities,
+          onChange: (selectedRowKeys) => onSelect(selectedRowKeys as Key[]),
+        }
+      }
       onChange={(pagination, filters, sorter) => onSort(sorter)}
       {...props}
     />
