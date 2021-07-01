@@ -6,8 +6,9 @@ import { Button } from 'antd';
 import HoverAndClickPopOver from '../../ActivityValueColumns/Helpers/HoverAndClickPopOver';
 import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
 import { useMemo, useState } from 'react';
+import { updateActivity } from '../../../../Redux/Activities/activities.actions';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
@@ -16,7 +17,7 @@ import _ from 'lodash';
 const JointTeachingIcon = ({ activity }) => {
   if (!activity?.formId) return null;
   const { formId }: { formId: string } = activity;
-
+  const dispatch = useDispatch();
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const selectForm = useMemo(() => makeSelectForm(), []);
 
@@ -28,14 +29,27 @@ const JointTeachingIcon = ({ activity }) => {
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );
-  const [teachingObject, setTeachingObject] = useState(null);
+  const [teachingObject, setTeachingObject] = useState(
+    activity?.jointTeachingObject || null,
+  );
 
-  const handleSelectJointTeachObj = (jointTeachingObj): void => {
-    setTeachingObject(jointTeachingObj);
+  const handleSelectJointTeachObj = (jointTeachingObject): void => {
+    const updatedActivity = {
+      ...activity,
+      jointTeachingObject,
+    };
+
+    setTeachingObject(jointTeachingObject);
+    dispatch(updateActivity(updatedActivity));
   };
 
   const handleResetJointTeachObj = () => {
     setTeachingObject(null);
+    const updatedActivity = {
+      ...activity,
+      jointTeachingObject: null,
+    };
+    dispatch(updateActivity(updatedActivity));
   };
 
   const hoverContent = 'Click to indicate joint teaching';
