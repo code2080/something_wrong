@@ -1,59 +1,25 @@
-/* eslint-disable no-unused-vars */
 import _ from 'lodash';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
-import {
-  FETCH_ACTIVITIES_FOR_FORM_REQUEST,
-  FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-  FETCH_ACTIVITIES_FOR_FORM_FAILURE,
-  FETCH_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
-  FETCH_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
-  FETCH_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
-  SAVE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
-  SAVE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
-  SAVE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
-  DELETE_ACTIVITIES_FOR_FORM_REQUEST,
-  DELETE_ACTIVITIES_FOR_FORM_SUCCESS,
-  DELETE_ACTIVITIES_FOR_FORM_FAILURE,
-  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
-  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
-  DELETE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
-  MANUALLY_OVERRIDE_ACTIVITY_VALUE_REQUEST,
-  MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS,
-  MANUALLY_OVERRIDE_ACTIVITY_VALUE_FAILURE,
-  REVERT_TO_SUBMISSION_VALUE_REQUEST,
-  REVERT_TO_SUBMISSION_VALUE_SUCCESS,
-  REVERT_TO_SUBMISSION_VALUE_FAILURE,
-  UPDATE_ACTIVITY_REQUEST,
-  UPDATE_ACTIVITY_SUCCESS,
-  UPDATE_ACTIVITY_FAILURE,
-  UPDATE_ACTIVITIES_REQUEST,
-  UPDATE_ACTIVITIES_SUCCESS,
-  UPDATE_ACTIVITIES_FAILURE,
-  REORDER_ACTIVITIES_REQUEST,
-  REORDER_ACTIVITIES_SUCCESS,
-  REORDER_ACTIVITIES_FAILURE,
-  SET_SCHEDULING_STATUS_OF_ACTIVITIES_REQUEST,
-  SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS,
-  SET_SCHEDULING_STATUS_OF_ACTIVITIES_FAILURE,
-} from './activities.actionTypes';
+import * as activitiesActionTypes from './activities.actionTypes';
 
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
+import { notification } from 'antd';
 
 const fetchActivitiesForFormFlow = (formId) => ({
   request: () => ({
-    type: FETCH_ACTIVITIES_FOR_FORM_REQUEST,
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId } },
   }),
   success: (response) => ({
-    type: FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
     payload: { ...response, actionMeta: { formId } },
   }),
   failure: (err) => ({
-    type: FETCH_ACTIVITIES_FOR_FORM_FAILURE,
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_FAILURE,
     payload: { ...err, actionMeta: { formId } },
   }),
 });
@@ -70,13 +36,15 @@ export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
   });
 };
 const fetchActivitiesForFormInstanceFlow = {
-  request: () => ({ type: FETCH_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
+  }),
   success: (response) => ({
-    type: FETCH_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: FETCH_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
+    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
     payload: { ...err },
   }),
 };
@@ -89,13 +57,15 @@ export const fetchActivitiesForFormInstance = (formId, formInstanceId) =>
   });
 
 const saveActivitiesFlow = {
-  request: () => ({ type: SAVE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.SAVE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
+  }),
   success: (response) => ({
-    type: SAVE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
+    type: activitiesActionTypes.SAVE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: SAVE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
+    type: activitiesActionTypes.SAVE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
     payload: { ...err },
   }),
 };
@@ -114,13 +84,15 @@ export const saveActivities = (formId, formInstanceId, callback) =>
   });
 
 const manuallyOverrideActivityValueFlow = {
-  request: () => ({ type: MANUALLY_OVERRIDE_ACTIVITY_VALUE_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.MANUALLY_OVERRIDE_ACTIVITY_VALUE_REQUEST,
+  }),
   success: (response) => ({
-    type: MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS,
+    type: activitiesActionTypes.MANUALLY_OVERRIDE_ACTIVITY_VALUE_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: MANUALLY_OVERRIDE_ACTIVITY_VALUE_FAILURE,
+    type: activitiesActionTypes.MANUALLY_OVERRIDE_ACTIVITY_VALUE_FAILURE,
     payload: { ...err },
   }),
 };
@@ -141,13 +113,15 @@ export const overrideActivityValue = (newValue, activityValue, activity) => {
 };
 
 const revertToSubmissionValueFlow = {
-  request: () => ({ type: REVERT_TO_SUBMISSION_VALUE_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.REVERT_TO_SUBMISSION_VALUE_REQUEST,
+  }),
   success: (response) => ({
-    type: REVERT_TO_SUBMISSION_VALUE_SUCCESS,
+    type: activitiesActionTypes.REVERT_TO_SUBMISSION_VALUE_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: REVERT_TO_SUBMISSION_VALUE_FAILURE,
+    type: activitiesActionTypes.REVERT_TO_SUBMISSION_VALUE_FAILURE,
     payload: { ...err },
   }),
 };
@@ -167,13 +141,15 @@ export const revertToSubmissionValue = (activityValue, activity) => {
 };
 
 const deleteActivitiesFlow = {
-  request: () => ({ type: DELETE_ACTIVITIES_FOR_FORM_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_REQUEST,
+  }),
   success: (response) => ({
-    type: DELETE_ACTIVITIES_FOR_FORM_SUCCESS,
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: DELETE_ACTIVITIES_FOR_FORM_FAILURE,
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_FAILURE,
     payload: { ...err },
   }),
 };
@@ -186,13 +162,15 @@ export const deleteActivities = (formId) =>
   });
 
 const deleteActivitiesInFormInstanceFlow = {
-  request: () => ({ type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_INSTANCE_REQUEST,
+  }),
   success: (response) => ({
-    type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_INSTANCE_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: DELETE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
+    type: activitiesActionTypes.DELETE_ACTIVITIES_FOR_FORM_INSTANCE_FAILURE,
     payload: { ...err },
   }),
 };
@@ -207,12 +185,15 @@ export const deleteActivitiesInFormInstance = (formId, formInstanceId) =>
   });
 
 const updateActivityFlow = {
-  request: () => ({ type: UPDATE_ACTIVITY_REQUEST }),
+  request: () => ({ type: activitiesActionTypes.UPDATE_ACTIVITY_REQUEST }),
   success: (response) => ({
-    type: UPDATE_ACTIVITY_SUCCESS,
+    type: activitiesActionTypes.UPDATE_ACTIVITY_SUCCESS,
     payload: { ...response },
   }),
-  failure: (err) => ({ type: UPDATE_ACTIVITY_FAILURE, payload: { ...err } }),
+  failure: (err) => ({
+    type: activitiesActionTypes.UPDATE_ACTIVITY_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const updateActivity = (activity) =>
@@ -223,12 +204,15 @@ export const updateActivity = (activity) =>
   });
 
 const updateActivitiesFlow = {
-  request: () => ({ type: UPDATE_ACTIVITIES_REQUEST }),
+  request: () => ({ type: activitiesActionTypes.UPDATE_ACTIVITIES_REQUEST }),
   success: (response) => ({
-    type: UPDATE_ACTIVITIES_SUCCESS,
+    type: activitiesActionTypes.UPDATE_ACTIVITIES_SUCCESS,
     payload: { ...response },
   }),
-  failure: (err) => ({ type: UPDATE_ACTIVITIES_FAILURE, payload: { ...err } }),
+  failure: (err) => ({
+    type: activitiesActionTypes.UPDATE_ACTIVITIES_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const updateActivities = (formId, formInstanceId, activities) =>
@@ -244,13 +228,15 @@ export const updateActivities = (formId, formInstanceId, activities) =>
   });
 
 export const setSchedulingStatusOfActivitiesFlow = {
-  request: () => ({ type: SET_SCHEDULING_STATUS_OF_ACTIVITIES_REQUEST }),
+  request: () => ({
+    type: activitiesActionTypes.SET_SCHEDULING_STATUS_OF_ACTIVITIES_REQUEST,
+  }),
   success: (response) => ({
-    type: SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS,
+    type: activitiesActionTypes.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
-    type: SET_SCHEDULING_STATUS_OF_ACTIVITIES_FAILURE,
+    type: activitiesActionTypes.SET_SCHEDULING_STATUS_OF_ACTIVITIES_FAILURE,
     payload: { ...err },
   }),
 };
@@ -268,14 +254,17 @@ export const setSchedulingStatusOfActivities = (formId, schedulingStatuses) =>
 
 const reorderActivitiesFlow = {
   request: ({ formId, formInstanceId, sourceIdx, destinationIdx }) => ({
-    type: REORDER_ACTIVITIES_REQUEST,
+    type: activitiesActionTypes.REORDER_ACTIVITIES_REQUEST,
     payload: { formId, formInstanceId, sourceIdx, destinationIdx },
   }),
   success: (response) => ({
-    type: REORDER_ACTIVITIES_SUCCESS,
+    type: activitiesActionTypes.REORDER_ACTIVITIES_SUCCESS,
     payload: { ...response },
   }),
-  failure: (err) => ({ type: REORDER_ACTIVITIES_FAILURE, payload: { ...err } }),
+  failure: (err) => ({
+    type: activitiesActionTypes.REORDER_ACTIVITIES_FAILURE,
+    payload: { ...err },
+  }),
 };
 
 export const reorderActivities = (
@@ -295,4 +284,31 @@ export const reorderActivities = (
       sourceIdx,
       destinationIdx,
     },
+  });
+
+const createActivityFlow = {
+  request: () => ({ type: activitiesActionTypes.CREATE__ACTIVITY_REQUEST }),
+  failure: (err) => ({
+    type: activitiesActionTypes.CREATE__ACTIVITY_FAILURE,
+    payload: err,
+  }),
+  success: (response) => {
+    notification.success({
+      getContainer: () => document.getElementById('te-prefs-lib'),
+      message: 'Activities merged',
+      description: 'Successfully merged the activities!',
+    });
+
+    return {
+      type: activitiesActionTypes.CREATE__ACTIVITY_SUCCESS,
+      payload: response,
+    };
+  },
+};
+
+export const createActivity = ({ formId, activity }) =>
+  asyncAction.POST({
+    flow: createActivityFlow,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+    params: activity,
   });
