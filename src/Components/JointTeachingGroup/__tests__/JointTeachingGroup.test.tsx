@@ -520,7 +520,9 @@ describe('Joint Teaching Group tests', () => {
         formId='test'
         activities={Object.values(activities).flat()}
       />,
-      { initialState: { activites: { formIdTest: { submissionIdTest: [] } } } },
+      {
+        initialState: { activities: { formIdTest: { submissionIdTest: [] } } },
+      },
     );
   });
 

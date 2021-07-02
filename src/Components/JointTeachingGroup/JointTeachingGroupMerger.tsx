@@ -1,14 +1,21 @@
 import { Button, Modal } from 'antd';
 import { TActivity } from 'Types/Activity.type';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ActivityTable from 'Pages/FormDetail/pages/ActivityTable';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 // import JointTeachingGroup from '../../Models/JointTeachingGroup.model';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import {
+  createActivity,
+  fetchActivitiesForForm,
+  // updateActivities,
+} from '../../Redux/Activities/activities.actions';
+// import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import _ from 'lodash';
+import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { makeSelectSortParamsForActivities } from 'Redux/GlobalUI/globalUI.selectors';
 
 type Props = {
   activities: TActivity[];
@@ -23,6 +30,30 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
   // );
   const [visible, setVisible] = useState(false);
   const design = useSelector(selectDesignForForm)(formId);
+  const dispatch = useDispatch();
+
+  /**
+   * SELECTORS
+   */
+
+  // Select filters
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  // Select sorting
+  const selectActivityParamSorting = useMemo(
+    () => makeSelectSortParamsForActivities(),
+    [],
+  );
+
+  const selectedSortingParams = useSelector((state) =>
+    selectActivityParamSorting(state, formId),
+  );
 
   const mergeActivityValues = (lAV: ActivityValue, rAV: ActivityValue) => {
     if (lAV.value === rAV.value) return lAV.value;
@@ -40,7 +71,7 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
   const canMergectivities =
     activities.length > 1 &&
     !activities.some((act) =>
-      ['SCHEDULED', 'QUEUED'].includes(act.activityStatus),
+      ['SCHEDULED', 'QUEUED', 'INACTIVE'].includes(act.activityStatus),
     );
 
   const mergeActivities = (activities: TActivity[]) =>
@@ -57,7 +88,7 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
       }),
     }));
 
-  const handleMerge = () => {
+  const handleMerge = async () => {
     /*
     TODO:
     Validate
@@ -72,16 +103,22 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
       '_id',
       'formInstanceId',
     ]);
-    const inactivatedActivities = activities.map(
-      (act) =>
-        ({
-          ...act,
-          activityStatus: EActivityStatus.INACTIVE,
-        } as TActivity),
+    // const inactivatedActivities = activities.map(
+    //   (act) =>
+    //     ({
+    //       ...act,
+    //       activityStatus: EActivityStatus.INACTIVE,
+    //     } as TActivity),
+    // );
+    // dispatch(updateActivities(formId, null, inactivatedActivities));
+    await dispatch(createActivity({ formId, activity: mergedActivity }));
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        selectedFilterValues,
+        selectedSortingParams,
+      ),
     );
-    console.log(mergedActivity);
-    // dispatch updateactivities(inactivatedActivities)
-    // dispatch createNewActivity
   };
 
   return (
