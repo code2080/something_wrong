@@ -9,20 +9,20 @@ import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import { setSchedulingStatusOfActivities } from '../../../../Redux/Activities/activities.actions';
 
 // CONSTANTS
-import { activityStatuses } from '../../../../Constants/activityStatuses.constants';
 
 // STYLES
 import './SchedulingCheckbox.scss';
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {
-    if (activityStatus === activityStatuses.SCHEDULED)
-      return activityStatuses.NOT_SCHEDULED;
-    return activityStatuses.SCHEDULED;
+    if (activityStatus === EActivityStatus.SCHEDULED)
+      return EActivityStatus.NOT_SCHEDULED;
+    return EActivityStatus.SCHEDULED;
   } else {
-    return activityStatus !== activityStatuses.SCHEDULED
-      ? activityStatuses.NOT_SCHEDULED
-      : activityStatuses.SCHEDULED;
+    return activityStatus !== EActivityStatus.SCHEDULED
+      ? EActivityStatus.NOT_SCHEDULED
+      : EActivityStatus.SCHEDULED;
   }
 };
 
@@ -72,7 +72,7 @@ const SchedulingCheckbox = ({ activity }) => {
       setSchedulingStatusOfActivities(formId, [
         {
           activityId: activity._id,
-          activityStatus: activityStatuses.SCHEDULED,
+          activityStatus: EActivityStatus.SCHEDULED,
           errorDetails: null,
           reservationId: null,
         },
@@ -85,7 +85,7 @@ const SchedulingCheckbox = ({ activity }) => {
       setSchedulingStatusOfActivities(formId, [
         {
           activityId: activity._id,
-          activityStatus: activityStatuses.NOT_SCHEDULED,
+          activityStatus: EActivityStatus.NOT_SCHEDULED,
           errorDetails: null,
           reservationId: null,
         },
@@ -103,11 +103,11 @@ const SchedulingCheckbox = ({ activity }) => {
       onMouseLeave={() => setShowInvertedState(false)}
       className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus}`}
     >
-      {activity.activityStatus !== activityStatuses.SCHEDULED && (
+      {activity.activityStatus !== EActivityStatus.SCHEDULED && (
         <Button
           size='small'
           icon={
-            derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
+            derivedSchedulingStatus !== EActivityStatus.SCHEDULED ? (
               <MinusSquareOutlined />
             ) : (
               <CheckSquareOutlined />
@@ -117,7 +117,7 @@ const SchedulingCheckbox = ({ activity }) => {
           className={derivedSchedulingStatus}
         />
       )}
-      {activity.activityStatus === activityStatuses.SCHEDULED && (
+      {activity.activityStatus === EActivityStatus.SCHEDULED && (
         <Popconfirm
           title='Are you sure you want to unschedule this activity?'
           onConfirm={onUnscheduleActivity}
@@ -129,7 +129,7 @@ const SchedulingCheckbox = ({ activity }) => {
           <Button
             size='small'
             icon={
-              derivedSchedulingStatus !== activityStatuses.SCHEDULED ? (
+              derivedSchedulingStatus !== EActivityStatus.SCHEDULED ? (
                 <MinusSquareOutlined />
               ) : (
                 <CheckSquareOutlined />

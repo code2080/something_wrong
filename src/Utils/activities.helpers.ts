@@ -1,6 +1,5 @@
 import _ from 'lodash';
 // CONSTANTS
-import { activityStatuses } from '../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
@@ -14,6 +13,7 @@ import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import { TFormInstance } from '../Types/FormInstance.type';
 import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 // FUNCTIONS
 /**
@@ -60,9 +60,7 @@ export const findObjectPathForActivityValue = (valueExtId, activity) => {
  */
 export const validateScheduledActivities = (activities, teCoreAPI) => {
   const reservationIds = activities
-    .filter(
-      (activity) => activity.activityStatus === activityStatuses.SCHEDULED,
-    )
+    .filter((activity) => activity.activityStatus === EActivityStatus.SCHEDULED)
     .map((activity) => activity.reservationId);
 
   teCoreAPI[teCoreCallnames.VALIDATE_RESERVATIONS]({
@@ -101,8 +99,7 @@ export const hydrateObjectRequests = (
 
 export const activityIsReadOnly = (status) =>
   // TODO: Temporarily disables editing activities until we ensure it works again
-  true ||
-  [activityStatuses.SCHEDULED, activityStatuses.QUEUED].includes(status);
+  true || [EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
   activityValue: ActivityValue,

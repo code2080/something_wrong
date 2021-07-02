@@ -9,9 +9,9 @@ import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.sel
 import {
   createActivity,
   fetchActivitiesForForm,
-  // updateActivities,
+  updateActivities,
 } from '../../Redux/Activities/activities.actions';
-// import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import _ from 'lodash';
 import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
@@ -70,8 +70,10 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
 
   const canMergectivities =
     activities.length > 1 &&
-    !activities.some((act) =>
-      ['SCHEDULED', 'QUEUED', 'INACTIVE'].includes(act.activityStatus),
+    !activities.some(
+      (act) =>
+        ['SCHEDULED', 'QUEUED', 'INACTIVE'].includes(act.activityStatus) ||
+        !act.formInstanceId,
     );
 
   const mergeActivities = (activities: TActivity[]) =>
@@ -103,14 +105,14 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
       '_id',
       'formInstanceId',
     ]);
-    // const inactivatedActivities = activities.map(
-    //   (act) =>
-    //     ({
-    //       ...act,
-    //       activityStatus: EActivityStatus.INACTIVE,
-    //     } as TActivity),
-    // );
-    // dispatch(updateActivities(formId, null, inactivatedActivities));
+    const inactivatedActivities = activities.map(
+      (act) =>
+        ({
+          ...act,
+          activityStatus: EActivityStatus.INACTIVE,
+        } as TActivity),
+    );
+    dispatch(updateActivities(formId, null, inactivatedActivities));
     await dispatch(createActivity({ formId, activity: mergedActivity }));
     dispatch(
       fetchActivitiesForForm(
