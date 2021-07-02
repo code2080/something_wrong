@@ -65,10 +65,8 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
 
   const updateJointTeachingObjects = (jointTeachingObject) => {
     if (
-      _.isEmpty(
-        selectedActivitiesInRow ||
-          !_.includes(selectedActivitiesInRow, activity),
-      )
+      _.isEmpty(selectedActivitiesInRow) ||
+      !_.includes(selectedActivitiesInRow, activity)
     ) {
       updateSingleObject({ ...activity, jointTeachingObject });
     } else {
