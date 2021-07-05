@@ -86,12 +86,12 @@ export const getSectionsToUseInActivities = (sections, activityDesign) => {
  */
 
 export const findTimeSlot = (startTime, endTime, timeslots) => {
-  const _startTime = moment.utc(startTime).format(TIME_FORMAT);
-  const _endTime = moment.utc(endTime).format(TIME_FORMAT);
+  const eventStart = moment(startTime).format(TIME_FORMAT);
+  const eventEnd = moment(endTime).format(TIME_FORMAT);
   return timeslots.find((timeslot) => {
-    const slotStart = moment.utc(timeslot.startTime).format(TIME_FORMAT);
-    const slotEnd = moment.utc(timeslot.endTime).format(TIME_FORMAT);
-    return slotStart === _startTime && slotEnd === _endTime;
+    const slotStart = moment(timeslot.startTime).format(TIME_FORMAT);
+    const slotEnd = moment(timeslot.endTime).format(TIME_FORMAT);
+    return slotStart === eventStart && slotEnd === eventEnd;
   });
 };
 

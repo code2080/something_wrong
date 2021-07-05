@@ -38,6 +38,9 @@
     "storybook": "start-storybook -p 6006",
     "storybook:export": "build-storybook"
   },
+  "jest": {
+    "globalSetup": "<rootDir>/globalSetup.jest.ts"
+  },
   "peerDependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "antd": "^4.1.0",
