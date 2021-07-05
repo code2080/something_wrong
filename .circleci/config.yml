@@ -1,11 +1,14 @@
 version: 2.1
+
 jobs:
   test:
     docker:
       # Primary container
-      - image: circleci/node:15.14.0
+      - image: circleci/node:15.4.0
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
       - restore_cache:
           keys:
             - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
