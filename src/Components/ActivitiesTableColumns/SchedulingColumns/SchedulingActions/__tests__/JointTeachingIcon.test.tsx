@@ -574,4 +574,23 @@ describe('JointTeachingIcon test', () => {
       expect(screen.getByRole('button')).toBeDisabled();
     });
   });
+
+  describe('Test editing of activities', () => {
+    it('Set joint teaching object and reset it', () => {
+      const { getByRole } = render(
+        <Provider store={store}>
+          <JointTeachingIcon activity={fakeActivity} />
+        </Provider>,
+      );
+
+      fireEvent.click(getByRole('button'));
+      expect(getByRole('combobox')).toHaveValue('');
+      fireEvent.change(getByRole('combobox'), {
+        target: { value: 'Test' },
+      });
+      expect(getByRole('combobox')).toHaveValue('Test');
+      const delButton = screen.getByRole('button', { name: 'delete' });
+      expect(delButton).toBeInTheDocument();
+    });
+  });
 });
