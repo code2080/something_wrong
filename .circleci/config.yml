@@ -3,7 +3,7 @@ jobs:
   test:
     docker:
       # Primary container
-      - image: circleci/node:8.9.4
+      - image: circleci/node:16.4.0
     steps:
       - checkout
       - restore_cache:
@@ -22,7 +22,7 @@ jobs:
           name: Lint and Test
           command: |
             mkdir -p ~/reports
-            yarn lint --output-file ~/reports/eslint.xml
+            yarn lint --format junit --output-file ~/reports/eslint.xml
             yarn test
           environment:
             JEST_JUNIT_OUTPUT: '~/reports/test-results.xml'
