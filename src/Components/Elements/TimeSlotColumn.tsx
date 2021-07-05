@@ -30,7 +30,9 @@ const TimeSlotColumn = ({ event, timeslots }) => {
       title={tooltipTitle}
       mouseEnterDelay={0.8}
       placement='topLeft'
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
     >
       <div className='picker--wrapper'>
         <div className='icon--wrapper'>
