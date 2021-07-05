@@ -1,0 +1,38 @@
+version: 2.1
+jobs:
+  test:
+    docker:
+      # Primary container
+      - image: circleci/node:8.9.4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - dependencies-{{ .Branch }}-
+            - dependencies-master-
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          key: dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Lint and Test
+          command: |
+            mkdir -p ~/reports
+            yarn lint --output-file ~/reports/eslint.xml
+            yarn test
+          environment:
+            JEST_JUNIT_OUTPUT: '~/reports/test-results.xml'
+      - store_test_results:
+          path: ~/reports
+      - store_artifacts:
+          path: ~/reports
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
