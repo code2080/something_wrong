@@ -12,7 +12,9 @@ export const renderWithState = (
 ) => {
   const store = configureStore(initialState);
   const Wrapper = ({ children }: { children?: ReactNode }) => (
-    <Provider store={store}>{children}</Provider>
+    <Provider store={store}>
+      <div id='te-prefs-lib'>{children}</div>
+    </Provider>
   );
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
