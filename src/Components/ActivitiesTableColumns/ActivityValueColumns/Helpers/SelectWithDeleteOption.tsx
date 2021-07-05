@@ -4,7 +4,7 @@ import { Button, Select } from 'antd';
 type Props = {
   header: string;
   placeholder?: string;
-  onSelect: (jointTeachingObj) => void;
+  onSelect: (jointTeaching) => void;
   onDelete: () => void;
   selectedValue: string | undefined | null;
   selectValues: (string | null)[];

@@ -44,7 +44,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
     [form, submissions],
   );
   const [localTeachingObject, setTeachingObject] = useState(
-    activity?.jointTeachingObject || null,
+    activity?.jointTeaching || null,
   );
 
   const updateSingleObject = (updatedActivities) => {
@@ -57,7 +57,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
   ) => {
     const updatedActivities = selectedActivitiesInRow.map((activity) => ({
       ...activity,
-      jointTeachingObject,
+      jointTeaching: jointTeachingObject,
     }));
 
     dispatch(updateActivities(formId, formInstanceId, updatedActivities));
@@ -68,7 +68,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
       _.isEmpty(selectedActivitiesInRow) ||
       !_.includes(selectedActivitiesInRow, activity)
     ) {
-      updateSingleObject({ ...activity, jointTeachingObject });
+      updateSingleObject({ ...activity, jointTeaching: jointTeachingObject });
     } else {
       updateMultipleObjects(selectedActivitiesInRow, jointTeachingObject);
     }

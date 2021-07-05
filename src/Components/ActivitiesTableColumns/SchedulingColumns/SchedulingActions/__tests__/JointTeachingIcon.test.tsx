@@ -1,4 +1,5 @@
 import JointTeachingIcon from '../JointTeachingIcon';
+import SchedulingActions from '../SchedulingActions';
 import mockStore from '../TestHelpers/TestHelpers';
 import configureStore from '../../../../../Redux/store';
 import React from 'react';
