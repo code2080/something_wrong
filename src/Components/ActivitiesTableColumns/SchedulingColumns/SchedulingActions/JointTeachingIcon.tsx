@@ -12,11 +12,16 @@ import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/Activities/
 import { useSelector, useDispatch } from 'react-redux';
 
 import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
-import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import _ from 'lodash';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity.type';
 
-const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
+type Props = {
+  activity: TActivity;
+  selectedRowKeys: string[];
+};
+
+const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
   if (!activity?.formId) return null;
   const { formId, formInstanceId }: { formId: string; formInstanceId: string } =
     activity;
@@ -44,37 +49,30 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }) => {
     [form, submissions],
   );
   const [localTeachingObject, setTeachingObject] = useState(
-    activity?.jointTeaching || null,
+    activity?.jointTeaching?.object || null,
   );
 
-  const updateSingleObject = (updatedActivities) => {
-    dispatch(updateActivities(formId, formInstanceId, [updatedActivities]));
-  };
-
-  const updateMultipleObjects = (
-    selectedActivitiesInRow,
-    jointTeachingObject,
+  const updateObjects = (
+    selectedActivitiesInRow: TActivity[],
+    jointTeachingObject: string | null,
   ) => {
     const updatedActivities = selectedActivitiesInRow.map((activity) => ({
       ...activity,
-      jointTeaching: jointTeachingObject,
+      jointTeaching: { ...activity.jointTeaching, object: jointTeachingObject },
     }));
 
     dispatch(updateActivities(formId, formInstanceId, updatedActivities));
   };
 
-  const updateJointTeachingObjects = (jointTeachingObject) => {
-    if (
-      _.isEmpty(selectedActivitiesInRow) ||
-      !_.includes(selectedActivitiesInRow, activity)
-    ) {
-      updateSingleObject({ ...activity, jointTeaching: jointTeachingObject });
+  const updateJointTeachingObjects = (jointTeachingObject: string | null) => {
+    if (_.includes(selectedActivitiesInRow, activity)) {
+      updateObjects(selectedActivitiesInRow, jointTeachingObject);
     } else {
-      updateMultipleObjects(selectedActivitiesInRow, jointTeachingObject);
+      updateObjects([activity], jointTeachingObject);
     }
   };
 
-  const handleSelectJointTeachObj = (jointTeachingObject): void => {
+  const handleSelectJointTeachObj = (jointTeachingObject: string | null) => {
     setTeachingObject(jointTeachingObject);
     updateJointTeachingObjects(jointTeachingObject);
   };

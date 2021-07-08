@@ -16,4 +16,5 @@ export type TActivity = {
   errorDetails?: any; // Instance of scheduling error
   timing: ActivityValue[]; // An array of ActivityValue, with each element's extId representing one of the properties in the ActivityTiming.model.js
   values: ActivityValue[]; // An array of ActivityValue, with each element's extId representing one of the mapped properties in the form's Activity Designer Mapping
+  jointTeaching: { object: string; typeExtId: string };
 };
