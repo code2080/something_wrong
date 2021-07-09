@@ -1,3 +1,5 @@
+import { TFormInstance } from '../Types/FormInstance.type';
+
 export const form = {
   _id: '60104814ea0edb00206dadfe',
   organizationId: '5fb6cf79d0330d00203bb3a7',
@@ -755,7 +757,7 @@ export const activities = [
   },
 ];
 
-export const submissions = [
+export const submissions: TFormInstance[] = [
   {
     _id: '601048c0ea0edb00206dae89',
     scopedObject: 'courseevt_BI1143-40049-VT2021',
@@ -863,7 +865,6 @@ export const submissions = [
     createdAt: '2021-01-26T16:52:16.418Z',
     updatedAt: '2021-06-15T20:49:40.243Z',
     submittedAt: '2021-01-26T16:55:23.096Z',
-    index: 0,
   },
 ];
 
