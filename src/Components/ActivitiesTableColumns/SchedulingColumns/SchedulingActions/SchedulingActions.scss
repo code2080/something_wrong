@@ -5,6 +5,7 @@ $statusColumnLength: 0.8rem;
 .scheduling-actions-column--wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   .scheduling-actions--button {
     margin-left: 0.4rem;

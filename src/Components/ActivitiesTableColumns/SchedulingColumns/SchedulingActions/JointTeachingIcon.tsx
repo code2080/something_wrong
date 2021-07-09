@@ -96,7 +96,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   const clickContent = (
     <SelectWithDeleteOption
       header={'Select joint teaching object'}
-      selectedValue={localTeachingObject}
+      selectedValue={extIdLabel}
       onSelect={handleSelectJointTeachObj}
       onDelete={handleResetJointTeachObj}
       selectValues={scopedObjectIds}
@@ -116,7 +116,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
             background: 'none',
             color: '#40a9ff',
             height: '24px',
-            marginLeft: '0.4rem',
+            margin: '0 0.4rem',
           }}
         />
       </>
@@ -132,7 +132,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
             border: 'none',
             color: 'green',
             background: 'none',
-            marginLeft: '0.4rem',
+            margin: '0 0.4rem',
           }}
         />
       </>
@@ -148,7 +148,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
           border: 'none',
           background: '#e7eff0',
           height: '24px',
-          marginLeft: '0.4rem',
+          margin: '0 0.4rem',
         }}
       />
     </>

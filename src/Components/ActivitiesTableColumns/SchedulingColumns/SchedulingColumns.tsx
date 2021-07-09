@@ -7,7 +7,7 @@ export const SchedulingColumns = (selectedRowKeys: Key[] = []) => [
     title: '',
     key: 'activityScheduling',
     dataIndex: undefined,
-    width: 90,
+    width: 110,
     render: (activity) => (
       <SortableTableCell className={`activityScheduling_${activity._id}`}>
         <SchedulingActions
