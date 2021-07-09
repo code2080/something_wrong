@@ -1,4 +1,6 @@
 import { getExtIdPropsPayload } from '../integration.selectors';
+import * as mockData from '../../../Mock/Form';
+import { TActivity } from '../../../Types/Activity.type';
 
 describe('integration selectors tests', () => {
   describe('getExtIdPropsPayload', () => {
@@ -361,11 +363,72 @@ describe('integration selectors tests', () => {
         },
         expected: { objects: [], types: [], fields: [] },
       },
+      {
+        input: {
+          sections: mockData.form.sections,
+          submissionValues: mockData.submissions.map((s) => s.values),
+          activities: mockData.activities,
+          objectScope: mockData.form.objectScope,
+        },
+        expected: {
+          fields: ['room.type', 'res.restext', 'res.comment'],
+          objects: [
+            'person_atsi0001',
+            'person_auba0002',
+            'course_activity_discussion',
+            'course_activity_lecture',
+            null,
+          ],
+          types: [
+            'person_staff',
+            'room',
+            'activity_teach',
+            'equipment',
+            'courseevt',
+            null,
+          ],
+        },
+      },
+      {
+        input: {
+          sections: mockData.form.sections,
+          submissionValues: mockData.submissions.map((s) => s.values),
+          objectScope: mockData.form.objectScope,
+          activities: mockData.activities.map(
+            (a) =>
+              ({
+                ...a,
+                jointTeaching: {
+                  object: 'jointTeachingObj',
+                  typeExtId: mockData.form.objectScope,
+                },
+              } as TActivity),
+          ),
+        },
+        expected: {
+          fields: ['room.type', 'res.restext', 'res.comment'],
+          objects: [
+            'person_atsi0001',
+            'person_auba0002',
+            'course_activity_discussion',
+            'course_activity_lecture',
+            'jointTeachingObj',
+          ],
+          types: [
+            'person_staff',
+            'room',
+            'activity_teach',
+            'equipment',
+            'courseevt',
+            null,
+          ],
+        },
+      },
     ];
-    test.each(testData.map(({ input, expected }) => [input, expected]))(
-      'Should parse objects',
+    it.each(testData.map(({ input, expected }) => [input, expected]))(
+      'Should get all expected extids',
       (input, expected) => {
-        const payload = getExtIdPropsPayload(input);
+        const payload = getExtIdPropsPayload(input as any);
         expect(payload).toEqual(expected);
       },
     );
