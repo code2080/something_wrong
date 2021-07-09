@@ -496,8 +496,9 @@ export const FiltersV3 = (args) => {
     selected: string;
   };
 
-  const [selectedProperty, setSelectedProperty] =
-    useState<Selection | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
+    null,
+  );
   const [selectedValues, setSelectedValues] = useState<SelectedValues>({});
 
   const input = {
