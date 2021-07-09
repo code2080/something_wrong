@@ -17,11 +17,11 @@ import _ from 'lodash';
 import { TActivity } from '../../../../Types/Activity.type';
 
 type Props = {
-  activity: TActivity;
-  selectedRowKeys: string[];
+  activity?: TActivity;
+  selectedRowKeys?: string[];
 };
 
-const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
+const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   if (!activity?.formId) return null;
   const { formId, formInstanceId }: { formId: string; formInstanceId: string } =
     activity;
@@ -112,7 +112,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
       </>
     );
   }
-  if (activity?.isMerged)
+  if (activity?.originJointTeachingGroup)
     return (
       <>
         <Button
