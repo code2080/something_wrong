@@ -8,8 +8,14 @@ import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
 import _ from 'lodash';
+import { TActivity } from 'Types/Activity.type';
 
-const reducer = (state = initialState, action) => {
+const reducer = (
+  state: {
+    [formId: string]: { [formInstanceId: string]: TActivity[] };
+  } = initialState,
+  action,
+) => {
   switch (action.type) {
     case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
@@ -49,6 +55,9 @@ const reducer = (state = initialState, action) => {
        */
       const direction = destinationIdx - sourceIdx;
       const updActivities = activities.map((activity) => {
+        if (!activity.sequenceIdx) {
+          return activity;
+        }
         // If it's the moved activity
         if (activity.sequenceIdx === sourceIdx)
           return { ...activity, sequenceIdx: destinationIdx };
@@ -254,17 +263,7 @@ const reducer = (state = initialState, action) => {
       } = action;
       return {
         ...state,
-        [formId]: Object.values(state[formId]).reduce((results, activity) => {
-          if (activity.formInstanceId === formInstanceId) {
-            return {
-              ...results,
-            };
-          }
-          return {
-            ...results,
-            [activity]: activity,
-          };
-        }, {}),
+        [formId]: _.omit(state[formId], formInstanceId),
       };
     }
 

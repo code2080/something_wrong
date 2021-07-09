@@ -1,14 +1,14 @@
 import { EFormDetailTabs } from '../../Types/FormDetailTabs.enum';
 
 export default {
-  breadcrumbs: [],
-  spotlightPositionInfo: null,
-  tableViews: {},
+  breadcrumbs: [] as any,
+  spotlightPositionInfo: null as any,
+  tableViews: {} as any,
   openedModals: {
-    formInstanceSchedulingProcess: null,
+    formInstanceSchedulingProcess: null as any,
   },
   selectedFormDetailTab: EFormDetailTabs.SUBMISSIONS,
-  selectedFormDetailSubmission: null,
-  tabHistory: [],
-  activitySorting: {},
+  selectedFormDetailSubmission: null as any,
+  tabHistory: [] as any,
+  activitySorting: {} as any,
 };

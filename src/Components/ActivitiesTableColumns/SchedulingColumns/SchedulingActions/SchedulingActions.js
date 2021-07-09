@@ -6,7 +6,7 @@ import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';
 
 // CONSTANTS
-import { activityStatuses } from '../../../../Constants/activityStatuses.constants';
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 // STYLES
 import './SchedulingActions.scss';
@@ -14,7 +14,7 @@ import './SchedulingActions.scss';
 const SchedulingActions = ({ activity }) => {
   return (
     <div className='scheduling-actions-column--wrapper'>
-      {activity.activityStatus === activityStatuses.COMPLETED && (
+      {activity.activityStatus === EActivityStatus.COMPLETED && (
         <div className='scheduling-actions--strikethrough' />
       )}
       <SchedulingCheckbox activity={activity} />

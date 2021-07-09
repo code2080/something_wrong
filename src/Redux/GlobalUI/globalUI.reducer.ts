@@ -2,7 +2,7 @@ import { FETCH_ACTIVITIES_FOR_FORM_SUCCESS } from '../Activities/activities.acti
 import * as types from './globalUI.actionTypes';
 
 // INITIAL STATE
-import initialState from './globalUI.initialState.ts';
+import initialState from './globalUI.initialState';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

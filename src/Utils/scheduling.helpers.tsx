@@ -20,9 +20,9 @@ import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constant
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 import {
   activityValueStatuses,
-  activityStatuses,
   activityStatusProps,
 } from '../Constants/activityStatuses.constants';
+import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
@@ -90,17 +90,17 @@ const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
   teCoreReturns.map((el) => {
     const status =
       el.result.result && el.result.result < 0
-        ? activityStatuses.FAILED
-        : activityStatuses.SCHEDULED;
+        ? EActivityStatus.FAILED
+        : EActivityStatus.SCHEDULED;
     return {
       activityId: el.activityId,
       result: {
         status,
         reservationId:
-          status === activityStatuses.SCHEDULED ? el.result.reference : null,
-        errorCode: status === activityStatuses.FAILED ? el.result.result : null,
+          status === EActivityStatus.SCHEDULED ? el.result.reference : null,
+        errorCode: status === EActivityStatus.FAILED ? el.result.result : null,
         errorMessage:
-          status === activityStatuses.FAILED ? el.result.details : null,
+          status === EActivityStatus.FAILED ? el.result.details : null,
       },
     };
   });
@@ -182,10 +182,11 @@ export const scheduleActivities = (
         result: validates
           ? null
           : new SchedulingReturn({
-              status: activityStatuses.VALIDATION_ERROR,
-              errorCode: activityStatuses.VALIDATION_ERROR,
+              status: EActivityStatus.VALIDATION_ERROR,
+              errorCode: EActivityStatus.VALIDATION_ERROR,
               errorMessage:
-                activityStatusProps[activityStatuses.VALIDATION_ERROR].label,
+                activityStatusProps[EActivityStatus.VALIDATION_ERROR]?.label ??
+                EActivityStatus.VALIDATION_ERROR,
             }),
       };
     })
@@ -274,7 +275,7 @@ export const updateActivitiesWithSchedulingResults = (
     } = response;
 
     const errorDetails =
-      activityStatus === activityStatuses.FAILED
+      activityStatus === EActivityStatus.FAILED
         ? new SchedulingError({
             message: errorMessage,
             code: errorCode,

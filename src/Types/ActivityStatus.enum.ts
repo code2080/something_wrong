@@ -7,4 +7,5 @@ export enum EActivityStatus {
   VALIDATION_ERROR = 'VALIDATION_ERROR', // One of the activity values has a validation error
   FAILED = 'FAILED', // When a scheduling attempt has been made but failed
   QUEUED = 'QUEUED', // Activity is waiting to be scheduled
+  INACTIVE = 'INACTIVE', // Activity has been inactivated by a merge
 }

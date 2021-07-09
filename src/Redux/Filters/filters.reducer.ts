@@ -1,17 +1,16 @@
 import FilterLookUpMap from '../../Types/FilterLookUp.type';
 import * as types from './filters.actionTypes';
 
-// eslint-disable-next-line no-undef
 const loadFiltersFromLS = (filterId: string) => {
   const stringedFilter = localStorage.getItem(filterId);
   if (stringedFilter) return JSON.parse(stringedFilter);
   return {};
 };
-// eslint-disable-next-line no-undef
+
 const saveFilterToLS = (filterId: string, filter: any) =>
   localStorage.setItem(filterId, JSON.stringify(filter));
 
-const reducer = (state = {}, action) => {
+const reducer = (state: any = {}, action) => {
   switch (action.type) {
     case types.SET_ACTIVITY_FILTER_INCLUSION: {
       const { filterId, inclusion } = action.payload;

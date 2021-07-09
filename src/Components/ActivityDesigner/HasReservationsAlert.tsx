@@ -11,7 +11,7 @@ import { unlockActivityDesigner } from '../../Redux/ActivityDesigner/activityDes
 import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 import { useMemo, useState } from 'react';
 import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { activityStatuses } from '../../Constants/activityStatuses.constants';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 const HasReservationsAlert = ({ formId }) => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const HasReservationsAlert = ({ formId }) => {
         const updatedActivity = {
           ...res.activity,
           schedulingDate: null,
-          activityStatus: activityStatuses.NOT_SCHEDULED,
+          activityStatus: EActivityStatus.NOT_SCHEDULED,
           reservationId: null,
         };
         dispatch(updateActivity(updatedActivity));

@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Key, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
+import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
 
 // COMPONENtS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
-
+import ActivityTable from './ActivityTable';
 // ACTIONS
 import {
   setActivitySorting,
@@ -13,28 +16,20 @@ import {
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
-import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
-import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
 // HELPERS
-import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
-import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 import _ from 'lodash';
 import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
-
-const calculateAvailableTableHeight = () => {
-  return (window as any).tePrefsHeight - 110;
-};
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 const ActivitiesPage = () => {
-  const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
+  const { formId } = useParams<{ formId: string }>();
 
   /**
    * SELECTORS
@@ -43,15 +38,30 @@ const ActivitiesPage = () => {
     () => makeSelectActivitiesForForm(),
     [],
   );
+
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
 
-  const design = useSelector(selectDesignForForm)(formId);
-  const isLoading = useSelector(
-    createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
-  ) as boolean;
-  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const selectActivitySortingOrder = useMemo(
+    () => makeSelectSortOrderForActivities(),
+    [],
+  );
+  const sortOrder = useSelector((state) =>
+    selectActivitySortingOrder(state, formId),
+  );
+
+  const tableDataSource = useMemo(
+    () =>
+      _.compact<TActivity>(
+        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
+          allActivities,
+      ),
+    [allActivities, keyedActivities, sortOrder],
+  );
+
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -63,54 +73,22 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
+
+  const design = useSelector(selectDesignForForm)(formId);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const isLoading = useSelector(
+    createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
+  ) as boolean;
+
+  /**
+   * EVENT HANDLERS
+   */
   const { handleScheduleActivities } = useActivityScheduling({
     formId,
     formType,
     reservationMode,
   });
 
-  const [yScroll] = useState(calculateAvailableTableHeight());
-
-  /**
-   * MEMOIZED PROPS
-   */
-  const tableColumns = useMemo(
-    () =>
-      design
-        ? createActivitiesTableColumnsFromMapping(design, objectRequests, true)
-        : [],
-    [design, objectRequests],
-  );
-
-  const selectActivitySortingOrder = useMemo(
-    () => makeSelectSortOrderForActivities(),
-    [],
-  );
-
-  const sortOrder = useSelector((state) =>
-    selectActivitySortingOrder(state, formId),
-  );
-
-  const allActivities = Object.values(activities).flat();
-  const keyedActivities = _.keyBy(allActivities, '_id');
-
-  const tableDataSource = useMemo(
-    () =>
-      _.compact<TActivity>(
-        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
-          allActivities,
-      ),
-    [allActivities, keyedActivities, sortOrder],
-  );
-
-  /**
-   * STATE
-   */
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-
-  /**
-   * EVENT HANDLERS
-   */
   const onSelectAll = () => {
     setSelectedRowKeys(tableDataSource.map((a) => a._id));
   };
@@ -143,18 +121,17 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         allActivities={tableDataSource}
       />
-      <VirtualTable
-        scroll={{ y: yScroll }}
-        columns={tableColumns}
-        dataSource={tableDataSource}
-        rowKey='_id'
-        loading={isLoading && !activities?.length}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (selectedRowKeys) =>
-            setSelectedRowKeys(selectedRowKeys as string[]),
+      <ActivityTable
+        design={design}
+        isLoading={isLoading}
+        activities={tableDataSource}
+        onSort={onSortActivities}
+        selectedActivities={selectedRowKeys}
+        onSelect={setSelectedRowKeys}
+        additionalColumns={{
+          pre: SchedulingColumns,
+          post: StaticColumns,
         }}
-        onChange={(pagination, filters, sorter) => onSortActivities(sorter)}
       />
     </>
   );
