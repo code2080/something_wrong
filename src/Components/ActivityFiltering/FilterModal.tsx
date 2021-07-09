@@ -256,8 +256,9 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const [localSelectedValues, setLocalSelectedValues] =
     useState<TActivityFilterQuery>(currentlySelectedFilterValues);
 
-  const [selectedProperty, setSelectedProperty] =
-    useState<Selection | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
+    null,
+  );
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),

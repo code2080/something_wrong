@@ -1,11 +1,10 @@
 import JointTeachingIcon from '../JointTeachingIcon';
-import SchedulingActions from '../SchedulingActions';
 import mockStore from '../TestHelpers/TestHelpers';
 import configureStore from '../../../../../Redux/store';
-import React from 'react';
 import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { TActivity } from 'Types/Activity.type';
 
 const fakeActivity = {
   _id: '60912a9e7a86fc2c90563901',
@@ -256,7 +255,6 @@ const fakeActivity = {
 };
 
 const fakeActivityWithMerged = {
-  isMerged: true,
   _id: '60912a9e7a86fc2c90563901',
   formId: '5fbe13cddb07580020e2bdbf',
   formInstanceId: '5fdb2e82596fd700208c0e68',
@@ -502,6 +500,7 @@ const fakeActivityWithMerged = {
     },
   ],
   sequenceIdx: 0,
+  originJointTeachingGroup: 'jointTeachingGroupId',
 };
 
 const initialState = {};
@@ -512,7 +511,7 @@ describe('JointTeachingIcon test', () => {
     beforeEach(() =>
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity} />
+          <JointTeachingIcon activity={fakeActivity as TActivity} />
         </Provider>,
       ),
     );
@@ -520,7 +519,7 @@ describe('JointTeachingIcon test', () => {
     it('Renders without error', () => {
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity} />,
+          <JointTeachingIcon activity={fakeActivity as TActivity} />,
         </Provider>,
       );
     });
@@ -560,14 +559,14 @@ describe('JointTeachingIcon test', () => {
     beforeEach(() =>
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivityWithMerged} />
+          <JointTeachingIcon activity={fakeActivityWithMerged as TActivity} />
         </Provider>,
       ),
     );
     it('Renders without error', () => {
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivityWithMerged} />
+          <JointTeachingIcon activity={fakeActivityWithMerged as TActivity} />
         </Provider>,
       );
     });
@@ -580,7 +579,7 @@ describe('JointTeachingIcon test', () => {
     it('Set joint teaching object and reset it', () => {
       const { getByRole } = render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity} />
+          <JointTeachingIcon activity={fakeActivity as TActivity} />
         </Provider>,
       );
 

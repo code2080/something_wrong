@@ -18,11 +18,11 @@ import { TActivity } from '../../../../Types/Activity.type';
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 
 type Props = {
-  activity: TActivity;
-  selectedRowKeys: string[];
+  activity?: TActivity;
+  selectedRowKeys?: string[];
 };
 
-const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
+const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   if (!activity?.formId) return null;
   const {
     formId,
@@ -122,7 +122,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
       </>
     );
   }
-  if (activity?.jointTeaching?.status === 'MERGED')
+  if (activity?.originJointTeachingGroup)
     return (
       <>
         <Button
