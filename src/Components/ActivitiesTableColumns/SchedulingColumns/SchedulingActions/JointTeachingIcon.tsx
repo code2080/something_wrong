@@ -15,6 +15,7 @@ import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import _ from 'lodash';
 import { TActivity } from '../../../../Types/Activity.type';
+import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 
 type Props = {
   activity: TActivity;
@@ -23,8 +24,13 @@ type Props = {
 
 const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
   if (!activity?.formId) return null;
-  const { formId, formInstanceId }: { formId: string; formInstanceId: string } =
-    activity;
+  const {
+    formId,
+    formInstanceId,
+  }: {
+    formId: string;
+    formInstanceId: string;
+  } = activity;
   const dispatch = useDispatch();
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const selectForm = useMemo(() => makeSelectForm(), []);
@@ -48,8 +54,13 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );
+
   const [localTeachingObject, setTeachingObject] = useState(
     activity?.jointTeaching?.object || null,
+  );
+  const extIdLabel = useSelector(selectExtIdLabel)(
+    'objects',
+    localTeachingObject,
   );
 
   const updateObjects = (
@@ -60,7 +71,6 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
       ...activity,
       jointTeaching: { ...activity.jointTeaching, object: jointTeachingObject },
     }));
-
     dispatch(updateActivities(formId, formInstanceId, updatedActivities));
   };
 
@@ -98,7 +108,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
     return (
       <>
         <HoverAndClickPopOver
-          hoverContent={localTeachingObject}
+          hoverContent={extIdLabel ?? 'N/A'}
           clickContent={clickContent}
           icon={icon}
           style={{
@@ -112,7 +122,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys }: Props) => {
       </>
     );
   }
-  if (activity?.isMerged)
+  if (activity?.jointTeaching?.status === 'MERGED')
     return (
       <>
         <Button

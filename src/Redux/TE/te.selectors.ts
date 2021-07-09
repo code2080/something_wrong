@@ -17,16 +17,16 @@ export type Field = 'types' | 'fields' | 'objects';
 
 type ExtIdLabelPayload = {
   field: Field;
-  extId: string;
-  fallbackVal?: string;
+  extId?: string | null;
+  fallbackVal?: string | null;
 };
 
 const getLabelFromExtId = (
   extIdProps: any,
   { field, extId, fallbackVal = extId }: ExtIdLabelPayload,
 ) =>
-  !_.isEmpty(extIdProps[field][extId]?.label)
-    ? (extIdProps[field][extId].label as string)
+  !_.isEmpty(extIdProps[field][extId ?? '']?.label)
+    ? (extIdProps[field][extId ?? ''].label as string)
     : fallbackVal;
 
 /**
@@ -43,7 +43,7 @@ export const selectExtIdLabel = createSelector(
    */
   selectExtIdProps,
   (extIdProps) =>
-    (field: Field, extId: string, fallbackVal = extId) =>
+    (field: Field, extId?: string | null, fallbackVal = extId) =>
       getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
 );
 
@@ -54,7 +54,7 @@ export const selectMultipleExtIdLabels = createSelector(
       extIds.reduce(
         (idLabelMap, extId) => ({
           ...idLabelMap,
-          [extId.extId]: getLabelFromExtId(extIdProps, extId),
+          [extId.extId ?? '']: getLabelFromExtId(extIdProps, extId),
         }),
         {},
       ),

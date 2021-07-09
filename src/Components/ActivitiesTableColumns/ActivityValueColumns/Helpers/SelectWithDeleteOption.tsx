@@ -1,5 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Select } from 'antd';
+import { useSelector } from 'react-redux';
+import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
 
 type Props = {
   header: string;
@@ -18,6 +20,13 @@ const SelectWithDeleteOption = ({
   selectedValue,
   selectValues,
 }: Props) => {
+  const labels = useSelector(selectMultipleExtIdLabels)(
+    selectValues.map((val: any) => ({
+      field: 'objects',
+      extId: val,
+    })),
+  );
+
   return (
     <>
       <span>{header}</span>
@@ -32,7 +41,7 @@ const SelectWithDeleteOption = ({
       >
         {(selectValues as any)?.map((val: string) => (
           <Select.Option key={val} value={val as string}>
-            {val}
+            {labels[val]}
           </Select.Option>
         ))}
       </Select>

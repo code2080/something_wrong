@@ -1,8 +1,10 @@
 import React, { SetStateAction, useState } from 'react';
 import { Button, Popover } from 'antd';
+import { selectExtIdLabel } from 'Redux/TE/te.selectors';
+import { useSelector } from 'react-redux';
 
 type Props = {
-  hoverContent?: string | null;
+  hoverContent?: string;
   clickContent?: any;
   icon?: any;
   style?: object;
@@ -16,6 +18,7 @@ const HoverAndClickPopOver = ({
 }: Props) => {
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const extIdLabel = useSelector(selectExtIdLabel)('objects', hoverContent);
 
   const handleHoverChange = (visible: SetStateAction<boolean>) => {
     setHovered(visible);
@@ -38,7 +41,7 @@ const HoverAndClickPopOver = ({
     : (style = origStyle);
   return (
     <Popover
-      content={hoverContent}
+      content={extIdLabel}
       trigger='hover'
       visible={hovered}
       onVisibleChange={handleHoverChange}
