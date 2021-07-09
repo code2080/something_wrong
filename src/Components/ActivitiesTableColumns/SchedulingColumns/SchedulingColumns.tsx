@@ -1,7 +1,8 @@
+import { Key } from 'react';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
 
-export const SchedulingColumns = [
+export const SchedulingColumns = (selectedRowKeys: Key[] = []) => [
   {
     title: '',
     key: 'activityScheduling',
@@ -9,7 +10,10 @@ export const SchedulingColumns = [
     width: 90,
     render: (activity) => (
       <SortableTableCell className={`activityScheduling_${activity._id}`}>
-        <SchedulingActions activity={activity} />
+        <SchedulingActions
+          activity={activity}
+          selectedRowKeys={selectedRowKeys}
+        />
       </SortableTableCell>
     ),
   },

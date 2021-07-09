@@ -503,8 +503,7 @@ const fakeActivityWithMerged = {
   originJointTeachingGroup: 'jointTeachingGroupId',
 };
 
-const initialState = {};
-const store = configureStore(initialState, mockStore);
+const store = configureStore(mockStore);
 
 describe('JointTeachingIcon test', () => {
   describe('Render unmerged joint teaching icon', () => {

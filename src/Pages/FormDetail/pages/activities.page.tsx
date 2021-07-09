@@ -129,7 +129,7 @@ const ActivitiesPage = () => {
         selectedActivities={selectedRowKeys}
         onSelect={setSelectedRowKeys}
         additionalColumns={{
-          pre: SchedulingColumns,
+          pre: SchedulingColumns(selectedRowKeys),
           post: StaticColumns,
         }}
       />

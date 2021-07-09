@@ -161,7 +161,7 @@ const FormPage = () => {
           sections,
           submissionValues,
           objectScope: form.objectScope,
-          activities,
+          activities: Object.values(activities).flat(),
         });
     const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
