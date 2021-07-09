@@ -3,10 +3,10 @@ import { getEnvParams } from '../../configs';
 import * as types from './jobs.actionTypes';
 import { Job } from '../../Models/Job.model';
 import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.constants';
-import { activityStatuses } from '../../Constants/activityStatuses.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
 import { selectCurrentConstraintConfigurationForForm } from '../ConstraintConfigurations/constraintConfigurations.selectors';
+import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
@@ -38,7 +38,7 @@ const createJobFlow = {
       activities.map((a) => ({
         activityId: a._id,
         result: new SchedulingReturn({
-          status: activityStatuses.QUEUED,
+          status: EActivityStatus.QUEUED,
         }),
       })),
     );
@@ -53,7 +53,7 @@ const createJobFlow = {
     if (meta.schedulingMode === schedulingModes.SINGLE) {
       callback(
         new SchedulingReturn({
-          status: activityStatuses.FAILED,
+          status: EActivityStatus.FAILED,
           errorCode: err.code || -1,
           errorMessage: err.message || 'Failed to create job',
         }),
@@ -63,7 +63,7 @@ const createJobFlow = {
         activities.map((a) => ({
           activityId: a._id,
           result: new SchedulingReturn({
-            status: activityStatuses.FAILED,
+            status: EActivityStatus.FAILED,
             errorCode: err.code || -1,
             errorMessage: err.message || 'Failed to create job',
           }),

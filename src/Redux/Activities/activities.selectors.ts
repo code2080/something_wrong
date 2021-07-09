@@ -32,7 +32,10 @@ export const makeSelectActivitiesForForm = () =>
     ) => {
       const formSubmissions = submissions?.[formId];
       const formActivities = activities[formId] || {};
-      return pick(formActivities, Object.keys(formSubmissions || {}));
+      return pick(formActivities, [
+        ...Object.keys(formSubmissions || {}),
+        'null',
+      ]);
     },
   );
 

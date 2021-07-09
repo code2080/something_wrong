@@ -11,15 +11,13 @@ import StatusLabel from '../../../StatusLabel/StatusLabel';
 import './ActivityStatusCol.scss';
 
 // CONSTANTS
-import {
-  activityStatusProps,
-  activityStatuses,
-} from '../../../../Constants/activityStatuses.constants';
+import { activityStatusProps } from '../../../../Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 import { useState } from 'react';
 import EditableText from '../../../EditableText/EditableText';
 import { useDispatch } from 'react-redux';
 import { updateActivity } from '../../../../Redux/Activities/activities.actions';
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 const PopoverContent = ({ activity, onUpdate }) => {
   const [reservationId, setReservationId] = useState(activity.reservationId);
@@ -37,12 +35,15 @@ const PopoverContent = ({ activity, onUpdate }) => {
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <Form.Item label='Status'>
           <StatusLabel
-            color={activityStatusProps[activity.activityStatus].color}
+            color={
+              activityStatusProps[activity.activityStatus]?.color ?? 'default'
+            }
           >
-            {activityStatusProps[activity.activityStatus].label}
+            {activityStatusProps[activity.activityStatus]?.label ??
+              activity.activityStatus}
           </StatusLabel>
         </Form.Item>
-        {activity.activityStatus === activityStatuses.FAILED && (
+        {activity.activityStatus === EActivityStatus.FAILED && (
           <Form.Item label='Error'>
             {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
               activity,
@@ -60,7 +61,7 @@ const PopoverContent = ({ activity, onUpdate }) => {
               : 'N/A'}
           </div>
         </Form.Item>
-        {activity.activityStatus === activityStatuses.SCHEDULED && (
+        {activity.activityStatus === EActivityStatus.SCHEDULED && (
           <Form.Item label='ID'>
             <EditableText
               value={reservationId}
@@ -76,7 +77,7 @@ const PopoverContent = ({ activity, onUpdate }) => {
 
 const StatusText = ({ activity }) => {
   switch (activity.activityStatus) {
-    case activityStatuses.SCHEDULED:
+    case EActivityStatus.SCHEDULED:
       return (
         <span>
           <CheckOutlined />
@@ -84,7 +85,10 @@ const StatusText = ({ activity }) => {
         </span>
       );
     default:
-      return activityStatusProps[activity.activityStatus].label;
+      return (
+        activityStatusProps[activity.activityStatus]?.label ??
+        activity.activityStatus
+      );
   }
 };
 
@@ -101,7 +105,11 @@ const ActivityStatusCol = ({ activity }) => {
         content={<PopoverContent activity={activity} onUpdate={onUpdate} />}
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
-        <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
+        <StatusLabel
+          color={
+            activityStatusProps[activity.activityStatus]?.color ?? 'default'
+          }
+        >
           <StatusText activity={activity} />
         </StatusLabel>
       </Popover>

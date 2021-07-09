@@ -18,10 +18,11 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
-import { useMemo } from 'react';
+import { Key, useMemo } from 'react';
+import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
 
 type Props = {
-  selectedRowKeys: string[];
+  selectedRowKeys: Key[];
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onScheduleActivities: (activities) => void;
@@ -46,15 +47,37 @@ const ActivitiesToolbar = ({
     () => makeSelectActivitiesForFormAndIds(),
     [],
   );
-  const activities: TActivity[] = useSelector((state) =>
+  const selectedActivities: TActivity[] = useSelector((state) =>
     selectActivitiesForFormAndIds(state, {
       formId,
-      activityIds: selectedRowKeys,
+      activityIds: selectedRowKeys as string[],
     }),
   );
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
+
+  const TagSelectedActivitiesButton = () =>
+    !selectedRowKeys?.length ? (
+      <Button size='small' type='link' disabled>
+        Tag selected activities
+      </Button>
+    ) : (
+      <Popover
+        overlayClassName='activity-tag-popover--wrapper'
+        title='Tag activity'
+        content={<ActivityTagPopover activities={selectedActivities} />}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
+        trigger='click'
+        placement='rightTop'
+      >
+        <Button size='small' type='link'>
+          Tag selected activities
+        </Button>
+      </Popover>
+    );
 
   return (
     <div className='activities-toolbar--wrapper'>
@@ -74,7 +97,7 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onScheduleActivities(activities)}
+        onClick={() => onScheduleActivities(selectedActivities)}
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
         Schedule selected activities
@@ -88,20 +111,11 @@ const ActivitiesToolbar = ({
         Schedule activities
       </Button>
       <Divider type='vertical' />
-      <Popover
-        overlayClassName='activity-tag-popover--wrapper'
-        title='Tag activity'
-        content={<ActivityTagPopover activities={activities} />}
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-        trigger='hover'
-        placement='rightTop'
-      >
-        <Button size='small' type='link' disabled={!selectedRowKeys?.length}>
-          Tag selected activities
-        </Button>
-      </Popover>
+      <TagSelectedActivitiesButton />
+      <JointTeachingGroupMerger
+        activities={selectedActivities}
+        formId={formId}
+      />
       <ActivityFiltering />
     </div>
   );

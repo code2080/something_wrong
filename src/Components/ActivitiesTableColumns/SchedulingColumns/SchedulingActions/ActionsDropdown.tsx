@@ -23,7 +23,6 @@ import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
 
 // CONSTANTS
-import { activityStatuses } from '../../../../Constants/activityStatuses.constants';
 import { teCoreCallnames } from '../../../../Constants/teCoreActions.constants';
 import { teCoreSchedulingProgress } from '../../../../Constants/teCoreProps.constants';
 import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedulingConstants';
@@ -37,6 +36,7 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -73,19 +73,19 @@ const activityActions = {
     label: 'Select reservation',
     filterFn: (activity) =>
       activity.reservationId &&
-      activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
+      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
     callname: teCoreCallnames.SELECT_RESERVATION,
   },
   DELETE: {
     label: 'Delete reservation',
     filterFn: (activity) =>
       activity.reservationId &&
-      activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
+      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
   STOP_SCHEDULING: {
     label: 'Stop scheduling',
-    filterFn: (activity) => activity.activityStatus === activityStatuses.QUEUED,
+    filterFn: (activity) => activity.activityStatus === EActivityStatus.QUEUED,
     callname: teCoreCallnames.STOP_SCHEDULING,
   },
   DELETE_ALL: {
@@ -94,7 +94,7 @@ const activityActions = {
       activity, // Should filter look at activities instead?
     ) =>
       activity.reservationId &&
-      activity.activityStatus !== activityStatuses.NOT_SCHEDULED,
+      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
 };
@@ -145,7 +145,7 @@ const ActivityActionsDropdown = ({
           const updatedActivity = {
             ...res.activity,
             schedulingDate: null,
-            activityStatus: activityStatuses.NOT_SCHEDULED,
+            activityStatus: EActivityStatus.NOT_SCHEDULED,
             reservationId: null,
           };
           updateActivity(updatedActivity);
@@ -228,7 +228,7 @@ const ActivityActionsDropdown = ({
         case 'SCHEDULE_ALL':
           handleScheduleActivities(
             activities.filter(
-              (a) => a.activityStatus !== activityStatuses.SCHEDULED,
+              (a) => a.activityStatus !== EActivityStatus.SCHEDULED,
             ),
             key,
           );

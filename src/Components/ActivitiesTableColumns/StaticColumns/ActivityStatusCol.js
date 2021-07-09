@@ -9,10 +9,8 @@ import StatusLabel from '../../StatusLabel/StatusLabel';
 import './ActivityStatusCol.scss';
 
 // CONSTANTS
-import {
-  activityStatusProps,
-  activityStatuses,
-} from '../../../Constants/activityStatuses.constants';
+import { EActivityStatus } from '../../../Types/ActivityStatus.enum';
+import { activityStatusProps } from '../../../Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
 
 const ActivityStatusCol = ({ activity }) => {
@@ -21,12 +19,15 @@ const ActivityStatusCol = ({ activity }) => {
       <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
         <Form.Item label='Status'>
           <StatusLabel
-            color={activityStatusProps[activity.activityStatus].color}
+            color={
+              activityStatusProps[activity.activityStatus]?.color ?? 'default'
+            }
           >
-            {activityStatusProps[activity.activityStatus].label}
+            {activityStatusProps[activity.activityStatus]?.label ??
+              activity.activityStatus}
           </StatusLabel>
         </Form.Item>
-        {activity.activityStatus === activityStatuses.FAILED && (
+        {activity.activityStatus === EActivityStatus.FAILED && (
           <Form.Item label='Error'>
             {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
               activity,
@@ -51,8 +52,11 @@ const ActivityStatusCol = ({ activity }) => {
       content={content}
       getPopupContainer={() => document.getElementById('te-prefs-lib')}
     >
-      <StatusLabel color={activityStatusProps[activity.activityStatus].color}>
-        {activityStatusProps[activity.activityStatus].label}
+      <StatusLabel
+        color={activityStatusProps[activity.activityStatus]?.color ?? 'default'}
+      >
+        {activityStatusProps[activity.activityStatus]?.label ??
+          activity.activityStatus}
       </StatusLabel>
     </Popover>
   );
