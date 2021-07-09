@@ -14,6 +14,9 @@ import {
 } from '../../Constants/sectionTypes.constants';
 import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
 import { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
+import { TActivity } from 'Types/Activity.type';
+import { ObjectRequest } from 'Redux/ObjectRequests/ObjectRequests.types';
+import { ActivityValue } from 'Types/ActivityValue.type';
 
 const selectIntegration = (state) => state.integration;
 const selectReservationModes = (state) => state.integration.reservationModes;
@@ -133,49 +136,43 @@ const extractPayloadFromElements = (elements) =>
         };
   }, emptyExtIdPropsPayload);
 
-const getExtIdPairsForActivity = (values) => {
+const getExtIdPairsForActivity = (values: ActivityValue[]) => {
   // Each value contains the type of the values within, and the values (extIds) themselves
-  const typeExtidPairs = values.reduce(
-    (typeExtidPairs, value) =>
-      !_.isEmpty(value.value)
-        ? [
-            ...typeExtidPairs,
-            [
-              value.type === 'object' ? 'types' : `${value.type}s`,
-              value.value,
-              value.extId,
-            ],
-          ]
-        : typeExtidPairs,
-    [],
-  );
+  const typeExtidPairs = values.flatMap((value) =>
+    _.isEmpty(value.value)
+      ? []
+      : [
+          [
+            value.type === 'object' ? 'types' : `${value.type}s`,
+            value.value as string,
+            value.extId,
+          ],
+        ],
+  ) as [type: 'fields' | 'types' | 'objects', value: string, extId: string][];
   return typeExtidPairs;
 };
 
-const extractPayloadFromActivities = (activities) => {
-  const allExtIdPairs = activities.reduce(
-    (extIdPairs, activity) => [
-      ...extIdPairs,
-      ...getExtIdPairsForActivity(activity.values),
-    ],
-    [],
-  );
+const extractPayloadFromActivities = (activities: TActivity[]) => {
+  const allExtIdPairs = activities.flatMap((a) => [
+    ...getExtIdPairsForActivity(a.values),
+    ['objects', '', a.jointTeaching?.object],
+  ]);
 
-  return allExtIdPairs.reduce((payload, [type, _, extId]) => {
-    const newPayloadWithExtId = {
-      ...payload,
-      [type]: [...payload[type], extId],
-    };
-    return type === 'objects'
-      ? {
-          ...newPayloadWithExtId,
-          objects: [
-            ...newPayloadWithExtId.objects,
-            // ...values
-          ],
-        }
-      : newPayloadWithExtId;
-  }, emptyExtIdPropsPayload);
+  return allExtIdPairs.reduce<GetExtIdPropsPayload>(
+    (payload, [type, _, extId]) => {
+      const newPayloadWithExtId = {
+        ...payload,
+        [type as string]: [...payload[type as string], extId],
+      };
+      return type === 'objects'
+        ? {
+            ...newPayloadWithExtId,
+            objects: [...newPayloadWithExtId.objects],
+          }
+        : newPayloadWithExtId;
+    },
+    emptyExtIdPropsPayload,
+  );
 };
 
 const extractPayloadFromObjectRequests = (requests) =>
@@ -331,7 +328,13 @@ export const getExtIdPropsPayload = ({
   activities = [],
   objectRequests = [],
   objectScope = null,
-}) => {
+}: {
+  sections: any;
+  submissionValues: any;
+  activities?: TActivity[];
+  objectRequests?: ObjectRequest[];
+  objectScope?: string | null;
+}): GetExtIdPropsPayload => {
   if (isEmpty(sections) || isEmpty(submissionValues))
     return emptyExtIdPropsPayload;
   const elements = getAllElementsFromSections(sections, submissionValues);

@@ -144,7 +144,14 @@ const FormPage = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
-
+  // **** Test sending objects with type to core to see if this helps with DEV-7663
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
   const submissionPayload = useMemo(() => {
     const sections = form.sections;
     const submissionValues = submissions.map((submission) => submission.values);
@@ -154,6 +161,7 @@ const FormPage = () => {
           sections,
           submissionValues,
           objectScope: form.objectScope,
+          activities,
         });
     const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
@@ -161,16 +169,8 @@ const FormPage = () => {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
-  }, [submissions, form]);
+  }, [form.sections, form.objectScope, submissions, activities]);
 
-  // **** Test sending objects with type to core to see if this helps with DEV-7663
-  const selectActivitiesForForm = useMemo(
-    () => makeSelectActivitiesForForm(),
-    [],
-  );
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
-  );
   const extIds = useSelector(selectExtIds);
 
   useEffect(() => {
