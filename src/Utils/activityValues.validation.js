@@ -5,6 +5,7 @@ import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
 import { ActivityValueValidation } from '../Models/ActivityValueValidation.model';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
+import { compact, isEmpty } from 'lodash';
 
 export const validateGeneralValue = (_activityValue) => {
   // TODO: Reenable when we're improving the logic to consider mandatory values
@@ -23,6 +24,17 @@ export const validateGeneralValue = (_activityValue) => {
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
   });
+};
+
+export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
+  if (!activityDesign) return true;
+  const mandatoryFields = Object.keys(activityDesign.propSettings).filter(
+    (key) =>
+      activityDesign.propSettings[key] &&
+      activityDesign.propSettings[key].mandatory,
+  );
+  if (!mandatoryFields.includes(activityValue.extId)) return true;
+  return !isEmpty(compact(activityValue.value));
 };
 
 export const validateFilterValue = (activityValue) => {

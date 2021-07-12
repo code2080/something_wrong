@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { groupBy, keyBy } from 'lodash';
+import { flatten, groupBy, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
@@ -26,6 +26,7 @@ import { EActivityStatus } from '../Types/ActivityStatus.enum';
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 type Props = {
   formType: string;
@@ -42,6 +43,7 @@ const useActivityScheduling = ({
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
+  const activityDesign = useSelector(selectDesignForForm)(formId);
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -94,38 +96,50 @@ const useActivityScheduling = ({
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
-    openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
-    return Promise.all(
-      Object.keys(groupedActivities)
-        .filter((formInstanceId) => formInstanceId)
-        .map((formInstanceId) => {
-          const activitiesOfFormInstance = groupedActivities[formInstanceId];
-          return new Promise((resolve) => {
-            scheduleActivities(
-              activitiesOfFormInstance,
-              formType,
-              reservationMode,
-              teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
-              (schedulingReturns) => {
-                dispatch(
-                  updateActivities(
-                    formId,
-                    formInstanceId,
-                    updateActivitiesWithSchedulingResults(
-                      activitiesOfFormInstance,
-                      schedulingReturns,
-                    ),
+    const queue = Object.keys(groupedActivities)
+      .filter((formInstanceId) => formInstanceId)
+      .map((formInstanceId) => {
+        const activitiesOfFormInstance = groupedActivities[formInstanceId];
+        return new Promise((resolve) => {
+          scheduleActivities(
+            activitiesOfFormInstance,
+            formType,
+            reservationMode,
+            teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
+            (schedulingReturns) => {
+              dispatch(
+                updateActivities(
+                  formId,
+                  formInstanceId,
+                  updateActivitiesWithSchedulingResults(
+                    activitiesOfFormInstance,
+                    schedulingReturns,
                   ),
-                );
-                resolve(null);
-              },
-              objectRequests,
-            );
-          });
-        }),
-    ).catch((err) => {
-      console.log('ERROR', err);
-      return err;
+                ),
+              );
+              resolve(schedulingReturns);
+            },
+            objectRequests,
+            activityDesign,
+          );
+        });
+      });
+
+    return new Promise((resolve, reject) => {
+      Promise.all(queue)
+        .then((results) => {
+          const hasValidActivity = flatten(results).some(
+            (item: any) => !item.result.errorCode,
+          );
+          if (hasValidActivity) {
+            openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
+          }
+          resolve(results);
+        })
+        .catch((err) => {
+          console.log('ERROR', err);
+          reject(err);
+        });
     });
   };
 

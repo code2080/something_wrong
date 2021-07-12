@@ -1,6 +1,3 @@
-// VALIDATION
-import { validateGeneralValue } from '../../../../Utils/activityValues.validation';
-
 // COMPONENTS
 import FieldValue from '../ValueTypes/FieldValue';
 
@@ -17,13 +14,6 @@ import { activityValueStatuses } from '../../../../Constants/activityStatuses.co
  * @returns RenderPayload
  */
 export const renderFieldComponent = (activityValue, activity) => {
-  const validationResult = validateGeneralValue(activityValue);
-  if (validationResult.errorCode)
-    return ActivityValueRenderPayload.create({
-      status: activityValueStatuses.MISSING_DATA,
-      errorMessage: 'Activity value contains unknown property type',
-    });
-
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     renderedComponent: (

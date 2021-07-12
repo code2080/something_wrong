@@ -1,15 +1,22 @@
 import { memo, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // HELPERS
-
-// COMPONENTS
 import { renderComponent } from '../Helpers/rendering';
+
+// CONSTANTS
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
+// SELECTORS
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+
 const BaseActivityColValue = ({ activityValue, activity }) => {
+  const { formId } = useParams();
+  const activityDesign = useSelector(selectDesignForForm)(formId);
   const component = useMemo(
-    () => renderComponent(activityValue, activity),
+    () => renderComponent(activityValue, activity, activityDesign),
     [activityValue, activity],
   );
   if (
