@@ -26,6 +26,13 @@ export const validateGeneralValue = (_activityValue) => {
   });
 };
 
+/**
+ * @function validateMandatoryFieldValue
+ * @description Check if missing mandatory field value
+ * @param {ActivityValue} activityValue
+ * @param {ActivityDesign} activityDesign
+ * @returns {Boolean}
+ */
 export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
   if (!activityDesign) return true;
   const mandatoryFields = Object.keys(activityDesign.propSettings).filter(

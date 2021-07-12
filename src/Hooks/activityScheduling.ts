@@ -22,6 +22,7 @@ import { TFormInstance } from '../Types/FormInstance.type';
 import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
@@ -93,7 +94,7 @@ const useActivityScheduling = ({
 
   const handleScheduleActivities = async (activities) => {
     const schedulingResults: {
-      [formInstanceId: string]: any;
+      [formInstanceId: string]: ActivityValueValidation[];
     } = {};
     const groupedActivities = groupBy(
       activities,
@@ -109,7 +110,7 @@ const useActivityScheduling = ({
             formType,
             reservationMode,
             teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
-            (schedulingReturns) => {
+            (schedulingReturns: ActivityValueValidation[]) => {
               schedulingResults[formInstanceId] = [
                 ...(schedulingResults[formInstanceId] || []),
                 ...(schedulingReturns || []),
@@ -141,8 +142,8 @@ const useActivityScheduling = ({
             }
           });
 
-          const allResults: any[] = Object.keys(schedulingResults).reduce(
-            (results: any[], formInstanceId: string) => {
+          const allResults = Object.keys(schedulingResults).reduce(
+            (results: ActivityValueValidation[], formInstanceId: string) => {
               return [...results, ...(schedulingResults[formInstanceId] || [])];
             },
             [],
