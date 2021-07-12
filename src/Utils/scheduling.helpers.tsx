@@ -187,7 +187,6 @@ export const scheduleActivities = (
   const preprocessingMap = activities
     .map((a) => {
       const validates = validateActivity(a, activityDesign);
-      console.log('validates', validates);
       return {
         activity: hydrateObjectRequests(a, objRequests) as TActivity,
         activityId: a._id as string,

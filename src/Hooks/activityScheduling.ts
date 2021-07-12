@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { flatten, groupBy, keyBy } from 'lodash';
+import { flatten, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
@@ -92,13 +92,16 @@ const useActivityScheduling = ({
   };
 
   const handleScheduleActivities = async (activities) => {
+    const schedulingResults: {
+      [formInstanceId: string]: any;
+    } = {};
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
     const queue = Object.keys(groupedActivities)
       .filter((formInstanceId) => formInstanceId)
-      .map((formInstanceId) => {
+      .map((formInstanceId: string) => {
         const activitiesOfFormInstance = groupedActivities[formInstanceId];
         return new Promise((resolve) => {
           scheduleActivities(
@@ -107,17 +110,11 @@ const useActivityScheduling = ({
             reservationMode,
             teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
             (schedulingReturns) => {
-              dispatch(
-                updateActivities(
-                  formId,
-                  formInstanceId,
-                  updateActivitiesWithSchedulingResults(
-                    activitiesOfFormInstance,
-                    schedulingReturns,
-                  ),
-                ),
-              );
-              resolve(schedulingReturns);
+              schedulingResults[formInstanceId] = [
+                ...(schedulingResults[formInstanceId] || []),
+                ...(schedulingReturns || []),
+              ];
+              resolve(formInstanceId);
             },
             objectRequests,
             activityDesign,
@@ -127,14 +124,36 @@ const useActivityScheduling = ({
 
     return new Promise((resolve, reject) => {
       Promise.all(queue)
-        .then((results) => {
-          const hasValidActivity = flatten(results).some(
+        // @ts-ignore
+        .then((formInstanceIds: string[]) => {
+          formInstanceIds.forEach((formInstanceId) => {
+            if (!isEmpty(schedulingResults[formInstanceId])) {
+              dispatch(
+                updateActivities(
+                  formId,
+                  formInstanceId,
+                  updateActivitiesWithSchedulingResults(
+                    groupedActivities[formInstanceId],
+                    schedulingResults[formInstanceId],
+                  ),
+                ),
+              );
+            }
+          });
+
+          const allResults: any[] = Object.keys(schedulingResults).reduce(
+            (results: any[], formInstanceId: string) => {
+              return [...results, ...(schedulingResults[formInstanceId] || [])];
+            },
+            [],
+          );
+          const hasValidActivity = flatten(allResults).some(
             (item: any) => !item.result.errorCode,
           );
           if (hasValidActivity) {
             openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
           }
-          resolve(results);
+          resolve(schedulingResults);
         })
         .catch((err) => {
           console.log('ERROR', err);
