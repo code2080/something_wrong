@@ -1,9 +1,16 @@
+import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Cascader, Switch, Button } from 'antd';
+import { Select, Cascader, Switch, Button, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
 import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
+
+type MappingOptions = {
+  value: string;
+  label: string;
+  children?: MappingOptions[];
+};
 
 const MappingRow = ({
   teProp,
@@ -55,6 +62,13 @@ const MappingRow = ({
     return onChangeMapping({ [teProp]: [..._mappedValues, []] });
   }, [_mappedValues, onChangeMapping, teProp]);
 
+  const getLabels = (values: string[], mappingOptions: MappingOptions[]) => {
+    if (values.length === 0) return [];
+    const option = mappingOptions.find((v) => v.value === _.head(values));
+    if (!option) return [];
+    return [option.label, ...getLabels(_.tail(values), option?.children ?? [])];
+  };
+
   return (
     <div className='object-mapping-row--wrapper'>
       <div className='object-mapping-row--type'>
@@ -62,7 +76,9 @@ const MappingRow = ({
           disabled={disabled}
           value={teProp}
           onChange={onChangeTEPropCallback}
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           size='small'
         >
           {(tePropOptions || []).map((el) => (
@@ -74,17 +90,29 @@ const MappingRow = ({
       </div>
       {_mappedValues &&
         _mappedValues.map((el, idx) => (
-          <Cascader
-            key={`mapper-${idx}`}
-            disabled={disabled}
-            options={mappingOptions}
-            value={el}
-            onChange={(val) => onChangeFormMapping(val, idx)}
-            placeholder='Select an element'
-            getPopupContainer={() => document.getElementById('te-prefs-lib')}
-            size='small'
-            style={{ width: '400px', marginRight: '8px' }}
-          />
+          <Tooltip
+            key={idx}
+            title={getLabels(el, mappingOptions).join(' / ')}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
+          >
+            <span>
+              <Cascader
+                key={`mapper-${idx}`}
+                disabled={disabled}
+                options={mappingOptions}
+                value={el}
+                onChange={(val) => onChangeFormMapping(val, idx)}
+                placeholder='Select an element'
+                getPopupContainer={() =>
+                  document.getElementById('te-prefs-lib') as HTMLElement
+                }
+                size='small'
+                style={{ width: '400px', marginRight: '8px' }}
+              />
+            </span>
+          </Tooltip>
         ))}
       <div className='object-mapping-row--add'>
         <Button
@@ -103,6 +131,7 @@ const MappingRow = ({
           onChange={onChangePropsCallback}
           size='small'
           disabled={disabled}
+          aria-label='Is mandatory'
         />
       </div>
       <Button
@@ -131,7 +160,7 @@ MappingRow.propTypes = {
 
 MappingRow.defaultProps = {
   formMapping: null,
-  props: { mandatory: false },
+  tePropSettings: { mandatory: false },
   tePropOptions: [],
   mappingOptions: [],
   disabled: false,
