@@ -83,7 +83,7 @@ const MappingRow = ({
             placeholder='Select an element'
             getPopupContainer={() => document.getElementById('te-prefs-lib')}
             size='small'
-            style={{ width: '200px', marginRight: '8px' }}
+            style={{ width: '400px', marginRight: '8px' }}
           />
         ))}
       <div className='object-mapping-row--add'>
