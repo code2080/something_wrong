@@ -1,10 +1,11 @@
 import { Select, Cascader } from 'antd';
-import { staticDesignObj } from '../static_params';
+import _ from 'lodash';
 
 const { Option } = Select;
 
 type Props = {
   paramFields: any;
+  paramFormElements: any | {};
   availableOperators: string[];
   activityDesignObj: any;
 };
@@ -13,18 +14,34 @@ const ParameterCascader = ({
   paramFields,
   availableOperators,
   activityDesignObj,
+  paramFormElements,
 }: Props) => {
-  console.log({ activityDesignObj });
-  const options = Object.keys(staticDesignObj).map((objField) => ({
-    value: objField,
-    label: objField,
-    children: Object.keys(
-      paramFields[objField] ?? { [objField]: objField },
-    ).map((field) => ({
-      value: field,
-      label: field,
+  const fieldOptions = [
+    ...Object.keys(activityDesignObj).map((objField) => ({
+      value: objField,
+      label: objField,
+      children: Object.keys(
+        paramFields[objField] ?? { [objField]: objField },
+      ).map((field) => ({
+        value: field,
+        label: field,
+      })),
     })),
-  }));
+  ];
+  const options = [
+    _.isEmpty(paramFormElements)
+      ? {}
+      : {
+          value: 'Objects',
+          label: 'Objects',
+          children: paramFormElements,
+        },
+    {
+      value: 'Form',
+      label: 'Form',
+      children: fieldOptions,
+    },
+  ];
 
   return (
     <div>

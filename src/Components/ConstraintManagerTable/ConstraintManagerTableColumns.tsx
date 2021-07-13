@@ -14,6 +14,7 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
 
 const renderConstraintParameters = (
   paramFields,
+  paramElements,
   allConstraints,
   constraintId,
   activityDesignObj,
@@ -32,6 +33,7 @@ const renderConstraintParameters = (
   return !isEmpty(parameters) ? (
     <ParameterCascader
       paramFields={paramFields}
+      paramFormElements={paramElements}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
     />
@@ -41,6 +43,7 @@ const constraintManagerTableColumns = (
   onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
   allConstraints: TConstraint[],
   paramFields,
+  paramElements,
   activityDesignObj,
 ) => [
   {
@@ -78,6 +81,7 @@ const constraintManagerTableColumns = (
     render: (constraintId) =>
       renderConstraintParameters(
         paramFields,
+        paramElements,
         allConstraints,
         constraintId,
         activityDesignObj,

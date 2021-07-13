@@ -26,7 +26,10 @@ import {
   TConstraintConfiguration,
   TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+
 import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
+import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
@@ -35,6 +38,7 @@ import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDes
 import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
 import { hasPermission } from '../../../Redux/Auth/auth.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
+
 const getConstrOfType = (
   type: string,
   config: TConstraintConfiguration | null,
@@ -65,6 +69,9 @@ const ConstraintManagerPage = () => {
       selectConstraintConfigurationsForForm(state, formId),
     ),
   );
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const tecoreAPI = useTECoreAPI();
@@ -74,14 +81,24 @@ const ConstraintManagerPage = () => {
   const [localConstrConf, setConstrConf] =
     useState<TConstraintConfiguration | null>(null);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
+  const [elements, setElements] = useState({});
 
+  const elem = getElementsForMapping(form.sections, activityDesign);
+  // setElements(elem);
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
+
+    // setElements(getElementsForMapping(form.sections, activityDesign));
+    // console.log({elements typeExtIds}  );
+    // console.log(elem);
     tecoreAPI.getFieldIds({
       typeExtIds,
-      callback: (result) => setFields(result),
+      callback: (result) => {
+        setFields(result);
+        setElements(elem);
+      },
     });
-  }, [activityDesign?.objects, tecoreAPI]);
+  }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);
 
@@ -147,9 +164,16 @@ const ConstraintManagerPage = () => {
         handleUpdConstrConf,
         allConstraints,
         fields,
+        elements,
         activityDesign.objects,
       ),
-    [handleUpdConstrConf, allConstraints, fields, activityDesign.objects],
+    [
+      handleUpdConstrConf,
+      allConstraints,
+      fields,
+      elements,
+      activityDesign.objects,
+    ],
   );
 
   const handleAddCustomConstraint = (e) => {
