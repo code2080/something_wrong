@@ -80,7 +80,6 @@ describe('MappingRow tests', () => {
         />
       </div>,
     );
-    screen.debug();
     fireEvent.mouseOver(screen.getByText('Untitled connected section / Rum'));
     await waitFor(() => screen.getByRole('tooltip'));
 
