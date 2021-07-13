@@ -134,8 +134,7 @@ const findFirstRepeatingSection = (formSections, mapping) =>
  * @param {*} formSections the sections of the form
  * @param {*} mapping the current mapping
  */
-
-export const getElementsForMapping = (formSections, mapping) => {
+export const getElementsForMapping = ({ formSections, mapping, settings = {}}: any) => {
   if (!formSections || !formSections.length || !mapping) return [];
   // Ensure only one repeating section can be used
   const firstRepeatingSection = findFirstRepeatingSection(
@@ -151,6 +150,8 @@ export const getElementsForMapping = (formSections, mapping) => {
       firstRepeatingSection &&
       isReccuring &&
       section._id !== firstRepeatingSection._id;
+    const activityTemplateEnabled = _.get(section, ['activityTemplatesSettings', 'isEnabled']);
+    const groupsEnabled = _.get(section, ['groupManagementSettings', 'isEnabled']);
 
     return {
       value: section._id,
@@ -158,16 +159,16 @@ export const getElementsForMapping = (formSections, mapping) => {
       disabled: isDisabled,
       children: [
         ...(isReccuring
-          ? [
-              {
+          ? _.compact([
+              activityTemplateEnabled && {
                 value: 'templates',
                 label: 'Activity template',
               },
-              {
+            groupsEnabled && {
                 value: 'groups',
                 label: 'Groups',
               },
-            ]
+            ])
           : []),
         ...section.elements.map((element) => ({
           value: element._id,
@@ -177,13 +178,13 @@ export const getElementsForMapping = (formSections, mapping) => {
     };
   });
 
-  return [
-    {
+  return _.compact([
+    settings.primaryObject && {
       value: 'scopedObject',
       label: 'Primary object',
     },
     ...elementOptions,
-  ];
+  ]);
 };
 
 /**
