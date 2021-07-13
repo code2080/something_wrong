@@ -3,7 +3,6 @@ import { Switch, InputNumber /* , Select */ } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
 import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
-import staticParams from './static_params';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   const constraint = allConstraints.find(
@@ -32,7 +31,7 @@ const renderConstraintParameters = (
   );
   return !isEmpty(parameters) ? (
     <ParameterCascader
-      paramFields={staticParams}
+      paramFields={paramFields}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
     />
