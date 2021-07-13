@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Select, Cascader } from 'antd';
 
 // HELPERS
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
+import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 
 // CONSTANTS
 import {
@@ -17,6 +18,7 @@ import './Mapping.scss';
 import MultiRowParameter from './MultiRowParameter';
 import { getElementTypeFromId } from '../../Utils/elements.helpers';
 import { elementTypes } from '../../Constants/elementTypes.constants';
+import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
 
 const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const timingMode = useMemo(
@@ -43,10 +45,21 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     if (!value || !value.length) return;
     onChange('dateRanges', [...value.slice(0, idx), ...value.slice(idx + 1)]);
   };
+  const calendarSections = getElementsForTimingMapping[timingMode](
+    formSections.filter(section => determineSectionType(section) === SECTION_CONNECTED),
+    mapping,
+  );
   const sections = getElementsForTimingMapping[timingMode](
     formSections,
     mapping,
   );
+
+  // Change to another mode if there is no calendar sections
+  useEffect(() => {
+    if (!calendarSections.length && timingMode === activityTimeModes.EXACT) {
+      onChange('mode', activityTimeModes.TIMESLOTS);
+    }
+  }, [calendarSections.length]);
 
   const filterOnElementTypes = ({ types = [], sections }) => {
     if (_.isEmpty(types) || _.isEmpty(sections)) return sections;
@@ -81,11 +94,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           disabled={disabled}
         >
-          {Object.keys(activityTimeModeProps).map((mode) => (
-            <Select.Option key={mode} value={mode}>
-              {activityTimeModeProps[mode].label}
-            </Select.Option>
-          ))}
+          {Object.keys(activityTimeModeProps)
+            .filter(mode => calendarSections.length || mode !== activityTimeModes.EXACT)
+            .map((mode) => (
+              <Select.Option key={mode} value={mode}>
+                {activityTimeModeProps[mode].label}
+              </Select.Option>
+            ))}
         </Select>
       </div>
       {timingMode === activityTimeModes.EXACT && (
@@ -96,7 +111,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={sections}
+              options={calendarSections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -111,7 +126,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={sections}
+              options={calendarSections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
