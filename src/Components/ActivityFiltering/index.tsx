@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';
-import FilterModal from './FilterModal';
+import FilterModal from './FilterModal/FilterModal';
 
 // STYLES
 import './index.scss';

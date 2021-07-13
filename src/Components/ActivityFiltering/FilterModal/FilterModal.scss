@@ -1,0 +1,13 @@
+.filter-modal__content {
+  min-height: 300px;
+}
+.filter-modal__box {
+  border: 1px solid #333;
+  flex: 1;
+  min-height: 0;
+}
+.filter-modal__column {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}

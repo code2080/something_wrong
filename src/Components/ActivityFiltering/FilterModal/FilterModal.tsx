@@ -1,25 +1,30 @@
 import _ from 'lodash';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
-import PropertySelector from '../PropertySelector';
+import PropertySelector from '../../PropertySelector';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   fetchLookupMap,
   setSelectedFilterValues,
-} from '../../Redux/Filters/filters.actions';
+} from '../../../Redux/Filters/filters.actions';
 import {
   makeSelectFormLookupMap,
   makeSelectSelectedFilterValues,
-} from '../../Redux/Filters/filters.selectors';
-import type { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
-import type { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
-import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
-import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
-import { selectActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.selectors';
-import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+} from '../../../Redux/Filters/filters.selectors';
+import type { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
+import type { GetExtIdPropsPayload } from '../../../Types/TECorePayloads.type';
+import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
+import { selectMultipleExtIdLabels } from '../../../Redux/TE/te.selectors';
+import { selectActivityTagsForForm } from '../../../Redux/ActivityTag/activityTag.selectors';
+import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
+import FilterSettings from './FilterSettings';
+
+import './FilterModal.scss';
+import FilterContent from './FilterContent';
+import FilterModalContainer from './FilterModalContainer';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -563,7 +568,13 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
         document.getElementById('te-prefs-lib') as HTMLElement
       }
     >
-      <ModalBody />
+      <FilterModalContainer.Provider filterLookupMap={filterLookupMap} >
+        <div>
+          <FilterSettings />
+          <FilterContent />
+          <ModalBody />
+        </div>
+      </FilterModalContainer.Provider>
     </Modal>
   );
 };
