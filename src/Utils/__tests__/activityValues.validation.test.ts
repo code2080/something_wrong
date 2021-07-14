@@ -4,21 +4,33 @@ import { validateMandatoryFieldValue } from '../activityValues.validation';
 import { dummyActivities, dummyActivityDesign } from './mockups';
 
 describe('Activity validations test', () => {
-  it('Return true if there is no empty mandatory field', () => {
-    const result = (dummyActivities[0].values as ActivityValue[]).every(
-      (val: ActivityValue) => {
-        return validateMandatoryFieldValue(val, dummyActivityDesign);
-      },
-    );
-    expect(result).toBeTruthy();
-  });
+  interface Test {
+    args: ActivityValue[];
+    expected: boolean;
+  }
+  type TestData = [message: string, testVars: Test];
 
-  it('Return false if there is empty mandatory field', () => {
-    const result = (dummyActivities[2].values as ActivityValue[]).every(
-      (val: ActivityValue) => {
-        return validateMandatoryFieldValue(val, dummyActivityDesign);
+  const testData: TestData[] = [
+    [
+      'Return true if there is no empty mandatory field',
+      {
+        args: dummyActivities[0].values as ActivityValue[],
+        expected: true,
       },
+    ],
+    [
+      'Return false if there is empty mandatory field',
+      {
+        args: dummyActivities[2].values as ActivityValue[],
+        expected: false,
+      },
+    ],
+  ];
+
+  test.each<[string, Test]>(testData)('%s', (_, test) => {
+    const result = test.args.every((val) =>
+      validateMandatoryFieldValue(val, dummyActivityDesign),
     );
-    expect(result).toBeFalsy();
+    expect(result).toEqual(test.expected);
   });
 });
