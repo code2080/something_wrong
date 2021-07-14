@@ -17,7 +17,7 @@ const BaseActivityColValue = ({ activityValue, activity }) => {
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const component = useMemo(
     () => renderComponent(activityValue, activity, activityDesign),
-    [activityValue, activity],
+    [activityValue, activity, activityDesign],
   );
   if (
     component.status === activityValueStatuses.READY_FOR_SCHEDULING &&
