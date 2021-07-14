@@ -36,12 +36,12 @@ export const validateGeneralValue = (_activityValue) => {
 export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
   if (!activityDesign) return true;
   const mandatoryFields = Object.keys(activityDesign.propSettings).filter(
-    (key) =>
-      activityDesign.propSettings[key] &&
-      activityDesign.propSettings[key].mandatory,
+    (key) => activityDesign.propSettings[key]?.mandatory,
   );
-  if (!mandatoryFields.includes(activityValue.extId)) return true;
-  return !isEmpty(compact(activityValue.value));
+  const isMandatoryField = mandatoryFields.includes(activityValue.extId);
+  const hasValue = !isEmpty(compact(activityValue.value));
+
+  return !isMandatoryField || hasValue;
 };
 
 export const validateFilterValue = (activityValue) => {
