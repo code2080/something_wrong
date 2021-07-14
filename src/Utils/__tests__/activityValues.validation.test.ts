@@ -1,16 +1,10 @@
 import { ActivityValue } from 'Types/ActivityValue.type';
+import { parameterizedTest, TestMetaData } from 'Utils/test.utils';
 import { validateMandatoryFieldValue } from '../activityValues.validation';
-
 import { dummyActivities, dummyActivityDesign } from './mockups';
 
 describe('Activity validations test', () => {
-  interface Test {
-    args: ActivityValue[];
-    expected: boolean;
-  }
-  type TestData = [message: string, testVars: Test];
-
-  const testData: TestData[] = [
+  const testData = [
     [
       'Return true if there is no empty mandatory field',
       {
@@ -32,12 +26,12 @@ describe('Activity validations test', () => {
         expected: true,
       },
     ],
-  ];
+  ] as TestMetaData<ActivityValue[], boolean>[];
 
-  test.each<[string, Test]>(testData)('%s', (_, test) => {
-    const result = test.args.every((val) =>
+  parameterizedTest(testData, ({ args, expected }) => {
+    const result = args.every((val) =>
       validateMandatoryFieldValue(val, dummyActivityDesign),
     );
-    expect(result).toEqual(test.expected);
+    expect(result).toBe(expected);
   });
 });
