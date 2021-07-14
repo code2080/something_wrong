@@ -143,13 +143,14 @@ const ActivityDesignPage = () => {
   const isEditable = useMemo(() => storeDesign.isEditable, [storeDesign]);
 
   const mappingOptions = useMemo(
-    () => getElementsForMapping({
-      formSections: form.sections,
-      mapping: design,
-      settings: {
-        primaryObject: form.objectScope,
-      }
-    }),
+    () =>
+      getElementsForMapping({
+        formSections: form.sections,
+        mapping: design,
+        settings: {
+          primaryObject: form.objectScope,
+        },
+      }),
     [form, design],
   );
   const typeOptions = useMemo(
