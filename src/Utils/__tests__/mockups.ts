@@ -356,6 +356,18 @@ export const dummyActivities = [
       {
         type: 'object',
         extId: 'availgrp_room',
+        value: [null],
+        submissionValue: [null],
+        submissionValueType: 'FREE_TEXT',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: '60e7fb62d3241f0026cd5a47',
+        elementId: '60e7fb62d3241f0026cd5a29',
+        eventId: 'c4ea36e7-5214-42b2-8299-b0ee3ca0196a',
+        rowIdx: null,
+      },
+      {
+        type: 'object',
+        extId: 'availgrp_room',
         value: [2],
         submissionValue: [2],
         submissionValueType: 'FREE_TEXT',

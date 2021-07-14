@@ -25,6 +25,13 @@ describe('Activity validations test', () => {
         expected: false,
       },
     ],
+    [
+      'Return true if there is multiple values of same field, with one of them nonempty mandatory field',
+      {
+        args: dummyActivities[1].values as ActivityValue[],
+        expected: true,
+      },
+    ],
   ];
 
   test.each<[string, Test]>(testData)('%s', (_, test) => {
