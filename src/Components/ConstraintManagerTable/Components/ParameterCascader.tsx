@@ -16,19 +16,20 @@ const ParameterCascader = ({
   activityDesignObj,
   paramFormElements,
 }: Props) => {
-  if (!paramFields || paramFormElements || activityDesignObj) return null;
-  const fieldOptions = [
-    ...Object.keys(activityDesignObj).map((objField) => ({
-      value: objField,
-      label: objField,
-      children: Object.keys(
-        paramFields[objField] ?? { [objField]: objField },
-      ).map((field) => ({
-        value: field,
-        label: field,
-      })),
-    })),
-  ];
+  const fieldOptions = activityDesignObj
+    ? [
+        ...Object.keys(activityDesignObj).map((objField) => ({
+          value: objField,
+          label: objField,
+          children: Object.keys(
+            paramFields[objField] ?? { [objField]: objField },
+          ).map((field) => ({
+            value: field,
+            label: field,
+          })),
+        })),
+      ]
+    : [];
   const options = [
     _.isEmpty(paramFormElements)
       ? {}
