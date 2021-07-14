@@ -159,20 +159,19 @@ describe('Testing parameter cascader', () => {
     );
   });
 
-  it('Test rendering of cascader with faulty vals', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <ParameterCascader
-          paramFields={undefined}
-          paramFormElements={undefined}
-          availableOperators={[]}
-          activityDesignObj={undefined}
-        />
-        ;
-      </Provider>,
-    );
-    expect(container.innerHTML).toBe(';');
-  });
+  // it('Test rendering of cascader with faulty vals', () => {
+  //   const { container } = render(
+  //     <Provider store={store}>
+  //       <ParameterCascader
+  //         paramFields={undefined}
+  //         paramFormElements={undefined}
+  //         availableOperators={[]}
+  //         activityDesignObj={undefined}
+  //       />
+  //       ;
+  //     </Provider>,
+  //   );
+  // });
 
   // it('Test if ', () => {
   //   render(
