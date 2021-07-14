@@ -16,6 +16,7 @@ const ParameterCascader = ({
   activityDesignObj,
   paramFormElements,
 }: Props) => {
+  if (!paramFields || paramFormElements || activityDesignObj) return null;
   const fieldOptions = [
     ...Object.keys(activityDesignObj).map((objField) => ({
       value: objField,
