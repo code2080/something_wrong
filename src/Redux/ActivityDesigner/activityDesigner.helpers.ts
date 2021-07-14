@@ -134,7 +134,11 @@ const findFirstRepeatingSection = (formSections, mapping) =>
  * @param {*} formSections the sections of the form
  * @param {*} mapping the current mapping
  */
-export const getElementsForMapping = ({ formSections, mapping, settings = {}}: any) => {
+export const getElementsForMapping = ({
+  formSections,
+  mapping,
+  settings = {},
+}: any) => {
   if (!formSections || !formSections.length || !mapping) return [];
   // Ensure only one repeating section can be used
   const firstRepeatingSection = findFirstRepeatingSection(
@@ -150,8 +154,9 @@ export const getElementsForMapping = ({ formSections, mapping, settings = {}}: a
       firstRepeatingSection &&
       isReccuring &&
       section._id !== firstRepeatingSection._id;
-    const activityTemplateEnabled = _.get(section, ['activityTemplatesSettings', 'isEnabled']);
-    const groupsEnabled = _.get(section, ['groupManagementSettings', 'isEnabled']);
+    const activityTemplateEnabled =
+      section?.activityTemplatesSettings?.isEnabled;
+    const groupsEnabled = section?.groupManagementSettings?.isEnabled;
 
     return {
       value: section._id,
@@ -164,7 +169,7 @@ export const getElementsForMapping = ({ formSections, mapping, settings = {}}: a
                 value: 'templates',
                 label: 'Activity template',
               },
-            groupsEnabled && {
+              groupsEnabled && {
                 value: 'groups',
                 label: 'Groups',
               },
