@@ -1,20 +1,19 @@
-import React from 'react';
-
 import { CascaderProps, Cascader, Tooltip } from 'antd';
 
-const CascaderWithTooltip = (props: CascaderProps) => {
+const CascaderWithTooltip = (props: CascaderProps & { separator?: string }) => {
+  const defaultSeparator = ' / ';
   return (
     <Cascader
       {...props}
       displayRender={(label: string[]) => (
         <Tooltip
-          title={label.join('/')}
+          title={label.join(props.separator ?? defaultSeparator)}
           getPopupContainer={() =>
             document.getElementById('te-prefs-lib') as HTMLElement
           }
         >
           <span style={{ width: '100%', display: 'block' }}>
-            {label.join('/')}
+            {label.join(props.separator ?? defaultSeparator)}
           </span>
         </Tooltip>
       )}
