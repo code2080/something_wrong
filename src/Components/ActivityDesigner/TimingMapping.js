@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Select, Cascader } from 'antd';
+import { Select, Cascader, Tooltip } from 'antd';
 
 // HELPERS
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -45,19 +45,31 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     if (!value || !value.length) return;
     onChange('dateRanges', [...value.slice(0, idx), ...value.slice(idx + 1)]);
   };
-  const calendarSections = getElementsForTimingMapping[timingMode](
-    formSections.filter(section => determineSectionType(section) === SECTION_CONNECTED),
-    mapping,
+  const calendarSections = useMemo(() => {
+    return getElementsForTimingMapping[timingMode](
+      formSections.filter(
+        (section) => determineSectionType(section) === SECTION_CONNECTED,
+      ),
+      mapping,
+    );
+  }, [formSections, mapping]);
+
+  const timingIsDisabled = useCallback(
+    (mode) => {
+      // TODO: Add more conditions if there is DateTime element in future
+      return !calendarSections.length && mode !== activityTimeModes.SEQUENCE;
+    },
+    [calendarSections],
   );
-  const sections = getElementsForTimingMapping[timingMode](
-    formSections,
-    mapping,
-  );
+
+  const sections = useMemo(() => {
+    return getElementsForTimingMapping[timingMode](formSections, mapping);
+  }, [formSections, mapping]);
 
   // Change to another mode if there is no calendar sections
   useEffect(() => {
-    if (!calendarSections.length && timingMode === activityTimeModes.EXACT) {
-      onChange('mode', activityTimeModes.TIMESLOTS);
+    if (!calendarSections.length && timingMode !== activityTimeModes.SEQUENCE) {
+      onChange('mode', activityTimeModes.SEQUENCE);
     }
   }, [calendarSections.length]);
 
@@ -94,13 +106,22 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           getPopupContainer={() => document.getElementById('te-prefs-lib')}
           disabled={disabled}
         >
-          {Object.keys(activityTimeModeProps)
-            .filter(mode => calendarSections.length || mode !== activityTimeModes.EXACT)
-            .map((mode) => (
-              <Select.Option key={mode} value={mode}>
-                {activityTimeModeProps[mode].label}
+          {Object.keys(activityTimeModeProps).map((mode) => {
+            const isDisabled = timingIsDisabled(mode);
+            return (
+              <Select.Option disabled={isDisabled} key={mode} value={mode}>
+                <Tooltip
+                  title={
+                    isDisabled
+                      ? 'No calendar section available on the form'
+                      : null
+                  }
+                >
+                  {activityTimeModeProps[mode].label}
+                </Tooltip>
               </Select.Option>
-            ))}
+            );
+          })}
         </Select>
       </div>
       {timingMode === activityTimeModes.EXACT && (
