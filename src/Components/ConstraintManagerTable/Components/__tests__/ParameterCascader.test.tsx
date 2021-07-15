@@ -1,18 +1,7 @@
 import ParameterCascader from '../../Components/ParameterCascader';
-import configureStore from '../../../../Redux/store';
-import { Provider } from 'react-redux';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  act,
-  getByText,
-  getAllByRole,
-  within,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import mockStore from '../TestHelpers/TestHelpers';
+import { renderWithState } from '../../../../Utils/test.utils';
 
 const mockParamFields = {
   room: {
@@ -128,77 +117,44 @@ const mockParamFormElements = [
   },
 ];
 
-const store = configureStore(mockStore);
-
 describe('Testing parameter cascader', () => {
-  beforeEach(() =>
-    render(
-      <Provider store={store}>
-        <ParameterCascader
-          paramFields={mockParamFields}
-          paramFormElements={mockParamFormElements}
-          availableOperators={mockOperators}
-          activityDesignObj={mockActivityDesignObj}
-        />
-        ;
-      </Provider>,
-    ),
-  );
-
   it('Test rendering of cascader', () => {
-    render(
-      <Provider store={store}>
-        <ParameterCascader
-          paramFields={mockParamFields}
-          paramFormElements={mockParamFormElements}
-          availableOperators={mockOperators}
-          activityDesignObj={mockActivityDesignObj}
-        />
-        ;
-      </Provider>,
+    renderWithState(
+      <ParameterCascader
+        paramFields={mockParamFields}
+        paramFormElements={mockParamFormElements}
+        availableOperators={mockOperators}
+        activityDesignObj={mockActivityDesignObj}
+      />,
     );
   });
 
-  // it('Test rendering of cascader with faulty vals', () => {
-  //   const { container } = render(
-  //     <Provider store={store}>
-  //       <ParameterCascader
-  //         paramFields={undefined}
-  //         paramFormElements={undefined}
-  //         availableOperators={[]}
-  //         activityDesignObj={undefined}
-  //       />
-  //       ;
-  //     </Provider>,
-  //   );
-  // });
+  it('test example user flow', async () => {
+    renderWithState(
+      <ParameterCascader
+        data-testId='ParamCascader'
+        paramFields={mockParamFields}
+        paramFormElements={mockParamFormElements}
+        availableOperators={mockOperators}
+        activityDesignObj={mockActivityDesignObj}
+      />,
+    );
+    const sel = screen.getAllByPlaceholderText('Please select');
 
-  // it('Test if ', () => {
-  //   render(
-  //     <Provider store={store}>
-  //       <ParameterCascader
-  //         data-testId='ParamCascader'
-  //         paramFields={mockParamFields}
-  //         paramFormElements={mockParamFormElements}
-  //         availableOperators={mockOperators}
-  //         activityDesignObj={mockActivityDesignObj}
-  //       />
-  //       ;
-  //     </Provider>,
-  //   );
-  //   const sel = screen.getAllByPlaceholderText('Please select');
+    fireEvent.click(sel[0]);
+    const objectsOption = screen.getByText('Objects');
+    await waitFor(() => objectsOption);
+    expect(screen.getByText('Form')).toBeInTheDocument();
+    expect(objectsOption).toBeInTheDocument();
 
-  //   fireEvent.click(sel[0]);
-  //   // fireEvent.change(display, { target: { value: 'Form' } });
+    fireEvent.click(objectsOption);
+    const primaryObjectOption = screen.getByText('Primary object');
+    await waitFor(() => primaryObjectOption);
+    expect(primaryObjectOption).toBeInTheDocument();
 
-  //   // screen.getByRole('combobox');
-  //   screen.debug();
-
-  // fireEvent.click(screen.getByPlaceholderText('Please select'));
-  //   fireEvent.click(display);
-  //   const form = await screen.findAllByPlaceholderText('Form');
-  // console.log(sel[0]);
-  // expect(screen.findByText('Objects')).toBeInTheDocument();
-  // expect(screen.getByText('Form')).toBeInTheDocument();
-  // });
+    fireEvent.click(primaryObjectOption);
+    await waitFor(() =>
+      expect(screen.getByText('Objects / Primary object')).toBeInTheDocument(),
+    );
+  });
 });
