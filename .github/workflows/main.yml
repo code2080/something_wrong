@@ -16,8 +16,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: textbook/git-checkout-submodule-action
-      
+        with:
+          submodules: recursive
+          
       - name: install
         run: yarn
       # Runs a single command using the runners shell
