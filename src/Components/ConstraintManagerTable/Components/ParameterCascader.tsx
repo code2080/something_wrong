@@ -8,6 +8,7 @@ type Props = {
   paramFormElements: any | {};
   availableOperators: string[];
   activityDesignObj: any;
+  onSelect?: () => void;
 };
 
 const ParameterCascader = ({
@@ -15,6 +16,7 @@ const ParameterCascader = ({
   availableOperators,
   activityDesignObj,
   paramFormElements,
+  onSelect,
 }: Props) => {
   const fieldOptions = activityDesignObj
     ? [
@@ -53,6 +55,7 @@ const ParameterCascader = ({
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
+        onChange={onSelect}
       />{' '}
       <Select
         placeholder='Operator'
@@ -60,6 +63,7 @@ const ParameterCascader = ({
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
+        onChange={onSelect}
       >
         {availableOperators.map((operator) => (
           <Option key={operator} value={operator}>
@@ -73,6 +77,7 @@ const ParameterCascader = ({
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
+        onChange={onSelect}
       />
     </div>
   );

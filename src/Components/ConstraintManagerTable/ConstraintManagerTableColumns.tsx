@@ -18,6 +18,7 @@ const renderConstraintParameters = (
   allConstraints,
   constraintId,
   activityDesignObj,
+  onUpdateValue,
 ) => {
   const operators = getPropFromConstraint(
     constraintId,
@@ -36,6 +37,7 @@ const renderConstraintParameters = (
       paramFormElements={paramElements}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
+      onSelect={onUpdateValue}
     />
   ) : null;
 };
@@ -85,6 +87,7 @@ const constraintManagerTableColumns = (
         allConstraints,
         constraintId,
         activityDesignObj,
+        onUpdateValue,
       ),
   },
   {
