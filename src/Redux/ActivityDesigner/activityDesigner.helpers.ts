@@ -216,11 +216,6 @@ const getExactModeElementsForMapping = (formSections, mapping) => {
           ? [
               { value: 'startTime', label: 'Event start time' },
               { value: 'endTime', label: 'Event end time' },
-              ...section.elements.map((element) => ({
-                value: element._id,
-                label: element.label,
-                elementId: element.elementId,
-              })),
             ]
           : section.elements.map((element) => ({
               value: element._id,
