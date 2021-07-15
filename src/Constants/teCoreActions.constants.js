@@ -194,9 +194,8 @@ export const teCoreActions = {
   },
   GET_FIELDIDS_FOR_TYPES: {
     callname: teCoreCallnames.GET_FIELDIDS_FOR_TYPES,
-    mockFunction: (typeExtIds, callback) => {
+    mockFunction: ({ typeExtIds, callback }) => {
       if (_.isEmpty(typeExtIds)) return null;
-      callback();
       const res = typeExtIds.reduce(
         (labels, extId) => ({
           ...labels,
