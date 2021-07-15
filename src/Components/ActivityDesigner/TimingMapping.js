@@ -59,7 +59,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const timingIsDisabled = useCallback(
     (mode) => {
       // TODO: Add more conditions if there is DateTime element in future
-      return !_.get(mapping, ['timing', 'hasTiming']) && mode !== activityTimeModes.SEQUENCE;
+      return (
+        !_.get(mapping, ['timing', 'hasTiming']) &&
+        mode !== activityTimeModes.SEQUENCE
+      );
     },
     [calendarSections],
   );

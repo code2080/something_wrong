@@ -14,8 +14,17 @@ const reducer = (state = initialState, action) => {
         isEditable: true,
       });
       // Only support 1 recurring section in form.
-      const calendarSection = action.payload.form.sections.find(section => determineSectionType(section) === SECTION_CONNECTED);
-      const mapping = new ActivityDesign({ ..._mapping, hasTiming: !!calendarSection, useTimeslots: calendarSection && calendarSection.calendarSettings && calendarSection.calendarSettings.useTimeslots });
+      const calendarSection = action.payload.form.sections.find(
+        (section) => determineSectionType(section) === SECTION_CONNECTED,
+      );
+      const mapping = new ActivityDesign({
+        ..._mapping,
+        hasTiming: !!calendarSection,
+        useTimeslots:
+          calendarSection &&
+          calendarSection.calendarSettings &&
+          calendarSection.calendarSettings.useTimeslots,
+      });
       return {
         ...state,
         [action.payload.actionMeta.formId]: { ...mapping },

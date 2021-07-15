@@ -13,22 +13,28 @@ export class ActivityTiming {
   time;
   hasTiming;
 
-  constructor({
-    mode,
-    startDate = [],
-    endDate = [],
-    startTime = [],
-    endTime = [],
-    length = [],
-    padding = [],
-    dateRanges = [],
-    weekday = [],
-    time = [],
-  }, settings = {}) {
+  constructor(
+    {
+      mode,
+      startDate = [],
+      endDate = [],
+      startTime = [],
+      endTime = [],
+      length = [],
+      padding = [],
+      dateRanges = [],
+      weekday = [],
+      time = [],
+    },
+    settings = {},
+  ) {
     const { hasTiming, useTimeslots } = settings;
     if (!mode) {
       if (!hasTiming) this.mode = activityTimeModes.SEQUENCE;
-      else this.mode = useTimeslots ? activityTimeModes.TIMESLOTS : activityTimeModes.EXACT
+      else
+        this.mode = useTimeslots
+          ? activityTimeModes.TIMESLOTS
+          : activityTimeModes.EXACT;
     } else {
       this.mode = mode;
     }
