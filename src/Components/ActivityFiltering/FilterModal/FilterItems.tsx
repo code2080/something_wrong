@@ -1,13 +1,22 @@
 import React from 'react';
+import { SelectOption, ItemsMapping } from './FilterModal.type';
 
-const FilterItems = () => {
+interface Props {
+  selectedProperty: string;
+  filterOptions: { [key: string]: SelectOption[] };
+  mapping: any;
+  propertiesMapping: ItemsMapping;
+}
+const FilterItems = ({ selectedProperty, filterOptions, mapping, propertiesMapping }: Props) => {
+  const property = propertiesMapping[selectedProperty];
+  if (!property) return null;
   return (
     <div className="filter-modal__column">
       <div>
         <b>Available filters</b>
       </div>
       <div className="filter-modal__box">
-
+        {property.render(filterOptions[selectedProperty])}
       </div>
     </div>
   )

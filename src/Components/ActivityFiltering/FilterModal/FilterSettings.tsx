@@ -30,7 +30,7 @@ const FilterSettings = () => {
       </div>
       <Row gutter={16}>
         <Col span={8}>
-          <Form.Item label="Match criteria">
+          <Form.Item label="Match criteria" name="criteria">
             <Radio.Group>
               {CRITERIAS.map(criteria => (
                 <Radio key={criteria.value} value={criteria.label}>{criteria.label}</Radio>
@@ -39,7 +39,7 @@ const FilterSettings = () => {
           </Form.Item>
         </Col>
         <Col span={16}>
-          <Form.Item label="Include full submission for matching activity">
+          <Form.Item label="Include full submission for matching activity" name="mode">
             <Radio.Group>
               {MODES.map(criteria => (
                 <Radio key={criteria.value} value={criteria.label}>{criteria.label}</Radio>
@@ -48,7 +48,6 @@ const FilterSettings = () => {
           </Form.Item>
         </Col>
       </Row>
-      
     </div>
   );
 };

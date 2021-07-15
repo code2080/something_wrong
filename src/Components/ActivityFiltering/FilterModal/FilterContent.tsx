@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Row, Col } from 'antd';
+
 import FilterProperties from './FilterProperties';
 import FilterItems from './FilterItems';
 import FilterSummary from './FilterSummary';
+import FilterModalContainer from './FilterModalContainer';
 
 const FilterContent = () => {
+  const { selectedProperty, setSelectedProperty, filterOptions, mapping, propertiesMapping, values } = useContext(FilterModalContainer.Context);
   return (
-    <Row gutter={16} className="filter-modal__content">
-      <Col span={8}>
-        <FilterProperties />
-      </Col>
-      <Col span={8}>
-        <FilterItems />
-      </Col>
-      <Col span={8}>
-        <FilterSummary />
-      </Col>
-    </Row>
+    <div>
+      <Row gutter={16} className="filter-modal__content">
+        <Col span={7}>
+          <FilterProperties selectedProperty={selectedProperty} onSelect={setSelectedProperty} propertiesMapping={propertiesMapping} />
+        </Col>
+        <Col span={7}>
+        <FilterItems selectedProperty={selectedProperty} filterOptions={filterOptions} mapping={mapping} propertiesMapping={propertiesMapping} />
+        </Col>
+        <Col span={10}>
+          <FilterSummary values={values} filterOptions={filterOptions} />
+        </Col>
+      </Row>
+    </div>
   )
 };
 
