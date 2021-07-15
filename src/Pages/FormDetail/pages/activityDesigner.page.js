@@ -179,6 +179,13 @@ const ActivityDesignPage = () => {
     designRef.current = design;
   }, [design]);
 
+  // init the reservation mode as the default value
+  useEffect(() => {
+    if (!storeDesign.formId && !storeDesign.name) {
+      setDesign(resetAll(typeOptions, fieldOptions))
+    }
+  }, [typeOptions, fieldOptions, storeDesign]);
+
   /**
    * EVENT HANDLERS
    */
