@@ -3,7 +3,6 @@ import { Switch, InputNumber /* , Select */ } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
 import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
-import staticParams from './static_params';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   const constraint = allConstraints.find(
@@ -15,6 +14,7 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
 
 const renderConstraintParameters = (
   paramFields,
+  paramElements,
   allConstraints,
   constraintId,
   activityDesignObj,
@@ -32,7 +32,8 @@ const renderConstraintParameters = (
   );
   return !isEmpty(parameters) ? (
     <ParameterCascader
-      paramFields={staticParams}
+      paramFields={paramFields}
+      paramFormElements={paramElements}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
     />
@@ -42,6 +43,7 @@ const constraintManagerTableColumns = (
   onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
   allConstraints: TConstraint[],
   paramFields,
+  paramElements,
   activityDesignObj,
 ) => [
   {
@@ -79,6 +81,7 @@ const constraintManagerTableColumns = (
     render: (constraintId) =>
       renderConstraintParameters(
         paramFields,
+        paramElements,
         allConstraints,
         constraintId,
         activityDesignObj,
