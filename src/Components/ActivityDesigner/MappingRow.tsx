@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Cascader, Switch, Button, Tooltip } from 'antd';
+import { Select, Switch, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
 import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
+import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
 
 const MappingRow = ({
   teProp,
@@ -76,7 +77,7 @@ const MappingRow = ({
       </div>
       {_mappedValues &&
         _mappedValues.map((el, idx) => (
-          <Cascader
+          <CascaderWithTooltip
             key={`mapper-${idx}`}
             disabled={disabled}
             options={mappingOptions}
@@ -88,18 +89,6 @@ const MappingRow = ({
             }
             size='small'
             style={{ width: '400px', marginRight: '8px' }}
-            displayRender={(label: string[]) => (
-              <Tooltip
-                title={label.join('/')}
-                getPopupContainer={() =>
-                  document.getElementById('te-prefs-lib') as HTMLElement
-                }
-              >
-                <span style={{ width: '100%', display: 'block' }}>
-                  {label.join('/')}
-                </span>
-              </Tooltip>
-            )}
           />
         ))}
       <div className='object-mapping-row--add'>
