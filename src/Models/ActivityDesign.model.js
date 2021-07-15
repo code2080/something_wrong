@@ -17,10 +17,12 @@ export class ActivityDesign {
     fields,
     propSettings,
     isEditable,
+    hasTiming,
+    useTimeslots,
   }) {
     this.name = name;
     this.formId = formId;
-    this.timing = new ActivityTiming(timing || {});
+    this.timing = new ActivityTiming(timing || {}, { useTimeslots, hasTiming });
     this.objects = objects || {};
     this.fields = fields || {};
     this.propSettings = propSettings || {};

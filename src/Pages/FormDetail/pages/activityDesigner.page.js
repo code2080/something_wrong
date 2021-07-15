@@ -91,6 +91,7 @@ const ActivityDesignPage = () => {
     form.reservationMode,
   );
   const storeDesign = useSelector(selectDesignForForm)(formId);
+  console.log(storeDesign);
   const isSaving = useSelector(
     createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
   );

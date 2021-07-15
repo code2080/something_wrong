@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Select, Cascader, Tooltip } from 'antd';
@@ -54,10 +54,12 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     );
   }, [formSections, mapping]);
 
+  console.log(calendarSections);
+
   const timingIsDisabled = useCallback(
     (mode) => {
       // TODO: Add more conditions if there is DateTime element in future
-      return !calendarSections.length && mode !== activityTimeModes.SEQUENCE;
+      return !_.get(mapping, ['timing', 'hasTiming']) && mode !== activityTimeModes.SEQUENCE;
     },
     [calendarSections],
   );
@@ -65,13 +67,6 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const sections = useMemo(() => {
     return getElementsForTimingMapping[timingMode](formSections, mapping);
   }, [formSections, mapping]);
-
-  // Change to another mode if there is no calendar sections
-  useEffect(() => {
-    if (!calendarSections.length && timingMode !== activityTimeModes.SEQUENCE) {
-      onChange('mode', activityTimeModes.SEQUENCE);
-    }
-  }, [calendarSections.length]);
 
   const filterOnElementTypes = ({ types = [], sections }) => {
     if (_.isEmpty(types) || _.isEmpty(sections)) return sections;
@@ -166,7 +161,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={sections}
+              options={calendarSections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -181,7 +176,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <Cascader
-              options={sections}
+              options={calendarSections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
