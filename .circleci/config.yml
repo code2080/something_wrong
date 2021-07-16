@@ -18,7 +18,7 @@ jobs:
               chmod 400 ~/.ssh/tedataid_ed25519
               ssh-keyscan github.com >> ~/.ssh/known_hosts
               git config core.sshCommand "ssh -i ~/.ssh/tedataid_ed25519 -F /dev/null"
-              GIT_SSH_COMMAND="ssh -i ~/.ssh/tedataid_ed25519 -F /dev/null" git submodule update --init --recursive
+              GIT_SSH_COMMAND="ssh -i ~/.ssh/tedataid_ed255219 -F /dev/null" git submodule update --init --recursive
         - restore_cache:
             keys:
               - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
