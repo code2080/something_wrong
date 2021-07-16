@@ -52,24 +52,19 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
       ),
       mapping,
     );
-  }, [formSections, mapping]);
-
-  console.log(calendarSections);
+  }, [formSections, mapping, timingMode]);
 
   const timingIsDisabled = useCallback(
     (mode) => {
       // TODO: Add more conditions if there is DateTime element in future
-      return (
-        !_.get(mapping, ['timing', 'hasTiming']) &&
-        mode !== activityTimeModes.SEQUENCE
-      );
+      return !mapping?.timing?.hasTiming && mode !== activityTimeModes.SEQUENCE;
     },
-    [calendarSections],
+    [mapping],
   );
 
   const sections = useMemo(() => {
     return getElementsForTimingMapping[timingMode](formSections, mapping);
-  }, [formSections, mapping]);
+  }, [formSections, mapping, timingMode]);
 
   const filterOnElementTypes = ({ types = [], sections }) => {
     if (_.isEmpty(types) || _.isEmpty(sections)) return sections;

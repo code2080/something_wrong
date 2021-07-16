@@ -20,10 +20,7 @@ const reducer = (state = initialState, action) => {
       const mapping = new ActivityDesign({
         ..._mapping,
         hasTiming: !!calendarSection,
-        useTimeslots:
-          calendarSection &&
-          calendarSection.calendarSettings &&
-          calendarSection.calendarSettings.useTimeslots,
+        useTimeslots: calendarSection?.calendarSettings?.useTimeslots,
       });
       return {
         ...state,
