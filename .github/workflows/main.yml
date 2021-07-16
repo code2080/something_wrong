@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SKIP_PREFLIGHT_CHECK: true 
+      SKIP_PREFLIGHT_CHECK: true
+      TZ: UTC+2
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2        
