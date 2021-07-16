@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  lintandtest:
+    runs-on: ubuntu-latest
+
+    env:
+      SKIP_PREFLIGHT_CHECK: true
+      TZ: Europe/Stockholm
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Get submodules
+        env:
+          SSH_KEY_SUBMODULE: ${{secrets.SUBMODULE_CONTENT_PULL_KEY}}
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update --init --recursive
+
+      - uses: c-hive/gha-yarn-cache@v2
+      - name: install
+        run: yarn
+      - name: Lint
+        run: |
+          yarn lint
+          yarn ts:lint
+
+      - name: Prettier
+        run: yarn prettier
+
+      - name: Test
+        run: yarn test
+
+      - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: yarn
+          skip-step: install
+          test-script: yarn test --coverage --coverageReporters="text" --coverageReporters="text-summary"

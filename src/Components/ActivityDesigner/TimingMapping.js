@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Select, Cascader, Tooltip } from 'antd';
+import { Select, Tooltip } from 'antd';
+import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
 
 // HELPERS
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -124,7 +125,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               Start time
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={calendarSections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
@@ -139,7 +140,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               End time
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={calendarSections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
@@ -158,7 +159,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               Start on or after:
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={calendarSections}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
@@ -173,7 +174,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               End on or before:
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={calendarSections}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
@@ -188,7 +189,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               Length
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={sections}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
@@ -207,7 +208,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               Length
               <span className='is-required'>(required)</span>
             </div>
-            <Cascader
+            <CascaderWithTooltip
               options={sections}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
@@ -219,7 +220,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           </div>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Padding</div>
-            <Cascader
+            <CascaderWithTooltip
               options={filterOnElementTypes({
                 types: [elementTypes.ELEMENT_TYPE_PADDING],
                 sections,
@@ -234,7 +235,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           </div>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Weekday</div>
-            <Cascader
+            <CascaderWithTooltip
               options={filterOnElementTypes({
                 types: [elementTypes.ELEMENT_TYPE_DAY_PICKER],
                 sections,
@@ -249,7 +250,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           </div>
           <div className='timing-mapping__row--wrapper'>
             <div className='label'>Exact time</div>
-            <Cascader
+            <CascaderWithTooltip
               options={filterOnElementTypes({
                 types: [elementTypes.ELEMENT_TYPE_INPUT_TIME],
                 sections,
