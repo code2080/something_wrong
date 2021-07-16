@@ -8,17 +8,14 @@ jobs:
        - image: circleci/node:15.14.0
       steps:
         - checkout
-        - add_ssh_keys:
-            fingerprints: 
-              - "37:42:83:b6:27:40:b6:df:32:2c:21:98:19:2b:ac:05"
         - run:
             name: Install Submodules
             command: |
               echo "$TE_DATA_MODELS_DEPLOY_KEY" > ~/.ssh/tedataid_ed25519
               chmod 400 ~/.ssh/tedataid_ed25519
               ssh-keyscan github.com >> ~/.ssh/known_hosts
-              git config core.sshCommand "ssh -i ~/.ssh/tedataid_ed25519 -F /dev/null"
-              GIT_SSH_COMMAND="ssh -i ~/.ssh/tedataid_ed255219 -F /dev/null" git submodule update --init --recursive
+              cat ~/.ssh/config
+              GIT_SSH_COMMAND="ssh -i ~/.ssh/tedataid_ed25519 -F /dev/null" git submodule update --init --recursive
         - restore_cache:
             keys:
               - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
