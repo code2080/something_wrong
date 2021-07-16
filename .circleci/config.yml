@@ -12,8 +12,11 @@ jobs:
             name: Install Submodules
             command: |
               echo "$TE_DATA_MODELS_DEPLOY_KEY" > ~/.ssh/tedataid_ed25519
-              chmod 400 ~/.ssh/tedataid_ed25519
+              chmod 600 ~/.ssh/tedataid_ed25519
               ssh-keyscan github.com >> ~/.ssh/known_hosts
+              echo "Host github.com
+                      IdentityFile ~/.ssh/tedataid_ed25519" > ~/.ssh/config
+              chmod 600 ~/.ssh/config
               cat ~/.ssh/config
               GIT_SSH_COMMAND="ssh -i ~/.ssh/tedataid_ed25519 -F /dev/null" git submodule update --init --recursive
         - restore_cache:
