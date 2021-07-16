@@ -11,6 +11,7 @@ jobs:
 
     env:
       SKIP_PREFLIGHT_CHECK: true
+      TZ: Europe/Stockholm
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2        
@@ -33,4 +34,4 @@ jobs:
         run: yarn prettier
         
       - name: Test
-        run: TZ=UTC+2 yarn test
+        run: yarn test
