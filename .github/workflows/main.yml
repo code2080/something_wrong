@@ -35,7 +35,9 @@ jobs:
 
       - name: Test
         run: yarn test
+
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
+        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: yarn
