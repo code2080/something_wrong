@@ -18,7 +18,7 @@ jobs:
               chmod 600 ~/.ssh/tedataid_ed25519
               ssh-keyscan github.com >> ~/.ssh/known_hosts
               git config core.sshCommand "ssh -i ~/.ssh/teDataid_ed25519 -F /dev/null"
-              git submodule update --init --recursive
+              GIT_SSH_COMMAND="ssh -i ~/.ssh/teDataid_ed25519 -F /dev/null" git submodule update --init --recursive
             # eval `ssh-agent -s`
             # ssh-add - \<<< "$TE_DATA_MODELS_DEPLOY_KEY"; 
         - restore_cache:
