@@ -14,8 +14,14 @@ jobs:
         - run:
             name: Install Submodules
             command: |
-              eval `ssh-agent -s`
-              ssh-add - \<<< "$TE_DATA_MODELS_DEPLOY_KEY"; git submodule update --init --recursive
+              mkdir ~/.ssh/
+              echo "$TE_DATA_MODELS_DEPLOY_KEY" > ~/.ssh/id_ed25519
+              chmod 600 ~/.ssh/id_ed25519
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+              git config core.sshCommand "ssh -i ~/.ssh/id_ed25519 -F /dev/null"
+              git submodule update --init --recursive
+            # eval `ssh-agent -s`
+            # ssh-add - \<<< "$TE_DATA_MODELS_DEPLOY_KEY"; 
         - restore_cache:
             keys:
               - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
