@@ -20,7 +20,8 @@ jobs:
         run: |
           eval `ssh-agent -s`
           ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update --init --recursive
-          
+      
+      - uses: c-hive/gha-yarn-cache@v2
       - name: install
         run: yarn
       - name: Lint
@@ -32,4 +33,4 @@ jobs:
         run: yarn prettier
         
       - name: Test
-        run: TZ='UTC+2' yarn test
+        run: TZ=UTC+2 yarn test
