@@ -182,7 +182,7 @@ const ActivityDesignPage = () => {
   // init the reservation mode as the default value
   useEffect(() => {
     if (!storeDesign.formId && !storeDesign.name) {
-      setDesign(resetAll(typeOptions, fieldOptions))
+      setDesign(resetAll(typeOptions, fieldOptions));
     }
   }, [typeOptions, fieldOptions, storeDesign]);
 
