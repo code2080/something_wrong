@@ -10,7 +10,7 @@ jobs:
         - checkout
         - add_ssh_keys:
             fingerprints: 
-              - "256 SHA256:B205eHsllnf9SPDzqvw351xfJQRE/N68NH+wkkKy1n4 info@timeedit.com (ED25519)"
+              - "37:42:83:b6:27:40:b6:df:32:2c:21:98:19:2b:ac:05"
         - run:
             name: Install Submodules
             command: git submodule sync && git submodule update --init
