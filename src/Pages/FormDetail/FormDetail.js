@@ -124,7 +124,7 @@ const FormPage = () => {
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
-    dispatch(fetchMappings(formId));
+    dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));

@@ -10,23 +10,23 @@ import {
   UNLOCK_ACTIVITY_DESIGN,
 } from './activityDesigner.actionTypes';
 
-const fetchMappingsFlow = {
+const fetchMappingsFlow = (form) => ({
   request: () => ({ type: FETCH_MAPPINGS_FOR_FORM_REQUEST }),
   success: (response) => ({
     type: FETCH_MAPPINGS_FOR_FORM_SUCCESS,
-    payload: { ...response },
+    payload: { ...response, form },
   }),
   failure: (err) => ({
     type: FETCH_MAPPINGS_FOR_FORM_FAILURE,
     payload: { ...err },
   }),
-};
+});
 
-export const fetchMappings = (formId) =>
+export const fetchMappings = (form) =>
   asyncAction.GET({
-    flow: fetchMappingsFlow,
+    flow: fetchMappingsFlow(form),
     endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
-    params: { formId },
+    params: { formId: form._id },
   });
 
 const updateDesignFlow = {
