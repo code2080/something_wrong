@@ -16,9 +16,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.SUBMODULE_CONTENT_PULL_KEY }}
-          submodules: recursive
+       # with:
+        #  ssh-key: ${{ secrets.SUBMODULE_CONTENT_PULL_KEY }}
+        #  submodules: recursive
+        
+      - name: Get submodules
+        env:
+          SSH_KEY_SUBMODULE: ${{secrets.SUBMODULE_CONTENT_PULL_KEY}}
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "${SSH_KEY_SUBMODULE}"; git submodule update --init --recursive
           
       - name: install
         run: yarn
