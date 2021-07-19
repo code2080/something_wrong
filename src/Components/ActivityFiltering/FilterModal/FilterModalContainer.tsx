@@ -118,7 +118,7 @@ const Provider = ({ children, filterLookupMap, form, formId }: Props) => {
       values,
       onValueChange,
     }}>
-      <Form form={form} layout="vertical" onValuesChange={onValueChange}>
+      <Form form={form} layout="vertical" onValuesChange={onValueChange} initialValues={{ criteria: 'one', mode: 'single'}}>
         {children({ values })}
       </Form>
     </Context.Provider>

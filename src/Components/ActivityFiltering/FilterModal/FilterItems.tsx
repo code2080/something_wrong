@@ -4,10 +4,9 @@ import { SelectOption, ItemsMapping } from './FilterModal.type';
 interface Props {
   selectedProperty: string;
   filterOptions: { [key: string]: SelectOption[] };
-  mapping: any;
   propertiesMapping: ItemsMapping;
 }
-const FilterItems = ({ selectedProperty, filterOptions, mapping, propertiesMapping }: Props) => {
+const FilterItems = ({ selectedProperty, filterOptions, propertiesMapping }: Props) => {
   const property = propertiesMapping[selectedProperty];
   if (!property) return null;
   return (

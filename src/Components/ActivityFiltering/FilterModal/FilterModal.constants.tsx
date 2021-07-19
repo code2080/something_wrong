@@ -53,7 +53,7 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
     title: 'Start time',
     label: 'Start time',
     render: () => (
-      <Form.Item label="Select time interval" name="startTime">
+      <Form.Item label="Select start time" name="startTime">
         <TimePicker format="HH:mm" />
       </Form.Item>
     ),
@@ -63,7 +63,7 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
     title: 'End time',
     label: 'End time',
     render: () => (
-      <Form.Item label="Select time interval" name="endTime">
+      <Form.Item label="Select end time" name="endTime">
         <TimePicker format="HH:mm" />
       </Form.Item>
     ),

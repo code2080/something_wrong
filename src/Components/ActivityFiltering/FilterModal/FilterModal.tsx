@@ -31,6 +31,7 @@ const propTypes = {
 type Props = {
   isVisible?: boolean;
   onClose?(): void;
+  formId: string;
 };
 
 const getLabelsFromProp = {
@@ -67,9 +68,9 @@ const getTECorePayload = (
     { objects: [], fields: [], types: [] },
   );
 };
-const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
+const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => {
   const dispatch = useDispatch();
-  const { formId } = useParams<{ formId: string }>();
+  // const { formId } = useParams<{ formId: string }>();
   const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
@@ -79,8 +80,8 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     [filterLookupMap],
   );
 
-  console.log(teCorePayload);
-  useFetchLabelsFromExtIds(teCorePayload);
+  // console.log(teCorePayload);
+  // useFetchLabelsFromExtIds(teCorePayload);
 
   const selectSelectedFilterValues = useMemo(
     () => makeSelectSelectedFilterValues(),
