@@ -84,13 +84,9 @@ const ConstraintManagerPage = () => {
   const [elements, setElements] = useState({});
 
   const elem = getElementsForMapping(form.sections, activityDesign);
-  // setElements(elem);
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
 
-    // setElements(getElementsForMapping(form.sections, activityDesign));
-    // console.log({elements typeExtIds}  );
-    // console.log(elem);
     tecoreAPI.getFieldIds({
       typeExtIds,
       callback: (result) => {
