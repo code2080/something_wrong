@@ -8,7 +8,7 @@ import FilterSummary from './FilterSummary';
 import FilterModalContainer from './FilterModalContainer';
 
 const FilterContent = () => {
-  const { selectedProperty, setSelectedProperty, filterOptions, propertiesMapping, values } = useContext(FilterModalContainer.Context);
+  const { selectedProperty, setSelectedProperty, filterOptions, propertiesMapping, values, validationError, onClear, onDeselect } = useContext(FilterModalContainer.Context);
   return (
     <div>
       <Row gutter={16} className="filter-modal__content">
@@ -19,7 +19,7 @@ const FilterContent = () => {
         <FilterItems selectedProperty={selectedProperty} filterOptions={filterOptions} propertiesMapping={propertiesMapping} />
         </Col>
         <Col span={10}>
-          <FilterSummary values={values} filterOptions={filterOptions} />
+          <FilterSummary values={values} validationError={validationError} filterOptions={filterOptions} onClear={onClear} onDeselect={onDeselect} />
         </Col>
       </Row>
     </div>

@@ -1,29 +1,10 @@
-import { ItemsMapping, SelectOption } from './FilterModal.type';
+import { ItemsMapping } from './FilterModal.type';
 
-import { Form, DatePicker, TimePicker, Select, Row, Col } from 'antd';
+import { Form, DatePicker, Row, Col } from 'antd';
+import TETimePicker from 'Components/Common/TETimePicker/TETimePicker';
+import { generateSelectComponent } from './FilterModal.helper';
 
-export const generateSelectComponent = ({ title, name, label, parent }: {
-  title: string,
-  name: string,
-  label: string,
-  parent?: string,
-}) => ({
-  name,
-  title,
-  label,
-  parent,
-  render: (options?: SelectOption[]) => (
-    <Form.Item label={label} name={name}>
-      <Select allowClear mode="multiple">
-        {options?.map(opt => (
-          <Select.Option value={opt.value} key={opt.value}>
-            {opt.label}
-          </Select.Option>
-        ))}
-      </Select>
-    </Form.Item>
-  ),
-});
+export const NESTED_FIELDS = ['objects', 'fields', 'objectFilters'];
 
 export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
@@ -48,26 +29,48 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
       </Row>
     ),
   },
-  startTime: {
-    name: 'startTime',
-    title: 'Start time',
-    label: 'Start time',
+  time: {
+    name: 'time',
+    title: 'Time',
+    label: 'Time',
     render: () => (
-      <Form.Item label="Select start time" name="startTime">
-        <TimePicker format="HH:mm" />
-      </Form.Item>
-    ),
+      <Row gutter={8}>
+        <Col span={24}>
+          <p>Select time interval</p>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="Start" name="startTime">
+            <TETimePicker format="HH:mm" minuteStep={15} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+        <Form.Item label="End" name="endTime">
+          <TETimePicker format="HH:mm" minuteStep={15} />
+        </Form.Item>
+        </Col>
+      </Row>
+    )
   },
-  endTime: {
-    name: 'endTime',
-    title: 'End time',
-    label: 'End time',
-    render: () => (
-      <Form.Item label="Select end time" name="endTime">
-        <TimePicker format="HH:mm" />
-      </Form.Item>
-    ),
-  },
+  // startTime: {
+  //   name: 'startTime',
+  //   title: 'Start time',
+  //   label: 'Start time',
+  //   render: () => (
+  //     <Form.Item label="Select start time" name="startTime">
+  //       <TETimePicker format="HH:mm" />
+  //     </Form.Item>
+  //   ),
+  // },
+  // endTime: {
+  //   name: 'endTime',
+  //   title: 'End time',
+  //   label: 'End time',
+  //   render: () => (
+  //     <Form.Item label="Select end time" name="endTime">
+  //       <TETimePicker format="HH:mm" />
+  //     </Form.Item>
+  //   ),
+  // },
   submitter: generateSelectComponent({
     title: 'Submitter',
     name: 'submitter',

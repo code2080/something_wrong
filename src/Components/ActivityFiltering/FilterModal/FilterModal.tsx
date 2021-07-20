@@ -23,6 +23,7 @@ import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
 import { useForm } from 'antd/lib/form/Form';
 
+
 const propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
@@ -31,7 +32,6 @@ const propTypes = {
 type Props = {
   isVisible?: boolean;
   onClose?(): void;
-  formId: string;
 };
 
 const getLabelsFromProp = {
@@ -68,9 +68,9 @@ const getTECorePayload = (
     { objects: [], fields: [], types: [] },
   );
 };
-const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => {
+const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
-  // const { formId } = useParams<{ formId: string }>();
+  const { formId } = useParams<{ formId: string }>();
   const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
@@ -81,7 +81,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => 
   );
 
   // console.log(teCorePayload);
-  // useFetchLabelsFromExtIds(teCorePayload);
+  useFetchLabelsFromExtIds(teCorePayload);
 
   const selectSelectedFilterValues = useMemo(
     () => makeSelectSelectedFilterValues(),
@@ -93,7 +93,6 @@ const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => 
 
   const [localSelectedValues, setLocalSelectedValues] =
     useState<TActivityFilterQuery>(currentlySelectedFilterValues);
-
 
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
@@ -141,14 +140,18 @@ const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => 
 
   const [form] = useForm();
 
+  useEffect(() => {
+    console.log('formID', formId, currentlySelectedFilterValues)
+  }, [formId])
+
   return (
-    <FilterModalContainer.Provider filterLookupMap={filterLookupMap} form={form} formId={formId}>
-      {({ values }) => {
+    <FilterModalContainer.Provider filterLookupMap={filterLookupMap} form={form} formId={formId} defaultMapping={currentlySelectedFilterValues}>
+      {({ onSubmit }) => {
         return (
           <Modal
             title='Filter activities'
             visible={isVisible}
-            onOk={() => handleOk(values)}
+            onOk={() => onSubmit(handleOk)}
             onCancel={handleCancel}
             width={1000}
             getContainer={false}
