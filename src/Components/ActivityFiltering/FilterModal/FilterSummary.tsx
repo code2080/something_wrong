@@ -1,5 +1,5 @@
 import React, { ReactChild, useMemo, useCallback } from 'react';
-import { capitalize, isEmpty, keyBy, pick, startCase } from 'lodash';
+import { capitalize, isEmpty, pick, startCase } from 'lodash';
 import moment from 'moment';
 
 // COMPONENTS
@@ -9,18 +9,22 @@ import { Divider, Typography } from 'antd';
 // CONSTANTS
 import { NESTED_FIELDS } from './FilterModal.constants';
 import { DATE_FORMAT } from 'Constants/common.constants';
+import FilterItemLabel from './FilterItemLabel';
 interface Props {
   values: any;
-  filterOptions: any;
   validationError: any;
   onClear: (field: string[]) => void;
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
+  getOptionLabel: (field: string, id: string) => string;
 };
 
-const ValueDisplay = ({ label, content }: {label: string, content: string | ReactChild}) => {
+const ValueDisplay = ({ label, content }: {label: string | ReactChild, content: string | ReactChild}) => {
   return (
     <div className="filter-modal__value-display">
-      <b>{capitalize(startCase(label))}:</b>
+      <b>
+        {typeof label === 'string' ? capitalize(startCase(label)) : label}
+        :
+      </b>
       <div>
         {content}
       </div>
@@ -28,7 +32,7 @@ const ValueDisplay = ({ label, content }: {label: string, content: string | Reac
   );
 };
 
-const FilterSummary = ({ values, filterOptions, onClear, onDeselect, validationError }: Props) => {
+const FilterSummary = ({ values, onClear, onDeselect, validationError, getOptionLabel }: Props) => {
 
   const dateDisplay = useMemo(() => {
     const { startDate, endDate } = values;
@@ -75,16 +79,15 @@ const FilterSummary = ({ values, filterOptions, onClear, onDeselect, validationE
     return fields
       .filter(key => !isEmpty(values[key]))
       .map(key => {
-        const indexedOptions = keyBy((filterOptions[key] || {}), 'value');
         return (
           <ValueDisplay
             key={key}
-            label={key}
+            label={<FilterItemLabel label={key} />}
             content={(
               <ul>
                 {values[key].map(item => (
                   <li key={item}>
-                    {indexedOptions[item]?.label || item}
+                    {getOptionLabel(key, item)}
                     <CloseCircleOutlined onClick={() => onDeselect(key, [item])} />
                   </li>
                 ))}
@@ -93,7 +96,7 @@ const FilterSummary = ({ values, filterOptions, onClear, onDeselect, validationE
           />
         );
       });
-  }, [values, filterOptions]);
+  }, [values]);
 
   const generateObjectsDisplay = useCallback((field) => {
     const fieldValues = pick(values, Object.keys(values).filter(key => key.startsWith(`${field}.`)));
@@ -108,7 +111,7 @@ const FilterSummary = ({ values, filterOptions, onClear, onDeselect, validationE
               .map(key => (
                 <ul key={key}>
                   <li>
-                    {key}
+                    <FilterItemLabel label={key} />
                     <ul>
                       {values[key]?.map(item => (
                         <li key={item}>

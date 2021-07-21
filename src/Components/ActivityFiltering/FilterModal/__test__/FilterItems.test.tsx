@@ -12,7 +12,7 @@ describe('Filter Items column tests', () => {
   it('Render without crashes', () => {
     render(
       <Form>
-        <FilterItems selectedProperty={'date'} propertiesMapping={FILTER_ITEMS_MAPPING} filterOptions={filterOptions} />
+        <FilterItems selectedProperty={'date'} />
       </Form>
     );
     expect(screen.getByText('Select date interval')).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe('Filter Items column tests', () => {
   it('Render time', () => {
     render(
       <Form>
-        <FilterItems selectedProperty={'startTime'} propertiesMapping={FILTER_ITEMS_MAPPING} filterOptions={filterOptions} />
+        <FilterItems selectedProperty={'startTime'} />
       </Form>
     );
     expect(screen.getByText('Select start time')).toBeInTheDocument();

@@ -2,9 +2,9 @@ import { ItemsMapping } from './FilterModal.type';
 
 import { Form, DatePicker, Row, Col } from 'antd';
 import TETimePicker from 'Components/Common/TETimePicker/TETimePicker';
-import { generateSelectComponent } from './FilterModal.helper';
 
-export const NESTED_FIELDS = ['objects', 'fields', 'objectFilters'];
+export const REPLACED_KEY = '____';
+export const NESTED_FIELDS = ['objects', 'fields'];
 
 export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
@@ -71,20 +71,20 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   //     </Form.Item>
   //   ),
   // },
-  submitter: generateSelectComponent({
-    title: 'Submitter',
-    name: 'submitter',
-    label: 'Select submitters',
-  }),
-  tag: generateSelectComponent({
-    title: 'Tag',
-    name: 'tag',
-    label: 'Select tags',
-  }),
-  primaryObject: generateSelectComponent({
-    title: 'Primary object',
-    name: 'primaryObject',
-    label: 'Priamry object',
-  })
+  // submitter: generateSelectComponent({
+  //   title: 'Submitter',
+  //   name: 'submitter',
+  //   label: 'Select submitters',
+  // }),
+  // tag: generateSelectComponent({
+  //   title: 'Tag',
+  //   name: 'tag',
+  //   label: 'Select tags',
+  // }),
+  // primaryObject: generateSelectComponent({
+  //   title: 'Primary object',
+  //   name: 'primaryObject',
+  //   label: 'Priamry object',
+  // })
 };
 

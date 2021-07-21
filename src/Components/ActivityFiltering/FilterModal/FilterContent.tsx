@@ -8,18 +8,18 @@ import FilterSummary from './FilterSummary';
 import FilterModalContainer from './FilterModalContainer';
 
 const FilterContent = () => {
-  const { selectedProperty, setSelectedProperty, filterOptions, propertiesMapping, values, validationError, onClear, onDeselect } = useContext(FilterModalContainer.Context);
+  const { filterLookupMap, selectedProperty, setSelectedProperty, values, validationError, onClear, onDeselect, getOptionLabel } = useContext(FilterModalContainer.Context);
   return (
     <div>
       <Row gutter={16} className="filter-modal__content">
         <Col span={7}>
-          <FilterProperties selectedProperty={selectedProperty} onSelect={setSelectedProperty} propertiesMapping={propertiesMapping} />
+          <FilterProperties filterLookupMap={filterLookupMap} selectedProperty={selectedProperty} onSelect={setSelectedProperty} />
         </Col>
         <Col span={7}>
-        <FilterItems selectedProperty={selectedProperty} filterOptions={filterOptions} propertiesMapping={propertiesMapping} />
+          <FilterItems filterLookupMap={filterLookupMap} selectedProperty={selectedProperty} getOptionLabel={getOptionLabel} />
         </Col>
         <Col span={10}>
-          <FilterSummary values={values} validationError={validationError} filterOptions={filterOptions} onClear={onClear} onDeselect={onDeselect} />
+          <FilterSummary values={values} validationError={validationError} onClear={onClear} onDeselect={onDeselect} getOptionLabel={getOptionLabel} />
         </Col>
       </Row>
     </div>

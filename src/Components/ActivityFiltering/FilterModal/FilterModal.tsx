@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
@@ -15,7 +15,6 @@ import {
 import type { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 import type { GetExtIdPropsPayload } from '../../../Types/TECorePayloads.type';
 import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
-import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import FilterSettings from './FilterSettings';
 
 import './FilterModal.scss';
@@ -91,47 +90,21 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     selectSelectedFilterValues(state, formId),
   );
 
-  const [localSelectedValues, setLocalSelectedValues] =
-    useState<TActivityFilterQuery>(currentlySelectedFilterValues);
-
   useEffect(
     () => isVisible && dispatch(fetchLookupMap({ formId })),
     [dispatch, formId, isVisible],
   );
   const handleCancel = useCallback(() => {
-    setLocalSelectedValues(currentlySelectedFilterValues);
     onClose();
   }, [currentlySelectedFilterValues, onClose]);
 
   const handleOk = useCallback(values => {
-    const fields = ['objects', 'fields'];
-    const parsedValues = Object.keys(values).reduce((results, key) => {
-      const objectField = fields.find(field => key.startsWith(`${field}.`));
-      if (objectField) {
-        return {
-          ...results,
-          [objectField]: {
-            ...results[objectField] || {},
-            [key.replace(`${objectField}.`, '')]: values[key],
-          }
-        };
-      } 
-      return {
-        ...results,
-        [key]: values[key],
-      };
-
-    }, {});
-    dispatch(
-      setSelectedFilterValues({ formId, filterValues: parsedValues }),
-    );
-    // !_.isEqual(localSelectedValues, currentlySelectedFilterValues) &&
-    //   dispatch(
-    //     setSelectedFilterValues({ formId, filterValues: localSelectedValues }),
-    //   );
+    !_.isEqual(values, currentlySelectedFilterValues) &&
+      dispatch(
+        setSelectedFilterValues({ formId, filterValues: values }),
+      );
     onClose();
   }, [
-    localSelectedValues,
     currentlySelectedFilterValues,
     dispatch,
     formId,

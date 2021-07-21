@@ -1,37 +1,31 @@
-import React, { useEffect, useMemo, createContext, useState, ReactChild, ReactChildren } from 'react';
-import { get, isEmpty, keyBy, omit } from 'lodash';
-import { useSelector } from 'react-redux';
+import React, { useMemo, useEffect, createContext, useState, ReactChild, ReactChildren } from 'react';
+import { get, isEmpty, omit } from 'lodash';
 
 // COMPONENTS
 import { FormInstance } from 'antd/lib/form/Form';
 import { Form } from 'antd';
 
-// SELECTORS
-import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-
 // TYPES
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
-import { SelectOption, ItemsMapping } from './FilterModal.type';
-
-// CONSTANTS
-import { FILTER_ITEMS_MAPPING, NESTED_FIELDS } from './FilterModal.constants';
 
 // HELPERS
-import { generateObjectItems, convertToKeys, validateFilterQuery } from './FilterModal.helper';
+import { validateFilterQuery, beatifyObject } from './FilterModal.helper';
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
+import { useSelector } from 'react-redux';
+import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
   setSelectedProperty: (field: string) => void;
   form: FormInstance;
-  filterOptions: { [key: string]: SelectOption[] };
-  propertiesMapping: ItemsMapping;
   values: any;
   validationError: any;
   onValueChange: (obj, allValues) => void;
   onClear: (fields: string[]) => void;
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
   onSubmit: (cb?: (values) => void) => void;
+  filterLookupMap: any;
+  getOptionLabel: (field: string, id: string) => string;
 };
 
 const emptyValue: ValueProps = {
@@ -39,14 +33,14 @@ const emptyValue: ValueProps = {
   setSelectedProperty: () => {},
   // @ts-ignore
   form: null,
-  filterOptions: {},
-  propertiesMapping: {},
   values: {},
   validationError: {},
   onValueChange: () => {},
   onClear: () => {},
   onDeselect: () => {},
   onSubmit: () => false,
+  filterLookupMap: {},
+  getOptionLabel: () => '',
 };
 
 const Context = createContext(emptyValue);
@@ -59,75 +53,30 @@ interface Props {
   defaultMapping: TActivityFilterQuery;
 }
 
-const flattenObject = (obj: {[key: string]: any}) => {
-  return Object.keys(obj).reduce((results, key) => {
-    if (NESTED_FIELDS.includes(key)) return {
-      ...results,
-      ...Object.keys(obj[key]).reduce((rs, itemKey) => ({
-        ...rs,
-        [`${key}.${itemKey}`]: obj[key][itemKey],
-      }), {})
-    };
-    return {
-      ...results,
-      [key]: obj[key],
-    };
-  }, {})
-}
-
 const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: Props) => {
   const [selectedProperty, setSelectedProperty] = useState<string>('date');
   const [values, setValues] = useState({});
   const [validationError, setValidationError] = useState({});
+
   const submissions = useSelector(state => makeSelectSubmissions()(state, formId));
 
-  const indexedSubmissions = useMemo(() => keyBy(submissions, 'recipientId'), [submissions.length]);
-  const objectsAndFields = useMemo(() =>
-    NESTED_FIELDS.reduce((results, key) => {
-      return {
-        ...results,
-        ...generateObjectItems(filterLookupMap, key),
-      }
-    }, {}), [filterLookupMap]);
-
-  console.log('objectsAndFields', objectsAndFields);
-
-  const propertiesMapping = useMemo(() => ({
-    ...FILTER_ITEMS_MAPPING,
-    ...objectsAndFields,
-  }), [objectsAndFields]);
-
-  const filterOptions = useMemo(() => {
+  const optionsLabelMapping = useMemo(() => {
     return {
-      tag: filterLookupMap.tag ? Object.keys(filterLookupMap.tag).map(tag => ({
-        label: tag,
-        value: tag,
-      })) : [],
-      submitter: filterLookupMap.submitter ? Object.keys(filterLookupMap.submitter).map(submitterId => ({
-        label: indexedSubmissions[submitterId]?.submitter || submitterId,
-        value: submitterId,
-      })) : [],
-      primaryObject: filterLookupMap.primaryObject ? Object.keys(filterLookupMap.primaryObject).map(tag => ({
-        label: tag,
-        value: tag,
-      })) : [],
-      ...Object.keys(objectsAndFields).reduce((results, key) => {
-        return {
-          ...results,
-          [key]: Object.keys(get(filterLookupMap, convertToKeys(key), {})).map(item => ({
-            label: item,
-            value: item,
-          }))
-        }
-      }, {}),
+      submitter: submissions.reduce((results, submission) => ({
+        ...results,
+        [submission.recipientId as string]: submission.submitter,
+      }), {})
     }
-  }, [filterLookupMap]);
+  }, [submissions]);
+
+  const getOptionLabel = (field: string, id: string) => {
+    return get(optionsLabelMapping, [field, id], id);
+  };
 
   // onInitialize
   useEffect(() => {
-    const falttenValues = flattenObject(defaultMapping);
-    form.setFieldsValue(falttenValues);
-    setValues(falttenValues);
+    form.setFieldsValue(defaultMapping);
+    setValues(defaultMapping);
   }, [formId, defaultMapping])
 
   const onValueChange = obj => {
@@ -165,14 +114,20 @@ const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: P
       selectedProperty,
       setSelectedProperty,
       form,
-      filterOptions,
-      propertiesMapping,
       values,
       validationError,
       onValueChange,
       onClear,
       onDeselect,
       onSubmit,
+      filterLookupMap: beatifyObject({
+        ...omit(filterLookupMap, ['objectFilters']),
+        objects: {
+          ...filterLookupMap.objects,
+          ...filterLookupMap.objectFilters,
+        }
+      }),
+      getOptionLabel,
     }}>
       <Form form={form} layout="vertical" onValuesChange={onValueChange} initialValues={{ criteria: 'one', mode: 'single'}}>
         {children({ values, onSubmit })}

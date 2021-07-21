@@ -8,6 +8,10 @@
     padding: 8px;
     max-height: 300px;
     overflow: auto;
+
+    b {
+      font-weight: 500;
+    }
   
     .ant-menu {
       border-right: 0;
@@ -49,10 +53,6 @@
       color: $bittersweet;
     }
 
-    b {
-      font-weight: 500;
-    }
-
     & > div {
       padding-left: 12px;
       &:hover {
@@ -83,6 +83,9 @@
   }
 
   &__select-box {
+    b {
+      font-weight: 500;
+    }
     .ant-select-selector {
       opacity: 0 !important;
       visibility: hidden !important;
@@ -101,6 +104,26 @@
       top: 0 !important;
       position: relative !important;
       box-shadow: none;
+    }
+
+    .ant-select-item {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 24px;
+      min-height: 24px;
+      margin-bottom: 2px;
+    }
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background: none;
+      &:hover {
+        color: #1890ff;
+      }
+    }
+
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      font-weight: normal;
+      color: #1890ff;
+      background: #e6f7ff;
     }
   }
 }

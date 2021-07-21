@@ -1,3 +1,4 @@
+import { deFlattenObject, isObject } from "Components/ActivityFiltering/FilterModal/FilterModal.helper";
 import { DATE_FORMAT } from "Constants/common.constants";
 import { compact } from "lodash";
 import moment from "moment";
@@ -8,26 +9,41 @@ export class ActivityFilterPayload {
   tag: string[];
   primaryObject: string[];
   objectFilters: TObjectQuery[];
-  objects: TObjectQuery[];
+  objects: any;
   filters: TFilterQuery;
   fields: TFieldQuery;
   timing?: TATimingQuery;
 
   constructor(data) {
-    const { startDate, endDate, startTime, endTime, tag, primaryObject, objects, filters, objectFilters, fields } = data;
+    const { startDate, endDate, startTime, endTime, ...rest } = data;
     this.timing = {
       startDate: compact([startDate ? moment.utc(startDate).format(DATE_FORMAT) : null]),
       endDate: compact([endDate ? moment.utc(endDate).format(DATE_FORMAT) : null]),
       startTime: compact([startTime ? moment.utc(startTime).toJSON() : null]),
       endTime: compact([endTime ? moment.utc(endTime).toJSON() : null]),
     };
-    this.tag = tag;
-    this.primaryObject = primaryObject;
-    this.objects = objects;
-    this.filters = filters;
-    this.fields = fields;
-    this.submitter = data.submitter;
-    this.objectFilters = objectFilters;
+    const results = deFlattenObject(rest);
+    Object.keys(results).forEach(key => {
+      this[key] = results[key];
+    });
+
+    // Update only for `objects`
+    if (results.objects) {
+      this.objects = Object.keys(results.objects).reduce((objectResults, key) => {
+        if (isObject(results.objects[key]))
+          return {
+            ...objectResults,
+            [key]: Object.keys(results.objects[key]).map(objectKey => ({
+              fieldExtId: objectKey,
+              values: results.objects[key][objectKey]
+            }))
+          };
+
+        return {
+          ...objectResults,
+          [key]: results.objects[key],
+        };
+      }, {});
+    }
   }
 };
-

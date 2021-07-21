@@ -1,20 +1,18 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { Menu } from 'antd';
 
-import { ItemsMapping } from './FilterModal.type';
-import { capitalize, compact, groupBy } from 'lodash';
+import { capitalize, startCase } from 'lodash';
+import { FILTER_ITEMS_MAPPING, NESTED_FIELDS } from './FilterModal.constants';
+import { reparseKey } from './FilterModal.helper';
 
 interface Props {
   selectedProperty: string;
   onSelect: (property: string) => void;
-  propertiesMapping: ItemsMapping;
+  filterLookupMap: any;
 }
-const FilterProperties = ({ selectedProperty, propertiesMapping, onSelect }: Props) => {
-  const parentItems = useMemo(() => 
-    groupBy(Object.values(propertiesMapping).filter(item => item.parent), 'parent')
-  , [propertiesMapping]);
-
+const FilterProperties = ({ selectedProperty, onSelect, filterLookupMap }: Props) => {
+  const normalObjectsKey = Object.keys(filterLookupMap).filter(key => !NESTED_FIELDS.includes(key));
   return (
     <div className="filter-modal__column">
       <div>
@@ -22,16 +20,21 @@ const FilterProperties = ({ selectedProperty, propertiesMapping, onSelect }: Pro
       </div>
       <div className="filter-modal__box">
         <Menu onSelect={({ key }) => onSelect(key)} selectedKeys={[selectedProperty]}>
-          {Object.values(propertiesMapping).filter(item => !item.parent).map(item => (
-            <Menu.Item key={item.name}>{item.title}</Menu.Item>
+          {Object.values(FILTER_ITEMS_MAPPING).map(item => (
+            <Menu.Item key={item.name}>{item.label}</Menu.Item>
           ))}
-          {compact(Object.keys(parentItems)).map((parent: string) => (
-            <Menu.ItemGroup key={parent} title={capitalize(parent)}>
-              {parentItems[parent].map(item => (
-                <Menu.Item key={item.name}>{item.title}</Menu.Item>
-              ))}
-            </Menu.ItemGroup>
+          {normalObjectsKey.map(key => (
+            <Menu.Item key={key}>{capitalize(startCase(key))}</Menu.Item>
           ))}
+          {NESTED_FIELDS
+            .filter(field => filterLookupMap[field])
+            .map(field => (
+              <Menu.ItemGroup key={field} title={capitalize(startCase(field))}>
+                {Object.keys(filterLookupMap[field] || {}).map(key => (
+                  <Menu.Item key={`${field}.${key}`}>{reparseKey(key)}</Menu.Item>
+                ))}
+              </Menu.ItemGroup>
+            ))}
         </Menu>
       </div>
     </div>
