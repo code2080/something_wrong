@@ -143,7 +143,14 @@ const ActivityDesignPage = () => {
   const isEditable = useMemo(() => storeDesign.isEditable, [storeDesign]);
 
   const mappingOptions = useMemo(
-    () => getElementsForMapping(form.sections, design),
+    () =>
+      getElementsForMapping({
+        formSections: form.sections,
+        mapping: design,
+        settings: {
+          primaryObject: form.objectScope,
+        },
+      }),
     [form, design],
   );
   const typeOptions = useMemo(
@@ -171,6 +178,13 @@ const ActivityDesignPage = () => {
   useEffect(() => {
     designRef.current = design;
   }, [design]);
+
+  // init the reservation mode as the default value
+  useEffect(() => {
+    if (!storeDesign.formId && !storeDesign.name) {
+      setDesign(resetAll(typeOptions, fieldOptions));
+    }
+  }, [typeOptions, fieldOptions, storeDesign]);
 
   /**
    * EVENT HANDLERS
