@@ -1,37 +1,46 @@
-import { ActivityValue } from 'Types/ActivityValue.type';
 import { parameterizedTest, TestMetaData } from 'Utils/test.utils';
-import { validateMandatoryFieldValue } from '../activityValues.validation';
-import { dummyActivities, dummyActivityDesign } from './mockups';
+import { validateActivityByMandatoryFieldValue } from '../activityValues.validation';
+import { dummyActivityDesign } from 'Mock/ActivityDesign';
+import { dummyActivities } from 'Mock/Activities';
+import { TActivity } from 'Types/Activity.type';
 
 describe('Activity validations test', () => {
   const testData = [
     [
       'Return true if there is no empty mandatory field',
       {
-        args: dummyActivities[0].values as ActivityValue[],
+        args: dummyActivities[0] as TActivity,
         expected: true,
-      },
-    ],
-    [
-      'Return false if there is empty mandatory field',
-      {
-        args: dummyActivities[2].values as ActivityValue[],
-        expected: false,
       },
     ],
     [
       'Return true if there is multiple values of same field, with one of them nonempty mandatory field',
       {
-        args: dummyActivities[1].values as ActivityValue[],
+        args: dummyActivities[1] as TActivity,
         expected: true,
       },
     ],
-  ] as TestMetaData<ActivityValue[], boolean>[];
+    [
+      'Return false if there is multiple values of same field, with all of them empty mandatory field',
+      {
+        args: dummyActivities[2] as TActivity,
+        expected: false,
+      },
+    ],
+    [
+      'Return false if all mandatory fields are empty',
+      {
+        args: dummyActivities[3] as TActivity,
+        expected: false,
+      },
+    ],
+  ] as TestMetaData<TActivity, boolean>[];
 
   parameterizedTest(testData, ({ args, expected }) => {
-    const result = args.every((val) =>
-      validateMandatoryFieldValue(val, dummyActivityDesign),
+    const valid = validateActivityByMandatoryFieldValue(
+      args,
+      dummyActivityDesign,
     );
-    expect(result).toBe(expected);
+    expect(valid).toBe(expected);
   });
 });

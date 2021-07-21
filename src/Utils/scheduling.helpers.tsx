@@ -6,7 +6,7 @@ import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import {
   validateTiming,
   validateValue,
-  validateMandatoryFieldValue,
+  validateActivityByMandatoryFieldValue,
 } from './activityValues.validation';
 import {
   getTimingModeForActivity,
@@ -112,13 +112,10 @@ const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
 
 export const validateActivity = (activity, activityDesign) => {
   if (_.isEmpty(activity.values)) return false;
-  if (
-    activity.values.some(
-      (activityValue) =>
-        !validateMandatoryFieldValue(activityValue, activityDesign),
-    )
-  )
+
+  if (!validateActivityByMandatoryFieldValue(activity, activityDesign))
     return false;
+
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map((activityValue) => validateValue(activityValue)),
