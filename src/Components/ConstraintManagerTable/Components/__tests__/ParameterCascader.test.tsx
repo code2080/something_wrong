@@ -87,6 +87,10 @@ const mockParamFields = {
     'person.annualhours': 'Årsarbetstid',
   },
 };
+const mockOldParams = {
+  firstParam: ['Form', 'scopedObject'],
+  lastParam: [['Objects', 'courseevt', 'courseevt.groupname']],
+};
 
 const mockActivityDesignObj = {
   room: [['601048afea0edb00206dae62', '601048afea0edb00206dae69']],
@@ -96,6 +100,7 @@ const mockActivityDesignObj = {
   person_staff: [['601048afea0edb00206dae62', '601048afea0edb00206dae67']],
 };
 
+const myMock = jest.fn();
 const mockOperators = ['>', '>=', '=', '=<', '<'];
 
 const mockParamFormElements = [
@@ -125,6 +130,10 @@ describe('Testing parameter cascader', () => {
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
+        oldParameters={mockOldParams}
+        onUpdate={myMock}
+        operator={'='}
+        constraintId={'testing'}
       />,
     );
   });
@@ -132,19 +141,22 @@ describe('Testing parameter cascader', () => {
   it('test example user flow', async () => {
     renderWithState(
       <ParameterCascader
-        data-testId='ParamCascader'
         paramFields={mockParamFields}
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
+        oldParameters={mockOldParams}
+        onUpdate={myMock}
+        operator={'='}
+        constraintId={'testing'}
       />,
     );
     const sel = screen.getAllByPlaceholderText('Please select');
 
     fireEvent.click(sel[0]);
-    const objectsOption = screen.getByText('Objects');
+    const objectsOption = screen.getByText('Form');
     await waitFor(() => objectsOption);
-    expect(screen.getByText('Form')).toBeInTheDocument();
+    expect(screen.getByText('Objects')).toBeInTheDocument();
     expect(objectsOption).toBeInTheDocument();
 
     fireEvent.click(objectsOption);
@@ -154,7 +166,7 @@ describe('Testing parameter cascader', () => {
 
     fireEvent.click(primaryObjectOption);
     await waitFor(() =>
-      expect(screen.getByText('Objects / Primary object')).toBeInTheDocument(),
+      expect(screen.getByText('Form / Primary object')).toBeInTheDocument(),
     );
   });
 });
