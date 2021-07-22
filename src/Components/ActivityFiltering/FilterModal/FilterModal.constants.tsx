@@ -17,14 +17,14 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
           <p>Select date interval</p>
         </Col>
         <Col span={12}>
-          <Form.Item label="Start" name="startDate">
+          <Form.Item label='Start' name='startDate'>
             <DatePicker />
           </Form.Item>
         </Col>
         <Col span={12}>
-        <Form.Item label="End" name="endDate">
-          <DatePicker />
-        </Form.Item>
+          <Form.Item label='End' name='endDate'>
+            <DatePicker />
+          </Form.Item>
         </Col>
       </Row>
     ),
@@ -39,17 +39,17 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
           <p>Select time interval</p>
         </Col>
         <Col span={12}>
-          <Form.Item label="Start" name="startTime">
-            <TETimePicker format="HH:mm" minuteStep={15} />
+          <Form.Item label='Start' name='startTime'>
+            <TETimePicker format='HH:mm' minuteStep={15} />
           </Form.Item>
         </Col>
         <Col span={12}>
-        <Form.Item label="End" name="endTime">
-          <TETimePicker format="HH:mm" minuteStep={15} />
-        </Form.Item>
+          <Form.Item label='End' name='endTime'>
+            <TETimePicker format='HH:mm' minuteStep={15} />
+          </Form.Item>
         </Col>
       </Row>
-    )
+    ),
   },
   // startTime: {
   //   name: 'startTime',
@@ -87,4 +87,3 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   //   label: 'Priamry object',
   // })
 };
-

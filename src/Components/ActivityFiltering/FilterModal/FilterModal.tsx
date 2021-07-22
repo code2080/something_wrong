@@ -22,7 +22,6 @@ import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
 import { useForm } from 'antd/lib/form/Form';
 
-
 const propTypes = {
   isVisible: PropTypes.bool,
   onClose: PropTypes.func,
@@ -98,27 +97,28 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     onClose();
   }, [currentlySelectedFilterValues, onClose]);
 
-  const handleOk = useCallback(values => {
-    !_.isEqual(values, currentlySelectedFilterValues) &&
-      dispatch(
-        setSelectedFilterValues({ formId, filterValues: values }),
-      );
-    onClose();
-  }, [
-    currentlySelectedFilterValues,
-    dispatch,
-    formId,
-    onClose,
-  ]);
+  const handleOk = useCallback(
+    (values) => {
+      !_.isEqual(values, currentlySelectedFilterValues) &&
+        dispatch(setSelectedFilterValues({ formId, filterValues: values }));
+      onClose();
+    },
+    [currentlySelectedFilterValues, dispatch, formId, onClose],
+  );
 
   const [form] = useForm();
 
   useEffect(() => {
-    console.log('formID', formId, currentlySelectedFilterValues)
-  }, [formId])
+    console.log('formID', formId, currentlySelectedFilterValues);
+  }, [formId]);
 
   return (
-    <FilterModalContainer.Provider filterLookupMap={filterLookupMap} form={form} formId={formId} defaultMapping={currentlySelectedFilterValues}>
+    <FilterModalContainer.Provider
+      filterLookupMap={filterLookupMap}
+      form={form}
+      formId={formId}
+      defaultMapping={currentlySelectedFilterValues}
+    >
       {({ onSubmit }) => {
         return (
           <Modal
@@ -134,7 +134,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
               <FilterContent />
             </div>
           </Modal>
-        )
+        );
       }}
     </FilterModalContainer.Provider>
   );

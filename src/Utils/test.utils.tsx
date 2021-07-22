@@ -20,19 +20,25 @@ export const renderWithState = (
   }: RenderOptions & { initialState?: any } = {},
 ) => {
   const store = configureStore(initialState);
-  const Wrapper = ({ children, _teCoreAPI }: { children?: ReactNode, _teCoreAPI: any }) => {
+  const Wrapper = ({
+    children,
+    _teCoreAPI,
+  }: {
+    children?: ReactNode;
+    _teCoreAPI: any;
+  }) => {
     const teCoreAPI = configureTECoreAPI(_teCoreAPI);
     window.tePrefsLibStore = store;
-      return (
-        <Provider store={store}>
-            <ConfigProvider {...antdConfig}>
-              <Router>
-                <div id='te-prefs-lib'>{children}</div>
-              </Router>
-            </ConfigProvider>
-        </Provider>
-      );
-  }
+    return (
+      <Provider store={store}>
+        <ConfigProvider {...antdConfig}>
+          <Router>
+            <div id='te-prefs-lib'>{children}</div>
+          </Router>
+        </ConfigProvider>
+      </Provider>
+    );
+  };
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };

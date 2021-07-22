@@ -12,7 +12,7 @@
     b {
       font-weight: 500;
     }
-  
+
     .ant-menu {
       border-right: 0;
       li.ant-menu-item {
@@ -26,7 +26,7 @@
     }
     .ant-form-item {
       flex-flow: column;
-  
+
       .ant-form-item-label {
         text-align: left;
       }
@@ -56,7 +56,8 @@
     & > div {
       padding-left: 12px;
       &:hover {
-        & > .anticon-close-circle, & > div > .anticon-close-circle {
+        & > .anticon-close-circle,
+        & > div > .anticon-close-circle {
           opacity: 1;
           visibility: visible;
         }
@@ -79,7 +80,6 @@
         }
       }
     }
-
   }
 
   &__select-box {

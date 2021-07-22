@@ -16,8 +16,13 @@ const FilterOptions = (props: Props) => {
     <>
       <FilterItemLabel label={label} />
       <Form.Item name={name}>
-        <Select mode="multiple" open getPopupContainer={node => node.parentNode} className="filter-modal__select-box">
-          {options?.map(opt => (
+        <Select
+          mode='multiple'
+          open
+          getPopupContainer={(node) => node.parentNode}
+          className='filter-modal__select-box'
+        >
+          {options?.map((opt) => (
             <Select.Option value={opt.value} key={opt.value}>
               {opt.label}
             </Select.Option>
@@ -25,8 +30,7 @@ const FilterOptions = (props: Props) => {
         </Select>
       </Form.Item>
     </>
-  )
-
+  );
 };
 
 export default FilterOptions;

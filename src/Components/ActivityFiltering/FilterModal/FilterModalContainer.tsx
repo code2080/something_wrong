@@ -1,4 +1,11 @@
-import React, { useMemo, useEffect, createContext, useState, ReactChild, ReactChildren } from 'react';
+import React, {
+  useMemo,
+  useEffect,
+  createContext,
+  useState,
+  ReactChild,
+  ReactChildren,
+} from 'react';
 import { get, isEmpty, omit } from 'lodash';
 
 // COMPONENTS
@@ -26,7 +33,7 @@ export interface ValueProps {
   onSubmit: (cb?: (values) => void) => void;
   filterLookupMap: any;
   getOptionLabel: (field: string, id: string) => string;
-};
+}
 
 const emptyValue: ValueProps = {
   selectedProperty: 'date',
@@ -53,20 +60,31 @@ interface Props {
   defaultMapping: TActivityFilterQuery;
 }
 
-const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: Props) => {
+const Provider = ({
+  children,
+  filterLookupMap,
+  defaultMapping,
+  form,
+  formId,
+}: Props) => {
   const [selectedProperty, setSelectedProperty] = useState<string>('date');
   const [values, setValues] = useState({});
   const [validationError, setValidationError] = useState({});
 
-  const submissions = useSelector(state => makeSelectSubmissions()(state, formId));
+  const submissions = useSelector((state) =>
+    makeSelectSubmissions()(state, formId),
+  );
 
   const optionsLabelMapping = useMemo(() => {
     return {
-      submitter: submissions.reduce((results, submission) => ({
-        ...results,
-        [submission.recipientId as string]: submission.submitter,
-      }), {})
-    }
+      submitter: submissions.reduce(
+        (results, submission) => ({
+          ...results,
+          [submission.recipientId as string]: submission.submitter,
+        }),
+        {},
+      ),
+    };
   }, [submissions]);
 
   const getOptionLabel = (field: string, id: string) => {
@@ -77,24 +95,29 @@ const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: P
   useEffect(() => {
     form.setFieldsValue(defaultMapping);
     setValues(defaultMapping);
-  }, [formId, defaultMapping])
+  }, [formId, defaultMapping]);
 
-  const onValueChange = obj => {
+  const onValueChange = (obj) => {
     setValues({ ...values, ...obj });
     setValidationError({});
-  }
+  };
   const onClear = (fields: string[]) => {
     form.setFieldsValue(
-      fields.reduce((results, field) => ({
-        ...results,
-        [field]: undefined,
-      }), {})
+      fields.reduce(
+        (results, field) => ({
+          ...results,
+          [field]: undefined,
+        }),
+        {},
+      ),
     );
     setValues(omit(values, fields));
   };
   const onDeselect = (key: string, itemsToDeselect: string[]) => {
     if (!values[key] || !Array.isArray(values[key])) return;
-    const selectedValues = values[key].filter(item => !itemsToDeselect.includes(item));
+    const selectedValues = values[key].filter(
+      (item) => !itemsToDeselect.includes(item),
+    );
     form.setFieldsValue({
       [key]: selectedValues,
     });
@@ -110,26 +133,33 @@ const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: P
   };
 
   return (
-    <Context.Provider value={{
-      selectedProperty,
-      setSelectedProperty,
-      form,
-      values,
-      validationError,
-      onValueChange,
-      onClear,
-      onDeselect,
-      onSubmit,
-      filterLookupMap: beatifyObject({
-        ...omit(filterLookupMap, ['objectFilters']),
-        objects: {
-          ...filterLookupMap.objects,
-          ...filterLookupMap.objectFilters,
-        }
-      }),
-      getOptionLabel,
-    }}>
-      <Form form={form} layout="vertical" onValuesChange={onValueChange} initialValues={{ criteria: 'one', mode: 'single'}}>
+    <Context.Provider
+      value={{
+        selectedProperty,
+        setSelectedProperty,
+        form,
+        values,
+        validationError,
+        onValueChange,
+        onClear,
+        onDeselect,
+        onSubmit,
+        filterLookupMap: beatifyObject({
+          ...omit(filterLookupMap, ['objectFilters']),
+          objects: {
+            ...filterLookupMap.objects,
+            ...filterLookupMap.objectFilters,
+          },
+        }),
+        getOptionLabel,
+      }}
+    >
+      <Form
+        form={form}
+        layout='vertical'
+        onValuesChange={onValueChange}
+        initialValues={{ criteria: 'one', mode: 'single' }}
+      >
         {children({ values, onSubmit })}
       </Form>
     </Context.Provider>
@@ -139,4 +169,4 @@ const Provider = ({ children, filterLookupMap, defaultMapping, form, formId }: P
 export default {
   Context,
   Provider,
-}
+};

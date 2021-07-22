@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import FilterProperties from "../FilterProperties";
+import FilterProperties from '../FilterProperties';
 
 import { propertiesMapping } from 'Mock/Filter';
 
@@ -8,7 +8,13 @@ const handleSelect = jest.fn();
 
 describe('Filter Properties column tests', () => {
   beforeEach(() => {
-    render(<FilterProperties selectedProperty={'date'} propertiesMapping={propertiesMapping} onSelect={handleSelect} />);
+    render(
+      <FilterProperties
+        selectedProperty={'date'}
+        propertiesMapping={propertiesMapping}
+        onSelect={handleSelect}
+      />,
+    );
   });
   it('Render without crashes', () => {
     expect(screen.getByText('Date')).toBeInTheDocument();
@@ -27,7 +33,9 @@ describe('Filter Properties column tests', () => {
     fireEvent.click(screen.getByText('Start time'));
     expect(handleSelect).toBeCalledWith('startTime');
     waitFor(() => {
-      expect(screen.getByText('Start time').parentElement).toHaveClass('ant-menu-item-selected');
+      expect(screen.getByText('Start time').parentElement).toHaveClass(
+        'ant-menu-item-selected',
+      );
     });
   });
 });

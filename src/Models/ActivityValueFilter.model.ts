@@ -1,8 +1,16 @@
-import { deFlattenObject, isObject } from "Components/ActivityFiltering/FilterModal/FilterModal.helper";
-import { DATE_FORMAT } from "Constants/common.constants";
-import { compact } from "lodash";
-import moment from "moment";
-import { TATimingQuery, TFilterQuery, TFieldQuery, TObjectQuery } from "Types/ActivityFilter.type";
+import {
+  deFlattenObject,
+  isObject,
+} from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { DATE_FORMAT } from 'Constants/common.constants';
+import { compact } from 'lodash';
+import moment from 'moment';
+import {
+  TATimingQuery,
+  TFilterQuery,
+  TFieldQuery,
+  TObjectQuery,
+} from 'Types/ActivityFilter.type';
 
 export class ActivityFilterPayload {
   submitter: string[];
@@ -17,33 +25,40 @@ export class ActivityFilterPayload {
   constructor(data) {
     const { startDate, endDate, startTime, endTime, ...rest } = data;
     this.timing = {
-      startDate: compact([startDate ? moment.utc(startDate).format(DATE_FORMAT) : null]),
-      endDate: compact([endDate ? moment.utc(endDate).format(DATE_FORMAT) : null]),
+      startDate: compact([
+        startDate ? moment.utc(startDate).format(DATE_FORMAT) : null,
+      ]),
+      endDate: compact([
+        endDate ? moment.utc(endDate).format(DATE_FORMAT) : null,
+      ]),
       startTime: compact([startTime ? moment.utc(startTime).toJSON() : null]),
       endTime: compact([endTime ? moment.utc(endTime).toJSON() : null]),
     };
     const results = deFlattenObject(rest);
-    Object.keys(results).forEach(key => {
+    Object.keys(results).forEach((key) => {
       this[key] = results[key];
     });
 
     // Update only for `objects`
     if (results.objects) {
-      this.objects = Object.keys(results.objects).reduce((objectResults, key) => {
-        if (isObject(results.objects[key]))
+      this.objects = Object.keys(results.objects).reduce(
+        (objectResults, key) => {
+          if (isObject(results.objects[key]))
+            return {
+              ...objectResults,
+              [key]: Object.keys(results.objects[key]).map((objectKey) => ({
+                fieldExtId: objectKey,
+                values: results.objects[key][objectKey],
+              })),
+            };
+
           return {
             ...objectResults,
-            [key]: Object.keys(results.objects[key]).map(objectKey => ({
-              fieldExtId: objectKey,
-              values: results.objects[key][objectKey]
-            }))
+            [key]: results.objects[key],
           };
-
-        return {
-          ...objectResults,
-          [key]: results.objects[key],
-        };
-      }, {});
+        },
+        {},
+      );
     }
   }
-};
+}
