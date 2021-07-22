@@ -38,10 +38,10 @@ const ParameterCascader = ({
   onUpdate,
 }: Props) => {
   const firstParam = Array.isArray(oldParameters)
-    ? oldParameters.map((param) => param?.firstParam)
+    ? oldParameters.flatMap((param) => param?.firstParam)
     : [];
   const lastParam = Array.isArray(oldParameters)
-    ? oldParameters.map((param) => param?.lastParam)
+    ? oldParameters.flatMap((param) => param?.lastParam)
     : [];
 
   const [parameters, setParameters] = useState<{
