@@ -83,7 +83,10 @@ const ConstraintManagerPage = () => {
   const [fields, setFields] = useState<getFieldIdsReturn>({});
   const [elements, setElements] = useState({});
 
-  const elem = getElementsForMapping(form.sections, activityDesign);
+  const elem = getElementsForMapping({
+    formSections: form.sections,
+    mapping: activityDesign,
+  });
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
 
