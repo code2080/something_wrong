@@ -142,19 +142,19 @@ describe('Testing parameter cascader', () => {
     const sel = screen.getAllByPlaceholderText('Please select');
 
     fireEvent.click(sel[0]);
-    const objectsOption = screen.getByText('Objects');
-    await waitFor(() => objectsOption);
-    expect(screen.getByText('Form')).toBeInTheDocument();
-    expect(objectsOption).toBeInTheDocument();
+    const formOption = screen.getByText('Form');
+    await waitFor(() => formOption);
+    expect(screen.getByText('Objects')).toBeInTheDocument();
+    expect(formOption).toBeInTheDocument();
 
-    fireEvent.click(objectsOption);
+    fireEvent.click(formOption);
     const primaryObjectOption = screen.getByText('Primary object');
     await waitFor(() => primaryObjectOption);
     expect(primaryObjectOption).toBeInTheDocument();
 
     fireEvent.click(primaryObjectOption);
     await waitFor(() =>
-      expect(screen.getByText('Objects / Primary object')).toBeInTheDocument(),
+      expect(screen.getByText('Form / Primary object')).toBeInTheDocument(),
     );
   });
 });
