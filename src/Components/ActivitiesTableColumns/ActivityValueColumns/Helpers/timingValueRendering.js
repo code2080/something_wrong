@@ -18,10 +18,7 @@ import { activityValueStatuses } from '../../../../Constants/activityStatuses.co
 import { ActivityValueRenderPayload } from './RenderPayload';
 
 // VALIDATION
-import {
-  validateGeneralValue,
-  validateTimeslotTimeMode,
-} from '../../../../Utils/activityValues.validation';
+import { validateTimeslotTimeMode } from '../../../../Utils/activityValues.validation';
 
 /**
  * @function getTimeModeForActivity
@@ -208,12 +205,6 @@ const renderPaddingValue = (activityValue, activityId) => {
  * @returns RenderPayload
  */
 const renderExactTimeModeTimeValue = (activityValue, activityId) => {
-  const validation = validateGeneralValue(activityValue);
-  if (validation.errorCode)
-    return ActivityValueRenderPayload.create({
-      status: activityValueStatuses.MISSING_DATA,
-      errorMessage: validation.errorMessage,
-    });
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,

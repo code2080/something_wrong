@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { groupBy, keyBy } from 'lodash';
+import { Dictionary, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
@@ -22,10 +22,12 @@ import { TFormInstance } from '../Types/FormInstance.type';
 import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 type Props = {
   formType: string;
@@ -42,6 +44,7 @@ const useActivityScheduling = ({
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
+  const activityDesign = useSelector(selectDesignForForm)(formId);
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -89,44 +92,78 @@ const useActivityScheduling = ({
     });
   };
 
-  const handleScheduleActivities = async (activities) => {
+  const handleScheduleActivities = async (activities: TActivity[]) => {
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
-    openConfirmModal(checkActivitiesInFormInstance(groupedActivities));
-    return Promise.all(
-      Object.keys(groupedActivities)
-        .filter((formInstanceId) => formInstanceId)
-        .map((formInstanceId) => {
-          const activitiesOfFormInstance = groupedActivities[formInstanceId];
-          return new Promise((resolve) => {
-            scheduleActivities(
-              activitiesOfFormInstance,
-              formType,
-              reservationMode,
-              teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
-              (schedulingReturns) => {
+    const queue = Object.entries(groupedActivities).map(
+      ([formInstanceId, activitiesOfFormInstance]) => {
+        return new Promise<
+          [formInstanceId: string, results: ActivityValueValidation[]]
+        >((resolve) => {
+          scheduleActivities(
+            activitiesOfFormInstance,
+            formType,
+            reservationMode,
+            teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
+            (schedulingReturns: ActivityValueValidation[]) => {
+              resolve([formInstanceId, schedulingReturns]);
+            },
+            objectRequests,
+            activityDesign,
+          );
+        });
+      },
+    );
+
+    return new Promise<Dictionary<ActivityValueValidation[]>>(
+      (resolve, reject) => {
+        Promise.all(queue)
+          .then((schedulingResults) => {
+            schedulingResults.forEach(([formInstanceId, results]) => {
+              if (!isEmpty(results)) {
                 dispatch(
                   updateActivities(
                     formId,
                     formInstanceId,
                     updateActivitiesWithSchedulingResults(
-                      activitiesOfFormInstance,
-                      schedulingReturns,
+                      groupedActivities[formInstanceId],
+                      results,
                     ),
                   ),
                 );
-                resolve(null);
-              },
-              objectRequests,
+              }
+            });
+
+            const hasValidActivity = schedulingResults
+              .flatMap(([_, results]) => results)
+              .some(({ result }) => !result?.errorCode);
+
+            if (hasValidActivity) {
+              openConfirmModal(
+                checkActivitiesInFormInstance(groupedActivities),
+              );
+            }
+
+            const mappedResults = schedulingResults.reduce<
+              Dictionary<ActivityValueValidation[]>
+            >(
+              (acc, [formInstanceId, result]) => ({
+                ...acc,
+                [formInstanceId]: result,
+              }),
+              {},
             );
+
+            resolve(mappedResults);
+          })
+          .catch((err) => {
+            console.log('ERROR', err);
+            reject(err);
           });
-        }),
-    ).catch((err) => {
-      console.log('ERROR', err);
-      return err;
-    });
+      },
+    );
   };
 
   return {

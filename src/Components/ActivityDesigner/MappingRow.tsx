@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Cascader, Switch, Button } from 'antd';
+import { Select, Switch, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
 import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
+import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
 
 const MappingRow = ({
   teProp,
@@ -62,7 +63,9 @@ const MappingRow = ({
           disabled={disabled}
           value={teProp}
           onChange={onChangeTEPropCallback}
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           size='small'
         >
           {(tePropOptions || []).map((el) => (
@@ -74,16 +77,18 @@ const MappingRow = ({
       </div>
       {_mappedValues &&
         _mappedValues.map((el, idx) => (
-          <Cascader
+          <CascaderWithTooltip
             key={`mapper-${idx}`}
             disabled={disabled}
             options={mappingOptions}
             value={el}
             onChange={(val) => onChangeFormMapping(val, idx)}
             placeholder='Select an element'
-            getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             size='small'
-            style={{ width: '200px', marginRight: '8px' }}
+            style={{ width: '400px', marginRight: '8px' }}
           />
         ))}
       <div className='object-mapping-row--add'>
@@ -103,6 +108,7 @@ const MappingRow = ({
           onChange={onChangePropsCallback}
           size='small'
           disabled={disabled}
+          aria-label='Is mandatory'
         />
       </div>
       <Button
@@ -131,7 +137,7 @@ MappingRow.propTypes = {
 
 MappingRow.defaultProps = {
   formMapping: null,
-  props: { mandatory: false },
+  tePropSettings: { mandatory: false },
   tePropOptions: [],
   mappingOptions: [],
   disabled: false,

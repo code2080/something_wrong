@@ -3,7 +3,11 @@ import _ from 'lodash';
 
 // HELPERS
 import { formatActivityForExactScheduling } from './exactScheduling.helpers';
-import { validateTiming, validateValue } from './activityValues.validation';
+import {
+  validateTiming,
+  validateValue,
+  validateActivityByMandatoryFieldValue,
+} from './activityValues.validation';
 import {
   getTimingModeForActivity,
   hydrateObjectRequests,
@@ -12,6 +16,7 @@ import {
 // MODELS
 import { SchedulingReturn } from '../Models/SchedulingReturn.model';
 import { SchedulingError } from '../Models/SchedulingError.model';
+import { ActivityDesign } from '../Models/ActivityDesign.model';
 
 // CONSTANTS
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
@@ -27,6 +32,7 @@ import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from '../Types/Activity.type';
+import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
 
 /**
  * @function createSchedulingReturns
@@ -105,8 +111,15 @@ const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
     };
   });
 
-export const validateActivity = (activity) => {
+export const validateActivity = (
+  activity: TActivity,
+  activityDesign: ActivityDesign,
+) => {
   if (_.isEmpty(activity.values)) return false;
+
+  if (!validateActivityByMandatoryFieldValue(activity, activityDesign))
+    return false;
+
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map((activityValue) => validateValue(activityValue)),
@@ -163,21 +176,21 @@ const getBindingSchedulingAlgorithm = (activities) => {
 };
 
 export const scheduleActivities = (
-  activities: any[],
-  formType,
-  reservationMode,
+  activities: TActivity[],
+  formType: string,
+  reservationMode: string,
   teCoreScheduleFn,
-  cFn,
+  cFn: (result: ActivityValueValidation[]) => void,
   objRequests: ObjectRequest[],
+  activityDesign?: ActivityDesign,
 ) => {
   // Preprocess all activities
-
   const preprocessingMap = activities
     .map((a) => {
-      const validates = validateActivity(a);
+      const validates = validateActivity(a, activityDesign);
       return {
         activity: hydrateObjectRequests(a, objRequests) as TActivity,
-        activityId: a._id as string,
+        activityId: a._id,
         validates,
         result: validates
           ? null
@@ -229,9 +242,9 @@ export const scheduleActivities = (
       .filter((a) => a.result == null)
       .map((a) => ({ activityId: a.activityId, reservation: a.reservation }));
 
-    if (toSchedule.length === 0) return;
+    if (toSchedule.length === 0) return [];
 
-    return teCoreScheduleFn({
+    teCoreScheduleFn({
       reservations: toSchedule,
       formInfo: {
         formType,
@@ -240,11 +253,11 @@ export const scheduleActivities = (
       callback: (teCoreResults) =>
         cFn([...parseTECoreResultsToScheduleReturns(teCoreResults)]),
     });
+    return toSchedule;
   }
   // General case: start an automated scheduling job
   const a = preprocessingMap.filter((a) => a.validates).map((a) => a.activity);
-  return (
-    a.length &&
+  if (a.length) {
     (window as any).tePrefsLibStore.dispatch(
       createJob({
         activities: a,
@@ -254,8 +267,9 @@ export const scheduleActivities = (
         callback: cFn,
         meta: { schedulingMode: schedulingModes.MULTIPLE },
       }),
-    )
-  );
+    );
+  }
+  return a;
 };
 
 export const updateActivitiesWithSchedulingResults = (
