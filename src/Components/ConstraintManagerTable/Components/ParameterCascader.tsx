@@ -5,25 +5,23 @@ import { useState } from 'react';
 
 const { Option } = Select;
 
+type ParameterType = {
+  firstParam: CascaderValueType;
+  lastParam: CascaderValueType;
+};
+
 type Props = {
   constraintId: string;
   paramFields: any;
-  paramFormElements: any | {};
+  paramFormElements: any;
   availableOperators: string[];
   activityDesignObj: any;
-  oldParameters: any;
+  oldParameters: ParameterType;
   operator: string;
   onUpdate: (
     constraintId: string,
     field: string,
-    value:
-      | {
-          firstParam: string | CascaderValueType;
-          lastParam: string | CascaderValueType;
-        }
-      | string
-      | string[]
-      | number[],
+    value: ParameterType | string,
   ) => void;
 };
 
@@ -39,19 +37,18 @@ const ParameterCascader = ({
 }: Props) => {
   const firstParam = Array.isArray(oldParameters)
     ? oldParameters.flatMap((param) => param?.firstParam)
-    : [];
+    : oldParameters?.firstParam;
   const lastParam = Array.isArray(oldParameters)
     ? oldParameters.flatMap((param) => param?.lastParam)
-    : [];
+    : oldParameters?.lastParam;
 
   const [parameters, setParameters] = useState<{
     firstParam: CascaderValueType;
     lastParam: CascaderValueType;
   }>({
-    firstParam: firstParam || null,
-    lastParam: lastParam || null,
+    firstParam: firstParam,
+    lastParam: lastParam,
   });
-
   const fieldOptions = activityDesignObj
     ? [
         ...Object.keys(activityDesignObj).map((objField) => ({
@@ -66,6 +63,7 @@ const ParameterCascader = ({
         })),
       ]
     : [];
+
   const options = [
     _.isEmpty(paramFormElements)
       ? {}
