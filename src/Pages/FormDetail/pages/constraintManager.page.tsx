@@ -97,6 +97,7 @@ const ConstraintManagerPage = () => {
         setElements(elem);
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);

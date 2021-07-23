@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
 // HELPERS
+// eslint-disable-next-line import/no-cycle
 import { normalizeFilterValues } from '../Helpers/rendering';
 
 // STYLES
