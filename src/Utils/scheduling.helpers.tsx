@@ -6,7 +6,7 @@ import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import {
   validateTiming,
   validateValue,
-  validateMandatoryFieldValue,
+  validateActivityByMandatoryFieldValue,
 } from './activityValues.validation';
 import {
   getTimingModeForActivity,
@@ -32,6 +32,7 @@ import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from '../Types/Activity.type';
+import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
 
 /**
  * @function createSchedulingReturns
@@ -110,15 +111,15 @@ const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
     };
   });
 
-export const validateActivity = (activity, activityDesign) => {
+export const validateActivity = (
+  activity: TActivity,
+  activityDesign: ActivityDesign,
+) => {
   if (_.isEmpty(activity.values)) return false;
-  if (
-    activity.values.some(
-      (activityValue) =>
-        !validateMandatoryFieldValue(activityValue, activityDesign),
-    )
-  )
+
+  if (!validateActivityByMandatoryFieldValue(activity, activityDesign))
     return false;
+
   const validationResults = [
     validateTiming(activity),
     ...activity.values.map((activityValue) => validateValue(activityValue)),
@@ -175,11 +176,11 @@ const getBindingSchedulingAlgorithm = (activities) => {
 };
 
 export const scheduleActivities = (
-  activities: any[],
-  formType,
-  reservationMode,
+  activities: TActivity[],
+  formType: string,
+  reservationMode: string,
   teCoreScheduleFn,
-  cFn,
+  cFn: (result: ActivityValueValidation[]) => void,
   objRequests: ObjectRequest[],
   activityDesign?: ActivityDesign,
 ) => {
@@ -189,7 +190,7 @@ export const scheduleActivities = (
       const validates = validateActivity(a, activityDesign);
       return {
         activity: hydrateObjectRequests(a, objRequests) as TActivity,
-        activityId: a._id as string,
+        activityId: a._id,
         validates,
         result: validates
           ? null

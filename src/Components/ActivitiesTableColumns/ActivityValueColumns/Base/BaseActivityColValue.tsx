@@ -10,10 +10,10 @@ import { renderComponent } from '../Helpers/rendering';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 // SELECTORS
-import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { selectDesignForForm } from '../../../../Redux/ActivityDesigner/activityDesigner.selectors';
 
 const BaseActivityColValue = ({ activityValue, activity }) => {
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const component = useMemo(
     () => renderComponent(activityValue, activity, activityDesign),
@@ -24,7 +24,7 @@ const BaseActivityColValue = ({ activityValue, activity }) => {
     component.renderedComponent
   )
     return component.renderedComponent;
-  return <span>Missing data</span>;
+  return <span style={{ color: 'red' }}>Missing data</span>;
 };
 
 BaseActivityColValue.propTypes = {

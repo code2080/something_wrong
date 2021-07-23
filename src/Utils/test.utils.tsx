@@ -20,16 +20,18 @@ export const renderWithState = (
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
-interface TestData<A, E> {
-  args: A;
-  expected: E;
+interface TestData<ArgType, ExpectedType> {
+  args: ArgType;
+  expected: ExpectedType;
 }
-export type TestMetaData<A = any, E = any> = [
+export type TestMetaData<ArgType = any, ExpectedType = any> = [
   message: string,
-  testVars: TestData<A, E>,
+  testVars: TestData<ArgType, ExpectedType>,
 ];
 
-type Test<A, E> = (data: TestData<A, E>) => void;
+type Test<ArgType, ExpectedType> = (
+  data: TestData<ArgType, ExpectedType>,
+) => void;
 
 /**
  * This will run the testFn for all the data in testData
