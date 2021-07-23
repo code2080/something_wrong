@@ -97,10 +97,8 @@ const useActivityScheduling = ({
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
-    const queue = Object.keys(groupedActivities)
-      .filter((formInstanceId) => formInstanceId)
-      .map((formInstanceId) => {
-        const activitiesOfFormInstance = groupedActivities[formInstanceId];
+    const queue = Object.entries(groupedActivities).map(
+      ([formInstanceId, activitiesOfFormInstance]) => {
         return new Promise<
           [formInstanceId: string, results: ActivityValueValidation[]]
         >((resolve) => {
@@ -116,7 +114,8 @@ const useActivityScheduling = ({
             activityDesign,
           );
         });
-      });
+      },
+    );
 
     return new Promise<Dictionary<ActivityValueValidation[]>>(
       (resolve, reject) => {
