@@ -39,6 +39,7 @@ const ParameterCascader = ({
         })),
       ]
     : [];
+  const MissingOptionsMessage = 'Missing Activity Design';
 
   const options = _.isEmpty(activityDesignObj)
     ? []
@@ -59,6 +60,7 @@ const ParameterCascader = ({
   return (
     <div>
       <Cascader
+        notFoundContent={MissingOptionsMessage}
         options={options}
         size='small'
         getPopupContainer={() =>
@@ -79,6 +81,7 @@ const ParameterCascader = ({
         ))}
       </Select>{' '}
       <Cascader
+        notFoundContent={MissingOptionsMessage}
         options={options}
         size='small'
         getPopupContainer={() =>

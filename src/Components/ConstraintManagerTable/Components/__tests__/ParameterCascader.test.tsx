@@ -132,7 +132,6 @@ describe('Testing parameter cascader', () => {
   it('test example user flow', async () => {
     renderWithState(
       <ParameterCascader
-        data-testId='ParamCascader'
         paramFields={mockParamFields}
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
@@ -156,5 +155,24 @@ describe('Testing parameter cascader', () => {
     await waitFor(() =>
       expect(screen.getByText('Form / Primary object')).toBeInTheDocument(),
     );
+  });
+
+  it('informs about missing activity design', async () => {
+    renderWithState(
+      <ParameterCascader
+        paramFields={{}}
+        paramFormElements={{}}
+        availableOperators={[]}
+        activityDesignObj={{}}
+      />,
+    );
+    const sel = screen.getAllByPlaceholderText('Please select');
+
+    fireEvent.click(sel[0]);
+    const missingActivityDesignText = screen.getByText(
+      'Missing Activity Design',
+    );
+    await waitFor(() => missingActivityDesignText);
+    expect(missingActivityDesignText).toBeInTheDocument();
   });
 });
