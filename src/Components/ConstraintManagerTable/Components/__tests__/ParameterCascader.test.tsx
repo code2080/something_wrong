@@ -130,7 +130,7 @@ describe('Testing parameter cascader', () => {
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
-        oldParameters={mockOldParams}
+        oldParameters={undefined}
         onUpdate={myMock}
         operator={'='}
         constraintId={'testing'}
@@ -145,12 +145,13 @@ describe('Testing parameter cascader', () => {
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
-        oldParameters={mockOldParams}
+        oldParameters={undefined}
         onUpdate={myMock}
         operator={'='}
         constraintId={'testing'}
       />,
     );
+    // screen.debug();
     const sel = screen.getAllByPlaceholderText('Please select');
 
     fireEvent.click(sel[0]);
@@ -169,4 +170,22 @@ describe('Testing parameter cascader', () => {
       expect(screen.getByText('Form / Primary object')).toBeInTheDocument(),
     );
   });
+
+  // it('Test changing operators.', async () => {
+  //   renderWithState(
+  //     <ParameterCascader
+  //       paramFields={mockParamFields}
+  //       paramFormElements={mockParamFormElements}
+  //       availableOperators={mockOperators}
+  //       activityDesignObj={mockActivityDesignObj}
+  //       oldParameters={mockOldParams}
+  //       onUpdate={myMock}
+  //       operator={'='}
+  //       constraintId={'testing'}
+  //     />,
+  //   );
+  //   const sel = screen.getByText('=');
+  //   fireEvent.click(sel);
+
+  // });
 });

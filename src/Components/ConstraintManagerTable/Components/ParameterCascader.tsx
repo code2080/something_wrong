@@ -6,8 +6,8 @@ import { useState } from 'react';
 const { Option } = Select;
 
 type ParameterType = {
-  firstParam: CascaderValueType;
-  lastParam: CascaderValueType;
+  firstParam: CascaderValueType | undefined;
+  lastParam: CascaderValueType | undefined;
 };
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
   paramFormElements: any;
   availableOperators: string[];
   activityDesignObj: any;
-  oldParameters: ParameterType;
+  oldParameters: ParameterType | undefined;
   operator: string;
   onUpdate: (
     constraintId: string,
@@ -43,8 +43,8 @@ const ParameterCascader = ({
     : oldParameters?.lastParam;
 
   const [parameters, setParameters] = useState<{
-    firstParam: CascaderValueType;
-    lastParam: CascaderValueType;
+    firstParam?: CascaderValueType;
+    lastParam?: CascaderValueType;
   }>({
     firstParam: firstParam,
     lastParam: lastParam,
