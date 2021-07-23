@@ -81,11 +81,13 @@ const ConstraintManagerPage = () => {
   const [localConstrConf, setConstrConf] =
     useState<TConstraintConfiguration | null>(null);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
-  const [elements, setElements] = useState({});
 
-  const elem = getElementsForMapping({
+  const elements = getElementsForMapping({
     formSections: form.sections,
     mapping: activityDesign,
+    settings: {
+      primaryObject: form.objectScope,
+    },
   });
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
@@ -94,10 +96,8 @@ const ConstraintManagerPage = () => {
       typeExtIds,
       callback: (result) => {
         setFields(result);
-        setElements(elem);
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);
