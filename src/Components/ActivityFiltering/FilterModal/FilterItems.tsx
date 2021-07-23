@@ -4,7 +4,7 @@ import { get, isEmpty, lowerCase } from 'lodash';
 
 // CONSTANTS
 import { FILTER_ITEMS_MAPPING } from './FilterModal.constants';
-import { beatifyObject, flattenObject, isObject } from './FilterModal.helper';
+import { beautifyObject, flattenObject, isObject } from './FilterModal.helper';
 import FilterOptions from './FilterOptionsSelectbox';
 import { SearchOutlined } from '@ant-design/icons';
 
@@ -27,7 +27,7 @@ const FilterItems = ({
   const allProperties = useMemo(
     () => ({
       ...filterLookupMap,
-      ...flattenObject(beatifyObject(filterLookupMap), null, 2),
+      ...flattenObject(beautifyObject(filterLookupMap), null, 2),
     }),
     [filterLookupMap],
   );

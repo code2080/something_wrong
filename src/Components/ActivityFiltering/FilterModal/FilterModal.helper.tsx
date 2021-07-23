@@ -88,12 +88,12 @@ export const reparseKey = (key) => {
 
 export const isObject = (obj) => !Array.isArray(obj) && typeof obj === 'object';
 
-export const beatifyObject = (object) => {
+export const beautifyObject = (object) => {
   return Object.keys(object).reduce((results, key) => {
     if (isObject(object[key])) {
       return {
         ...results,
-        [parseKey(key)]: beatifyObject(object[key]),
+        [parseKey(key)]: beautifyObject(object[key]),
       };
     }
     return {

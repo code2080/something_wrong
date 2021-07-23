@@ -6,7 +6,7 @@ import React, {
   ReactChild,
   ReactChildren,
 } from 'react';
-import { get, isEmpty, omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 
 // COMPONENTS
 import { FormInstance } from 'antd/lib/form/Form';
@@ -16,7 +16,7 @@ import { Form } from 'antd';
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 
 // HELPERS
-import { validateFilterQuery, beatifyObject } from './FilterModal.helper';
+import { validateFilterQuery, beautifyObject } from './FilterModal.helper';
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 import { useSelector } from 'react-redux';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
@@ -88,7 +88,7 @@ const Provider = ({
   }, [submissions]);
 
   const getOptionLabel = (field: string, id: string) => {
-    return get(optionsLabelMapping, [field, id], id);
+    return optionsLabelMapping?.[field]?.[id] ?? id;
   };
 
   // onInitialize
@@ -144,7 +144,7 @@ const Provider = ({
         onClear,
         onDeselect,
         onSubmit,
-        filterLookupMap: beatifyObject({
+        filterLookupMap: beautifyObject({
           ...omit(filterLookupMap, ['objectFilters']),
           objects: {
             ...filterLookupMap.objects,
