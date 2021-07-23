@@ -15,9 +15,12 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
 const renderConstraintParameters = (
   paramFields,
   paramElements,
-  allConstraints,
-  constraintId,
+  allConstraints: TConstraint[],
+  constraintId: string,
   activityDesignObj,
+  oldParameters,
+  oldOperator: string,
+  onUpdateValue,
 ) => {
   const operators = getPropFromConstraint(
     constraintId,
@@ -32,10 +35,14 @@ const renderConstraintParameters = (
   );
   return !isEmpty(parameters) ? (
     <ParameterCascader
+      constraintId={constraintId}
       paramFields={paramFields}
       paramFormElements={paramElements}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
+      oldParameters={oldParameters}
+      operator={oldOperator}
+      onUpdate={onUpdateValue}
     />
   ) : null;
 };
@@ -78,13 +85,16 @@ const constraintManagerTableColumns = (
     title: 'Parameters',
     dataIndex: 'constraintId',
     key: 'parameters',
-    render: (constraintId) =>
+    render: (constraintId: string, constraintInstance: TConstraintInstance) =>
       renderConstraintParameters(
         paramFields,
         paramElements,
         allConstraints,
         constraintId,
         activityDesignObj,
+        constraintInstance.parameters,
+        constraintInstance.operator,
+        onUpdateValue,
       ),
   },
   {

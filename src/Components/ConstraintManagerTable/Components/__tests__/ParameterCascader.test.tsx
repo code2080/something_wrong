@@ -96,6 +96,7 @@ const mockActivityDesignObj = {
   person_staff: [['601048afea0edb00206dae62', '601048afea0edb00206dae67']],
 };
 
+const myMock = jest.fn();
 const mockOperators = ['>', '>=', '=', '=<', '<'];
 
 const mockParamFormElements = [
@@ -125,17 +126,25 @@ describe('Testing parameter cascader', () => {
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
+        oldParameters={undefined}
+        onUpdate={myMock}
+        operator={'='}
+        constraintId={'testing'}
       />,
     );
   });
 
-  it('test example user flow', async () => {
+  it('Test example user flow', async () => {
     renderWithState(
       <ParameterCascader
         paramFields={mockParamFields}
         paramFormElements={mockParamFormElements}
         availableOperators={mockOperators}
         activityDesignObj={mockActivityDesignObj}
+        oldParameters={undefined}
+        onUpdate={myMock}
+        operator={'='}
+        constraintId={'testing'}
       />,
     );
     const sel = screen.getAllByPlaceholderText('Please select');
@@ -164,6 +173,10 @@ describe('Testing parameter cascader', () => {
         paramFormElements={{}}
         availableOperators={[]}
         activityDesignObj={{}}
+        constraintId='testing'
+        oldParameters={undefined}
+        operator='='
+        onUpdate={myMock}
       />,
     );
     const sel = screen.getAllByPlaceholderText('Please select');

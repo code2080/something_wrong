@@ -81,21 +81,21 @@ const ConstraintManagerPage = () => {
   const [localConstrConf, setConstrConf] =
     useState<TConstraintConfiguration | null>(null);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
-  const [elements, setElements] = useState({});
 
-  const elem = getElementsForMapping(form.sections, activityDesign);
-  // setElements(elem);
+  const elements = getElementsForMapping({
+    formSections: form.sections,
+    mapping: activityDesign,
+    settings: {
+      primaryObject: form.objectScope,
+    },
+  });
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
 
-    // setElements(getElementsForMapping(form.sections, activityDesign));
-    // console.log({elements typeExtIds}  );
-    // console.log(elem);
     tecoreAPI.getFieldIds({
       typeExtIds,
       callback: (result) => {
         setFields(result);
-        setElements(elem);
       },
     });
   }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);

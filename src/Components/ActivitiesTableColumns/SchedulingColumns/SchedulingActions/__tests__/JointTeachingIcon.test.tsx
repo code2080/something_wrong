@@ -1,5 +1,5 @@
 import JointTeachingIcon from '../JointTeachingIcon';
-import mockStore from '../TestHelpers/TestHelpers';
+import mockStore from '../../../../../Mock/MockState';
 import configureStore from '../../../../../Redux/store';
 import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';

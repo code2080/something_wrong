@@ -3,10 +3,7 @@ import ObjectFilterValue from '../ValueTypes/ObjectFilterValue.jsx';
 import ObjectObjectValue from '../ValueTypes/ObjectObjectValue.jsx';
 
 // VALIDATION
-import {
-  validateFilterValue,
-  validateGeneralValue,
-} from '../../../../Utils/activityValues.validation';
+import { validateFilterValue } from '../../../../Utils/activityValues.validation';
 
 // HELPERS
 import { ActivityValueRenderPayload } from './RenderPayload';
@@ -67,13 +64,6 @@ const renderObjectFilterValue = (activityValue, activity) => {
  * @returns RenderPayload
  */
 const renderObjectValue = (activityValue, activity) => {
-  const validationResult = validateGeneralValue(activityValue);
-  if (validationResult.errorCode)
-    return ActivityValueRenderPayload.create({
-      status: validationResult.status,
-      errorMessage: validationResult.errorMessage,
-    });
-
   return ActivityValueRenderPayload.create({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
     value: activityValue.value,
