@@ -1,5 +1,7 @@
 import { Select, Cascader } from 'antd';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
 
 const { Option } = Select;
 
@@ -16,31 +18,39 @@ const ParameterCascader = ({
   activityDesignObj,
   paramFormElements,
 }: Props) => {
+  const labels = useSelector(selectMultipleExtIdLabels)(
+    Object.keys(activityDesignObj).map((extId) => ({
+      field: 'types',
+      extId,
+    })),
+  );
+
   const fieldOptions = activityDesignObj
     ? [
         ...Object.keys(activityDesignObj).map((objField) => ({
           value: objField,
-          label: objField,
-          children: Object.keys(
+          label: labels[objField],
+          children: Object.entries(
             paramFields[objField] ?? { [objField]: objField },
-          ).map((field) => ({
-            value: field,
-            label: field,
+          ).map(([value, label]) => ({
+            value,
+            label,
           })),
         })),
       ]
     : [];
+
   const options = [
     _.isEmpty(paramFormElements)
       ? {}
       : {
-          value: 'Objects',
-          label: 'Objects',
+          value: 'Form',
+          label: 'Form',
           children: paramFormElements,
         },
     {
-      value: 'Form',
-      label: 'Form',
+      value: 'Objects',
+      label: 'Objects',
       children: fieldOptions,
     },
   ];
