@@ -5,6 +5,7 @@ import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
 import { ActivityValueValidation } from '../Models/ActivityValueValidation.model';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
+import { compact, isEmpty, groupBy } from 'lodash';
 
 export const validateGeneralValue = (_activityValue) => {
   // TODO: Reenable when we're improving the logic to consider mandatory values
@@ -22,6 +23,43 @@ export const validateGeneralValue = (_activityValue) => {
 
   return new ActivityValueValidation({
     status: activityValueStatuses.READY_FOR_SCHEDULING,
+  });
+};
+
+/**
+ * @function validateMandatoryFieldValue
+ * @description Check if missing mandatory field value
+ * @param {ActivityValue} activityValue
+ * @param {ActivityDesign} activityDesign
+ * @returns {Boolean}
+ */
+export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
+  if (!activityDesign) return true;
+  const mandatoryFields = Object.keys(activityDesign.propSettings).filter(
+    (key) => activityDesign.propSettings[key]?.mandatory,
+  );
+  const isMandatoryField = mandatoryFields.includes(activityValue.extId);
+  const hasValue = !isEmpty(compact(activityValue.value));
+
+  return !isMandatoryField || hasValue;
+};
+
+/**
+ * @function validateActivityByMandatoryFieldValue
+ * @description Check if activity is missing any mandatory field value
+ * @param {Activity} activity
+ * @param {ActivityDesign} activityDesign
+ * @returns {Boolean}
+ */
+export const validateActivityByMandatoryFieldValue = (
+  activity,
+  activityDesign,
+) => {
+  const groupedValues = groupBy(activity.values, 'extId');
+  return Object.values(groupedValues).every((values) => {
+    return values.some((activityValue) =>
+      validateMandatoryFieldValue(activityValue, activityDesign),
+    );
   });
 };
 

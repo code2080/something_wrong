@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect, useSelector } from 'react-redux';
 import { Modal, Dropdown, Menu, Button } from 'antd';
@@ -37,6 +37,7 @@ import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -118,6 +119,7 @@ const ActivityActionsDropdown = ({
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
+  const activityDesign = useSelector(selectDesignForForm)(formId);
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
@@ -210,15 +212,16 @@ const ActivityActionsDropdown = ({
 
   const handleScheduleActivities = (activities: TActivity[], key: string) => {
     trackScheduleActivities(activities);
-    scheduleActivities(
+    const results = scheduleActivities(
       activities,
       formType,
       reservationMode,
       teCoreAPI[activityActions[key].callname],
       onFinishScheduleMultiple,
       objectRequests,
+      activityDesign,
     );
-    updateSchedulingProgress();
+    if (!isEmpty(results)) updateSchedulingProgress();
   };
 
   const handleMenuClick = useCallback(

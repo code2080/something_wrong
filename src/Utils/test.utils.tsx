@@ -19,3 +19,27 @@ export const renderWithState = (
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
+
+interface TestData<ArgType, ExpectedType> {
+  args: ArgType;
+  expected: ExpectedType;
+}
+export type TestMetaData<ArgType = any, ExpectedType = any> = [
+  message: string,
+  testVars: TestData<ArgType, ExpectedType>,
+];
+
+type Test<ArgType, ExpectedType> = (
+  data: TestData<ArgType, ExpectedType>,
+) => void;
+
+/**
+ * This will run the testFn for all the data in testData
+ */
+export const parameterizedTest = <ArgType, ExpectedType>(
+  testData: TestMetaData<ArgType, ExpectedType>[],
+  testFn: Test<ArgType, ExpectedType>,
+) =>
+  test.each<TestMetaData<ArgType, ExpectedType>>(testData)('%s', (_, data) =>
+    testFn(data),
+  );
