@@ -1,4 +1,4 @@
-export const mockState = {
+const mockState = {
   apiStatus: {
     loading: {
       FETCH_PROFILE: false,
@@ -48094,3 +48094,5 @@ export const mockState = {
     },
   ],
 };
+
+export default mockState;
