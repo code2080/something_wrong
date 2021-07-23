@@ -40,21 +40,22 @@ const ParameterCascader = ({
       ]
     : [];
 
-  const options = [
-    _.isEmpty(paramFormElements)
-      ? {}
-      : {
-          value: 'Form',
-          label: 'Form',
-          children: paramFormElements,
+  const options = _.isEmpty(activityDesignObj)
+    ? []
+    : [
+        _.isEmpty(paramFormElements)
+          ? {}
+          : {
+              value: 'Form',
+              label: 'Form',
+              children: paramFormElements,
+            },
+        {
+          value: 'Objects',
+          label: 'Objects',
+          children: fieldOptions,
         },
-    {
-      value: 'Objects',
-      label: 'Objects',
-      children: fieldOptions,
-    },
-  ];
-
+      ];
   return (
     <div>
       <Cascader
