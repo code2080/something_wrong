@@ -89,7 +89,7 @@ const mockParamFields = {
 };
 const mockOldParams = {
   firstParam: ['Form', 'scopedObject'],
-  lastParam: [['Objects', 'courseevt', 'courseevt.groupname']],
+  lastParam: ['Objects', 'courseevt', 'courseevt.groupname'],
 };
 
 const mockActivityDesignObj = {
@@ -138,7 +138,7 @@ describe('Testing parameter cascader', () => {
     );
   });
 
-  it('test example user flow', async () => {
+  it('Test example user flow', async () => {
     renderWithState(
       <ParameterCascader
         paramFields={mockParamFields}
