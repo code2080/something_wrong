@@ -1,7 +1,6 @@
 import { ItemsMapping } from './FilterModal.type';
 
-import { Form, DatePicker, Row, Col } from 'antd';
-import TETimePicker from 'Components/Common/TETimePicker/TETimePicker';
+import { Form, DatePicker, TimePicker } from 'antd';
 
 export const REPLACED_KEY = '____';
 export const NESTED_FIELDS = ['objects', 'fields'];
@@ -10,23 +9,11 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
     name: 'date',
     title: 'Date',
-    label: 'Start date',
+    label: 'Date',
     render: () => (
-      <Row gutter={8}>
-        <Col span={24}>
-          <p>Select date interval</p>
-        </Col>
-        <Col span={12}>
-          <Form.Item label='Start' name='startDate'>
-            <DatePicker />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label='End' name='endDate'>
-            <DatePicker />
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item label="Select date interval" name='date'>
+        <DatePicker.RangePicker allowEmpty={[true, true]} />
+      </Form.Item>
     ),
   },
   time: {
@@ -34,21 +21,9 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
     title: 'Time',
     label: 'Time',
     render: () => (
-      <Row gutter={8}>
-        <Col span={24}>
-          <p>Select time interval</p>
-        </Col>
-        <Col span={12}>
-          <Form.Item label='Start' name='startTime'>
-            <TETimePicker format='HH:mm' minuteStep={15} />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label='End' name='endTime'>
-            <TETimePicker format='HH:mm' minuteStep={15} />
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item label="Select time interval" name="time">
+        <TimePicker.RangePicker format='HH:mm' allowEmpty={[true, true]} />
+      </Form.Item>
     ),
   },
   // startTime: {

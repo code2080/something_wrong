@@ -9,7 +9,6 @@ interface Props {
 }
 const FilterOptions = (props: Props) => {
   const { options, label, name } = props;
-  console.log(label);
   return (
     <>
       <span>{label}</span>

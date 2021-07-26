@@ -23,7 +23,9 @@ export class ActivityFilterPayload {
   timing?: TATimingQuery;
 
   constructor(data) {
-    const { startDate, endDate, startTime, endTime, ...rest } = data;
+    const { date, time, ...rest } = data;
+    const [startDate, endDate] = date || [];
+    const [startTime, endTime] = time || [];
     this.timing = {
       startDate: compact([
         startDate ? moment.utc(startDate).format(DATE_FORMAT) : null,

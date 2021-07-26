@@ -96,16 +96,17 @@ const Provider = ({
 
   const getOptionLabel = (field: string, id?: string) => {
     if (id) {
-      return optionsLabelMapping?.[reparseKey[field]]?.[id] ?? id;
+      return optionsLabelMapping?.[reparseKey(field)]?.[id] ?? id;
     }
     return optionsLabelMapping?.[reparseKey(field)] ?? field
   };
 
   // onInitialize
   useEffect(() => {
+    form.resetFields();
     form.setFieldsValue(defaultMapping);
     setValues(defaultMapping);
-  }, [formId, defaultMapping]);
+  }, [form, defaultMapping]);
 
   const onValueChange = (obj) => {
     setValues({ ...values, ...obj });

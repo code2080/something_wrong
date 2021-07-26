@@ -41,7 +41,7 @@ const FilterSummary = ({
   getOptionLabel,
 }: Props) => {
   const dateDisplay = useMemo(() => {
-    const { startDate, endDate } = values;
+    const [startDate, endDate] = values.date || [];
     if (!startDate && !endDate) return null;
     const dateDisplay = `${
       startDate ? moment(startDate).format(DATE_FORMAT) : '---'
@@ -67,7 +67,7 @@ const FilterSummary = ({
   }, [values, validationError]);
 
   const timeDisplay = useMemo(() => {
-    const { startTime, endTime } = values;
+    const [startTime, endTime ] = values.time || [];
     if (!startTime && !endTime) return null;
     const timeDisplay = `${
       startTime ? moment(startTime).format('HH:mm') : '---'

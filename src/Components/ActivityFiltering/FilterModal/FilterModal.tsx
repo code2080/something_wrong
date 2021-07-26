@@ -1,26 +1,39 @@
 import _ from 'lodash';
-import { Modal } from 'antd';
+import { Modal, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'antd/lib/form/Form';
+
+
+// ACTIONS
 import {
   fetchLookupMap,
   setSelectedFilterValues,
 } from '../../../Redux/Filters/filters.actions';
+
+// SELECTORS
 import {
   makeSelectFormLookupMap,
   makeSelectSelectedFilterValues,
 } from '../../../Redux/Filters/filters.selectors';
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+
+// CONSTANTS
 import type { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 import type { GetExtIdPropsPayload } from '../../../Types/TECorePayloads.type';
-import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
-import FilterSettings from './FilterSettings';
 
-import './FilterModal.scss';
+// COMPONENTS
+import FilterSettings from './FilterSettings';
 import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
-import { useForm } from 'antd/lib/form/Form';
+
+// HOOKS
+import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
+
+import './FilterModal.scss';
+import { FETCH_FORM_LOOKUPMAP } from 'Redux/Filters/filters.actionTypes';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -69,7 +82,9 @@ const getTECorePayload = (
 const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
+  const [form] = useForm();
   const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
+  
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
   );
@@ -83,6 +98,9 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     () => makeSelectSelectedFilterValues(),
     [],
   );
+
+  const loading:boolean = useSelector(createLoadingSelector([FETCH_FORM_LOOKUPMAP]));
+
   const currentlySelectedFilterValues = useSelector((state) =>
     selectSelectedFilterValues(state, formId),
   );
@@ -93,7 +111,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   );
   const handleCancel = useCallback(() => {
     onClose();
-  }, [currentlySelectedFilterValues, onClose]);
+  }, [currentlySelectedFilterValues, onClose, form]);
 
   const handleOk = useCallback(
     (values) => {
@@ -104,14 +122,12 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     [currentlySelectedFilterValues, dispatch, formId, onClose],
   );
 
-  const [form] = useForm();
-
   return (
     <FilterModalContainer.Provider
       filterLookupMap={filterLookupMap}
       form={form}
       formId={formId}
-      defaultMapping={currentlySelectedFilterValues}
+      defaultMapping={isVisible ? currentlySelectedFilterValues : {}}
     >
       {({ onSubmit }) => {
         return (
@@ -119,14 +135,16 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
             title='Filter activities'
             visible={isVisible}
             onOk={() => onSubmit(handleOk)}
-            onCancel={handleCancel}
+            onCancel={() => {
+              handleCancel();
+            }}
             width={1000}
             getContainer={false}
           >
-            <div>
+            <Spin spinning={loading!!}>
               <FilterSettings />
               <FilterContent />
-            </div>
+            </Spin>
           </Modal>
         );
       }}
