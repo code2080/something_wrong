@@ -77,8 +77,6 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
     () => getTECorePayload(filterLookupMap),
     [filterLookupMap],
   );
-
-  // console.log(teCorePayload);
   useFetchLabelsFromExtIds(teCorePayload);
 
   const selectSelectedFilterValues = useMemo(
@@ -107,10 +105,6 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   );
 
   const [form] = useForm();
-
-  useEffect(() => {
-    console.log('formID', formId, currentlySelectedFilterValues);
-  }, [formId]);
 
   return (
     <FilterModalContainer.Provider

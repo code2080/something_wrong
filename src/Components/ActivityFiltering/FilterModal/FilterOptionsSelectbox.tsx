@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { ReactChild } from 'react';
 
 import { Form, Select } from 'antd';
 import { SelectOption } from './FilterModal.type';
-import FilterItemLabel from './FilterItemLabel';
-
 interface Props {
   options?: SelectOption[];
-  label: string;
+  label: string | ReactChild;
   name: string;
 }
 const FilterOptions = (props: Props) => {
   const { options, label, name } = props;
-
+  console.log(label);
   return (
     <>
-      <FilterItemLabel label={label} />
+      <span>{label}</span>
       <Form.Item name={name}>
         <Select
           mode='multiple'

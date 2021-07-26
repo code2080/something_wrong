@@ -7,6 +7,7 @@ import { FILTER_ITEMS_MAPPING } from './FilterModal.constants';
 import { beautifyObject, flattenObject, isObject } from './FilterModal.helper';
 import FilterOptions from './FilterOptionsSelectbox';
 import { SearchOutlined } from '@ant-design/icons';
+import FilterItemLabel from './FilterItemLabel';
 
 const filterOptionsByQuery = (query: string, options: any[]) => {
   if (!query) return options;
@@ -17,7 +18,7 @@ const filterOptionsByQuery = (query: string, options: any[]) => {
 interface Props {
   selectedProperty: string;
   filterLookupMap: any;
-  getOptionLabel: (field: string, id: string) => string;
+  getOptionLabel: (field: string, id?: string) => string;
 }
 const FilterItems = ({
   selectedProperty,
@@ -70,7 +71,7 @@ const FilterItems = ({
                   value: opt,
                 })),
               )}
-              label={selectedProperty}
+              label={<FilterItemLabel label={selectedProperty} render={getOptionLabel} />}
               name={selectedProperty}
             />
           )}
@@ -88,7 +89,8 @@ const FilterItems = ({
                     value: opt,
                   })),
                 )}
-                label={`${selectedProperty}.${key}`}
+                label={<FilterItemLabel label={`${selectedProperty}.${key}`} render={getOptionLabel} />}
+                // label={`${selectedProperty}.${key}`}
                 name={`${selectedProperty}.${key}`}
               />
             ))}

@@ -15,7 +15,7 @@ interface Props {
   validationError: any;
   onClear: (field: string[]) => void;
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
-  getOptionLabel: (field: string, id: string) => string;
+  getOptionLabel: (field: string, id?: string) => string;
 }
 
 const ValueDisplay = ({
@@ -100,7 +100,7 @@ const FilterSummary = ({
         return (
           <ValueDisplay
             key={key}
-            label={<FilterItemLabel label={key} />}
+            label={<FilterItemLabel label={key} render={getOptionLabel} />}
             content={
               <ul>
                 {values[key].map((item) => (
@@ -130,7 +130,7 @@ const FilterSummary = ({
       )
         return null;
       return (
-        <>
+        <React.Fragment key={field}>
           <Divider />
           <ValueDisplay
             label={capitalize(field)}
@@ -141,7 +141,7 @@ const FilterSummary = ({
                   .map((key) => (
                     <ul key={key}>
                       <li>
-                        <FilterItemLabel label={key} />
+                        <FilterItemLabel label={key} render={getOptionLabel} />
                         <ul>
                           {values[key]?.map((item) => (
                             <li key={item}>
@@ -158,7 +158,7 @@ const FilterSummary = ({
               </div>
             }
           />
-        </>
+        </React.Fragment>
       );
     },
     [values],

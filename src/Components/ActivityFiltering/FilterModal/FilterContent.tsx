@@ -26,6 +26,7 @@ const FilterContent = () => {
             filterLookupMap={filterLookupMap}
             selectedProperty={selectedProperty}
             onSelect={setSelectedProperty}
+            getOptionLabel={getOptionLabel}
           />
         </Col>
         <Col span={7}>

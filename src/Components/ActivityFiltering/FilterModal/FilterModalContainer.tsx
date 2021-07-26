@@ -16,10 +16,11 @@ import { Form } from 'antd';
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 
 // HELPERS
-import { validateFilterQuery, beautifyObject } from './FilterModal.helper';
+import { validateFilterQuery, beautifyObject, reparseKey } from './FilterModal.helper';
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 import { useSelector } from 'react-redux';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -32,7 +33,7 @@ export interface ValueProps {
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
   onSubmit: (cb?: (values) => void) => void;
   filterLookupMap: any;
-  getOptionLabel: (field: string, id: string) => string;
+  getOptionLabel: (field: string, id?: string) => string;
 }
 
 const emptyValue: ValueProps = {
@@ -74,6 +75,8 @@ const Provider = ({
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
+  const objectLabelsMapping = useSelector(selectObjectLabelsMapping());
+  const fieldsLabelMapping = useSelector(selectFieldLabelsMapping());
 
   const optionsLabelMapping = useMemo(() => {
     return {
@@ -84,11 +87,18 @@ const Provider = ({
         }),
         {},
       ),
+      objects: objectLabelsMapping,
+      fields: fieldsLabelMapping,
+      ...objectLabelsMapping,
+      ...fieldsLabelMapping,
     };
-  }, [submissions]);
+  }, [submissions, objectLabelsMapping, fieldsLabelMapping]);
 
-  const getOptionLabel = (field: string, id: string) => {
-    return optionsLabelMapping?.[field]?.[id] ?? id;
+  const getOptionLabel = (field: string, id?: string) => {
+    if (id) {
+      return optionsLabelMapping?.[reparseKey[field]]?.[id] ?? id;
+    }
+    return optionsLabelMapping?.[reparseKey(field)] ?? field
   };
 
   // onInitialize

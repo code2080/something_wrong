@@ -10,11 +10,13 @@ interface Props {
   selectedProperty: string;
   onSelect: (property: string) => void;
   filterLookupMap: any;
+  getOptionLabel: (field: string, id?: string) => string;
 }
 const FilterProperties = ({
   selectedProperty,
   onSelect,
   filterLookupMap,
+  getOptionLabel,
 }: Props) => {
   const normalObjectsKey = Object.keys(filterLookupMap).filter(
     (key) => !NESTED_FIELDS.includes(key),
@@ -40,7 +42,7 @@ const FilterProperties = ({
               <Menu.ItemGroup key={field} title={capitalize(startCase(field))}>
                 {Object.keys(filterLookupMap[field] || {}).map((key) => (
                   <Menu.Item key={`${field}.${key}`}>
-                    {reparseKey(key)}
+                    {getOptionLabel(reparseKey(key))}
                   </Menu.Item>
                 ))}
               </Menu.ItemGroup>
