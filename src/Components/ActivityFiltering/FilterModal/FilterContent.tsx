@@ -13,7 +13,6 @@ const FilterContent = () => {
     selectedProperty,
     setSelectedProperty,
     values,
-    validationError,
     onClear,
     onDeselect,
     getOptionLabel,
@@ -39,7 +38,6 @@ const FilterContent = () => {
         <Col span={10}>
           <FilterSummary
             values={values}
-            validationError={validationError}
             onClear={onClear}
             onDeselect={onDeselect}
             getOptionLabel={getOptionLabel}

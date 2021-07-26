@@ -52,17 +52,19 @@ export const generateObjectItems = (
 };
 
 export const validateFilterQuery = (values: any): any => {
-  const { startTime, endTime, startDate, endDate } = values;
-  const err: {
-    [key: string]: string;
-  } = {};
-  if (startTime && endTime && !moment(startTime).isBefore(moment(endTime))) {
-    err.startTime = 'End time must be later then start time';
-  }
-  if (startDate && endDate && !moment(startDate).isBefore(moment(endDate))) {
-    err.startDate = 'End date must be later then start date';
-  }
-  return err;
+  // TODO: Comment for now, may useful in future
+  // const { startTime, endTime, startDate, endDate } = values;
+  // const err: {
+  //   [key: string]: string;
+  // } = {};
+  // if (startTime && endTime && !moment(startTime).isBefore(moment(endTime))) {
+  //   err.startTime = 'End time must be later then start time';
+  // }
+  // if (startDate && endDate && !moment(startDate).isBefore(moment(endDate))) {
+  //   err.startDate = 'End date must be later then start date';
+  // }
+  // return err;
+  return null;
 };
 
 export const supportedFields = [

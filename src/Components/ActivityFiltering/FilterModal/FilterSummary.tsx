@@ -4,7 +4,7 @@ import moment from 'moment';
 
 // COMPONENTS
 import { CloseCircleOutlined } from '@ant-design/icons';
-import { Divider, Typography } from 'antd';
+import { Divider } from 'antd';
 
 // CONSTANTS
 import { NESTED_FIELDS } from './FilterModal.constants';
@@ -12,7 +12,6 @@ import { DATE_FORMAT } from 'Constants/common.constants';
 import FilterItemLabel from './FilterItemLabel';
 interface Props {
   values: any;
-  validationError: any;
   onClear: (field: string[]) => void;
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
   getOptionLabel: (field: string, id?: string) => string;
@@ -37,7 +36,6 @@ const FilterSummary = ({
   values,
   onClear,
   onDeselect,
-  validationError,
   getOptionLabel,
 }: Props) => {
   const dateDisplay = useMemo(() => {
@@ -50,21 +48,16 @@ const FilterSummary = ({
       <ValueDisplay
         label='Date interval'
         content={
-          <>
-            <div>
-              {dateDisplay}
-              <CloseCircleOutlined
-                onClick={() => onClear(['startDate', 'endDate'])}
-              />
-            </div>
-            <Typography.Text type='danger'>
-              {validationError.startDate}
-            </Typography.Text>
-          </>
+          <div>
+            {dateDisplay}
+            <CloseCircleOutlined
+              onClick={() => onClear(['startDate', 'endDate'])}
+            />
+          </div>
         }
       />
     );
-  }, [values, validationError]);
+  }, [values]);
 
   const timeDisplay = useMemo(() => {
     const [startTime, endTime ] = values.time || [];
@@ -76,21 +69,16 @@ const FilterSummary = ({
       <ValueDisplay
         label='Time interval'
         content={
-          <>
-            <div>
-              {timeDisplay}
-              <CloseCircleOutlined
-                onClick={() => onClear(['startTime', 'endTime'])}
-              />
-            </div>
-            <Typography.Text type='danger'>
-              {validationError.startTime}
-            </Typography.Text>
-          </>
+          <div>
+            {timeDisplay}
+            <CloseCircleOutlined
+              onClick={() => onClear(['startTime', 'endTime'])}
+            />
+          </div>
         }
       />
     );
-  }, [values, validationError]);
+  }, [values]);
 
   const otherFieldsDisplays = useMemo(() => {
     const fields = ['submitter', 'tag', 'primaryObject'];
