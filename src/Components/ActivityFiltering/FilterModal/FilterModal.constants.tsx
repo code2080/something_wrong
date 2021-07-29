@@ -11,7 +11,7 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
     title: 'Date',
     label: 'Date',
     render: () => (
-      <Form.Item label="Select date interval" name='date'>
+      <Form.Item label='Select date interval' name='date'>
         <DatePicker.RangePicker allowEmpty={[true, true]} minuteStep={30} />
       </Form.Item>
     ),
@@ -21,8 +21,12 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
     title: 'Time',
     label: 'Time',
     render: () => (
-      <Form.Item label="Select time interval" name="time">
-        <TimePicker.RangePicker format='HH:mm' allowEmpty={[true, true]} minuteStep={30} />
+      <Form.Item label='Select time interval' name='time'>
+        <TimePicker.RangePicker
+          format='HH:mm'
+          allowEmpty={[true, true]}
+          minuteStep={30}
+        />
       </Form.Item>
     ),
   },

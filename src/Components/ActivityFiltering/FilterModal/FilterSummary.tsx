@@ -60,7 +60,7 @@ const FilterSummary = ({
   }, [values]);
 
   const timeDisplay = useMemo(() => {
-    const [startTime, endTime ] = values.time || [];
+    const [startTime, endTime] = values.time || [];
     if (!startTime && !endTime) return null;
     const timeDisplay = `${
       startTime ? moment(startTime).format('HH:mm') : '---'

@@ -1,9 +1,5 @@
 import moment from 'moment';
-import {
-  fireEvent,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import FilterModal from '../FilterModal';
 import { storeForTestingFilter } from 'Mock/Store';
@@ -45,8 +41,8 @@ describe('Filter Modal tests', () => {
     const rangePicker = document.querySelector('.ant-picker-range');
     const inputElems = [
       screen.queryByPlaceholderText('Start date'),
-      screen.queryByPlaceholderText('End date')
-    ]
+      screen.queryByPlaceholderText('End date'),
+    ];
     await waitFor(async () => {
       expect(rangePicker).toBeInTheDocument();
       expect(inputElems[0]).toBeInTheDocument();
@@ -64,8 +60,13 @@ describe('Filter Modal tests', () => {
     });
 
     expect(screen.getByText('Date interval:')).toBeInTheDocument();
-    expect(screen.getByText(`${moment().format('YYYY-MM')}-15 ~ ${moment().add(1, 'month').format('YYYY-MM')}-15`)).toBeInTheDocument();
-
+    expect(
+      screen.getByText(
+        `${moment().format('YYYY-MM')}-15 ~ ${moment()
+          .add(1, 'month')
+          .format('YYYY-MM')}-15`,
+      ),
+    ).toBeInTheDocument();
   });
 
   it('Try to change time', async () => {
@@ -73,8 +74,8 @@ describe('Filter Modal tests', () => {
     const rangePicker = document.querySelector('.ant-picker-range');
     const inputElems = [
       screen.queryByPlaceholderText('Start time'),
-      screen.queryByPlaceholderText('End time')
-    ]
+      screen.queryByPlaceholderText('End time'),
+    ];
     await waitFor(async () => {
       expect(rangePicker).toBeInTheDocument();
       expect(inputElems[0]).toBeInTheDocument();
@@ -91,7 +92,9 @@ describe('Filter Modal tests', () => {
       expect(minuteInput).toBeInTheDocument();
       await fireEvent.click(hourInput);
       await fireEvent.click(minuteInput);
-      fireEvent.click(document.querySelector('.ant-picker-ok button') as Element);
+      fireEvent.click(
+        document.querySelector('.ant-picker-ok button') as Element,
+      );
     });
 
     await waitFor(async () => {
@@ -101,7 +104,9 @@ describe('Filter Modal tests', () => {
       expect(minuteInput).toBeInTheDocument();
       await fireEvent.click(hourInput);
       await fireEvent.click(minuteInput);
-      fireEvent.click(document.querySelector('.ant-picker-ok button') as Element);
+      fireEvent.click(
+        document.querySelector('.ant-picker-ok button') as Element,
+      );
     });
 
     expect(screen.getByText('Time interval:')).toBeInTheDocument();

@@ -43,17 +43,22 @@ const reducer = (state = initialState, action) => {
       const mappedObjectsLabel = (objectTypes || []).reduce(
         (results, objectType) => ({
           ...results,
-          [objectType.objectTypeExtId]: objectType.applicationObjectTypeLabel
-        }), {}
+          [objectType.objectTypeExtId]: objectType.applicationObjectTypeLabel,
+        }),
+        {},
       );
       const mappedFieldsLabel = (objectTypes || []).reduce(
         (results, objectType) => ({
           ...results,
-          ...(objectType.fields || []).reduce((fieldResults, field) => ({
-            ...fieldResults,
-            [field.fieldExtId]: field.fieldLabel
-          }), {}),
-        }), {}
+          ...(objectType.fields || []).reduce(
+            (fieldResults, field) => ({
+              ...fieldResults,
+              [field.fieldExtId]: field.fieldLabel,
+            }),
+            {},
+          ),
+        }),
+        {},
       );
 
       return {

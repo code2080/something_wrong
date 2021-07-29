@@ -384,11 +384,11 @@ export const selectLabelField = (type) =>
   });
 
 export const selectObjectLabelsMapping = () =>
-  createSelector(selectIntegration, integration => ({
+  createSelector(selectIntegration, (integration) => ({
     ...integration.mappedObjectsLabel,
   }));
 
 export const selectFieldLabelsMapping = () =>
-  createSelector(selectIntegration, integration => ({
+  createSelector(selectIntegration, (integration) => ({
     ...integration.mappedFieldsLabel,
   }));

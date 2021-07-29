@@ -71,7 +71,12 @@ const FilterItems = ({
                   value: opt,
                 })),
               )}
-              label={<FilterItemLabel label={selectedProperty} render={getOptionLabel} />}
+              label={
+                <FilterItemLabel
+                  label={selectedProperty}
+                  render={getOptionLabel}
+                />
+              }
               name={selectedProperty}
             />
           )}
@@ -89,7 +94,12 @@ const FilterItems = ({
                     value: opt,
                   })),
                 )}
-                label={<FilterItemLabel label={`${selectedProperty}.${key}`} render={getOptionLabel} />}
+                label={
+                  <FilterItemLabel
+                    label={`${selectedProperty}.${key}`}
+                    render={getOptionLabel}
+                  />
+                }
                 // label={`${selectedProperty}.${key}`}
                 name={`${selectedProperty}.${key}`}
               />

@@ -18,7 +18,11 @@ const ActivityFiltering = () => {
         onClick={() => setShowModal(!showModal)}
         isActive={showModal}
       />
-      <FilterModal formId={formId} isVisible={showModal} onClose={() => setShowModal(false)} />
+      <FilterModal
+        formId={formId}
+        isVisible={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 };

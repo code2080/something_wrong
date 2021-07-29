@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'antd/lib/form/Form';
 
-
 // ACTIONS
 import {
   fetchLookupMap,
@@ -79,11 +78,15 @@ const getTECorePayload = (
     { objects: [], fields: [], types: [] },
   );
 };
-const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => {
+const FilterModal = ({
+  isVisible = false,
+  onClose = _.noop,
+  formId,
+}: Props) => {
   const dispatch = useDispatch();
   const [form] = useForm();
   const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
-  
+
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
   );
@@ -99,7 +102,9 @@ const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => 
     [],
   );
 
-  const loading:boolean = useSelector(createLoadingSelector([FETCH_FORM_LOOKUPMAP]));
+  const loading: boolean = useSelector(
+    createLoadingSelector([FETCH_FORM_LOOKUPMAP]),
+  );
 
   const currentlySelectedFilterValues = useSelector((state) =>
     selectSelectedFilterValues(state, formId),

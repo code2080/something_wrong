@@ -16,11 +16,18 @@ import { Form } from 'antd';
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 
 // HELPERS
-import { validateFilterQuery, beautifyObject, reparseKey } from './FilterModal.helper';
+import {
+  validateFilterQuery,
+  beautifyObject,
+  reparseKey,
+} from './FilterModal.helper';
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 import { useSelector } from 'react-redux';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+import {
+  selectFieldLabelsMapping,
+  selectObjectLabelsMapping,
+} from 'Redux/Integration/integration.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -98,7 +105,7 @@ const Provider = ({
     if (id) {
       return optionsLabelMapping?.[reparseKey(field)]?.[id] ?? id;
     }
-    return optionsLabelMapping?.[reparseKey(field)] ?? field
+    return optionsLabelMapping?.[reparseKey(field)] ?? field;
   };
 
   // onInitialize

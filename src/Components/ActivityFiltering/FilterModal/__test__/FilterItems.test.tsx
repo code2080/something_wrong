@@ -18,7 +18,6 @@ const filterLookupMap = beautifyObject({
 
 const getOptionLabel = (field: string, id?: string) => id || field;
 
-
 describe('Filter Items column tests', () => {
   it('Render without crashes', () => {
     render(
@@ -59,8 +58,12 @@ describe('Filter Items column tests', () => {
     await waitFor(() => {
       screen.getAllByText('60924c137c04ee0025094bd0');
     });
-    expect(screen.getAllByText('60924c137c04ee0025094bd0').length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText('Should not be on screen')).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText('60924c137c04ee0025094bd0').length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.queryByText('Should not be on screen'),
+    ).not.toBeInTheDocument();
   });
 
   it('Render an object', async () => {
@@ -76,8 +79,12 @@ describe('Filter Items column tests', () => {
     await waitFor(() => {
       screen.getAllByText('equipment_C-KV Hyrbil');
     });
-    expect(screen.getAllByText('equipment_C-KV Hyrbil').length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText('Should not be on screen')).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText('equipment_C-KV Hyrbil').length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.queryByText('Should not be on screen'),
+    ).not.toBeInTheDocument();
   });
 
   it('Render a field', async () => {
@@ -93,7 +100,11 @@ describe('Filter Items column tests', () => {
     await waitFor(() => {
       screen.getAllByText('Quae earum soluta au');
     });
-    expect(screen.getAllByText('Quae earum soluta au').length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText('Should not be on screen')).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText('Quae earum soluta au').length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.queryByText('Should not be on screen'),
+    ).not.toBeInTheDocument();
   });
 });

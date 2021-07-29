@@ -4,7 +4,7 @@ import { TimePicker, TimeRangePickerProps } from 'antd';
 import moment, { Moment } from 'moment';
 import { TIME_FORMAT } from 'Constants/common.constants';
 
-interface Props extends TimeRangePickerProps { }
+interface Props extends TimeRangePickerProps {}
 
 const getValues = (container: HTMLElement) => {
   const inputs = container.querySelectorAll('input');
@@ -33,7 +33,7 @@ export default (props: Props) => {
   const onBlur = (e) => {
     const values = getValues(e.target.closest('.ant-picker-range'));
     console.log(values);
-  }
+  };
 
   return <TimePicker.RangePicker ref={ref} {...props} onBlur={onBlur} />;
 };

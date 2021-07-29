@@ -12,7 +12,7 @@ const filterLookupMap = beautifyObject({
     ...filterLoopup.objects,
     ...filterLoopup.objectFilters,
   },
-})
+});
 
 const handleSelect = jest.fn();
 const getOptionLabel = (field: string, id?: string) => id || field;
@@ -25,7 +25,7 @@ describe('Filter Properties column tests', () => {
         selectedProperty='date'
         onSelect={handleSelect}
         getOptionLabel={getOptionLabel}
-      />
+      />,
     );
   });
   it('Render without crashes', () => {
@@ -45,9 +45,9 @@ describe('Filter Properties column tests', () => {
     fireEvent.click(screen.getByText('Time'));
     expect(handleSelect).toBeCalledWith('time');
     waitFor(() => {
-      expect(screen.getByText('Select time interval').parentElement).toHaveClass(
-        'ant-menu-item-selected',
-      );
+      expect(
+        screen.getByText('Select time interval').parentElement,
+      ).toHaveClass('ant-menu-item-selected');
     });
   });
 });
