@@ -110,6 +110,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
         <HoverAndClickPopOver
           hoverContent={extIdLabel ?? 'N/A'}
           clickContent={clickContent}
+          disabled={activity.isInactive()}
           icon={icon}
           style={{
             border: 'none',
@@ -144,6 +145,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
         hoverContent={hoverContent}
         clickContent={clickContent}
         icon={icon}
+        disabled={activity.isInactive()}
         style={{
           border: 'none',
           background: '#e7eff0',

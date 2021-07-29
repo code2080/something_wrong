@@ -1,16 +1,20 @@
 import { Checkbox } from 'antd';
+import _ from 'lodash';
 import { ColumnType, Key, TableRowSelection } from 'antd/lib/table/interface';
+import { TActivity } from '../../Types/Activity.type';
 
 type Props = {
   rowKey: Key | undefined;
   rowSelection?: TableRowSelection<object>;
   dataSource: readonly object[] | undefined;
+  mapDataSource: { [key: string]: object }
 };
 
 const SelectionColumn = ({
   rowKey,
   rowSelection,
   dataSource,
+  mapDataSource,
 }: Props): ColumnType<object> | undefined => {
   const handleChecked = (
     checked: boolean,
@@ -45,14 +49,18 @@ const SelectionColumn = ({
       width: 25,
       title: '',
       dataIndex: rowKey,
-      render: (key: Key) => (
+      render: (key: Key) => {
+        const activity = _.get(mapDataSource, `[${key}][${0}]`, {}) as TActivity
+
+        return (
         <Checkbox
           checked={rowSelection.selectedRowKeys?.includes(key)}
+          disabled={activity ? activity.isInactive() : false}
           onChange={({ target: { checked } }) =>
             handleChecked(checked, key, rowSelection)
           }
         />
-      ),
+      )},
     }
   );
 };

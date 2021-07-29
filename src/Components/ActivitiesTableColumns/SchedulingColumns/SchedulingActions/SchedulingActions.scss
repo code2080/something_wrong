@@ -20,6 +20,11 @@ $statusColumnLength: 0.8rem;
       background: $candlelight;
       color: $deepSeaGreen;
     }
+
+    &.disabled {
+      background-color: #bfbfbf;
+      cursor: not-allowed;
+    }
   }
 
   .scheduling-actions--status {

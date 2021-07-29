@@ -1,17 +1,25 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { SelectOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 
 // COMPONENTS
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
+import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
 import { useMemo } from 'react';
 
-const SelectActivityButton = ({ activity }) => {
+// TYPES
+import { TActivity } from '../../../../Types/Activity.type';
+
+type SelectActivityButtonProps = {
+  activity: TActivity
+}
+
+const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
   const teCoreAPI = useTECoreAPI();
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const formInstance = useSelector((state) =>
@@ -20,7 +28,7 @@ const SelectActivityButton = ({ activity }) => {
       formInstanceId: activity.formInstanceId,
     }),
   );
-  const formInstanceRequests = useSelector(
+  const formInstanceRequests: any = useSelector(
     selectFormInstanceObjectRequests(formInstance),
   );
   const teCorePayload = useSelector(selectTECorePayloadForActivity)(
@@ -35,7 +43,12 @@ const SelectActivityButton = ({ activity }) => {
   };
 
   return (
-    <div className='scheduling-actions--button' onClick={onSelectAllCallback}>
+    <div
+      className={classNames('scheduling-actions--button', {
+        'disabled': activity.isInactive()
+      })}
+      onClick={!activity.isInactive() ? onSelectAllCallback : undefined}
+    >
       <SelectOutlined />
     </div>
   );
