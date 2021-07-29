@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 
 import _, { set } from 'lodash';
@@ -82,10 +81,10 @@ export const supportedFields = [
 ];
 
 export const parseKey = (key) => {
-  return key.replaceAll('.', REPLACED_KEY);
+  return key.split('.').join(REPLACED_KEY);
 };
 export const reparseKey = (key) => {
-  return key.replaceAll(REPLACED_KEY, '.');
+  return key.split(REPLACED_KEY).join('.');
 };
 
 export const isObject = (obj) => !Array.isArray(obj) && typeof obj === 'object';

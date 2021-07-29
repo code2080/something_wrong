@@ -3,7 +3,6 @@ import { Modal, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { useForm } from 'antd/lib/form/Form';
 
 
@@ -41,6 +40,7 @@ const propTypes = {
 };
 
 type Props = {
+  formId: string;
   isVisible?: boolean;
   onClose?(): void;
 };
@@ -79,15 +79,15 @@ const getTECorePayload = (
     { objects: [], fields: [], types: [] },
   );
 };
-const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
+const FilterModal = ({ isVisible = false, onClose = _.noop, formId }: Props) => {
   const dispatch = useDispatch();
-  const { formId } = useParams<{ formId: string }>();
   const [form] = useForm();
   const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
   
   const filterLookupMap = useSelector((state) =>
     selectFormLookupMap(state, formId),
   );
+
   const teCorePayload = useMemo(
     () => getTECorePayload(filterLookupMap),
     [filterLookupMap],

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';
@@ -9,6 +10,7 @@ import './index.scss';
 
 const ActivityFiltering = () => {
   const [showModal, setShowModal] = useState(false);
+  const { formId } = useParams<{ formId: string }>();
 
   return (
     <div className='activity-filtering--wrapper'>
@@ -16,7 +18,7 @@ const ActivityFiltering = () => {
         onClick={() => setShowModal(!showModal)}
         isActive={showModal}
       />
-      <FilterModal isVisible={showModal} onClose={() => setShowModal(false)} />
+      <FilterModal formId={formId} isVisible={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

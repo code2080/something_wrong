@@ -22,7 +22,7 @@ const FilterProperties = ({
     (key) => !NESTED_FIELDS.includes(key),
   );
   return (
-    <div className='filter-modal__column'>
+    <div className='filter-modal__column filter__properties'>
       <div>
         <b>Available properties</b>
       </div>

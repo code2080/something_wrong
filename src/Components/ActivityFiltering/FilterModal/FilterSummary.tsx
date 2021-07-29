@@ -153,7 +153,7 @@ const FilterSummary = ({
   );
 
   return (
-    <div className='filter-modal__column'>
+    <div className='filter-modal__column' id='filterSummary'>
       <div>
         <b>Selected filters</b>
       </div>
