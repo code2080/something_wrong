@@ -7,6 +7,7 @@ import {
 import { TActivity } from '../../Types/Activity.type';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import { isEmptyDeep } from 'Utils/general.helpers';
 
 const filterstate = (state) => state.filters;
 
@@ -136,3 +137,13 @@ export const selectVisibleActivitiesForForm = createSelector(
       .value();
   },
 );
+
+export const selectFilterIsActivated = (formId: string) =>
+  createSelector(filterstate, (filters) => {
+    const formFilterQueries = filters[formId]?.filterValues;
+    return !isEmptyDeep(formFilterQueries);
+    // if (isEmpty(formFilterQueries)) return false;
+    // return Object.keys(formFilterQueries).some((field: string) => {
+    //   return !isEmpty(formFilterQueries[field]);
+    // })
+  });
