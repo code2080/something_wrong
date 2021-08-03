@@ -14,10 +14,14 @@ const fetchActivitiesForFormFlow = (formId) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId } },
   }),
-  success: (response) => ({
-    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-    payload: { ...response, actionMeta: { formId } },
-  }),
+  success: (response) => {
+    const storeState = window.tePrefsLibStore.getState();
+    const sections = storeState.forms[formId].sections;
+    return {
+      type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
+      payload: { ...response, actionMeta: { formId, sections } },
+    };
+  },
   failure: (err) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_FAILURE,
     payload: { ...err, actionMeta: { formId } },

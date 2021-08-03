@@ -12,7 +12,10 @@ import DatasourceReadonly from '../../../Elements/DatasourceReadonly';
 import { selectElementType } from '../../../../Redux/Forms/forms.selectors';
 
 // CONSTANTS
-import { elementTypes } from '../../../../Constants/elementTypes.constants';
+import {
+  elementTypes,
+  elementTypeValueRenderer,
+} from '../../../../Constants/elementTypes.constants';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
 
@@ -50,7 +53,12 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
     _.find(objectRequests, ['_id', value]),
   );
 
-  const formattedValue = values.map((val) => labels[val] || val).join(', ');
+  const valueDisplay = values.map((val) =>
+    elementTypeValueRenderer(elementType, val),
+  );
+  const formattedValue = valueDisplay
+    .map((val) => labels[val] || val)
+    .join(', ');
 
   const requestComponents = requests
     .map((reqId) => _.find(objectRequests, ['_id', reqId]))

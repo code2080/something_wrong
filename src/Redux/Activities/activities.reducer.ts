@@ -93,11 +93,11 @@ const reducer = (
       const {
         payload: {
           activities: activitityObjs,
-          actionMeta: { formId },
+          actionMeta: { formId, sections },
         },
       } = action;
 
-      const activities = updateActivitiesForForm(activitityObjs);
+      const activities = updateActivitiesForForm(activitityObjs, sections);
 
       return {
         ...state,

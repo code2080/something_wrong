@@ -135,6 +135,33 @@ export const elementTypeMapping = {
   },
 };
 
+export const elementTypeMappingById = Object.keys(elementTypeMapping).reduce(
+  (results, key) => ({
+    ...results,
+    [elementTypeMapping[key].elementId]: key,
+  }),
+  {},
+);
+
+export const elementTypeValueFormatter = (type, value) => {
+  switch (type) {
+    case elementTypes.ELEMENT_TYPE_CHECKBOX:
+      // eslint-disable-next-line
+      return String(value) === 'true' ? '1' : '0';
+    default:
+      return value;
+  }
+};
+
+export const elementTypeValueRenderer = (type, value) => {
+  switch (type) {
+    case elementTypes.ELEMENT_TYPE_CHECKBOX:
+      return value === '1' ? 'true' : 'false';
+    default:
+      return value;
+  }
+};
+
 export const WEEKDAYNAMES = {
   MON: 'Monday',
   TUE: 'Tuesday',
