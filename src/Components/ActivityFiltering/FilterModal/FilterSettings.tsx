@@ -5,21 +5,21 @@ import { Row, Col, Form, Radio } from 'antd';
 const CRITERIAS = [
   {
     label: 'Match all',
-    value: 'all',
+    value: 'ALL',
   },
   {
     label: 'Match one',
-    value: 'one',
+    value: 'SOME',
   },
 ];
 const MODES = [
   {
     label: 'Single activity',
-    value: 'single',
+    value: 'SINGLE',
   },
   {
     label: 'All in submission',
-    value: 'all',
+    value: 'ALL',
   },
 ];
 const FilterSettings = () => {
@@ -30,7 +30,7 @@ const FilterSettings = () => {
       </div>
       <Row gutter={16}>
         <Col span={8}>
-          <Form.Item label='Match criteria' name='criteria'>
+          <Form.Item label='Match criteria' name='matchCriteria'>
             <Radio.Group>
               {CRITERIAS.map((criteria) => (
                 <Radio key={criteria.value} value={criteria.value}>
@@ -43,7 +43,7 @@ const FilterSettings = () => {
         <Col span={16}>
           <Form.Item
             label='Include full submission for matching activity'
-            name='mode'
+            name='includeSubmission'
           >
             <Radio.Group>
               {MODES.map((criteria) => (

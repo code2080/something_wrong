@@ -85,6 +85,12 @@ const Provider = ({
   const objectLabelsMapping = useSelector(selectObjectLabelsMapping());
   const fieldsLabelMapping = useSelector(selectFieldLabelsMapping());
 
+  const initialValues = useMemo(() => {
+    return {
+      matchCriteria: 'ALL', includeSubmission: 'ALL'
+    };
+  }, []);
+
   const optionsLabelMapping = useMemo(() => {
     return {
       submitter: submissions.reduce(
@@ -112,7 +118,7 @@ const Provider = ({
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue(defaultMapping);
-    setValues(defaultMapping);
+    setValues(isEmpty(defaultMapping) ? initialValues : defaultMapping);
   }, [form, defaultMapping]);
 
   const onValueChange = (obj) => {
@@ -176,7 +182,7 @@ const Provider = ({
         form={form}
         layout='vertical'
         onValuesChange={onValueChange}
-        initialValues={{ criteria: 'one', mode: 'single' }}
+        initialValues={initialValues}
       >
         {children({ values, onSubmit })}
       </Form>
