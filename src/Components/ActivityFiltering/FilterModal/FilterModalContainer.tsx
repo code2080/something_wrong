@@ -28,6 +28,7 @@ import {
   selectFieldLabelsMapping,
   selectObjectLabelsMapping,
 } from 'Redux/Integration/integration.selectors';
+import { selectAllLabels } from 'Redux/TE/te.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -84,6 +85,7 @@ const Provider = ({
   );
   const objectLabelsMapping = useSelector(selectObjectLabelsMapping());
   const fieldsLabelMapping = useSelector(selectFieldLabelsMapping());
+  const allLabels = useSelector(selectAllLabels());
 
   const initialValues = useMemo(() => {
     return {
@@ -102,16 +104,15 @@ const Provider = ({
         }),
         {},
       ),
-      objects: objectLabelsMapping,
-      fields: fieldsLabelMapping,
       ...objectLabelsMapping,
       ...fieldsLabelMapping,
+      ...allLabels,
     };
   }, [submissions, objectLabelsMapping, fieldsLabelMapping]);
 
   const getOptionLabel = (field: string, id?: string) => {
     if (id) {
-      return optionsLabelMapping?.[reparseKey(field)]?.[id] ?? id;
+      return optionsLabelMapping?.[reparseKey(field)]?.[id] || optionsLabelMapping?.[id] || id;
     }
     return optionsLabelMapping?.[reparseKey(field)] ?? field;
   };

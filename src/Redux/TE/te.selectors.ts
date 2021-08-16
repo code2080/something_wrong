@@ -59,3 +59,16 @@ export const selectMultipleExtIdLabels = createSelector(
         {},
       ),
 );
+
+export const selectAllLabels = () => createSelector(
+  selectExtIdProps,
+  (extIdProps) => Object.values(extIdProps).reduce((results: {[key: string]: string}, item: any) => {
+    return {
+      ...results,
+      ...Object.keys(item).reduce((itemResults, itemKey) => ({
+        ...itemResults,
+        [itemKey]: item[itemKey].label
+      }), {})
+    }
+  }, {})
+);

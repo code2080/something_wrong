@@ -119,17 +119,6 @@ const FilterItems = ({
       <div className='filter-modal__box'>{renderer}</div>
     </div>
   );
-  // if (!property) return null;
-  // return (
-  //   <div className="filter-modal__column">
-  //     <div>
-  //       <b>Available filters</b>
-  //     </div>
-  //     <div className="filter-modal__box">
-  //       {property.render(filterOptions[selectedProperty])}
-  //     </div>
-  //   </div>
-  // )
 };
 
 export default FilterItems;
