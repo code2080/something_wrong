@@ -23,6 +23,13 @@ export type TECoreAPI = {
     typeExtIds: string[];
     callback: (results: getFieldIdsReturn) => void;
   }): void;
+  requestManuallyScheduleActivity({
+    reservationData,
+    callback,
+  }: {
+    reservationData: PopulateSelectionPayload;
+    callback: (reservationIds: string[]) => void;
+  }): void;
   // To be extended
   [apiCall: string]: any;
 };
