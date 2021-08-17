@@ -103,6 +103,17 @@ const reducer = (state: any = {}, action) => {
       };
     }
 
+    case types.RESET_FORM_FILTER_VALUES: {
+      const { formId } = action.payload;
+      return {
+        ...state,
+        [formId]: {
+          ...(state[formId] ?? {}),
+          filterValues: {},
+        },
+      };
+    }
+
     default:
       return state;
   }
