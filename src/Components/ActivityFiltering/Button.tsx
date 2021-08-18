@@ -14,7 +14,7 @@ const ActivityFilterButton = ({ onClick, isActive }: Props) => (
     size='small'
     shape='circle'
     ghost
-    className={`filter-btn ${isActive && 'active'}`}
+    className={`${isActive && 'active'}`}
     onClick={onClick}
   >
     <FilterFilled />
