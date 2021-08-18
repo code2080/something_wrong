@@ -174,15 +174,23 @@ const useActivityScheduling = ({
     );
     return Promise.all(
       Object.keys(groupedByFormInstance).map((formInstanceId) => {
-        return dispatch(
-          updateActivities(
-            formId,
-            formInstanceId,
-            groupedByFormInstance[formInstanceId].map(
-              activityConvertFn.toDeleted,
-            ),
-          ),
+        const _activities = groupedByFormInstance[formInstanceId].map(
+          activityConvertFn.toDeleted,
         );
+        return teCoreAPI.deleteReservations({
+          activities: _activities,
+          callback: () => {
+            dispatch(
+              updateActivities(
+                formId,
+                formInstanceId,
+                groupedByFormInstance[formInstanceId].map(
+                  activityConvertFn.toDeleted,
+                ),
+              ),
+            );
+          },
+        });
       }),
     );
   };
