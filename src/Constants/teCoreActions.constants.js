@@ -69,6 +69,41 @@ export const teCoreActions = {
   },
   GET_EXTID_PROPS: {
     callname: teCoreCallnames.GET_EXTID_PROPS,
+    mockFunction: (payload) => {
+      const examplePayload = {
+        objects: [],
+        types: [
+          'equipment',
+          'courseevt',
+          'room',
+          'person_staff',
+          'activity_teach',
+        ],
+        fields: [],
+      };
+      const result = {
+        objects: {},
+        types: {
+          equipment: {
+            label: 'Appliance',
+          },
+          courseevt: {
+            label: 'Course event',
+          },
+          room: {
+            label: 'Room',
+          },
+          person_staff: {
+            label: 'Teacher',
+          },
+          activity_teach: {
+            label: 'Course activity',
+          },
+        },
+        fields: {},
+      };
+      return result;
+    },
   },
   GET_RESERVATION_TEMPLATES: {
     // DEPRECATED
