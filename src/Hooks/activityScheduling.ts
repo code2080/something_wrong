@@ -180,15 +180,7 @@ const useActivityScheduling = ({
         return teCoreAPI.deleteReservations({
           activities: _activities,
           callback: () => {
-            dispatch(
-              updateActivities(
-                formId,
-                formInstanceId,
-                groupedByFormInstance[formInstanceId].map(
-                  activityConvertFn.toDeleted,
-                ),
-              ),
-            );
+            dispatch(updateActivities(formId, formInstanceId, _activities));
           },
         });
       }),
