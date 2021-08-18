@@ -56,9 +56,15 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   const valueDisplay = values.map((val) =>
     elementTypeValueRenderer(elementType, val),
   );
-  const formattedValue = valueDisplay
-    .map((val) => labels[val] || val)
-    .join(', ');
+
+  const formattedValue = valueDisplay.map((val, valIndex) => (
+    <>
+      <span key={valIndex}>{labels[val] || val}</span>
+      {valIndex < valueDisplay.length - 1 && ', '}
+    </>
+  ));
+
+  const rawValue = values.map((val) => labels[val] || val).join(', ');
 
   const requestComponents = requests
     .map((reqId) => _.find(objectRequests, ['_id', reqId]))
@@ -68,7 +74,9 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   return (
     <>
       {requestComponents}
-      {!_.isEmpty(formattedValue) && <EllipsisRenderer text={formattedValue} />}
+      {!_.isEmpty(formattedValue) && (
+        <EllipsisRenderer text={formattedValue} title={rawValue} />
+      )}
     </>
   );
 };

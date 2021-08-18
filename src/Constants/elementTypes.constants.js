@@ -1,3 +1,4 @@
+import { Switch } from 'antd';
 import { valueTypes } from './valueTypes.constants';
 
 // TYPE DECLARATIONS
@@ -156,7 +157,7 @@ export const elementTypeValueFormatter = (type, value) => {
 export const elementTypeValueRenderer = (type, value) => {
   switch (type) {
     case elementTypes.ELEMENT_TYPE_CHECKBOX:
-      return value === '1' ? 'true' : 'false';
+      return <Switch checked={value === '1'} size='small' />;
     default:
       return value;
   }
