@@ -26,6 +26,7 @@ import _ from 'lodash';
 import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { Modal } from 'antd';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
@@ -83,11 +84,12 @@ const ActivitiesPage = () => {
   /**
    * EVENT HANDLERS
    */
-  const { handleScheduleActivities } = useActivityScheduling({
-    formId,
-    formType,
-    reservationMode,
-  });
+  const { handleScheduleActivities, handleDeleteActivities } =
+    useActivityScheduling({
+      formId,
+      formType,
+      reservationMode,
+    });
 
   const onSelectAll = () => {
     setSelectedRowKeys(tableDataSource.map((a) => a._id));
@@ -100,6 +102,19 @@ const ActivitiesPage = () => {
   const onScheduleActivities = async (activities) => {
     await handleScheduleActivities(activities);
     onDeselectAll();
+  };
+
+  const onDeleteActivities = async (activities) => {
+    Modal.confirm({
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') || document.body,
+      title: 'Delete reservations',
+      content: 'Are you sure you want to delete these reservations?',
+      onOk: async () => {
+        await handleDeleteActivities(activities);
+        onDeselectAll();
+      },
+    });
   };
 
   const onSortActivities = (sorter): void => {
@@ -119,6 +134,7 @@ const ActivitiesPage = () => {
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
+        onDeleteActivities={onDeleteActivities}
         allActivities={tableDataSource}
       />
       <ActivityTable

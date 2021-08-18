@@ -28,6 +28,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
 
 type Props = {
   formType: string;
@@ -166,8 +167,29 @@ const useActivityScheduling = ({
     );
   };
 
+  const handleDeleteActivities = async (activities: TActivity[]) => {
+    const groupedByFormInstance = groupBy(
+      activities.filter(activityFilterFn.canBeDeleted),
+      'formInstanceId',
+    );
+    return Promise.all(
+      Object.keys(groupedByFormInstance).map((formInstanceId) => {
+        return dispatch(
+          updateActivities(
+            formId,
+            formInstanceId,
+            groupedByFormInstance[formInstanceId].map(
+              activityConvertFn.toDeleted,
+            ),
+          ),
+        );
+      }),
+    );
+  };
+
   return {
     handleScheduleActivities,
+    handleDeleteActivities,
   };
 };
 export default useActivityScheduling;
