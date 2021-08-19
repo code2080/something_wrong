@@ -1,10 +1,10 @@
 {
-  "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.52",
-  "description": "TE Prefs Library",
+  "name": "@timeedit/activitymanager",
+  "version": "0.11.0",
+  "description": "TE Activity Manager Library",
   "author": "TimeEdit",
   "license": "ISC",
-  "repository": "TimeEdit/te-prefs-lib",
+  "repository": "github:timeEdit/am-fe",
   "main": "dist/te-prefs-lib.js",
   "module": "dist/te-prefs-lib.es.js",
   "jsnext:main": "dist/te-prefs-lib.es.js",
@@ -33,7 +33,7 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
     "preversion": "yarn lint && yarn prettier && yarn test",
-    "postversion": "yarn publish . --new-version $npm_package_version && git push && git push --tags && echo \"Successfully released version $npm_package_version!\"",
+    "postversion": "yarn publish . --new-version $npm_package_version --access public && git push && git push --tags && echo \"Successfully released version $npm_package_version!\"",
     "sb": "yarn storybook",
     "storybook": "start-storybook -p 6006",
     "storybook:export": "build-storybook"
