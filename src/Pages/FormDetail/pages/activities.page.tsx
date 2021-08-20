@@ -26,6 +26,8 @@ import _ from 'lodash';
 import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { Modal } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
 import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 
 const ActivitiesPage = () => {
@@ -85,11 +87,12 @@ const ActivitiesPage = () => {
   /**
    * EVENT HANDLERS
    */
-  const { handleScheduleActivities } = useActivityScheduling({
-    formId,
-    formType,
-    reservationMode,
-  });
+  const { handleScheduleActivities, handleDeleteActivities } =
+    useActivityScheduling({
+      formId,
+      formType,
+      reservationMode,
+    });
 
   const onSelectAll = () => {
     setSelectedRowKeys(tableDataSource.map((a) => a._id));
@@ -99,19 +102,29 @@ const ActivitiesPage = () => {
     setSelectedRowKeys([]);
   };
 
-  const onScheduleActivities = async (activities) => {
+  const onScheduleActivities = async (activities: TActivity[]) => {
     await handleScheduleActivities(activities);
     onDeselectAll();
   };
 
-  const onSortActivities = (sorter): void => {
-    if (sorter && sorter.columnKey) {
-      if (sorter.order) {
-        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
-      } else {
-        dispatch(resetActivitySorting(formId));
-      }
-    }
+  const onDeleteActivities = async (activities: TActivity[]) => {
+    Modal.confirm({
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') || document.body,
+      title: 'Delete reservations',
+      content: 'Are you sure you want to cancel these reservations?',
+      onOk: async () => {
+        await handleDeleteActivities(activities);
+        onDeselectAll();
+      },
+    });
+  };
+
+  const onSortActivities = (sorter: SorterResult<object>): void => {
+    if (!sorter?.columnKey) return;
+    sorter?.order
+      ? dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order))
+      : dispatch(resetActivitySorting(formId));
   };
 
   return (
@@ -121,6 +134,7 @@ const ActivitiesPage = () => {
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
+        onDeleteActivities={onDeleteActivities}
         allActivities={tableDataSource}
       />
       <ActivityTable
