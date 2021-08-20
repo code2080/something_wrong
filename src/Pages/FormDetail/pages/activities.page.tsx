@@ -26,9 +26,11 @@ import _ from 'lodash';
 import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
+  const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
 
   /**
@@ -129,7 +131,7 @@ const ActivitiesPage = () => {
         selectedActivities={selectedRowKeys}
         onSelect={setSelectedRowKeys}
         additionalColumns={{
-          pre: SchedulingColumns(selectedRowKeys),
+          pre: SchedulingColumns(selectedRowKeys, isBeta),
           post: StaticColumns,
         }}
       />
