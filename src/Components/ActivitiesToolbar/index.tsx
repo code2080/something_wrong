@@ -24,10 +24,10 @@ import { activityFilterFn } from 'Utils/activities.helpers';
 
 type Props = {
   selectedRowKeys: Key[];
-  onSelectAll: () => void;
-  onDeselectAll: () => void;
-  onScheduleActivities: (activities) => void;
-  onDeleteActivities: (activities) => void;
+  onSelectAll(): void;
+  onDeselectAll(): void;
+  onScheduleActivities(activities: TActivity[]): void;
+  onDeleteActivities(activities: TActivity[]): void;
   allActivities: TActivity[];
 };
 

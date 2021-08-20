@@ -27,6 +27,7 @@ import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/global
 import { TActivity } from '../../../Types/Activity.type';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { Modal } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
@@ -99,12 +100,12 @@ const ActivitiesPage = () => {
     setSelectedRowKeys([]);
   };
 
-  const onScheduleActivities = async (activities) => {
+  const onScheduleActivities = async (activities: TActivity[]) => {
     await handleScheduleActivities(activities);
     onDeselectAll();
   };
 
-  const onDeleteActivities = async (activities) => {
+  const onDeleteActivities = async (activities: TActivity[]) => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
@@ -117,14 +118,11 @@ const ActivitiesPage = () => {
     });
   };
 
-  const onSortActivities = (sorter): void => {
-    if (sorter && sorter.columnKey) {
-      if (sorter.order) {
-        dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order));
-      } else {
-        dispatch(resetActivitySorting(formId));
-      }
-    }
+  const onSortActivities = (sorter: SorterResult<object>): void => {
+    if (!sorter?.columnKey) return;
+    sorter?.order
+      ? dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order))
+      : dispatch(resetActivitySorting(formId));
   };
 
   return (
