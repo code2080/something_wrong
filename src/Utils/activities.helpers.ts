@@ -456,21 +456,22 @@ export const getFilterLookupMap = (
 };
 
 export const activityFilterFn = {
-  canBeScheduled: (activity) => !activity.reservationId,
-  canBeDeleted: (activity) =>
-    activity.reservationId &&
-    activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
-  canBeSelected: (activity) =>
-    activity.reservationId &&
-    activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
-  canBeStopped: (activity) =>
+  canBeScheduled: (activity: TActivity) =>
+    !activity.reservationId &&
+    ![EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(
+      activity.activityStatus,
+    ),
+  canBeSelected: (activity: TActivity) =>
+    !!activity.reservationId &&
+    activity.activityStatus === EActivityStatus.SCHEDULED,
+  canBeStopped: (activity: TActivity) =>
     activity.activityStatus === EActivityStatus.QUEUED,
 };
 
 export const activityConvertFn = {
-  toDeleted: (activity) => ({
+  toDeleted: (activity: TActivity): TActivity => ({
     ...activity,
-    schedulingDate: null,
+    schedulingTimestamp: null,
     activityStatus: EActivityStatus.NOT_SCHEDULED,
     reservationId: null,
   }),

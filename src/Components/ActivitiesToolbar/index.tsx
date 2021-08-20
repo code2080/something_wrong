@@ -58,7 +58,7 @@ const ActivitiesToolbar = ({
   );
 
   const deleteableActivities: TActivity[] = useMemo(
-    () => selectedActivities.filter(activityFilterFn.canBeDeleted),
+    () => selectedActivities.filter(activityFilterFn.canBeSelected),
     [selectedActivities],
   );
 

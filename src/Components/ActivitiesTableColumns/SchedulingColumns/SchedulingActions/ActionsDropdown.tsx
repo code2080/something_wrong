@@ -78,7 +78,7 @@ const activityActions = {
   },
   DELETE: {
     label: 'Delete reservation',
-    filterFn: activityFilterFn.canBeDeleted,
+    filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
   STOP_SCHEDULING: {
@@ -88,7 +88,7 @@ const activityActions = {
   },
   DELETE_ALL: {
     label: 'Delete all reservations',
-    filterFn: activityFilterFn.canBeDeleted,
+    filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
 };

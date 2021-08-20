@@ -169,7 +169,7 @@ const useActivityScheduling = ({
 
   const handleDeleteActivities = async (activities: TActivity[]) => {
     const groupedByFormInstance = groupBy(
-      activities.filter(activityFilterFn.canBeDeleted),
+      activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',
     );
     return Promise.all(
