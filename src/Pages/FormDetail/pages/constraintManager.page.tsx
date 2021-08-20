@@ -2,8 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import last from 'lodash/last';
-import { Button, Collapse, Table } from 'antd';
+import { Button, Collapse, Table, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -15,11 +14,15 @@ import {
   updateConstraintConfiguration,
   createConstraintConfigurations,
   deleteConstraintConfiguration,
+  selectConstraintConfiguration,
 } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
-import { makeSelectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+import {
+  makeSelectConstraintConfigurationsForForm,
+  selectSelectedConstraintConfiguration,
+} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
   ConstraintConfiguration,
   ConstraintInstance,
@@ -60,6 +63,9 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
+  const selectedConstraitConfiguration = useSelector(
+    selectSelectedConstraintConfiguration(formId),
+  );
   const selectConstraintConfigurationsForForm = useMemo(
     () => makeSelectConstraintConfigurationsForForm(),
     [],
@@ -89,6 +95,7 @@ const ConstraintManagerPage = () => {
       primaryObject: form.objectScope,
     },
   });
+
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
 
@@ -102,13 +109,9 @@ const ConstraintManagerPage = () => {
 
   const [isUnsaved, setIsUnsaved] = useState(false);
 
-  useEffect(
-    () => {
-      setConstrConf(last(constrConfs) || null);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [constrConfs.length],
-  );
+  useEffect(() => {
+    setConstrConf(selectedConstraitConfiguration);
+  }, [selectedConstraitConfiguration]);
 
   useEffect(() => {
     const currentConstrConf = constrConfs.find(
@@ -127,10 +130,20 @@ const ConstraintManagerPage = () => {
    * EVENT HANDLERS
    */
   const handleSelectConstrConf = (cid: string): void => {
-    const constrConf = constrConfs.find(
-      (constraintConfig) => constraintConfig._id === cid,
-    );
-    if (constrConf) setConstrConf(constrConf);
+    if (isUnsaved) {
+      Modal.confirm({
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
+        title: 'Changing constraint configuration',
+        content:
+          'You have unsaved configuration, do you want to discard those changes?',
+        onOk: () => {
+          dispatch(selectConstraintConfiguration(formId, cid));
+        },
+      });
+    } else {
+      dispatch(selectConstraintConfiguration(formId, cid));
+    }
   };
 
   const handleUpdConstrConfName = (value: string) => {
@@ -181,23 +194,24 @@ const ConstraintManagerPage = () => {
   };
 
   const handleCreateConstrConf = useCallback(() => {
-    const newConstrConf = ConstraintConfiguration.create({
-      formId,
-      name: 'New constraint configuration',
-      constraints: (allConstraints || [])
-        .filter(
-          (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT ||
-            constraint.type === EConstraintType.OTHER,
-        )
-        .map((constraint: TConstraint) =>
-          ConstraintInstance.createFromConstraint(constraint),
-        ),
-    });
-
-    dispatch(createConstraintConfigurations(newConstrConf));
-
-    if (localConstrConf) setConstrConf(localConstrConf[0]);
+    const doCreate = async () => {
+      const newConstrConf = ConstraintConfiguration.create({
+        formId,
+        name: 'New constraint configuration',
+        constraints: (allConstraints || [])
+          .filter(
+            (constraint: TConstraint) =>
+              constraint.type === EConstraintType.DEFAULT ||
+              constraint.type === EConstraintType.OTHER,
+          )
+          .map((constraint: TConstraint) =>
+            ConstraintInstance.createFromConstraint(constraint),
+          ),
+      });
+      const res = await dispatch(createConstraintConfigurations(newConstrConf));
+      if (res?._id) handleSelectConstrConf(res?._id);
+    };
+    doCreate();
   }, [allConstraints, localConstrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
@@ -209,7 +223,6 @@ const ConstraintManagerPage = () => {
 
   const handleDeleteConstrconf = () => {
     if (!localConstrConf || constrConfs.length === 1) return;
-    setConstrConf(localConstrConf[0]);
     dispatch(deleteConstraintConfiguration(localConstrConf));
   };
 
@@ -224,7 +237,6 @@ const ConstraintManagerPage = () => {
 
   useEffect(() => {
     if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
-    if (localConstrConf) setConstrConf(localConstrConf);
   }, [constrConfs, localConstrConf, handleCreateConstrConf]);
 
   return (
