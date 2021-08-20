@@ -109,6 +109,7 @@ const reducer = (state: any = {}, action) => {
         ...state,
         [formId]: {
           ...(state[formId] ?? {}),
+          filterLookUp: {},
           filterValues: {},
         },
       };

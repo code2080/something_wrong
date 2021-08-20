@@ -256,6 +256,11 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const [localSelectedValues, setLocalSelectedValues] =
     useState<TActivityFilterQuery>(currentlySelectedFilterValues);
 
+  useEffect(
+    () => setLocalSelectedValues(currentlySelectedFilterValues),
+    [currentlySelectedFilterValues],
+  );
+
   const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
     null,
   );
@@ -515,7 +520,9 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
           title='Available filters'
         />
         <PropertySelector
-          properties={getRenderPayloadForSelectedValues(localSelectedValues)}
+          properties={getRenderPayloadForSelectedValues(
+            _.isEmpty(availProps) ? {} : localSelectedValues,
+          )}
           onSelect={(selection) => {
             const [property, type, fieldExtId] = selection.parent ?? [];
             handleSelectValue({
