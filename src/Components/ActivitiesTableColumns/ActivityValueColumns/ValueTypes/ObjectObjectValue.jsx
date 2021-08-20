@@ -5,19 +5,21 @@ import { useSelector } from 'react-redux';
 import isNil from 'lodash/isNil';
 
 // COMPONENTS
-import EllipsisRenderer from '../../../TableColumns/Components/EllipsisRenderer';
 import DatasourceReadonly from '../../../Elements/DatasourceReadonly';
 
 // SELECTORS
-import { selectElementType } from '../../../../Redux/Forms/forms.selectors';
+import {
+  selectElementById,
+  selectElementType,
+} from '../../../../Redux/Forms/forms.selectors';
 
 // CONSTANTS
-import {
-  elementTypes,
-  elementTypeValueRenderer,
-} from '../../../../Constants/elementTypes.constants';
+import { elementTypes } from '../../../../Constants/elementTypes.constants';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
+
+// HELPERS
+import { renderElementValue } from 'Utils/rendering.helpers';
 
 const standardizeValue = (value) =>
   (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));
@@ -28,6 +30,7 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   const elementType = useSelector(
     selectElementType(formId, sectionId, elementId),
   );
+  const element = useSelector(selectElementById(formId, sectionId, elementId));
   const stdValue = standardizeValue(value);
   const labels = useSelector(selectMultipleExtIdLabels)(
     stdValue.map((val) => ({ field: 'objects', extId: val })),
@@ -52,19 +55,7 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   const [requests, values] = _.partition(stdValue, (value) =>
     _.find(objectRequests, ['_id', value]),
   );
-
-  const valueDisplay = values.map((val) =>
-    elementTypeValueRenderer(elementType, val),
-  );
-
-  const formattedValue = valueDisplay.map((val, valIndex) => (
-    <>
-      <span key={valIndex}>{labels[val] || val}</span>
-      {valIndex < valueDisplay.length - 1 && ', '}
-    </>
-  ));
-
-  const rawValue = values.map((val) => labels[val] || val).join(', ');
+  const valueDisplay = renderElementValue(values, element);
 
   const requestComponents = requests
     .map((reqId) => _.find(objectRequests, ['_id', reqId]))
@@ -74,9 +65,7 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   return (
     <>
       {requestComponents}
-      {!_.isEmpty(formattedValue) && (
-        <EllipsisRenderer text={formattedValue} title={rawValue} />
-      )}
+      {!_.isEmpty(valueDisplay) && valueDisplay}
     </>
   );
 };

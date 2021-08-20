@@ -57,6 +57,15 @@ export const selectSectionHasAvailabilityCalendar = (sectionElements) =>
     ),
   );
 
+export const selectElementById = (formId, sectionId, elementId) =>
+  createSelector(formState, (forms) => {
+    const form = forms[formId];
+    if (!form) return null;
+    const section = form.sections.find(({ _id }) => _id === sectionId);
+    if (!section) return null;
+    return section.elements.find(({ _id }) => _id === elementId);
+  });
+
 export const selectElementType = (formId, sectionId, elementId) =>
   createSelector(formState, elementState, (forms, elements) => {
     const form = forms[formId];
