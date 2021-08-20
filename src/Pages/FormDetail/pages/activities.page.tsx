@@ -53,14 +53,12 @@ const ActivitiesPage = () => {
     selectActivitySortingOrder(state, formId),
   );
 
-  const tableDataSource = useMemo(
-    () =>
-      _.compact<TActivity>(
-        sortOrder?.map((activityId) => keyedActivities?.[activityId]) ??
-          allActivities,
-      ),
-    [allActivities, keyedActivities, sortOrder],
-  );
+  const tableDataSource = useMemo(() => {
+    const sortedActivities = _.compact<TActivity>(
+      sortOrder?.map((activityId) => keyedActivities?.[activityId]),
+    );
+    return _.isEmpty(sortedActivities) ? allActivities : sortedActivities;
+  }, [allActivities, keyedActivities, sortOrder]);
 
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];

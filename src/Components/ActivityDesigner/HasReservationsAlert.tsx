@@ -11,8 +11,9 @@ import { unlockActivityDesigner } from '../../Redux/ActivityDesigner/activityDes
 import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 import { useMemo, useState } from 'react';
 import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { resetFormFilterValues } from 'Redux/Filters/filters.actions';
+import { EActivityStatus } from '../../Types/ActivityStatus.enum';
+import { resetFormFilterValues } from '../../Redux/Filters/filters.actions';
+import { resetActivitySorting } from '../../Redux/GlobalUI/globalUI.actions';
 
 const HasReservationsAlert = ({ formId }) => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const HasReservationsAlert = ({ formId }) => {
     dispatch(deleteActivities(formId));
     dispatch(unlockActivityDesigner({ formId }));
     dispatch(resetFormFilterValues({ formId }));
+    dispatch(resetActivitySorting({ formId }));
   };
 
   const handleDeleteReservations = (responses: any[] = []) => {
