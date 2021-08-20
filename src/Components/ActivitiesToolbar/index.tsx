@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 
 // SELECTORS
 import { makeSelectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
-import { hasPermission } from '../../Redux/Auth/auth.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 
 // COMPONENTS
 import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
@@ -65,6 +68,7 @@ const ActivitiesToolbar = ({
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
+  const isBetaOrDev = useSelector(selectIsBetaOrDev);
 
   const TagSelectedActivitiesButton = () =>
     !selectedRowKeys?.length ? (
@@ -129,10 +133,12 @@ const ActivitiesToolbar = ({
       </Button>
       <Divider type='vertical' />
       <TagSelectedActivitiesButton />
-      <JointTeachingGroupMerger
-        activities={selectedActivities}
-        formId={formId}
-      />
+      {isBetaOrDev && (
+        <JointTeachingGroupMerger
+          activities={selectedActivities}
+          formId={formId}
+        />
+      )}
       <ActivityFiltering />
     </div>
   );
