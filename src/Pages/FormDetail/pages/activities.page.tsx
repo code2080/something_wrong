@@ -110,7 +110,7 @@ const ActivitiesPage = () => {
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
       title: 'Delete reservations',
-      content: 'Are you sure you want to delete these reservations?',
+      content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
         await handleDeleteActivities(activities);
         onDeselectAll();

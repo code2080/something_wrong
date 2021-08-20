@@ -125,7 +125,7 @@ const ActivitiesToolbar = ({
         onClick={() => onDeleteActivities(deleteableActivities)}
         disabled={!deleteableActivities?.length || !hasSchedulingPermissions}
       >
-        Delete reservations
+        Cancel selected reservations
       </Button>
       <Divider type='vertical' />
       <TagSelectedActivitiesButton />
