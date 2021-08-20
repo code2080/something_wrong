@@ -13,13 +13,13 @@ const callCanBeMocked = (actionKey) =>
 
 const executeAPICall = async (api, callname, args, actionKey) => {
   if (apiSupportsFunc(api, callname)) {
-    const _retVal = await api[callname](args);
+    const _retVal = await api[callname](...args);
     return _retVal;
   }
   if (callCanBeMocked(actionKey)) {
     console.info('Call is unsupported but can be mocked');
     console.info(`Mocking ${actionKey} with arguments:`, args);
-    return teCoreActions[actionKey].mockFunction(args);
+    return teCoreActions[actionKey].mockFunction(...args);
   }
   console.info('Call is unsupported and can not be mocked');
   console.info(`Suppressing call to ${actionKey} with arguments:`, args);
@@ -30,7 +30,7 @@ const configureTECoreAPI = (teCoreAPI) => {
   const apiActions = Object.keys(teCoreActions).reduce(
     (actions, actionKey) => ({
       ...actions,
-      [teCoreActions[actionKey].callname]: (args) =>
+      [teCoreActions[actionKey].callname]: (...args) =>
         executeAPICall(
           teCoreAPI,
           [teCoreActions[actionKey].callname],
