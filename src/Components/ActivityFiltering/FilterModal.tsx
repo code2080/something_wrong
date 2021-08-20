@@ -520,9 +520,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
           title='Available filters'
         />
         <PropertySelector
-          properties={getRenderPayloadForSelectedValues(
-            _.isEmpty(availProps) ? {} : localSelectedValues,
-          )}
+          properties={getRenderPayloadForSelectedValues(localSelectedValues)}
           onSelect={(selection) => {
             const [property, type, fieldExtId] = selection.parent ?? [];
             handleSelectValue({
