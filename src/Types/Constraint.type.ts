@@ -32,8 +32,8 @@ export type TConstraint = {
   parameters: TConstraintParameter[];
   allowedOperators: EConstraintOperators[];
   type: EConstraintType;
-  weight: Number;
-  isHardConstraint: Boolean;
+  weight: number;
+  isHardConstraint: boolean;
 };
 
 export class Constraint {
