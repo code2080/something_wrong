@@ -2,7 +2,6 @@ import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { JSXElementConstructor, ReactElement, ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from '../Redux/store';
-import { TECoreAPIProvider, configureTECoreAPI } from 'Components/TECoreAPI';
 import { MemoryRouter as Router } from 'react-router-dom';
 
 import { ConfigProvider } from 'antd';
@@ -27,10 +26,11 @@ export const renderWithState = (
     children?: ReactNode;
     _teCoreAPI: any;
   }) => {
-    const teCoreAPI = configureTECoreAPI(_teCoreAPI);
+    // @ts-ignore
     window.tePrefsLibStore = store;
     return (
       <Provider store={store}>
+        {/* @ts-ignore */}
         <ConfigProvider {...antdConfig}>
           <Router>
             <div id='te-prefs-lib'>{children}</div>
@@ -40,6 +40,7 @@ export const renderWithState = (
     );
   };
 
+  // @ts-ignore
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
