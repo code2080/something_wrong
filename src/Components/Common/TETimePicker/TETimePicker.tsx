@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 import { TimePicker, TimePickerProps } from 'antd';
 import { Moment } from 'moment';
