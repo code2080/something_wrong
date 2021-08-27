@@ -54,7 +54,7 @@ const FormSubmissionFilterBar = ({
   }, [filters, isPropsFilterVisible]);
 
   return (
-    <div className='form-submission-filter-bar--wrapper'>
+    <div className='form-submission-filter-bar--wrapper filter-bar__wrapper'>
       <Input
         placeholder='Filter...'
         value={filters.freeTextFilter}

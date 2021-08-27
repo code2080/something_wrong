@@ -28,6 +28,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
 
 type Props = {
   formType: string;
@@ -166,8 +167,33 @@ const useActivityScheduling = ({
     );
   };
 
+  const handleDeleteActivities = async (activities: TActivity[]) => {
+    const groupedByFormInstance = groupBy(
+      activities.filter(activityFilterFn.canBeSelected),
+      'formInstanceId',
+    );
+    return Promise.all(
+      Object.entries(groupedByFormInstance).map(
+        ([formInstanceId, activities]) => {
+          return teCoreAPI.deleteReservations({
+            activities,
+            callback: () =>
+              dispatch(
+                updateActivities(
+                  formId,
+                  formInstanceId,
+                  activities.map(activityConvertFn.toDeleted),
+                ),
+              ),
+          });
+        },
+      ),
+    );
+  };
+
   return {
     handleScheduleActivities,
+    handleDeleteActivities,
   };
 };
 export default useActivityScheduling;

@@ -38,6 +38,7 @@ import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/Object
 import { TActivity } from '../../../../Types/Activity.type';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { activityFilterFn } from 'Utils/activities.helpers';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];
@@ -62,40 +63,32 @@ const mapActionsToProps = {
 const activityActions = {
   SCHEDULE_ALL: {
     label: 'Schedule submission',
-    filterFn: (activity) => !activity.reservationId,
+    filterFn: activityFilterFn.canBeScheduled,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SCHEDULE: {
     label: 'Schedule activity',
-    filterFn: (activity) => !activity.reservationId,
+    filterFn: activityFilterFn.canBeScheduled,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
   },
   SELECT: {
     label: 'Select reservation',
-    filterFn: (activity) =>
-      activity.reservationId &&
-      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
+    filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.SELECT_RESERVATION,
   },
   DELETE: {
-    label: 'Delete reservation',
-    filterFn: (activity) =>
-      activity.reservationId &&
-      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
+    label: 'Cancel reservation',
+    filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
   STOP_SCHEDULING: {
     label: 'Stop scheduling',
-    filterFn: (activity) => activity.activityStatus === EActivityStatus.QUEUED,
+    filterFn: activityFilterFn.canBeStopped,
     callname: teCoreCallnames.STOP_SCHEDULING,
   },
   DELETE_ALL: {
-    label: 'Delete all reservations',
-    filterFn: (
-      activity, // Should filter look at activities instead?
-    ) =>
-      activity.reservationId &&
-      activity.activityStatus !== EActivityStatus.NOT_SCHEDULED,
+    label: 'Cancel all reservations',
+    filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
 };

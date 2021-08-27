@@ -289,9 +289,9 @@ export const reorderActivities = (
   });
 
 const createActivityFlow = {
-  request: () => ({ type: activitiesActionTypes.CREATE__ACTIVITY_REQUEST }),
+  request: () => ({ type: activitiesActionTypes.CREATE_ACTIVITY_REQUEST }),
   failure: (err) => ({
-    type: activitiesActionTypes.CREATE__ACTIVITY_FAILURE,
+    type: activitiesActionTypes.CREATE_ACTIVITY_FAILURE,
     payload: err,
   }),
   success: (response) => {
@@ -302,7 +302,7 @@ const createActivityFlow = {
     });
 
     return {
-      type: activitiesActionTypes.CREATE__ACTIVITY_SUCCESS,
+      type: activitiesActionTypes.CREATE_ACTIVITY_SUCCESS,
       payload: response,
     };
   },

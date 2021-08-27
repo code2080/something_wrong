@@ -3,7 +3,6 @@ import { Switch, InputNumber /* , Select */ } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
 import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
-import staticParams from './static_params';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {
   const constraint = allConstraints.find(
@@ -15,9 +14,13 @@ const getPropFromConstraint = (constraintId, prop, allConstraints) => {
 
 const renderConstraintParameters = (
   paramFields,
-  allConstraints,
-  constraintId,
+  paramElements,
+  allConstraints: TConstraint[],
+  constraintId: string,
   activityDesignObj,
+  oldParameters,
+  oldOperator: string,
+  onUpdateValue,
 ) => {
   const operators = getPropFromConstraint(
     constraintId,
@@ -32,9 +35,14 @@ const renderConstraintParameters = (
   );
   return !isEmpty(parameters) ? (
     <ParameterCascader
-      paramFields={staticParams}
+      constraintId={constraintId}
+      paramFields={paramFields}
+      paramFormElements={paramElements}
       availableOperators={operators}
       activityDesignObj={activityDesignObj}
+      oldParameters={oldParameters}
+      operator={oldOperator}
+      onUpdate={onUpdateValue}
     />
   ) : null;
 };
@@ -42,6 +50,7 @@ const constraintManagerTableColumns = (
   onUpdateValue: (constraintId: string, field: string, value: boolean) => void,
   allConstraints: TConstraint[],
   paramFields,
+  paramElements,
   activityDesignObj,
 ) => [
   {
@@ -76,12 +85,16 @@ const constraintManagerTableColumns = (
     title: 'Parameters',
     dataIndex: 'constraintId',
     key: 'parameters',
-    render: (constraintId) =>
+    render: (constraintId: string, constraintInstance: TConstraintInstance) =>
       renderConstraintParameters(
         paramFields,
+        paramElements,
         allConstraints,
         constraintId,
         activityDesignObj,
+        constraintInstance.parameters,
+        constraintInstance.operator,
+        onUpdateValue,
       ),
   },
   {

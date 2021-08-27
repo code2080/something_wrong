@@ -16,25 +16,6 @@
       margin-left: 0.3rem;
     }
   }
-
-  .ant-btn {
-    margin-left: 6px;
-    margin-right: 6px;
-    color: $deepSeaGreen;
-    &.active {
-      background-color: $deepSeaGreen;
-      color: #fff !important;
-    }
-    &.has-filters {
-      background-color: $candlelight;
-      color: #000 !important;
-    }
-    &:hover,
-    &:active,
-    &:focus {
-      color: $deepSeaGreen;
-    }
-  }
 }
 
 .scoped-object-filters--wrapper {

@@ -27,7 +27,7 @@ export const makeSelectActivitiesForForm = () =>
     (_: any, formId: string) => formId,
     (
       activities: TActivityMap,
-      submissions: { [formId: string]: TFormInstance },
+      submissions: { [formId: string]: TFormInstance[] },
       formId: string,
     ) => {
       const formSubmissions = submissions?.[formId];
