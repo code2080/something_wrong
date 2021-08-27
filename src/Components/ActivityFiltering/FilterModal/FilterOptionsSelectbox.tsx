@@ -1,4 +1,4 @@
-import React, { ReactChild } from 'react';
+import { ReactChild } from 'react';
 
 import { Form, Select } from 'antd';
 import { SelectOption } from './FilterModal.type';

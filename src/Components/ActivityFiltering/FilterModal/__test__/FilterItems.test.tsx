@@ -1,11 +1,9 @@
-import React from 'react';
 import { omit } from 'lodash';
 import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import FilterItems from '../FilterItems';
 
 import { Form } from 'antd';
-import { filterLoopup } from 'Mock/Filter';
+import { filterLoopup } from '../../../../Mock/Filter';
 import { beautifyObject } from '../FilterModal.helper';
 
 const filterLookupMap = beautifyObject({

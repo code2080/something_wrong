@@ -1,4 +1,4 @@
-import React, { ReactChild, useMemo, useCallback } from 'react';
+import { ReactChild, useMemo, useCallback, Fragment } from 'react';
 import { capitalize, isEmpty, pick, startCase } from 'lodash';
 import moment from 'moment';
 
@@ -8,7 +8,7 @@ import { Divider } from 'antd';
 
 // CONSTANTS
 import { NESTED_FIELDS } from './FilterModal.constants';
-import { DATE_FORMAT } from 'Constants/common.constants';
+import { DATE_FORMAT } from '../../../Constants/common.constants';
 import FilterItemLabel from './FilterItemLabel';
 interface Props {
   values: any;
@@ -57,7 +57,7 @@ const FilterSummary = ({
         }
       />
     );
-  }, [values]);
+  }, [onClear, values.date]);
 
   const timeDisplay = useMemo(() => {
     const [startTime, endTime] = values.time || [];
@@ -78,7 +78,7 @@ const FilterSummary = ({
         }
       />
     );
-  }, [values]);
+  }, [onClear, values.time]);
 
   const otherFieldsDisplays = useMemo(() => {
     const fields = ['submitter', 'tag', 'primaryObject'];
@@ -104,7 +104,7 @@ const FilterSummary = ({
           />
         );
       });
-  }, [values]);
+  }, [getOptionLabel, onDeselect, values]);
 
   const generateObjectsDisplay = useCallback(
     (field) => {
@@ -118,7 +118,7 @@ const FilterSummary = ({
       )
         return null;
       return (
-        <React.Fragment key={field}>
+        <Fragment key={field}>
           <Divider />
           <ValueDisplay
             label={capitalize(field)}
@@ -146,10 +146,10 @@ const FilterSummary = ({
               </div>
             }
           />
-        </React.Fragment>
+        </Fragment>
       );
     },
-    [values],
+    [getOptionLabel, onDeselect, values],
   );
 
   return (

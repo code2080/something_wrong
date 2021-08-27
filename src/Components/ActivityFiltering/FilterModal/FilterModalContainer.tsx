@@ -1,4 +1,4 @@
-import React, {
+import {
   useMemo,
   useEffect,
   createContext,
@@ -13,7 +13,7 @@ import { FormInstance } from 'antd/lib/form/Form';
 import { Form } from 'antd';
 
 // TYPES
-import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
+import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 
 // HELPERS
 import {
@@ -21,14 +21,14 @@ import {
   beautifyObject,
   reparseKey,
 } from './FilterModal.helper';
-import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
+import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import { useSelector } from 'react-redux';
-import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
   selectFieldLabelsMapping,
   selectObjectLabelsMapping,
-} from 'Redux/Integration/integration.selectors';
-import { selectAllLabels } from 'Redux/TE/te.selectors';
+} from '../../../Redux/Integration/integration.selectors';
+import { selectAllLabels } from '../../../Redux/TE/te.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -108,11 +108,15 @@ const Provider = ({
       ...fieldsLabelMapping,
       ...allLabels,
     };
-  }, [submissions, objectLabelsMapping, fieldsLabelMapping]);
+  }, [submissions, objectLabelsMapping, fieldsLabelMapping, allLabels]);
 
   const getOptionLabel = (field: string, id?: string) => {
     if (id) {
-      return optionsLabelMapping?.[reparseKey(field)]?.[id] || optionsLabelMapping?.[id] || id;
+      return (
+        optionsLabelMapping?.[reparseKey(field)]?.[id] ||
+        optionsLabelMapping?.[id] ||
+        id
+      );
     }
     return optionsLabelMapping?.[reparseKey(field)] ?? field;
   };
@@ -122,7 +126,7 @@ const Provider = ({
     form.resetFields();
     form.setFieldsValue(defaultMapping);
     setValues(isEmpty(defaultMapping) ? initialValues : defaultMapping);
-  }, [form, defaultMapping]);
+  }, [form, defaultMapping, initialValues]);
 
   const onValueChange = (obj) => {
     setValues({ ...values, ...obj });

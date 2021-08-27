@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Input, Empty } from 'antd';
 import { get, isEmpty, lowerCase } from 'lodash';
 
@@ -109,7 +109,7 @@ const FilterItems = ({
     }
 
     return <Empty />;
-  }, [selectedProperty, allProperties, query]);
+  }, [selectedProperty, allProperties, query, getOptionLabel]);
 
   return (
     <div className='filter-modal__column'>

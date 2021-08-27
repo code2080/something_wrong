@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import TEPrefsLib from '@timeedit/te-prefs-lib';
 

@@ -1,8 +1,8 @@
 import {
   deFlattenObject,
   isObject,
-} from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
-import { DATE_FORMAT } from 'Constants/common.constants';
+} from '../Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { DATE_FORMAT } from '../Constants/common.constants';
 import { compact } from 'lodash';
 import moment from 'moment';
 import {
@@ -10,7 +10,7 @@ import {
   TFilterQuery,
   TFieldQuery,
   TObjectQuery,
-} from 'Types/ActivityFilter.type';
+} from '../Types/ActivityFilter.type';
 
 export class ActivityFilterPayload {
   submitter: string[];

@@ -116,6 +116,7 @@ const FilterModal = ({
   );
   const handleCancel = useCallback(() => {
     onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentlySelectedFilterValues, onClose, form]);
 
   const handleOk = useCallback(

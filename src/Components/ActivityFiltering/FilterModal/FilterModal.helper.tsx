@@ -50,7 +50,7 @@ export const generateObjectItems = (
   }, {});
 };
 
-export const validateFilterQuery = (values: any): any => {
+export const validateFilterQuery = (_values: any): any => {
   // TODO: Comment for now, may useful in future
   // const { startTime, endTime, startDate, endDate } = values;
   // const err: {
@@ -104,12 +104,12 @@ export const beautifyObject = (object) => {
   }, {});
 };
 
-export const deBeatifyObject = (object) => {
+export const deBeautifyObject = (object) => {
   return Object.keys(object).reduce((results, key) => {
     if (isObject(object[key])) {
       return {
         ...results,
-        [reparseKey(key)]: deBeatifyObject(object[key]),
+        [reparseKey(key)]: deBeautifyObject(object[key]),
       };
     }
     return {
@@ -124,7 +124,7 @@ export const deFlattenObject = (object) => {
   Object.keys(object).forEach((key) =>
     set(results, key.split('.'), object[key]),
   );
-  return deBeatifyObject(results);
+  return deBeautifyObject(results);
 };
 export const flattenObject = (object, parentKey, level) => {
   return Object.keys(object).reduce((results, key) => {

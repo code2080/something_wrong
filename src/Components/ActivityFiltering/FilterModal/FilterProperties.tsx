@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Menu } from 'antd';
 
 import { capitalize, startCase } from 'lodash';

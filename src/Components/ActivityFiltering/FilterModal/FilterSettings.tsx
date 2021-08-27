@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Row, Col, Form, Radio } from 'antd';
 
 const CRITERIAS = [
@@ -81,7 +79,7 @@ const FilterSettings = () => {
                 </Radio.Group>
               </Form.Item>
             </Col>
-          </Row>  
+          </Row>
         </Col>
       </Row>
     </div>

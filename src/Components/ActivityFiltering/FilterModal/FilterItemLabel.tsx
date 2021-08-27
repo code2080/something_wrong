@@ -1,4 +1,3 @@
-import React from 'react';
 import { capitalize, startCase } from 'lodash';
 import { reparseKey } from './FilterModal.helper';
 

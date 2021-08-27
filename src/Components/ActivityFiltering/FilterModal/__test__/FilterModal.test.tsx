@@ -1,10 +1,9 @@
 import moment from 'moment';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import FilterModal from '../FilterModal';
-import { storeForTestingFilter } from 'Mock/Store';
+import { storeForTestingFilter } from '../../../../Mock/Store';
 
-import { renderWithState } from 'Utils/test.utils';
+import { renderWithState } from '../../../../Utils/test.utils';
 
 describe('Filter Modal tests', () => {
   beforeEach(() => {

@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
 import last from 'lodash/last';
-import { Button, Collapse, Table } from 'antd';
+import { Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 

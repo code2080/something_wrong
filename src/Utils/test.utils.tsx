@@ -8,7 +8,8 @@ import { ConfigProvider } from 'antd';
 
 const antdConfig = {
   dropdownMatchSelectWidth: false,
-  getPopupContainer: () => document.getElementById('te-prefs-lib'),
+  getPopupContainer: () =>
+    document.getElementById('te-prefs-lib') as HTMLElement,
 };
 
 export const renderWithState = (
@@ -19,18 +20,10 @@ export const renderWithState = (
   }: RenderOptions & { initialState?: any } = {},
 ) => {
   const store = configureStore(initialState);
-  const Wrapper = ({
-    children,
-    _teCoreAPI,
-  }: {
-    children?: ReactNode;
-    _teCoreAPI: any;
-  }) => {
-    // @ts-ignore
-    window.tePrefsLibStore = store;
+  const Wrapper = ({ children }: { children?: ReactNode }) => {
+    (window as any).tePrefsLibStore = store;
     return (
       <Provider store={store}>
-        {/* @ts-ignore */}
         <ConfigProvider {...antdConfig}>
           <Router>
             <div id='te-prefs-lib'>{children}</div>
@@ -40,7 +33,6 @@ export const renderWithState = (
     );
   };
 
-  // @ts-ignore
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
