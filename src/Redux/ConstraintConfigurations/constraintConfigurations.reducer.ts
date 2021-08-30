@@ -41,11 +41,13 @@ const reducer = (
       return {
         ...state,
         configurations,
+
         formConfigs: Object.keys(configurations).reduce(
           (results, formId: string) => {
             return {
-              ...results,
+              ...state.formConfigs,
               [formId]: {
+                ...results,
                 selectedConfiguration: Object.keys(configurations[formId])[0],
               },
             };
@@ -54,6 +56,7 @@ const reducer = (
         ),
       };
     }
+    // formConfigs: Object.keys(configurations)
 
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
       const {
