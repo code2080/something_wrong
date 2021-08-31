@@ -42,7 +42,7 @@ const FilterSettings = () => {
       </div>
       <Row gutter={16}>
         <Col span={6}>
-          <Form.Item label='Match criteria' name='matchCriteria'>
+          <Form.Item label='Match criteria' name='settings.matchCriteria'>
             <Radio.Group>
               {CRITERIAS.map((criteria) => (
                 <Radio key={criteria.value} value={criteria.value}>
@@ -57,7 +57,7 @@ const FilterSettings = () => {
             <Col span={12}>
               <Form.Item
                 label='Include full submission for matching activity'
-                name='includeSubmission'
+                name='settings.includeSubmission'
               >
                 <Radio.Group>
                   {MODES.map((criteria) => (
@@ -69,7 +69,7 @@ const FilterSettings = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label='Joint teaching activities' name='jointTeaching'>
+              <Form.Item label='Joint teaching activities' name='settings.jointTeaching'>
                 <Radio.Group>
                   {JOINT_TEACHING_OPTIONS.map((criteria) => (
                     <Radio key={criteria.value} value={criteria.value}>

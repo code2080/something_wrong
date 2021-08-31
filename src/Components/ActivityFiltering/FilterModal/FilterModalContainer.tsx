@@ -89,9 +89,9 @@ const Provider = ({
 
   const initialValues = useMemo(() => {
     return {
-      matchCriteria: 'ALL',
-      includeSubmission: 'ALL',
-      jointTeaching: 'INCLUDE',
+      'settings.matchCriteria': 'ALL',
+      'settings.includeSubmission': 'ALL',
+      'settings.jointTeaching': 'INCLUDE',
     };
   }, []);
 
