@@ -5,6 +5,11 @@ import { Form, DatePicker, TimePicker } from 'antd';
 export const REPLACED_KEY = '____';
 export const NESTED_FIELDS = ['objects', 'fields'];
 
+export const INITIAL_FILTER_VALUES = {
+  'settings.matchCriteria': 'SOME',
+  'settings.includeSubmission': 'ALL',
+  'settings.jointTeaching': 'INCLUDE',
+};
 export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
     name: 'date',

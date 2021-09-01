@@ -50,9 +50,7 @@ const FilterSummary = ({
         content={
           <div>
             {dateDisplay}
-            <CloseCircleOutlined
-              onClick={() => onClear(['startDate', 'endDate'])}
-            />
+            <CloseCircleOutlined onClick={() => onClear(['date'])} />
           </div>
         }
       />
@@ -71,9 +69,7 @@ const FilterSummary = ({
         content={
           <div>
             {timeDisplay}
-            <CloseCircleOutlined
-              onClick={() => onClear(['startTime', 'endTime'])}
-            />
+            <CloseCircleOutlined onClick={() => onClear(['time'])} />
           </div>
         }
       />

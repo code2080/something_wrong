@@ -29,6 +29,7 @@ import {
   selectObjectLabelsMapping,
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
+import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -87,14 +88,6 @@ const Provider = ({
   const fieldsLabelMapping = useSelector(selectFieldLabelsMapping());
   const allLabels = useSelector(selectAllLabels());
 
-  const initialValues = useMemo(() => {
-    return {
-      'settings.matchCriteria': 'ALL',
-      'settings.includeSubmission': 'ALL',
-      'settings.jointTeaching': 'INCLUDE',
-    };
-  }, []);
-
   const optionsLabelMapping = useMemo(() => {
     return {
       submitter: submissions.reduce(
@@ -125,8 +118,8 @@ const Provider = ({
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue(defaultMapping);
-    setValues(isEmpty(defaultMapping) ? initialValues : defaultMapping);
-  }, [form, defaultMapping, initialValues]);
+    setValues(isEmpty(defaultMapping) ? INITIAL_FILTER_VALUES : defaultMapping);
+  }, [form, defaultMapping]);
 
   const onValueChange = (obj) => {
     setValues({ ...values, ...obj });
@@ -189,7 +182,7 @@ const Provider = ({
         form={form}
         layout='vertical'
         onValuesChange={onValueChange}
-        initialValues={initialValues}
+        initialValues={INITIAL_FILTER_VALUES}
       >
         {children({ values, onSubmit })}
       </Form>

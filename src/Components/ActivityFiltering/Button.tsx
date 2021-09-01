@@ -7,14 +7,15 @@ import './button.scss';
 type Props = {
   onClick: () => void;
   isActive: boolean;
+  hasFilters: boolean;
 };
 
-const ActivityFilterButton = ({ onClick, isActive }: Props) => (
+const ActivityFilterButton = ({ onClick, isActive, hasFilters }: Props) => (
   <Button
     size='small'
     shape='circle'
     ghost
-    className={`${isActive && 'active'}`}
+    className={`${isActive && 'active'} ${hasFilters && 'has-filters'}`}
     onClick={onClick}
   >
     <FilterFilled />

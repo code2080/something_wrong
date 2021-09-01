@@ -4,9 +4,7 @@ import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
 
 import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
-import {
-  deFlattenObject,
-} from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
 
 import {
   manuallyOverrideActivityValue,
@@ -36,7 +34,9 @@ export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
     flow: fetchActivitiesForFormFlow(formId),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     params: {
-      filter: _.isEmpty(_filter) ? undefined : new ActivityFilterPayload(_filter),
+      filter: _.isEmpty(_filter)
+        ? undefined
+        : new ActivityFilterPayload(_filter),
       settings: _filter.settings,
       sorting: sorting == null ? undefined : sorting,
     },

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
+import _, { isEqual, omit } from 'lodash';
 import {
   EActivityFilterInclusion,
   EActivityFilterMode,
@@ -8,6 +8,8 @@ import { TActivity } from '../../Types/Activity.type';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 import { isEmptyDeep } from 'Utils/general.helpers';
+import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { INITIAL_FILTER_VALUES } from 'Components/ActivityFiltering/FilterModal/FilterModal.constants';
 
 const filterstate = (state) => state.filters;
 
@@ -141,9 +143,7 @@ export const selectVisibleActivitiesForForm = createSelector(
 export const selectFilterIsActivated = (formId: string) =>
   createSelector(filterstate, (filters) => {
     const formFilterQueries = filters[formId]?.filterValues;
+    if (!formFilterQueries) return false;
+    if (isEqual(formFilterQueries, INITIAL_FILTER_VALUES)) return false;
     return !isEmptyDeep(formFilterQueries);
-    // if (isEmpty(formFilterQueries)) return false;
-    // return Object.keys(formFilterQueries).some((field: string) => {
-    //   return !isEmpty(formFilterQueries[field]);
-    // })
   });

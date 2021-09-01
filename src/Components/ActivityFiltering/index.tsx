@@ -19,7 +19,8 @@ const ActivityFiltering = () => {
     <div className='activity-filtering--wrapper filter-bar__wrapper'>
       <ActivityFilterButton
         onClick={() => setShowModal(!showModal)}
-        isActive={isActivated || showModal}
+        isActive={showModal}
+        hasFilters={isActivated}
       />
       <FilterModal
         formId={formId}
