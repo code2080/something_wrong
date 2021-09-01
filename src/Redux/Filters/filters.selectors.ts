@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import _, { isEqual, omit } from 'lodash';
+import _, { isEqual } from 'lodash';
 import {
   EActivityFilterInclusion,
   EActivityFilterMode,
@@ -8,7 +8,6 @@ import { TActivity } from '../../Types/Activity.type';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 import { isEmptyDeep } from 'Utils/general.helpers';
-import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
 import { INITIAL_FILTER_VALUES } from 'Components/ActivityFiltering/FilterModal/FilterModal.constants';
 
 const filterstate = (state) => state.filters;
