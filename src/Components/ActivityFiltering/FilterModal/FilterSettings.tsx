@@ -1,4 +1,6 @@
 import { Row, Col, Form, Radio } from 'antd';
+import { useSelector } from 'react-redux';
+import { selectIsBetaOrDev } from '../../../Redux/Auth/auth.selectors';
 
 const CRITERIAS = [
   {
@@ -35,6 +37,8 @@ const JOINT_TEACHING_OPTIONS = [
   },
 ];
 const FilterSettings = () => {
+  const isBeta = useSelector(selectIsBetaOrDev);
+
   return (
     <div>
       <div>
@@ -68,17 +72,22 @@ const FilterSettings = () => {
                 </Radio.Group>
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item label='Joint teaching activities' name='settings.jointTeaching'>
-                <Radio.Group>
-                  {JOINT_TEACHING_OPTIONS.map((criteria) => (
-                    <Radio key={criteria.value} value={criteria.value}>
-                      {criteria.label}
-                    </Radio>
-                  ))}
-                </Radio.Group>
-              </Form.Item>
-            </Col>
+            {isBeta && (
+              <Col span={12}>
+                <Form.Item
+                  label='Joint teaching activities'
+                  name='settings.jointTeaching'
+                >
+                  <Radio.Group>
+                    {JOINT_TEACHING_OPTIONS.map((criteria) => (
+                      <Radio key={criteria.value} value={criteria.value}>
+                        {criteria.label}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+            )}
           </Row>
         </Col>
       </Row>
