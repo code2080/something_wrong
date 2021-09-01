@@ -129,7 +129,7 @@ const FilterSummary = ({
                         <ul>
                           {values[key]?.map((item) => (
                             <li key={item}>
-                              {item}
+                              {getOptionLabel(field, item)}
                               <CloseCircleOutlined
                                 onClick={() => onDeselect(key, [item])}
                               />
