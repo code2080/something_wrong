@@ -9,7 +9,7 @@ export const INITIAL_FILTER_VALUES = {
   'settings.matchCriteria': 'SOME',
   'settings.includeSubmission': 'SINGLE',
   'settings.jointTeaching': 'INCLUDE',
-};
+} as const;
 export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
     name: 'date',

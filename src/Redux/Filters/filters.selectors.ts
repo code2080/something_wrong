@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 import omitBy from 'lodash/omitBy';
 import isEqual from 'lodash/isEqual';
 
@@ -45,10 +47,24 @@ export const selectFilter = createSelector(
 
 export const selectFilterIsActivated = (formId: string) =>
   createSelector(filterstate, (filters) => {
-    const formFilterQueries = omitBy(filters[formId]?.filterValues, (val) =>
-      isEmpty(val),
+    const formFilterQueries = filters[formId]?.filterValues;
+
+    const jointTeachingSettings = pick(
+      INITIAL_FILTER_VALUES,
+      'settings.jointTeaching',
     );
-    if (!formFilterQueries) return false;
-    if (isEqual(formFilterQueries, INITIAL_FILTER_VALUES)) return false;
-    return !isEmptyDeep(formFilterQueries);
+    const filterSettings = omit(
+      INITIAL_FILTER_VALUES,
+      'settings.jointTeaching',
+    );
+
+    const formFilterQueriesWithoutSettings = omitBy(
+      formFilterQueries,
+      (val, property) =>
+        isEmpty(val) || Object.keys(filterSettings).includes(property),
+    );
+    if (!formFilterQueriesWithoutSettings) return false;
+    if (isEqual(formFilterQueriesWithoutSettings, jointTeachingSettings))
+      return false;
+    return !isEmptyDeep(formFilterQueriesWithoutSettings);
   });
