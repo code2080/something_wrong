@@ -13,13 +13,13 @@ import {
 } from '../Types/ActivityFilter.type';
 
 export class ActivityFilterPayload {
-  submitter: string[];
-  tag: string[];
-  primaryObject: string[];
-  objectFilters: TObjectQuery[];
-  objects: any;
-  filters: TFilterQuery;
-  fields: TFieldQuery;
+  submitter: string[] = [];
+  tag: string[] = [];
+  primaryObject: string[] = [];
+  objectFilters: TObjectQuery[] = [];
+  objects: any = {};
+  filters: TFilterQuery = {};
+  fields: TFieldQuery = {};
   timing?: TATimingQuery;
 
   constructor(data) {
