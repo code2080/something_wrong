@@ -41,5 +41,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: yarn
-          skip-step: install
           test-script: yarn test --coverage --coverageReporters="text" --coverageReporters="text-summary"
