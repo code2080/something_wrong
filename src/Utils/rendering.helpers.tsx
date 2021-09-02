@@ -195,6 +195,7 @@ const invalidIndex = (index) => {
  */
 export const renderElementValue = (value, element) => {
   if (value == null) return 'N/A';
+  if (!element) return value;
   const elementType = getElementTypeFromId(element.elementId);
   if (!elementType || !elementTypes[elementType]) return value.toString();
   switch (elementType) {

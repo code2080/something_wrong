@@ -16,8 +16,13 @@ import {
   activityValueStatuses,
   activityValueStatusProps,
 } from '../../../Constants/activityStatuses.constants';
+import { useSelector } from 'react-redux';
+import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 
 const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
+  const propLabel = useSelector((state) =>
+    selectExtIdLabel(state)('types', prop),
+  );
   const component = useMemo(
     () => renderComponent(activityValue, activity),
     [activity, activityValue],
@@ -63,7 +68,7 @@ const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }}>
         <Form.Item label='Mapped to:'>
           <div className='ant-form-text'>
-            <span className='prop-name'>{prop}</span>
+            <span className='prop-name'>{propLabel}</span>
             {mappingProps.settings && mappingProps.settings.mandatory && (
               <span className='required-prop'>&nbsp;(required)</span>
             )}
