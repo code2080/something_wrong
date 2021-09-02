@@ -7,7 +7,7 @@ export const NESTED_FIELDS = ['objects', 'fields'];
 
 export const INITIAL_FILTER_VALUES = {
   'settings.matchCriteria': 'SOME',
-  'settings.includeSubmission': 'ALL',
+  'settings.includeSubmission': 'SINGLE',
   'settings.jointTeaching': 'INCLUDE',
 };
 export const FILTER_ITEMS_MAPPING: ItemsMapping = {
