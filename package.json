@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.53",
+  "version": "0.10.54",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -147,7 +147,7 @@
     "storybook": "^6.2.9",
     "style-loader": "^2.0.0",
     "tslib": "^2.1.0",
-    "typescript": "^4.1.5",
+    "typescript": "^4.4.2",
     "webpack": "<=4.44.2"
   },
   "files": [
