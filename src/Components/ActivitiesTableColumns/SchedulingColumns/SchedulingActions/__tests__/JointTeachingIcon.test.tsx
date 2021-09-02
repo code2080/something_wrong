@@ -3,10 +3,10 @@ import mockStore from '../../../../../Mock/MockState';
 import configureStore from '../../../../../Redux/store';
 import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { TActivity } from 'Types/Activity.type';
+import { Activity } from 'Models/Activity.model';
 
-const fakeActivity = {
+const fakeActivity = new Activity({
   _id: '60912a9e7a86fc2c90563901',
   formId: '5fbe13cddb07580020e2bdbf',
   formInstanceId: '5fdb2e82596fd700208c0e68',
@@ -252,9 +252,9 @@ const fakeActivity = {
     },
   ],
   sequenceIdx: 0,
-};
+}) as TActivity;
 
-const fakeActivityWithMerged = {
+const fakeActivityWithMerged = new Activity({
   _id: '60912a9e7a86fc2c90563901',
   formId: '5fbe13cddb07580020e2bdbf',
   formInstanceId: '5fdb2e82596fd700208c0e68',
@@ -501,7 +501,7 @@ const fakeActivityWithMerged = {
   ],
   sequenceIdx: 0,
   originJointTeachingGroup: 'jointTeachingGroupId',
-};
+}) as TActivity;
 
 const store = configureStore(mockStore);
 
@@ -510,7 +510,7 @@ describe('JointTeachingIcon test', () => {
     beforeEach(() =>
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity as TActivity} />
+          <JointTeachingIcon activity={fakeActivity} />
         </Provider>,
       ),
     );
@@ -518,7 +518,7 @@ describe('JointTeachingIcon test', () => {
     it('Renders without error', () => {
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity as TActivity} />,
+          <JointTeachingIcon activity={fakeActivity} />,
         </Provider>,
       );
     });
@@ -558,38 +558,29 @@ describe('JointTeachingIcon test', () => {
     beforeEach(() =>
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivityWithMerged as TActivity} />
+          <JointTeachingIcon activity={fakeActivityWithMerged} />
         </Provider>,
       ),
     );
     it('Renders without error', () => {
       render(
         <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivityWithMerged as TActivity} />
+          <JointTeachingIcon activity={fakeActivityWithMerged} />
         </Provider>,
       );
     });
-    it('Test rendering merged icon', () => {
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
-  });
 
-  describe('Test editing of activities', () => {
-    it('Set joint teaching object and reset it', () => {
-      const { getByRole } = render(
-        <Provider store={store}>
-          <JointTeachingIcon activity={fakeActivity as TActivity} />
-        </Provider>,
-      );
-
-      fireEvent.click(getByRole('button'));
-      expect(getByRole('combobox')).toHaveValue('');
-      fireEvent.change(getByRole('combobox'), {
-        target: { value: 'Test' },
+    describe('Test editing of activities', () => {
+      it('Set joint teaching object and reset it', () => {
+        fireEvent.click(screen.getAllByRole('button')[0]);
+        expect(screen.getByRole('combobox')).toHaveValue('');
+        fireEvent.change(screen.getByRole('combobox'), {
+          target: { value: 'Test' },
+        });
+        expect(screen.getByRole('combobox')).toHaveValue('Test');
+        const delButton = screen.getByRole('button', { name: 'delete' });
+        expect(delButton).toBeInTheDocument();
       });
-      expect(getByRole('combobox')).toHaveValue('Test');
-      const delButton = screen.getByRole('button', { name: 'delete' });
-      expect(delButton).toBeInTheDocument();
     });
   });
 });

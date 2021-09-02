@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 
 // SELECTORS
 import { makeSelectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
-import { hasPermission } from '../../Redux/Auth/auth.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 
 // COMPONENTS
 import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
@@ -20,12 +23,14 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 import { TActivity } from '../../Types/Activity.type';
 import { Key, useMemo } from 'react';
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
+import { activityFilterFn } from 'Utils/activities.helpers';
 
 type Props = {
   selectedRowKeys: Key[];
-  onSelectAll: () => void;
-  onDeselectAll: () => void;
-  onScheduleActivities: (activities) => void;
+  onSelectAll(): void;
+  onDeselectAll(): void;
+  onScheduleActivities(activities: TActivity[]): void;
+  onDeleteActivities(activities: TActivity[]): void;
   allActivities: TActivity[];
 };
 
@@ -40,6 +45,7 @@ const ActivitiesToolbar = ({
   onSelectAll,
   onDeselectAll,
   onScheduleActivities,
+  onDeleteActivities,
   allActivities,
 }: Props) => {
   const { formId }: { formId: string } = useParams();
@@ -53,9 +59,16 @@ const ActivitiesToolbar = ({
       activityIds: selectedRowKeys as string[],
     }),
   );
+
+  const deleteableActivities: TActivity[] = useMemo(
+    () => selectedActivities.filter(activityFilterFn.canBeSelected),
+    [selectedActivities],
+  );
+
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
+  const isBetaOrDev = useSelector(selectIsBetaOrDev);
 
   const TagSelectedActivitiesButton = () =>
     !selectedRowKeys?.length ? (
@@ -110,12 +123,22 @@ const ActivitiesToolbar = ({
       >
         Schedule activities
       </Button>
+      <Button
+        size='small'
+        type='link'
+        onClick={() => onDeleteActivities(deleteableActivities)}
+        disabled={!deleteableActivities?.length || !hasSchedulingPermissions}
+      >
+        Cancel selected reservations
+      </Button>
       <Divider type='vertical' />
       <TagSelectedActivitiesButton />
-      <JointTeachingGroupMerger
-        activities={selectedActivities}
-        formId={formId}
-      />
+      {isBetaOrDev && (
+        <JointTeachingGroupMerger
+          activities={selectedActivities}
+          formId={formId}
+        />
+      )}
       <ActivityFiltering />
     </div>
   );

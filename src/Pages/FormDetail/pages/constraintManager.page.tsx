@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import { Button, Collapse, Table, Modal } from 'antd';
+import { Collapse, Table, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -189,10 +189,6 @@ const ConstraintManagerPage = () => {
     ],
   );
 
-  const handleAddCustomConstraint = (e) => {
-    e.stopPropagation();
-  };
-
   const handleCreateConstrConf = useCallback(() => {
     const doCreate = async () => {
       const newConstrConf = ConstraintConfiguration.create({
@@ -212,6 +208,7 @@ const ConstraintManagerPage = () => {
       if (res?._id) handleSelectConstrConf(res?._id);
     };
     doCreate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allConstraints, localConstrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
@@ -263,15 +260,7 @@ const ConstraintManagerPage = () => {
             />
           </Collapse.Panel>
           {hasAEBetaPermission && (
-            <Collapse.Panel
-              key='CUSTOM'
-              header='Custom constraints'
-              extra={
-                <Button onClick={handleAddCustomConstraint} size='small'>
-                  Add new custom constraint
-                </Button>
-              }
-            >
+            <Collapse.Panel key='CUSTOM' header='Custom constraints'>
               <Table
                 columns={constraintManagercolumns}
                 dataSource={customConstraints}

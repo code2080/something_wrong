@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.52",
+  "version": "0.10.53",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -15,7 +15,7 @@
   "scripts": {
     "test": "cross-env CI=1 TZ=Europe/Stockholm react-scripts test --env=jsdom --passWithNoTests",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rm -rf dist && rollup -c",
+    "build": "rm -rf dist",
     "start": "rollup -c -w --environment BUILD:development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:diff": "f(){ eslint $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"([^/])(src).*(.[jt]sx?)$)\");};f",
@@ -137,7 +137,7 @@
     "react-resizable": "^1.11.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
-    "rollup": "^2.38.5",
+    "rollup": "^2.56.3",
     "rollup-plugin-less": "^1.1.3",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
@@ -155,7 +155,6 @@
   ],
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
-    "@ant-design/compatible": "^1.0.8",
     "@ant-design/icons": "^4.6.2",
     "antd": "^4.1.0",
     "axios": "^0.21.1",

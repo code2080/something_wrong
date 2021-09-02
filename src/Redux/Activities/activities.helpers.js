@@ -10,6 +10,7 @@ import {
 // CONSTANTS
 import { ActivityValueMode } from '../../Constants/activityValueModes.constants';
 import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
+import { getActivityValuesBasedOnElement } from '../../Utils/ActivityValues/helpers';
 
 /**
  * @function updateActivitiesForForm
@@ -17,10 +18,15 @@ import { activityTimeModes } from '../../Constants/activityTimeModes.constants';
  * @param {Activity[]} activities
  * @returns {Object} updatedFormState
  */
-export const updateActivitiesForForm = (activities) =>
+export const updateActivitiesForForm = (activities, sections) =>
   activities
     .map(
-      (el, idx) => new Activity({ ...el, sequenceIdx: el.sequenceIdx ?? idx }),
+      (el, idx) =>
+        new Activity({
+          ...el,
+          sequenceIdx: el.sequenceIdx ?? idx,
+          values: getActivityValuesBasedOnElement(el.values, sections),
+        }),
     )
     .reduce(
       (_activities, activity) => ({
