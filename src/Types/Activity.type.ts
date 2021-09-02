@@ -19,4 +19,5 @@ export type TActivity = {
   organizationId?: string;
   originJointTeachingGroup?: string;
   jointTeaching?: { object: string; typeExtId: string };
+  isInactive(): boolean;
 };

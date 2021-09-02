@@ -34,7 +34,7 @@ jobs:
         run: yarn prettier
 
       - name: Test
-        run: yarn test
+        run: yarn test --silent
 
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         continue-on-error: true

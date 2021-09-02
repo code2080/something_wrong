@@ -8,6 +8,7 @@ type Props = {
   clickContent?: any;
   icon?: any;
   style?: object;
+  disabled?: boolean;
 };
 
 const HoverAndClickPopOver = ({
@@ -15,17 +16,20 @@ const HoverAndClickPopOver = ({
   clickContent,
   icon,
   style,
+  disabled,
 }: Props) => {
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const extIdLabel = useSelector(selectExtIdLabel)('objects', hoverContent);
 
   const handleHoverChange = (visible: SetStateAction<boolean>) => {
+    if (disabled) return;
     setHovered(visible);
     setClicked(false);
   };
 
   const handleClickChange = (visible: SetStateAction<boolean>) => {
+    if (disabled) return;
     setClicked(visible);
     setHovered(false);
   };
@@ -43,16 +47,20 @@ const HoverAndClickPopOver = ({
     <Popover
       content={extIdLabel}
       trigger='hover'
-      visible={hovered}
+      visible={!disabled ? hovered : false}
       onVisibleChange={handleHoverChange}
     >
       <Popover
         content={clickContent}
         trigger='click'
-        visible={clicked}
+        visible={!disabled ? clicked : false}
         onVisibleChange={handleClickChange}
       >
-        <Button style={style || undefined} icon={icon}></Button>
+        <Button
+          disabled={disabled}
+          style={style || undefined}
+          icon={icon}
+        ></Button>
       </Popover>
     </Popover>
   );
