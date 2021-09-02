@@ -55,7 +55,7 @@ export const createConstraintConfigurations =
       constraints,
       constraintConfigurationId: ' ',
     });
-    dispatch(
+    return dispatch(
       asyncAction.POST({
         flow: createConstraintsConfigurationsFlow,
         endpoint: `${
@@ -145,3 +145,11 @@ export const deleteConstraintConfiguration =
       }),
     );
   };
+
+export const selectConstraintConfiguration = (formId, configurationId) => ({
+  type: types.SELECT_CONSTRAINT_CONFIGURATION,
+  payload: {
+    formId,
+    configurationId,
+  },
+});
