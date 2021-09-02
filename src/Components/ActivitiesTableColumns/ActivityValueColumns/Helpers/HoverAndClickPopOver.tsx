@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Button, Popover } from 'antd';
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 import { useSelector } from 'react-redux';

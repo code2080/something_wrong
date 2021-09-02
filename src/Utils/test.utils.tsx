@@ -2,6 +2,15 @@ import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { JSXElementConstructor, ReactElement, ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from '../Redux/store';
+import { MemoryRouter as Router } from 'react-router-dom';
+
+import { ConfigProvider } from 'antd';
+
+const antdConfig = {
+  dropdownMatchSelectWidth: false,
+  getPopupContainer: () =>
+    document.getElementById('te-prefs-lib') as HTMLElement,
+};
 
 export const renderWithState = (
   ui: ReactElement<any, string | JSXElementConstructor<any>>,
@@ -11,11 +20,18 @@ export const renderWithState = (
   }: RenderOptions & { initialState?: any } = {},
 ) => {
   const store = configureStore(initialState);
-  const Wrapper = ({ children }: { children?: ReactNode }) => (
-    <Provider store={store}>
-      <div id='te-prefs-lib'>{children}</div>
-    </Provider>
-  );
+  const Wrapper = ({ children }: { children?: ReactNode }) => {
+    (window as any).tePrefsLibStore = store;
+    return (
+      <Provider store={store}>
+        <ConfigProvider {...antdConfig}>
+          <Router>
+            <div id='te-prefs-lib'>{children}</div>
+          </Router>
+        </ConfigProvider>
+      </Provider>
+    );
+  };
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
