@@ -7,7 +7,7 @@ type Props = {
   rowKey: Key | undefined;
   rowSelection?: TableRowSelection<object>;
   dataSource: readonly object[] | undefined;
-  mapDataSource: { [key: string]: object }
+  mapDataSource: { [key: string]: object };
 };
 
 const SelectionColumn = ({
@@ -50,17 +50,22 @@ const SelectionColumn = ({
       title: '',
       dataIndex: rowKey,
       render: (key: Key) => {
-        const activity = _.get(mapDataSource, `[${key}][${0}]`, {}) as TActivity
+        const activity = _.get(
+          mapDataSource,
+          `[${key}][${0}]`,
+          {},
+        ) as TActivity;
 
         return (
-        <Checkbox
-          checked={rowSelection.selectedRowKeys?.includes(key)}
-          disabled={activity ? activity.isInactive() : false}
-          onChange={({ target: { checked } }) =>
-            handleChecked(checked, key, rowSelection)
-          }
-        />
-      )},
+          <Checkbox
+            checked={rowSelection.selectedRowKeys?.includes(key)}
+            disabled={activity ? activity.isInactive() : false}
+            onChange={({ target: { checked } }) =>
+              handleChecked(checked, key, rowSelection)
+            }
+          />
+        );
+      },
     }
   );
 };

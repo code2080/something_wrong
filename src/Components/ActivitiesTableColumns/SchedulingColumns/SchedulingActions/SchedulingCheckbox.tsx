@@ -15,7 +15,7 @@ import './SchedulingCheckbox.scss';
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type'
+import { TActivity } from '../../../../Types/Activity.type';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {
@@ -30,7 +30,9 @@ const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
 };
 
 const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
-  const [reservationId, setReservationId] = useState<string | undefined>(undefined);
+  const [reservationId, setReservationId] = useState<string | undefined>(
+    undefined,
+  );
   return (
     <div className='popover-scheduled--wrapper'>
       <Form.Item>
@@ -66,8 +68,8 @@ MarkAsScheduledPopover.propTypes = {
 };
 
 type SchedulingCheckboxProps = {
-  activity: TActivity
-}
+  activity: TActivity;
+};
 
 const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
   const dispatch = useDispatch();
@@ -106,9 +108,15 @@ const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
   );
   return (
     <div
-      onMouseEnter={!activity.isInactive() ? () => setShowInvertedState(true) : undefined}
-      onMouseLeave={!activity.isInactive() ? () => setShowInvertedState(false) : undefined}
-      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${activity.isInactive() ? 'disabled': ''}`}
+      onMouseEnter={
+        !activity.isInactive() ? () => setShowInvertedState(true) : undefined
+      }
+      onMouseLeave={
+        !activity.isInactive() ? () => setShowInvertedState(false) : undefined
+      }
+      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${
+        activity.isInactive() ? 'disabled' : ''
+      }`}
     >
       {activity.activityStatus !== EActivityStatus.SCHEDULED && (
         <Button
@@ -131,7 +139,9 @@ const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
           onConfirm={onUnscheduleActivity}
           okText='Yes'
           cancelText='No'
-          getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLInputElement}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLInputElement
+          }
           trigger={'click'}
         >
           <Button

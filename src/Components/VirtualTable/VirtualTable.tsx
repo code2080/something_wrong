@@ -9,7 +9,7 @@ import SelectionColumn from './SelectionColumn';
 
 import './VirtualTable.scss';
 import { ColumnType } from 'antd/lib/table';
-import { TActivity } from '../../Types/Activity.type'
+import { TActivity } from '../../Types/Activity.type';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   const { columns, scroll, rowSelection, rowKey, dataSource } = props;
@@ -99,17 +99,18 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
           const activity = rawData[rowIndex] as TActivity;
 
           return (
-          <div
-            className={classNames('virtual-table-cell', 'ant-table-cell', {
-              'virtual-table-cell-last':
-                columnIndex === mergedColumns.length - 1,
-              'inactivate-table-cell': activity.isInactive()
-            })}
-            style={style}
-          >
-            {Cell({ rowIndex, columnIndex })}
-          </div>
-        )}}
+            <div
+              className={classNames('virtual-table-cell', 'ant-table-cell', {
+                'virtual-table-cell-last':
+                  columnIndex === mergedColumns.length - 1,
+                'inactivate-table-cell': activity.isInactive(),
+              })}
+              style={style}
+            >
+              {Cell({ rowIndex, columnIndex })}
+            </div>
+          );
+        }}
       </Grid>
     );
   };
