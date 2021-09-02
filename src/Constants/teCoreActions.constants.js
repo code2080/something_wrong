@@ -21,7 +21,7 @@ export const teCoreCallnames = {
   SELECT_RESERVATION: 'selectReservation',
   STOP_SCHEDULING: 'stopScheduling',
   DELETE_RESERVATIONS: 'deleteReservations',
-  POPULATE_SELECTION: 'populateSelection', // WHERE IS THIS ONE USED?
+  POPULATE_SELECTION: 'populateSelection', // DEPRECATED, use requestManuallyScheduleActivity
   GET_RESERVATION_TYPES: 'getReservationTypes',
   GET_RESERVATION_FIELDS: 'getReservationFields',
   REQUEST_GET_OBJECT_FROM_FILTER: 'requestGetObjectFromFilter',
@@ -34,6 +34,7 @@ export const teCoreCallnames = {
   SET_RESERVATION_MODE: 'setReservationMode',
   VALIDATE_RESERVATIONS: 'validateReservations',
   GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
+  REQUEST_MANUALLY_SCHEDULE_ACTIVITY: 'requestManuallyScheduleActivity',
 };
 
 export const teCoreActions = {
@@ -69,6 +70,41 @@ export const teCoreActions = {
   },
   GET_EXTID_PROPS: {
     callname: teCoreCallnames.GET_EXTID_PROPS,
+    mockFunction: (payload) => {
+      const examplePayload = {
+        objects: [],
+        types: [
+          'equipment',
+          'courseevt',
+          'room',
+          'person_staff',
+          'activity_teach',
+        ],
+        fields: [],
+      };
+      const result = {
+        objects: {},
+        types: {
+          equipment: {
+            label: 'Appliance',
+          },
+          courseevt: {
+            label: 'Course event',
+          },
+          room: {
+            label: 'Room',
+          },
+          person_staff: {
+            label: 'Teacher',
+          },
+          activity_teach: {
+            label: 'Course activity',
+          },
+        },
+        fields: {},
+      };
+      return result;
+    },
   },
   GET_RESERVATION_TEMPLATES: {
     // DEPRECATED
@@ -207,6 +243,12 @@ export const teCoreActions = {
         {},
       );
       callback(res);
+    },
+  },
+  REQUEST_MANUALLY_SCHEDULE_ACTIVITY: {
+    callname: teCoreCallnames.REQUEST_MANUALLY_SCHEDULE_ACTIVITY,
+    mockFunction: (_payload, callback) => {
+      callback(['testReservationId']);
     },
   },
 };

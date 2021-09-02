@@ -1,3 +1,4 @@
+import { Switch } from 'antd';
 import { valueTypes } from './valueTypes.constants';
 
 // TYPE DECLARATIONS
@@ -133,6 +134,33 @@ export const elementTypeMapping = {
     valueType: valueTypes.SINGLE,
     elementId: '5ff3fdb82251fc05196c59d2',
   },
+};
+
+export const elementTypeMappingById = Object.keys(elementTypeMapping).reduce(
+  (results, key) => ({
+    ...results,
+    [elementTypeMapping[key].elementId]: key,
+  }),
+  {},
+);
+
+export const elementTypeValueFormatter = (type, value) => {
+  switch (type) {
+    case elementTypes.ELEMENT_TYPE_CHECKBOX:
+      // eslint-disable-next-line
+      return String(value) === 'true' ? '1' : '0';
+    default:
+      return value;
+  }
+};
+
+export const elementTypeValueRenderer = (type, value) => {
+  switch (type) {
+    case elementTypes.ELEMENT_TYPE_CHECKBOX:
+      return <Switch checked={value === '1'} size='small' />;
+    default:
+      return value;
+  }
 };
 
 export const WEEKDAYNAMES = {

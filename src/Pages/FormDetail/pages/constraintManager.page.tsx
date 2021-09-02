@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
 import last from 'lodash/last';
-import { Button, Collapse, Table } from 'antd';
+import { Collapse, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -176,10 +176,6 @@ const ConstraintManagerPage = () => {
     ],
   );
 
-  const handleAddCustomConstraint = (e) => {
-    e.stopPropagation();
-  };
-
   const handleCreateConstrConf = useCallback(() => {
     const newConstrConf = ConstraintConfiguration.create({
       formId,
@@ -251,15 +247,7 @@ const ConstraintManagerPage = () => {
             />
           </Collapse.Panel>
           {hasAEBetaPermission && (
-            <Collapse.Panel
-              key='CUSTOM'
-              header='Custom constraints'
-              extra={
-                <Button onClick={handleAddCustomConstraint} size='small'>
-                  Add new custom constraint
-                </Button>
-              }
-            >
+            <Collapse.Panel key='CUSTOM' header='Custom constraints'>
               <Table
                 columns={constraintManagercolumns}
                 dataSource={customConstraints}

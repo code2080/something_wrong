@@ -16,8 +16,8 @@ import { useMemo } from 'react';
 import { TActivity } from '../../../../Types/Activity.type';
 
 type SelectActivityButtonProps = {
-  activity: TActivity
-}
+  activity: TActivity;
+};
 
 const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
   const teCoreAPI = useTECoreAPI();
@@ -45,7 +45,7 @@ const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
   return (
     <div
       className={classNames('scheduling-actions--button', {
-        'disabled': activity.isInactive()
+        disabled: activity.isInactive(),
       })}
       onClick={!activity.isInactive() ? onSelectAllCallback : undefined}
     >

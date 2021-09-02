@@ -1,8 +1,12 @@
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 import { TActivity } from '../../Types/Activity.type';
 import { ActivityValue, ValueType } from '../../Types/ActivityValue.type';
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
+import {
+  elementTypeMappingById,
+  elementTypeValueFormatter,
+} from '../../Constants/elementTypes.constants';
 import { extractValuesFromActivityValues } from '../activities.helpers';
 import {
   GetExtIdPropsPayload,
@@ -180,4 +184,43 @@ export const getExtIdsFromActivities = (
   const values = extractValuesFromActivityValues(activityValues);
   const extIds = extractExtIdsFromValues(values);
   return extIds;
+};
+
+export const getActivityValuesBasedOnElement = (
+  activityValues: ActivityValue[],
+  sections = [],
+) => {
+  if (isEmpty(activityValues)) return activityValues;
+  const mapping = sections.reduce((results, section: any) => {
+    return {
+      ...results,
+      [section._id]: (section.elements || []).reduce(
+        (elemResults, elm) => ({
+          ...elemResults,
+          [elm._id]: elementTypeMappingById[elm.elementId],
+        }),
+        {},
+      ),
+    };
+  }, {});
+  if (isEmpty(mapping)) return activityValues;
+  return activityValues.map((aValue) => {
+    if (aValue.sectionId && aValue.elementId) {
+      const elementType = mapping[aValue.sectionId]?.[aValue.elementId];
+      return {
+        ...aValue,
+        value: Array.isArray(aValue.value)
+          ? aValue.value.map((val) =>
+              elementTypeValueFormatter(elementType, val),
+            )
+          : elementTypeValueFormatter(elementType, aValue.value),
+        submissionValue: Array.isArray(aValue.submissionValue)
+          ? aValue.submissionValue.map((val) =>
+              elementTypeValueFormatter(elementType, val),
+            )
+          : elementTypeValueFormatter(elementType, aValue.submissionValue),
+      };
+    }
+    return aValue;
+  });
 };

@@ -14,10 +14,14 @@ const fetchActivitiesForFormFlow = (formId) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId } },
   }),
-  success: (response) => ({
-    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-    payload: { ...response, actionMeta: { formId } },
-  }),
+  success: (response) => {
+    const storeState = window.tePrefsLibStore.getState();
+    const sections = storeState.forms[formId].sections;
+    return {
+      type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
+      payload: { ...response, actionMeta: { formId, sections } },
+    };
+  },
   failure: (err) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_FAILURE,
     payload: { ...err, actionMeta: { formId } },
@@ -287,9 +291,9 @@ export const reorderActivities = (
   });
 
 const createActivityFlow = {
-  request: () => ({ type: activitiesActionTypes.CREATE__ACTIVITY_REQUEST }),
+  request: () => ({ type: activitiesActionTypes.CREATE_ACTIVITY_REQUEST }),
   failure: (err) => ({
-    type: activitiesActionTypes.CREATE__ACTIVITY_FAILURE,
+    type: activitiesActionTypes.CREATE_ACTIVITY_FAILURE,
     payload: err,
   }),
   success: (response) => {
@@ -300,7 +304,7 @@ const createActivityFlow = {
     });
 
     return {
-      type: activitiesActionTypes.CREATE__ACTIVITY_SUCCESS,
+      type: activitiesActionTypes.CREATE_ACTIVITY_SUCCESS,
       payload: response,
     };
   },

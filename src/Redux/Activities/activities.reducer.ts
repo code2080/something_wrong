@@ -93,11 +93,11 @@ const reducer = (
       const {
         payload: {
           activities: activitityObjs,
-          actionMeta: { formId },
+          actionMeta: { formId, sections },
         },
       } = action;
 
-      const activities = updateActivitiesForForm(activitityObjs);
+      const activities = updateActivitiesForForm(activitityObjs, sections);
 
       return {
         ...state,
@@ -151,24 +151,27 @@ const reducer = (
     case activityDesignerTypes.UPDATE_MAPPING_FOR_FORM_SUCCESS: {
       const {
         payload: { design, activities },
-      } = action;
-      const activityFormState = (Object.keys(activities) || []).reduce(
-        (fIState, formInstanceId) => {
-          const activityObjs = activities[formInstanceId];
-          const as = activityObjs.map(
-            (a, idx) =>
-              new Activity({
-                ...a,
-                sequenceIdx: a.sequenceIdx ? a.sequenceIdx : idx,
-              }),
-          );
-          return {
-            ...fIState,
-            [formInstanceId]: as,
-          };
-        },
-        {},
-      );
+      } = action as {
+        payload: {
+          design: any;
+          activities: { [formInstanceId: string]: TActivity[] };
+        };
+      };
+      const activityFormState = (Object.entries(activities) || []).reduce<{
+        [formInstanceId: string]: TActivity[];
+      }>((fIState, [formInstanceId, activityObjs]) => {
+        const as = activityObjs.map(
+          (a, idx) =>
+            new Activity({
+              ...a,
+              sequenceIdx: a.sequenceIdx ?? idx,
+            }),
+        );
+        return {
+          ...fIState,
+          [formInstanceId]: as,
+        };
+      }, {});
       return {
         ...state,
         [design.formId]: activityFormState,

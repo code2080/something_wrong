@@ -12,6 +12,8 @@ import ObjectScopeCol from '../../../Components/TableColumns/Components/ObjectSc
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { useMemo } from 'react';
 
+import './form.page.scss';
+
 const formToFieldInfo = (form) => {
   const formFieldMapping = [
     {
