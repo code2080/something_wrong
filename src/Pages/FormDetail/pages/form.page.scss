@@ -1,7 +1,7 @@
 @import '../../../Styles/globals.scss';
 
 .filter-bar__wrapper {
-  .ant-btn {
+  & > .ant-btn {
     margin-left: 6px;
     margin-right: 6px;
     color: $deepSeaGreen;

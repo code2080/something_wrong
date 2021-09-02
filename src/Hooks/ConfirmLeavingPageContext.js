@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // COMPONENTS
 import ConfirmLeaveTabModal from '../Components/ConfirmLeaveTabModal/ConfirmLeaveTabModal';
 
-export const ConfirmLeavingPageContext = React.createContext();
+export const ConfirmLeavingPageContext = createContext();
 
 export const ConfirmLeavingPageProvider = ({ children }) => {
   const [isOpen, setOpen] = useState(false);

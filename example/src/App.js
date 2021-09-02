@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import TEPrefsLib from '@timeedit/te-prefs-lib';
 
@@ -15,7 +15,7 @@ const App = () => {
         coreAPI={{
           setToolbarContent: (content) => setToolbarContent(content),
         }}
-        env='amLocalhost'
+        env='beta'
       />
     </div>
   );

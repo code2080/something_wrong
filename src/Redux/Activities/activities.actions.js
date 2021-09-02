@@ -3,6 +3,9 @@ import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
 
+import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
+import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
@@ -30,11 +33,15 @@ const fetchActivitiesForFormFlow = (formId) => ({
 
 export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
   const sorting = sortingParam;
+  const _filter = deFlattenObject(filter);
   return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     params: {
-      filter: _.isEmpty(filter) ? undefined : filter,
+      filter: _.isEmpty(_filter)
+        ? undefined
+        : new ActivityFilterPayload(_filter),
+      settings: _filter.settings,
       sorting: sorting == null ? undefined : sorting,
     },
   });
