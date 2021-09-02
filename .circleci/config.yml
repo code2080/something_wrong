@@ -1,59 +1,13 @@
-# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
-jobs:
-  test:
-      docker:
-      # Primary container
-       - image: circleci/node:15.14.0
-      steps:
-        - checkout
-        - add_ssh_keys:
-            fingerprints:
-              - "37:42:83:b6:27:40:b6:df:32:2c:21:98:19:2b:ac:05"
-        - run:
-            name: Install Submodules
-            command: |
-              echo "$TE_DATA_MODELS_DEPLOY_KEY" > ~/.ssh/tedataid_ed25519
-              chmod 600 ~/.ssh/tedataid_ed25519
-              ssh-keyscan github.com >> ~/.ssh/known_hosts
-              echo "Host github.com
-                  IdentityFile ~/.ssh/tedataid_ed25519" > ~/.ssh/config
-              chmod 600 ~/.ssh/config
-              git submodule update --init --recursive
-        - restore_cache:
-            keys:
-              - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
-              - dependencies-{{ .Branch }}-
-              - dependencies-master-
-        - run:
-            name: Install Dependencies
-            command: yarn
-        - save_cache:
-            key: dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            paths:
-              - ./node_modules
-        - run:
-            name: Lint
-            command: |
-              mkdir -p ~/reports
-              yarn lint  --output-file ~/reports/eslint.xml
-              yarn ts:lint
-        - run:
-              name: Prettier
-              command: yarn prettier
-        - run:
-              name: Test
-              command: yarn test
-        - store_test_results:
-            path: ~/reports
-        - store_artifacts:
-            path: ~/reports
-
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+# Orchestrate or schedule a set of jobs
 workflows:
-  version: 2
-  test:
+  # Name the workflow "welcome"
+  welcome:
+    # Run the welcome/run job in its own container
     jobs:
-       - test
- 
-   
+      - welcome/run
