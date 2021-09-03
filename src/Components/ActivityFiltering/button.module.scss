@@ -1,8 +1,8 @@
 @import '../../Styles/globals.scss';
 
-.ant-btn.filter-btn {
+.filterBtn {
   color: $deepSeaGreen;
-  border: none !important;
+  border: none;
 
   &.active {
     color: $deepSeaGreen !important;

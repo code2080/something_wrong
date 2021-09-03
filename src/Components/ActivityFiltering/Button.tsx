@@ -1,8 +1,7 @@
 import { Button } from 'antd';
 import { FilterFilled } from '@ant-design/icons';
-
-import './button.scss';
-
+import styles from './button.module.scss';
+import classnames from 'classnames';
 // TYPES
 type Props = {
   onClick: () => void;
@@ -14,8 +13,12 @@ const ActivityFilterButton = ({ onClick, isActive, hasFilters }: Props) => (
   <Button
     size='small'
     shape='circle'
-    ghost
-    className={`${isActive && 'active'} ${hasFilters && 'has-filters'}`}
+    color={'red'}
+    className={classnames([
+      styles.filterBtn,
+      { [styles.active]: isActive },
+      { 'has-filters': hasFilters },
+    ])}
     onClick={onClick}
   >
     <FilterFilled />
