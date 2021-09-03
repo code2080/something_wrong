@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.55",
+  "version": "0.10.56",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -15,7 +15,7 @@
   "scripts": {
     "test": "cross-env CI=1 TZ=Europe/Stockholm react-scripts test --env=jsdom --passWithNoTests",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rm -rf dist",
+    "build": "echo skipping build",
     "start": "rollup -c -w --environment BUILD:development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:diff": "f(){ eslint $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"([^/])(src).*(.[jt]sx?)$)\");};f",
