@@ -51,7 +51,9 @@ export const useFetchLabelsFromExtIds = (payload: GetExtIdPropsPayload) => {
   const extIds = useSelector(selectExtIds) as string[];
 
   useEffect(() => {
-    fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, payload);
+    if (teCoreAPI) {
+      fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, payload);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [payload]);
+  }, [payload, teCoreAPI]);
 };

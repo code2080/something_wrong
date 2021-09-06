@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, Key } from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
 import { Table } from 'antd';
@@ -8,6 +9,7 @@ import SelectionColumn from './SelectionColumn';
 
 import './VirtualTable.scss';
 import { ColumnType } from 'antd/lib/table';
+import { TActivity } from '../../Types/Activity.type';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   const { columns, scroll, rowSelection, rowKey, dataSource } = props;
@@ -17,6 +19,7 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
     SelectionColumn({
       rowSelection,
       dataSource,
+      mapDataSource: _.groupBy(dataSource, '_id') as { [key: string]: object },
       rowKey: rowKey as Key | undefined,
     }),
     ...(columns ?? []),
@@ -92,17 +95,22 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
         width={tableWidth}
         onScroll={onScroll}
       >
-        {({ columnIndex, rowIndex, style }) => (
-          <div
-            className={classNames('virtual-table-cell', 'ant-table-cell', {
-              'virtual-table-cell-last':
-                columnIndex === mergedColumns.length - 1,
-            })}
-            style={style}
-          >
-            {Cell({ rowIndex, columnIndex })}
-          </div>
-        )}
+        {({ columnIndex, rowIndex, style }) => {
+          const activity = rawData[rowIndex] as TActivity;
+
+          return (
+            <div
+              className={classNames('virtual-table-cell', 'ant-table-cell', {
+                'virtual-table-cell-last':
+                  columnIndex === mergedColumns.length - 1,
+                'inactivate-table-cell': activity.isInactive(),
+              })}
+              style={style}
+            >
+              {Cell({ rowIndex, columnIndex })}
+            </div>
+          );
+        }}
       </Grid>
     );
   };

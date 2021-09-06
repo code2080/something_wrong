@@ -3,6 +3,9 @@ import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
 
+import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
+import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
@@ -14,10 +17,14 @@ const fetchActivitiesForFormFlow = (formId) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId } },
   }),
-  success: (response) => ({
-    type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-    payload: { ...response, actionMeta: { formId } },
-  }),
+  success: (response) => {
+    const storeState = window.tePrefsLibStore.getState();
+    const sections = storeState.forms[formId].sections;
+    return {
+      type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
+      payload: { ...response, actionMeta: { formId, sections } },
+    };
+  },
   failure: (err) => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_FAILURE,
     payload: { ...err, actionMeta: { formId } },
@@ -26,11 +33,15 @@ const fetchActivitiesForFormFlow = (formId) => ({
 
 export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
   const sorting = sortingParam;
+  const _filter = deFlattenObject(filter);
   return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     params: {
-      filter: _.isEmpty(filter) ? undefined : filter,
+      filter: _.isEmpty(_filter)
+        ? undefined
+        : new ActivityFilterPayload(_filter),
+      settings: _filter.settings,
       sorting: sorting == null ? undefined : sorting,
     },
   });
@@ -287,9 +298,9 @@ export const reorderActivities = (
   });
 
 const createActivityFlow = {
-  request: () => ({ type: activitiesActionTypes.CREATE__ACTIVITY_REQUEST }),
+  request: () => ({ type: activitiesActionTypes.CREATE_ACTIVITY_REQUEST }),
   failure: (err) => ({
-    type: activitiesActionTypes.CREATE__ACTIVITY_FAILURE,
+    type: activitiesActionTypes.CREATE_ACTIVITY_FAILURE,
     payload: err,
   }),
   success: (response) => {
@@ -300,7 +311,7 @@ const createActivityFlow = {
     });
 
     return {
-      type: activitiesActionTypes.CREATE__ACTIVITY_SUCCESS,
+      type: activitiesActionTypes.CREATE_ACTIVITY_SUCCESS,
       payload: response,
     };
   },

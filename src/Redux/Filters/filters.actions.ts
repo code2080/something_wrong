@@ -60,6 +60,11 @@ export const setSelectedFilterValues = (
   payload: TActionSetSelectedFilterValues,
 ) => ({ type: types.SET_SELECTED_FILTER_VALUES, payload });
 
+export const resetFormFilterValues = (payload: { formId }) => ({
+  type: types.RESET_FORM_FILTER_VALUES,
+  payload,
+});
+
 const fetchLookupMapFlow = {
   request: () => ({ type: types.FETCH_FORM_LOOKUPMAP_REQUEST }),
   success: (response) => ({

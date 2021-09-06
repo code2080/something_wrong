@@ -14,6 +14,9 @@ import { setSchedulingStatusOfActivities } from '../../../../Redux/Activities/ac
 import './SchedulingCheckbox.scss';
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
+// TYPES
+import { TActivity } from '../../../../Types/Activity.type';
+
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {
     if (activityStatus === EActivityStatus.SCHEDULED)
@@ -27,10 +30,12 @@ const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
 };
 
 const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
-  const [reservationId, setReservationId] = useState(undefined);
+  const [reservationId, setReservationId] = useState<string | undefined>(
+    undefined,
+  );
   return (
     <div className='popover-scheduled--wrapper'>
-      <Form.Item title='Add a reservation id to the scheduling status:'>
+      <Form.Item>
         <Input
           placeholder='Enter the reservation id here'
           value={reservationId}
@@ -49,7 +54,7 @@ const MarkAsScheduledPopover = ({ onConfirm, onCancel }) => {
         <Button type='default' size='small' onClick={() => onConfirm(null)}>
           No reservation id
         </Button>
-        <Button type='danger' size='small' onClick={onCancel}>
+        <Button type='default' size='small' onClick={onCancel}>
           Cancel
         </Button>
       </div>
@@ -62,9 +67,13 @@ MarkAsScheduledPopover.propTypes = {
   onCancel: PropTypes.func.isRequired,
 };
 
-const SchedulingCheckbox = ({ activity }) => {
+type SchedulingCheckboxProps = {
+  activity: TActivity;
+};
+
+const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
   const dispatch = useDispatch();
-  const { formId } = useParams();
+  const { formId } = useParams() as { formId: string };
 
   const [showInvertedState, setShowInvertedState] = useState(false);
   const onUpdateSchedulingStatus = () => {
@@ -99,9 +108,15 @@ const SchedulingCheckbox = ({ activity }) => {
   );
   return (
     <div
-      onMouseEnter={() => setShowInvertedState(true)}
-      onMouseLeave={() => setShowInvertedState(false)}
-      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus}`}
+      onMouseEnter={
+        !activity.isInactive() ? () => setShowInvertedState(true) : undefined
+      }
+      onMouseLeave={
+        !activity.isInactive() ? () => setShowInvertedState(false) : undefined
+      }
+      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${
+        activity.isInactive() ? 'disabled' : ''
+      }`}
     >
       {activity.activityStatus !== EActivityStatus.SCHEDULED && (
         <Button
@@ -113,6 +128,7 @@ const SchedulingCheckbox = ({ activity }) => {
               <CheckSquareOutlined />
             )
           }
+          disabled={activity.isInactive()}
           onClick={onUpdateSchedulingStatus}
           className={derivedSchedulingStatus}
         />
@@ -123,7 +139,9 @@ const SchedulingCheckbox = ({ activity }) => {
           onConfirm={onUnscheduleActivity}
           okText='Yes'
           cancelText='No'
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLInputElement
+          }
           trigger={'click'}
         >
           <Button

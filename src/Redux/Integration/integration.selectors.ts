@@ -382,3 +382,15 @@ export const selectLabelField = (type) =>
       fields && fields.find((field) => field.appProperty === 'LABEL');
     return labelField ? labelField.fieldExtId : null;
   });
+
+export const selectObjectLabelsMapping = () =>
+  createSelector(
+    selectIntegration,
+    (integration) => integration.mappedObjectsLabel,
+  );
+
+export const selectFieldLabelsMapping = () =>
+  createSelector(
+    selectIntegration,
+    (integration) => integration.mappedFieldsLabel,
+  );

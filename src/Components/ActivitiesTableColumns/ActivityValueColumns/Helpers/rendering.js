@@ -7,6 +7,7 @@ import { renderTimingComponent } from './timingValueRendering';
 import { renderObjectComponent } from './objectValueRendering';
 import { renderFieldComponent } from './fieldValueRendering';
 import { ActivityValueRenderPayload } from './RenderPayload';
+import { validateMandatoryFieldValue } from '../../../../Utils/activityValues.validation';
 
 // CONSTANTS
 const filterTypes = {
@@ -19,7 +20,13 @@ const filterTypes = {
  * @param {ActivityValue} activityValue
  * @param {Activity} activity
  */
-export const renderComponent = (activityValue, activity) => {
+export const renderComponent = (activityValue, activity, activityDesign) => {
+  if (!validateMandatoryFieldValue(activityValue, activityDesign)) {
+    return ActivityValueRenderPayload.create({
+      status: activityValueStatuses.MISSING_DATA,
+      errorMessage: 'Mandatory field is missing data',
+    });
+  }
   // Start by figuring out if we're dealing with a timing, object, or field value
   const type = activityValue.type;
 

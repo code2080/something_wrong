@@ -91,9 +91,10 @@ const DynamicTableHOC = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const visibleColumnsKey = useMemo(() => {
-    return Object.keys(visibleCols).filter((key) => visibleCols[key]);
-  }, [visibleCols]);
+  const visibleColumnsKey = useMemo(
+    () => Object.keys(visibleCols).filter((key) => visibleCols[key]),
+    [visibleCols],
+  );
 
   // Save to sessionStorage after columnWidths is changed
   useEffect(() => {

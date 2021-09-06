@@ -10,8 +10,12 @@ import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 // STYLES
 import './SchedulingActions.scss';
+import { useSelector } from 'react-redux';
+import { selectIsBetaOrDev } from '../../../../Redux/Auth/auth.selectors';
 
 const SchedulingActions = ({ activity, selectedRowKeys }) => {
+  const isBeta = useSelector(selectIsBetaOrDev);
+
   return (
     <div className='scheduling-actions-column--wrapper'>
       {activity.activityStatus === EActivityStatus.COMPLETED && (
@@ -19,10 +23,12 @@ const SchedulingActions = ({ activity, selectedRowKeys }) => {
       )}
       <SchedulingCheckbox activity={activity} />
       <SelectActivityButton activity={activity} />
-      <JointTeachingIcon
-        activity={activity}
-        selectedRowKeys={selectedRowKeys}
-      />
+      {isBeta && (
+        <JointTeachingIcon
+          activity={activity}
+          selectedRowKeys={selectedRowKeys}
+        />
+      )}
       <ActionsDropdown buttonType='ellipsis' activity={activity} />
     </div>
   );

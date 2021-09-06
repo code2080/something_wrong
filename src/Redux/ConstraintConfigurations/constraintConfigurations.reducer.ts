@@ -3,6 +3,7 @@ import {
   CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
+  SELECT_CONSTRAINT_CONFIGURATION,
 } from './constraintConfigurations.actionTypes';
 
 // MODELS
@@ -11,12 +12,19 @@ import {
   TConstraintConfiguration,
 } from '../../Types/ConstraintConfiguration.type';
 
-const reducer = (state = {}, action) => {
+export interface ConstraintConfigurationState {
+  configurations: any[];
+  formConfigs: any;
+}
+const reducer = (
+  state: ConstraintConfigurationState = { configurations: [], formConfigs: {} },
+  action,
+) => {
   switch (action.type) {
     case FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS: {
       if (!action?.payload) return state;
       const { actionMeta, ...payload } = action.payload;
-      return Object.values(payload).reduce(
+      const configurations = Object.values(payload).reduce(
         (
           consConf: { [formId: string]: TConstraintConfiguration },
           constraintConfig: any,
@@ -28,8 +36,24 @@ const reducer = (state = {}, action) => {
               ConstraintConfiguration.create(constraintConfig),
           },
         }),
-        state,
+        {},
       );
+      return {
+        ...state,
+        configurations,
+        formConfigs: Object.keys(configurations).reduce(
+          (results, formId: string) => {
+            return {
+              ...state.formConfigs,
+              [formId]: {
+                ...results,
+                selectedConfiguration: Object.keys(configurations[formId])[0],
+              },
+            };
+          },
+          {},
+        ),
+      };
     }
 
     case CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS: {
@@ -41,12 +65,14 @@ const reducer = (state = {}, action) => {
       Object.assign(constraintConfiguration, {
         constraintConfigurationId: constraintConfiguration._id,
       });
-      console.log(constraintConfiguration);
       return {
         ...state,
-        [constraintConfiguration.formId]: {
-          ...state[constraintConfiguration.formId],
-          [constraintConfiguration._id as string]: constraintConfiguration,
+        configurations: {
+          ...state.configurations,
+          [constraintConfiguration.formId]: {
+            ...state.configurations[constraintConfiguration.formId],
+            [constraintConfiguration._id as string]: constraintConfiguration,
+          },
         },
       };
     }
@@ -60,9 +86,12 @@ const reducer = (state = {}, action) => {
       constraintConfiguration._id = constraintConfObj.constraintConfigurationId;
       return {
         ...state,
-        [constraintConfiguration.formId]: {
-          ...state[constraintConfiguration.formId],
-          [constraintConfiguration._id as string]: constraintConfiguration,
+        configurations: {
+          ...state.configurations,
+          [constraintConfiguration.formId]: {
+            ...state.configurations[constraintConfiguration.formId],
+            [constraintConfiguration._id as string]: constraintConfiguration,
+          },
         },
       };
     }
@@ -73,10 +102,35 @@ const reducer = (state = {}, action) => {
           actionMeta: { formId, constraintConfigurationId },
         },
       } = action;
-      const { [constraintConfigurationId]: _, ...updFormState } = state[formId];
+      const { [constraintConfigurationId]: _, ...updFormState } =
+        state.configurations[formId] || {};
       return {
         ...state,
-        [formId]: updFormState,
+        configurations: {
+          ...state.configurations,
+          [formId]: updFormState,
+        },
+        formConfigs: {
+          ...state.formConfigs,
+          [formId]: {
+            ...state.formConfigs[formId],
+            selectedConfiguration: Object.keys(updFormState)[0],
+          },
+        },
+      };
+    }
+
+    case SELECT_CONSTRAINT_CONFIGURATION: {
+      const { formId, configurationId } = action.payload;
+      return {
+        ...state,
+        formConfigs: {
+          ...state.formConfigs,
+          [formId]: {
+            ...state.formConfigs[formId],
+            selectedConfiguration: configurationId,
+          },
+        },
       };
     }
 

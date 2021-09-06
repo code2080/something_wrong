@@ -2,8 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import last from 'lodash/last';
-import { Button, Collapse, Table } from 'antd';
+import { Collapse, Table, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -15,18 +14,25 @@ import {
   updateConstraintConfiguration,
   createConstraintConfigurations,
   deleteConstraintConfiguration,
+  selectConstraintConfiguration,
 } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
 import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
-import { makeSelectConstraintConfigurationsForForm } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+import {
+  makeSelectConstraintConfigurationsForForm,
+  selectSelectedConstraintConfiguration,
+} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
   ConstraintConfiguration,
   ConstraintInstance,
   TConstraintConfiguration,
   TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
+import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+
 import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
+import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
@@ -35,6 +41,7 @@ import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDes
 import { AEBETA_PERMISSION } from '../../../Constants/permissions.constants';
 import { hasPermission } from '../../../Redux/Auth/auth.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
+
 const getConstrOfType = (
   type: string,
   config: TConstraintConfiguration | null,
@@ -56,6 +63,9 @@ const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
   const dispatch = useDispatch();
+  const selectedConstraitConfiguration = useSelector(
+    selectSelectedConstraintConfiguration(formId),
+  );
   const selectConstraintConfigurationsForForm = useMemo(
     () => makeSelectConstraintConfigurationsForForm(),
     [],
@@ -65,6 +75,9 @@ const ConstraintManagerPage = () => {
       selectConstraintConfigurationsForForm(state, formId),
     ),
   );
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector((state) => selectForm(state, formId));
+
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const hasAEBetaPermission = useSelector(hasPermission(AEBETA_PERMISSION));
   const tecoreAPI = useTECoreAPI();
@@ -75,23 +88,30 @@ const ConstraintManagerPage = () => {
     useState<TConstraintConfiguration | null>(null);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
 
+  const elements = getElementsForMapping({
+    formSections: form.sections,
+    mapping: activityDesign,
+    settings: {
+      primaryObject: form.objectScope,
+    },
+  });
+
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);
+
     tecoreAPI.getFieldIds({
       typeExtIds,
-      callback: (result) => setFields(result),
+      callback: (result) => {
+        setFields(result);
+      },
     });
-  }, [activityDesign?.objects, tecoreAPI]);
+  }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);
 
-  useEffect(
-    () => {
-      setConstrConf(last(constrConfs) || null);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [constrConfs.length],
-  );
+  useEffect(() => {
+    setConstrConf(selectedConstraitConfiguration);
+  }, [selectedConstraitConfiguration]);
 
   useEffect(() => {
     const currentConstrConf = constrConfs.find(
@@ -110,10 +130,20 @@ const ConstraintManagerPage = () => {
    * EVENT HANDLERS
    */
   const handleSelectConstrConf = (cid: string): void => {
-    const constrConf = constrConfs.find(
-      (constraintConfig) => constraintConfig._id === cid,
-    );
-    if (constrConf) setConstrConf(constrConf);
+    if (isUnsaved) {
+      Modal.confirm({
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
+        title: 'Changing constraint configuration',
+        content:
+          'You have unsaved configuration, do you want to discard those changes?',
+        onOk: () => {
+          dispatch(selectConstraintConfiguration(formId, cid));
+        },
+      });
+    } else {
+      dispatch(selectConstraintConfiguration(formId, cid));
+    }
   };
 
   const handleUpdConstrConfName = (value: string) => {
@@ -147,33 +177,38 @@ const ConstraintManagerPage = () => {
         handleUpdConstrConf,
         allConstraints,
         fields,
+        elements,
         activityDesign.objects,
       ),
-    [handleUpdConstrConf, allConstraints, fields, activityDesign.objects],
+    [
+      handleUpdConstrConf,
+      allConstraints,
+      fields,
+      elements,
+      activityDesign.objects,
+    ],
   );
 
-  const handleAddCustomConstraint = (e) => {
-    e.stopPropagation();
-  };
-
   const handleCreateConstrConf = useCallback(() => {
-    const newConstrConf = ConstraintConfiguration.create({
-      formId,
-      name: 'New constraint configuration',
-      constraints: (allConstraints || [])
-        .filter(
-          (constraint: TConstraint) =>
-            constraint.type === EConstraintType.DEFAULT ||
-            constraint.type === EConstraintType.OTHER,
-        )
-        .map((constraint: TConstraint) =>
-          ConstraintInstance.createFromConstraint(constraint),
-        ),
-    });
-
-    dispatch(createConstraintConfigurations(newConstrConf));
-
-    if (localConstrConf) setConstrConf(localConstrConf[0]);
+    const doCreate = async () => {
+      const newConstrConf = ConstraintConfiguration.create({
+        formId,
+        name: 'New constraint configuration',
+        constraints: (allConstraints || [])
+          .filter(
+            (constraint: TConstraint) =>
+              constraint.type === EConstraintType.DEFAULT ||
+              constraint.type === EConstraintType.OTHER,
+          )
+          .map((constraint: TConstraint) =>
+            ConstraintInstance.createFromConstraint(constraint),
+          ),
+      });
+      const res = await dispatch(createConstraintConfigurations(newConstrConf));
+      if (res?._id) handleSelectConstrConf(res?._id);
+    };
+    doCreate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allConstraints, localConstrConf, dispatch, formId]);
 
   const handleSaveConstrConf = () => {
@@ -185,7 +220,6 @@ const ConstraintManagerPage = () => {
 
   const handleDeleteConstrconf = () => {
     if (!localConstrConf || constrConfs.length === 1) return;
-    setConstrConf(localConstrConf[0]);
     dispatch(deleteConstraintConfiguration(localConstrConf));
   };
 
@@ -200,7 +234,6 @@ const ConstraintManagerPage = () => {
 
   useEffect(() => {
     if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
-    if (localConstrConf) setConstrConf(localConstrConf);
   }, [constrConfs, localConstrConf, handleCreateConstrConf]);
 
   return (
@@ -227,15 +260,7 @@ const ConstraintManagerPage = () => {
             />
           </Collapse.Panel>
           {hasAEBetaPermission && (
-            <Collapse.Panel
-              key='CUSTOM'
-              header='Custom constraints'
-              extra={
-                <Button onClick={handleAddCustomConstraint} size='small'>
-                  Add new custom constraint
-                </Button>
-              }
-            >
+            <Collapse.Panel key='CUSTOM' header='Custom constraints'>
               <Table
                 columns={constraintManagercolumns}
                 dataSource={customConstraints}

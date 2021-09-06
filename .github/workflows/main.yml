@@ -34,7 +34,7 @@ jobs:
         run: yarn prettier
 
       - name: Test
-        run: yarn test --coverage --coverageReporters="text" --coverageReporters="text-summary" --testLocationInResults --json --outputFile=report.json
+        run: yarn test --coverage --coverageReporters="text" --coverageReporters="text-summary" --testLocationInResults --json --outputFile=report.json --silent
 
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         continue-on-error: true

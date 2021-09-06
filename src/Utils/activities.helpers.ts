@@ -454,3 +454,25 @@ export const getFilterLookupMap = (
     };
   }, <TFilterLookUpMap>{});
 };
+
+export const activityFilterFn = {
+  canBeScheduled: (activity: TActivity) =>
+    !activity.reservationId &&
+    ![EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(
+      activity.activityStatus,
+    ),
+  canBeSelected: (activity: TActivity) =>
+    !!activity.reservationId &&
+    activity.activityStatus === EActivityStatus.SCHEDULED,
+  canBeStopped: (activity: TActivity) =>
+    activity.activityStatus === EActivityStatus.QUEUED,
+};
+
+export const activityConvertFn = {
+  toDeleted: (activity: TActivity): TActivity => ({
+    ...activity,
+    schedulingTimestamp: null,
+    activityStatus: EActivityStatus.NOT_SCHEDULED,
+    reservationId: null,
+  }),
+};

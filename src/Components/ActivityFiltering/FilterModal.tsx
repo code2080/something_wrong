@@ -256,6 +256,11 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const [localSelectedValues, setLocalSelectedValues] =
     useState<TActivityFilterQuery>(currentlySelectedFilterValues);
 
+  useEffect(
+    () => setLocalSelectedValues(currentlySelectedFilterValues),
+    [currentlySelectedFilterValues],
+  );
+
   const [selectedProperty, setSelectedProperty] = useState<Selection | null>(
     null,
   );
