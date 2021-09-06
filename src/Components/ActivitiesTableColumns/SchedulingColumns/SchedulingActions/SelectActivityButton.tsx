@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SelectOutlined } from '@ant-design/icons';
-import classNames from 'classnames';
+import head from 'lodash/head';
 
 // COMPONENTS
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
@@ -11,9 +11,12 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
 import { useMemo } from 'react';
-
-// TYPES
+import { updateActivities } from '../../../../Redux/Activities/activities.actions';
 import { TActivity } from '../../../../Types/Activity.type';
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { ObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequests.types';
+import moment from 'moment';
+import classNames from 'classnames';
 
 type SelectActivityButtonProps = {
   activity: TActivity;
@@ -21,6 +24,7 @@ type SelectActivityButtonProps = {
 
 const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
   const teCoreAPI = useTECoreAPI();
+  const dispatch = useDispatch();
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, {
@@ -28,7 +32,7 @@ const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
       formInstanceId: activity.formInstanceId,
     }),
   );
-  const formInstanceRequests: any = useSelector(
+  const formInstanceRequests: ObjectRequest[] = useSelector(
     selectFormInstanceObjectRequests(formInstance),
   );
   const teCorePayload = useSelector(selectTECorePayloadForActivity)(
@@ -38,8 +42,27 @@ const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
     formInstanceRequests,
   );
 
-  const onSelectAllCallback = () => {
-    if (teCorePayload) teCoreAPI.populateSelection(teCorePayload);
+  const handleManuallyScheduledActivities = (reservationIds: string[]) => {
+    const updatedActivity = {
+      ...activity,
+      activityStatus: EActivityStatus.SCHEDULED,
+      reservationId: head(reservationIds),
+      schedulingTimestamp: moment.utc(),
+    };
+
+    dispatch(
+      updateActivities(updatedActivity.formId, updatedActivity.formInstanceId, [
+        updatedActivity,
+      ]),
+    );
+  };
+
+  const onRequestManuallyScheduling = () => {
+    if (teCorePayload)
+      teCoreAPI.requestManuallyScheduleActivity({
+        reservationData: teCorePayload,
+        callback: handleManuallyScheduledActivities,
+      });
   };
 
   return (
@@ -47,7 +70,7 @@ const SelectActivityButton = ({ activity }: SelectActivityButtonProps) => {
       className={classNames('scheduling-actions--button', {
         disabled: activity.isInactive(),
       })}
-      onClick={!activity.isInactive() ? onSelectAllCallback : undefined}
+      onClick={!activity.isInactive() ? onRequestManuallyScheduling : undefined}
     >
       <SelectOutlined />
     </div>
