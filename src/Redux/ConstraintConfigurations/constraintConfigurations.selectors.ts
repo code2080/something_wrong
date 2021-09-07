@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
 import { ConstraintConfigurationState } from './constraintConfigurations.reducer';
