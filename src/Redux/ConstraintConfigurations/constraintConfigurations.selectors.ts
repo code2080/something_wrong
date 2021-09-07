@@ -15,22 +15,16 @@ export const makeSelectConstraintConfigurationsForForm = () =>
       (constraintConfigs && constraintConfigs.configurations[formId]) || [],
   );
 
-export const selectCurrentConstraintConfigurationForForm = createSelector(
+export const selectSelectedConstraintConfiguration = createSelector(
   constraintConfigurationState,
   (_, formId: string) => formId,
-  // TODO: replace with proper logic
-  (constraintConfigs, formId): TConstraintConfiguration | null => {
-    const formConfigs = constraintConfigs.configurations[formId] ?? null;
-    return _.head(Object.values(formConfigs)) ?? null;
-  },
-);
-export const selectSelectedConstraintConfiguration = (formId: string) =>
-  createSelector(constraintConfigurationState, (constraintConfigs) => {
+  (constraintConfigs, formId) => {
     const selectedId: string =
       constraintConfigs.formConfigs[formId]?.selectedConfiguration;
     if (!selectedId) return null;
     return constraintConfigs.configurations[formId]?.[selectedId] ?? null;
-  });
+  },
+);
 
 export const selectConstraintConfigurationById = (
   formId: string,

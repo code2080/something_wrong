@@ -4,7 +4,7 @@ import { Job } from '../../Models/Job.model';
 import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
-import { selectCurrentConstraintConfigurationForForm } from '../ConstraintConfigurations/constraintConfigurations.selectors';
+import { selectSelectedConstraintConfiguration } from '../ConstraintConfigurations/constraintConfigurations.selectors';
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 import * as types from './jobs.actionTypes';
 
@@ -89,7 +89,7 @@ export const createJob =
       auth: { coreUserId },
     } = storeState;
     const currentConstraintConfiguration =
-      selectCurrentConstraintConfigurationForForm(storeState, formId);
+      selectSelectedConstraintConfiguration(storeState, formId);
     const job = new Job({
       activities,
       type,
