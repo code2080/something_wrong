@@ -38,12 +38,6 @@ import {
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // PAGES
-import SubmissionsPage from './pages/submissions.page';
-import FormInfoPage from './pages/formInfo.page';
-import ActivitiesPage from './pages/activities.page';
-import ActivityDesignPage from './pages/activityDesigner.page';
-import ConstraintManagerPage from './pages/constraintManager.page';
-import ObjectRequestsPage from './pages/objectRequests.page';
 
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
@@ -59,6 +53,12 @@ import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
 import { selectExtIds } from '../../Redux/TE/te.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
+import ObjectRequestsPage from './pages/objectRequests.page';
+import ConstraintManagerPage from './pages/constraintManager.page';
+import ActivityDesignPage from './pages/activityDesigner.page';
+import ActivitiesPage from './pages/activities.page';
+import FormInfoPage from './pages/formInfo.page';
+import SubmissionsPage from './pages/submissions.page';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',

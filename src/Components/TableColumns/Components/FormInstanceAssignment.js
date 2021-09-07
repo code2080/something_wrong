@@ -16,10 +16,10 @@ import { ASSIGNABLE_PERMISSION_NAME } from '../../../Constants/permissions.const
 import { toggleUserForFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 
 // COMPONENTS
+import { getUsers } from '../../../Redux/Users/users.selectors';
 import ManageAssigneesList from './ManageAssigneesList';
 
 // SELECTORS
-import { getUsers } from '../../../Redux/Users/users.selectors';
 
 // STYLES
 import './FormInstanceAssignment.scss';

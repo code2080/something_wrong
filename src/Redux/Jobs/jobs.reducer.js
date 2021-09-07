@@ -1,6 +1,6 @@
-import * as types from './jobs.actionTypes';
-import { Job } from '../../Models/Job.model';
 import _ from 'lodash';
+import { Job } from '../../Models/Job.model';
+import * as types from './jobs.actionTypes';
 
 // INITIAL STATE
 import initialState from './jobs.initialState';

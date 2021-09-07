@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Resizable } from 'react-resizable';
 import PropTypes from 'prop-types';
-import ColumnHeader from './ColumnHeader';
 import _ from 'lodash';
 import { getHeaderCellWidth } from '../../Utils/dom.helper';
+import ColumnHeader from './ColumnHeader';
 
 let start = 0;
 let changedWidth = 0;

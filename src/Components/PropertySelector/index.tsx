@@ -1,13 +1,11 @@
 // COMPONENTS
+import _ from 'lodash';
+import { TProperty } from '../../Types/property.type';
 import PropertySelectorItem from './Item';
 import PropertySelectorHeadingItem from './HeadingItem';
-import _ from 'lodash';
 
 // STYLES
 import './index.scss';
-
-// TYPES
-import { TProperty } from '../../Types/property.type';
 
 type Props = {
   properties: TProperty[];

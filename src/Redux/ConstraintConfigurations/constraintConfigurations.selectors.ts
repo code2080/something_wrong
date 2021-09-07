@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { ConstraintConfigurationState } from './constraintConfigurations.reducer';
 import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
+import { ConstraintConfigurationState } from './constraintConfigurations.reducer';
 
 const constraintConfigurationState = (
   state: any,

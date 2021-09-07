@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 import { useSelector } from 'react-redux';
 import isNil from 'lodash/isNil';
+import { renderElementValue } from 'Utils/rendering.helpers';
+import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 
 // COMPONENTS
 import DatasourceReadonly from '../../../Elements/DatasourceReadonly';
@@ -19,7 +20,6 @@ import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/Object
 import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // HELPERS
-import { renderElementValue } from 'Utils/rendering.helpers';
 
 const standardizeValue = (value) =>
   (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));

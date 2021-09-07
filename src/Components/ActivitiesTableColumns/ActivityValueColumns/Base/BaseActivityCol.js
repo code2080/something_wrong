@@ -7,7 +7,6 @@ import { notification, Menu, Dropdown } from 'antd';
 import './BaseActivityCol.scss';
 
 // COMPONENTS
-import BaseActivityColValue from './BaseActivityColValue';
 import InlineEdit from '../../../ActivityEditing/InlineEdit';
 import ModalEdit from '../../../ActivityEditing/ModalEdit';
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
@@ -42,6 +41,7 @@ import {
 } from '../../../../Constants/activityActions.constants';
 import { activityViews } from '../../../../Constants/activityViews.constants';
 import { activityIsReadOnly } from '../../../../Utils/activities.helpers';
+import BaseActivityColValue from './BaseActivityColValue';
 
 const mapActionsToProps = {
   overrideActivityValue,

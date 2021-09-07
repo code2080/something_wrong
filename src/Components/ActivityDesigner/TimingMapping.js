@@ -16,10 +16,10 @@ import {
 
 // STYLES
 import './Mapping.scss';
-import MultiRowParameter from './MultiRowParameter';
 import { getElementTypeFromId } from '../../Utils/elements.helpers';
 import { elementTypes } from '../../Constants/elementTypes.constants';
 import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
+import MultiRowParameter from './MultiRowParameter';
 
 const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const timingMode = useMemo(

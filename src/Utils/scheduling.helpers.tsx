@@ -2,19 +2,10 @@ import moment from 'moment';
 import _ from 'lodash';
 
 // HELPERS
-import { formatActivityForExactScheduling } from './exactScheduling.helpers';
-import {
-  validateTiming,
-  validateValue,
-  validateActivityByMandatoryFieldValue,
-} from './activityValues.validation';
-import {
-  getTimingModeForActivity,
-  hydrateObjectRequests,
-} from './activities.helpers';
+import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
+import { SchedulingReturn } from '../Models/SchedulingReturn.model';
 
 // MODELS
-import { SchedulingReturn } from '../Models/SchedulingReturn.model';
 import { SchedulingError } from '../Models/SchedulingError.model';
 import { ActivityDesign } from '../Models/ActivityDesign.model';
 
@@ -32,7 +23,16 @@ import { createJob } from '../Redux/Jobs/jobs.actions';
 import { schedulingModes } from '../Constants/schedulingModes.constants';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from '../Types/Activity.type';
-import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
+import {
+  getTimingModeForActivity,
+  hydrateObjectRequests,
+} from './activities.helpers';
+import {
+  validateTiming,
+  validateValue,
+  validateActivityByMandatoryFieldValue,
+} from './activityValues.validation';
+import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 
 /**
  * @function createSchedulingReturns

@@ -1,11 +1,11 @@
+import FormInstance from '../../Models/FormInstance.model';
+import FormInstanceTECoreProps from '../../Models/FormInstanceTECoreProps.model';
 import * as types from './formSubmissions.actionTypes';
 
 // INITIAL STATE
 import initialState from './formSubmissions.initialState';
 
 // MODELS
-import FormInstance from '../../Models/FormInstance.model';
-import FormInstanceTECoreProps from '../../Models/FormInstanceTECoreProps.model';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

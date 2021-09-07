@@ -7,8 +7,8 @@ import { CloseCircleOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 
 // CONSTANTS
-import { NESTED_FIELDS } from './FilterModal.constants';
 import { DATE_FORMAT } from '../../../Constants/common.constants';
+import { NESTED_FIELDS } from './FilterModal.constants';
 import FilterItemLabel from './FilterItemLabel';
 interface Props {
   values: any;

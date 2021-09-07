@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
+import { Collapse } from 'antd';
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
 import { tableViews } from '../../Constants/tableViews.constants';
 
-import { Collapse } from 'antd';
 import './ConstraintManagerTable.scss';
 import constraintManagerTableColumns from './ConstraintManagerTableColumns';
 

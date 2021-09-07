@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
-import PropertySelector from '../PropertySelector';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import PropertySelector from '../PropertySelector';
 import {
   fetchLookupMap,
   setSelectedFilterValues,

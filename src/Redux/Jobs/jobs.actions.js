@@ -1,12 +1,12 @@
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
-import * as types from './jobs.actionTypes';
 import { Job } from '../../Models/Job.model';
 import { schedulingAlgorithms } from '../../Constants/schedulingAlgorithms.constants';
 import { SchedulingReturn } from '../../Models/SchedulingReturn.model';
 import { schedulingModes } from '../../Constants/schedulingModes.constants';
 import { selectCurrentConstraintConfigurationForForm } from '../ConstraintConfigurations/constraintConfigurations.selectors';
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
+import * as types from './jobs.actionTypes';
 
 const fetchAllJobsFlow = {
   request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),

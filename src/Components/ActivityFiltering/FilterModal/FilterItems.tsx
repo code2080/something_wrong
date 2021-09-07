@@ -3,10 +3,10 @@ import { Input, Empty } from 'antd';
 import { get, isEmpty, lowerCase } from 'lodash';
 
 // CONSTANTS
+import { SearchOutlined } from '@ant-design/icons';
 import { FILTER_ITEMS_MAPPING } from './FilterModal.constants';
 import { beautifyObject, flattenObject, isObject } from './FilterModal.helper';
 import FilterOptions from './FilterOptionsSelectbox';
-import { SearchOutlined } from '@ant-design/icons';
 import FilterItemLabel from './FilterItemLabel';
 
 const filterOptionsByQuery = (query: string, options: any[]) => {

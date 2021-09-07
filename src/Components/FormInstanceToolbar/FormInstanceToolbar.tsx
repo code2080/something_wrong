@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 // COMPONENTS
+import { useMemo } from 'react';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
@@ -14,12 +15,11 @@ import {
   teCoreSchedulingProgressProps,
   teCoreAcceptanceStatusProps,
 } from '../../Constants/teCoreProps.constants';
-import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
 import useFormInstanceSchedulingProcessModal from '../Modals/useFormInstanceSchedulingProcessModal';
 import useFormInstanceAcceptanceStatusModal from '../Modals/useFormInstanceAcceptanceStatusModal';
 import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { useMemo } from 'react';
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
+import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
 
 const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);

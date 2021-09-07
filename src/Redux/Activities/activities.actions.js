@@ -1,16 +1,15 @@
 import _ from 'lodash';
+import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
+import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { notification } from 'antd';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
-
-import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
-import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
 
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
-import { notification } from 'antd';
 
 const fetchActivitiesForFormFlow = (formId) => ({
   request: () => ({

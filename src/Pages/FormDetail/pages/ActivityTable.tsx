@@ -1,10 +1,10 @@
 import { Key, useMemo, useState } from 'react';
-import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
-import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
+import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 
 type Props = {
   design: any;

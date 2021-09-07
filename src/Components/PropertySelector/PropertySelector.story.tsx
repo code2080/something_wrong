@@ -1,6 +1,6 @@
-import PropSelector from './index';
 import _ from 'lodash';
 import { useState } from 'react';
+import PropSelector from './index';
 
 export default {
   title: 'Activity Manager/Components/PropertySelector',

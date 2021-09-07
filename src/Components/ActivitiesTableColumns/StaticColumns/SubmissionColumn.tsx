@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -11,7 +12,6 @@ import { EFormDetailTabs } from '../../../Types/FormDetailTabs.enum';
 // STYLES
 import './SubmissionColumn.scss';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
-import { useMemo } from 'react';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestValue from '../../Elements/ObjectRequestValue';
 

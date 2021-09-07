@@ -1,12 +1,12 @@
 import moment from 'moment';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
-import { determineSectionType } from './determineSectionType.helpers';
 import {
   SECTION_VERTICAL,
   SECTION_TABLE,
   SECTION_CONNECTED,
 } from '../Constants/sectionTypes.constants';
 import { DATE_FORMAT } from '../Constants/common.constants';
+import { determineSectionType } from './determineSectionType.helpers';
 
 /**
  * @function pickElement

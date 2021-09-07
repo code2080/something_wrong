@@ -1,8 +1,8 @@
 import { parameterizedTest, TestMetaData } from 'Utils/test.utils';
-import { validateActivityByMandatoryFieldValue } from '../activityValues.validation';
 import { dummyActivityDesign } from 'Mock/ActivityDesign';
 import { dummyActivities } from 'Mock/Activities';
 import { TActivity } from 'Types/Activity.type';
+import { validateActivityByMandatoryFieldValue } from '../activityValues.validation';
 
 describe('Activity validations test', () => {
   const testData = [

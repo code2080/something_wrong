@@ -15,10 +15,10 @@ import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 // HELPERS
+import { validateTimeslotTimeMode } from '../../../../Utils/activityValues.validation';
 import { ActivityValueRenderPayload } from './RenderPayload';
 
 // VALIDATION
-import { validateTimeslotTimeMode } from '../../../../Utils/activityValues.validation';
 
 /**
  * @function getTimeModeForActivity

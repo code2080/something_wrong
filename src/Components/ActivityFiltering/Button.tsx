@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { FilterFilled } from '@ant-design/icons';
-import styles from './button.module.scss';
 import classnames from 'classnames';
+import styles from './button.module.scss';
 // TYPES
 type Props = {
   onClick: () => void;

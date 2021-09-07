@@ -7,16 +7,17 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // COMPONENTS
-import { columnModifierColumn } from './ColumnModifierColumn';
-import ColumnSelector from './ColumnSelector';
-import FilterBar from './FilterBar';
-
-// ACTIONS
+import { useHistory } from 'react-router-dom';
 import {
   initView,
   getView,
   updateView,
 } from '../../Redux/GlobalUI/globalUI.actions';
+import { columnModifierColumn } from './ColumnModifierColumn';
+import ColumnSelector from './ColumnSelector';
+import FilterBar from './FilterBar';
+
+// ACTIONS
 
 // STYLES
 import './DynamicTable.scss';
@@ -32,7 +33,6 @@ import {
   filterDataSource,
   getTableComponents,
 } from './helpers';
-import { useHistory } from 'react-router-dom';
 
 const COLUMNS_WIDTH = 'COLUMNS_WIDTH';
 

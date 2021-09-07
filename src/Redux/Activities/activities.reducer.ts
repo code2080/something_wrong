@@ -1,14 +1,14 @@
+import _ from 'lodash';
+import { TActivity } from 'Types/Activity.type';
 import { Activity } from '../../Models/Activity.model';
-import * as types from './activities.actionTypes';
 import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
+import * as types from './activities.actionTypes';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
-import _ from 'lodash';
-import { TActivity } from 'Types/Activity.type';
 
 const reducer = (
   state: {

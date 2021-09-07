@@ -3,8 +3,6 @@ import _ from 'lodash';
 import styles from '../Styles/requestStyle.module.scss';
 
 // HELPERS
-import { getElementTypeFromId } from './elements.helpers';
-import { sortByElementHtml } from './sorting.helpers';
 
 // COMPONENTS
 import Datasource from '../Components/Elements/Datasource';
@@ -20,7 +18,6 @@ import Padding from '../Components/Elements/Padding';
 // import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
-import LabelRenderer from './LabelRenderer';
 
 // CONSTANTS
 import { elementTypes } from '../Constants/elementTypes.constants';
@@ -31,9 +28,12 @@ import {
   SECTION_AVAILABILITY,
 } from '../Constants/sectionTypes.constants';
 import { DATE_TIME_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
-import { getLocalDate } from './moment.helpers';
 import ObjectRequestDropdown from '../Components/Elements/DatasourceInner/ObjectRequestDropdown';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
+import { getLocalDate } from './moment.helpers';
+import LabelRenderer from './LabelRenderer';
+import { sortByElementHtml } from './sorting.helpers';
+import { getElementTypeFromId } from './elements.helpers';
 
 const unformattedValue = (value) => (
   <div

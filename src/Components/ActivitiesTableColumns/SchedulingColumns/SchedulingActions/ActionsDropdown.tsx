@@ -6,6 +6,9 @@ import { Modal, Dropdown, Menu, Button } from 'antd';
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 // HELPERS
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { activityFilterFn } from 'Utils/activities.helpers';
 import {
   scheduleActivities,
   updateActivitiesWithSchedulingResults,
@@ -36,9 +39,6 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { activityFilterFn } from 'Utils/activities.helpers';
 
 const mapStateToProps = (state, { activity }) => {
   const activities = state.activities[activity.formId][activity.formInstanceId];

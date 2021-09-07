@@ -1,10 +1,10 @@
-import JointTeachingIcon from '../JointTeachingIcon';
-import mockStore from '../../../../../Mock/MockState';
-import configureStore from '../../../../../Redux/store';
 import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from 'Models/Activity.model';
+import configureStore from '../../../../../Redux/store';
+import mockStore from '../../../../../Mock/MockState';
+import JointTeachingIcon from '../JointTeachingIcon';
 
 const fakeActivity = new Activity({
   _id: '60912a9e7a86fc2c90563901',

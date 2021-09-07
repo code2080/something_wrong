@@ -13,8 +13,8 @@ import { createActivityTag } from '../../../../Redux/ActivityTag/activityTag.act
 // TYPES
 import { TActivityTag } from '../../../../Types/ActivityTag.type';
 
-import ActivityTagListItem from './ListItem';
 import { TActivity } from '../../../../Types/Activity.type';
+import ActivityTagListItem from './ListItem';
 
 type Props = {
   activities: TActivity[];

@@ -1,17 +1,14 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { selectIsBetaOrDev } from '../../../../Redux/Auth/auth.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';
 import JointTeachingIcon from './JointTeachingIcon';
-// CONSTANTS
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
-
-// STYLES
 import './SchedulingActions.scss';
-import { useSelector } from 'react-redux';
-import { selectIsBetaOrDev } from '../../../../Redux/Auth/auth.selectors';
 
 const SchedulingActions = ({ activity, selectedRowKeys }) => {
   const isBeta = useSelector(selectIsBetaOrDev);

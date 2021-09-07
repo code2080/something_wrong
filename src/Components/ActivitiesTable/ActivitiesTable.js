@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // COMPONENtS
+import { useDispatch } from 'react-redux';
 import DynamicTable from '../DynamicTable/DynamicTableHOC';
 import ExpandedPane from '../TableColumns/Components/ExpandedPane';
 
@@ -13,7 +14,6 @@ import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColum
 import { tableViews } from '../../Constants/tableViews.constants';
 import { DATE_TIME_FORMAT } from '../../Constants/common.constants';
 import { stringIncludes, anyIncludes } from '../../Utils/validation';
-import { useDispatch } from 'react-redux';
 import { reorderActivities } from '../../Redux/Activities/activities.actions';
 
 const filterFn = (activity, query) => {

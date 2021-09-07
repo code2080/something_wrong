@@ -2,13 +2,13 @@ import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // COMPONENTS
+import { activityActions } from '../../Constants/activityActions.constants';
 import TextEdit from './InlineEdits/TextEdit';
 import NumberEdit from './InlineEdits/NumberEdit';
 import DateTimeEdit from './InlineEdits/DateTimeEdit';
 import TimeslotSelect from './InlineEdits/TimeslotSelect';
 
 // CONSTANTS
-import { activityActions } from '../../Constants/activityActions.constants';
 
 const componentMapping = {
   [activityActions.FREE_TEXT_OVERRIDE]: TextEdit,

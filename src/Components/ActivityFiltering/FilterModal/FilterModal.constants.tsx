@@ -1,6 +1,5 @@
-import { ItemsMapping } from './FilterModal.type';
-
 import { Form, DatePicker, TimePicker } from 'antd';
+import { ItemsMapping } from './FilterModal.type';
 
 export const REPLACED_KEY = '____';
 export const NESTED_FIELDS = ['objects', 'fields'];

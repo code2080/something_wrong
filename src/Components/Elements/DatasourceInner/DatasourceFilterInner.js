@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'antd';
-import { datasourceValueTypes } from '../../../Constants/datasource.constants';
 import {
   CaretLeftOutlined,
   CaretRightOutlined,
   DownOutlined,
 } from '@ant-design/icons';
+import { datasourceValueTypes } from '../../../Constants/datasource.constants';
 
 // CONSTANTS
 const renderFieldValues = (values) =>

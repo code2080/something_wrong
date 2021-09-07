@@ -1,17 +1,17 @@
 import { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
+import { ConfigProvider } from 'antd';
+import configureStore from '../Redux/store';
 
 // REDUX
-import configureStore from '../Redux/store';
 import { validateLogin } from '../Redux/Auth/auth.actions';
 import { SET_ENVIRONMENT, SET_CORE_USER } from '../Redux/Auth/auth.actionTypes';
 
 // COMPONENTS
-import TEPrefsLibRouter from './TEPrefsLibRouter';
-import { ConfigProvider } from 'antd';
 import { ConfirmLeavingPageProvider } from '../Hooks/ConfirmLeavingPageContext';
+import TEPrefsLibRouter from './TEPrefsLibRouter';
+import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
 
 // STYLES
 import './TEPrefsLib.scss';

@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
-import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import _ from 'lodash';
-import styles from './ObjectRequestDropdown.module.scss';
+import { DownOutlined } from '@ant-design/icons';
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 
 // COMPONENTS
 import ObjectRequestModal from '../../Modals/ObjectRequestModal';
@@ -25,7 +25,7 @@ import {
 } from '../../../Constants/objectRequestActions.constants';
 import { closeAllDropdown } from '../../../Utils/dom.helper';
 import ObjectRequestValue from '../ObjectRequestValue';
-import { DownOutlined } from '@ant-design/icons';
+import styles from './ObjectRequestDropdown.module.scss';
 
 const ObjectRequestDropdown = ({ request, children }) => {
   const dispatch = useDispatch();

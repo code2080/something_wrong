@@ -1,4 +1,8 @@
 import {
+  ConstraintConfiguration,
+  TConstraintConfiguration,
+} from '../../Types/ConstraintConfiguration.type';
+import {
   FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS,
   CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
@@ -7,10 +11,6 @@ import {
 } from './constraintConfigurations.actionTypes';
 
 // MODELS
-import {
-  ConstraintConfiguration,
-  TConstraintConfiguration,
-} from '../../Types/ConstraintConfiguration.type';
 
 export interface ConstraintConfigurationState {
   configurations: any[];

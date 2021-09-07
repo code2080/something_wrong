@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
@@ -8,7 +9,6 @@ import { normalizeFilterValues } from '../Helpers/rendering';
 
 // STYLES
 import './ObjectFilterValue.scss';
-import { useSelector } from 'react-redux';
 import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 
 const ObjectFilterValue = ({ value }) => {

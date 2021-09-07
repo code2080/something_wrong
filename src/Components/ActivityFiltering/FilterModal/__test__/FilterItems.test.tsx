@@ -1,8 +1,8 @@
 import { omit } from 'lodash';
 import { render, screen, waitFor } from '@testing-library/react';
+import { Form } from 'antd';
 import FilterItems from '../FilterItems';
 
-import { Form } from 'antd';
 import { filterLoopup } from '../../../../Mock/Filter';
 import { beautifyObject } from '../FilterModal.helper';
 

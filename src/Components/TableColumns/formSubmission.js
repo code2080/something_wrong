@@ -1,14 +1,10 @@
 // COMPONENTS
-import SubmissionActionButton from './Components/SubmissionActionButton';
-import StatusLabel from '../StatusLabel/StatusLabel';
-import AcceptanceStatus from './Components/AcceptanceStatus';
-import FormInstanceAssignment from './Components/FormInstanceAssignment';
+import { StarOutlined, StarFilled } from '@ant-design/icons';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import DateTime from '../Common/DateTime';
-import { StarOutlined, StarFilled } from '@ant-design/icons';
+import StatusLabel from '../StatusLabel/StatusLabel';
 
 // SORTERS
-import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
 
 // ACTIONS
 import { toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/formSubmissions.actions';
@@ -17,6 +13,10 @@ import { toggleFormInstanceStarringStatus } from '../../Redux/FormSubmissions/fo
 import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { themeColors } from '../../Constants/themeColors.constants';
 import ObjectRequestValue from '../Elements/ObjectRequestValue';
+import FormInstanceAssignment from './Components/FormInstanceAssignment';
+import AcceptanceStatus from './Components/AcceptanceStatus';
+import { sortAlpha, sortBoolean, sortTime } from './Helpers/sorters';
+import SubmissionActionButton from './Components/SubmissionActionButton';
 
 export const formSubmission = {
   NAME: {

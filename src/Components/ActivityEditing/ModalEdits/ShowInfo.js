@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Alert } from 'antd';
@@ -16,7 +17,6 @@ import {
   activityValueStatuses,
   activityValueStatusProps,
 } from '../../../Constants/activityStatuses.constants';
-import { useSelector } from 'react-redux';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 
 const ShowInfo = ({ activityValue, activity, prop, mappingProps }) => {

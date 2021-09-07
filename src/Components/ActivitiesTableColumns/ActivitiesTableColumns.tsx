@@ -1,14 +1,14 @@
 // COMPONENTS
-import ColumnWrapper from './new/ColumnWrapper';
-import TitleCell from './new/TitleCell';
+import { Field } from 'Redux/TE/te.selectors';
+import { TActivity } from 'Types/Activity.type';
+import type { ColumnsType } from 'antd/lib/table';
 import ActivityStatusCol from '../../Components/ActivitiesTableColumns/SchedulingColumns/StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../Components/DynamicTable/SortableTableCell';
 import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging';
 
 // COLUMNS
-import { Field } from 'Redux/TE/te.selectors';
-import { TActivity } from 'Types/Activity.type';
-import type { ColumnsType } from 'antd/lib/table';
+import TitleCell from './new/TitleCell';
+import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 
 // SORTERS

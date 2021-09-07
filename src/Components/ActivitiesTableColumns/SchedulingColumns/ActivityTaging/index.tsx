@@ -3,17 +3,12 @@ import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { AppstoreOutlined } from '@ant-design/icons';
 
-// COMPONENTS
-import ActivityTagPopover from './Popover';
-// SELECTORS
 import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
-// STYLES
-import './index.scss';
-
-// TYPES
 import { TActivity } from '../../../../Types/Activity.type';
 import { TActivityTag } from '../../../../Types/ActivityTag.type';
+import ActivityTagPopover from './Popover';
+import './index.scss';
 
 type Props = {
   activities: TActivity[];

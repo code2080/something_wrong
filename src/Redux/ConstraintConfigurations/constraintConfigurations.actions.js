@@ -1,7 +1,7 @@
 import { asyncAction } from '../../Utils/actionHelpers';
-import * as types from './constraintConfigurations.actionTypes';
 import { ConstraintConfiguration } from '../../Models/ConstraintConfiguration.model';
 import { getEnvParams } from '../../configs';
+import * as types from './constraintConfigurations.actionTypes';
 
 const opts = {
   // Make Mongoose use Unix time (seconds since Jan 1, 1970)

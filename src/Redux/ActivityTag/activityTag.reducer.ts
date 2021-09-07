@@ -1,9 +1,9 @@
-import * as types from './activityTag.actionTypes';
 import {
   TActivityTag,
   TActivityTagMap,
   ActivityTag,
 } from '../../Types/ActivityTag.type';
+import * as types from './activityTag.actionTypes';
 
 // INITIAL STATE
 import initialState from './activityTag.initialState';

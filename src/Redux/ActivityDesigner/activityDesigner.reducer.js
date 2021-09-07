@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import * as types from './activityDesigner.actionTypes';
+import { SECTION_CONNECTED } from 'Constants/sectionTypes.constants';
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
+import { determineSectionType } from '../../Utils/determineSectionType.helpers';
+import * as types from './activityDesigner.actionTypes';
 
 // INITIAL STATE
 import initialState from './activityDesigner.initialState';
-import { determineSectionType } from '../../Utils/determineSectionType.helpers';
-import { SECTION_CONNECTED } from 'Constants/sectionTypes.constants';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

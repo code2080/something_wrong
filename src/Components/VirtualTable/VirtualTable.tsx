@@ -5,11 +5,11 @@ import _ from 'lodash';
 import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
 import { Table } from 'antd';
-import SelectionColumn from './SelectionColumn';
 
 import './VirtualTable.scss';
 import { ColumnType } from 'antd/lib/table';
 import { TActivity } from '../../Types/Activity.type';
+import SelectionColumn from './SelectionColumn';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   const { columns, scroll, rowSelection, rowKey, dataSource } = props;

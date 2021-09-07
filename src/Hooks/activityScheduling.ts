@@ -3,6 +3,8 @@ import { Dictionary, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
 import {
   scheduleActivities,
   updateActivitiesWithSchedulingResults,
@@ -15,7 +17,6 @@ import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 
 // COMPONENTS
 import { makeSelectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
-import SchedulingStatusModal from './schedulingStatusConfirmModal';
 
 // TYPES
 import { TFormInstance } from '../Types/FormInstance.type';
@@ -27,8 +28,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 // HOOKS
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
+import SchedulingStatusModal from './schedulingStatusConfirmModal';
 
 type Props = {
   formType: string;

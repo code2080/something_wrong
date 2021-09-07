@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect';
+import partition from 'lodash/partition';
+import { pick } from 'lodash';
 import { TActivity } from '../../Types/Activity.type';
 import {
   PopulateSelectionPayload,
@@ -7,10 +9,8 @@ import {
 } from '../../Types/TECorePayloads.type';
 import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
 import { ActivityValue } from '../../Types/ActivityValue.type';
-import partition from 'lodash/partition';
 import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
-import { pick } from 'lodash';
 
 // TYPES
 type TActivityMap = {

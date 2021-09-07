@@ -1,5 +1,5 @@
-import ParameterCascader from '../../Components/ParameterCascader';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import ParameterCascader from '../../Components/ParameterCascader';
 import '@testing-library/jest-dom';
 import { renderWithState } from '../../../../Utils/test.utils';
 

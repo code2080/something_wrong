@@ -1,6 +1,6 @@
-import * as types from './auth.actionTypes';
 import { setToken } from '../../Utils/tokenHelpers';
 import { authenticationStatuses } from '../../Constants/auth.constants';
+import * as types from './auth.actionTypes';
 import { actionsToSignOutOnFailure } from './auth.constants';
 
 // INITIAL STATE

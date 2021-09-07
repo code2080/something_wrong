@@ -2,14 +2,12 @@ import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 
 // COMPONENTS
+import { activityActions } from '../../Constants/activityActions.constants';
 import ShowInfo from './ModalEdits/ShowInfo';
 import TimeslotToExactTime from './ModalEdits/TimeslotToExactTime';
 
 // STYLES
 import './ModalEdit.scss';
-
-// CONSTANTS
-import { activityActions } from '../../Constants/activityActions.constants';
 
 const componentMapping = {
   [activityActions.TIMESLOT_TO_EXACT_OVERRIDE]: TimeslotToExactTime,

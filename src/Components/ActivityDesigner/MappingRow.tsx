@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Select, Switch, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
-import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
 import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
+import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helpers';
 
 const MappingRow = ({
   teProp,

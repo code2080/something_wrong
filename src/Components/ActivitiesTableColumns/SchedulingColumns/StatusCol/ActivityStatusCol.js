@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { CheckOutlined } from '@ant-design/icons';
 
 // COMPONENTS
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import StatusLabel from '../../../StatusLabel/StatusLabel';
 
 // STYLES
@@ -13,9 +15,7 @@ import './ActivityStatusCol.scss';
 // CONSTANTS
 import { activityStatusProps } from '../../../../Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
-import { useState } from 'react';
 import EditableText from '../../../EditableText/EditableText';
-import { useDispatch } from 'react-redux';
 import { updateActivity } from '../../../../Redux/Activities/activities.actions';
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 

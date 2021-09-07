@@ -2,10 +2,10 @@
 import FieldValue from '../ValueTypes/FieldValue';
 
 // HELPERS
+import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 import { ActivityValueRenderPayload } from './RenderPayload';
 
 // CONSTANTS
-import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 
 /**
  * @function renderFieldComponent

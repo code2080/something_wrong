@@ -1,10 +1,10 @@
 import moment from 'moment';
 import _ from 'lodash';
 import { SelectionSettings } from '../Models/SelectionSettings.model';
-import { getElementTypeFromId } from './elements.helpers';
 import { elementTypes } from '../Constants/elementTypes.constants';
-import { determineSectionType } from './determineSectionType.helpers';
 import { TIME_FORMAT } from '../Constants/common.constants';
+import { getElementTypeFromId } from './elements.helpers';
+import { determineSectionType } from './determineSectionType.helpers';
 
 /**
  * @function getSectionTypeFromId

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
 // COMPONENTS
-import ObjectRequestDropdown from './ObjectRequestDropdown';
-import ObjectRequestLabel from '../ObjectRequestValue';
 import { DownOutlined } from '@ant-design/icons';
+import ObjectRequestLabel from '../ObjectRequestValue';
+import ObjectRequestDropdown from './ObjectRequestDropdown';
 
 const DatasourceObjectRequest = ({ request, readonly }) => {
   if (!request) return null;

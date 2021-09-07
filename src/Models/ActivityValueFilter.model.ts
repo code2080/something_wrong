@@ -1,10 +1,10 @@
+import { compact } from 'lodash';
+import moment from 'moment';
 import {
   deFlattenObject,
   isObject,
 } from '../Components/ActivityFiltering/FilterModal/FilterModal.helper';
 import { DATE_FORMAT } from '../Constants/common.constants';
-import { compact } from 'lodash';
-import moment from 'moment';
 import {
   TATimingQuery,
   TFilterQuery,

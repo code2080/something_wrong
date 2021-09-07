@@ -14,6 +14,7 @@ import {
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 
 // COMPONENTS
+import { authenticationStatuses } from '../../Constants/auth.constants';
 import SignIn from './SignIn';
 import SelectOrg from './SelectOrg';
 
@@ -21,7 +22,6 @@ import SelectOrg from './SelectOrg';
 import './Login.scss';
 
 // CONSTANTS
-import { authenticationStatuses } from '../../Constants/auth.constants';
 
 const mapStateToProps = (state) => ({
   authenticationStatus: state.auth.authenticationStatus,

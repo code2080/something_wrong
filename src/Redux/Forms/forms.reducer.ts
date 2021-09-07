@@ -1,7 +1,7 @@
+import Form from '../../Models/Form.model';
 import * as types from './forms.actionTypes';
 
 // MODELS
-import Form from '../../Models/Form.model';
 
 // INITIAL STATE
 import initialState from './forms.initialState';

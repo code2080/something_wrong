@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { filterLoopup } from 'Mock/Filter';
+import { omit } from 'lodash';
 import FilterProperties from '../FilterProperties';
 
-import { filterLoopup } from 'Mock/Filter';
 import { beautifyObject } from '../FilterModal.helper';
-import { omit } from 'lodash';
 
 const filterLookupMap = beautifyObject({
   ...omit(filterLoopup, ['objectFilters']),

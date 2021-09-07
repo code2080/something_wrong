@@ -3,11 +3,11 @@ import { ActivityValueType } from '../../../../Constants/activityValueTypes.cons
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
 
 // RENDERING HELPERS
+import { validateMandatoryFieldValue } from '../../../../Utils/activityValues.validation';
 import { renderTimingComponent } from './timingValueRendering';
 import { renderObjectComponent } from './objectValueRendering';
 import { renderFieldComponent } from './fieldValueRendering';
 import { ActivityValueRenderPayload } from './RenderPayload';
-import { validateMandatoryFieldValue } from '../../../../Utils/activityValues.validation';
 
 // CONSTANTS
 const filterTypes = {

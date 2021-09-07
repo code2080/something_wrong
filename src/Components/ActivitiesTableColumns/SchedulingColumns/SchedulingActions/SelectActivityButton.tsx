@@ -4,19 +4,19 @@ import { SelectOutlined } from '@ant-design/icons';
 import head from 'lodash/head';
 
 // COMPONENTS
+import { useMemo } from 'react';
+import moment from 'moment';
+import classNames from 'classnames';
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
-import { useMemo } from 'react';
 import { updateActivities } from '../../../../Redux/Activities/activities.actions';
 import { TActivity } from '../../../../Types/Activity.type';
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 import { ObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequests.types';
-import moment from 'moment';
-import classNames from 'classnames';
 
 type SelectActivityButtonProps = {
   activity: TActivity;

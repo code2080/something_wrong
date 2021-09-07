@@ -1,8 +1,8 @@
+import ObjectRequest from '../../Models/ObjectRequest.model';
 import * as types from './ObjectRequests.actionTypes';
 import { initialState } from './ObjectRequests.initialState';
 
 // MODELS
-import ObjectRequest from '../../Models/ObjectRequest.model';
 
 export default (state = initialState, action) => {
   switch (action.type) {

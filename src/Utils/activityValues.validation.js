@@ -1,11 +1,11 @@
-import { getTimingModeForActivity } from './activities.helpers';
-import { determineContentOfValue } from './activityValues.helpers';
+import { compact, isEmpty, groupBy } from 'lodash';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
 import { ActivityValueValidation } from '../Models/ActivityValueValidation.model';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
-import { compact, isEmpty, groupBy } from 'lodash';
+import { determineContentOfValue } from './activityValues.helpers';
+import { getTimingModeForActivity } from './activities.helpers';
 
 export const validateGeneralValue = (_activityValue) => {
   // TODO: Reenable when we're improving the logic to consider mandatory values

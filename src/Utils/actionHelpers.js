@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { getEnvParams } from '../configs';
-import { getToken, deleteToken } from './tokenHelpers';
 import { notification } from 'antd';
-import { hasPermission } from '../Redux/Auth/auth.selectors';
 import _ from 'lodash';
+import { getEnvParams } from '../configs';
+import { hasPermission } from '../Redux/Auth/auth.selectors';
+import { getToken, deleteToken } from './tokenHelpers';
 // import { useHistory } from 'react-router-dom';
 
 // Singleton to hold API status

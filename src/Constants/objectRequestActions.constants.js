@@ -1,5 +1,3 @@
-import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
-import { teCoreCallnames } from './teCoreActions.constants';
 import _ from 'lodash';
 import {
   UndoOutlined,
@@ -12,6 +10,8 @@ import {
 import { getTECoreAPIPayload } from '../Redux/Integration/integration.selectors';
 import { updateObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.actions';
 import { setExternalAction } from '../Redux/GlobalUI/globalUI.actions';
+import { teCoreCallnames } from './teCoreActions.constants';
+import { requestStatusToIcon, RequestStatus } from './ObjectRequest.constants';
 
 export const objectRequestActions = {
   ACCEPT: 'ACCEPT',

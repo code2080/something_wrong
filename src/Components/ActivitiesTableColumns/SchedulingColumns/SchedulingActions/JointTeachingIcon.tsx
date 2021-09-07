@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { ShrinkOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { useMemo, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
+import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 import HoverAndClickPopOver from '../../ActivityValueColumns/Helpers/HoverAndClickPopOver';
 import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
-import { useMemo, useState } from 'react';
 import { updateActivities } from '../../../../Redux/Activities/activities.actions';
 import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/Activities/activities.selectors';
 
-import { useSelector, useDispatch } from 'react-redux';
-
 import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import _ from 'lodash';
 import { TActivity } from '../../../../Types/Activity.type';
-import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 
 type Props = {
   activity?: TActivity;

@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
+import { Key, useMemo } from 'react';
+import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
+import { activityFilterFn } from 'Utils/activities.helpers';
 import { makeSelectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
 import {
   hasPermission,
@@ -21,9 +24,6 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
-import { Key, useMemo } from 'react';
-import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
-import { activityFilterFn } from 'Utils/activities.helpers';
 
 type Props = {
   selectedRowKeys: Key[];

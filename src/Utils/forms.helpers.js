@@ -1,8 +1,8 @@
 import { SECTION_VERTICAL } from '../Constants/sectionTypes.constants';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
+import { datasourceValueTypes } from '../Constants/datasource.constants';
 import { determineSectionType } from './determineSectionType.helpers';
 import { renderElementValue } from './rendering.helpers';
-import { datasourceValueTypes } from '../Constants/datasource.constants';
 import {
   pickElement,
   findElementValueInSubmissionFromId,

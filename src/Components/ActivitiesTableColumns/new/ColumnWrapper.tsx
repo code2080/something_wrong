@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react';
 
 // COMPONENTS
-import ColumnContent from './ColumnContent';
 
 // TYPES
 import { TActivity } from '../../../Types/Activity.type';
 import { ActivityValue } from '../../../Types/ActivityValue.type';
+import ColumnContent from './ColumnContent';
 
 type Props = {
   activity: TActivity;

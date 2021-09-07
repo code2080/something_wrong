@@ -66,6 +66,7 @@ module.exports = {
     'react/jsx-uses-react': 0,
     'react/react-in-jsx-scope': 0,
     'import/no-cycle': 'warn',
+    'import/order': 'error',
 
     /* [Typescript overrides] */
     // note you must disable the base rule as it can report incorrect errors,

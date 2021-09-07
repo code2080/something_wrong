@@ -1,11 +1,11 @@
 import { useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
+import { Dispatch } from 'redux';
 import { selectExtIds } from '../Redux/TE/te.selectors';
 import { setTEDataForValues } from '../Redux/TE/te.actions';
 import { TECoreAPIContext } from '../Components/TECoreAPI/context';
 import { TECoreAPI } from '../Types/TECoreAPI';
-import _ from 'lodash';
-import { Dispatch } from 'redux';
 import { GetExtIdPropsPayload, TEObject } from '../Types/TECorePayloads.type';
 
 export const useTECoreAPI = (): TECoreAPI => {

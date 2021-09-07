@@ -1,5 +1,6 @@
 import _ from 'lodash';
 // CONSTANTS
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
@@ -9,11 +10,10 @@ import {
   TEObjectFilter,
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
-import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import { TFormInstance } from '../Types/FormInstance.type';
 import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { derivedFormattedValueForActivityValue } from './ActivityValues';
 
 // FUNCTIONS
 /**

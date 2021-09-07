@@ -2,8 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Modal as AntModal, Select, Form } from 'antd';
-import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { useDispatch, useSelector } from 'react-redux';
+import { teCoreSchedulingProgressProps } from '../../Constants/teCoreProps.constants';
 import { setFormInstanceSchedulingProgress } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 

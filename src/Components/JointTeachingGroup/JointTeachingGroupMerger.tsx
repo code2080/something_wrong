@@ -6,16 +6,16 @@ import ActivityTable from 'Pages/FormDetail/pages/ActivityTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 // import JointTeachingGroup from '../../Models/JointTeachingGroup.model';
-import {
-  createActivity,
-  fetchActivitiesForForm,
-  updateActivities,
-} from '../../Redux/Activities/activities.actions';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import _ from 'lodash';
 import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { makeSelectSortParamsForActivities } from 'Redux/GlobalUI/globalUI.selectors';
+import {
+  createActivity,
+  fetchActivitiesForForm,
+  updateActivities,
+} from '../../Redux/Activities/activities.actions';
 
 type Props = {
   activities: TActivity[];

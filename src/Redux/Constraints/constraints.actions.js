@@ -1,6 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
-import * as types from './constraints.actionTypes';
 import { getEnvParams } from '../../configs';
+import * as types from './constraints.actionTypes';
 
 const fetchConstraintsFlow = {
   request: () => ({ type: types.FETCH_CONSTRAINTS_REQUEST }),

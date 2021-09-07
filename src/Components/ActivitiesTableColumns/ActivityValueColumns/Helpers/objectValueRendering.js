@@ -6,12 +6,12 @@ import ObjectObjectValue from '../ValueTypes/ObjectObjectValue.jsx';
 import { validateFilterValue } from '../../../../Utils/activityValues.validation';
 
 // HELPERS
-import { ActivityValueRenderPayload } from './RenderPayload';
 
 // CONSTANTS
 import { activityValueStatuses } from '../../../../Constants/activityStatuses.constants';
 import { ActivityValueType } from '../../../../Constants/activityValueTypes.constants';
 import { submissionValueTypes } from '../../../../Constants/submissionValueTypes.constants';
+import { ActivityValueRenderPayload } from './RenderPayload';
 
 /**
  * @function determineObjectValueContent

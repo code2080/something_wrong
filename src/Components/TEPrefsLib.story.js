@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import TEPrefsLib from './TEPrefsLib';
 import { availableEnvs } from '../configs';
+import TEPrefsLib from './TEPrefsLib';
 
 export default {
   title: 'Activity Manager/Components/Main',

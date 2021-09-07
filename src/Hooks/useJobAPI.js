@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { getEnvParams } from '../configs';
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { getEnvParams } from '../configs';
 import { abortJob, updateJobFromWS } from '../Redux/Jobs/jobs.actions';
 import { fetchActivitiesForForm } from '../Redux/Activities/activities.actions';
-
-import { useParams } from 'react-router-dom';
 
 export const useJobWSAPI = () => {
   const socket = useRef(null);

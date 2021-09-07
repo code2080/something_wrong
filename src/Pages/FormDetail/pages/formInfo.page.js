@@ -4,13 +4,13 @@ import { Table } from 'antd';
 import _ from 'lodash';
 
 // COMPONENTS
+import { useMemo } from 'react';
 import DateTime from '../../../Components/Common/DateTime';
 import OwnerCol from '../../../Components/TableColumns/Components/OwnerCol';
 import ObjectScopeCol from '../../../Components/TableColumns/Components/ObjectScopeCol';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
-import { useMemo } from 'react';
 
 import './form.page.scss';
 

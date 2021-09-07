@@ -13,22 +13,22 @@ import { FormInstance } from 'antd/lib/form/Form';
 import { Form } from 'antd';
 
 // TYPES
-import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 
 // HELPERS
-import {
-  validateFilterQuery,
-  beautifyObject,
-  reparseKey,
-} from './FilterModal.helper';
-import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import { useSelector } from 'react-redux';
+import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
+import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
   selectFieldLabelsMapping,
   selectObjectLabelsMapping,
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
+import {
+  validateFilterQuery,
+  beautifyObject,
+  reparseKey,
+} from './FilterModal.helper';
 import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
 
 export interface ValueProps {

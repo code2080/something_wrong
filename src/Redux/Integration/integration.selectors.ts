@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
+import { TActivity } from 'Types/Activity.type';
+import { ObjectRequest } from 'Redux/ObjectRequests/ObjectRequests.types';
+import { ActivityValue } from 'Types/ActivityValue.type';
 import { Field, selectExtIdLabel } from '../TE/te.selectors';
 import {
   datasourceValueTypes,
@@ -14,9 +17,6 @@ import {
 } from '../../Constants/sectionTypes.constants';
 import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
 import { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
-import { TActivity } from 'Types/Activity.type';
-import { ObjectRequest } from 'Redux/ObjectRequests/ObjectRequests.types';
-import { ActivityValue } from 'Types/ActivityValue.type';
 
 const selectIntegration = (state) => state.integration;
 const selectReservationModes = (state) => state.integration.reservationModes;

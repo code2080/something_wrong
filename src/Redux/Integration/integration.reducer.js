@@ -1,8 +1,8 @@
 import _ from 'lodash';
+import ObjectTypeMapping from '../../Models/ObjectTypeMapping.model';
 import * as types from './integration.actionTypes';
 
 // MODELS
-import ObjectTypeMapping from '../../Models/ObjectTypeMapping.model';
 
 // INITIAL STATE
 import { initialState } from './integration.initialState';

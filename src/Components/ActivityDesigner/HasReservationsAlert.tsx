@@ -3,13 +3,13 @@ import { Alert, Button, Popconfirm } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
+import { useMemo, useState } from 'react';
 import {
   deleteActivities,
   updateActivity,
 } from '../../Redux/Activities/activities.actions';
 import { unlockActivityDesigner } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
-import { useMemo, useState } from 'react';
 import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 import { resetFormFilterValues } from '../../Redux/Filters/filters.actions';

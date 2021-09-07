@@ -5,10 +5,10 @@ import pick from 'lodash/pick';
 import omitBy from 'lodash/omitBy';
 import isEqual from 'lodash/isEqual';
 
-import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
-import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 import { isEmptyDeep } from 'Utils/general.helpers';
 import { INITIAL_FILTER_VALUES } from 'Components/ActivityFiltering/FilterModal/FilterModal.constants';
+import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
+import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 
 const filterstate = (state) => state.filters;
 

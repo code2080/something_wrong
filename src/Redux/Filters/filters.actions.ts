@@ -6,8 +6,8 @@ import {
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import { TProperty } from '../../Types/property.type';
-import * as types from './filters.actionTypes';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import * as types from './filters.actionTypes';
 
 // TYPES
 type TActionLoadFilter = {

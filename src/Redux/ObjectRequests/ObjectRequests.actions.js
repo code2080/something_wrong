@@ -1,5 +1,5 @@
-import * as types from './ObjectRequests.actionTypes';
 import { asyncAction } from '../../Utils/actionHelpers';
+import * as types from './ObjectRequests.actionTypes';
 
 export const setObjectRequest = (objectRequest) => ({
   type: types.SET_OBJECT_REQUEST,

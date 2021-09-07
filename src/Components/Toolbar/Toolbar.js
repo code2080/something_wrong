@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 
 // COMPONENTS
-import ActionsButton from './ActionsButton';
 import withTECoreAPI from '../TECoreAPI/withTECoreAPI';
 import { ConfirmLeavingPageContext } from '../../Hooks/ConfirmLeavingPageContext';
 
@@ -18,6 +17,7 @@ import './Toolbar.scss';
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { authenticationStatuses } from '../../Constants/auth.constants';
+import ActionsButton from './ActionsButton';
 
 const actionKeys = {
   LOGOUT: 'LOGOUT',

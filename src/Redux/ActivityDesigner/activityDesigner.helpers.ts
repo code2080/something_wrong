@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   activityTimeModes,
@@ -5,7 +6,6 @@ import {
 } from '../../Constants/activityTimeModes.constants';
 import { mappingStatuses } from '../../Constants/mappingStatus.constants';
 import { mappingTypes } from '../../Constants/mappingTypes.constants';
-import _ from 'lodash';
 
 import {
   SECTION_TABLE,

@@ -1,16 +1,16 @@
 // COMPONENTS
-import ResponseTracker from './Components/ResponseTracker';
 import StatusLabel from '../StatusLabel/StatusLabel';
-import ObjectScopeCol from './Components/ObjectScopeCol';
 import IconFormType from '../FormType/IconFormType';
 
 // CONSTANTS
 import { formStatusProps } from '../../Constants/formStatuses.constants';
 
 // HELPERS
-import { sortAlpha, sortTime } from './Helpers/sorters';
 import Form from '../../Models/Form.model';
 import DateTime from '../Common/DateTime';
+import { sortAlpha, sortTime } from './Helpers/sorters';
+import ObjectScopeCol from './Components/ObjectScopeCol';
+import ResponseTracker from './Components/ResponseTracker';
 
 export const form = {
   CREATEDAT: {

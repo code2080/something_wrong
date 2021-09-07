@@ -4,11 +4,11 @@ import { Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 // COMPONENTS
-import ObjectRequestDropdown from './ObjectRequestDropdown';
 import ObjectRequestValue from '../ObjectRequestValue';
 
 // SELECTORS
 import { selectObjectRequestsByValues } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
+import ObjectRequestDropdown from './ObjectRequestDropdown';
 
 const DatasourceObjectInner = ({ labels, menu }) => {
   const foundObjReqs = useSelector(selectObjectRequestsByValues(labels));

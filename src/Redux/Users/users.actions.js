@@ -1,6 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
-import * as types from './users.actionTypes';
 import { getEnvParams } from '../../configs';
+import * as types from './users.actionTypes';
 
 const fetchUserFlow = {
   request: () => ({ type: types.FETCH_USER_REQUEST }),

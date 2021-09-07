@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'antd/lib/form/Form';
 
 // ACTIONS
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+import { FETCH_FORM_LOOKUPMAP } from 'Redux/Filters/filters.actionTypes';
 import {
   fetchLookupMap,
   setSelectedFilterValues,
@@ -16,22 +18,20 @@ import {
   makeSelectFormLookupMap,
   makeSelectSelectedFilterValues,
 } from '../../../Redux/Filters/filters.selectors';
-import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
 import type { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
 import type { GetExtIdPropsPayload } from '../../../Types/TECorePayloads.type';
 
 // COMPONENTS
+import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
 import FilterSettings from './FilterSettings';
 import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
 
 // HOOKS
-import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
 
 import './FilterModal.scss';
-import { FETCH_FORM_LOOKUPMAP } from 'Redux/Filters/filters.actionTypes';
 
 const propTypes = {
   isVisible: PropTypes.bool,

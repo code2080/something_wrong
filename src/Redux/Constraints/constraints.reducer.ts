@@ -1,7 +1,7 @@
+import { TConstraint, Constraint } from '../../Types/Constraint.type';
 import { FETCH_CONSTRAINTS_SUCCESS } from './constraints.actionTypes';
 
 // TYPES
-import { TConstraint, Constraint } from '../../Types/Constraint.type';
 
 const reducer = (state = [], action) => {
   switch (action.type) {
