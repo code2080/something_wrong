@@ -32,6 +32,6 @@ export const selectConstraintConfigurationById = (
 ) =>
   createSelector(
     constraintConfigurationState,
-    (constraintConfigs) =>
+    (constraintConfigs): TConstraintConfiguration =>
       constraintConfigs.configurations[formId]?.[constraintId],
   );
