@@ -44,9 +44,9 @@ const envVarMap = {
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
     VIEWS_URL: `https://views-beta.timeedit.io/${apiVersion}/`,
-    AM_BE_URL: `http://localhost:3011/${apiVersion}/`,
+    AM_BE_URL: `http://localhost:3001/${apiVersion}/`,
   },
-};
+} as const;
 
 export const availableEnvs = [
   'production',
@@ -54,13 +54,13 @@ export const availableEnvs = [
   'beta',
   'localhost',
   'amLocalhost',
-];
+] as const;
 
 export const getEnvParams = () => {
-  const storeState = window.tePrefsLibStore.getState();
+  const storeState = (window as any).tePrefsLibStore.getState();
   const env = storeState.auth.env || 'production';
   if (!env || !availableEnvs.includes(env)) return envVarMap.production;
   return envVarMap[env];
 };
 
-export const TOKEN_NAME = 'te_auth_token';
+export const TOKEN_NAME = 'te_auth_token' as const;
