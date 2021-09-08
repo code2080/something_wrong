@@ -94,7 +94,7 @@ const ConstraintManagerPage = () => {
     settings: {
       primaryObject: form.objectScope,
     },
-  });
+  }).filter((elem) => !elem.isRecurring);
 
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);

@@ -162,6 +162,7 @@ export const getElementsForMapping = ({
       value: section._id,
       label: section.name,
       disabled: isDisabled,
+      isReccuring,
       children: [
         ...(isReccuring
           ? _.compact([
