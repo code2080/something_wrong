@@ -87,7 +87,7 @@ export const updateConstraintConfiguration =
           getEnvParams().AM_BE_URL
         }forms/${formId}/constraint-configurations/${_id}`,
         params: {
-          formId, 
+          formId,
           constraintConfigurationId: constraintConfiguration._id,
           constraintConfiguration,
         },
