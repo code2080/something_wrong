@@ -1,6 +1,7 @@
 import { omit } from 'lodash';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
+import { renderWithState } from 'Utils/test.utils';
 import FilterItems from '../FilterItems';
 
 import { filterLoopup } from '../../../../Mock/Filter';
@@ -18,7 +19,7 @@ const getOptionLabel = (field: string, id?: string) => id || field;
 
 describe('Filter Items column tests', () => {
   it('Render without crashes', () => {
-    render(
+    renderWithState(
       <Form>
         <FilterItems
           filterLookupMap={filterLookupMap}
@@ -26,12 +27,13 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
+      { initialState: { auth: { env: 'beta' } } },
     );
     expect(screen.getByText('Select date interval')).toBeInTheDocument();
   });
 
   it('Render time', () => {
-    render(
+    renderWithState(
       <Form>
         <FilterItems
           filterLookupMap={filterLookupMap}
@@ -39,12 +41,13 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
+      { initialState: { auth: { env: 'beta' } } },
     );
     expect(screen.getByText('Select time interval')).toBeInTheDocument();
   });
 
   it('Render submitter', async () => {
-    render(
+    renderWithState(
       <Form>
         <FilterItems
           filterLookupMap={filterLookupMap}
@@ -52,6 +55,7 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
+      { initialState: { auth: { env: 'beta' } } },
     );
     await waitFor(() => {
       screen.getAllByText('60924c137c04ee0025094bd0');
@@ -65,7 +69,7 @@ describe('Filter Items column tests', () => {
   });
 
   it('Render an object', async () => {
-    render(
+    renderWithState(
       <Form>
         <FilterItems
           filterLookupMap={filterLookupMap}
@@ -73,6 +77,7 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
+      { initialState: { auth: { env: 'beta' } } },
     );
     await waitFor(() => {
       screen.getAllByText('equipment_C-KV Hyrbil');
@@ -86,7 +91,7 @@ describe('Filter Items column tests', () => {
   });
 
   it('Render a field', async () => {
-    render(
+    renderWithState(
       <Form>
         <FilterItems
           filterLookupMap={filterLookupMap}
@@ -94,6 +99,7 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
+      { initialState: { auth: { env: 'beta' } } },
     );
     await waitFor(() => {
       screen.getAllByText('Quae earum soluta au');

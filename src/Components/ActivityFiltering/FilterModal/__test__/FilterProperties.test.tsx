@@ -1,6 +1,7 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { filterLoopup } from 'Mock/Filter';
 import { omit } from 'lodash';
+import { renderWithState } from 'Utils/test.utils';
 import FilterProperties from '../FilterProperties';
 
 import { beautifyObject } from '../FilterModal.helper';
@@ -18,13 +19,14 @@ const getOptionLabel = (field: string, id?: string) => id || field;
 
 describe('Filter Properties column tests', () => {
   beforeEach(() => {
-    render(
+    renderWithState(
       <FilterProperties
         filterLookupMap={filterLookupMap}
         selectedProperty='date'
         onSelect={handleSelect}
         getOptionLabel={getOptionLabel}
       />,
+      { initialState: { auth: { env: 'beta' } } },
     );
   });
   it('Render without crashes', () => {

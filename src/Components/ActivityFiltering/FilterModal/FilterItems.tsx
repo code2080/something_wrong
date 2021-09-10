@@ -4,6 +4,8 @@ import { get, isEmpty, lowerCase } from 'lodash';
 
 // CONSTANTS
 import { SearchOutlined } from '@ant-design/icons';
+import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
+import { useSelector } from 'react-redux';
 import { FILTER_ITEMS_MAPPING } from './FilterModal.constants';
 import { beautifyObject, flattenObject, isObject } from './FilterModal.helper';
 import FilterOptions from './FilterOptionsSelectbox';
@@ -25,6 +27,7 @@ const FilterItems = ({
   filterLookupMap,
   getOptionLabel,
 }: Props) => {
+  const isBeta = useSelector(selectIsBetaOrDev);
   const allProperties = useMemo(
     () => ({
       ...filterLookupMap,
@@ -39,7 +42,7 @@ const FilterItems = ({
   }, [selectedProperty]);
 
   const renderer = useMemo(() => {
-    const fixedProperties = FILTER_ITEMS_MAPPING[selectedProperty];
+    const fixedProperties = FILTER_ITEMS_MAPPING(isBeta)[selectedProperty];
     if (fixedProperties) return fixedProperties.render();
 
     const dynamicProperty = get(allProperties, selectedProperty);
