@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
 import { renderWithState } from 'Utils/test.utils';
 import FilterItems from '../FilterItems';
