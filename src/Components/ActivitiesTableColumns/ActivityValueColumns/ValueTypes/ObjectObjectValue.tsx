@@ -19,12 +19,22 @@ import { elementTypes } from '../../../../Constants/elementTypes.constants';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
 
-// HELPERS
+type ObjectObjectValueProps = {
+  value: string | string[];
+  formId?: string;
+  sectionId?: string;
+  elementId?: string;
+};
 
-const standardizeValue = (value) =>
+const standardizeValue = (value: string | string[]): string[] =>
   (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));
 
-const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
+const ObjectObjectValue = ({
+  value,
+  formId,
+  sectionId,
+  elementId,
+}: ObjectObjectValueProps): JSX.Element => {
   const objectRequests = useSelector(selectFormObjectRequest(formId));
 
   const elementType = useSelector(
@@ -39,18 +49,22 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   );
 
   if (elementType === elementTypes.ELEMENT_TYPE_DATASOURCE) {
-    return stdValue.map((item, itemIndex) =>
-      item.split(',').map((val, valIndex) => {
-        const request = _.find(objectRequests, ['_id', val]);
-        return request ? (
-          <ObjectRequestDropdown key={request._id} request={request} />
-        ) : (
-          <DatasourceReadonly
-            key={`${itemIndex}_${valIndex}`}
-            value={labels[val]}
-          />
-        );
-      }),
+    return (
+      <>
+        {stdValue.map((item, itemIndex) =>
+          item.split(',').map((val, valIndex) => {
+            const request = _.find(objectRequests, ['_id', val]);
+            return request ? (
+              <ObjectRequestDropdown key={request._id} request={request} />
+            ) : (
+              <DatasourceReadonly
+                key={`${itemIndex}_${valIndex}`}
+                value={labels[val]}
+              />
+            );
+          }),
+        )}
+      </>
     );
   }
 
@@ -59,11 +73,8 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   );
 
   // Will try to replace the values with labels
-  const replaceWithLabels = (
-    values: string[] | string,
-    labels: Dictionary<string>,
-  ) =>
-    Array.isArray(values) ? values.map((val) => labels[val]) : labels[values];
+  const replaceWithLabels = (values: string[], labels: Dictionary<string>) =>
+    values.map((val) => labels[val]);
 
   const valueDisplay = element
     ? renderElementValue(values, element)
