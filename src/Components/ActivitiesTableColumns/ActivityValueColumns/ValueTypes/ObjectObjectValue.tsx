@@ -35,7 +35,7 @@ const ObjectObjectValue = ({
   sectionId,
   elementId,
 }: ObjectObjectValueProps): JSX.Element => {
-  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const objectRequests = useSelector(selectFormObjectRequest(formId ?? ''));
 
   const elementType = useSelector(
     selectElementType(formId, sectionId, elementId),
@@ -82,8 +82,9 @@ const ObjectObjectValue = ({
 
   const requestComponents = requests
     .map((reqId) => _.find(objectRequests, ['_id', reqId]))
+    .filter(Boolean)
     .map((request) => (
-      <ObjectRequestDropdown request={request} key={request._id} />
+      <ObjectRequestDropdown request={request} key={request?._id || ''} />
     ));
   return (
     <>
@@ -94,7 +95,10 @@ const ObjectObjectValue = ({
 };
 
 ObjectObjectValue.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
   formId: PropTypes.string,
   sectionId: PropTypes.string,
   elementId: PropTypes.string,
