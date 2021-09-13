@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import isNil from 'lodash/isNil';
@@ -59,7 +59,10 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   );
 
   // Will try to replace the values with labels
-  const replaceWithLabels = (values, labels) =>
+  const replaceWithLabels = (
+    values: string[] | string,
+    labels: Dictionary<string>,
+  ) =>
     Array.isArray(values) ? values.map((val) => labels[val]) : labels[values];
 
   const valueDisplay = element
