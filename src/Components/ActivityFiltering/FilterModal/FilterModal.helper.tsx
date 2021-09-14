@@ -120,6 +120,7 @@ export const deBeautifyObject = (object) => {
 };
 
 export const deFlattenObject = (object) => {
+  if (!object) return object;
   const results = {};
   Object.keys(object).forEach((key) =>
     set(results, key.split('.'), object[key]),
