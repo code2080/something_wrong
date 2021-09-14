@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
+import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
@@ -17,6 +19,7 @@ import {
   setActivitySorting,
   resetActivitySorting,
 } from '../../../Redux/GlobalUI/globalUI.actions';
+import { fetchActivitiesForForm } from '../../../Redux/Activities/activities.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -26,7 +29,10 @@ import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activitie
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
-import { makeSelectSortOrderForActivities } from '../../../Redux/GlobalUI/globalUI.selectors';
+import {
+  makeSelectSortOrderForActivities,
+  makeSelectSortParamsForActivities,
+} from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
 
@@ -48,6 +54,25 @@ const ActivitiesPage = () => {
   );
   const allActivities = Object.values(activities).flat();
   const keyedActivities = _.keyBy(allActivities, '_id');
+
+  // Select filters
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, formId),
+  );
+
+  // Select sorting
+  const selectActivityParamSorting = useMemo(
+    () => makeSelectSortParamsForActivities(),
+    [],
+  );
+
+  const selectedSortingParams = useSelector((state) =>
+    selectActivityParamSorting(state, formId),
+  );
 
   const selectActivitySortingOrder = useMemo(
     () => makeSelectSortOrderForActivities(),
@@ -72,6 +97,17 @@ const ActivitiesPage = () => {
   useEffect(() => {
     getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
+
+  useEffect(() => {
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        selectedFilterValues,
+        selectedSortingParams,
+      ),
+    );
+  }, [dispatch, formId, selectedFilterValues, selectedSortingParams]);
+
   /**
    * HOOKS
    */
