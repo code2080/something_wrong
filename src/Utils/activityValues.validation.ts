@@ -1,4 +1,6 @@
 import { compact, isEmpty, groupBy } from 'lodash';
+import { ActivityValue } from 'Types/ActivityValue.type';
+import { TActivity } from 'Types/Activity.type';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { activityValueValidations } from '../Constants/activityValueValidations.constants';
@@ -33,7 +35,10 @@ export const validateGeneralValue = (_activityValue) => {
  * @param {ActivityDesign} activityDesign
  * @returns {Boolean}
  */
-export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
+export const validateMandatoryFieldValue = (
+  activityValue: ActivityValue,
+  activityDesign,
+) => {
   if (!activityDesign) return true;
   const mandatoryFields = Object.keys(activityDesign.propSettings).filter(
     (key) => activityDesign.propSettings[key]?.mandatory,
@@ -41,7 +46,7 @@ export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
   const isMandatoryField = mandatoryFields.includes(activityValue.extId);
   const hasValue = !isEmpty(
     Array.isArray(activityValue.value)
-      ? compact(activityValue.value)
+      ? compact(activityValue.value as string[])
       : [activityValue.value],
   );
 
@@ -56,7 +61,7 @@ export const validateMandatoryFieldValue = (activityValue, activityDesign) => {
  * @returns {Boolean}
  */
 export const validateActivityByMandatoryFieldValue = (
-  activity,
+  activity: TActivity,
   activityDesign,
 ) => {
   const groupedValues = groupBy(activity.values, 'extId');
