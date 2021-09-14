@@ -99,7 +99,8 @@ const ActivityDesignPage = () => {
    * STATE VARS
    */
   const [design, setActivityDesign] = useState(storeDesign);
-  const setDesign = (activityDesign) => setActivityDesign(new ActivityDesign(activityDesign));
+  const setDesign = (activityDesign) =>
+    setActivityDesign(new ActivityDesign(activityDesign));
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
   const designRef = useRef();
