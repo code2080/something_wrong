@@ -1,7 +1,7 @@
-import { parameterizedTest, TestMetaData } from 'Utils/test.utils';
-import { dummyActivityDesign } from 'Mock/ActivityDesign';
-import { dummyActivities } from 'Mock/Activities';
-import { TActivity } from 'Types/Activity.type';
+import { parameterizedTest, TestMetaData } from '../../Utils/test.utils';
+import { dummyActivityDesign } from '../../Mock/ActivityDesign';
+import { dummyActivities } from '../../Mock/Activities';
+import { TActivity } from '../../Types/Activity.type';
 import { validateActivityByMandatoryFieldValue } from '../activityValues.validation';
 
 describe('Activity validations test', () => {
@@ -32,6 +32,13 @@ describe('Activity validations test', () => {
       {
         args: dummyActivities[3] as TActivity,
         expected: false,
+      },
+    ],
+    [
+      'Return true if mandatory fields are not array',
+      {
+        args: dummyActivities[4] as TActivity,
+        expected: true,
       },
     ],
   ] as TestMetaData<TActivity, boolean>[];
