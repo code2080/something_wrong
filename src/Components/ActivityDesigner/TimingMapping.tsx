@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { Select, Tooltip } from 'antd';
-import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
+import CascaderWithTooltip from '../../Components/CascaderWithTooltip/CascaderWithTooltip';
 
 // HELPERS
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -21,7 +21,19 @@ import { elementTypes } from '../../Constants/elementTypes.constants';
 import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
 import MultiRowParameter from './MultiRowParameter';
 
-const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
+type TimingMappingProps = {
+  onChange(field: string, values: any[]): void;
+  formSections: any[];
+  mapping: any;
+  disabled?: boolean;
+};
+
+const TimingMapping = ({
+  onChange,
+  formSections,
+  mapping,
+  disabled = false,
+}: TimingMappingProps) => {
   const timingMode = useMemo(
     () => _.get(mapping, 'timing.mode', null),
     [mapping],
@@ -58,7 +70,10 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
   const timingIsDisabled = useCallback(
     (mode) => {
       // TODO: Add more conditions if there is DateTime element in future
-      return !mapping?.timing?.hasTiming && mode !== activityTimeModes.SEQUENCE;
+      return (
+        !(mapping?.timing?.hasTiming ?? !isEmpty(calendarSections)) &&
+        mode !== activityTimeModes.SEQUENCE
+      );
     },
     [mapping],
   );
@@ -67,7 +82,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     return getElementsForTimingMapping[timingMode](formSections, mapping);
   }, [formSections, mapping, timingMode]);
 
-  const filterOnElementTypes = ({ types = [], sections }) => {
+  const filterOnElementTypes = ({
+    types = [],
+    sections,
+  }: {
+    types: any[];
+    sections: any[];
+  }) => {
     if (_.isEmpty(types) || _.isEmpty(sections)) return sections;
     return sections
       .reduce(
@@ -97,7 +118,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           value={_.get(mapping, 'timing.mode', null)}
           onChange={(val) => onChange('mode', val)}
           size='small'
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           disabled={disabled}
         >
           {Object.keys(activityTimeModeProps).map((mode) => {
@@ -130,7 +153,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -145,7 +170,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -164,7 +191,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -179,7 +208,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -194,7 +225,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -213,7 +246,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -228,7 +263,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.padding', null)}
               onChange={(val) => onChange('padding', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -243,7 +280,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.weekday', null)}
               onChange={(val) => onChange('weekday', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -258,7 +297,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.time', null)}
               onChange={(val) => onChange('time', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
