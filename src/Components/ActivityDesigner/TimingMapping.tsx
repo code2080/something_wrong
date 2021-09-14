@@ -75,7 +75,7 @@ const TimingMapping = ({
         mode !== activityTimeModes.SEQUENCE
       );
     },
-    [mapping],
+    [calendarSections, mapping?.timing?.hasTiming],
   );
 
   const sections = useMemo(() => {

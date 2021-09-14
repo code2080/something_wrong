@@ -112,7 +112,7 @@ const FilterItems = ({
     }
 
     return <Empty />;
-  }, [selectedProperty, allProperties, query, getOptionLabel]);
+  }, [isBeta, selectedProperty, allProperties, query, getOptionLabel]);
 
   return (
     <div className='filter-modal__column'>
