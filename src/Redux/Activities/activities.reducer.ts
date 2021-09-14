@@ -98,7 +98,7 @@ const reducer = (
       } = action;
 
       const activities = updateActivitiesForForm(activityObjs, sections);
-      const formIdValue = tableType ? formId + tableType : formId;
+      const formIdValue = `${formId}${tableType || ''}`;
 
       return {
         ...state,
