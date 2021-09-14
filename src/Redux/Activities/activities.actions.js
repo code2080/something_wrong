@@ -40,7 +40,7 @@ export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
       filter: _.isEmpty(_filter)
         ? undefined
         : new ActivityFilterPayload(_filter),
-      settings: _filter && _filter.settings,
+      settings: _filter?.settings,
       sorting: sorting == null ? undefined : sorting,
     },
   });
