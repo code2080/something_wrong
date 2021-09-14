@@ -40,6 +40,7 @@ const ActivitiesPage = () => {
   const dispatch = useDispatch();
   const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
+  const tableType = '_ACTIVITIES_TABLE';
 
   /**
    * SELECTORS
@@ -104,6 +105,7 @@ const ActivitiesPage = () => {
         formId,
         selectedFilterValues,
         selectedSortingParams,
+        tableType,
       ),
     );
   }, [dispatch, formId, selectedFilterValues, selectedSortingParams]);
