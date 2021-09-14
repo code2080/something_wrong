@@ -110,24 +110,19 @@ const FormPage = () => {
     selectActivityParamSorting(state, formId),
   );
 
-  useEffect(
-    () =>
-      dispatch(
-        fetchActivitiesForForm(
-          formId,
-          selectedFilterValues,
-          selectedSortingParams,
-        ),
-      ),
-    [dispatch, formId, selectedFilterValues, selectedSortingParams],
-  );
-
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        selectedFilterValues,
+        selectedSortingParams,
+      ),
+    );
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
