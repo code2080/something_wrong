@@ -11,7 +11,7 @@ import {
   revertActivityValueToSubmission,
 } from './activities.helpers';
 
-const fetchActivitiesForFormFlow = (formId) => ({
+const fetchActivitiesForFormFlow = (formId, tableType) => ({
   request: () => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId } },
@@ -21,7 +21,7 @@ const fetchActivitiesForFormFlow = (formId) => ({
     const sections = storeState.forms[formId].sections;
     return {
       type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-      payload: { ...response, actionMeta: { formId, sections } },
+      payload: { ...response, actionMeta: { formId, sections, tableType } },
     };
   },
   failure: (err) => ({
@@ -30,11 +30,16 @@ const fetchActivitiesForFormFlow = (formId) => ({
   }),
 });
 
-export const fetchActivitiesForForm = (formId, filter, sortingParam) => {
+export const fetchActivitiesForForm = (
+  formId,
+  filter,
+  sortingParam,
+  tableType,
+) => {
   const sorting = sortingParam;
   const _filter = deFlattenObject(filter);
   return asyncAction.POST({
-    flow: fetchActivitiesForFormFlow(formId),
+    flow: fetchActivitiesForFormFlow(formId, tableType),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     params: {
       filter: _.isEmpty(_filter)
