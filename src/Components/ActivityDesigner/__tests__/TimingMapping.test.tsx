@@ -40,7 +40,7 @@ describe('TimingMapping tests', () => {
     renderWithState(
       <TimingMapping
         {...minimumProps}
-        formSections={[{ isConnected: true }]}
+        formSections={[{ elements: [], isConnected: true }]}
         mapping={{ ...minimumProps.mapping, objects: {}, fields: {} }}
       />,
     );
