@@ -75,4 +75,19 @@ describe('TimingMapping tests', () => {
     expectAntOption(screen.getByText('Timeslots')).toBeDisabled();
     expectAntOption(last(screen.getAllByText('Sequence'))).not.toBeDisabled();
   });
+
+  // APP-246 tests!
+  /*
+  Given a calendar section with duration element, and some other elements of other types
+  and timing mapping mode = sequence | timeslot
+
+  Then length should only show the duration element
+  
+  *******
+  Given a calendar section and timing mode = timeslot | exact
+
+  The start and end time selection should only contain 
+  <calendar section>  > start time
+                      > end time.
+  */
 });
