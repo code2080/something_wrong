@@ -1,4 +1,4 @@
-import _, { filter } from 'lodash';
+import _ from 'lodash';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
