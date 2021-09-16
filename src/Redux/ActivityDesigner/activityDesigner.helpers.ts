@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { CascaderOptionType } from 'antd/lib/cascader';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
   activityTimeModes,
@@ -198,45 +199,54 @@ export const getElementsForMapping = ({
  * @param {*} formSections sections of the form
  * @param {*} mapping current mapping
  */
-const getExactModeElementsForMapping = (formSections, mapping) => {
-  if (!formSections || !formSections.length || !mapping) return [];
+const getExactModeElementsForMapping = (
+  formSections,
+  mapping,
+): {
+  startAndEndTime: {
+    value: string;
+    label: string;
+  }[];
+  elements: CascaderOptionType;
+} => {
+  if (!formSections || !formSections.length || !mapping)
+    return { startAndEndTime: [], elements: [] };
   // Ensure only one repeating sectionn can be used
   const firstRepeatingSection = findFirstRepeatingSection(
     formSections,
     mapping,
   );
-  return [
-    ...formSections.map((section) => {
-      const sectionType = determineSectionType(section);
-      let isDisabled = false;
-      if (
-        firstRepeatingSection &&
-        (sectionType === SECTION_TABLE || sectionType === SECTION_CONNECTED) &&
-        section._id !== firstRepeatingSection._id
-      ) {
-        isDisabled = true;
-      }
 
-      const children =
-        sectionType === SECTION_CONNECTED
-          ? [
-              { value: 'startTime', label: 'Event start time' },
-              { value: 'endTime', label: 'Event end time' },
-            ]
-          : section.elements.map((element) => ({
-              value: element._id,
-              label: element.label,
-              elementId: element.elementId,
-            }));
-
-      return {
-        value: section._id,
-        label: section.name,
-        disabled: isDisabled,
-        children: children,
-      };
-    }),
+  const startAndEndTime = [
+    { value: 'startTime', label: 'Event start time' },
+    { value: 'endTime', label: 'Event end time' },
   ];
+
+  return {
+    startAndEndTime,
+    elements: [
+      ...formSections.map((section) => {
+        const sectionType = determineSectionType(section);
+        const isDisabled =
+          firstRepeatingSection &&
+          (sectionType === SECTION_TABLE ||
+            sectionType === SECTION_CONNECTED) &&
+          section._id !== firstRepeatingSection._id;
+        const children = section.elements.map((element) => ({
+          value: element._id,
+          label: element.label,
+          elementId: element.elementId,
+        }));
+
+        return {
+          value: section._id,
+          label: section.name,
+          disabled: isDisabled,
+          children,
+        };
+      }),
+    ],
+  };
 };
 
 /**

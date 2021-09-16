@@ -58,14 +58,21 @@ const TimingMapping = ({
     if (!value || !value.length) return;
     onChange('dateRanges', [...value.slice(0, idx), ...value.slice(idx + 1)]);
   };
-  const calendarSections = useMemo(() => {
-    return getElementsForTimingMapping[timingMode](
-      formSections.filter(
-        (section) => determineSectionType(section) === SECTION_CONNECTED,
+  const { elements: calendarSections } = useMemo(
+    () =>
+      getElementsForTimingMapping[timingMode](
+        formSections.filter(
+          (section) => determineSectionType(section) === SECTION_CONNECTED,
+        ),
+        mapping,
       ),
-      mapping,
-    );
-  }, [formSections, mapping, timingMode]);
+    [formSections, mapping, timingMode],
+  );
+
+  const { elements: sections, startAndEndTime } = useMemo(
+    () => getElementsForTimingMapping[timingMode](formSections, mapping),
+    [formSections, mapping, timingMode],
+  );
 
   const timingIsDisabled = useCallback(
     (mode) => {
@@ -77,10 +84,6 @@ const TimingMapping = ({
     },
     [calendarSections, mapping?.timing?.hasTiming],
   );
-
-  const sections = useMemo(() => {
-    return getElementsForTimingMapping[timingMode](formSections, mapping);
-  }, [formSections, mapping, timingMode]);
 
   const filterOnElementTypes = ({
     types = [],
@@ -149,7 +152,7 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -166,7 +169,7 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
@@ -187,7 +190,7 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
@@ -204,7 +207,7 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
@@ -221,7 +224,10 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={sections}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_DURATION],
+                sections,
+              })}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
