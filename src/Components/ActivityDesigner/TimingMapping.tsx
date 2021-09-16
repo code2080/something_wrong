@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _, { isEmpty } from 'lodash';
 import { Select, Tooltip } from 'antd';
+import { useSelector } from 'react-redux';
 import CascaderWithTooltip from '../../Components/CascaderWithTooltip/CascaderWithTooltip';
 
 // HELPERS
@@ -16,9 +17,9 @@ import {
 
 // STYLES
 import './Mapping.scss';
-import { getElementTypeFromId } from '../../Utils/elements.helpers';
 import { elementTypes } from '../../Constants/elementTypes.constants';
 import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
+import { selectElementTypesMap } from '../../Redux/Elements/element.selectors';
 import MultiRowParameter from './MultiRowParameter';
 
 type TimingMappingProps = {
@@ -39,6 +40,7 @@ const TimingMapping = ({
     [mapping],
   );
 
+  const elementMap = useSelector(selectElementTypesMap());
   const onSequenceModeTimingParameterUpdateValue = (idx, value) => {
     const currValue = _.get(mapping, 'timing.dateRanges', []);
     onChange('dateRanges', [
@@ -100,7 +102,7 @@ const TimingMapping = ({
           {
             ...section,
             children: section.children.filter(({ elementId }) => {
-              const elementType = getElementTypeFromId(elementId);
+              const elementType = elementMap[elementId]?.type;
               return types.includes(elementType);
             }),
           },
