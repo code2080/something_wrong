@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { filter } from 'lodash';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import { determineSectionType } from '../../Utils/determineSectionType.helpers';
 import {
@@ -85,49 +85,14 @@ export const validateDesign = (formId, designState) => {
 
 /**
  * @function findFirstRepeatingSection
- * @description determine the first (and only) repeating section (table, connected) already used in the mapping
+ * @description get the repeating section (table, connected)
  * @param {*} formSections the form's sections
- * @param {*} mapping the current mapping
  */
-
-const findFirstRepeatingSection = (formSections, mapping) =>
-  [
-    ...(Object.keys(mapping.timing) || []).reduce<any[]>(
-      (sections, timingKey) => {
-        const timing = mapping.timing[timingKey];
-        if (timing && timing[0] && timing[1]) return [...sections, timing[0]];
-        return sections;
-      },
-      [],
-    ),
-    ...(Object.keys(mapping.objects) || []).reduce<any[]>(
-      (sections, objectKey) => {
-        const object = mapping.objects[objectKey];
-        if (object && object[0] && object[1]) return [...sections, object[0]];
-        return sections;
-      },
-      [],
-    ),
-    ...(Object.keys(mapping.fields) || []).reduce<any[]>(
-      (sections, fieldKey) => {
-        const field = mapping.fields[fieldKey];
-        if (field && field[0] && field[1]) return [...sections, field[0]];
-        return sections;
-      },
-      [],
-    ),
-  ]
-    .reduce<any[]>((sections, sectionId) => {
-      const sectionIdx = formSections.findIndex((el) => el._id === sectionId);
-      if (sectionIdx > -1) return [...sections, formSections[sectionIdx]];
-      return sections;
-    }, [])
-    .find((el) => {
-      const sectionType = determineSectionType(el);
-      if (sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE)
-        return true;
-      return false;
-    });
+const getRepeatingSection = (formSections) =>
+  formSections.find((section) => {
+    const sectionType = determineSectionType(section);
+    return sectionType === SECTION_CONNECTED || sectionType === SECTION_TABLE;
+  });
 
 /**
  * @function getElementsForMapping
@@ -142,10 +107,7 @@ export const getElementsForMapping = ({
 }: any) => {
   if (!formSections || !formSections.length || !mapping) return [];
   // Ensure only one repeating section can be used
-  const firstRepeatingSection = findFirstRepeatingSection(
-    formSections,
-    mapping,
-  );
+  const firstRepeatingSection = getRepeatingSection(formSections);
 
   const elementOptions = formSections.map((section) => {
     const sectionType = determineSectionType(section);
@@ -212,10 +174,7 @@ const getExactModeElementsForMapping = (
   if (!formSections || !formSections.length || !mapping)
     return { startAndEndTime: [], elements: [] };
   // Ensure only one repeating sectionn can be used
-  const firstRepeatingSection = findFirstRepeatingSection(
-    formSections,
-    mapping,
-  );
+  const firstRepeatingSection = getRepeatingSection(formSections);
 
   const startAndEndTime = [
     {
