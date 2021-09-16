@@ -248,7 +248,10 @@ const TimingMapping = ({
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={sections}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_DURATION],
+                sections,
+              })}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
