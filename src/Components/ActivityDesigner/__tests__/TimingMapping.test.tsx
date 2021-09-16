@@ -90,4 +90,16 @@ describe('TimingMapping tests', () => {
   <calendar section>  > start time
                       > end time.
   */
+
+  /**
+   * APP-253 test spec!
+   * Given a section with calendar section with name "Test calendar section"
+   * and timing mode = exact | timeslots
+   *
+   * Clicking start time dropdown
+   *   -> Click Test calendar section
+   *       => click start time
+   *
+   * Same alternatives for end time but with end time
+   */
 });
