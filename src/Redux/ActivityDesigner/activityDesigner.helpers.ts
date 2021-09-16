@@ -219,8 +219,8 @@ const getExactModeElementsForMapping = (
 
   const startAndEndTime = [
     {
-      value: firstRepeatingSection._id,
-      label: firstRepeatingSection.name,
+      value: firstRepeatingSection?._id ?? 'N/A',
+      label: firstRepeatingSection?.name ?? 'N/A',
       children: [
         { value: 'startTime', label: 'Event start time' },
         { value: 'endTime', label: 'Event end time' },
@@ -229,7 +229,7 @@ const getExactModeElementsForMapping = (
   ];
 
   return {
-    startAndEndTime: startAndEndTime,
+    startAndEndTime: firstRepeatingSection ? startAndEndTime : [],
     elements: [
       ...formSections.map((section) => {
         const sectionType = determineSectionType(section);
