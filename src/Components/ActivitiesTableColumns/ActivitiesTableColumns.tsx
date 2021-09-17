@@ -12,7 +12,11 @@ import TitleCell from './new/TitleCell';
 import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 
-export const createActivitiesTableColumnsFromMapping = (design) => {
+export const createActivitiesTableColumnsFromMapping = (
+  design,
+  columnPrefix,
+  renderer,
+) => {
   const _design = new ActivityDesign(design);
   const allActivityValues = [
     ...Object.keys(_design.objects).map(
@@ -22,6 +26,7 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
       (fieldKey) => ['fields', fieldKey] as [Field, string],
     ),
   ];
+
   const activityValueColumns = allActivityValues.reduce<ColumnsType<object>>(
     (values, [field, extId]) => [
       ...values,
@@ -29,12 +34,15 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
         displayName: 'ActivityCol',
+        width: (design.objects[extId] || [null]).length * 150,
         render: (activity: TActivity) => (
           <ColumnWrapper
             activity={activity}
             type='VALUE'
             prop={extId}
             mapping={_design}
+            columnPrefix={columnPrefix}
+            renderer={renderer}
           />
         ),
       },

@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 
 const FieldValue = ({ value }) => {
   const formattedValue = Array.isArray(value) ? value.join(', ') : value;
-
-  return formattedValue;
+  return formattedValue || null;
 };
 
 FieldValue.propTypes = {

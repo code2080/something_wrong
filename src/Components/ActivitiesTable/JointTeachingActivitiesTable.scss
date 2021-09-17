@@ -1,0 +1,28 @@
+@import '../../Styles/globals.scss';
+
+.joint-teaching-activities-table {
+  .ant-table-thead {
+    // .cell--activity-index {
+    //   border: 0;
+    //   background-color: #fff;
+
+    //   &::before {
+    //     display: none;
+    //   }
+    // }
+  }
+  .ant-table-footer {
+    background: none;
+    margin-top: 20px;
+    padding: 0;
+  }
+
+  .ant-table {
+    .cell--activity-index {
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+    }
+  }
+  &:not(.readonly) .virtual-table-row-last {
+    color: $jungleGreen;
+  }
+}

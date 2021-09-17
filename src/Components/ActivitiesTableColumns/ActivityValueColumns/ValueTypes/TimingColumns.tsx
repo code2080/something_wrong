@@ -36,6 +36,7 @@ const timingCols = {
     title: 'Start time',
     key: 'startTime',
     dataIndex: null,
+    width: 150,
     render: (activity) => (
       <SortableTableCell className={`startTime_${activity._id}`}>
         <BaseActivityCol
@@ -53,6 +54,7 @@ const timingCols = {
   endTimeExact: (mapping) => ({
     title: 'End time',
     key: 'endTime',
+    width: 150,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`endTime_${activity._id}`}>
@@ -71,6 +73,7 @@ const timingCols = {
   startTimeTimeslots: (mapping) => ({
     title: 'Start after or at:',
     key: 'startTime',
+    width: 200,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`startTimeOrAt_${activity._id}`}>
@@ -88,6 +91,7 @@ const timingCols = {
   }),
   endTimeTimeslots: (mapping) => ({
     title: 'End before or at:',
+    width: 200,
     key: 'endTime',
     dataIndex: null,
     render: (activity) => (
@@ -106,6 +110,7 @@ const timingCols = {
   }),
   length: (mapping) => ({
     title: 'Length',
+    width: 70,
     key: 'length',
     dataIndex: null,
     render: (activity) => (
@@ -124,6 +129,7 @@ const timingCols = {
   padding: (mapping) => ({
     title: 'Padding',
     key: 'padding',
+    width: 70,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`padding_${activity._id}`}>
@@ -140,6 +146,7 @@ const timingCols = {
   weekday: (mapping) => ({
     title: 'Weekday',
     key: 'weekday',
+    width: 70,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`weekday_${activity._id}`}>
@@ -157,6 +164,7 @@ const timingCols = {
   dateRanges: (mapping) => ({
     title: 'Date ranges',
     key: 'dateRanges',
+    width: 120,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`dateRanges_${activity._id}`}>
@@ -174,6 +182,7 @@ const timingCols = {
   time: (mapping) => ({
     title: 'Exact time',
     key: 'time',
+    width: 120,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`time_${activity._id}`}>

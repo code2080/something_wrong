@@ -68,6 +68,7 @@ const DynamicTableHOC = ({
   onSearch,
   onMove,
   rowSelection,
+  rowClassName,
 }) => {
   const history = useHistory();
   /**
@@ -266,6 +267,7 @@ const DynamicTableHOC = ({
               sortDirections={['descend', 'ascend']}
               onRow={onRowHandler}
               {...otherProps}
+              rowClassName={rowClassName}
             />
           </DndProvider>
         </>
@@ -295,6 +297,7 @@ DynamicTableHOC.propTypes = {
   onSearch: PropTypes.func,
   onMove: PropTypes.func,
   rowSelection: PropTypes.object,
+  rowClassName: PropTypes.string,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -316,6 +319,7 @@ DynamicTableHOC.defaultProps = {
   draggable: false,
   onSearch: null,
   onMove: null,
+  rowClassName: null,
 };
 
 export default withResizeDetector(

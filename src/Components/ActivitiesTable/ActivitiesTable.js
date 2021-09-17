@@ -48,6 +48,8 @@ const ActivitiesTable = ({
   formId,
   mapping: design,
   activities,
+  columnPrefix,
+  renderer,
 }) => {
   const dispatch = useDispatch();
   const onMove = (sourceIdx, destinationIdx) => {
@@ -58,7 +60,9 @@ const ActivitiesTable = ({
     }
   };
 
-  const columns = design ? createActivitiesTableColumnsFromMapping(design) : [];
+  const columns = design
+    ? createActivitiesTableColumnsFromMapping(design, columnPrefix, renderer)
+    : [];
   const dataSource = getActivityDataSource(activities);
 
   return (
@@ -81,11 +85,15 @@ ActivitiesTable.propTypes = {
   formId: PropTypes.string.isRequired,
   mapping: PropTypes.object,
   activities: PropTypes.array,
+  columnPrefix: PropTypes.func,
+  renderer: PropTypes.func,
 };
 
 ActivitiesTable.defaultProps = {
   mapping: null,
   activities: [],
+  columnPrefix: null,
+  renderer: null,
 };
 
 export default ActivitiesTable;

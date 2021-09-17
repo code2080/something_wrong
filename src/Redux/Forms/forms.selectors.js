@@ -76,3 +76,10 @@ export const selectElementType = (formId, sectionId, elementId) =>
     if (!element) return null;
     return get(elements.map, [element.elementId, 'type']);
   });
+
+export const selectSectionById = (formId, sectionId) =>
+  createSelector(formState, (forms) => {
+    return (forms[formId]?.sections || []).find(
+      (section) => section._id === sectionId,
+    );
+  });

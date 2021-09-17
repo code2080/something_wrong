@@ -1,0 +1,13 @@
+@import './globals.scss';
+
+.text {
+  &--success {
+    color: $jungleGreen !important;
+  }
+  &--error {
+    color: $bittersweet !important;
+  }
+  &--warning {
+    color: $candlelight !important;
+  }
+}

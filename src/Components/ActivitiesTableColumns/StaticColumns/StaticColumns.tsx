@@ -6,6 +6,7 @@ export const StaticColumns = [
   {
     title: 'Submission',
     key: 'formInstanceId',
+    width: 170,
     render: (activity) => (
       <SortableTableCell
         className={`formInstanceId_${activity.formInstanceId}`}

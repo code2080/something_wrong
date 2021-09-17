@@ -12,8 +12,10 @@ import { TActivity } from '../../Types/Activity.type';
 import SelectionColumn from './SelectionColumn';
 
 const VirtualTable = (props: Parameters<typeof Table>[0]) => {
-  const { columns, scroll, rowSelection, rowKey, dataSource } = props;
+  const { columns, scroll, rowSelection, rowKey, dataSource, className } =
+    props;
   const [tableWidth, setTableWidth] = useState(0);
+  const ref = useRef(null);
 
   const columnswithSelection = [
     SelectionColumn({
@@ -69,13 +71,14 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
 
     const Cell = ({ rowIndex, columnIndex }) => {
       const rowData = rawData[rowIndex] as any;
+      if (!rowData) return null;
       const currentColumn = mergedColumns[columnIndex] as any;
       const dataIndex = currentColumn.dataIndex;
-      const result =
-        typeof currentColumn.render === 'function'
-          ? currentColumn.render(dataIndex ? rowData[dataIndex] : rowData)
-          : rowData[dataIndex] ?? 'N/A';
-      return result;
+      if (typeof currentColumn.render === 'function')
+        return dataIndex
+          ? currentColumn.render(rowData[dataIndex], rowData, rowIndex)
+          : currentColumn.render(rowData, rowIndex);
+      return rowData[dataIndex] ?? 'N/A';
     };
 
     return (
@@ -100,11 +103,18 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
 
           return (
             <div
-              className={classNames('virtual-table-cell', 'ant-table-cell', {
-                'virtual-table-cell-last':
-                  columnIndex === mergedColumns.length - 1,
-                'inactivate-table-cell': activity.isInactive(),
-              })}
+              className={classNames(
+                'virtual-table-cell',
+                'ant-table-cell',
+                {
+                  'virtual-table-cell-last':
+                    columnIndex === mergedColumns.length - 1,
+                  'virtual-table-row-last':
+                    rowIndex === (dataSource || []).length - 1,
+                  'inactivate-table-cell': activity.isInactive(),
+                },
+                mergedColumns[columnIndex]?.className || '',
+              )}
               style={style}
             >
               {Cell({ rowIndex, columnIndex })}
@@ -120,10 +130,15 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
       onResize={({ width }) => {
         setTableWidth(width);
       }}
+      ref={ref}
     >
       <Table
         {...props}
-        className='virtual-table'
+        style={{
+          maxWidth: (document.getElementById('te-prefs-lib') || document.body)
+            .offsetWidth,
+        }}
+        className={`${className || ''} virtual-table`}
         columns={mergedColumns}
         pagination={false}
         components={{
