@@ -21,11 +21,33 @@ export const makeSelectSortParamsForActivities = () =>
   createSelector(
     globalUIState,
     (_, formId: string) => formId,
-    (uiState, formId) => uiState.activitySorting[formId]?.sortParams || null,
+    (uiState, formId) =>
+      uiState.activitySorting[formId]?.activityTable?.sortParams || null,
   );
 export const makeSelectSortOrderForActivities = () =>
   createSelector(
     globalUIState,
     (_, formId: string) => formId,
-    (uiState, formId) => uiState.activitySorting[formId]?.sortOrder || null,
+    (uiState, formId) =>
+      uiState.activitySorting[formId]?.activityTable?.sortOrder || null,
+  );
+
+export const makeSelectSortParamsForJointTeaching = () =>
+  createSelector(
+    globalUIState,
+    (_, formId: string) => formId,
+    (uiState, formId) =>
+      uiState.activitySorting[formId]?.jointTeachingTable?.sortParams || null,
+  );
+export const makeSelectSortOrderForJointTeaching = () =>
+  createSelector(
+    globalUIState,
+    (_, formId: string) => formId,
+    (uiState, formId) =>
+      uiState.activitySorting[formId]?.jointTeachingTable?.sortOrder || null,
+  );
+export const selectUnmatchedActivities = (formId: string) =>
+  createSelector(
+    globalUIState,
+    (globalUI) => globalUI.jointTeaching?.[formId]?.activities || [],
   );

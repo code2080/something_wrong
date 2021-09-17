@@ -7,29 +7,23 @@ import { useForm } from 'antd/lib/form/Form';
 
 // ACTIONS
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
-import { FETCH_FORM_LOOKUPMAP } from 'Redux/Filters/filters.actionTypes';
-import {
-  fetchLookupMap,
-  setSelectedFilterValues,
-} from '../../../Redux/Filters/filters.actions';
+import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.actions';
+
+// HOOKS
+import { useFetchLabelsFromExtIds } from 'Hooks/TECoreApiHooks';
 
 // SELECTORS
-import {
-  makeSelectFormLookupMap,
-  makeSelectSelectedFilterValues,
-} from '../../../Redux/Filters/filters.selectors';
+import { selectFormActivityLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.selectors';
 
 // CONSTANTS
-import type { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
-import type { GetExtIdPropsPayload } from '../../../Types/TECorePayloads.type';
+import type { TFilterLookUpMap } from 'Types/FilterLookUp.type';
+import type { GetExtIdPropsPayload } from 'Types/TECorePayloads.type';
+import { FETCH_ACTIVITY_FILTER_LOOKUP_MAP } from 'Redux/FilterLookupMap/filterLookupMap.actionTypes';
 
 // COMPONENTS
-import { useFetchLabelsFromExtIds } from '../../../Hooks/TECoreApiHooks';
 import FilterSettings from './FilterSettings';
 import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
-
-// HOOKS
 
 import './FilterModal.scss';
 
@@ -42,6 +36,8 @@ type Props = {
   formId: string;
   isVisible?: boolean;
   onClose?(): void;
+  selectedFilterValues: any;
+  onSubmit: (values) => void;
 };
 
 const getLabelsFromProp = {
@@ -82,14 +78,13 @@ const FilterModal = ({
   isVisible = false,
   onClose = _.noop,
   formId,
+  selectedFilterValues,
+  onSubmit,
 }: Props) => {
   const dispatch = useDispatch();
   const [form] = useForm();
-  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
 
-  const filterLookupMap = useSelector((state) =>
-    selectFormLookupMap(state, formId),
-  );
+  const filterLookupMap = useSelector(selectFormActivityLookupMap(formId));
 
   const teCorePayload = useMemo(
     () => getTECorePayload(filterLookupMap),
@@ -97,35 +92,25 @@ const FilterModal = ({
   );
   useFetchLabelsFromExtIds(teCorePayload);
 
-  const selectSelectedFilterValues = useMemo(
-    () => makeSelectSelectedFilterValues(),
-    [],
-  );
-
   const loading: boolean = useSelector(
-    createLoadingSelector([FETCH_FORM_LOOKUPMAP]),
-  );
-
-  const currentlySelectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId),
+    createLoadingSelector([FETCH_ACTIVITY_FILTER_LOOKUP_MAP]),
   );
 
   useEffect(
-    () => isVisible && dispatch(fetchLookupMap({ formId })),
+    () => isVisible && dispatch(fetchActivityFilterLookupMap({ formId })),
     [dispatch, formId, isVisible],
   );
   const handleCancel = useCallback(() => {
     onClose();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentlySelectedFilterValues, onClose, form]);
+  }, [selectedFilterValues, onClose, form]);
 
   const handleOk = useCallback(
     (values) => {
-      !_.isEqual(values, currentlySelectedFilterValues) &&
-        dispatch(setSelectedFilterValues({ formId, filterValues: values }));
+      !_.isEqual(values, selectedFilterValues) && onSubmit(values);
       onClose();
     },
-    [currentlySelectedFilterValues, dispatch, formId, onClose],
+    [selectedFilterValues, onSubmit, onClose],
   );
 
   return (
@@ -133,7 +118,7 @@ const FilterModal = ({
       filterLookupMap={filterLookupMap}
       form={form}
       formId={formId}
-      defaultMapping={isVisible ? currentlySelectedFilterValues : {}}
+      defaultMapping={isVisible ? selectedFilterValues : {}}
     >
       {({ onSubmit }) => {
         return (

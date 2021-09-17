@@ -92,13 +92,12 @@ const reducer = (
     case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
       const {
         payload: {
-          activities: activityObjs,
+          activities: activitityObjs,
           actionMeta: { formId, sections, tableType },
         },
       } = action;
-
-      const activities = updateActivitiesForForm(activityObjs, sections);
-      const formIdValue = `${formId}${tableType || ''}`;
+      const activities = updateActivitiesForForm(activitityObjs, sections);
+      const formIdValue = tableType ? formId + tableType : formId;
 
       return {
         ...state,

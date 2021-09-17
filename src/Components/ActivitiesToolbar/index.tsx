@@ -1,18 +1,19 @@
+import { Key, useMemo } from 'react';
 import { Button, Divider, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+// ACTIONS
+import { setSelectedFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
-import { Key, useMemo } from 'react';
-import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
 import { activityFilterFn } from 'Utils/activities.helpers';
-import { makeSelectActivitiesForFormAndIds } from '../../Redux/Activities/activities.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { makeSelectActivitiesForFormAndIds } from 'Redux/Activities/activities.selectors';
+import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
+import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
+import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
 import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
 import ActivityFiltering from '../ActivityFiltering';
 
@@ -48,11 +49,22 @@ const ActivitiesToolbar = ({
   onDeleteActivities,
   allActivities,
 }: Props) => {
+  const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
+  const selectSelectedFilterValues = useMemo(
+    () => makeSelectSelectedFilterValues(),
+    [],
+  );
+
+  const selectedFilterValues = useSelector((state) =>
+    selectSelectedFilterValues(state, `${formId}_ACTIVITIES_TABLE`),
+  );
+
   const selectActivitiesForFormAndIds = useMemo(
     () => makeSelectActivitiesForFormAndIds(),
     [],
   );
+
   const selectedActivities: TActivity[] = useSelector((state) =>
     selectActivitiesForFormAndIds(state, {
       formId,
@@ -139,7 +151,17 @@ const ActivitiesToolbar = ({
           formId={formId}
         />
       )}
-      <ActivityFiltering />
+      <ActivityFiltering
+        selectedFilterValues={selectedFilterValues}
+        onSubmit={(values) => {
+          dispatch(
+            setSelectedFilterValues({
+              formId: `${formId}_ACTIVITIES_TABLE`,
+              filterValues: values,
+            }),
+          );
+        }}
+      />
     </div>
   );
 };

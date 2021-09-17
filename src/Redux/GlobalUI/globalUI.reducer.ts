@@ -90,7 +90,7 @@ const reducer = (state = initialState, action) => {
 
     case types.SET_SORTING_FOR_ACTIVITIES: {
       const {
-        payload: { formId, columnKey, direction },
+        payload: { formId, columnKey, direction, tableType },
       } = action;
       const key = columnKey;
       return {
@@ -99,7 +99,11 @@ const reducer = (state = initialState, action) => {
           ...state.activitySorting,
           [formId]: {
             ...state.activitySorting[formId],
-            sortParams: { key, direction },
+            [tableType]: {
+              ...state.activitySorting[formId][tableType],
+              sortParams: { key, direction },
+              tableType,
+            },
           },
         },
       };
@@ -107,13 +111,16 @@ const reducer = (state = initialState, action) => {
 
     case types.RESET_SORTING_FOR_ACTIVITIES: {
       const {
-        payload: { formId },
+        payload: { formId, tableType },
       } = action;
       return {
         ...state,
         activitySorting: {
           ...state.activitySorting,
-          [formId]: null,
+          [formId]: {
+            ...state.activitySorting[formId],
+            [tableType]: null,
+          },
         },
       };
     }
@@ -125,17 +132,43 @@ const reducer = (state = initialState, action) => {
           actionMeta: { formId },
         },
       } = action;
+      if (!action || !action.payload) return state;
       return {
         ...state,
         activitySorting: {
           ...state.activitySorting,
           [formId]: {
             ...state.activitySorting[formId],
-            sortOrder: activities.map((a) => a._id),
+            activityTable: {
+              ...state.activitySorting[formId]?.activityTable,
+              sortOrder: activities.map((a) => a._id),
+            },
+            jointTeachingTable: {
+              ...state.activitySorting[formId]?.jointTeachingTable,
+              sortOrder: activities.map((a) => a._id),
+            },
           },
         },
       };
     }
+
+    case types.SET_UNMATCHED_ACTIVITIES: {
+      const {
+        payload: { formId, activities },
+      } = action;
+
+      return {
+        ...state,
+        jointTeaching: {
+          ...state.jointTeaching,
+          [formId]: {
+            ...state.jointTeaching[formId],
+            activities,
+          },
+        },
+      };
+    }
+
     default:
       return state;
   }

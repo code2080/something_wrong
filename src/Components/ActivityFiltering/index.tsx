@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+// SELECTORS
 import { selectFilterIsActivated } from 'Redux/Filters/filters.selectors';
+
+// TYPES
+import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 
 // COMPONENTS
 import ActivityFilterButton from './Button';
@@ -10,7 +15,12 @@ import FilterModal from './FilterModal/FilterModal';
 // STYLES
 import './index.scss';
 
-const ActivityFiltering = () => {
+interface Props {
+  onSubmit: (values) => void;
+  selectedFilterValues: TActivityFilterQuery;
+}
+
+const ActivityFiltering = ({ onSubmit, selectedFilterValues }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const { formId } = useParams<{ formId: string }>();
   const isActivated = useSelector(selectFilterIsActivated(formId));
@@ -26,6 +36,8 @@ const ActivityFiltering = () => {
         formId={formId}
         isVisible={showModal}
         onClose={() => setShowModal(false)}
+        selectedFilterValues={selectedFilterValues}
+        onSubmit={onSubmit}
       />
     </div>
   );

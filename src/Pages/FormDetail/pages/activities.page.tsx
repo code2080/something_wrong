@@ -45,16 +45,6 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const selectActivitiesForForm = useMemo(
-    () => makeSelectActivitiesForForm(),
-    [],
-  );
-
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
-  );
-  const allActivities = Object.values(activities).flat();
-  const keyedActivities = _.keyBy(allActivities, '_id');
 
   // Select filters
   const selectSelectedFilterValues = useMemo(
@@ -62,7 +52,7 @@ const ActivitiesPage = () => {
     [],
   );
   const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId),
+    selectSelectedFilterValues(state, formId + tableType),
   );
 
   // Select sorting
@@ -72,8 +62,20 @@ const ActivitiesPage = () => {
   );
 
   const selectedSortingParams = useSelector((state) =>
-    selectActivityParamSorting(state, formId),
+    selectActivityParamSorting(state, formId, tableType),
   );
+
+  const selectActivitiesForForm = useMemo(
+    () => makeSelectActivitiesForForm(),
+    [],
+  );
+
+  const activities = useSelector((state) =>
+    selectActivitiesForForm(state, formId),
+  );
+
+  const allActivities = Object.values(activities).flat();
+  const keyedActivities = _.keyBy(allActivities, '_id');
 
   const selectActivitySortingOrder = useMemo(
     () => makeSelectSortOrderForActivities(),
@@ -109,7 +111,6 @@ const ActivitiesPage = () => {
       ),
     );
   }, [dispatch, formId, selectedFilterValues, selectedSortingParams]);
-
   /**
    * HOOKS
    */
