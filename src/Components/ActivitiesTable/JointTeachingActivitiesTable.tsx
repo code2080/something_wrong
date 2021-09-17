@@ -86,7 +86,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       isInactive: () => false,
       sequenceIdx: -1,
     };
-  }, [readonly, activities, selectedJointTeachingValue]);
+  }, [
+    showResult,
+    activities,
+    allElementIds,
+    selectedJointTeachingValue,
+    indexedSubmissions,
+  ]);
 
   const finalActivities = compact([...activities, resultsRow]);
 
@@ -102,10 +108,9 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         columnPrefix={
           !readonly
             ? (activity: TActivity, activityValue: ActivityValue) => {
-                if (!activity || Number(activity.sequenceIdx) < 0) return null;
+                if (!activity || Number(activity?.sequenceIdx) < 0) return null;
                 if (
-                  activityValue &&
-                  activityValue.elementId &&
+                  activityValue?.elementId &&
                   (allElementIds || []).includes(activityValue.elementId)
                 ) {
                   return (
@@ -129,10 +134,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
             : undefined
         }
         renderer={(activity, values) => {
-          if (
-            activity.sequenceIdx < 0 &&
-            (isEmpty(values) || isEmpty(values[0].value))
-          ) {
+          if (activity.sequenceIdx < 0 && isEmpty(values[0]?.value)) {
             return <span className='text--error'>N/A</span>;
           }
           return undefined;
@@ -162,7 +164,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               key: 'submitter',
               width: 150,
               render: (activity) => {
-                if (activity.submitters) return activity.submitters;
+                if (activity?.submitters) return activity.submitters;
                 return indexedSubmissions[activity.formInstanceId]?.submitter;
               },
             },
