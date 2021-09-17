@@ -64,6 +64,7 @@ const ColumnWrapper = ({
           />
         </>
       ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activity, activityValues, mapping, prop, type]);
 
   return (

@@ -39,7 +39,6 @@ const ActivitiesPage = () => {
   const dispatch = useDispatch();
   const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
-  const tableType = '_ACTIVITIES_TABLE';
 
   /**
    * SELECTORS
@@ -51,7 +50,7 @@ const ActivitiesPage = () => {
     [],
   );
   const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId + tableType),
+    selectSelectedFilterValues(state, formId),
   );
 
   // Select sorting
@@ -61,7 +60,7 @@ const ActivitiesPage = () => {
   );
 
   const selectedSortingParams = useSelector((state) =>
-    selectActivityParamSorting(state, formId, tableType),
+    selectActivityParamSorting(state, formId),
   );
 
   const selectActivitiesForForm = useMemo(
@@ -106,7 +105,6 @@ const ActivitiesPage = () => {
         formId,
         selectedFilterValues,
         selectedSortingParams,
-        tableType,
       ),
     );
   }, [dispatch, formId, selectedFilterValues, selectedSortingParams]);

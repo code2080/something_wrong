@@ -71,7 +71,6 @@ const UnmatchedActivities = ({ formId }: Props) => {
   return (
     <div>
       <JointTeachingToolbar
-        tableType='jointTeachingUnmatchedActivities'
         onSelectAll={selectAll}
         onDeselectAll={deselectAll}
         onCreateJointTeachingMatch={createJointTeachingMatch}

@@ -100,7 +100,7 @@ const reducer = (state = initialState, action) => {
           [formId]: {
             ...state.activitySorting[formId],
             [tableType]: {
-              ...state.activitySorting[formId][tableType],
+              ...state.activitySorting[formId],
               sortParams: { key, direction },
               tableType,
             },
