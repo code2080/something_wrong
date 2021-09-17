@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
@@ -34,7 +34,6 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
-import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
@@ -186,22 +185,6 @@ const ActivitiesPage = () => {
           post: StaticColumns,
         }}
       />
-      {/* TODO: For testing purpose, have to removed after review */}
-      {isBeta && (
-        <JointTeachingActivitiesTable
-          showResult
-          formId={formId}
-          activities={tableDataSource}
-          header={<h3>Table header</h3>}
-          footer={
-            <div>
-              <Button>Create</Button>
-              &nbsp;&nbsp;&nbsp;
-              <Button>Another button</Button>
-            </div>
-          }
-        />
-      )}
     </>
   );
 };
