@@ -199,7 +199,6 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const { formId } = useParams<{ formId: string }>();
   const filterLookupMap = useSelector(selectFormActivityLookupMap(formId));
 
-  console.log('filterLookupMap', filterLookupMap);
   const teCorePayload = useMemo(
     () => getTECorePayload(filterLookupMap),
     [filterLookupMap],

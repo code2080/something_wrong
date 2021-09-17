@@ -1,9 +1,10 @@
 import React from 'react';
+import JointTeachingGroupsTable from './JointTeachingGroupsTable/JointTeachingGroupsTable';
 
 const MatchedActivities = () => {
   return (
     <div>
-      <h1>Matched activities</h1>
+      <JointTeachingGroupsTable />
     </div>
   );
 };

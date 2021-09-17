@@ -134,3 +134,12 @@ export const setActivityFilterInclusion = ({
 }: TActionSetActivityFilterInclusion) => ({
   type: types.SET_ACTIVITY_FILTER_INCLUSION,
 });
+
+export const setFilterValues = ({ origin, formId, values }) => ({
+  type: types.SET_FILTER_VALUES,
+  payload: {
+    origin,
+    formId,
+    values,
+  },
+});

@@ -37,10 +37,20 @@ const JointTeachingToolbar = ({
         Deselect all
       </Button>
       <Divider type='vertical' />
-      <Button size='small' type='link' onClick={onCreateJointTeachingMatch}>
+      <Button
+        size='small'
+        type='link'
+        disabled={!selectedRowKeys?.length}
+        onClick={onCreateJointTeachingMatch}
+      >
         Create joint teaching match
       </Button>
-      <Button size='small' type='link' onClick={onAddJointTeachingMatch}>
+      <Button
+        size='small'
+        type='link'
+        disabled={!selectedRowKeys?.length}
+        onClick={onAddJointTeachingMatch}
+      >
         Add to joint teaching match
       </Button>
       <JointTeachingFiltering tableType={tableType} />

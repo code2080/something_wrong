@@ -1,3 +1,7 @@
+import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
+import { TActivity } from 'Types/Activity.type';
+import { Activity } from 'Models/Activity.model';
+
 export enum JointTeachingStatus {
   MERGED = 'MERGED',
   NOT_MERGED = 'NOT_MERGED',
@@ -17,25 +21,32 @@ export type JointTeachingConflict = {
 };
 
 export default class JointTeachingGroup {
-  _id?: string;
+  _id: string;
+  activities: TActivity[];
   activityIds: string[];
   conflicts: JointTeachingConflict[];
   status: JointTeachingStatus;
+  primaryObjects: string[];
 
   constructor({
     _id,
-    activityIds,
     conflicts = [],
     status = JointTeachingStatus.NOT_MERGED,
+    activities,
+    activitiesDetail,
   }: {
-    _id?: string;
+    _id: string;
     activityIds: string[];
     conflicts?: JointTeachingConflict[];
     status?: JointTeachingStatus;
+    activities: string[];
+    activitiesDetail: IndexedObject[];
   }) {
     this._id = _id;
-    this.activityIds = activityIds;
+    this.activityIds = activities;
     this.conflicts = conflicts;
     this.status = status;
+    this.activities = activitiesDetail.map((act) => new Activity(act));
+    this.primaryObjects = [];
   }
 }
