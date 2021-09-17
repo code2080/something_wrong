@@ -8,12 +8,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { makeSelectSortParamsForJointTeaching } from 'Redux/GlobalUI/globalUI.selectors';
 import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
-import { setUnmatchedActivities } from '../../../Redux/GlobalUI/globalUI.actions';
+import { setUnmatchedActivities } from 'Redux/GlobalUI/globalUI.actions';
 import { fetchActivitiesForForm } from '../../../Redux/Activities/activities.actions';
 
-import './jointTeaching.page.scss';
 import UnmatchedActivities from './JointTeaching/UnmatchedActivities';
 import MatchedActivities from './JointTeaching/MatchedActivities';
+
+// ACTIONS
+
+import './jointTeaching.page.scss';
 
 const JointTeachingPage = () => {
   const dispatch = useDispatch();

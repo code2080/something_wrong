@@ -14,7 +14,7 @@ import {
 const fetchActivitiesForFormFlow = (formId, tableType) => ({
   request: () => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
-    payload: { actionMeta: { formId } },
+    payload: { actionMeta: { formId, origin } },
   }),
   success: (response) => {
     const storeState = window.tePrefsLibStore.getState();

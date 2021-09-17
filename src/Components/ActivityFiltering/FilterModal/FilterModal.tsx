@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'antd/lib/form/Form';
 
 // ACTIONS
-import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.actions';
 
 // HOOKS
@@ -14,6 +13,7 @@ import { useFetchLabelsFromExtIds } from 'Hooks/TECoreApiHooks';
 
 // SELECTORS
 import { selectFormActivityLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.selectors';
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
 import type { TFilterLookUpMap } from 'Types/FilterLookUp.type';

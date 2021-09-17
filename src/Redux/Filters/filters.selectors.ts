@@ -68,3 +68,9 @@ export const selectFilterIsActivated = (formId: string) =>
       return false;
     return !isEmptyDeep(formFilterQueriesWithoutSettings);
   });
+
+export const selectSelectedFilterItemsForMatchedActivities = (formId: string) =>
+  createSelector(
+    filterstate,
+    (filters) => filters.matchedActivities[formId] || {},
+  );

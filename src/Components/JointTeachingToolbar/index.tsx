@@ -46,8 +46,8 @@ const JointTeachingToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={onAddJointTeachingMatch}
         disabled={!selectedRowKeys?.length}
+        onClick={onAddJointTeachingMatch}
       >
         Add to joint teaching match
       </Button>

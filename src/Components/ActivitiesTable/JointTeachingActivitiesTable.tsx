@@ -17,6 +17,8 @@ import { ActivityValue } from 'Types/ActivityValue.type';
 import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
+import AddActivitiesToJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
+import { selectUnmatchedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 
 interface Props {
   formId: string;
@@ -30,7 +32,6 @@ interface Props {
   selectedActivities?: Key[];
   onSelect?(selectedRowKeys: Key[]): void;
 }
-
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
 }
@@ -39,11 +40,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState(
     {},
   );
+  const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
   const {
     activities,
     formId,
     readonly,
     onRemove,
+    onAddActivity,
     footer,
     header,
     selectedActivities,
@@ -51,7 +54,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     showResult,
     allElementIds,
   } = props;
-
+  const unmatchedActivities = useSelector(selectUnmatchedActivities(formId));
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
@@ -179,9 +182,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
                   return (
                     <Button
                       size='small'
-                      onClick={() => {
-                        console.log('On add new');
-                      }}
+                      onClick={() => setAddActivityModalVisible(true)}
                     >
                       Add more
                     </Button>
@@ -203,6 +204,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         pagination={false}
         selectedActivities={selectedActivities}
         onSelect={onSelect}
+      />
+      <AddActivitiesToJointTeachingGroupModal
+        formId={formId}
+        visible={addActivityModalVisible}
+        onCancel={() => setAddActivityModalVisible(false)}
+        activities={unmatchedActivities}
+        onSubmit={onAddActivity}
       />
     </div>
   );
