@@ -1,0 +1,14 @@
+@import '../../../Styles/globals.scss';
+.jointTeaching-buttons--wrapper {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 0.2rem 8px;
+  .jointTeaching-tabs {
+    .ant-radio-button-wrapper-checked {
+      background-color: $jungleGreen !important;
+      border-color: $jungleGreen !important;
+      color: #fff !important;
+    }
+  }
+}

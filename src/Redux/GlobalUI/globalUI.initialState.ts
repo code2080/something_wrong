@@ -11,4 +11,5 @@ export default {
   selectedFormDetailSubmission: null as any,
   tabHistory: [] as any,
   activitySorting: {} as any,
+  jointTeaching: [] as any,
 };

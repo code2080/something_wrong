@@ -8,7 +8,12 @@ import { renderWithState } from '../../../../Utils/test.utils';
 describe('Filter Modal tests', () => {
   beforeEach(() => {
     renderWithState(
-      <FilterModal formId='60acfd026b58240023ae588b' isVisible />,
+      <FilterModal
+        formId='60acfd026b58240023ae588b'
+        isVisible
+        selectedFilterValues={{}}
+        onSubmit={() => {}}
+      />,
       {
         initialState: storeForTestingFilter,
       },

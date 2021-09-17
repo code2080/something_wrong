@@ -35,9 +35,10 @@ import {
   makeSelectSortParamsForActivities,
   selectFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.selectors';
-import { hasPermission } from '../../Redux/Auth/auth.selectors';
-
-// PAGES
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 
 // CONSTANTS
 import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
@@ -53,12 +54,14 @@ import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
 import { selectExtIds } from '../../Redux/TE/te.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
+// PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ActivitiesPage from './pages/activities.page';
 import FormInfoPage from './pages/formInfo.page';
 import SubmissionsPage from './pages/submissions.page';
+import JointTeachingPage from './pages/jointTeaching.page';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -67,6 +70,7 @@ export const TAB_CONSTANT = {
   ACTIVITIES: 'ACTIVITIES',
   ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
   CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER',
+  JOINT_TEACHING: 'JOINT_TEACHING',
 };
 
 const FormPage = () => {
@@ -85,6 +89,7 @@ const FormPage = () => {
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
   );
+  const isBeta = useSelector(selectIsBetaOrDev);
   const hasAssistedSchedulingPermission = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
@@ -111,6 +116,13 @@ const FormPage = () => {
   );
 
   useEffect(() => {
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        selectedFilterValues,
+        selectedSortingParams,
+      ),
+    );
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
@@ -202,6 +214,11 @@ const FormPage = () => {
             key={TAB_CONSTANT.OBJECT_REQUESTS}
           >
             <ObjectRequestsPage />
+          </Tabs.TabPane>
+        )}
+        {isBeta && hasAssistedSchedulingPermission && (
+          <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
+            <JointTeachingPage />
           </Tabs.TabPane>
         )}
         <Tabs.TabPane

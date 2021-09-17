@@ -4,15 +4,13 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { setSelectedFilterValues } from 'Redux/Filters/filters.actions';
+import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.actions';
+
+import { selectFormActivityLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.selectors';
+import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
+
 import PropertySelector from '../PropertySelector';
-import {
-  fetchLookupMap,
-  setSelectedFilterValues,
-} from '../../Redux/Filters/filters.actions';
-import {
-  makeSelectFormLookupMap,
-  makeSelectSelectedFilterValues,
-} from '../../Redux/Filters/filters.selectors';
 import type { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import type { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
@@ -199,10 +197,9 @@ const mapFilterMapToPropSelectorInput = (
 const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-  const selectFormLookupMap = useMemo(() => makeSelectFormLookupMap(), []);
-  const filterLookupMap = useSelector((state) =>
-    selectFormLookupMap(state, formId),
-  );
+  const filterLookupMap = useSelector(selectFormActivityLookupMap(formId));
+
+  console.log('filterLookupMap', filterLookupMap);
   const teCorePayload = useMemo(
     () => getTECorePayload(filterLookupMap),
     [filterLookupMap],
@@ -266,7 +263,7 @@ const FilterModal = ({ isVisible = false, onClose = _.noop }: Props) => {
   );
 
   useEffect(
-    () => isVisible && dispatch(fetchLookupMap({ formId })),
+    () => isVisible && dispatch(fetchActivityFilterLookupMap({ formId })),
     [dispatch, formId, isVisible],
   );
 

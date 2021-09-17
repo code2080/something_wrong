@@ -20,6 +20,7 @@ import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
 import elements from './Elements/elements.reducer';
 import constraints from './Constraints/constraints.reducer';
+import filterLookupMap from './FilterLookupMap/filterLookupMap.reducer';
 import { LOGOUT } from './Auth/auth.actionTypes';
 
 const appReducer = combineReducers({
@@ -41,6 +42,7 @@ const appReducer = combineReducers({
   objectRequests,
   elements,
   constraints,
+  filterLookupMap,
 });
 
 const rootReducer = (state, action) => {
