@@ -1,6 +1,7 @@
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import {
   selectUnmatchedActivities,
@@ -20,6 +21,7 @@ interface Props {
   formId: string;
 }
 const UnmatchedActivities = ({ formId }: Props) => {
+  const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const dispatch = useDispatch();
   const design = useSelector(selectDesignForForm)(formId);
@@ -42,7 +44,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
   };
 
   const createJointTeachingMatch = () => {
-    console.log('createJointTeachingMatch');
+    setCreateNewGroupVisible(true);
   };
 
   const addJointTeachingMatch = () => {
@@ -86,6 +88,17 @@ const UnmatchedActivities = ({ formId }: Props) => {
         additionalColumns={{
           pre: JointTeachingColumn(),
         }}
+      />
+      <CreateNewJointTeachingGroupModal
+        visible={createNewGroupVisible}
+        onCancel={() => {
+          setCreateNewGroupVisible(false);
+          setSelectedRowKeys([]);
+        }}
+        formId={formId}
+        activities={activities.filter(({ _id }) =>
+          selectedRowKeys.includes(_id),
+        )}
       />
     </div>
   );
