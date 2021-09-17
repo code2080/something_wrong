@@ -1,6 +1,6 @@
 // COMPONENTS
-import ObjectFilterValue from '../ValueTypes/ObjectFilterValue.jsx';
-import ObjectObjectValue from '../ValueTypes/ObjectObjectValue.jsx';
+import ObjectFilterValue from '../ValueTypes/ObjectFilterValue';
+import ObjectObjectValue from '../ValueTypes/ObjectObjectValue';
 
 // VALIDATION
 import { validateFilterValue } from '../../../../Utils/activityValues.validation';

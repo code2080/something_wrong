@@ -65,6 +65,7 @@ import {
 
 // STYLES
 import './activityDesigner.page.scss';
+import { ActivityDesign } from '../../../Models/ActivityDesign.model';
 
 const ActivityDesignPage = () => {
   const { formId } = useParams();
@@ -97,7 +98,9 @@ const ActivityDesignPage = () => {
   /**
    * STATE VARS
    */
-  const [design, setDesign] = useState(storeDesign);
+  const [design, setActivityDesign] = useState(storeDesign);
+  const setDesign = (activityDesign) =>
+    setActivityDesign(new ActivityDesign(activityDesign));
   const [availableTypes, setAvailableTypes] = useState([]);
   const [availableFields, setAvailableFields] = useState([]);
   const designRef = useRef();

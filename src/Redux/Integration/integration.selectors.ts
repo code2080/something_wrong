@@ -259,7 +259,7 @@ const getValueFromElement = (el) => {
 };
 
 const getPayloadForVerticalSection = (element, values) =>
-  values
+  (values || [])
     .filter((el) => el.elementId === element._id)
     .map((el) =>
       getTECoreAPIPayload(getValueFromElement(el), element.datasource),

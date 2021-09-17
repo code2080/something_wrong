@@ -1,8 +1,8 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import isNil from 'lodash/isNil';
-import { renderElementValue } from 'Utils/rendering.helpers';
+import { renderElementValue } from '../../../../Utils/rendering.helpers';
 import { selectMultipleExtIdLabels } from '../../../../Redux/TE/te.selectors';
 
 // COMPONENTS
@@ -19,17 +19,29 @@ import { elementTypes } from '../../../../Constants/elementTypes.constants';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestDropdown from '../../../Elements/DatasourceInner/ObjectRequestDropdown';
 
-// HELPERS
+type ObjectObjectValueProps = {
+  value: string | string[];
+  formId?: string;
+  sectionId?: string;
+  elementId?: string;
+};
 
-const standardizeValue = (value) =>
+const standardizeValue = (value: string | string[]): string[] =>
   (Array.isArray(value) ? value : [value]).filter((val) => !isNil(val));
 
-const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
-  const objectRequests = useSelector(selectFormObjectRequest(formId));
+const ObjectObjectValue = ({
+  value,
+  formId,
+  sectionId,
+  elementId,
+}: ObjectObjectValueProps): JSX.Element => {
+  const objectRequests = useSelector(selectFormObjectRequest(formId ?? ''));
 
   const elementType = useSelector(
     selectElementType(formId, sectionId, elementId),
   );
+
+  // ElementId could be scopedObject | groups | templates. In these cases we would not find any matching element from preferences, therefore element will be undefined.
   const element = useSelector(selectElementById(formId, sectionId, elementId));
   const stdValue = standardizeValue(value);
   const labels = useSelector(selectMultipleExtIdLabels)(
@@ -37,30 +49,42 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
   );
 
   if (elementType === elementTypes.ELEMENT_TYPE_DATASOURCE) {
-    return stdValue.map((item, itemIndex) =>
-      item.split(',').map((val, valIndex) => {
-        const request = _.find(objectRequests, ['_id', val]);
-        return request ? (
-          <ObjectRequestDropdown key={request._id} request={request} />
-        ) : (
-          <DatasourceReadonly
-            key={`${itemIndex}_${valIndex}`}
-            value={labels[val]}
-          />
-        );
-      }),
+    return (
+      <>
+        {stdValue.map((item, itemIndex) =>
+          item.split(',').map((val, valIndex) => {
+            const request = _.find(objectRequests, ['_id', val]);
+            return request ? (
+              <ObjectRequestDropdown key={request._id} request={request} />
+            ) : (
+              <DatasourceReadonly
+                key={`${itemIndex}_${valIndex}`}
+                value={labels[val]}
+              />
+            );
+          }),
+        )}
+      </>
     );
   }
 
   const [requests, values] = _.partition(stdValue, (value) =>
     _.find(objectRequests, ['_id', value]),
   );
-  const valueDisplay = renderElementValue(values, element);
+
+  // Will try to replace the values with labels
+  const replaceWithLabels = (values: string[], labels: Dictionary<string>) =>
+    values.map((val) => labels[val]);
+
+  const valueDisplay = element
+    ? renderElementValue(values, element)
+    : replaceWithLabels(values, labels);
 
   const requestComponents = requests
     .map((reqId) => _.find(objectRequests, ['_id', reqId]))
+    .filter(Boolean)
     .map((request) => (
-      <ObjectRequestDropdown request={request} key={request._id} />
+      <ObjectRequestDropdown request={request} key={request?._id || ''} />
     ));
   return (
     <>
@@ -71,7 +95,10 @@ const ObjectObjectValue = ({ value, formId, sectionId, elementId }) => {
 };
 
 ObjectObjectValue.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
   formId: PropTypes.string,
   sectionId: PropTypes.string,
   elementId: PropTypes.string,

@@ -7,17 +7,18 @@ import SortableTableCell from '../../Components/DynamicTable/SortableTableCell';
 import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging';
 
 // COLUMNS
+import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import TitleCell from './new/TitleCell';
 import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 
-// SORTERS
 export const createActivitiesTableColumnsFromMapping = (design) => {
+  const _design = new ActivityDesign(design);
   const allActivityValues = [
-    ...Object.keys(design.objects).map(
+    ...Object.keys(_design.objects).map(
       (objKey) => ['types', objKey] as [Field, string],
     ),
-    ...Object.keys(design.fields).map(
+    ...Object.keys(_design.fields).map(
       (fieldKey) => ['fields', fieldKey] as [Field, string],
     ),
   ];
@@ -33,7 +34,7 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
             activity={activity}
             type='VALUE'
             prop={extId}
-            mapping={design}
+            mapping={_design}
           />
         ),
       },
@@ -66,7 +67,7 @@ export const createActivitiesTableColumnsFromMapping = (design) => {
       ),
       sorter: true,
     },
-    ...TimingColumns[design.timing.mode](design),
+    ...TimingColumns[_design.timing.mode](_design),
     ...activityValueColumns,
   ];
 };

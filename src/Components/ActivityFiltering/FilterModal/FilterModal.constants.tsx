@@ -9,7 +9,9 @@ export const INITIAL_FILTER_VALUES = {
   'settings.includeSubmission': 'SINGLE',
   'settings.jointTeaching': 'INCLUDE',
 } as const;
-export const FILTER_ITEMS_MAPPING: ItemsMapping = {
+export const FILTER_ITEMS_MAPPING = (
+  isBeta: boolean = false,
+): ItemsMapping => ({
   date: {
     name: 'date',
     title: 'Date',
@@ -20,20 +22,24 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
       </Form.Item>
     ),
   },
-  time: {
-    name: 'time',
-    title: 'Time',
-    label: 'Time',
-    render: () => (
-      <Form.Item label='Select time interval' name='time'>
-        <TimePicker.RangePicker
-          format='HH:mm'
-          allowEmpty={[true, true]}
-          minuteStep={30}
-        />
-      </Form.Item>
-    ),
-  },
+  ...(isBeta
+    ? {
+        time: {
+          name: 'time',
+          title: 'Time',
+          label: 'Time',
+          render: () => (
+            <Form.Item label='Select time interval' name='time'>
+              <TimePicker.RangePicker
+                format='HH:mm'
+                allowEmpty={[true, true]}
+                minuteStep={30}
+              />
+            </Form.Item>
+          ),
+        },
+      }
+    : {}),
   // startTime: {
   //   name: 'startTime',
   //   title: 'Start time',
@@ -69,4 +75,4 @@ export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   //   name: 'primaryObject',
   //   label: 'Priamry object',
   // })
-};
+});

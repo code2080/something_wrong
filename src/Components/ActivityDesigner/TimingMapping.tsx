@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { Select, Tooltip } from 'antd';
-import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
+import { useSelector } from 'react-redux';
+import CascaderWithTooltip from '../../Components/CascaderWithTooltip/CascaderWithTooltip';
 
 // HELPERS
 import { getElementsForTimingMapping } from '../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -16,17 +17,30 @@ import {
 
 // STYLES
 import './Mapping.scss';
-import { getElementTypeFromId } from '../../Utils/elements.helpers';
 import { elementTypes } from '../../Constants/elementTypes.constants';
 import { SECTION_CONNECTED } from '../../Constants/sectionTypes.constants';
+import { selectElementTypesMap } from '../../Redux/Elements/element.selectors';
 import MultiRowParameter from './MultiRowParameter';
 
-const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
+type TimingMappingProps = {
+  onChange(field: string, values: any[]): void;
+  formSections: any[];
+  mapping: any;
+  disabled?: boolean;
+};
+
+const TimingMapping = ({
+  onChange,
+  formSections,
+  mapping,
+  disabled = false,
+}: TimingMappingProps) => {
   const timingMode = useMemo(
     () => _.get(mapping, 'timing.mode', null),
     [mapping],
   );
 
+  const elementMap = useSelector(selectElementTypesMap());
   const onSequenceModeTimingParameterUpdateValue = (idx, value) => {
     const currValue = _.get(mapping, 'timing.dateRanges', []);
     onChange('dateRanges', [
@@ -46,28 +60,40 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
     if (!value || !value.length) return;
     onChange('dateRanges', [...value.slice(0, idx), ...value.slice(idx + 1)]);
   };
-  const calendarSections = useMemo(() => {
-    return getElementsForTimingMapping[timingMode](
-      formSections.filter(
-        (section) => determineSectionType(section) === SECTION_CONNECTED,
+  const { elements: calendarSections } = useMemo(
+    () =>
+      getElementsForTimingMapping[timingMode](
+        formSections.filter(
+          (section) => determineSectionType(section) === SECTION_CONNECTED,
+        ),
+        mapping,
       ),
-      mapping,
-    );
-  }, [formSections, mapping, timingMode]);
+    [formSections, mapping, timingMode],
+  );
+
+  const { elements: sections, startAndEndTime } = useMemo(
+    () => getElementsForTimingMapping[timingMode](formSections, mapping),
+    [formSections, mapping, timingMode],
+  );
 
   const timingIsDisabled = useCallback(
     (mode) => {
       // TODO: Add more conditions if there is DateTime element in future
-      return !mapping?.timing?.hasTiming && mode !== activityTimeModes.SEQUENCE;
+      return (
+        !(mapping?.timing?.hasTiming ?? !isEmpty(calendarSections)) &&
+        mode !== activityTimeModes.SEQUENCE
+      );
     },
-    [mapping],
+    [calendarSections, mapping?.timing?.hasTiming],
   );
 
-  const sections = useMemo(() => {
-    return getElementsForTimingMapping[timingMode](formSections, mapping);
-  }, [formSections, mapping, timingMode]);
-
-  const filterOnElementTypes = ({ types = [], sections }) => {
+  const filterOnElementTypes = ({
+    types = [],
+    sections,
+  }: {
+    types: any[];
+    sections: any[];
+  }) => {
     if (_.isEmpty(types) || _.isEmpty(sections)) return sections;
     return sections
       .reduce(
@@ -76,7 +102,7 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           {
             ...section,
             children: section.children.filter(({ elementId }) => {
-              const elementType = getElementTypeFromId(elementId);
+              const elementType = elementMap[elementId]?.type;
               return types.includes(elementType);
             }),
           },
@@ -97,7 +123,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
           value={_.get(mapping, 'timing.mode', null)}
           onChange={(val) => onChange('mode', val)}
           size='small'
-          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLElement
+          }
           disabled={disabled}
         >
           {Object.keys(activityTimeModeProps).map((mode) => {
@@ -126,11 +154,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -141,11 +171,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -160,11 +192,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.startTime', null)}
               onChange={(val) => onChange('startTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -175,11 +209,13 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={calendarSections}
+              options={startAndEndTime}
               value={_.get(mapping, 'timing.endTime', null)}
               onChange={(val) => onChange('endTime', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -190,11 +226,16 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={sections}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_DURATION],
+                sections,
+              })}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -209,11 +250,16 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               <span className='is-required'>(required)</span>
             </div>
             <CascaderWithTooltip
-              options={sections}
+              options={filterOnElementTypes({
+                types: [elementTypes.ELEMENT_TYPE_DURATION],
+                sections,
+              })}
               value={_.get(mapping, 'timing.length', null)}
               onChange={(val) => onChange('length', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -228,7 +274,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.padding', null)}
               onChange={(val) => onChange('padding', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -243,7 +291,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.weekday', null)}
               onChange={(val) => onChange('weekday', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />
@@ -258,7 +308,9 @@ const TimingMapping = ({ onChange, formSections, mapping, disabled }) => {
               value={_.get(mapping, 'timing.time', null)}
               onChange={(val) => onChange('time', val)}
               placeholder='Select an element'
-              getPopupContainer={() => document.getElementById('te-prefs-lib')}
+              getPopupContainer={() =>
+                document.getElementById('te-prefs-lib') as HTMLElement
+              }
               size='small'
               disabled={disabled}
             />

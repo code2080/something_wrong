@@ -1,6 +1,8 @@
 import { Menu } from 'antd';
 
 import { capitalize, startCase } from 'lodash';
+import { useSelector } from 'react-redux';
+import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { FILTER_ITEMS_MAPPING, NESTED_FIELDS } from './FilterModal.constants';
 import { reparseKey } from './FilterModal.helper';
 
@@ -16,6 +18,7 @@ const FilterProperties = ({
   filterLookupMap,
   getOptionLabel,
 }: Props) => {
+  const isBeta = useSelector(selectIsBetaOrDev);
   const normalObjectsKey = Object.keys(filterLookupMap).filter(
     (key) => !NESTED_FIELDS.includes(key),
   );
@@ -29,7 +32,7 @@ const FilterProperties = ({
           onSelect={({ key }) => onSelect(key)}
           selectedKeys={[selectedProperty]}
         >
-          {Object.values(FILTER_ITEMS_MAPPING).map((item) => (
+          {Object.values(FILTER_ITEMS_MAPPING(isBeta)).map((item) => (
             <Menu.Item key={item.name}>{item.label}</Menu.Item>
           ))}
           {normalObjectsKey.map((key) => (

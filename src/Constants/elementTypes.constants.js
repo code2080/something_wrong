@@ -27,6 +27,9 @@ export const elementTypes = {
 };
 
 // TYPE DEFINITIONS
+/**
+ * @deprecated use elements in redux store instead. The elementId can vary between environments and cause bugs that doesn't happen in beta because of this!
+ */
 export const elementTypeMapping = {
   ELEMENT_TYPE_INPUT_TEXT: {
     label: 'Text input',
