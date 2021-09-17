@@ -74,7 +74,6 @@ const JointTeachingPage = () => {
     ],
   );
 
-  dispatch(setUnmatchedActivities(formId, unmatchedActivities));
   useEffect(() => {
     dispatch(setUnmatchedActivities(formId, unmatchedActivities));
   }, [dispatch, formId, unmatchedActivities]);
