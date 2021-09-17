@@ -1,5 +1,4 @@
 import { flatten, isEmpty } from 'lodash';
-import JointTeachingGroup from 'Models/JointTeachingGroup.model';
 import { createSelector } from 'reselect';
 import { TActivity } from 'Types/Activity.type';
 

@@ -1,6 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-import ActivityFiltering from 'Components/ActivityFiltering';
 import React from 'react';
 
 const JointTeachingFiltering = () => {

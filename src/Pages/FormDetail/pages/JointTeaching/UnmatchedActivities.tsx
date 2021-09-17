@@ -1,13 +1,11 @@
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import {
   selectUnmatchedActivities,
   makeSelectSortOrderForJointTeaching,
 } from 'Redux/GlobalUI/globalUI.selectors';
-import ActivityTable from '../ActivityTable';
 import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { SorterResult } from 'antd/lib/table/interface';
 import {
@@ -16,6 +14,8 @@ import {
 } from 'Redux/GlobalUI/globalUI.actions';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
+import ActivityTable from '../ActivityTable';
+import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 
 interface Props {
   formId: string;
