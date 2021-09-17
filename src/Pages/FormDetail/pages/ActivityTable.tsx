@@ -2,11 +2,12 @@ import { Key, useMemo, useState } from 'react';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
+import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 
-type Props = {
+interface Props extends TableProps<any> {
   design: any;
   activities: TActivity[];
   selectedActivities?: Key[];
@@ -14,7 +15,9 @@ type Props = {
   onSelect?(selectedRowKeys: Key[]): void;
   onSort?(sorter: SorterResult<object> | SorterResult<object>[]): void;
   additionalColumns?: { pre?: ColumnsType<object>; post?: ColumnsType<object> };
-};
+  columnPrefix?: (a, b) => void;
+  renderer?: (a, b) => void;
+}
 
 const ActivityTable = ({
   design,
@@ -27,6 +30,8 @@ const ActivityTable = ({
     pre: [],
     post: [],
   },
+  columnPrefix,
+  renderer,
   ...props
 }: Props) => {
   const calculateAvailableTableHeight = () => {
@@ -35,8 +40,15 @@ const ActivityTable = ({
 
   const [yScroll] = useState(calculateAvailableTableHeight());
   const tableColumns = useMemo(
-    () => (design ? createActivitiesTableColumnsFromMapping(design) : []),
-    [design],
+    () =>
+      design
+        ? createActivitiesTableColumnsFromMapping(
+            design,
+            columnPrefix,
+            renderer,
+          )
+        : [],
+    [design, columnPrefix, renderer],
   );
   return (
     <VirtualTable
@@ -47,6 +59,7 @@ const ActivityTable = ({
         ...(additionalColumns.post ?? []),
       ]}
       dataSource={activities}
+      rowClassName='test-row'
       rowKey='_id'
       loading={isLoading && !activities?.length}
       rowSelection={
