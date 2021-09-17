@@ -6,7 +6,6 @@ import {
   selectUnmatchedActivities,
   makeSelectSortOrderForJointTeaching,
 } from 'Redux/GlobalUI/globalUI.selectors';
-import ActivityTable from '../ActivityTable';
 import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { SorterResult } from 'antd/lib/table/interface';
 import {
@@ -15,11 +14,14 @@ import {
 } from 'Redux/GlobalUI/globalUI.actions';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
+import ActivityTable from '../ActivityTable';
+import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 
 interface Props {
   formId: string;
 }
 const UnmatchedActivities = ({ formId }: Props) => {
+  const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const dispatch = useDispatch();
   const design = useSelector(selectDesignForForm)(formId);
@@ -42,7 +44,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
   };
 
   const createJointTeachingMatch = () => {
-    console.log('createJointTeachingMatch');
+    setCreateNewGroupVisible(true);
   };
 
   const addJointTeachingMatch = () => {
@@ -86,6 +88,17 @@ const UnmatchedActivities = ({ formId }: Props) => {
         additionalColumns={{
           pre: JointTeachingColumn(),
         }}
+      />
+      <CreateNewJointTeachingGroupModal
+        visible={createNewGroupVisible}
+        onCancel={() => {
+          setCreateNewGroupVisible(false);
+          setSelectedRowKeys([]);
+        }}
+        formId={formId}
+        activities={activities.filter(({ _id }) =>
+          selectedRowKeys.includes(_id),
+        )}
       />
     </div>
   );
