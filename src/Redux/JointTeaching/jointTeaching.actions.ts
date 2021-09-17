@@ -1,6 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
-import * as types from './jointTeaching.actionTypes';
 import { getEnvParams } from '../../configs';
+import * as types from './jointTeaching.actionTypes';
 
 const getBaseEndpoint = (formId: string) =>
   `${getEnvParams().AM_BE_URL}forms/${formId}/joint-teaching`;

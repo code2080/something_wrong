@@ -9,7 +9,6 @@ type Props = {
   onDeselectAll(): void;
   onCreateJointTeachingMatch(): void;
   onAddJointTeachingMatch(): void;
-  tableType: string;
 };
 
 const JointTeachingToolbar = ({
@@ -18,7 +17,6 @@ const JointTeachingToolbar = ({
   onDeselectAll,
   onCreateJointTeachingMatch,
   onAddJointTeachingMatch,
-  tableType,
 }: Props) => {
   return (
     <div className='activities-toolbar--wrapper'>
@@ -53,7 +51,7 @@ const JointTeachingToolbar = ({
       >
         Add to joint teaching match
       </Button>
-      <JointTeachingFiltering tableType={tableType} />
+      <JointTeachingFiltering />
     </div>
   );
 };

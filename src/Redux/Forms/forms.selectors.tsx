@@ -10,7 +10,7 @@ const elementState = (state) => state.elements;
 export const makeSelectForm = () =>
   createSelector(
     formState,
-    (_, formId) => formId,
+    (_, formId: string) => formId,
     (forms, formId) => forms[formId] ?? {},
   );
 
@@ -25,7 +25,7 @@ export const selectAllForms = createSelector(formState, (forms) =>
 
 export const selectTimeslotsForSection = createSelector(
   formState,
-  (forms) => (formId, sectionId) => {
+  (forms) => (formId: string, sectionId: string) => {
     try {
       const form = forms[formId];
       const section = form.sections.find(
@@ -42,7 +42,7 @@ export const selectTimeslotsForSection = createSelector(
 
 export const selectSectionDesign = createSelector(
   formState,
-  (forms) => (formId, sectionId) => {
+  (forms) => (formId: string, sectionId: string) => {
     const form = forms[formId];
     return form && form.sections.find((section) => section._id === sectionId);
   },
@@ -57,7 +57,11 @@ export const selectSectionHasAvailabilityCalendar = (sectionElements) =>
     ),
   );
 
-export const selectElementById = (formId, sectionId, elementId) =>
+export const selectElementById = (
+  formId: string,
+  sectionId: string,
+  elementId: string,
+) =>
   createSelector(formState, (forms) => {
     const form = forms[formId];
     if (!form) return null;
@@ -66,7 +70,11 @@ export const selectElementById = (formId, sectionId, elementId) =>
     return section.elements.find(({ _id }) => _id === elementId);
   });
 
-export const selectElementType = (formId, sectionId, elementId) =>
+export const selectElementType = (
+  formId: string,
+  sectionId: string,
+  elementId: string,
+) =>
   createSelector(formState, elementState, (forms, elements) => {
     const form = forms[formId];
     if (!form) return null;
@@ -75,4 +83,11 @@ export const selectElementType = (formId, sectionId, elementId) =>
     const element = section.elements.find(({ _id }) => _id === elementId);
     if (!element) return null;
     return get(elements.map, [element.elementId, 'type']);
+  });
+
+export const selectSectionById = (formId: string, sectionId: string) =>
+  createSelector(formState, (forms) => {
+    return (forms[formId]?.sections || []).find(
+      (section) => section._id === sectionId,
+    );
   });
