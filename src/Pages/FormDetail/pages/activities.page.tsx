@@ -186,22 +186,6 @@ const ActivitiesPage = () => {
           post: StaticColumns,
         }}
       />
-      {/* TODO: For testing purpose, have to removed after review */}
-      {isBeta && (
-        <JointTeachingActivitiesTable
-          showResult
-          formId={formId}
-          activities={tableDataSource}
-          header={<h3>Table header</h3>}
-          footer={
-            <div>
-              <Button>Create</Button>
-              &nbsp;&nbsp;&nbsp;
-              <Button>Another button</Button>
-            </div>
-          }
-        />
-      )}
     </>
   );
 };
