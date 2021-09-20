@@ -155,13 +155,11 @@ const JointTeachingGroupsTable = (props: Props) => {
         return (
           <div>
             {mergeBtn(group)}
-            <Popconfirm title='Are you sure you want to delete this joint teaching group?'>
-              <Button
-                type='link'
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => onDelete(group._id)}
-              />
+            <Popconfirm
+              title='Are you sure you want to delete this joint teaching group?'
+              onConfirm={() => onDelete(group._id)}
+            >
+              <Button type='link' danger icon={<DeleteOutlined />} />
             </Popconfirm>
           </div>
         );
