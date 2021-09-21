@@ -6,7 +6,7 @@ import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.sel
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
-import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
@@ -18,7 +18,6 @@ import {
   setActivitySorting,
   resetActivitySorting,
 } from '../../../Redux/GlobalUI/globalUI.actions';
-import { fetchActivitiesForForm } from '../../../Redux/Activities/activities.actions';
 
 // SELECTORS
 import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
@@ -34,6 +33,8 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
+import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,8 @@ const ActivitiesPage = () => {
    */
 
   // Select filters
-  const selectSelectedFilterValues = useMemo(
-    () => makeSelectSelectedFilterValues(),
-    [],
-  );
-  const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId),
+  const selectedFilterValues = useSelector(
+    selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }),
   );
 
   // Select sorting
@@ -69,7 +66,7 @@ const ActivitiesPage = () => {
   );
 
   const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
+    selectActivitiesForForm(state, formId, ACTIVITIES_TABLE),
   );
 
   const allActivities = Object.values(activities).flat();
@@ -99,18 +96,15 @@ const ActivitiesPage = () => {
     getExtIdsFromActivities(Object.values(activities).flat());
   }, [activities]);
 
-  useEffect(() => {
-    dispatch(
-      fetchActivitiesForForm(
-        formId,
-        selectedFilterValues,
-        selectedSortingParams,
-      ),
-    );
-  }, [dispatch, formId, selectedFilterValues, selectedSortingParams]);
   /**
    * HOOKS
    */
+  useActivitiesWatcher({
+    formId,
+    filters: selectedFilterValues,
+    sorters: selectedSortingParams,
+    origin: ACTIVITIES_TABLE,
+  });
 
   const design = useSelector(selectDesignForForm)(formId);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);

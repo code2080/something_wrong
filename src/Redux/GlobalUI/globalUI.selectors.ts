@@ -46,8 +46,3 @@ export const makeSelectSortOrderForJointTeaching = () =>
     (uiState, formId) =>
       uiState.activitySorting[formId]?.jointTeachingTable?.sortOrder || null,
   );
-export const selectUnmatchedActivities = (formId: string) =>
-  createSelector(
-    globalUIState,
-    (globalUI) => globalUI.jointTeaching?.[formId]?.activities || [],
-  );

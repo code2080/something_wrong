@@ -1,3 +1,4 @@
+import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { flatten, isEmpty } from 'lodash';
 import { createSelector } from 'reselect';
 
@@ -10,7 +11,7 @@ export const selectJointTeachingGroupsForForm = (formId: string) =>
     activityStateSelector,
     (jointTeaching, activity) => {
       const groups = jointTeaching.groups[formId] || [];
-      const activities = activity?.matchedActivities?.[formId];
+      const activities = activity[`${formId}${MATCHED_ACTIVITIES_TABLE}`];
       if (!activities) return groups;
       const allFilteredActivities = flatten(Object.values(activities)).map(
         (act: any) => act._id,

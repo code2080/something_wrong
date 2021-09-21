@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEmptyDeep } from 'Utils/general.helpers';
 import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
 import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
 import { notification } from 'antd';
@@ -38,14 +38,15 @@ export const fetchActivitiesForForm = (
 ) => {
   const sorting = sortingParam;
   const _filter = deFlattenObject(filter);
+  const { settings, ...others } = _filter || {};
   return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId, tableType),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
     params: {
-      filter: _.isEmpty(_filter)
+      filter: isEmptyDeep(others)
         ? undefined
-        : new ActivityFilterPayload(_filter),
-      settings: _filter?.settings,
+        : new ActivityFilterPayload(others),
+      settings,
       sorting: sorting == null ? undefined : sorting,
     },
   });

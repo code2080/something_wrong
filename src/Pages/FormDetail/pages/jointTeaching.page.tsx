@@ -73,27 +73,27 @@ const JointTeachingPage = () => {
     dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
 
-  useEffect(
-    () =>
-      dispatch(
-        fetchActivitiesForForm(
-          formId,
-          selectedFilterValues,
-          selectedSortingParams,
-        ),
-      ),
-    [
-      dispatch,
-      formId,
-      selectActivitiesForForm,
-      selectedFilterValues,
-      selectedSortingParams,
-    ],
-  );
+  // useEffect(
+  //   () =>
+  //     dispatch(
+  //       fetchActivitiesForForm(
+  //         formId,
+  //         selectedFilterValues,
+  //         selectedSortingParams,
+  //       ),
+  //     ),
+  //   [
+  //     dispatch,
+  //     formId,
+  //     selectActivitiesForForm,
+  //     selectedFilterValues,
+  //     selectedSortingParams,
+  //   ],
+  // );
 
-  useEffect(() => {
-    dispatch(setUnmatchedActivities(formId, unmatchedActivities));
-  }, [dispatch, formId, unmatchedActivities]);
+  // useEffect(() => {
+  //   dispatch(setUnmatchedActivities(formId, unmatchedActivities));
+  // }, [dispatch, formId, unmatchedActivities]);
 
   const renderTab = () => {
     switch (activeTab) {

@@ -45,9 +45,9 @@ export const selectFilter = createSelector(
     },
 );
 
-export const selectFilterIsActivated = (formId: string) =>
+export const selectFilterIsActivated = (formId: string, tableType?: string) =>
   createSelector(filterstate, (filters) => {
-    const formFilterQueries = filters[formId]?.filterValues;
+    const formFilterQueries = filters[`${formId}${tableType || ''}`];
 
     const jointTeachingSettings = pick(
       INITIAL_FILTER_VALUES,
@@ -69,8 +69,8 @@ export const selectFilterIsActivated = (formId: string) =>
     return !isEmptyDeep(formFilterQueriesWithoutSettings);
   });
 
-export const selectSelectedFilterItemsForMatchedActivities = (formId: string) =>
+export const selectSelectedFilterValues = ({ formId, origin }) =>
   createSelector(
     filterstate,
-    (filters) => filters.matchedActivities[formId] || {},
+    (filters) => filters[`${formId}${origin || ''}`] || {},
   );

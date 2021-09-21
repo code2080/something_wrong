@@ -22,7 +22,7 @@ import {
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
-import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
+// import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
 import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
 import { loadFilter } from '../../Redux/Filters/filters.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
@@ -96,45 +96,12 @@ const FormPage = () => {
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
 
-  // Select filters
-  const selectSelectedFilterValues = useMemo(
-    () => makeSelectSelectedFilterValues(),
-    [],
-  );
-  const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, formId),
-  );
-
-  // Select sorting
-  const selectActivityParamSorting = useMemo(
-    () => makeSelectSortParamsForActivities(),
-    [],
-  );
-
-  const selectedSortingParams = useSelector((state) =>
-    selectActivityParamSorting(state, formId),
-  );
-
   useEffect(() => {
-    dispatch(
-      fetchActivitiesForForm(
-        formId,
-        selectedFilterValues,
-        selectedSortingParams,
-      ),
-    );
     dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
-    dispatch(
-      fetchActivitiesForForm(
-        formId,
-        selectedFilterValues,
-        selectedSortingParams,
-      ),
-    );
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
@@ -159,37 +126,37 @@ const FormPage = () => {
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
-  const submissionPayload = useMemo(() => {
-    const sections = form.sections;
-    const submissionValues = submissions.map((submission) => submission.values);
-    const teValues = _.isEmpty(submissionValues)
-      ? initialPayload
-      : getExtIdPropsPayload({
-          sections,
-          submissionValues,
-          objectScope: form.objectScope,
-          activities: Object.values(activities).flat(),
-        });
-    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+  // const submissionPayload = useMemo(() => {
+  //   const sections = form.sections;
+  //   const submissionValues = submissions.map((submission) => submission.values);
+  //   const teValues = _.isEmpty(submissionValues)
+  //     ? initialPayload
+  //     : getExtIdPropsPayload({
+  //         sections,
+  //         submissionValues,
+  //         objectScope: form.objectScope,
+  //         activities: Object.values(activities).flat(),
+  //       });
+  //   const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
-    return {
-      ...teValues,
-      objects: [...teValues.objects, ...scopedObjectExtids],
-    };
-  }, [form.sections, form.objectScope, submissions, activities]);
+  //   return {
+  //     ...teValues,
+  //     objects: [...teValues.objects, ...scopedObjectExtids],
+  //   };
+  // }, [form.sections, form.objectScope, submissions, activities]);
 
   const extIds = useSelector(selectExtIds);
 
-  useEffect(() => {
-    const activityPayload = getExtIdsFromActivities(activities);
-    console.log({ extIds: activityPayload });
-    fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activities]);
+  // useEffect(() => {
+  //   const activityPayload = getExtIdsFromActivities(activities);
+  //   console.log({ extIds: activityPayload });
+  //   fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [activities]);
   // ****
 
   // Effect to get all TE values into redux state
-  useFetchLabelsFromExtIds(submissionPayload);
+  // useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EVENT HANDLERS

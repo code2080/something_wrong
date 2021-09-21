@@ -2,10 +2,7 @@ import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import {
-  selectUnmatchedActivities,
-  makeSelectSortOrderForJointTeaching,
-} from 'Redux/GlobalUI/globalUI.selectors';
+import { makeSelectSortOrderForJointTeaching } from 'Redux/GlobalUI/globalUI.selectors';
 import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { SorterResult } from 'antd/lib/table/interface';
 import {
@@ -16,6 +13,10 @@ import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 import ActivityTable from '../ActivityTable';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
+import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 
 interface Props {
   formId: string;
@@ -33,7 +34,19 @@ const UnmatchedActivities = ({ formId }: Props) => {
       : dispatch(resetActivitySorting(formId));
   };
 
-  const activities = useSelector(selectUnmatchedActivities(formId));
+  const selectedFilterValues = useSelector(
+    selectSelectedFilterValues({ formId, origin: UNMATCHED_ACTIVITIES_TABLE }),
+  );
+  useActivitiesWatcher({
+    formId,
+    filters: selectedFilterValues,
+    sorters: null,
+    origin: UNMATCHED_ACTIVITIES_TABLE,
+  });
+
+  const activities = useSelector(
+    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
+  );
 
   const selectAll = () => {
     console.log('click');
@@ -58,15 +71,14 @@ const UnmatchedActivities = ({ formId }: Props) => {
   const sortOrder = useSelector((state) =>
     selectJointTeachingSortingOrder(state, formId),
   );
-  const allActivities = Object.values(activities).flat();
-  const keyedActivities = _.keyBy(allActivities, '_id');
+  const keyedActivities = _.keyBy(activities, '_id');
 
   const tableDataSource = useMemo(() => {
     const sortedActivities = _.compact<TActivity>(
       sortOrder?.map((activityId) => keyedActivities?.[activityId]),
     );
-    return _.isEmpty(sortedActivities) ? allActivities : sortedActivities;
-  }, [allActivities, keyedActivities, sortOrder]);
+    return _.isEmpty(sortedActivities) ? activities : sortedActivities;
+  }, [activities, keyedActivities, sortOrder]);
 
   return (
     <div>
