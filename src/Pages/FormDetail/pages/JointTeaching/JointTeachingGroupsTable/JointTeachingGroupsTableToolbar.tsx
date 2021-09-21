@@ -16,14 +16,14 @@ interface Props {
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onMerge: (ids: Key[]) => void;
-  onUnmerge: (ids: Key[]) => void;
+  onRevert: (ids: Key[]) => void;
 }
 const JointTeachingGroupsTableToolbar = ({
   selectedRows,
   onSelectAll,
   onDeselectAll,
   onMerge,
-  onUnmerge,
+  onRevert,
   formId,
 }: Props) => {
   const selectedFilterValues = useSelector(
@@ -61,7 +61,7 @@ const JointTeachingGroupsTableToolbar = ({
         Merge selected
       </Button>
       <Button
-        onClick={() => onUnmerge(selectedRows)}
+        onClick={() => onRevert(selectedRows)}
         disabled={!selectedRows.length}
         type='link'
         size='small'

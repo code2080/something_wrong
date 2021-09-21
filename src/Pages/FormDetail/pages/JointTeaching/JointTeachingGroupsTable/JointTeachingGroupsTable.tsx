@@ -9,6 +9,8 @@ import {
   addActivityToJointTeachingGroup,
   deleteActivityFromJointTeachingGroup,
   fetchJointTeachingGroupsForForm,
+  mergeJointTeachingGroup,
+  revertJointTeachingGroup,
 } from 'Redux/JointTeaching/jointTeaching.actions';
 
 // SELECTORS
@@ -22,7 +24,9 @@ import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
 
 // CONSTANTS
 import { FETCH_JOINT_TEACHING_GROUPS_FOR_FORM } from 'Redux/JointTeaching/jointTeaching.actionTypes';
-import JointTeachingGroup from 'Models/JointTeachingGroup.model';
+import JointTeachingGroup, {
+  MAX_MATCHING_SCORE,
+} from 'Models/JointTeachingGroup.model';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import StatusLabel from 'Components/StatusLabel/StatusLabel';
 
@@ -80,11 +84,23 @@ const JointTeachingGroupsTable = (props: Props) => {
   const onDeselectAll = () => {
     setSelectedRows([]);
   };
-  const onMerge = (groupIds: Key[]) => {
-    console.log(`Merge ${groupIds.join(' ,')}`);
+  const onMerge = async (groupIds: Key[]) => {
+    await Promise.all(
+      groupIds.map((groupId) =>
+        dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
+      ),
+    );
+    dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
-  const onUnmerge = (groupIds: Key[]) => {
-    console.log(`Unmerge ${groupIds.join(' ,')}`);
+  const onRevert = async (groupIds: Key[]) => {
+    await Promise.all(
+      groupIds.map((groupId) =>
+        dispatch(
+          revertJointTeachingGroup({ formId, jointTeachingId: groupId }),
+        ),
+      ),
+    );
+    dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
   const onDelete = async (jointTeachingId: string) => {
     await dispatch(
@@ -99,12 +115,17 @@ const JointTeachingGroupsTable = (props: Props) => {
   const mergeBtn = (group: JointTeachingGroup) => {
     if (group.status === 'MERGED')
       return (
-        <Button size='small' type='primary' danger>
+        <Button
+          size='small'
+          type='primary'
+          danger
+          onClick={() => onRevert([group._id])}
+        >
           Revert
         </Button>
       );
     return (
-      <Button size='small' type='primary'>
+      <Button size='small' type='primary' onClick={() => onMerge([group._id])}>
         Merge
       </Button>
     );
@@ -139,8 +160,9 @@ const JointTeachingGroupsTable = (props: Props) => {
     },
     {
       title: 'Match score',
-      key: 'matchScore',
-      render: () => 'N/A',
+      key: 'matchingScore',
+      dataIndex: 'matchingScore',
+      render: (score: number) => `${score}/${MAX_MATCHING_SCORE}`,
     },
     {
       title: 'Matched on',
@@ -190,8 +212,8 @@ const JointTeachingGroupsTable = (props: Props) => {
           formId={formId}
           onSelectAll={onSelectAll}
           onDeselectAll={onDeselectAll}
-          onMerge={onMerge}
-          onUnmerge={onUnmerge}
+          onMerge={() => onMerge(selectedRows)}
+          onRevert={() => onRevert(selectedRows)}
           selectedRows={selectedRows}
         />
       )}
@@ -204,7 +226,7 @@ const JointTeachingGroupsTable = (props: Props) => {
         expandedRowRender={(group: JointTeachingGroup) => (
           <JointTeachingActivitiesTable
             showResult
-            readonly={readonly}
+            readonly={readonly || group.status === 'MERGED'}
             activities={group.activities}
             formId={formId}
             onRemove={(activityId: string) => {

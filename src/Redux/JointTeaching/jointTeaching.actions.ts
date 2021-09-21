@@ -47,6 +47,42 @@ export const createJointTeachingGroup = ({ formId, activityIds }) => {
   });
 };
 
+const mergeJointTeachingGroupFlow = (formId: string) => ({
+  request: () => ({ type: types.MERGE_JOINT_TEACHING_GROUP_REQUEST }),
+  success: (response) => ({
+    type: types.MERGE_JOINT_TEACHING_GROUP_SUCCESS,
+    payload: { ...response, formId },
+  }),
+  failure: (err) => ({
+    type: types.MERGE_JOINT_TEACHING_GROUP_FAILURE,
+    payload: { ...err },
+  }),
+});
+export const mergeJointTeachingGroup = ({ formId, jointTeachingId }) => {
+  return asyncAction.POST({
+    flow: mergeJointTeachingGroupFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/${jointTeachingId}/merge`,
+  });
+};
+
+const revertJointTeachingGroupFlow = (formId: string) => ({
+  request: () => ({ type: types.REVERT_JOINT_TEACHING_GROUP_REQUEST }),
+  success: (response) => ({
+    type: types.REVERT_JOINT_TEACHING_GROUP_SUCCESS,
+    payload: { ...response, formId },
+  }),
+  failure: (err) => ({
+    type: types.REVERT_JOINT_TEACHING_GROUP_FAILURE,
+    payload: { ...err },
+  }),
+});
+export const revertJointTeachingGroup = ({ formId, jointTeachingId }) => {
+  return asyncAction.POST({
+    flow: revertJointTeachingGroupFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/${jointTeachingId}/revert`,
+  });
+};
+
 const deleteJointTeachingGroupFlow = (formId: string) => ({
   request: () => ({ type: types.DELETE_JOINT_TEACHING_GROUP_REQUEST }),
   success: (response) => ({
@@ -116,5 +152,26 @@ export const deleteActivityFromJointTeachingGroup = ({
     params: {
       activityIds,
     },
+  });
+};
+
+const generateJointTeachingGroupFlow = (formId: string) => ({
+  request: () => ({
+    type: types.GENERATE_JOINT_TEACHING_GROUP_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.GENERATE_JOINT_TEACHING_GROUP_SUCCESS,
+    payload: { ...response, formId },
+  }),
+  failure: (err) => ({
+    type: types.GENERATE_JOINT_TEACHING_GROUP_FAILURE,
+    payload: { ...err },
+  }),
+});
+
+export const generateJointTeachingGroup = ({ formId }) => {
+  return asyncAction.POST({
+    flow: generateJointTeachingGroupFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/auto-generate`,
   });
 };

@@ -11,6 +11,9 @@
     .cell--activity-index {
       border-right: 1px solid rgba(0, 0, 0, 0.06);
     }
+    .ant-table-cell {
+      background: none !important;
+    }
   }
   &:not(.readonly) .virtual-table-row-last {
     color: $jungleGreen;

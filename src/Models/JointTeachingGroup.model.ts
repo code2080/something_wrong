@@ -2,6 +2,8 @@ import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from 'Models/Activity.model';
 
+export const MAX_MATCHING_SCORE = 6;
+
 export enum JointTeachingStatus {
   MERGED = 'MERGED',
   NOT_MERGED = 'NOT_MERGED',
@@ -27,6 +29,7 @@ export default class JointTeachingGroup {
   conflicts: JointTeachingConflict[];
   status: JointTeachingStatus;
   primaryObjects: string[];
+  matchingScore: number;
 
   constructor({
     _id,
@@ -34,6 +37,7 @@ export default class JointTeachingGroup {
     status = JointTeachingStatus.NOT_MERGED,
     activities,
     activitiesDetail,
+    matchingScore,
   }: {
     _id: string;
     activityIds: string[];
@@ -41,6 +45,7 @@ export default class JointTeachingGroup {
     status?: JointTeachingStatus;
     activities: string[];
     activitiesDetail: IndexedObject[];
+    matchingScore: number;
   }) {
     this._id = _id;
     this.activityIds = activities;
@@ -48,5 +53,6 @@ export default class JointTeachingGroup {
     this.status = status;
     this.activities = activitiesDetail.map((act) => new Activity(act));
     this.primaryObjects = [];
+    this.matchingScore = matchingScore || 0;
   }
 }

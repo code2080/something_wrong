@@ -2,6 +2,7 @@ import { Button, Radio } from 'antd';
 
 // SELETORS
 import { makeSelectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,11 +18,19 @@ import MatchedActivities from './JointTeaching/MatchedActivities';
 // ACTIONS
 
 import './jointTeaching.page.scss';
+import {
+  fetchJointTeachingGroupsForForm,
+  generateJointTeachingGroup,
+} from 'Redux/JointTeaching/jointTeaching.actions';
+import { GENERATE_JOINT_TEACHING_GROUP } from 'Redux/JointTeaching/jointTeaching.actionTypes';
 
 const JointTeachingPage = () => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
   const [activeTab, setActiveTab] = useState('unmatchedTab');
+  const generating = useSelector(
+    createLoadingSelector([GENERATE_JOINT_TEACHING_GROUP]),
+  );
 
   const selectSelectedFilterValues = useMemo(
     () => makeSelectSelectedFilterValues(),
@@ -59,6 +68,11 @@ const JointTeachingPage = () => {
     )
     .flat();
 
+  const onGenerate = async () => {
+    await dispatch(generateJointTeachingGroup({ formId }));
+    dispatch(fetchJointTeachingGroupsForForm({ formId }));
+  };
+
   useEffect(
     () =>
       dispatch(
@@ -94,7 +108,11 @@ const JointTeachingPage = () => {
     switch (activeTab) {
       case 'matchedTab':
         return (
-          <Button style={{ color: 'black' }}>
+          <Button
+            onClick={onGenerate}
+            style={{ color: 'black' }}
+            loading={!!generating}
+          >
             Generate joint teaching group
           </Button>
         );

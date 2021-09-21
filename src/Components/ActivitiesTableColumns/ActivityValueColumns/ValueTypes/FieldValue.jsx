@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 
 const FieldValue = ({ value }) => {
   const formattedValue = Array.isArray(value) ? value.join(', ') : value;
+  if (formattedValue && typeof formattedValue === 'object')
+    return JSON.stringify(formattedValue);
   return formattedValue || null;
 };
 
