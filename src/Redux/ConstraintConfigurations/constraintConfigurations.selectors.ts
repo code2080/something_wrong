@@ -1,5 +1,8 @@
 import { createSelector } from 'reselect';
-import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
+import {
+  ConstraintConfiguration,
+  TConstraintConfiguration,
+} from '../../Types/ConstraintConfiguration.type';
 import { ConstraintConfigurationState } from './constraintConfigurations.reducer';
 
 const constraintConfigurationState = (
@@ -17,7 +20,7 @@ export const makeSelectConstraintConfigurationsForForm = () =>
 export const selectSelectedConstraintConfiguration = createSelector(
   constraintConfigurationState,
   (_, formId: string) => formId,
-  (constraintConfigs, formId) => {
+  (constraintConfigs, formId): ConstraintConfiguration | null => {
     const selectedId: string =
       constraintConfigs.formConfigs[formId]?.selectedConfiguration;
     if (!selectedId) return null;
