@@ -1,161 +1,165 @@
-import { hydrateObjectRequests } from '../activities.helpers';
+import {
+  hydrateObjectRequests,
+  populateWithFieldConstraint,
+} from '../activities.helpers';
+import populateWithFieldConstraintMock from '../__mock__/activities.helpers.mock';
 
 describe('Activity helpers tests', () => {
-  describe('Hydrate object request', () => {
-    it('Simple input testing', () => {
-      const activity = {
-        _id: '60a6748ad2d5b076a79955df',
-        formId: '60812e90a46eac0022a5f3d8',
-        formInstanceId: '60812ea5a46eac0022a5f407',
-        sectionId: '60812ea4a46eac0022a5f3f8',
+  const activity = {
+    _id: '60a6748ad2d5b076a79955df',
+    formId: '60812e90a46eac0022a5f3d8',
+    formInstanceId: '60812ea5a46eac0022a5f407',
+    sectionId: '60812ea4a46eac0022a5f3f8',
+    eventId: null,
+    rowIdx: 'row-0',
+    activityStatus: 'FAILED',
+    errorDetails: {
+      message:
+        'teAdmin: Cast to ObjectId failed for value "true" at path "_id" for model "apps"',
+      code: 500,
+    },
+    schedulingTimestamp: '2021-05-21T08:33:41.163Z',
+    timing: [
+      {
+        type: 'timing',
+        extId: '$init',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
         eventId: null,
         rowIdx: 'row-0',
-        activityStatus: 'FAILED',
-        errorDetails: {
-          message:
-            'teAdmin: Cast to ObjectId failed for value "true" at path "_id" for model "apps"',
-          code: 500,
-        },
-        schedulingTimestamp: '2021-05-21T08:33:41.163Z',
-        timing: [
-          {
-            type: 'timing',
-            extId: '$init',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'mode',
-            value: 'SEQUENCE',
-            submissionValue: ['SEQUENCE'],
-            submissionValueType: 'TIMING',
-            valueMode: 'FROM_SUBMISSION',
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: null,
-          },
-          {
-            type: 'timing',
-            extId: 'startDate',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'endDate',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'startTime',
-            value: '6081300ca46eac0022a5f434',
-            submissionValue: ['6081300ca46eac0022a5f434'],
-            submissionValueType: 'OBJECT',
-            valueMode: 'FROM_SUBMISSION',
-            sectionId: '60812ea4a46eac0022a5f3f8',
-            elementId: '60812ea4a46eac0022a5f3fb',
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'endTime',
-            value: '60',
-            submissionValue: ['60'],
-            submissionValueType: 'FREE_TEXT',
-            valueMode: 'FROM_SUBMISSION',
-            sectionId: '60812ea4a46eac0022a5f3f8',
-            elementId: '60812ea4a46eac0022a5f3fd',
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'length',
-            value: '60',
-            submissionValue: ['60'],
-            submissionValueType: 'FREE_TEXT',
-            valueMode: 'FROM_SUBMISSION',
-            sectionId: '60812ea4a46eac0022a5f3f8',
-            elementId: '60812ea4a46eac0022a5f3fd',
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'padding',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'weekday',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-          {
-            type: 'timing',
-            extId: 'time',
-            value: null,
-            submissionValue: null,
-            submissionValueType: null,
-            valueMode: null,
-            sectionId: null,
-            elementId: null,
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-        ],
-        values: [
-          {
-            type: 'object',
-            extId: 'room',
-            value: ['6081300ca46eac0022a5f434'],
-            submissionValue: ['6081300ca46eac0022a5f434'],
-            submissionValueType: 'OBJECT',
-            valueMode: 'FROM_SUBMISSION',
-            sectionId: '60812ea4a46eac0022a5f3f8',
-            elementId: '60812ea4a46eac0022a5f3fb',
-            eventId: null,
-            rowIdx: 'row-0',
-          },
-        ],
-        sequenceIdx: 0,
-      };
+      },
+      {
+        type: 'timing',
+        extId: 'mode',
+        value: 'SEQUENCE',
+        submissionValue: ['SEQUENCE'],
+        submissionValueType: 'TIMING',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: null,
+      },
+      {
+        type: 'timing',
+        extId: 'startDate',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'endDate',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'startTime',
+        value: '6081300ca46eac0022a5f434',
+        submissionValue: ['6081300ca46eac0022a5f434'],
+        submissionValueType: 'OBJECT',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: '60812ea4a46eac0022a5f3f8',
+        elementId: '60812ea4a46eac0022a5f3fb',
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'endTime',
+        value: '60',
+        submissionValue: ['60'],
+        submissionValueType: 'FREE_TEXT',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: '60812ea4a46eac0022a5f3f8',
+        elementId: '60812ea4a46eac0022a5f3fd',
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'length',
+        value: '60',
+        submissionValue: ['60'],
+        submissionValueType: 'FREE_TEXT',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: '60812ea4a46eac0022a5f3f8',
+        elementId: '60812ea4a46eac0022a5f3fd',
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'padding',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'weekday',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+      {
+        type: 'timing',
+        extId: 'time',
+        value: null,
+        submissionValue: null,
+        submissionValueType: null,
+        valueMode: null,
+        sectionId: null,
+        elementId: null,
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+    ],
+    values: [
+      {
+        type: 'object',
+        extId: 'room',
+        value: ['6081300ca46eac0022a5f434'],
+        submissionValue: ['6081300ca46eac0022a5f434'],
+        submissionValueType: 'OBJECT',
+        valueMode: 'FROM_SUBMISSION',
+        sectionId: '60812ea4a46eac0022a5f3f8',
+        elementId: '60812ea4a46eac0022a5f3fb',
+        eventId: null,
+        rowIdx: 'row-0',
+      },
+    ],
+    sequenceIdx: 0,
+  };
 
+  describe('Hydrate object request', () => {
+    it('Simple input testing', () => {
       const expected = {
         _id: '60a6748ad2d5b076a79955df',
         formId: '60812e90a46eac0022a5f3d8',
@@ -676,6 +680,32 @@ describe('Activity helpers tests', () => {
         objectRequests as any[],
       );
       expect(hydratedActivity).toEqual(expected);
+    });
+  });
+  describe('populateWithFieldConstraint tests', () => {
+    it('returns activities if no constraint configuration is provided', () => {
+      const activities = [];
+      const retVal = populateWithFieldConstraint({
+        activities,
+        constraintConfiguration: null,
+      });
+      expect(retVal).toEqual(activities);
+    });
+
+    it('should add field data to activity', () => {
+      const fieldConstraint = {
+        value: 100,
+        operator: '<',
+        objectField: { typeExtId: 'room', fieldExtId: 'room.seats' },
+      };
+      const expected = {
+        ...populateWithFieldConstraintMock.activities[0],
+        fieldConstraint,
+      };
+      const returnedActivity = populateWithFieldConstraint(
+        populateWithFieldConstraintMock as any,
+      );
+      expect([expected]).toEqual(returnedActivity);
     });
   });
 });

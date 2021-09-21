@@ -9,7 +9,7 @@ export type TConstraintInstance = {
   isActive: boolean;
   isHardConstraint: boolean;
   weight?: number;
-  parameters: {};
+  parameters: any[];
   operator: EConstraintOperators;
 };
 

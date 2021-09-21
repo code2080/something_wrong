@@ -1,6 +1,11 @@
 import _ from 'lodash';
+import head from 'lodash/head';
 // CONSTANTS
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import {
+  TConstraintConfiguration,
+  TConstraintInstance,
+} from '../Types/ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
@@ -475,4 +480,57 @@ export const activityConvertFn = {
     activityStatus: EActivityStatus.NOT_SCHEDULED,
     reservationId: null,
   }),
+};
+
+const isFieldConstraint = (constraint: TConstraintInstance) =>
+  constraint.parameters.find(
+    ({ firstParam, lastParam }) =>
+      firstParam && lastParam && firstParam.length > 0 && lastParam.length > 0,
+  );
+
+const getFieldConstraintValue = (
+  submission: TFormInstance,
+  sectionId: string,
+  elementId: string,
+): null | number => {
+  const activityValue = submission.values[sectionId].find(
+    (value) => value.elementId === elementId,
+  );
+  if (!activityValue) return null;
+  const value = activityValue.value;
+  if (!value || isNaN(value)) return null;
+  return value;
+};
+
+export const populateWithFieldConstraint = ({
+  activities,
+  constraintConfiguration,
+  submissions,
+}: {
+  activities: TActivity[];
+  constraintConfiguration?: TConstraintConfiguration | null;
+  submissions?: TFormInstance[] | null;
+}): TActivity[] => {
+  if (!constraintConfiguration || !submissions) return activities;
+  const fieldConstraint =
+    constraintConfiguration.constraints.find(isFieldConstraint);
+  // Missing field constraint
+  if (!fieldConstraint) return activities;
+  const { operator, parameters } = fieldConstraint;
+  const { firstParam, lastParam } = head(parameters);
+  const [, typeExtId, fieldExtId] = lastParam;
+  const [, sectionId, elementId] = firstParam;
+  // Incomplete object or form mapping
+  if (!typeExtId || !fieldExtId || !sectionId || !elementId || !operator)
+    return activities;
+  const objectField = { typeExtId, fieldExtId };
+
+  return activities.map((activity) => {
+    const { formInstanceId } = activity;
+    const submission = submissions.find(({ _id }) => _id === formInstanceId);
+    if (!submission) return activity;
+    const value = getFieldConstraintValue(submission, sectionId, elementId);
+    const fieldConstraintData = { objectField, operator, value };
+    return { ...activity, fieldConstraint: fieldConstraintData };
+  });
 };
