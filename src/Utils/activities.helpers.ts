@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { chain, flatten, groupBy, isEmpty } from 'lodash';
 import head from 'lodash/head';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
@@ -7,7 +7,11 @@ import {
   TConstraintInstance,
 } from '../Types/ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
-import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
+import {
+  ActivityValue,
+  CategoryField,
+  ValueType,
+} from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -19,7 +23,7 @@ import { TFormInstance } from '../Types/FormInstance.type';
 import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
-
+// CONSTANTS
 // FUNCTIONS
 /**
  * @function ensureBackwardsCompatibleActivityDesign
@@ -533,4 +537,57 @@ export const populateWithFieldConstraint = ({
     const fieldConstraintData = { objectField, operator, value };
     return { ...activity, fieldConstraint: fieldConstraintData };
   });
+};
+
+export const calculateActivityConflicts = (
+  activities: TActivity[],
+  conflictElementIds: string[],
+  selectedValues: { [id: string]: any },
+) => {
+  if (isEmpty(activities)) return {};
+  const allValues = flatten(
+    activities.map(({ _id, values }) =>
+      values.map((val) => ({
+        ...val,
+        activityId: _id,
+      })),
+    ),
+  );
+  const valuesGroupedByElementId = groupBy(allValues, 'elementId');
+  return Object.keys(valuesGroupedByElementId)
+    .filter((elementId) => elementId)
+    .reduce((results, elementId) => {
+      const elementValues = valuesGroupedByElementId[elementId];
+      let newValues: ValueType[] = [];
+      let newSubmissionValues: ValueType[] = [];
+      if (conflictElementIds.includes(elementId)) {
+        const selectedValue = elementValues.find(
+          (elemValue) => elemValue.activityId === selectedValues[elementId],
+        );
+        if (selectedValue) {
+          newValues = [selectedValue.value || ''];
+          newSubmissionValues = [selectedValue.submissionValue || ''];
+        }
+      } else {
+        elementValues.forEach((val) => {
+          newValues = [...newValues, val.value || ''];
+          newSubmissionValues = [
+            ...newSubmissionValues,
+            val.submissionValue || '',
+          ];
+        });
+      }
+      return {
+        ...results,
+        [elementId]: {
+          ...elementValues[0],
+          value: chain(newValues).flatten().compact().uniq().value(),
+          submissionsValue: chain(newSubmissionValues)
+            .flatten()
+            .compact()
+            .uniq()
+            .value(),
+        },
+      };
+    }, {});
 };
