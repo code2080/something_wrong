@@ -43,7 +43,6 @@ export const makeSelectActivitiesForForm = () =>
 export const selectActivitiesForForm = ({ formId, tableType }) =>
   createSelector(activityStateSelector, (activity) => {
     const activitiesTableId = `${formId}${tableType || ''}`;
-    console.info(Object.values(activity[activitiesTableId] || {}).flat());
     return Object.values(activity[activitiesTableId] || {}).flat();
   });
 

@@ -58,12 +58,12 @@ export const selectSectionHasAvailabilityCalendar = (sectionElements) =>
   );
 
 export const selectElementById = (
-  formId: string,
-  sectionId: string,
-  elementId: string,
+  formId?: string,
+  sectionId?: string,
+  elementId?: string,
 ) =>
   createSelector(formState, (forms) => {
-    const form = forms[formId];
+    const form = forms[formId as string];
     if (!form) return null;
     const section = form.sections.find(({ _id }) => _id === sectionId);
     if (!section) return null;
@@ -71,12 +71,12 @@ export const selectElementById = (
   });
 
 export const selectElementType = (
-  formId: string,
-  sectionId: string,
-  elementId: string,
+  formId?: string,
+  sectionId?: string,
+  elementId?: string,
 ) =>
   createSelector(formState, elementState, (forms, elements) => {
-    const form = forms[formId];
+    const form = forms[formId as string];
     if (!form) return null;
     const section = form.sections.find(({ _id }) => _id === sectionId);
     if (!section) return null;
