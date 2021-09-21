@@ -4,12 +4,12 @@ import { Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import ActivityFiltering from 'Components/ActivityFiltering';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSelectedFilterItemsForMatchedActivities } from 'Redux/Filters/filters.selectors';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // SELECTORS
-
 interface Props {
   formId: string;
   selectedRows: Key[];
@@ -27,13 +27,14 @@ const JointTeachingGroupsTableToolbar = ({
   formId,
 }: Props) => {
   const selectedFilterValues = useSelector(
-    selectSelectedFilterItemsForMatchedActivities(formId),
+    selectSelectedFilterValues({ formId, origin: MATCHED_ACTIVITIES_TABLE }),
   );
   const dispatch = useDispatch();
   useActivitiesWatcher({
     formId,
     filters: selectedFilterValues,
-    origin: 'matchedActivities',
+    sorters: null,
+    origin: MATCHED_ACTIVITIES_TABLE,
   });
   return (
     <div className='activities-toolbar--wrapper' style={{ padding: '8px' }}>
@@ -76,11 +77,12 @@ const JointTeachingGroupsTableToolbar = ({
         size='small'
       />
       <ActivityFiltering
+        tableType={MATCHED_ACTIVITIES_TABLE}
         selectedFilterValues={selectedFilterValues}
         onSubmit={(values) => {
           dispatch(
             setFilterValues({
-              origin: 'matchedActivities',
+              origin: MATCHED_ACTIVITIES_TABLE,
               formId,
               values,
             }),

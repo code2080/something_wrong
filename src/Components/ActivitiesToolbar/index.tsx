@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
-import { setSelectedFilterValues } from 'Redux/Filters/filters.actions';
+import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
 import { activityFilterFn } from 'Utils/activities.helpers';
 import { makeSelectActivitiesForFormAndIds } from 'Redux/Activities/activities.selectors';
 import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
-import { makeSelectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
@@ -25,6 +25,7 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 type Props = {
   selectedRowKeys: Key[];
@@ -51,13 +52,9 @@ const ActivitiesToolbar = ({
 }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
-  const selectSelectedFilterValues = useMemo(
-    () => makeSelectSelectedFilterValues(),
-    [],
-  );
 
-  const selectedFilterValues = useSelector((state) =>
-    selectSelectedFilterValues(state, `${formId}_ACTIVITIES_TABLE`),
+  const selectedFilterValues = useSelector(
+    selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }),
   );
 
   const selectActivitiesForFormAndIds = useMemo(
@@ -155,9 +152,10 @@ const ActivitiesToolbar = ({
         selectedFilterValues={selectedFilterValues}
         onSubmit={(values) => {
           dispatch(
-            setSelectedFilterValues({
-              formId: `${formId}_ACTIVITIES_TABLE`,
-              filterValues: values,
+            setFilterValues({
+              formId,
+              values,
+              origin: ACTIVITIES_TABLE,
             }),
           );
         }}

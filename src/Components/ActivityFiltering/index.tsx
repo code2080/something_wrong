@@ -17,13 +17,18 @@ import './index.scss';
 
 interface Props {
   onSubmit: (values) => void;
+  tableType?: string;
   selectedFilterValues: TActivityFilterQuery;
 }
 
-const ActivityFiltering = ({ onSubmit, selectedFilterValues }: Props) => {
+const ActivityFiltering = ({
+  onSubmit,
+  selectedFilterValues,
+  tableType,
+}: Props) => {
   const [showModal, setShowModal] = useState(false);
   const { formId } = useParams<{ formId: string }>();
-  const isActivated = useSelector(selectFilterIsActivated(formId));
+  const isActivated = useSelector(selectFilterIsActivated(formId, tableType));
 
   return (
     <div className='activity-filtering--wrapper filter-bar__wrapper'>

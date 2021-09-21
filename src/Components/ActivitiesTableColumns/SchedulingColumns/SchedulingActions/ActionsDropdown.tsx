@@ -41,7 +41,8 @@ import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/Object
 import { TActivity } from '../../../../Types/Activity.type';
 
 const mapStateToProps = (state, { activity }) => {
-  const activities = state.activities[activity.formId][activity.formInstanceId];
+  const activities =
+    state.activities[activity.formId]?.[activity.formInstanceId] || {};
   const jobs = selectJobForActivities(activity.formId, [activity._id])(state);
   return {
     activities,

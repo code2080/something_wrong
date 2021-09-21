@@ -203,6 +203,7 @@ const JointTeachingGroupsTable = (props: Props) => {
 
   useEffect(() => {
     onFetchJointTeachingGroups();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

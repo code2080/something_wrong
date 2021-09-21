@@ -106,12 +106,10 @@ const reducer = (state: any = initialState, action) => {
 
     case types.SET_FILTER_VALUES: {
       const { origin, formId, values } = action.payload;
+      const key = `${formId}${origin || ''}`;
       return {
         ...state,
-        [origin]: {
-          ...state[origin],
-          [formId]: values,
-        },
+        [key]: values,
       };
     }
 

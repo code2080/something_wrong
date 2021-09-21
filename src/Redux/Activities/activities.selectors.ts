@@ -24,20 +24,27 @@ export const makeSelectActivitiesForForm = () =>
   createSelector(
     activityStateSelector,
     (state) => state.submissions,
-    (_: any, formId: string) => formId,
+    (_: any, formId: string, tableType?: string) => ({ formId, tableType }),
     (
       activities: TActivityMap,
       submissions: { [formId: string]: TFormInstance[] },
-      formId: string,
+      { formId, tableType },
     ) => {
+      const activitiesTableId = `${formId}${tableType || ''}`;
       const formSubmissions = submissions?.[formId];
-      const formActivities = activities[formId] || {};
+      const formActivities = activities[activitiesTableId] || {};
       return pick(formActivities, [
         ...Object.keys(formSubmissions || {}),
         'null',
       ]);
     },
   );
+
+export const selectActivitiesForForm = ({ formId, tableType }) =>
+  createSelector(activityStateSelector, (activity) => {
+    const activitiesTableId = `${formId}${tableType || ''}`;
+    return Object.values(activity[activitiesTableId] || {}).flat();
+  });
 
 export const makeSelectActivitiesForFormAndIds = () =>
   createSelector(

@@ -18,7 +18,8 @@ import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectUnmatchedActivities } from 'Redux/GlobalUI/globalUI.selectors';
+import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props {
   formId: string;
@@ -54,7 +55,9 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     showResult,
     allElementIds,
   } = props;
-  const unmatchedActivities = useSelector(selectUnmatchedActivities(formId));
+  const unmatchedActivities = useSelector(
+    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
+  );
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
