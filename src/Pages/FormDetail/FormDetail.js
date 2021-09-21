@@ -9,11 +9,7 @@ import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 // HOOKS
-import {
-  useFetchLabelsFromExtIds,
-  fetchLabelsFromExtIds,
-  useTECoreAPI,
-} from '../../Hooks/TECoreApiHooks';
+import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 
 // ACTIONS
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
@@ -29,19 +25,14 @@ import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
 // SELECTORS
-import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
-import {
-  makeSelectSortParamsForActivities,
-  selectFormDetailTab,
-} from '../../Redux/GlobalUI/globalUI.selectors';
+import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
 import {
   hasPermission,
   selectIsBetaOrDev,
 } from '../../Redux/Auth/auth.selectors';
 
 // CONSTANTS
-import { initialState as initialPayload } from '../../Redux/TE/te.helpers';
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 
@@ -49,11 +40,7 @@ import {
   ASSISTED_SCHEDULING_PERMISSION_NAME,
   AE_ACTIVITY_PERMISSION,
 } from '../../Constants/permissions.constants';
-import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { getExtIdsFromActivities } from '../../Utils/ActivityValues/helpers';
-import { selectExtIds } from '../../Redux/TE/te.selectors';
-import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
+
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
@@ -83,8 +70,6 @@ const FormPage = () => {
    */
   const selectForm = useMemo(() => makeSelectForm(), []);
   const form = useSelector((state) => selectForm(state, formId));
-  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-  const submissions = useSelector((state) => selectSubmissions(state, formId));
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
@@ -118,42 +103,6 @@ const FormPage = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
-  // **** Test sending objects with type to core to see if this helps with DEV-7663
-  const selectActivitiesForForm = useMemo(
-    () => makeSelectActivitiesForForm(),
-    [],
-  );
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
-  );
-  // const submissionPayload = useMemo(() => {
-  //   const sections = form.sections;
-  //   const submissionValues = submissions.map((submission) => submission.values);
-  //   const teValues = _.isEmpty(submissionValues)
-  //     ? initialPayload
-  //     : getExtIdPropsPayload({
-  //         sections,
-  //         submissionValues,
-  //         objectScope: form.objectScope,
-  //         activities: Object.values(activities).flat(),
-  //       });
-  //   const scopedObjectExtids = submissions.map((s) => s.scopedObject);
-
-  //   return {
-  //     ...teValues,
-  //     objects: [...teValues.objects, ...scopedObjectExtids],
-  //   };
-  // }, [form.sections, form.objectScope, submissions, activities]);
-
-  const extIds = useSelector(selectExtIds);
-
-  // useEffect(() => {
-  //   const activityPayload = getExtIdsFromActivities(activities);
-  //   console.log({ extIds: activityPayload });
-  //   fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [activities]);
-  // ****
 
   // Effect to get all TE values into redux state
   // useFetchLabelsFromExtIds(submissionPayload);
