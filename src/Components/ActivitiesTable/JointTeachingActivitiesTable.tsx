@@ -2,24 +2,24 @@ import React, { useMemo, ReactChild, useState, Key } from 'react';
 import { chain, compact, isEmpty, keyBy, uniq } from 'lodash';
 
 // COMPONENTS
-import ActivityTable from 'Pages/FormDetail/pages/ActivityTable';
+import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Popconfirm } from 'antd';
 
 // TYPES
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from '../../Types/Activity.type';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import { ActivityValue } from 'Types/ActivityValue.type';
-import { calculateActivityConflicts } from 'Utils/activities.helpers';
+import { selectDesignForForm } from '../../Redux/ActivityDesigner/activityDesigner.selectors';
+import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { ActivityValue } from '../../Types/ActivityValue.type';
+import { calculateActivityConflicts } from '../../Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
-import AddActivitiesToJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
-import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
+import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
+import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
 
 interface Props {
   formId: string;
