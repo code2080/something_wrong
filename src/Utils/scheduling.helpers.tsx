@@ -162,7 +162,7 @@ export const determineSchedulingAlgorithmForActivity = (activity) => {
  * @param {Array<Activities>} activities the activities to process
  * @returns schedulingAlgorithm: String
  */
-const getBindingSchedulingAlgorithm = (activities) => {
+const getBindingSchedulingAlgorithm = (activities: TActivity[]): string => {
   const schedA = activities.map((a) =>
     determineSchedulingAlgorithmForActivity(a),
   );

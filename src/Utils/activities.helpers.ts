@@ -1,12 +1,13 @@
-import _, { chain, flatten, groupBy, isEmpty } from 'lodash';
+import _ from 'lodash';
+import head from 'lodash/head';
 // CONSTANTS
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { teCoreCallnames } from '../Constants/teCoreActions.constants';
+import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
-  ActivityValue,
-  CategoryField,
-  ValueType,
-} from '../Types/ActivityValue.type';
+  TConstraintConfiguration,
+  TConstraintInstance,
+} from '../Types/ConstraintConfiguration.type';
+import { teCoreCallnames } from '../Constants/teCoreActions.constants';
+import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -481,55 +482,55 @@ export const activityConvertFn = {
   }),
 };
 
-export const calculateActivityConflicts = (
-  activities: TActivity[],
-  conflictElementIds: string[],
-  selectedValues: { [id: string]: any },
-) => {
-  if (isEmpty(activities)) return {};
-  const allValues = flatten(
-    activities.map(({ _id, values }) =>
-      values.map((val) => ({
-        ...val,
-        activityId: _id,
-      })),
-    ),
+const isFieldConstraint = (constraint: TConstraintInstance) =>
+  constraint.parameters.find(
+    ({ firstParam, lastParam }) =>
+      firstParam && lastParam && firstParam.length > 0 && lastParam.length > 0,
   );
-  const valuesGroupedByElementId = groupBy(allValues, 'elementId');
-  return Object.keys(valuesGroupedByElementId)
-    .filter((elementId) => elementId)
-    .reduce((results, elementId) => {
-      const elementValues = valuesGroupedByElementId[elementId];
-      let newValues: ValueType[] = [];
-      let newSubmissionValues: ValueType[] = [];
-      if (conflictElementIds.includes(elementId)) {
-        const selectedValue = elementValues.find(
-          (elemValue) => elemValue.activityId === selectedValues[elementId],
-        );
-        if (selectedValue) {
-          newValues = [selectedValue.value || ''];
-          newSubmissionValues = [selectedValue.submissionValue || ''];
-        }
-      } else {
-        elementValues.forEach((val) => {
-          newValues = [...newValues, val.value || ''];
-          newSubmissionValues = [
-            ...newSubmissionValues,
-            val.submissionValue || '',
-          ];
-        });
-      }
-      return {
-        ...results,
-        [elementId]: {
-          ...elementValues[0],
-          value: chain(newValues).flatten().compact().uniq().value(),
-          submissionsValue: chain(newSubmissionValues)
-            .flatten()
-            .compact()
-            .uniq()
-            .value(),
-        },
-      };
-    }, {});
+
+const getFieldConstraintValue = (
+  submission: TFormInstance,
+  sectionId: string,
+  elementId: string,
+): null | number => {
+  const activityValue = submission.values[sectionId].find(
+    (value) => value.elementId === elementId,
+  );
+  if (!activityValue) return null;
+  const value = activityValue.value;
+  if (!value || isNaN(value)) return null;
+  return value;
+};
+
+export const populateWithFieldConstraint = ({
+  activities,
+  constraintConfiguration,
+  submissions,
+}: {
+  activities: TActivity[];
+  constraintConfiguration?: TConstraintConfiguration | null;
+  submissions?: TFormInstance[] | null;
+}): TActivity[] => {
+  if (!constraintConfiguration || !submissions) return activities;
+  const fieldConstraint =
+    constraintConfiguration.constraints.find(isFieldConstraint);
+  // Missing field constraint
+  if (!fieldConstraint) return activities;
+  const { operator, parameters } = fieldConstraint;
+  const { firstParam, lastParam } = head(parameters);
+  const [, typeExtId, fieldExtId] = lastParam;
+  const [, sectionId, elementId] = firstParam;
+  // Incomplete object or form mapping
+  if (!typeExtId || !fieldExtId || !sectionId || !elementId || !operator)
+    return activities;
+  const objectField = { typeExtId, fieldExtId };
+
+  return activities.map((activity) => {
+    const { formInstanceId } = activity;
+    const submission = submissions.find(({ _id }) => _id === formInstanceId);
+    if (!submission) return activity;
+    const value = getFieldConstraintValue(submission, sectionId, elementId);
+    const fieldConstraintData = { objectField, operator, value };
+    return { ...activity, fieldConstraint: fieldConstraintData };
+  });
 };

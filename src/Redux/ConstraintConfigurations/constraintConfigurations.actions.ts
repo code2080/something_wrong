@@ -1,12 +1,8 @@
+import { TConstraintConfiguration } from 'Types/ConstraintConfiguration.type';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { ConstraintConfiguration } from '../../Models/ConstraintConfiguration.model';
 import { getEnvParams } from '../../configs';
 import * as types from './constraintConfigurations.actionTypes';
-
-const opts = {
-  // Make Mongoose use Unix time (seconds since Jan 1, 1970)
-  timestamps: { currentTime: () => Math.floor(Date.now() / 1000) },
-};
 
 const fetchConstraintsConfigurationsFlow = {
   request: () => ({
@@ -82,32 +78,17 @@ const updateConstraintConfigurationFlow = {
 };
 
 export const updateConstraintConfiguration =
-  (consConf) => async (dispatch, getState) => {
-    const storeState = await getState();
-    const { name, description, _id, formId, constraints } = consConf;
-    const constraintConfigurationId = _id;
-    const {
-      auth: { coreUserId },
-    } = storeState;
-    const constraintConfiguration = new ConstraintConfiguration({
-      constraintConfigurationId,
-      name,
-      formId,
-      constraints,
-      description,
-      timestamps: opts.timestamps,
-      userId: coreUserId,
-    });
-    constraintConfiguration.constraintConfigurationId = _id;
+  (constraintConfiguration: TConstraintConfiguration) => async (dispatch) => {
+    const { _id, formId } = constraintConfiguration;
     dispatch(
       asyncAction.PATCH({
         flow: updateConstraintConfigurationFlow,
         endpoint: `${
           getEnvParams().AM_BE_URL
-        }forms/${formId}/constraint-configurations/${constraintConfigurationId}`,
+        }forms/${formId}/constraint-configurations/${_id}`,
         params: {
-          constraintConfigurationId,
           formId,
+          constraintConfigurationId: constraintConfiguration._id,
           constraintConfiguration,
         },
       }),

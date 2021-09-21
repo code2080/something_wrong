@@ -9,10 +9,14 @@ export type TConstraintInstance = {
   isActive: boolean;
   isHardConstraint: boolean;
   weight?: number;
-  parameters: {};
+  parameters: any[];
   operator: EConstraintOperators;
 };
 
+export type ParameterData = {
+  constraintId: string;
+  data: { [submissionId: string]: { [fieldName: string]: number } };
+};
 export class ConstraintInstance {
   static createFromConstraint = (obj: TConstraint): TConstraintInstance => ({
     constraintId: obj.constraintId,
@@ -29,6 +33,7 @@ export type TConstraintConfiguration = {
   formId: string;
   name: string;
   description?: string;
+  parameterData: ParameterData[];
   constraints: TConstraintInstance[];
 };
 
@@ -39,5 +44,6 @@ export class ConstraintConfiguration {
     name: obj.name,
     description: obj.description || null,
     constraints: obj.constraints || {},
+    parameterData: obj.parameterData || [],
   });
 }

@@ -62,7 +62,7 @@ const getConstrOfType = (
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch() as any;
   const selectedConstraitConfiguration = useSelector((state) =>
     selectSelectedConstraintConfiguration(state, formId),
   );
@@ -94,7 +94,7 @@ const ConstraintManagerPage = () => {
     settings: {
       primaryObject: form.objectScope,
     },
-  });
+  }).filter((elem) => !elem.isRecurring);
 
   useEffect(() => {
     const typeExtIds = Object.keys(activityDesign.objects);

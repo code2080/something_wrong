@@ -1,3 +1,8 @@
+import { TActivity } from 'Types/Activity.type';
+import noop from 'lodash/noop';
+import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
+import { populateWithFieldConstraint } from '../../Utils/activities.helpers';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import { Job } from '../../Models/Job.model';
@@ -80,8 +85,15 @@ export const createJob =
     type = schedulingAlgorithms.UNKNOWN,
     formId,
     formInstanceIds = [],
-    callback = null,
+    callback = noop,
     meta = {},
+  }: {
+    activities: TActivity[];
+    type: string;
+    formId: string;
+    formInstanceIds: string[];
+    callback(result: ActivityValueValidation[]): void;
+    meta: any;
   }) =>
   async (dispatch, getState) => {
     const storeState = await getState();
@@ -90,8 +102,15 @@ export const createJob =
     } = storeState;
     const currentConstraintConfiguration =
       selectSelectedConstraintConfiguration(storeState, formId);
-    const job = new Job({
+
+    const submissions = makeSelectSubmissions()(storeState, formId);
+    const activitiesWithParameterData = populateWithFieldConstraint({
       activities,
+      constraintConfiguration: currentConstraintConfiguration,
+      submissions,
+    });
+    const job = new Job({
+      activities: activitiesWithParameterData,
       type,
       formId,
       formInstanceIds,
