@@ -12,5 +12,6 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
       console.log('DO FETCHING');
       dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevFilters, filters, origin]);
 };
