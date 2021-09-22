@@ -12,7 +12,7 @@ type Props = {
   type: 'VALUE' | 'TIMING';
   prop: string;
   mapping: any;
-  columnPrefix?: (activity: TActivity, b: any) => void;
+  columnPrefix?: (b: ActivityValue[]) => void;
   renderer?: (
     activity: TActivity,
     activityValues: ActivityValue[],
@@ -42,28 +42,33 @@ const ColumnWrapper = ({
     [activity, type, prop],
   );
   const renderedPayload = useMemo(() => {
-    if (!activityValues || !activityValues.length) return 'No values';
     if (typeof renderer === 'function') {
       const renderResult = renderer(activity, activityValues);
       if (renderResult !== undefined) return renderResult;
     }
-    return activityValues
-      .filter((activityValue) => activityValue.value != null)
-      .map((activityValue, idx) => (
-        <>
-          {typeof columnPrefix === 'function'
-            ? columnPrefix(activity, activityValue)
-            : null}
-          <ColumnContent
-            key={`av-${idx}`}
-            activityValue={activityValue}
-            activity={activity}
-            type={type}
-            prop={prop}
-            mapping={mapping}
-          />
-        </>
-      ));
+    if (!activityValues || !activityValues.length) return 'No values';
+    return (
+      <>
+        {typeof columnPrefix === 'function'
+          ? columnPrefix(activityValues)
+          : null}
+        {activityValues
+          .filter((activityValue) => activityValue.value != null)
+          .map((activityValue, idx) => (
+            <>
+              <ColumnContent
+                key={`av-${idx}`}
+                activityValue={activityValue}
+                activity={activity}
+                type={type}
+                prop={prop}
+                mapping={mapping}
+              />
+            </>
+          ))}
+      </>
+    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activity, activityValues, mapping, prop, type]);
 

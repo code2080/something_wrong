@@ -28,20 +28,29 @@ export const createActivitiesTableColumnsFromMapping = (
   ];
 
   const activityValueColumns = allActivityValues.reduce<ColumnsType<object>>(
-    (values, [field, extId]) => [
+    (values, [field, extId], valueIndex) => [
       ...values,
       {
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
         displayName: 'ActivityCol',
         width: (design.objects[extId] || [null]).length * 150,
-        render: (activity: TActivity) => (
+        render: (activity: TActivity, activityIndex: number) => (
           <ColumnWrapper
             activity={activity}
             type='VALUE'
             prop={extId}
             mapping={_design}
-            columnPrefix={columnPrefix}
+            columnPrefix={
+              typeof columnPrefix === 'function'
+                ? (activityValues) => {
+                    return columnPrefix(
+                      [activity, activityIndex],
+                      [activityValues, valueIndex],
+                    );
+                  }
+                : undefined
+            }
             renderer={renderer}
           />
         ),

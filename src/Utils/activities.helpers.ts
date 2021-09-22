@@ -1,5 +1,5 @@
-import _, { chain, flatten, groupBy, isEmpty } from 'lodash';
 import head from 'lodash/head';
+import _, { isEmpty, isEqual } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -7,11 +7,7 @@ import {
   TConstraintInstance,
 } from '../Types/ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
-import {
-  ActivityValue,
-  CategoryField,
-  ValueType,
-} from '../Types/ActivityValue.type';
+import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -539,55 +535,83 @@ export const populateWithFieldConstraint = ({
   });
 };
 
+export const getUniqueValues = (activities: TActivity[]) => {
+  if (isEmpty(activities)) return [];
+  const firstActivity = activities[0];
+  const { values } = firstActivity;
+  const allValues: any = [];
+  activities.forEach((act) => {
+    _.map(new Array(values.length), (item, itemIndex) => {
+      if (Array.isArray(allValues[itemIndex])) {
+        allValues[itemIndex].push(act.values[itemIndex]);
+      } else {
+        allValues[itemIndex] = [act.values[itemIndex]];
+      }
+    });
+  });
+  return allValues.map((values) =>
+    _.uniqWith(values, (a: ActivityValue, b: ActivityValue) => {
+      return isEqual(a.value, b.value);
+    }),
+  );
+};
 export const calculateActivityConflicts = (
   activities: TActivity[],
-  conflictElementIds: string[],
-  selectedValues: { [id: string]: any },
+  selectedValues: number[],
 ) => {
-  if (isEmpty(activities)) return {};
-  const allValues = flatten(
-    activities.map(({ _id, values }) =>
-      values.map((val) => ({
-        ...val,
-        activityId: _id,
-      })),
-    ),
-  );
-  const valuesGroupedByElementId = groupBy(allValues, 'elementId');
-  return Object.keys(valuesGroupedByElementId)
-    .filter((elementId) => elementId)
-    .reduce((results, elementId) => {
-      const elementValues = valuesGroupedByElementId[elementId];
-      let newValues: ValueType[] = [];
-      let newSubmissionValues: ValueType[] = [];
-      if (conflictElementIds.includes(elementId)) {
-        const selectedValue = elementValues.find(
-          (elemValue) => elemValue.activityId === selectedValues[elementId],
-        );
-        if (selectedValue) {
-          newValues = [selectedValue.value || ''];
-          newSubmissionValues = [selectedValue.submissionValue || ''];
-        }
-      } else {
-        elementValues.forEach((val) => {
-          newValues = [...newValues, val.value || ''];
-          newSubmissionValues = [
-            ...newSubmissionValues,
-            val.submissionValue || '',
-          ];
-        });
-      }
-      return {
-        ...results,
-        [elementId]: {
-          ...elementValues[0],
-          value: chain(newValues).flatten().compact().uniq().value(),
-          submissionsValue: chain(newSubmissionValues)
-            .flatten()
-            .compact()
-            .uniq()
-            .value(),
-        },
-      };
-    }, {});
+  const uniqueValues = getUniqueValues(activities);
+  return uniqueValues.map((values, index) => {
+    if (!values || values.length === 1) return values[0];
+    if (selectedValues[index] > -1) {
+      return activities[selectedValues[index]].values[index];
+    }
+    return [];
+  });
+  // console.log('uniqueValues', uniqueValues);
+  // const allValues = flatten(
+  //   activities.map(({ _id, values }) =>
+  //     values.map((val) => ({
+  //       ...val,
+  //       activityId: _id,
+  //     })),
+  //   ),
+  // );
+  // console.info(_allValues, allValues);
+  // const valuesGroupedByElementId = groupBy(allValues, 'elementId');
+  // return Object.keys(valuesGroupedByElementId)
+  //   .filter((elementId) => elementId)
+  //   .reduce((results, elementId) => {
+  //     const elementValues = valuesGroupedByElementId[elementId];
+  //     let newValues: ValueType[] = [];
+  //     let newSubmissionValues: ValueType[] = [];
+  //     if (conflictElementIds.includes(elementId)) {
+  //       const selectedValue = elementValues.find(
+  //         (elemValue) => elemValue.activityId === selectedValues[elementId],
+  //       );
+  //       if (selectedValue) {
+  //         newValues = [selectedValue.value || ''];
+  //         newSubmissionValues = [selectedValue.submissionValue || ''];
+  //       }
+  //     } else {
+  //       elementValues.forEach((val) => {
+  //         newValues = [...newValues, val.value || ''];
+  //         newSubmissionValues = [
+  //           ...newSubmissionValues,
+  //           val.submissionValue || '',
+  //         ];
+  //       });
+  //     }
+  //     return {
+  //       ...results,
+  //       [elementId]: {
+  //         ...elementValues[0],
+  //         value: chain(newValues).flatten().compact().uniq().value(),
+  //         submissionsValue: chain(newSubmissionValues)
+  //           .flatten()
+  //           .compact()
+  //           .uniq()
+  //           .value(),
+  //       },
+  //     };
+  //   }, {});
 };

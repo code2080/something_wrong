@@ -15,7 +15,10 @@ interface Props extends TableProps<any> {
   onSelect?(selectedRowKeys: Key[]): void;
   onSort?(sorter: SorterResult<object> | SorterResult<object>[]): void;
   additionalColumns?: { pre?: ColumnsType<object>; post?: ColumnsType<object> };
-  columnPrefix?: (a, b) => void;
+  columnPrefix?: (
+    [activity, activityIndex],
+    [activityValue, valueIndex],
+  ) => void;
   renderer?: (a, b) => void;
 }
 
