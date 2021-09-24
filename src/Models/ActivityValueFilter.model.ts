@@ -4,7 +4,7 @@ import {
   deFlattenObject,
   isObject,
 } from '../Components/ActivityFiltering/FilterModal/FilterModal.helper';
-import { DATE_FORMAT } from '../Constants/common.constants';
+import { DATE_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 import {
   TATimingQuery,
   TFilterQuery,
@@ -33,8 +33,12 @@ export class ActivityFilterPayload {
       endDate: compact([
         endDate ? moment.utc(endDate).format(DATE_FORMAT) : null,
       ]),
-      startTime: compact([startTime ? moment.utc(startTime).toJSON() : null]),
-      endTime: compact([endTime ? moment.utc(endTime).toJSON() : null]),
+      startTime: compact([
+        startTime ? moment.utc(startTime).format(TIME_FORMAT) : null,
+      ]),
+      endTime: compact([
+        endTime ? moment.utc(endTime).format(TIME_FORMAT) : null,
+      ]),
     };
     const results = deFlattenObject(rest);
     Object.keys(results).forEach((key) => {
