@@ -1,5 +1,5 @@
 import React, { useMemo, ReactChild, useState, Key, useEffect } from 'react';
-import { chain, compact, isEmpty, keyBy, uniq } from 'lodash';
+import { chain, compact, isEmpty, isEqual, keyBy, uniq } from 'lodash';
 
 // COMPONENTS
 import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
@@ -22,6 +22,11 @@ import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
 import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
+import { ActivityValue } from 'Types/ActivityValue.type';
+import {
+  ConflictType,
+  JointTeachingConflictMapping,
+} from 'Models/JointTeachingGroup.model';
 
 interface Props {
   formId: string;
@@ -30,19 +35,28 @@ interface Props {
   showResult?: boolean;
   onRemove?: (activityId: string) => void;
   onAddActivity?: (activityIds: Key[]) => void;
+  onSelectValue?: (
+    type: ConflictType,
+    checked: boolean,
+    activityValue: ActivityValue,
+  ) => void;
   footer?: ReactChild;
   header?: ReactChild;
   selectedActivities?: Key[];
   onSelect?(selectedRowKeys: Key[]): void;
+  conflicts?: JointTeachingConflictMapping;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
-  const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState<
-    number[]
-  >([]);
+  const [selectedJointTeachingTiming, setSelectedJointTeachingTiming] =
+    useState<{ [type: string]: { [key: string]: string } }>({
+      [ConflictType.VALUES]: {},
+      [ConflictType.TIMING]: {},
+    });
+
   const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
   const {
     activities,
@@ -56,6 +70,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     onSelect,
     showResult,
     allElementIds,
+    onSelectValue,
+    conflicts,
   } = props;
   const unmatchedActivities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
@@ -68,7 +84,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   const uniqueValues = useMemo(() => {
     return getUniqueValues(activities);
   }, [activities]);
-  console.log('uniqueValues', uniqueValues);
 
   const indexedSubmissions = useMemo(() => {
     return keyBy(submissions, '_id');
@@ -80,14 +95,24 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       activities.map(({ formInstanceId }) => formInstanceId),
     );
     const firstActivity = activities[0];
-    const mergedElementValues = calculateActivityConflicts(
-      activities,
-      selectedJointTeachingValue,
-    );
+    const { values: mergedActivityValues, timing: mergedActivityTiming } =
+      calculateActivityConflicts(activities, selectedJointTeachingTiming);
+
     if (!firstActivity) return null;
+
     return {
       ...firstActivity,
-      values: mergedElementValues,
+      timing: firstActivity.timing.map((val) => {
+        return (
+          mergedActivityTiming[val.extId] || {
+            ...val,
+            value: null,
+          }
+        );
+      }),
+      values: firstActivity.values.map((val) => {
+        return mergedActivityValues[val.extId] || [];
+      }),
       submitters: chain(formInstanceIds)
         .map((formInstanceId) => indexedSubmissions[formInstanceId]?.submitter)
         .uniq()
@@ -100,60 +125,87 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     showResult,
     activities,
     allElementIds,
-    selectedJointTeachingValue,
     indexedSubmissions,
+    selectedJointTeachingTiming,
   ]);
+  const finalActivities = compact([...activities, resultsRow]);
 
   useEffect(() => {
-    if (activities[0]) {
-      setSelectedJointTeachingValue(activities[0].values.map(() => -1));
-    }
+    if (!conflicts) return;
+    const selectedValues = {};
+    Object.keys(conflicts).forEach((type) => {
+      selectedValues[type] = {};
+      const typeValues = conflicts[type];
+      Object.keys(typeValues).forEach((extId) => {
+        const val = typeValues[extId];
+        const foundActivity = activities.find((act) => {
+          return act[type].find((values) =>
+            isEqual(
+              Array.isArray(values.value) ? values.value : [values.value],
+              val.resolution,
+            ),
+          );
+        });
+        if (foundActivity) {
+          selectedValues[type][extId] = foundActivity._id;
+        }
+      });
+    });
+    setSelectedJointTeachingTiming({
+      ...selectedJointTeachingTiming,
+      ...selectedValues,
+    });
   }, [activities.length]);
 
-  const finalActivities = compact([...activities, resultsRow]);
+  const columnPrefixRenderer = (type, [activity, __], [activityValue, ___]) => {
+    if (!activity || !activityValue || Number(activity?.sequenceIdx) < 0)
+      return null;
+    if (isEmpty(activityValue) || !uniqueValues[type][activityValue[0].extId])
+      return null;
+    if (uniqueValues[type][activityValue[0].extId].length > 1) {
+      return (
+        <Checkbox
+          checked={
+            selectedJointTeachingTiming[type][activityValue[0].extId] ===
+            activity._id
+          }
+          onChange={(e) => {
+            setSelectedJointTeachingTiming({
+              ...selectedJointTeachingTiming,
+              [type]: {
+                ...(selectedJointTeachingTiming[type] || {}),
+                [activityValue[0].extId]: e.target.checked ? activity._id : '',
+              },
+            });
+            if (typeof onSelectValue === 'function') {
+              onSelectValue(type, e.target.checked, activityValue);
+            }
+          }}
+        />
+      );
+    }
+    return null;
+    // return rendeerTimingColumnPrefix([activity, activityIndex], [activityValue, activityValueIdx])
+  };
 
   return (
     <div>
       {header}
       <ActivityTable
         className={`joint-teaching-activities-table ${
-          readonly ? 'readonly' : ''
+          showResult ? 'show-result' : ''
         }`}
         design={design}
         activities={finalActivities}
-        columnPrefix={
-          !readonly
-            ? ([activity, activityIndex], [, activityValueIdx]) => {
-                if (!activity || Number(activity?.sequenceIdx) < 0) return null;
-                if (uniqueValues[activityValueIdx].length > 1) {
-                  return (
-                    <Checkbox
-                      checked={
-                        selectedJointTeachingValue[activityValueIdx] ===
-                        activityIndex
-                      }
-                      onChange={(e) => {
-                        if (e.target.checked)
-                          setSelectedJointTeachingValue([
-                            ...selectedJointTeachingValue.slice(
-                              0,
-                              activityValueIdx,
-                            ),
-                            activityIndex,
-                            ...selectedJointTeachingValue.slice(
-                              activityValueIdx + 1,
-                            ),
-                          ]);
-                      }}
-                    />
-                  );
-                }
-                // return null;
-              }
-            : undefined
-        }
-        renderer={(activity, values) => {
-          if (activity.sequenceIdx < 0 && isEmpty(values)) {
+        columnPrefix={!readonly ? columnPrefixRenderer : undefined}
+        renderer={(type, activity, extId) => {
+          // If not last row, continue rendering
+          if (activity.sequenceIdx!! >= 0) return undefined;
+          // If value type is not supported ( Array or Object ), return normal N/A or anoother text
+          if (isEmpty(uniqueValues[type][extId])) return 'N/A';
+
+          const valueItem = activity[type].find((item) => item.extId === extId);
+          if (!valueItem || isEmpty(valueItem.value)) {
             return <span className='text--error'>N/A</span>;
           }
           return undefined;

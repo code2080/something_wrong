@@ -61,6 +61,8 @@ const BaseActivityCol = ({
   revertToSubmissionValue,
   setExtIdPropsForObject,
   teCoreAPI,
+  columnPrefix,
+  renderer,
 }) => {
   const dispatch = useDispatch();
   const spotlightedElRef = useRef(null);
@@ -227,50 +229,72 @@ const BaseActivityCol = ({
     onDispatchSelectedActivityValueAction(key);
   };
 
-  return (
-    <Dropdown
-      overlay={
-        <Menu onClick={onHandleDropdownMenuItemClick}>
-          {(validActivityValueActions || []).map((action) => (
-            <Menu.Item key={action}>{activityActionLabels[action]}</Menu.Item>
-          ))}
-        </Menu>
-      }
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
-      visible={isDropdownVisible}
-      onVisibleChange={onUpdateDropdownVisibility}
-      trigger={['hover']}
-    >
-      <div className={'base-activity-col--wrapper'} ref={spotlightedElRef}>
-        {viewProps.view === activityViews.INLINE_EDIT && (
-          <InlineEdit
-            onFinish={onFinishManualEditing}
-            onCancel={() => setViewProps(resetView())}
-            activityValue={_activityValue}
-            activity={activity}
-            action={viewProps.action}
-          />
-        )}
-        {viewProps.view === activityViews.VALUE_VIEW && (
-          <BaseActivityColValue
-            activityValue={_activityValue}
-            activity={activity}
-          />
-        )}
-        <ModalEdit
-          activityValue={_activityValue}
-          activity={activity}
-          formatFn={formatFn}
-          mappingProps={propertiesForMappedDesignValue}
-          propTitle={propTitle}
-          prop={typeExtId}
-          onClose={() => setViewProps(resetView())}
-          visible={viewProps.view === activityViews.MODAL_EDIT}
-          action={viewProps.action}
-        />
+  const renderedPayload = useMemo(() => {
+    if (typeof renderer === 'function') {
+      const renderResult = renderer(_activityValue);
+      if (renderResult !== undefined) return renderResult;
+    }
+    return (
+      <div style={{ display: 'flex' }}>
+        {typeof columnPrefix === 'function' && columnPrefix(_activityValue)}
+        <Dropdown
+          overlay={
+            <Menu onClick={onHandleDropdownMenuItemClick}>
+              {(validActivityValueActions || []).map((action) => (
+                <Menu.Item key={action}>
+                  {activityActionLabels[action]}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+          getPopupContainer={() => document.getElementById('te-prefs-lib')}
+          visible={isDropdownVisible}
+          onVisibleChange={onUpdateDropdownVisibility}
+          trigger={['hover']}
+        >
+          <div className={'base-activity-col--wrapper'} ref={spotlightedElRef}>
+            {viewProps.view === activityViews.INLINE_EDIT && (
+              <InlineEdit
+                onFinish={onFinishManualEditing}
+                onCancel={() => setViewProps(resetView())}
+                activityValue={_activityValue}
+                activity={activity}
+                action={viewProps.action}
+              />
+            )}
+            {viewProps.view === activityViews.VALUE_VIEW && (
+              <BaseActivityColValue
+                activityValue={_activityValue}
+                activity={activity}
+              />
+            )}
+            <ModalEdit
+              activityValue={_activityValue}
+              activity={activity}
+              formatFn={formatFn}
+              mappingProps={propertiesForMappedDesignValue}
+              propTitle={propTitle}
+              prop={typeExtId}
+              onClose={() => setViewProps(resetView())}
+              visible={viewProps.view === activityViews.MODAL_EDIT}
+              action={viewProps.action}
+            />
+          </div>
+        </Dropdown>
       </div>
-    </Dropdown>
-  );
+    );
+  }, [
+    _activityValue,
+    activity,
+    propertiesForMappedDesignValue,
+    propTitle,
+    typeExtId,
+    viewProps,
+    isDropdownVisible,
+    validActivityValueActions,
+    spotlightedElRef,
+  ]);
+  return renderedPayload;
 };
 
 BaseActivityCol.propTypes = {
@@ -285,6 +309,8 @@ BaseActivityCol.propTypes = {
   revertToSubmissionValue: PropTypes.func.isRequired,
   setExtIdPropsForObject: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
+  columnPrefix: PropTypes.func,
+  renderer: PropTypes.func,
 };
 
 BaseActivityCol.defaultProps = {
@@ -293,6 +319,8 @@ BaseActivityCol.defaultProps = {
   type: 'VALUE',
   formatFn: (value) => value,
   mapping: null,
+  columnPrefix: null,
+  renderer: null,
 };
 
 export default connect(null, mapActionsToProps)(withTECoreAPI(BaseActivityCol));

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Key } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { compact } from 'lodash';
+import { compact, isEmpty, uniqueId } from 'lodash';
 
 // ACTIONS
 import {
@@ -11,6 +11,9 @@ import {
   fetchJointTeachingGroupsForForm,
   mergeJointTeachingGroup,
   revertJointTeachingGroup,
+  addJointTeachingConflict,
+  updateJointTeachingConflict,
+  removeJointTeachingConflict,
 } from 'Redux/JointTeaching/jointTeaching.actions';
 
 // SELECTORS
@@ -26,6 +29,8 @@ import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
 import { FETCH_JOINT_TEACHING_GROUPS_FOR_FORM } from 'Redux/JointTeaching/jointTeaching.actionTypes';
 import JointTeachingGroup, {
   MAX_MATCHING_SCORE,
+  ConflictType,
+  JointTeachingConflict,
 } from 'Models/JointTeachingGroup.model';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import StatusLabel from 'Components/StatusLabel/StatusLabel';
@@ -33,6 +38,7 @@ import StatusLabel from 'Components/StatusLabel/StatusLabel';
 import './JointTeachingGroupsTable.scss';
 import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
 import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
+import { ActivityValue } from 'Types/ActivityValue.type';
 
 interface Props {
   readonly?: boolean;
@@ -112,6 +118,58 @@ const JointTeachingGroupsTable = (props: Props) => {
     onFetchJointTeachingGroups();
   };
 
+  const onSelectValue = (
+    jointTeaching: JointTeachingGroup,
+    {
+      type,
+      checked,
+      activityValue,
+    }: { type: ConflictType; checked: boolean; activityValue: ActivityValue },
+  ) => {
+    if (isEmpty(activityValue)) return;
+    const { conflictsMapping } = jointTeaching;
+    const { value, extId } = activityValue[0];
+    const resolution = Array.isArray(value) ? value : [value];
+    const foundConflict = conflictsMapping[type]?.[extId];
+    console.log('foundConflict >>>', foundConflict);
+    if (checked) {
+      if (foundConflict) {
+        dispatch(
+          updateJointTeachingConflict({
+            formId,
+            jointTeachingId: jointTeaching._id,
+            conflict: {
+              _id: foundConflict._id,
+              resolution,
+            },
+          }),
+        );
+      } else {
+        const conflict: JointTeachingConflict = {
+          _id: uniqueId(),
+          type,
+          resolution,
+          extId,
+        };
+        dispatch(
+          addJointTeachingConflict({
+            formId,
+            jointTeachingId: jointTeaching._id,
+            conflict,
+          }),
+        );
+      }
+    } else {
+      dispatch(
+        removeJointTeachingConflict({
+          formId,
+          jointTeachingId: jointTeaching._id,
+          conflictId: foundConflict._id,
+        }),
+      );
+    }
+  };
+
   const mergeBtn = (group: JointTeachingGroup) => {
     if (group.status === 'MERGED')
       return (
@@ -125,7 +183,12 @@ const JointTeachingGroupsTable = (props: Props) => {
         </Button>
       );
     return (
-      <Button size='small' type='primary' onClick={() => onMerge([group._id])}>
+      <Button
+        size='small'
+        type='primary'
+        onClick={() => onMerge([group._id])}
+        disabled={!group.conflictsResolved}
+      >
         Merge
       </Button>
     );
@@ -134,9 +197,10 @@ const JointTeachingGroupsTable = (props: Props) => {
   const columns = compact([
     !readonly && {
       title: ' ',
+      key: 'conflictsResolved',
       render: (jointTeachingGroup: JointTeachingGroup) => (
         <JointTeachingGroupStatusCheck
-          jointTeachingGroup={jointTeachingGroup}
+          conflictsResolved={jointTeachingGroup.conflictsResolved}
         />
       ),
       width: 32,
@@ -156,7 +220,7 @@ const JointTeachingGroupsTable = (props: Props) => {
     {
       title: 'Primary objects',
       key: 'primaryObjects',
-      render: () => 'N/A',
+      render: (group: JointTeachingGroup) => group.primaryObjects.join(', '),
     },
     {
       title: 'Match score',
@@ -226,6 +290,7 @@ const JointTeachingGroupsTable = (props: Props) => {
         isLoading={loading}
         expandedRowRender={(group: JointTeachingGroup) => (
           <JointTeachingActivitiesTable
+            conflicts={group.conflictsMapping}
             showResult
             readonly={readonly || group.status === 'MERGED'}
             activities={group.activities}
@@ -236,6 +301,9 @@ const JointTeachingGroupsTable = (props: Props) => {
             onAddActivity={(activityIds: Key[]) => {
               onAddActivity(group._id, activityIds);
             }}
+            onSelectValue={(type, checked, activityValue) =>
+              onSelectValue(group, { type, checked, activityValue })
+            }
           />
         )}
         rowSelection={

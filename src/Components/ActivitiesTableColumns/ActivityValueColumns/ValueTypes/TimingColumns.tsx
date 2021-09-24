@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 // COMPONENTS
-import BaseActivityCol from '../Base/BaseActivityCol';
+import BaseActivityColWrapper from '../Base/BaseActivityColWrapper';
 import BaseActivityColOuter from '../Base/BaseActivityColOuter';
 import SortableTableCell from '../../../DynamicTable/SortableTableCell';
 
@@ -18,10 +18,11 @@ const timingCols = {
     title: 'Timing mode',
     key: 'mode',
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`mode_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='mode'
           propTitle={TimingNameMap.mode}
@@ -32,34 +33,42 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  startTimeExact: (mapping) => ({
+  startTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'Start time',
     key: 'startTime',
     dataIndex: null,
     width: 150,
-    render: (activity) => (
-      <SortableTableCell className={`startTime_${activity._id}`}>
-        <BaseActivityCol
-          activity={activity}
-          type='TIMING'
-          prop='startTime'
-          propTitle={TimingNameMap.startTime}
-          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-          mapping={mapping}
-        />
-      </SortableTableCell>
-    ),
+    render: (activity, activityIndex) => {
+      return (
+        <SortableTableCell className={`startTime_${activity._id}`}>
+          <BaseActivityColWrapper
+            columnPrefix={columnPrefix}
+            renderer={renderer}
+            activity={activity}
+            activityIndex={activityIndex}
+            type='TIMING'
+            prop='startTime'
+            propTitle={TimingNameMap.startTime}
+            formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
+            mapping={mapping}
+          />
+        </SortableTableCell>
+      );
+    },
     sorter: true,
   }),
-  endTimeExact: (mapping) => ({
+  endTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'End time',
     key: 'endTime',
     width: 150,
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`endTime_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='endTime'
           propTitle={TimingNameMap.endTime}
@@ -70,15 +79,18 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  startTimeTimeslots: (mapping) => ({
+  startTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'Start after or at:',
     key: 'startTime',
     width: 200,
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`startTimeOrAt_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='startTime'
           propTitle='Start after or at'
@@ -89,15 +101,18 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  endTimeTimeslots: (mapping) => ({
+  endTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'End before or at:',
     width: 200,
     key: 'endTime',
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`endTimeOrAt_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='endTime'
           propTitle='End before or at'
@@ -108,15 +123,18 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  length: (mapping) => ({
+  length: (mapping, columnPrefix, renderer) => ({
     title: 'Length',
     width: 70,
     key: 'length',
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`length_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='length'
           propTitle={TimingNameMap.length}
@@ -126,15 +144,18 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  padding: (mapping) => ({
+  padding: (mapping, columnPrefix, renderer) => ({
     title: 'Padding',
     key: 'padding',
     width: 70,
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`padding_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='padding'
           propTitle={TimingNameMap.padding}
@@ -143,15 +164,18 @@ const timingCols = {
       </SortableTableCell>
     ),
   }),
-  weekday: (mapping) => ({
+  weekday: (mapping, columnPrefix, renderer) => ({
     title: 'Weekday',
     key: 'weekday',
     width: 70,
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`weekday_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='weekday'
           propTitle={TimingNameMap.weekday}
@@ -179,15 +203,18 @@ const timingCols = {
     ),
     sorter: true,
   }),
-  time: (mapping) => ({
+  time: (mapping, columnPrefix, renderer) => ({
     title: 'Exact time',
     key: 'time',
     width: 120,
     dataIndex: null,
-    render: (activity) => (
+    render: (activity, activityIndex) => (
       <SortableTableCell className={`time_${activity._id}`}>
-        <BaseActivityCol
+        <BaseActivityColWrapper
+          columnPrefix={columnPrefix}
+          renderer={renderer}
           activity={activity}
+          activityIndex={activityIndex}
           type='TIMING'
           prop='time'
           propTitle={TimingNameMap.time}
@@ -200,14 +227,14 @@ const timingCols = {
 };
 
 export const TimingColumns = {
-  [activityTimeModes.EXACT]: (mapping) => [
-    timingCols.startTimeExact(mapping),
-    timingCols.endTimeExact(mapping),
+  [activityTimeModes.EXACT]: (mapping, columnPrefix, render) => [
+    timingCols.startTimeExact(mapping, columnPrefix, render),
+    timingCols.endTimeExact(mapping, columnPrefix, render),
   ],
-  [activityTimeModes.TIMESLOTS]: (mapping) => [
-    timingCols.startTimeTimeslots(mapping),
-    timingCols.endTimeTimeslots(mapping),
-    timingCols.length(mapping),
+  [activityTimeModes.TIMESLOTS]: (mapping, columnPrefix, render) => [
+    timingCols.startTimeTimeslots(mapping, columnPrefix, render),
+    timingCols.endTimeTimeslots(mapping, columnPrefix, render),
+    timingCols.length(mapping, columnPrefix, render),
   ],
   [activityTimeModes.SEQUENCE]: (mapping) => {
     const { timing } = mapping;

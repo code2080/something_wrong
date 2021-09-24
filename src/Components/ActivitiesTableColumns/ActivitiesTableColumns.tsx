@@ -11,6 +11,7 @@ import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import TitleCell from './new/TitleCell';
 import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
+import { ConflictType } from 'Models/JointTeachingGroup.model';
 
 export const createActivitiesTableColumnsFromMapping = (
   design,
@@ -45,13 +46,20 @@ export const createActivitiesTableColumnsFromMapping = (
               typeof columnPrefix === 'function'
                 ? (activityValues) => {
                     return columnPrefix(
+                      ConflictType.VALUES,
                       [activity, activityIndex],
                       [activityValues, valueIndex],
                     );
                   }
                 : undefined
             }
-            renderer={renderer}
+            renderer={
+              typeof renderer === 'function'
+                ? (activty) => {
+                    return renderer(ConflictType.VALUES, activty, extId);
+                  }
+                : undefined
+            }
           />
         ),
       },
@@ -84,7 +92,7 @@ export const createActivitiesTableColumnsFromMapping = (
       ),
       sorter: true,
     },
-    ...TimingColumns[_design.timing.mode](_design),
+    ...TimingColumns[_design.timing.mode](_design, columnPrefix, renderer),
     ...activityValueColumns,
   ];
 };

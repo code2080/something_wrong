@@ -1,5 +1,4 @@
-import head from 'lodash/head';
-import _, { isEmpty, isEqual } from 'lodash';
+import _, { keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -19,6 +18,11 @@ import { TFormInstance } from '../Types/FormInstance.type';
 import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
+import {
+  ConflictType,
+  JointTeachingConflictMapping,
+  SUPPORTED_VALUE_TYPES,
+} from 'Models/JointTeachingGroup.model';
 // CONSTANTS
 // FUNCTIONS
 /**
@@ -517,7 +521,8 @@ export const populateWithFieldConstraint = ({
   // Missing field constraint
   if (!fieldConstraint) return activities;
   const { operator, parameters } = fieldConstraint;
-  const { firstParam, lastParam } = head(parameters);
+  // @ts-ignore
+  const { firstParam, lastParam } = _.head(parameters);
   const [, typeExtId, fieldExtId] = lastParam;
   const [, sectionId, elementId] = firstParam;
   // Incomplete object or form mapping
@@ -535,83 +540,141 @@ export const populateWithFieldConstraint = ({
   });
 };
 
-export const getUniqueValues = (activities: TActivity[]) => {
-  if (isEmpty(activities)) return [];
-  const firstActivity = activities[0];
-  const { values } = firstActivity;
-  const allValues: any = [];
+const getValuesType = (values) => {
+  if (Array.isArray(values)) return _.uniq(values.map((val) => typeof val));
+  return [typeof values];
+};
+
+const getAllValuesFromActivities = (type, activities) => {
+  const allValues: { [extId: string]: null | ActivityValue[] } = {};
   activities.forEach((act) => {
-    _.map(new Array(values.length), (item, itemIndex) => {
-      if (Array.isArray(allValues[itemIndex])) {
-        allValues[itemIndex].push(act.values[itemIndex]);
+    const indexedValues = keyBy(act[type], 'extId');
+    Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
+      const valueTypes = getValuesType(item.value);
+      const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
+      if (unsupportedTypes.length) {
+        allValues[item.extId] = null;
+      } else if (Array.isArray(allValues[item.extId])) {
+        if (
+          !allValues[item.extId]?.some((val) =>
+            _.isEqual(val.value, indexedValues[item.extId].value),
+          )
+        ) {
+          allValues[item.extId]?.push(indexedValues[item.extId]);
+        }
       } else {
-        allValues[itemIndex] = [act.values[itemIndex]];
+        allValues[item.extId] = [indexedValues[item.extId]];
       }
     });
   });
-  return allValues.map((values) =>
-    _.uniqWith(values, (a: ActivityValue, b: ActivityValue) => {
-      return isEqual(a.value, b.value);
-    }),
-  );
+  return allValues;
 };
-export const calculateActivityConflicts = (
-  activities: TActivity[],
-  selectedValues: number[],
-) => {
-  const uniqueValues = getUniqueValues(activities);
-  return uniqueValues.map((values, index) => {
-    if (!values || values.length === 1) return values[0];
-    if (selectedValues[index] > -1) {
-      return activities[selectedValues[index]].values[index];
-    }
-    return [];
-  });
-  // console.log('uniqueValues', uniqueValues);
-  // const allValues = flatten(
-  //   activities.map(({ _id, values }) =>
-  //     values.map((val) => ({
-  //       ...val,
-  //       activityId: _id,
-  //     })),
-  //   ),
-  // );
-  // console.info(_allValues, allValues);
-  // const valuesGroupedByElementId = groupBy(allValues, 'elementId');
-  // return Object.keys(valuesGroupedByElementId)
-  //   .filter((elementId) => elementId)
-  //   .reduce((results, elementId) => {
-  //     const elementValues = valuesGroupedByElementId[elementId];
-  //     let newValues: ValueType[] = [];
-  //     let newSubmissionValues: ValueType[] = [];
-  //     if (conflictElementIds.includes(elementId)) {
-  //       const selectedValue = elementValues.find(
-  //         (elemValue) => elemValue.activityId === selectedValues[elementId],
-  //       );
-  //       if (selectedValue) {
-  //         newValues = [selectedValue.value || ''];
-  //         newSubmissionValues = [selectedValue.submissionValue || ''];
+
+export const getUniqueValues = (activities: TActivity[]) => {
+  if (_.isEmpty(activities))
+    return {
+      values: {},
+      timing: {},
+    };
+  // const allValues: {[extId: string]: null | ActivityValue[]} = {};
+  // activities.forEach((act) => {
+  //   const indexedValues = keyBy(act[type], 'extId');
+  //   Object.values(activities[0]).forEach((item) => {
+  //     const valueTypes = getValuesType(item.value);
+  //     const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
+  //     if (unsupportedTypes.length) {
+  //       allValues[item.extId] = null;
+  //     }
+  //     else if (Array.isArray(allValues[item.extId])) {
+  //       if (!allValues[item.extId]?.some(val => _.isEqual(val.value, indexedValues[item.extId].value))) {
+  //         allValues[item.extId]?.push(indexedValues[item.extId]);
   //       }
   //     } else {
-  //       elementValues.forEach((val) => {
-  //         newValues = [...newValues, val.value || ''];
-  //         newSubmissionValues = [
-  //           ...newSubmissionValues,
-  //           val.submissionValue || '',
-  //         ];
-  //       });
+  //       allValues[item.extId] = [indexedValues[item.extId]];
   //     }
-  //     return {
-  //       ...results,
-  //       [elementId]: {
-  //         ...elementValues[0],
-  //         value: chain(newValues).flatten().compact().uniq().value(),
-  //         submissionsValue: chain(newSubmissionValues)
-  //           .flatten()
-  //           .compact()
-  //           .uniq()
-  //           .value(),
-  //       },
-  //     };
-  //   }, {});
+  //   });
+  // });
+  return {
+    [ConflictType.VALUES]: getAllValuesFromActivities(
+      ConflictType.VALUES,
+      activities,
+    ),
+    [ConflictType.TIMING]: getAllValuesFromActivities(
+      ConflictType.TIMING,
+      activities,
+    ),
+  };
+  // return Object.keys(allValues).reduce((results, key) => {
+  //   return {
+  //     ...results,
+  //   }
+  // }, {});
+  // return Object.values(allValues).map((values) =>
+  //   _.uniqWith(values, (a: ActivityValue, b: ActivityValue) => {
+  //     return a && b && _.isEqual(a.value, b.value);
+  //   }),
+  // );
+};
+export const getConflictsResolvingStatus = (
+  activities: TActivity[],
+  conflicts: JointTeachingConflictMapping,
+) => {
+  const uniqueValues = getUniqueValues(activities);
+  return Object.keys(uniqueValues).every((type) => {
+    const typeValues = uniqueValues[type];
+    return Object.keys(typeValues).every((extId) => {
+      const val = typeValues[extId];
+      if (_.isEmpty(val) || val.length === 1) return true;
+      return conflicts[type]?.[extId];
+    });
+  });
+};
+
+export const calculateActivityConflictsByType = (
+  type: ConflictType,
+  activities: TActivity[],
+  _selectedValues: { [type: string]: { [key: string]: string } },
+) => {
+  const uniqueValues = getUniqueValues(activities);
+  const selectedValues = _selectedValues[type];
+  return Object.keys(uniqueValues[type] || {}).reduce((results, key) => {
+    const _values = uniqueValues[type]?.[key];
+    if (!_values) return results;
+
+    // If only one value
+    if (_values.length === 1)
+      return {
+        ...results,
+        [key]: _values[0],
+      };
+
+    const foundActivity = activities.find(
+      (act) => act._id === selectedValues[key],
+    );
+    if (!foundActivity) return results;
+
+    // If multiple values
+    return {
+      ...results,
+      [key]: foundActivity[type].find((val) => val.extId === key),
+    };
+  }, {});
+};
+
+export const calculateActivityConflicts = (
+  activities: TActivity[],
+  selectedValues: { [type: string]: { [key: string]: string } },
+) => {
+  return {
+    values: calculateActivityConflictsByType(
+      ConflictType.VALUES,
+      activities,
+      selectedValues,
+    ),
+    timing: calculateActivityConflictsByType(
+      ConflictType.TIMING,
+      activities,
+      selectedValues,
+    ),
+  };
 };
