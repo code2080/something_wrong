@@ -145,7 +145,6 @@ const JointTeachingGroupsTable = (props: Props) => {
         );
       } else {
         const conflict: JointTeachingConflict = {
-          _id: uniqueId(),
           type,
           resolution,
           extId,
