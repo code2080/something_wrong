@@ -131,7 +131,6 @@ const JointTeachingGroupsTable = (props: Props) => {
     const { value, extId } = activityValue[0];
     const resolution = Array.isArray(value) ? value : [value];
     const foundConflict = conflictsMapping[type]?.[extId];
-    console.log('foundConflict >>>', foundConflict);
     if (checked) {
       if (foundConflict) {
         dispatch(

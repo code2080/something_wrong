@@ -51,11 +51,12 @@ interface TableProps extends Omit<Props, ''> {
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
-  const [selectedJointTeachingTiming, setSelectedJointTeachingTiming] =
-    useState<{ [type: string]: { [key: string]: string } }>({
-      [ConflictType.VALUES]: {},
-      [ConflictType.TIMING]: {},
-    });
+  const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState<{
+    [type: string]: { [key: string]: string };
+  }>({
+    [ConflictType.VALUES]: {},
+    [ConflictType.TIMING]: {},
+  });
 
   const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
   const {
@@ -96,7 +97,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     );
     const firstActivity = activities[0];
     const { values: mergedActivityValues, timing: mergedActivityTiming } =
-      calculateActivityConflicts(activities, selectedJointTeachingTiming);
+      calculateActivityConflicts(activities, selectedJointTeachingValue);
 
     if (!firstActivity) return null;
 
@@ -126,7 +127,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     activities,
     allElementIds,
     indexedSubmissions,
-    selectedJointTeachingTiming,
+    selectedJointTeachingValue,
   ]);
   const finalActivities = compact([...activities, resultsRow]);
 
@@ -151,8 +152,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         }
       });
     });
-    setSelectedJointTeachingTiming({
-      ...selectedJointTeachingTiming,
+    setSelectedJointTeachingValue({
+      ...selectedJointTeachingValue,
       ...selectedValues,
     });
   }, [activities.length]);
@@ -166,14 +167,14 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       return (
         <Checkbox
           checked={
-            selectedJointTeachingTiming[type][activityValue[0].extId] ===
+            selectedJointTeachingValue[type][activityValue[0].extId] ===
             activity._id
           }
           onChange={(e) => {
-            setSelectedJointTeachingTiming({
-              ...selectedJointTeachingTiming,
+            setSelectedJointTeachingValue({
+              ...selectedJointTeachingValue,
               [type]: {
-                ...(selectedJointTeachingTiming[type] || {}),
+                ...(selectedJointTeachingValue[type] || {}),
                 [activityValue[0].extId]: e.target.checked ? activity._id : '',
               },
             });

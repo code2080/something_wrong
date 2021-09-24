@@ -576,24 +576,6 @@ export const getUniqueValues = (activities: TActivity[]) => {
       values: {},
       timing: {},
     };
-  // const allValues: {[extId: string]: null | ActivityValue[]} = {};
-  // activities.forEach((act) => {
-  //   const indexedValues = keyBy(act[type], 'extId');
-  //   Object.values(activities[0]).forEach((item) => {
-  //     const valueTypes = getValuesType(item.value);
-  //     const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
-  //     if (unsupportedTypes.length) {
-  //       allValues[item.extId] = null;
-  //     }
-  //     else if (Array.isArray(allValues[item.extId])) {
-  //       if (!allValues[item.extId]?.some(val => _.isEqual(val.value, indexedValues[item.extId].value))) {
-  //         allValues[item.extId]?.push(indexedValues[item.extId]);
-  //       }
-  //     } else {
-  //       allValues[item.extId] = [indexedValues[item.extId]];
-  //     }
-  //   });
-  // });
   return {
     [ConflictType.VALUES]: getAllValuesFromActivities(
       ConflictType.VALUES,
@@ -604,16 +586,6 @@ export const getUniqueValues = (activities: TActivity[]) => {
       activities,
     ),
   };
-  // return Object.keys(allValues).reduce((results, key) => {
-  //   return {
-  //     ...results,
-  //   }
-  // }, {});
-  // return Object.values(allValues).map((values) =>
-  //   _.uniqWith(values, (a: ActivityValue, b: ActivityValue) => {
-  //     return a && b && _.isEqual(a.value, b.value);
-  //   }),
-  // );
 };
 export const getConflictsResolvingStatus = (
   activities: TActivity[],

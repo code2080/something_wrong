@@ -204,6 +204,19 @@ export const addJointTeachingConflict = ({
   });
 };
 
+const updateJointTeachingConflictFlow = (formId: string) => ({
+  request: () => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_SUCCESS,
+    payload: { jointTeaching: response, formId },
+  }),
+  failure: (err) => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_FAILURE,
+    payload: { ...err },
+  }),
+});
 export const updateJointTeachingConflict = ({
   formId,
   jointTeachingId,
@@ -219,20 +232,6 @@ export const updateJointTeachingConflict = ({
     },
   });
 };
-
-const updateJointTeachingConflictFlow = (formId: string) => ({
-  request: () => ({
-    type: types.UPDATE_JOINT_TEACHING_CONFLICT_REQUEST,
-  }),
-  success: (response) => ({
-    type: types.UPDATE_JOINT_TEACHING_CONFLICT_SUCCESS,
-    payload: { jointTeaching: response, formId },
-  }),
-  failure: (err) => ({
-    type: types.UPDATE_JOINT_TEACHING_CONFLICT_FAILURE,
-    payload: { ...err },
-  }),
-});
 
 const removeJointTeachingConflictFlow = (formId: string) => ({
   request: () => ({
