@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Key } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { compact, isEmpty, uniqueId } from 'lodash';
+import { compact, isEmpty } from 'lodash';
 
 // ACTIONS
 import {

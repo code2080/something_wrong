@@ -572,20 +572,21 @@ const getAllValuesFromActivities = (type, activities) => {
 
 export const getUniqueValues = (activities: TActivity[]) => {
   if (_.isEmpty(activities))
-    return {
-      values: {},
-      timing: {},
-    };
-  return {
-    [ConflictType.VALUES]: getAllValuesFromActivities(
-      ConflictType.VALUES,
-      activities,
-    ),
-    [ConflictType.TIMING]: getAllValuesFromActivities(
-      ConflictType.TIMING,
-      activities,
-    ),
-  };
+    return Object.values(ConflictType).reduce(
+      (results, type) => ({
+        ...results,
+        [type]: {},
+      }),
+      {},
+    );
+
+  return Object.values(ConflictType).reduce(
+    (results, type) => ({
+      ...results,
+      [type]: getAllValuesFromActivities(type, activities),
+    }),
+    {},
+  );
 };
 export const getConflictsResolvingStatus = (
   activities: TActivity[],
@@ -637,16 +638,15 @@ export const calculateActivityConflicts = (
   activities: TActivity[],
   selectedValues: { [type: string]: { [key: string]: string } },
 ) => {
-  return {
-    values: calculateActivityConflictsByType(
-      ConflictType.VALUES,
-      activities,
-      selectedValues,
-    ),
-    timing: calculateActivityConflictsByType(
-      ConflictType.TIMING,
-      activities,
-      selectedValues,
-    ),
-  };
+  return Object.values(ConflictType).reduce(
+    (results, type) => ({
+      ...results,
+      [type]: calculateActivityConflictsByType(
+        type,
+        activities,
+        selectedValues,
+      ),
+    }),
+    {},
+  );
 };
