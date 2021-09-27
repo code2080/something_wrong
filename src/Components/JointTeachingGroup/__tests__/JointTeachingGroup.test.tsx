@@ -3,7 +3,7 @@ import type { TActivity } from 'Types/Activity.type';
 import JointTeachingGroupMerger from '../JointTeachingGroupMerger';
 import { renderWithState } from '../../../Utils/test.utils';
 
-describe('Joint Teaching Group tests', () => {
+describe('Joint Teaching Match tests', () => {
   const activities = {
     '601048c0ea0edb00206dae89': [
       {
@@ -526,9 +526,9 @@ describe('Joint Teaching Group tests', () => {
     );
   });
 
-  it('renders Create joint teaching group header', () => {
+  it('renders Create joint teaching match header', () => {
     screen
-      .getAllByText('Create joint teaching group')
+      .getAllByText('Create joint teaching match')
       .forEach((element) => expect(element).toBeInTheDocument());
   });
 
