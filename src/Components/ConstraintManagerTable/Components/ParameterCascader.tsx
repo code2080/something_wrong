@@ -95,7 +95,7 @@ const ParameterCascader = ({
       <Cascader
         notFoundContent={MissingOptionsMessage}
         defaultValue={parameters?.firstParam}
-        options={options}
+        options={options.filter(({ value }) => value === 'Form')}
         size='small'
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
@@ -130,7 +130,7 @@ const ParameterCascader = ({
       <Cascader
         notFoundContent={MissingOptionsMessage}
         defaultValue={parameters?.lastParam}
-        options={options}
+        options={options.filter(({ value }) => value === 'Objects')}
         size='small'
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
