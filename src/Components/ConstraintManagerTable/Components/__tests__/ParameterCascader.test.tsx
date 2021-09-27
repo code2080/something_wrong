@@ -159,7 +159,6 @@ describe('Testing parameter cascader', () => {
     fireEvent.click(parameterSelectors[0]);
     const formOption = screen.getByText('Form');
     await waitFor(() => formOption);
-    // expect(screen.getByText('Objects')).toBeInTheDocument();
     expect(formOption).toBeInTheDocument();
 
     fireEvent.click(formOption);
