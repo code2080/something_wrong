@@ -146,13 +146,20 @@ describe('Testing parameter cascader', () => {
         operator={'='}
         constraintId={'testing'}
       />,
+      {
+        initialState: {
+          te: { extIdProps: { types: { room: { label: 'Room' } } } },
+        },
+      },
     );
-    const sel = screen.getAllByPlaceholderText('Please select');
+    const parameterSelectors = screen.getAllByPlaceholderText('Please select');
 
-    fireEvent.click(sel[0]);
+    expect(parameterSelectors.length === 2);
+
+    fireEvent.click(parameterSelectors[0]);
     const formOption = screen.getByText('Form');
     await waitFor(() => formOption);
-    expect(screen.getByText('Objects')).toBeInTheDocument();
+    // expect(screen.getByText('Objects')).toBeInTheDocument();
     expect(formOption).toBeInTheDocument();
 
     fireEvent.click(formOption);
@@ -163,6 +170,23 @@ describe('Testing parameter cascader', () => {
     fireEvent.click(primaryObjectOption);
     await waitFor(() =>
       expect(screen.getByText('Form / Primary object')).toBeInTheDocument(),
+    );
+
+    fireEvent.click(parameterSelectors[1]);
+    const objectOption = screen.getByText('Objects');
+    await waitFor(() => objectOption);
+
+    fireEvent.click(objectOption);
+    const roomOption = screen.getByText('Room');
+    await waitFor(() => roomOption);
+
+    fireEvent.click(roomOption);
+    const seatsOption = screen.getByText('Platser');
+    await waitFor(() => seatsOption);
+
+    fireEvent.click(seatsOption);
+    await waitFor(() =>
+      expect(screen.getByText('Objects / Room / Platser')).toBeInTheDocument(),
     );
   });
 
