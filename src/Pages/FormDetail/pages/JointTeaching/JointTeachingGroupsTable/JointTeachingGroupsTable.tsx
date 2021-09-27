@@ -178,7 +178,7 @@ const JointTeachingGroupsTable = (props: Props) => {
           <div>
             {mergeBtn(group)}
             <Popconfirm
-              title='Are you sure you want to delete this joint teaching group?'
+              title='Are you sure you want to delete this joint teaching match?'
               onConfirm={() => onDelete(group._id)}
             >
               <Button type='link' danger icon={<DeleteOutlined />} />
@@ -224,6 +224,7 @@ const JointTeachingGroupsTable = (props: Props) => {
         dataSource={groups}
         rowKey='_id'
         isLoading={loading}
+        showFilter={false}
         expandedRowRender={(group: JointTeachingGroup) => (
           <JointTeachingActivitiesTable
             showResult

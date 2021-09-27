@@ -67,27 +67,6 @@ const JointTeachingPage = () => {
     }
   };
 
-  const renderButtons = () => {
-    switch (activeTab) {
-      case 'matchedTab':
-        return (
-          <Button
-            onClick={onGenerate}
-            style={{ color: 'black' }}
-            loading={!!generating}
-          >
-            Generate joint teaching group
-          </Button>
-        );
-      default:
-        return (
-          <Button style={{ color: 'black' }}>
-            Generate joint teaching matching
-          </Button>
-        );
-    }
-  };
-
   return (
     <>
       <div className='jointTeaching-buttons--wrapper'>
@@ -106,7 +85,15 @@ const JointTeachingPage = () => {
             <Radio.Button value='matchedTab'>Matched activities</Radio.Button>
           </Radio.Group>
         </div>
-        {renderButtons()}
+        {activeTab === 'unmatchedTab' && (
+          <Button
+            onClick={onGenerate}
+            style={{ color: 'black' }}
+            loading={!!generating}
+          >
+            Generate joint teaching matching
+          </Button>
+        )}
       </div>
       {renderTab()}
     </>

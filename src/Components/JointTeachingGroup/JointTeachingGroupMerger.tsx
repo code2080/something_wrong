@@ -131,11 +131,11 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
         disabled={activities.length < 2}
         onClick={() => setVisible(true)}
       >
-        Create joint teaching group
+        Create joint teaching match
       </Button>
       <Modal
         width={'80%'}
-        title='Create joint teaching group'
+        title='Create joint teaching match'
         visible={visible}
         footer={[
           <Button key='create' disabled onClick={() => setVisible(false)}>
