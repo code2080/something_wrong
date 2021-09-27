@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
             ...state.groups[formId].slice(0, foundIdx),
             new JointTeachingGroup({
               ...jointTeaching,
-              activitiesDetail: state.groups[formId][foundIdx].activities,
+              primaryObjects: state.groups[formId][foundIdx].primaryObjects,
             }),
             ...state.groups[formId].slice(foundIdx + 1),
           ],
