@@ -1,15 +1,18 @@
 import React from 'react';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import JointTeachingGroup from 'Models/JointTeachingGroup.model';
+import {
+  ExclamationCircleOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
 
 interface Props {
-  jointTeachingGroup: JointTeachingGroup;
+  conflictsResolved: boolean;
 }
 
 const JointTeachingGroupStatusCheck = (props: Props) => {
-  const { jointTeachingGroup } = props;
-  console.log(jointTeachingGroup);
-  return (
+  const { conflictsResolved } = props;
+  return conflictsResolved ? (
+    <CheckCircleOutlined style={{ fontSize: 14 }} className='text--success' />
+  ) : (
     <ExclamationCircleOutlined
       style={{ fontSize: 14 }}
       className='text--error'

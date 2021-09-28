@@ -175,3 +175,87 @@ export const generateJointTeachingGroup = ({ formId }) => {
     endpoint: `${getBaseEndpoint(formId)}/auto-generate`,
   });
 };
+
+const addJointTeachingConflictFlow = (formId: string) => ({
+  request: () => ({
+    type: types.ADD_JOINT_TEACHING_CONFLICT_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.ADD_JOINT_TEACHING_CONFLICT_SUCCESS,
+    payload: { jointTeaching: response, formId },
+  }),
+  failure: (err) => ({
+    type: types.ADD_JOINT_TEACHING_CONFLICT_FAILURE,
+    payload: { ...err },
+  }),
+});
+
+export const addJointTeachingConflict = ({
+  formId,
+  jointTeachingId,
+  conflict,
+}) => {
+  return asyncAction.POST({
+    flow: addJointTeachingConflictFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/${jointTeachingId}/conflict`,
+    params: {
+      ...conflict,
+    },
+  });
+};
+
+const updateJointTeachingConflictFlow = (formId: string) => ({
+  request: () => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_SUCCESS,
+    payload: { jointTeaching: response, formId },
+  }),
+  failure: (err) => ({
+    type: types.UPDATE_JOINT_TEACHING_CONFLICT_FAILURE,
+    payload: { ...err },
+  }),
+});
+export const updateJointTeachingConflict = ({
+  formId,
+  jointTeachingId,
+  conflict,
+}) => {
+  return asyncAction.PATCH({
+    flow: updateJointTeachingConflictFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/${jointTeachingId}/conflict/${
+      conflict._id
+    }`,
+    params: {
+      resolution: conflict.resolution,
+    },
+  });
+};
+
+const removeJointTeachingConflictFlow = (formId: string) => ({
+  request: () => ({
+    type: types.REMOVE_JOINT_TEACHING_CONFLICT_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.REMOVE_JOINT_TEACHING_CONFLICT_SUCCESS,
+    payload: { jointTeaching: response, formId },
+  }),
+  failure: (err) => ({
+    type: types.REMOVE_JOINT_TEACHING_CONFLICT_FAILURE,
+    payload: { ...err },
+  }),
+});
+
+export const removeJointTeachingConflict = ({
+  formId,
+  jointTeachingId,
+  conflictId,
+}) => {
+  return asyncAction.DELETE({
+    flow: removeJointTeachingConflictFlow(formId),
+    endpoint: `${getBaseEndpoint(
+      formId,
+    )}/${jointTeachingId}/conflict/${conflictId}`,
+  });
+};

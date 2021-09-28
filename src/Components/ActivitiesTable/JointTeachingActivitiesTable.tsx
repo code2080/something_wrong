@@ -1,5 +1,5 @@
-import React, { useMemo, ReactChild, useState, Key } from 'react';
-import { chain, compact, isEmpty, keyBy, uniq } from 'lodash';
+import React, { useMemo, ReactChild, useState, Key, useEffect } from 'react';
+import { chain, compact, isEmpty, isEqual, keyBy, uniq } from 'lodash';
 
 // COMPONENTS
 import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
@@ -11,15 +11,22 @@ import { TActivity } from '../../Types/Activity.type';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectDesignForForm } from '../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { ActivityValue } from '../../Types/ActivityValue.type';
-import { calculateActivityConflicts } from '../../Utils/activities.helpers';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import {
+  calculateActivityConflicts,
+  getUniqueValues,
+} from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
 import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
+import { ActivityValue } from 'Types/ActivityValue.type';
+import {
+  ConflictType,
+  JointTeachingConflictMapping,
+} from 'Models/JointTeachingGroup.model';
 
 interface Props {
   formId: string;
@@ -28,19 +35,29 @@ interface Props {
   showResult?: boolean;
   onRemove?: (activityId: string) => void;
   onAddActivity?: (activityIds: Key[]) => void;
+  onSelectValue?: (
+    type: ConflictType,
+    checked: boolean,
+    activityValue: ActivityValue,
+  ) => void;
   footer?: ReactChild;
   header?: ReactChild;
   selectedActivities?: Key[];
   onSelect?(selectedRowKeys: Key[]): void;
+  conflicts?: JointTeachingConflictMapping;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
-  const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState(
-    {},
-  );
+  const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState<{
+    [type: string]: { [key: string]: string };
+  }>({
+    [ConflictType.VALUES]: {},
+    [ConflictType.TIMING]: {},
+  });
+
   const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
   const {
     activities,
@@ -54,6 +71,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     onSelect,
     showResult,
     allElementIds,
+    onSelectValue,
+    conflicts,
   } = props;
   const unmatchedActivities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
@@ -62,6 +81,10 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
+
+  const uniqueValues = useMemo(() => {
+    return getUniqueValues(activities);
+  }, [activities]);
 
   const indexedSubmissions = useMemo(() => {
     return keyBy(submissions, '_id');
@@ -73,17 +96,24 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       activities.map(({ formInstanceId }) => formInstanceId),
     );
     const firstActivity = activities[0];
-    const mergedElementValues = calculateActivityConflicts(
-      activities,
-      allElementIds,
-      selectedJointTeachingValue,
-    );
+    const { values: mergedActivityValues, timing: mergedActivityTiming } =
+      calculateActivityConflicts(activities, selectedJointTeachingValue);
+
     if (!firstActivity) return null;
+
     return {
       ...firstActivity,
-      values: firstActivity.values.map(
-        (actValue) => mergedElementValues[actValue?.elementId as string] || {},
-      ),
+      timing: firstActivity.timing.map((val) => {
+        return (
+          mergedActivityTiming[val.extId] || {
+            ...val,
+            value: null,
+          }
+        );
+      }),
+      values: firstActivity.values.map((val) => {
+        return mergedActivityValues[val.extId] || [];
+      }),
       submitters: chain(formInstanceIds)
         .map((formInstanceId) => indexedSubmissions[formInstanceId]?.submitter)
         .uniq()
@@ -96,51 +126,87 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     showResult,
     activities,
     allElementIds,
-    selectedJointTeachingValue,
     indexedSubmissions,
+    selectedJointTeachingValue,
   ]);
-
   const finalActivities = compact([...activities, resultsRow]);
+
+  useEffect(() => {
+    if (!conflicts) return;
+    const selectedValues = {};
+    Object.keys(conflicts).forEach((type) => {
+      selectedValues[type] = {};
+      const typeValues = conflicts[type];
+      Object.keys(typeValues).forEach((extId) => {
+        const val = typeValues[extId];
+        const foundActivity = activities.find((act) => {
+          return act[type].find((values) =>
+            isEqual(
+              Array.isArray(values.value) ? values.value : [values.value],
+              val.resolution,
+            ),
+          );
+        });
+        if (foundActivity) {
+          selectedValues[type][extId] = foundActivity._id;
+        }
+      });
+    });
+    setSelectedJointTeachingValue({
+      ...selectedJointTeachingValue,
+      ...selectedValues,
+    });
+  }, [activities.length]);
+
+  const columnPrefixRenderer = (type, [activity, __], [activityValue, ___]) => {
+    if (!activity || !activityValue || Number(activity?.sequenceIdx) < 0)
+      return null;
+    if (isEmpty(activityValue) || !uniqueValues[type][activityValue[0].extId])
+      return null;
+    if (uniqueValues[type][activityValue[0].extId].length > 1) {
+      return (
+        <Checkbox
+          checked={
+            selectedJointTeachingValue[type][activityValue[0].extId] ===
+            activity._id
+          }
+          onChange={(e) => {
+            setSelectedJointTeachingValue({
+              ...selectedJointTeachingValue,
+              [type]: {
+                ...(selectedJointTeachingValue[type] || {}),
+                [activityValue[0].extId]: e.target.checked ? activity._id : '',
+              },
+            });
+            if (typeof onSelectValue === 'function') {
+              onSelectValue(type, e.target.checked, activityValue);
+            }
+          }}
+        />
+      );
+    }
+    return null;
+    // return rendeerTimingColumnPrefix([activity, activityIndex], [activityValue, activityValueIdx])
+  };
 
   return (
     <div>
       {header}
       <ActivityTable
         className={`joint-teaching-activities-table ${
-          readonly ? 'readonly' : ''
+          showResult ? 'show-result' : ''
         }`}
         design={design}
         activities={finalActivities}
-        columnPrefix={
-          !readonly
-            ? (activity: TActivity, activityValue: ActivityValue) => {
-                if (!activity || Number(activity?.sequenceIdx) < 0) return null;
-                if (
-                  activityValue?.elementId &&
-                  (allElementIds || []).includes(activityValue.elementId)
-                ) {
-                  return (
-                    <Checkbox
-                      checked={
-                        selectedJointTeachingValue[activityValue.elementId] ===
-                        activity._id
-                      }
-                      onChange={(e) => {
-                        if (e.target.checked)
-                          setSelectedJointTeachingValue({
-                            ...selectedJointTeachingValue,
-                            [activityValue.elementId as string]: activity._id,
-                          });
-                      }}
-                    />
-                  );
-                }
-                return null;
-              }
-            : undefined
-        }
-        renderer={(activity, values) => {
-          if (activity.sequenceIdx < 0 && isEmpty(values[0]?.value)) {
+        columnPrefix={!readonly ? columnPrefixRenderer : undefined}
+        renderer={(type, activity, extId) => {
+          // If not last row, continue rendering
+          if (activity.sequenceIdx!! >= 0) return undefined;
+          // If value type is not supported ( Array or Object ), return normal N/A or anoother text
+          if (isEmpty(uniqueValues[type][extId])) return 'N/A';
+
+          const valueItem = activity[type].find((item) => item.extId === extId);
+          if (!valueItem || isEmpty(valueItem.value)) {
             return <span className='text--error'>N/A</span>;
           }
           return undefined;

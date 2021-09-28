@@ -11,6 +11,7 @@ import { ActivityDesign } from '../../Models/ActivityDesign.model';
 import TitleCell from './new/TitleCell';
 import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
+import { ConflictType } from 'Models/JointTeachingGroup.model';
 
 export const createActivitiesTableColumnsFromMapping = (
   design,
@@ -28,21 +29,37 @@ export const createActivitiesTableColumnsFromMapping = (
   ];
 
   const activityValueColumns = allActivityValues.reduce<ColumnsType<object>>(
-    (values, [field, extId]) => [
+    (values, [field, extId], valueIndex) => [
       ...values,
       {
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
         displayName: 'ActivityCol',
         width: (design.objects[extId] || [null]).length * 150,
-        render: (activity: TActivity) => (
+        render: (activity: TActivity, activityIndex: number) => (
           <ColumnWrapper
             activity={activity}
             type='VALUE'
             prop={extId}
             mapping={_design}
-            columnPrefix={columnPrefix}
-            renderer={renderer}
+            columnPrefix={
+              typeof columnPrefix === 'function'
+                ? (activityValues) => {
+                    return columnPrefix(
+                      ConflictType.VALUES,
+                      [activity, activityIndex],
+                      [activityValues, valueIndex],
+                    );
+                  }
+                : undefined
+            }
+            renderer={
+              typeof renderer === 'function'
+                ? (activty) => {
+                    return renderer(ConflictType.VALUES, activty, extId);
+                  }
+                : undefined
+            }
           />
         ),
       },
@@ -75,7 +92,7 @@ export const createActivitiesTableColumnsFromMapping = (
       ),
       sorter: true,
     },
-    ...TimingColumns[_design.timing.mode](_design),
+    ...TimingColumns[_design.timing.mode](_design, columnPrefix, renderer),
     ...activityValueColumns,
   ];
 };

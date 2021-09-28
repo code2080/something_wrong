@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
+import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
 
@@ -15,8 +16,12 @@ interface Props extends TableProps<any> {
   onSelect?(selectedRowKeys: Key[]): void;
   onSort?(sorter: SorterResult<object> | SorterResult<object>[]): void;
   additionalColumns?: { pre?: ColumnsType<object>; post?: ColumnsType<object> };
-  columnPrefix?: (a, b) => void;
-  renderer?: (a, b) => void;
+  columnPrefix?: (
+    type: ConflictType,
+    [activity, activityIndex],
+    [activityValue, valueIndex],
+  ) => void;
+  renderer?: (type: ConflictType, activity: TActivity, extId: string) => void;
 }
 
 const ActivityTable = ({

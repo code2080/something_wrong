@@ -15,7 +15,7 @@
       background: none !important;
     }
   }
-  &:not(.readonly) .virtual-table-row-last {
+  &.show-result .virtual-table-row-last {
     color: $jungleGreen;
   }
 }
