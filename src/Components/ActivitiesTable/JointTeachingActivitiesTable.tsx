@@ -240,7 +240,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               key: 'jointTeachingObject',
               width: 250,
               render: (act: TActivityResult) => {
-                if (Array.isArray(act.jointTeachings)) {
+                if (Array.isArray(act?.jointTeachings)) {
                   return (
                     <div>
                       {act.jointTeachings.map((item, itemIndex) => (
