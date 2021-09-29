@@ -13,6 +13,12 @@ export const selectExtIds = createSelector(selectExtIdProps, (extIdProps) =>
   ),
 );
 
+export const selectLabelByTypeAndExtId = ({ type, extId }) =>
+  createSelector(
+    selectExtIdProps,
+    (extIdProps) => extIdProps[type]?.[extId]?.label || extId,
+  );
+
 export type Field = 'types' | 'fields' | 'objects';
 
 type ExtIdLabelPayload = {
