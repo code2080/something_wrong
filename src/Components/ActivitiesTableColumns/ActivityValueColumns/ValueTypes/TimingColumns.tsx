@@ -226,14 +226,6 @@ const timingCols = {
   }),
 };
 
-export const timingColsLabelMapping = Object.keys(timingCols).reduce(
-  (results, key) => ({
-    ...results,
-    [key]: timingCols[key].title,
-  }),
-  {},
-);
-
 export const TimingColumns = {
   [activityTimeModes.EXACT]: (mapping, columnPrefix, render) => [
     timingCols.startTimeExact(mapping, columnPrefix, render),
