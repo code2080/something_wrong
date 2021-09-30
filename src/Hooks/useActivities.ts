@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { isEqual, isEmpty, uniq } from 'lodash';
+import { isEqual, isEmpty, uniqWith } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { initialState as initialPayload } from 'Redux/TE/te.helpers';
@@ -79,25 +79,25 @@ export const useActivitiesObjectWatcher = ({
   activities: TActivity[];
 }) => {
   const teCoreObjectPayload: GetExtIdPropsPayload = useMemo(() => {
-    const objects: Array<string | TEObject> = [];
-    const fields: string[] = [];
-    const types: string[] = [];
-    activities.forEach((activity: TActivity) => {
-      if (activity.jointTeaching && activity.jointTeaching.object) {
-        objects.push({
-          type: activity.jointTeaching.typeExtId,
-          id: activity.jointTeaching.object,
-        } as TEObject);
-      }
-      if (activity.scopedObject) {
-        objects.push(activity.scopedObject);
-      }
-    });
+    const primaryObjects = activities
+      .filter((activity: TActivity) => activity.scopedObject)
+      .map(({ scopedObject }) => scopedObject || '');
+
+    const jointTeachingObjects = activities
+      .filter((activity: TActivity) => activity.jointTeaching?.object)
+      .map(
+        ({ jointTeaching }) =>
+          ({
+            type: jointTeaching?.typeExtId,
+            id: jointTeaching?.object,
+          } as TEObject),
+      );
     return {
-      objects: uniq(objects),
-      fields: uniq(fields),
-      types: uniq(types),
+      objects: uniqWith([...primaryObjects, ...jointTeachingObjects], isEqual),
+      fields: [],
+      types: [],
     };
   }, [activities.length]);
+
   useFetchLabelsFromExtIds(teCoreObjectPayload);
 };

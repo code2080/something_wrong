@@ -100,7 +100,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       activities.map(({ formInstanceId }) => formInstanceId),
     );
     const firstActivity = activities[0];
-    // @ts-ignore
     const { values: mergedActivityValues, timing: mergedActivityTiming } =
       calculateActivityConflicts(activities, selectedJointTeachingValue);
 

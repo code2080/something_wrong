@@ -607,7 +607,7 @@ export const calculateActivityConflictsByType = (
   type: ConflictType,
   activities: TActivity[],
   _selectedValues: { [type: string]: { [key: string]: string } },
-) => {
+): { [key: string]: ActivityValueType } => {
   const uniqueValues = getUniqueValues(activities);
   const selectedValues = _selectedValues[type];
   return Object.keys(uniqueValues[type] || {}).reduce((results, key) => {
@@ -648,5 +648,5 @@ export const calculateActivityConflicts = (
       ),
     }),
     {},
-  );
+  ) as { [key in ConflictType]: ActivityValueType };
 };
