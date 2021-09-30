@@ -40,6 +40,7 @@ import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
 import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
+import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 interface Props {
   readonly?: boolean;
@@ -238,12 +239,14 @@ const JointTeachingGroupsTable = (props: Props) => {
     {
       title: 'Matched on',
       key: 'matchedOn',
-      render: () => 'N/A',
+      render: (jointTeachingGroup: JointTeachingGroup) => (
+        <JointTeachingMatchedOn jointTeachingGroup={jointTeachingGroup} />
+      ),
     },
     !readonly && {
       title: 'Action',
       key: 'action',
-      width: '60px',
+      width: '120px',
       render: (group: JointTeachingGroup) => {
         return (
           <div>
@@ -314,6 +317,7 @@ const JointTeachingGroupsTable = (props: Props) => {
             }
           />
         )}
+        nowrap
         rowSelection={
           readonly
             ? null

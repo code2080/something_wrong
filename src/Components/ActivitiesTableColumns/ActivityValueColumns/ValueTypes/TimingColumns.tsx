@@ -226,6 +226,14 @@ const timingCols = {
   }),
 };
 
+export const timingColsLabelMapping = Object.keys(timingCols).reduce(
+  (results, key) => ({
+    ...results,
+    [key]: timingCols[key].title,
+  }),
+  {},
+);
+
 export const TimingColumns = {
   [activityTimeModes.EXACT]: (mapping, columnPrefix, render) => [
     timingCols.startTimeExact(mapping, columnPrefix, render),
@@ -236,13 +244,13 @@ export const TimingColumns = {
     timingCols.endTimeTimeslots(mapping, columnPrefix, render),
     timingCols.length(mapping, columnPrefix, render),
   ],
-  [activityTimeModes.SEQUENCE]: (mapping) => {
+  [activityTimeModes.SEQUENCE]: (mapping, columnPrefix, render) => {
     const { timing } = mapping;
     const mappedKeys = Object.keys(timing).filter(
       (key) => timing[key] && timing[key].length && key !== 'mode',
     );
     return mappedKeys
-      .map((key) => timingCols?.[key]?.(mapping))
+      .map((key) => timingCols?.[key]?.(mapping, columnPrefix, render))
       .filter(Boolean);
   },
 };

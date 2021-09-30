@@ -39,6 +39,7 @@ export default class JointTeachingGroup {
   status: JointTeachingStatus;
   primaryObjects: string[];
   matchingScore: number;
+  matchingOn: { [key: string]: string[] };
   conflictsMapping: JointTeachingConflictMapping;
   conflictsResolved: boolean;
 
@@ -49,6 +50,7 @@ export default class JointTeachingGroup {
     activities,
     activitiesDetail,
     matchingScore,
+    matchingOn,
     primaryObjects,
   }: {
     _id: string;
@@ -59,6 +61,7 @@ export default class JointTeachingGroup {
     activitiesDetail: IndexedObject[];
     primaryObjects: null | string[];
     matchingScore: number;
+    matchingOn: { [key: string]: string[] };
     conflictsMapping: {
       [type: string]: {
         [extId: string]: JointTeachingConflict;
@@ -73,6 +76,7 @@ export default class JointTeachingGroup {
     this.primaryObjects =
       primaryObjects || activitiesDetail.map((act) => act.scopedObject);
     this.matchingScore = matchingScore || 0;
+    this.matchingOn = matchingOn || {};
     const groupedConflicts = groupBy(conflicts, 'type');
     this.conflictsMapping = Object.keys(groupedConflicts).reduce(
       (results, type) => {
