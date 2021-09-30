@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { isEqual, isEmpty } from 'lodash';
+import { isEqual, isEmpty, uniqWith } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { initialState as initialPayload } from 'Redux/TE/te.helpers';
@@ -22,6 +22,8 @@ import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
+import { TActivity } from 'Types/Activity.type';
+import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 
 export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   const teCoreAPI = useTECoreAPI();
@@ -69,4 +71,33 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
     fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
+};
+
+export const useActivitiesObjectWatcher = ({
+  activities = [],
+}: {
+  activities: TActivity[];
+}) => {
+  const teCoreObjectPayload: GetExtIdPropsPayload = useMemo(() => {
+    const primaryObjects = activities
+      .filter((activity: TActivity) => activity.scopedObject)
+      .map(({ scopedObject }) => scopedObject || '');
+
+    const jointTeachingObjects = activities
+      .filter((activity: TActivity) => activity.jointTeaching?.object)
+      .map(
+        ({ jointTeaching }) =>
+          ({
+            type: jointTeaching?.typeExtId,
+            id: jointTeaching?.object,
+          } as TEObject),
+      );
+    return {
+      objects: uniqWith([...primaryObjects, ...jointTeachingObjects], isEqual),
+      fields: [],
+      types: [],
+    };
+  }, [activities.length]);
+
+  useFetchLabelsFromExtIds(teCoreObjectPayload);
 };

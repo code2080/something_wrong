@@ -1,5 +1,5 @@
 import React, { useMemo, ReactChild, useState, Key, useEffect } from 'react';
-import { chain, compact, isEmpty, isEqual, keyBy, uniq } from 'lodash';
+import _, { chain, compact, isEmpty, isEqual, keyBy, uniq } from 'lodash';
 
 // COMPONENTS
 import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
@@ -27,6 +27,7 @@ import {
   ConflictType,
   JointTeachingConflictMapping,
 } from 'Models/JointTeachingGroup.model';
+import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
 
 interface Props {
   formId: string;
@@ -48,6 +49,9 @@ interface Props {
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
+}
+interface TActivityResult extends TActivity {
+  jointTeachings: Array<{ object: string; typeExtId: string }>;
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
@@ -121,6 +125,11 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         .value(),
       isInactive: () => false,
       sequenceIdx: -1,
+      jointTeachings: _(activities)
+        .filter((act) => !!act.jointTeaching?.object)
+        .map('jointTeaching')
+        .uniqWith((jT1, jT2) => jT1?.object === jT2?.object)
+        .value(),
     };
   }, [
     showResult,
@@ -229,7 +238,30 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               title: 'Joint teaching object',
               key: 'jointTeachingObject',
               width: 250,
-              render: (act: TActivity) => act.jointTeaching?.object,
+              render: (act: TActivityResult) => {
+                if (Array.isArray(act?.jointTeachings)) {
+                  return (
+                    <div>
+                      {act.jointTeachings.map((item, itemIndex) => (
+                        <>
+                          <ObjectLabel
+                            key={item.object}
+                            type='objects'
+                            extId={item.object}
+                          />
+                          {itemIndex < act.jointTeachings.length - 1 && `, `}
+                        </>
+                      ))}
+                    </div>
+                  );
+                }
+                return (
+                  <ObjectLabel
+                    type='objects'
+                    extId={act.jointTeaching?.object}
+                  />
+                );
+              },
             },
             {
               title: 'Submitter',

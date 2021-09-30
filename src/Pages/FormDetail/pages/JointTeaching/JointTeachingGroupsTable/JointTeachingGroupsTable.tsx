@@ -39,6 +39,7 @@ import './JointTeachingGroupsTable.scss';
 import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
 import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
 import { ActivityValue } from 'Types/ActivityValue.type';
+import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
 
 interface Props {
   readonly?: boolean;
@@ -53,7 +54,6 @@ const JointTeachingGroupsTable = (props: Props) => {
   const loading = useSelector(
     createLoadingSelector([FETCH_JOINT_TEACHING_GROUPS_FOR_FORM]),
   );
-
   const groups = useSelector(selectJointTeachingGroupsForForm(formId));
 
   // actions
@@ -218,7 +218,16 @@ const JointTeachingGroupsTable = (props: Props) => {
     {
       title: 'Primary objects',
       key: 'primaryObjects',
-      render: (group: JointTeachingGroup) => group.primaryObjects.join(', '),
+      render: (group: JointTeachingGroup) => (
+        <div>
+          {group.primaryObjects.map((extId, extIndex) => (
+            <>
+              <ObjectLabel key={extId} type='objects' extId={extId} />
+              {extIndex < group.primaryObjects.length && `, `}
+            </>
+          ))}
+        </div>
+      ),
     },
     {
       title: 'Match score',

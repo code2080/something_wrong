@@ -59,7 +59,6 @@ const ActivitiesTable = ({
       );
     }
   };
-
   const columns = design
     ? createActivitiesTableColumnsFromMapping(design, columnPrefix, renderer)
     : [];

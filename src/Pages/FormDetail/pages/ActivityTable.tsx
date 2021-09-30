@@ -7,6 +7,7 @@ import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
 
 interface Props extends TableProps<any> {
   design: any;
@@ -39,6 +40,8 @@ const ActivityTable = ({
   renderer,
   ...props
 }: Props) => {
+  useActivitiesObjectWatcher({ activities });
+
   const calculateAvailableTableHeight = () => {
     return ((window as any).tePrefsHeight ?? 500) - 110;
   };

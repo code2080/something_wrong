@@ -1,3 +1,4 @@
+import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
 import React from 'react';
 import { TActivity } from 'Types/Activity.type';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
@@ -12,7 +13,7 @@ export const JointTeachingColumn = () => [
       <SortableTableCell
         className={`activityJointTeachingTable_${activity?.jointTeaching?.object}`}
       >
-        <span>{activity?.jointTeaching?.object}</span>
+        <ObjectLabel type='objects' extId={activity?.jointTeaching?.object} />
       </SortableTableCell>
     ),
     sorter: true,
