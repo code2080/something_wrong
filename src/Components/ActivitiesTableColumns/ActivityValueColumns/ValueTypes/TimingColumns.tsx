@@ -236,13 +236,13 @@ export const TimingColumns = {
     timingCols.endTimeTimeslots(mapping, columnPrefix, render),
     timingCols.length(mapping, columnPrefix, render),
   ],
-  [activityTimeModes.SEQUENCE]: (mapping) => {
+  [activityTimeModes.SEQUENCE]: (mapping, columnPrefix, render) => {
     const { timing } = mapping;
     const mappedKeys = Object.keys(timing).filter(
       (key) => timing[key] && timing[key].length && key !== 'mode',
     );
     return mappedKeys
-      .map((key) => timingCols?.[key]?.(mapping))
+      .map((key) => timingCols?.[key]?.(mapping, columnPrefix, render))
       .filter(Boolean);
   },
 };

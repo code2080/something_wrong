@@ -170,6 +170,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   const columnPrefixRenderer = (type, [activity, __], [activityValue, ___]) => {
     if (!activity || !activityValue || Number(activity?.sequenceIdx) < 0)
       return null;
+
     if (isEmpty(activityValue) || !uniqueValues[type][activityValue[0].extId])
       return null;
     if (uniqueValues[type][activityValue[0].extId].length > 1) {
@@ -195,7 +196,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       );
     }
     return null;
-    // return rendeerTimingColumnPrefix([activity, activityIndex], [activityValue, activityValueIdx])
   };
 
   return (

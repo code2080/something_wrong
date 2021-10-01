@@ -69,6 +69,7 @@ const DynamicTableHOC = ({
   onMove,
   rowSelection,
   rowClassName,
+  nowrap,
 }) => {
   const history = useHistory();
   /**
@@ -193,6 +194,7 @@ const DynamicTableHOC = ({
         resizable,
         !!expandedRowRender,
         onResizeColumn,
+        nowrap,
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -204,6 +206,7 @@ const DynamicTableHOC = ({
       resizable,
       expandedRowRender,
       columnWidths,
+      nowrap,
     ],
   );
 
@@ -298,6 +301,7 @@ DynamicTableHOC.propTypes = {
   onMove: PropTypes.func,
   rowSelection: PropTypes.object,
   rowClassName: PropTypes.string,
+  nowrap: PropTypes.bool,
 };
 
 DynamicTableHOC.defaultProps = {
@@ -320,6 +324,7 @@ DynamicTableHOC.defaultProps = {
   onSearch: null,
   onMove: null,
   rowClassName: null,
+  nowrap: false,
 };
 
 export default withResizeDetector(

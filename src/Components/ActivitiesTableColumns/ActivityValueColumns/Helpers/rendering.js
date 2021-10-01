@@ -21,7 +21,10 @@ const filterTypes = {
  * @param {Activity} activity
  */
 export const renderComponent = (activityValue, activity, activityDesign) => {
-  if (!validateMandatoryFieldValue(activityValue, activityDesign)) {
+  if (
+    activityDesign &&
+    !validateMandatoryFieldValue(activityValue, activityDesign)
+  ) {
     return ActivityValueRenderPayload.create({
       status: activityValueStatuses.MISSING_DATA,
       errorMessage: 'Mandatory field is missing data',

@@ -152,3 +152,18 @@ export const updateFieldPropOnActivityDesign = (
     ...fieldDesign.propSettings,
   },
 });
+
+const timingColsLabelMapping = {
+  mode: 'Timing mode',
+  startTime: 'Start time',
+  endTime: 'End time',
+  startTimeTimeslots: 'Start after or at',
+  endTimeTimeslots: 'End before or at',
+  length: 'Length',
+  padding: 'Padding',
+  weekday: 'Weekday',
+  dateRanges: 'Date ranges',
+  time: 'Exact time',
+};
+
+export const getFieldLabel = (field) => timingColsLabelMapping[field] || field;

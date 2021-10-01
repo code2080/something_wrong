@@ -19,6 +19,7 @@ import {
 // SELECTORS
 import { selectJointTeachingGroupsForForm } from 'Redux/JointTeaching/jointTeaching.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // COMPONENTS
 import { Button, Popconfirm } from 'antd';
@@ -40,6 +41,7 @@ import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
 import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
+import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 interface Props {
   readonly?: boolean;
@@ -55,6 +57,9 @@ const JointTeachingGroupsTable = (props: Props) => {
     createLoadingSelector([FETCH_JOINT_TEACHING_GROUPS_FOR_FORM]),
   );
   const groups = useSelector(selectJointTeachingGroupsForForm(formId));
+  const activityDesigner = useSelector((state) =>
+    selectDesignForForm(state)(formId),
+  );
 
   // actions
   const onFetchJointTeachingGroups = () => {
@@ -238,12 +243,17 @@ const JointTeachingGroupsTable = (props: Props) => {
     {
       title: 'Matched on',
       key: 'matchedOn',
-      render: () => 'N/A',
+      render: (jointTeachingGroup: JointTeachingGroup) => (
+        <JointTeachingMatchedOn
+          jointTeachingGroup={jointTeachingGroup}
+          activityDesigner={activityDesigner}
+        />
+      ),
     },
     !readonly && {
       title: 'Action',
       key: 'action',
-      width: '60px',
+      width: '120px',
       render: (group: JointTeachingGroup) => {
         return (
           <div>
@@ -314,6 +324,7 @@ const JointTeachingGroupsTable = (props: Props) => {
             }
           />
         )}
+        nowrap
         rowSelection={
           readonly
             ? null
