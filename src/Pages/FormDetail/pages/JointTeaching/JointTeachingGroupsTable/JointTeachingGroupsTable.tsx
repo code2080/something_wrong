@@ -19,6 +19,7 @@ import {
 // SELECTORS
 import { selectJointTeachingGroupsForForm } from 'Redux/JointTeaching/jointTeaching.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // COMPONENTS
 import { Button, Popconfirm } from 'antd';
@@ -56,6 +57,9 @@ const JointTeachingGroupsTable = (props: Props) => {
     createLoadingSelector([FETCH_JOINT_TEACHING_GROUPS_FOR_FORM]),
   );
   const groups = useSelector(selectJointTeachingGroupsForForm(formId));
+  const activityDesigner = useSelector((state) =>
+    selectDesignForForm(state)(formId),
+  );
 
   // actions
   const onFetchJointTeachingGroups = () => {
@@ -240,7 +244,10 @@ const JointTeachingGroupsTable = (props: Props) => {
       title: 'Matched on',
       key: 'matchedOn',
       render: (jointTeachingGroup: JointTeachingGroup) => (
-        <JointTeachingMatchedOn jointTeachingGroup={jointTeachingGroup} />
+        <JointTeachingMatchedOn
+          jointTeachingGroup={jointTeachingGroup}
+          activityDesigner={activityDesigner}
+        />
       ),
     },
     !readonly && {

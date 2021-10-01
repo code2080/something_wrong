@@ -2,21 +2,20 @@ import _ from 'lodash';
 import JointTeachingGroup, {
   ConflictType,
 } from 'Models/JointTeachingGroup.model';
+import { ActivityDesign } from 'Models/ActivityDesign.model';
 import { useMemo } from 'react';
 import { renderComponent } from 'Components/ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
 import TitleCell from 'Components/ActivitiesTableColumns/new/TitleCell';
 import { getFieldLabel } from 'Utils/activityDesigner';
 import { ActivityValue } from 'Types/ActivityValue.type';
-
-const labelFieldMapping = {
-  field: 'fields',
-  object: 'objects',
-};
+import { Field } from 'Redux/TE/te.selectors';
 
 const JointTeachingMatchedOn = ({
   jointTeachingGroup,
+  activityDesigner,
 }: {
   jointTeachingGroup: JointTeachingGroup;
+  activityDesigner: ActivityDesign;
 }) => {
   const { matchingOn, activities } = jointTeachingGroup;
   const allElements: string[] = useMemo(() => {
@@ -41,9 +40,14 @@ const JointTeachingMatchedOn = ({
     );
   }, [allElements]);
 
+  const getTypeByExtId = (extId: string) => {
+    return (['fields', 'objects'] as Field[]).find((type) =>
+      Object.keys(activityDesigner[type] || {}).includes(extId),
+    );
+  };
   const renderFieldLabel = (key, activityValue: ActivityValue) => {
     if (key === ConflictType.TIMING) return getFieldLabel(activityValue.extId);
-    const field = labelFieldMapping[activityValue.type];
+    const field = getTypeByExtId(activityValue.extId);
     if (!field) return activityValue.extId;
     return <TitleCell field={field} extId={activityValue.extId} />;
   };
