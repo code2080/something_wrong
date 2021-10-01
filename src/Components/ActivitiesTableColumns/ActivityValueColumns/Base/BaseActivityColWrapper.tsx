@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-import BaseActivityCol from './BaseActivityCol';
+import BaseActivityCol, {
+  baseActivityColPropTypes,
+  baseActivityColDefaultProps,
+} from './BaseActivityCol';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 
 const BaseActivityColWrapper = (props) => {
@@ -33,14 +34,6 @@ const BaseActivityColWrapper = (props) => {
   );
 };
 
-BaseActivityColWrapper.propTypes = {
-  columnPrefix: PropTypes.func,
-  renderer: PropTypes.func,
-  activityIndex: PropTypes.number.isRequired,
-  activity: PropTypes.object.isRequired,
-};
-BaseActivityColWrapper.defaultProps = {
-  columnPrefix: null,
-  renderer: null,
-};
+BaseActivityColWrapper.propTypes = baseActivityColPropTypes;
+BaseActivityColWrapper.defaultProps = baseActivityColDefaultProps;
 export default BaseActivityColWrapper;

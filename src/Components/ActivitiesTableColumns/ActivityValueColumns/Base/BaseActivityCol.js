@@ -297,7 +297,7 @@ const BaseActivityCol = ({
   return renderedPayload;
 };
 
-BaseActivityCol.propTypes = {
+export const baseActivityColPropTypes = {
   activityValue: PropTypes.object,
   activity: PropTypes.object.isRequired,
   prop: PropTypes.string.isRequired,
@@ -313,7 +313,7 @@ BaseActivityCol.propTypes = {
   renderer: PropTypes.func,
 };
 
-BaseActivityCol.defaultProps = {
+export const baseActivityColDefaultProps = {
   activityValue: null,
   propTitle: null,
   type: 'VALUE',
@@ -322,5 +322,7 @@ BaseActivityCol.defaultProps = {
   columnPrefix: null,
   renderer: null,
 };
+BaseActivityCol.propTypes = baseActivityColPropTypes;
+BaseActivityCol.defaultProps = baseActivityColDefaultProps;
 
 export default connect(null, mapActionsToProps)(withTECoreAPI(BaseActivityCol));
