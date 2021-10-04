@@ -1,7 +1,7 @@
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from 'Models/Activity.model';
-import { groupBy, keyBy } from 'lodash';
+import { groupBy, keyBy, uniq } from 'lodash';
 import { getConflictsResolvingStatus } from 'Utils/activities.helpers';
 
 export const SUPPORTED_VALUE_TYPES = ['string', 'number'];
@@ -74,7 +74,7 @@ export default class JointTeachingGroup {
     this.status = status;
     this.activities = activitiesDetail.map((act) => new Activity(act));
     this.primaryObjects =
-      primaryObjects || activitiesDetail.map((act) => act.scopedObject);
+      primaryObjects || uniq(activitiesDetail.map((act) => act.scopedObject));
     this.matchingScore = matchingScore || 0;
     this.matchingOn = matchingOn || {};
     const groupedConflicts = groupBy(conflicts, 'type');

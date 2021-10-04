@@ -13,7 +13,11 @@ export const JointTeachingColumn = () => [
       <SortableTableCell
         className={`activityJointTeachingTable_${activity?.jointTeaching?.object}`}
       >
-        <ObjectLabel type='objects' extId={activity?.jointTeaching?.object} />
+        <ObjectLabel
+          objects={[
+            { type: 'objects', extId: activity?.jointTeaching?.object },
+          ]}
+        />
       </SortableTableCell>
     ),
     sorter: true,

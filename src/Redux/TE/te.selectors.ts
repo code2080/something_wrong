@@ -13,6 +13,14 @@ export const selectExtIds = createSelector(selectExtIdProps, (extIdProps) =>
   ),
 );
 
+export const selectLabels = (
+  objects: Array<{ type: string; extId?: string }>,
+) =>
+  createSelector(selectExtIdProps, (extIdProps) =>
+    objects.map(
+      ({ type, extId }) => (extId && extIdProps[type]?.[extId]?.label) || extId,
+    ),
+  );
 export const selectLabelByTypeAndExtId = ({ type, extId }) =>
   createSelector(
     selectExtIdProps,

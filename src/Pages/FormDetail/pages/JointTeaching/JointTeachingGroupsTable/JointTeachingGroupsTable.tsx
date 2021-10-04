@@ -225,12 +225,12 @@ const JointTeachingGroupsTable = (props: Props) => {
       key: 'primaryObjects',
       render: (group: JointTeachingGroup) => (
         <div>
-          {group.primaryObjects.map((extId, extIndex) => (
-            <>
-              <ObjectLabel key={extId} type='objects' extId={extId} />
-              {extIndex < group.primaryObjects.length && `, `}
-            </>
-          ))}
+          <ObjectLabel
+            objects={group.primaryObjects.map((extId) => ({
+              type: 'objects',
+              extId,
+            }))}
+          />
         </div>
       ),
     },
