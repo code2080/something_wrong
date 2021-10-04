@@ -17,12 +17,12 @@ export const selectJointTeachingGroupsForForm = (formId: string) =>
         (act: any) => act._id,
       );
       const _groups = groups.map((group) => {
-        return {
+        return group.reload({
           ...group,
-          activities: group.activities.filter((activity) =>
+          activities: group.allActivities.filter((activity) =>
             allFilteredActivities.includes(activity._id),
           ),
-        };
+        });
       });
       return _groups.filter((group) => !isEmpty(group.activities));
     },

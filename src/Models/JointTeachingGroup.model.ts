@@ -34,14 +34,13 @@ export type JointTeachingConflictMapping = {
 export default class JointTeachingGroup {
   _id: string;
   activities: TActivity[];
+  allActivities: TActivity[];
   activityIds: string[];
   conflicts: JointTeachingConflict[];
   status: JointTeachingStatus;
   primaryObjects: string[];
   matchingScore: number;
   matchingOn: { [key: string]: string[] };
-  conflictsMapping: JointTeachingConflictMapping;
-  conflictsResolved: boolean;
 
   constructor({
     _id,
@@ -62,23 +61,30 @@ export default class JointTeachingGroup {
     primaryObjects: null | string[];
     matchingScore: number;
     matchingOn: { [key: string]: string[] };
-    conflictsMapping: {
-      [type: string]: {
-        [extId: string]: JointTeachingConflict;
-      };
-    };
   }) {
     this._id = _id;
     this.activityIds = activities;
     this.conflicts = conflicts;
     this.status = status;
     this.activities = activitiesDetail.map((act) => new Activity(act));
+    // For filtering purpose, should be remove and filter in BE
+    this.allActivities = activitiesDetail.map((act) => new Activity(act));
     this.primaryObjects =
       primaryObjects || activitiesDetail.map((act) => act.scopedObject);
     this.matchingScore = matchingScore || 0;
     this.matchingOn = matchingOn || {};
-    const groupedConflicts = groupBy(conflicts, 'type');
-    this.conflictsMapping = Object.keys(groupedConflicts).reduce(
+  }
+
+  private reload(data) {
+    Object.keys(data).forEach((key) => {
+      this[key] = data[key];
+    });
+    return this;
+  }
+
+  get conflictsMapping(): JointTeachingConflictMapping {
+    const groupedConflicts = groupBy(this.conflicts, 'type');
+    const conflictsMapping = Object.keys(groupedConflicts).reduce(
       (results, type) => {
         const conflicts = groupedConflicts[type];
         return {
@@ -88,9 +94,10 @@ export default class JointTeachingGroup {
       },
       {},
     );
-    this.conflictsResolved = getConflictsResolvingStatus(
-      this.activities,
-      this.conflictsMapping,
-    );
+    return conflictsMapping;
+  }
+
+  get conflictsResolved() {
+    return getConflictsResolvingStatus(this.activities, this.conflictsMapping);
   }
 }
