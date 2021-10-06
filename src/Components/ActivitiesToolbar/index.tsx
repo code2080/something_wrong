@@ -26,6 +26,7 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 // TYPES
 import { TActivity } from '../../Types/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 type Props = {
   selectedRowKeys: Key[];
@@ -55,6 +56,9 @@ const ActivitiesToolbar = ({
 
   const selectedFilterValues = useSelector(
     selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }),
+  );
+  const allActivitiesAreScheduling = useSelector(
+    selectAllActivitiesAreScheduling(formId),
   );
 
   const selectActivitiesForFormAndIds = useMemo(
@@ -128,7 +132,11 @@ const ActivitiesToolbar = ({
         size='small'
         type='link'
         onClick={() => onScheduleActivities(allActivities)}
-        disabled={!allActivities?.length || !hasSchedulingPermissions}
+        disabled={
+          !allActivities?.length ||
+          !hasSchedulingPermissions ||
+          allActivitiesAreScheduling
+        }
       >
         Schedule activities
       </Button>

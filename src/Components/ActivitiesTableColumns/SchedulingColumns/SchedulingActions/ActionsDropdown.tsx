@@ -105,6 +105,7 @@ const ActivityActionsDropdown = ({
   teCoreAPI,
   setFormInstanceSchedulingProgress,
   abortJob,
+  isScheduling,
 }) => {
   const { formInstanceId, formId } = activity;
   const mixpanel = useMixpanel();
@@ -286,7 +287,8 @@ const ActivityActionsDropdown = ({
             <Menu.Item
               disabled={
                 ['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
-                !hasAssistedSchedulingPermissions
+                !hasAssistedSchedulingPermissions &&
+                isScheduling
               }
               key={key}
             >
@@ -295,7 +297,7 @@ const ActivityActionsDropdown = ({
           ))}
       </Menu>
     ),
-    [handleMenuClick, activity, hasAssistedSchedulingPermissions],
+    [handleMenuClick, activity, hasAssistedSchedulingPermissions, isScheduling],
   );
   return (
     <Dropdown
@@ -331,10 +333,12 @@ ActivityActionsDropdown.propTypes = {
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
+  isScheduling: PropTypes.bool,
 };
 
 ActivityActionsDropdown.defaultProps = {
   buttonType: 'default',
+  isScheduling: undefined,
 };
 
 export default connect(

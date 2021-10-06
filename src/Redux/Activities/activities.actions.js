@@ -219,21 +219,24 @@ export const updateActivity = (activity) =>
     params: { activity },
   });
 
-const updateActivitiesFlow = {
-  request: () => ({ type: activitiesActionTypes.UPDATE_ACTIVITIES_REQUEST }),
+const updateActivitiesFlow = (activities) => ({
+  request: () => ({
+    type: activitiesActionTypes.UPDATE_ACTIVITIES_REQUEST,
+    payload: { activities },
+  }),
   success: (response) => ({
     type: activitiesActionTypes.UPDATE_ACTIVITIES_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
     type: activitiesActionTypes.UPDATE_ACTIVITIES_FAILURE,
-    payload: { ...err },
+    payload: { ...err, activities },
   }),
-};
+});
 
 export const updateActivities = (formId, formInstanceId, activities) =>
   asyncAction.PUT({
-    flow: updateActivitiesFlow,
+    flow: updateActivitiesFlow(activities),
     endpoint: `${getEnvParams().AM_BE_URL}activity`,
     params: {
       formId,

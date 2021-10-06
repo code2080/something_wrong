@@ -29,6 +29,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
+import { selectActivityScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 type Props = {
   formType: string;
@@ -46,6 +47,7 @@ const useActivityScheduling = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
+  const schedulingActivities = useSelector(selectActivityScheduling());
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -93,7 +95,10 @@ const useActivityScheduling = ({
     });
   };
 
-  const handleScheduleActivities = async (activities: TActivity[]) => {
+  const handleScheduleActivities = async (_activities: TActivity[]) => {
+    const activities = _activities.filter(
+      (act) => !schedulingActivities[act._id],
+    );
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
