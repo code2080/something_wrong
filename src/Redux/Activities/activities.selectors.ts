@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import partition from 'lodash/partition';
 import { pick } from 'lodash';
 import { TActivity } from '../../Types/Activity.type';
+import { Activity } from 'Models/Activity.model';
 import {
   PopulateSelectionPayload,
   TEObject,
@@ -19,6 +20,7 @@ type TActivityMap = {
 
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
+const submissionStateSelector = (state) => state.submissions;
 
 export const makeSelectActivitiesForForm = () =>
   createSelector(
@@ -41,10 +43,22 @@ export const makeSelectActivitiesForForm = () =>
   );
 
 export const selectActivitiesForForm = ({ formId, tableType }) =>
-  createSelector(activityStateSelector, (activity) => {
-    const activitiesTableId = `${formId}${tableType || ''}`;
-    return Object.values(activity[activitiesTableId] || {}).flat();
-  });
+  createSelector(
+    activityStateSelector,
+    submissionStateSelector,
+    (activity, submission) => {
+      const formSubmissions = submission[formId] || {};
+      const activitiesTableId = `${formId}${tableType || ''}`;
+      return Object.values(activity[activitiesTableId] || {})
+        .flat()
+        .map((activity: Activity) => {
+          activity.updateScopedObject(
+            formSubmissions?.[activity.formInstanceId]?.scopedObject,
+          );
+          return activity as TActivity;
+        });
+    },
+  );
 
 export const makeSelectActivitiesForFormAndIds = () =>
   createSelector(
