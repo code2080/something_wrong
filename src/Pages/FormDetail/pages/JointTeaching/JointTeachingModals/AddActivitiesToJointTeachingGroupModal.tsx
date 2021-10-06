@@ -1,17 +1,72 @@
 import React, { useState, useEffect, Key } from 'react';
-import Modal, { ModalProps } from 'antd/lib/modal/Modal';
+import { Modal, ModalProps } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
+
+// COMPONENTS
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
+
+// TYPES
 import { TActivity } from 'Types/Activity.type';
+
+// ACTIONS
+import { calculateJointTeachingMatchingScore } from 'Redux/JointTeaching/jointTeaching.actions';
+
+// SELECTORS
+import { selectJointTeachingGroupById } from 'Redux/JointTeaching/jointTeaching.selectors';
 
 interface Props extends ModalProps {
   formId: string;
   activities: TActivity[];
+  jointTeachingGroupId?: string;
   onSubmit?: (activityIds: Key[]) => void;
 }
 const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
-  const { visible, onCancel, formId, activities, onSubmit } = props;
-
+  const dispatch = useDispatch();
+  const {
+    visible,
+    onCancel,
+    formId,
+    jointTeachingGroupId,
+    activities,
+    onSubmit,
+  } = props;
+  const jointTeachingGroup = useSelector(
+    selectJointTeachingGroupById({ formId, jointTeachingGroupId }),
+  );
   const [selectedActivities, setSelectedActivities] = useState<Key[]>([]);
+
+  const doSubmit = (e) => {
+    if (typeof onSubmit === 'function') onSubmit(selectedActivities);
+    if (typeof onCancel === 'function') onCancel(e);
+  };
+  const onOk = async (e) => {
+    const res = dispatch(
+      calculateJointTeachingMatchingScore({
+        formId,
+        activityIds: [
+          ...selectedActivities,
+          ...(jointTeachingGroup?.activityIds || []),
+        ],
+      }),
+    );
+    if (isEmpty(res?.data)) {
+      Modal.confirm({
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
+        content:
+          "The joint teaching object or the timing doesn't match for those activities, are you sure you want to continue",
+        onOk: () => doSubmit(e),
+        onCancel: () => {
+          if (typeof onCancel === 'function') {
+            onCancel(e);
+          }
+        },
+      });
+    } else {
+      doSubmit(e);
+    }
+  };
 
   useEffect(() => {
     if (!visible) {
@@ -30,10 +85,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
       }
       destroyOnClose
       okText='Add selection'
-      onOk={(e) => {
-        if (typeof onSubmit === 'function') onSubmit(selectedActivities);
-        if (typeof onCancel === 'function') onCancel(e);
-      }}
+      onOk={onOk}
       okButtonProps={{
         disabled: !selectedActivities.length,
       }}

@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Modal, ModalProps, Button } from 'antd';
 import { TActivity } from 'Types/Activity.type';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
-import { createJointTeachingGroup } from 'Redux/JointTeaching/jointTeaching.actions';
+import {
+  calculateJointTeachingMatchingScore,
+  createJointTeachingGroup,
+} from 'Redux/JointTeaching/jointTeaching.actions';
+
+// SELETORS
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+import { CALCULATE_JOINT_TEACHING_MATCHING_SCORE } from 'Redux/JointTeaching/jointTeaching.actionTypes';
+import { isEmpty } from 'lodash';
 
 interface Props extends ModalProps {
   activities: TActivity[];
@@ -14,9 +22,32 @@ interface Props extends ModalProps {
 }
 const CreateNewJointTeachingGroupModal = (props: Props) => {
   const { visible, onCancel, activities, formId } = props;
+  const [canBePaired, setCanBePaired] = useState(false);
+  const calculating = useSelector(
+    createLoadingSelector([CALCULATE_JOINT_TEACHING_MATCHING_SCORE]),
+  );
   const dispatch = useDispatch();
 
-  const onCreate = async (e) => {
+  useEffect(() => {
+    const doCalculating = async () => {
+      const res = await dispatch(
+        calculateJointTeachingMatchingScore({
+          formId,
+          activityIds: activities.map(({ _id }) => _id),
+        }),
+      );
+      if (isEmpty(res?.data)) {
+        setCanBePaired(false);
+      } else {
+        setCanBePaired(true);
+      }
+    };
+    if (visible) {
+      doCalculating();
+    }
+  }, [visible]);
+
+  const doCreate = async (e) => {
     await dispatch(
       createJointTeachingGroup({
         formId,
@@ -25,6 +56,24 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     );
     if (typeof onCancel === 'function') {
       onCancel(e);
+    }
+  };
+  const onCreate = (e) => {
+    if (!canBePaired) {
+      Modal.confirm({
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
+        content:
+          "The joint teaching object or the timing doesn't match for those activities, are you sure you want to continue",
+        onOk: () => doCreate(e),
+        onCancel: () => {
+          if (typeof onCancel === 'function') {
+            onCancel(e);
+          }
+        },
+      });
+    } else {
+      doCreate(e);
     }
   };
   const onCreateAndMerge = () => {};
@@ -38,6 +87,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       width={900}
     >
       <JointTeachingActivitiesTable
+        loading={!!calculating}
         showResult
         formId={formId}
         activities={activities}
