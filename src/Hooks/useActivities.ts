@@ -22,10 +22,34 @@ import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
+
+// TYPES
 import { TActivity } from 'Types/Activity.type';
 import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
+import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
+import * as tableTypes from 'Constants/tables.constants';
 
-export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
+// CONSTANTS
+const schemaQueriesMapping: { [key: string]: IndexedObject } = {
+  [tableTypes.UNMATCHED_ACTIVITIES_TABLE]: {
+    matchedJointTeachingId: null,
+  },
+};
+
+interface Props {
+  formId: string;
+  filters: IndexedObject;
+  sorters?: null | IndexedObject;
+  origin: string;
+  trigger?: number;
+}
+export const useActivitiesWatcher = ({
+  formId,
+  filters,
+  sorters,
+  origin,
+  trigger,
+}: Props) => {
   const teCoreAPI = useTECoreAPI();
   const selectForm = useMemo(() => makeSelectForm(), []);
   const form = useSelector((state) => selectForm(state, formId));
@@ -38,13 +62,30 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
+
+  const doFetchingActivities = () => {
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        { filters, sorters, schemaQueries: schemaQueriesMapping[origin] },
+        origin,
+      ),
+    );
+  };
+
   useEffect(() => {
     if (!isEqual(prevFilters, filters)) {
       console.log('DO FETCHING');
-      dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
+      doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevFilters, filters, origin]);
+
+  useEffect(() => {
+    if (trigger) {
+      doFetchingActivities();
+    }
+  }, [trigger]);
 
   const submissionPayload = useMemo(() => {
     const sections = form.sections;

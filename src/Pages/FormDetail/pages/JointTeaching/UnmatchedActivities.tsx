@@ -24,6 +24,7 @@ interface Props {
 const UnmatchedActivities = ({ formId }: Props) => {
   const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
   const design = useSelector(selectDesignForForm)(formId);
 
@@ -42,6 +43,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
     filters: selectedFilterValues,
     sorters: null,
     origin: UNMATCHED_ACTIVITIES_TABLE,
+    trigger: triggerFetchingActivities,
   });
 
   const activities = useSelector(
@@ -102,9 +104,12 @@ const UnmatchedActivities = ({ formId }: Props) => {
       />
       <CreateNewJointTeachingGroupModal
         visible={createNewGroupVisible}
-        onCancel={() => {
+        onCancel={(refetchNeeded?: boolean) => {
           setCreateNewGroupVisible(false);
           setSelectedRowKeys([]);
+          if (refetchNeeded) {
+            setTriggerFetchingActivities(triggerFetchingActivities + 1);
+          }
         }}
         formId={formId}
         activities={activities.filter(({ _id }) =>
