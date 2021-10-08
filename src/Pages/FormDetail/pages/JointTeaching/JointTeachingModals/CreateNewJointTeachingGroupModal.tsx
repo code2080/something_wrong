@@ -16,9 +16,10 @@ import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import { CALCULATE_JOINT_TEACHING_MATCHING_SCORE } from 'Redux/JointTeaching/jointTeaching.actionTypes';
 import { isEmpty } from 'lodash';
 
-interface Props extends ModalProps {
+interface Props extends Omit<ModalProps, 'onCancel'> {
   activities: TActivity[];
   formId: string;
+  onCancel: (refetchNeeded?: boolean) => void;
 }
 const CreateNewJointTeachingGroupModal = (props: Props) => {
   const { visible, onCancel, activities, formId } = props;
@@ -47,7 +48,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     }
   }, [visible]);
 
-  const doCreate = async (e) => {
+  const doCreate = async () => {
     await dispatch(
       createJointTeachingGroup({
         formId,
@@ -55,25 +56,25 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       }),
     );
     if (typeof onCancel === 'function') {
-      onCancel(e);
+      onCancel(true);
     }
   };
-  const onCreate = (e) => {
+  const onCreate = () => {
     if (!canBePaired) {
       Modal.confirm({
         getContainer: () =>
           document.getElementById('te-prefs-lib') as HTMLElement,
         content:
           "The joint teaching object or the timing doesn't match for those activities, are you sure you want to continue",
-        onOk: () => doCreate(e),
+        onOk: () => doCreate(),
         onCancel: () => {
           if (typeof onCancel === 'function') {
-            onCancel(e);
+            onCancel();
           }
         },
       });
     } else {
-      doCreate(e);
+      doCreate();
     }
   };
   const onCreateAndMerge = () => {};
@@ -82,7 +83,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     <Modal
       title='Create joint teaching match'
       visible={visible}
-      onCancel={onCancel}
+      onCancel={() => onCancel()}
       footer={false}
       width={900}
     >
@@ -101,7 +102,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
               Create and merge
             </Button>
             &nbsp;&nbsp;
-            <Button type='default' onClick={onCancel}>
+            <Button type='default' onClick={() => onCancel()}>
               Cancel
             </Button>
           </div>
