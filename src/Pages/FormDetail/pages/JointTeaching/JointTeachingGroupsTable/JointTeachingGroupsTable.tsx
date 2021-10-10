@@ -79,7 +79,13 @@ const JointTeachingGroupsTable = (props: Props) => {
   const onFetchJointTeachingGroups = () => {
     return dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
-  const exec = async (queue: Array<Promise<any>>) => {
+
+  /**
+    @function execThenRefetch
+    @description parallel processing queue, then refetch the joint teaching matches
+    @param {Array<Promise>}}
+  **/
+  const execThenRefetch = async (queue: Array<Promise<any>>) => {
     await Promise.all(queue);
     onFetchJointTeachingGroups();
   };
@@ -88,7 +94,7 @@ const JointTeachingGroupsTable = (props: Props) => {
     jointTeachingId: string,
     activityId: string,
   ) => {
-    exec([
+    execThenRefetch([
       dispatch(
         deleteActivityFromJointTeachingGroup({
           formId,
@@ -99,7 +105,7 @@ const JointTeachingGroupsTable = (props: Props) => {
     ]);
   };
   const onAddActivity = async (jointTeachingId: string, activityIds: Key[]) => {
-    exec([
+    execThenRefetch([
       dispatch(
         addActivityToJointTeachingGroup({
           formId,
@@ -117,14 +123,14 @@ const JointTeachingGroupsTable = (props: Props) => {
     setSelectedRows([]);
   };
   const onMerge = async (groupIds: Key[]) => {
-    exec(
+    execThenRefetch(
       groupIds.map((groupId) =>
         dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
       ),
     );
   };
   const onRevert = async (groupIds: Key[]) => {
-    exec(
+    execThenRefetch(
       groupIds.map((groupId) =>
         dispatch(
           revertJointTeachingGroup({ formId, jointTeachingId: groupId }),
@@ -141,7 +147,7 @@ const JointTeachingGroupsTable = (props: Props) => {
         }),
       );
     }
-    exec([
+    execThenRefetch([
       dispatch(
         deleteJointTeachingGroup({
           formId,
