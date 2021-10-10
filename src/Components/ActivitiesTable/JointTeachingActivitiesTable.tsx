@@ -52,6 +52,7 @@ interface TableProps extends Omit<Props, ''> {
 }
 interface TActivityResult extends TActivity {
   jointTeachings: Array<{ object: string; typeExtId: string }>;
+  scopedObjects: string[];
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
@@ -129,6 +130,11 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         .filter((act) => !!act.jointTeaching?.object)
         .map('jointTeaching')
         .uniqWith((jT1, jT2) => jT1?.object === jT2?.object)
+        .value(),
+      scopedObjects: _(activities)
+        .filter((act) => !!act.scopedObject)
+        .map((act) => act.scopedObject)
+        .uniq()
         .value(),
     };
   }, [
@@ -239,27 +245,35 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               key: 'jointTeachingObject',
               width: 250,
               render: (act: TActivityResult) => {
-                if (Array.isArray(act?.jointTeachings)) {
-                  return (
-                    <div>
-                      {act.jointTeachings.map((item, itemIndex) => (
-                        <>
-                          <ObjectLabel
-                            key={item.object}
-                            type='objects'
-                            extId={item.object}
-                          />
-                          {itemIndex < act.jointTeachings.length - 1 && `, `}
-                        </>
-                      ))}
-                    </div>
-                  );
-                }
                 return (
-                  <ObjectLabel
-                    type='objects'
-                    extId={act.jointTeaching?.object}
-                  />
+                  <div>
+                    <ObjectLabel
+                      objects={(Array.isArray(act.jointTeachings)
+                        ? act.jointTeachings
+                        : [act.jointTeaching]
+                      ).map((item) => ({
+                        type: 'objects',
+                        extId: item?.object,
+                      }))}
+                    />
+                  </div>
+                );
+              },
+            },
+            {
+              title: 'Primary object',
+              key: 'scopedObject',
+              width: 250,
+              render: (act: TActivityResult) => {
+                return (
+                  <div>
+                    <ObjectLabel
+                      objects={(Array.isArray(act.scopedObjects)
+                        ? act.scopedObjects
+                        : [act.scopedObject]
+                      ).map((extId) => ({ type: 'objects', extId }))}
+                    />
+                  </div>
                 );
               },
             },

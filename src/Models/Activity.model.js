@@ -1,3 +1,7 @@
-import { Activity } from '../../te-data-models/src/models';
+import { Activity as ActivityClass } from '../../te-data-models/src/models';
 
-export { Activity };
+export class Activity extends ActivityClass {
+  updateScopedObject(scopedObject) {
+    this.scopedObject = scopedObject;
+  }
+}

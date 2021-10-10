@@ -1,9 +1,12 @@
 import { useSelector } from 'react-redux';
-import { selectLabelByTypeAndExtId } from 'Redux/TE/te.selectors';
+import { selectLabels } from 'Redux/TE/te.selectors';
 
-const ObjectLabel = ({ type, extId }: { type: string; extId?: string }) => {
-  const label = useSelector(selectLabelByTypeAndExtId({ type, extId }));
-  return <span>{label}</span>;
+interface Props {
+  objects: Array<{ type: string; extId?: string }>;
+}
+const ObjectLabel = ({ objects }: Props) => {
+  const labels = useSelector(selectLabels(objects));
+  return <span>{labels.join(', ')}</span>;
 };
 
 export default ObjectLabel;
