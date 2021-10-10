@@ -75,13 +75,25 @@ export default class JointTeachingGroup {
     this.matchingOn = matchingOn || {};
   }
 
-  private reload(data) {
+  /**
+   * @description Return new JointTeachingGroup with updated inputs
+   * @description To make sure new model can use all the getters
+   * @returns new JointTeachingGroup
+   */
+  private reload(data: {
+    [key in keyof JointTeachingGroup]: JointTeachingGroup[keyof JointTeachingGroup];
+  }): JointTeachingGroup {
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
     return this;
   }
 
+  /**
+   * @description JointTeachingGroup getter, to return conflict mapping
+   * @returns JointTeachingConflictMapping
+   * @example (new JointTeachingGroup(inputs)).conflictsMapping
+   */
   get conflictsMapping(): JointTeachingConflictMapping {
     const groupedConflicts = groupBy(this.conflicts, 'type');
     const conflictsMapping = Object.keys(groupedConflicts).reduce(
@@ -97,7 +109,12 @@ export default class JointTeachingGroup {
     return conflictsMapping;
   }
 
-  get conflictsResolved() {
+  /**
+   * @description JointTeachingGroup getter, to return if all conflicts are resolved
+   * @returns boolean
+   * @example (new JointTeachingGroup(inputs)).conflictsResolved
+   */
+  get conflictsResolved(): boolean {
     return getConflictsResolvingStatus(this.activities, this.conflictsMapping);
   }
 }
