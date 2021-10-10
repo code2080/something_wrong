@@ -27,3 +27,13 @@ export const selectJointTeachingGroupsForForm = (formId: string) =>
       return _groups.filter((group) => !isEmpty(group.activities));
     },
   );
+
+export const selectJointTeachingGroupById = ({
+  formId,
+  jointTeachingGroupId,
+}) =>
+  createSelector(stateSelector, (jointTeaching) => {
+    return jointTeaching[formId]?.find(
+      (group) => group._id === jointTeachingGroupId,
+    );
+  });

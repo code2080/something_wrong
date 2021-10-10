@@ -44,8 +44,10 @@ interface Props {
   footer?: ReactChild;
   header?: ReactChild;
   selectedActivities?: Key[];
+  jointTeachingGroupId?: string;
   onSelect?(selectedRowKeys: Key[]): void;
   conflicts?: JointTeachingConflictMapping;
+  loading?: boolean;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
@@ -78,6 +80,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     allElementIds,
     onSelectValue,
     conflicts,
+    loading,
+    jointTeachingGroupId,
   } = props;
   const unmatchedActivities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
@@ -208,6 +212,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     <div>
       {header}
       <ActivityTable
+        loading={loading}
         className={`joint-teaching-activities-table ${
           showResult ? 'show-result' : ''
         }`}
@@ -326,6 +331,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         onCancel={() => setAddActivityModalVisible(false)}
         activities={unmatchedActivities}
         onSubmit={onAddActivity}
+        jointTeachingGroupId={jointTeachingGroupId}
       />
     </div>
   );

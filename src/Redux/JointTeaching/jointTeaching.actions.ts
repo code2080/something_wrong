@@ -259,3 +259,30 @@ export const removeJointTeachingConflict = ({
     )}/${jointTeachingId}/conflict/${conflictId}`,
   });
 };
+
+const calculateJointTeachingMatchingScoreFlow = (formId: string) => ({
+  request: () => ({
+    type: types.CALCULATE_JOINT_TEACHING_MATCHING_SCORE_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.CALCULATE_JOINT_TEACHING_MATCHING_SCORE_SUCCESS,
+    payload: { jointTeaching: response, formId },
+  }),
+  failure: (err) => ({
+    type: types.CALCULATE_JOINT_TEACHING_MATCHING_SCORE_FAILURE,
+    payload: { ...err },
+  }),
+});
+
+export const calculateJointTeachingMatchingScore = ({
+  formId,
+  activityIds,
+}) => {
+  return asyncAction.POST({
+    flow: calculateJointTeachingMatchingScoreFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/calculate`,
+    params: {
+      activityIds,
+    },
+  });
+};

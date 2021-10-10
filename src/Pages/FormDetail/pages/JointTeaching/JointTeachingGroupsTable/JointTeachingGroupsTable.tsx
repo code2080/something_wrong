@@ -322,6 +322,7 @@ const JointTeachingGroupsTable = (props: Props) => {
             onSelectValue={(type, checked, activityValue) =>
               onSelectValue(group, { type, checked, activityValue })
             }
+            jointTeachingGroupId={group._id}
           />
         )}
         nowrap
