@@ -1,7 +1,3 @@
-type Props = {
-  value: string;
-};
-
 const OperatorRenderer = (value: string) => {
   switch (value) {
     case '>':
