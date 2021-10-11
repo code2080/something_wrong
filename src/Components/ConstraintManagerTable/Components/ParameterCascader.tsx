@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
 import { useState } from 'react';
+import OperatorRenderer from './Parameters/OperatorRenderer';
 
 const { Option } = Select;
 
@@ -112,7 +113,7 @@ const ParameterCascader = ({
         }}
       />{' '}
       <Select
-        defaultValue={operator}
+        defaultValue={OperatorRenderer(operator) || undefined}
         size='small'
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
@@ -123,7 +124,7 @@ const ParameterCascader = ({
       >
         {availableOperators.map((operator) => (
           <Option key={operator} value={operator}>
-            {operator}
+            {OperatorRenderer(operator)}
           </Option>
         ))}
       </Select>{' '}
