@@ -39,8 +39,8 @@ export default (state: ActivitySchedulingState = initialState, action) => {
               [activityId]: false,
             };
           }, {}),
-        }
-      }
+        },
+      };
     }
 
     default:

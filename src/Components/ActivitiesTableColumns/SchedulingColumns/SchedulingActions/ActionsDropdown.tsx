@@ -21,6 +21,10 @@ import {
 } from '../../../../Redux/Activities/activities.actions';
 import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';
 import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
+import {
+  startSchedulingActivities,
+  finishSchedulingActivities,
+} from 'Redux/ActivityScheduling/activityScheduling.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
@@ -59,6 +63,8 @@ const mapActionsToProps = {
   updateActivities,
   setFormInstanceSchedulingProgress,
   abortJob,
+  startSchedulingActivities,
+  finishSchedulingActivities,
 };
 
 const activityActions = {
@@ -106,6 +112,8 @@ const ActivityActionsDropdown = ({
   setFormInstanceSchedulingProgress,
   abortJob,
   isScheduling,
+  startSchedulingActivities,
+  finishSchedulingActivities,
 }) => {
   const { formInstanceId, formId } = activity;
   const mixpanel = useMixpanel();
@@ -129,6 +137,9 @@ const ActivityActionsDropdown = ({
         activity.formId,
         activity.formInstanceId,
         updateActivitiesWithSchedulingResults(activities, schedulingReturns),
+      );
+      finishSchedulingActivities(
+        schedulingReturns.map(({ activityId }) => activityId),
       );
     },
     [activities, activity.formId, activity.formInstanceId, updateActivities],
@@ -206,6 +217,8 @@ const ActivityActionsDropdown = ({
   };
 
   const handleScheduleActivities = (activities: TActivity[], key: string) => {
+    const activityIds = activities.map(({ _id }) => _id);
+    startSchedulingActivities(activityIds);
     trackScheduleActivities(activities);
     const results = scheduleActivities(
       activities,
@@ -334,6 +347,8 @@ ActivityActionsDropdown.propTypes = {
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
   isScheduling: PropTypes.bool,
+  startSchedulingActivities: PropTypes.func.isRequired,
+  finishSchedulingActivities: PropTypes.func.isRequired,
 };
 
 ActivityActionsDropdown.defaultProps = {
