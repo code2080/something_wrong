@@ -235,7 +235,7 @@ const BaseActivityCol = ({
       if (renderResult !== undefined) return renderResult;
     }
     return (
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', gridGap: 8 }}>
         {typeof columnPrefix === 'function' && columnPrefix(_activityValue)}
         <Dropdown
           overlay={

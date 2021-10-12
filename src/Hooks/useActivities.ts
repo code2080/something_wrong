@@ -38,8 +38,16 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
+
+  // Fetch activities at first load
   useEffect(() => {
-    if (!isEqual(prevFilters, filters)) {
+    dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch activities list there is any change in filters or sorters
+  useEffect(() => {
+    if (prevFilters && !isEqual(prevFilters, filters)) {
       console.log('DO FETCHING');
       dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     }
