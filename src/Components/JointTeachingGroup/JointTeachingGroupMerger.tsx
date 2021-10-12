@@ -16,6 +16,7 @@ import {
   fetchActivitiesForForm,
   updateActivities,
 } from '../../Redux/Activities/activities.actions';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 type Props = {
   activities: TActivity[];
@@ -47,7 +48,7 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
 
   // Select sorting
   const selectActivityParamSorting = useMemo(
-    () => makeSelectSortParamsForActivities(),
+    () => makeSelectSortParamsForActivities(ACTIVITIES_TABLE),
     [],
   );
 

@@ -30,8 +30,15 @@ const UnmatchedActivities = ({ formId }: Props) => {
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
     sorter?.order
-      ? dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order))
-      : dispatch(resetActivitySorting(formId));
+      ? dispatch(
+          setActivitySorting(
+            formId,
+            sorter.columnKey,
+            sorter.order,
+            UNMATCHED_ACTIVITIES_TABLE,
+          ),
+        )
+      : dispatch(resetActivitySorting(formId, UNMATCHED_ACTIVITIES_TABLE));
   };
 
   const selectedFilterValues = useSelector(
