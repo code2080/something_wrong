@@ -38,6 +38,7 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
+  const prevSorters = usePrevious(sorters);
 
   // Fetch activities at first load
   useEffect(() => {
@@ -47,12 +48,12 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
 
   // Fetch activities list there is any change in filters or sorters
   useEffect(() => {
-    if (prevFilters && !isEqual(prevFilters, filters)) {
+    if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
       console.log('DO FETCHING');
       dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prevFilters, filters, origin]);
+  }, [prevFilters, prevSorters, filters, sorters, origin]);
 
   const submissionPayload = useMemo(() => {
     const sections = form.sections;

@@ -17,32 +17,17 @@ export const selectVisibleColsForDatasourceId = createSelector(
   (uiState) => (datasourceId: string) => uiState.tableViews[datasourceId] || {},
 );
 
-export const makeSelectSortParamsForActivities = () =>
+export const makeSelectSortParamsForActivities = (tableType: string) =>
   createSelector(
     globalUIState,
     (_, formId: string) => formId,
     (uiState, formId) =>
-      uiState.activitySorting[formId]?.activityTable?.sortParams || null,
+      uiState.activitySorting[`${formId}${tableType}`]?.sortParams || null,
   );
-export const makeSelectSortOrderForActivities = () =>
+export const makeSelectSortOrderForActivities = (tableType: string) =>
   createSelector(
     globalUIState,
     (_, formId: string) => formId,
     (uiState, formId) =>
-      uiState.activitySorting[formId]?.activityTable?.sortOrder || null,
-  );
-
-export const makeSelectSortParamsForJointTeaching = () =>
-  createSelector(
-    globalUIState,
-    (_, formId: string) => formId,
-    (uiState, formId) =>
-      uiState.activitySorting[formId]?.jointTeachingTable?.sortParams || null,
-  );
-export const makeSelectSortOrderForJointTeaching = () =>
-  createSelector(
-    globalUIState,
-    (_, formId: string) => formId,
-    (uiState, formId) =>
-      uiState.activitySorting[formId]?.jointTeachingTable?.sortOrder || null,
+      uiState.activitySorting[`${formId}${tableType}`]?.sortOrder || null,
   );
