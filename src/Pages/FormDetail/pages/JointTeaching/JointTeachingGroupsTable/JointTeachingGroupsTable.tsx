@@ -51,14 +51,16 @@ import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 interface Props {
   readonly?: boolean;
-  onGroupSelect?: (groupId: string) => void;
+  onGroupSelect?: (group: JointTeachingGroup) => void;
+  groupSelecting?: boolean;
 }
 
 const JointTeachingGroupsTable = (props: Props) => {
-  const { readonly, onGroupSelect } = props;
+  const { readonly, onGroupSelect, groupSelecting } = props;
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
+
   const loading = useSelector(
     createLoadingSelector([FETCH_JOINT_TEACHING_GROUPS_FOR_FORM]),
   );
@@ -233,6 +235,23 @@ const JointTeachingGroupsTable = (props: Props) => {
   };
 
   const columns = compact([
+    onGroupSelect && {
+      title: '',
+      key: 'onSelect',
+      width: '60px',
+      render: (group: JointTeachingGroup) => {
+        return (
+          <Button
+            type='primary'
+            onClick={() => onGroupSelect(group)}
+            loading={groupSelecting}
+            disabled={group.status === JointTeachingStatus.MERGED}
+          >
+            Select
+          </Button>
+        );
+      },
+    },
     !readonly && {
       title: ' ',
       key: 'conflictsResolved',
@@ -303,18 +322,6 @@ const JointTeachingGroupsTable = (props: Props) => {
         );
       },
     },
-    onGroupSelect && {
-      title: '',
-      key: 'onSelect',
-      width: '60px',
-      render: (group: JointTeachingGroup) => {
-        return (
-          <Button type='primary' onClick={() => onGroupSelect(group._id)}>
-            Select
-          </Button>
-        );
-      },
-    },
   ]);
 
   useEffect(() => {
@@ -341,25 +348,28 @@ const JointTeachingGroupsTable = (props: Props) => {
         rowKey='_id'
         isLoading={loading}
         showFilter={false}
-        expandedRowRender={(group: JointTeachingGroup) => (
-          <JointTeachingActivitiesTable
-            conflicts={group.conflictsMapping}
-            showResult
-            readonly={readonly || group.status === 'MERGED'}
-            activities={group.activities}
-            formId={formId}
-            onRemove={(activityId: string) => {
-              onDeleteActivity(group._id, activityId);
-            }}
-            onAddActivity={(activityIds: Key[]) => {
-              onAddActivity(group._id, activityIds);
-            }}
-            onSelectValue={(type, checked, activityValue) =>
-              onSelectValue(group, { type, checked, activityValue })
-            }
-            jointTeachingGroupId={group._id}
-          />
-        )}
+        expandedRowRender={(group: JointTeachingGroup) => {
+          const isMerged = group.status === JointTeachingStatus.MERGED;
+          return (
+            <JointTeachingActivitiesTable
+              conflicts={group.conflictsMapping}
+              showResult
+              readonly={readonly || isMerged}
+              activities={group.activities}
+              formId={formId}
+              onRemove={(activityId: string) => {
+                onDeleteActivity(group._id, activityId);
+              }}
+              onAddActivity={(activityIds: Key[]) => {
+                onAddActivity(group._id, activityIds);
+              }}
+              onSelectValue={(type, checked, activityValue) =>
+                onSelectValue(group, { type, checked, activityValue })
+              }
+              jointTeachingGroupId={group._id}
+            />
+          );
+        }}
         nowrap
         rowSelection={
           readonly
