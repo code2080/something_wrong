@@ -819,7 +819,6 @@ const populateWithFieldConstraintTestMocks = {
         operator: '<',
       },
     ],
-    parameterData: [],
   },
 };
 

@@ -34,7 +34,6 @@ export const createActivitiesTableColumnsFromMapping = (
       {
         title: <TitleCell extId={extId} field={field} />,
         key: extId,
-        width: (design.objects[extId] || [null]).length * 150,
         render: (activity: TActivity, activityIndex) => (
           <ColumnWrapper
             activity={activity}
