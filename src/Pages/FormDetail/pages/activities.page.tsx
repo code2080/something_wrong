@@ -52,7 +52,7 @@ const ActivitiesPage = () => {
 
   // Select sorting
   const selectActivityParamSorting = useMemo(
-    () => makeSelectSortParamsForActivities(),
+    () => makeSelectSortParamsForActivities(ACTIVITIES_TABLE),
     [],
   );
 
@@ -73,7 +73,7 @@ const ActivitiesPage = () => {
   const keyedActivities = _.keyBy(allActivities, '_id');
 
   const selectActivitySortingOrder = useMemo(
-    () => makeSelectSortOrderForActivities(),
+    () => makeSelectSortOrderForActivities(ACTIVITIES_TABLE),
     [],
   );
   const sortOrder = useSelector((state) =>
@@ -151,8 +151,15 @@ const ActivitiesPage = () => {
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
     sorter?.order
-      ? dispatch(setActivitySorting(formId, sorter.columnKey, sorter.order))
-      : dispatch(resetActivitySorting(formId));
+      ? dispatch(
+          setActivitySorting(
+            formId,
+            sorter.columnKey,
+            sorter.order,
+            ACTIVITIES_TABLE,
+          ),
+        )
+      : dispatch(resetActivitySorting(formId, ACTIVITIES_TABLE));
   };
 
   return (

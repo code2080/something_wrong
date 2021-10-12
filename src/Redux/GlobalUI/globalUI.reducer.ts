@@ -97,13 +97,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         activitySorting: {
           ...state.activitySorting,
-          [formId]: {
-            ...state.activitySorting[formId],
-            [tableType]: {
-              ...state.activitySorting[formId],
-              sortParams: { key, direction },
-              tableType,
-            },
+          [`${formId}${tableType}`]: {
+            ...state.activitySorting[`${formId}${tableType}`],
+            sortParams: { key, direction },
           },
         },
       };
@@ -117,9 +113,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         activitySorting: {
           ...state.activitySorting,
-          [formId]: {
-            ...state.activitySorting[formId],
-            [tableType]: null,
+          [`${formId}${tableType}`]: {
+            ...state.activitySorting[`${formId}${tableType}`],
+            sortParams: {},
           },
         },
       };
@@ -129,7 +125,7 @@ const reducer = (state = initialState, action) => {
       const {
         payload: {
           activities,
-          actionMeta: { formId },
+          actionMeta: { formId, tableType },
         },
       } = action;
       if (!action || !action.payload) return state;
@@ -137,33 +133,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         activitySorting: {
           ...state.activitySorting,
-          [formId]: {
-            ...state.activitySorting[formId],
-            activityTable: {
-              ...state.activitySorting[formId]?.activityTable,
-              sortOrder: activities.map((a) => a._id),
-            },
-            jointTeachingTable: {
-              ...state.activitySorting[formId]?.jointTeachingTable,
-              sortOrder: activities.map((a) => a._id),
-            },
-          },
-        },
-      };
-    }
-
-    case types.SET_UNMATCHED_ACTIVITIES: {
-      const {
-        payload: { formId, activities },
-      } = action;
-
-      return {
-        ...state,
-        jointTeaching: {
-          ...state.jointTeaching,
-          [formId]: {
-            ...state.jointTeaching[formId],
-            activities,
+          [`${formId}${tableType}`]: {
+            ...(state.activitySorting[`${formId}${tableType}`] || {}),
+            sortOrder: activities.map((a) => a._id),
           },
         },
       };

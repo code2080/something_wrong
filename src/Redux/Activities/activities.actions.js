@@ -6,6 +6,8 @@ import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
 
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
@@ -34,7 +36,7 @@ export const fetchActivitiesForForm = (
   formId,
   filter,
   sortingParam,
-  tableType,
+  tableType = ACTIVITIES_TABLE,
 ) => {
   const sorting = sortingParam;
   const _filter = deFlattenObject(filter);
