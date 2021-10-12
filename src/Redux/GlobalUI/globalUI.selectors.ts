@@ -31,18 +31,3 @@ export const makeSelectSortOrderForActivities = (tableType: string) =>
     (uiState, formId) =>
       uiState.activitySorting[`${formId}${tableType}`]?.sortOrder || null,
   );
-
-export const makeSelectSortParamsForJointTeaching = () =>
-  createSelector(
-    globalUIState,
-    (_, formId: string) => formId,
-    (uiState, formId) =>
-      uiState.activitySorting[formId]?.jointTeachingTable?.sortParams || null,
-  );
-export const makeSelectSortOrderForJointTeaching = () =>
-  createSelector(
-    globalUIState,
-    (_, formId: string) => formId,
-    (uiState, formId) =>
-      uiState.activitySorting[formId]?.jointTeachingTable?.sortOrder || null,
-  );

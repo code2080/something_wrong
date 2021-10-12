@@ -2,7 +2,7 @@ import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { makeSelectSortOrderForJointTeaching } from 'Redux/GlobalUI/globalUI.selectors';
+import { makeSelectSortOrderForActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { SorterResult } from 'antd/lib/table/interface';
 import {
@@ -72,7 +72,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
   };
 
   const selectJointTeachingSortingOrder = useMemo(
-    () => makeSelectSortOrderForJointTeaching(),
+    () => makeSelectSortOrderForActivities(UNMATCHED_ACTIVITIES_TABLE),
     [],
   );
   const sortOrder = useSelector((state) =>
