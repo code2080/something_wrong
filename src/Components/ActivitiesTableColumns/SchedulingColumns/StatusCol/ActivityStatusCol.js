@@ -1,25 +1,30 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, Form } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
-import { CheckOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 
 // COMPONENTS
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import EditableText from '../../../EditableText/EditableText';
+import { CheckOutlined } from '@ant-design/icons';
 import StatusLabel from '../../../StatusLabel/StatusLabel';
 
 // STYLES
 import './ActivityStatusCol.scss';
 
 // CONSTANTS
-import { activityStatusProps } from '../../../../Constants/activityStatuses.constants';
-import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
-import EditableText from '../../../EditableText/EditableText';
-import { updateActivity } from '../../../../Redux/Activities/activities.actions';
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { activityStatusProps } from 'Constants/activityStatuses.constants';
+import { DATE_TIME_FORMAT } from 'Constants/common.constants';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
-const PopoverContent = ({ activity, onUpdate }) => {
+// ACTIONS
+import { updateActivity } from 'Redux/Activities/activities.actions';
+
+// SELECTORS
+import { selectActivityStatus } from 'Redux/Activities/activities.selectors';
+
+const PopoverContent = ({ activity, activityStatus, onUpdate }) => {
   const [reservationId, setReservationId] = useState(activity.reservationId);
 
   const onUpdateReservationId = (value) => {
@@ -35,15 +40,12 @@ const PopoverContent = ({ activity, onUpdate }) => {
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <Form.Item label='Status'>
           <StatusLabel
-            color={
-              activityStatusProps[activity.activityStatus]?.color ?? 'default'
-            }
+            color={activityStatusProps[activityStatus]?.color ?? 'default'}
           >
-            {activityStatusProps[activity.activityStatus]?.label ??
-              activity.activityStatus}
+            {activityStatusProps[activityStatus]?.label ?? activityStatus}
           </StatusLabel>
         </Form.Item>
-        {activity.activityStatus === EActivityStatus.FAILED && (
+        {activityStatus === EActivityStatus.FAILED && (
           <Form.Item label='Error'>
             {`${_.get(activity, 'errorDetails.message', '')} (${_.get(
               activity,
@@ -61,7 +63,7 @@ const PopoverContent = ({ activity, onUpdate }) => {
               : 'N/A'}
           </div>
         </Form.Item>
-        {activity.activityStatus === EActivityStatus.SCHEDULED && (
+        {activityStatus === EActivityStatus.SCHEDULED && (
           <Form.Item label='ID'>
             <EditableText
               value={reservationId}
@@ -75,8 +77,8 @@ const PopoverContent = ({ activity, onUpdate }) => {
   );
 };
 
-const StatusText = ({ activity }) => {
-  switch (activity.activityStatus) {
+const StatusText = ({ activity, activityStatus }) => {
+  switch (activityStatus) {
     case EActivityStatus.SCHEDULED:
       return (
         <span>
@@ -85,10 +87,7 @@ const StatusText = ({ activity }) => {
         </span>
       );
     default:
-      return (
-        activityStatusProps[activity.activityStatus]?.label ??
-        activity.activityStatus
-      );
+      return activityStatusProps[activityStatus]?.label ?? activityStatus;
   }
 };
 
@@ -97,20 +96,25 @@ const ActivityStatusCol = ({ activity }) => {
   const onUpdate = (updatedActivity) => {
     dispatch(updateActivity(updatedActivity));
   };
+  const activityStatus = useSelector(selectActivityStatus(activity));
 
   return (
     <div className='activity-status-column'>
       <Popover
         title='Scheduling information'
-        content={<PopoverContent activity={activity} onUpdate={onUpdate} />}
+        content={
+          <PopoverContent
+            activityStatus={activityStatus}
+            activity={activity}
+            onUpdate={onUpdate}
+          />
+        }
         getPopupContainer={() => document.getElementById('te-prefs-lib')}
       >
         <StatusLabel
-          color={
-            activityStatusProps[activity.activityStatus]?.color ?? 'default'
-          }
+          color={activityStatusProps[activityStatus]?.color ?? 'default'}
         >
-          <StatusText activity={activity} />
+          <StatusText activity={activity} activityStatus={activityStatus} />
         </StatusLabel>
       </Popover>
     </div>
@@ -119,11 +123,13 @@ const ActivityStatusCol = ({ activity }) => {
 
 PopoverContent.propTypes = {
   activity: PropTypes.object.isRequired,
+  activityStatus: PropTypes.string.isRequired,
   onUpdate: PropTypes.func,
 };
 
 StatusText.propTypes = {
   activity: PropTypes.object.isRequired,
+  activityStatus: PropTypes.string.isRequired,
 };
 
 ActivityStatusCol.propTypes = {

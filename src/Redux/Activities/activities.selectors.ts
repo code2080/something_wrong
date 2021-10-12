@@ -11,6 +11,8 @@ import { extractValuesFromActivityValues } from '../../Utils/activities.helpers'
 import { ActivityValue } from '../../Types/ActivityValue.type';
 import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
+import { ActivitySchedulingState } from 'Redux/ActivityScheduling/activityScheduling.reducer';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 // TYPES
 type TActivityMap = {
@@ -19,6 +21,9 @@ type TActivityMap = {
 
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
+
+const activitySchedulingStateSelector = (state: any): ActivitySchedulingState =>
+  state.activityScheduling;
 
 export const makeSelectActivitiesForForm = () =>
   createSelector(
@@ -148,3 +153,11 @@ export const selectTECorePayloadForActivity = createSelector(
       } as PopulateSelectionPayload;
     },
 );
+
+export const selectActivityStatus = (actvity: TActivity) =>
+  createSelector(activitySchedulingStateSelector, (activityScheduling) => {
+    // If in scheduling, return QUEUE
+    return activityScheduling.scheduling[actvity._id]
+      ? EActivityStatus.QUEUED
+      : actvity.activityStatus;
+  });
