@@ -66,6 +66,9 @@ export const useActivitiesWatcher = ({
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
+  const prevSorters = usePrevious(sorters);
+
+  // Fetch activities list there is any change in filters or sorters
 
   const doFetchingActivities = () => {
     dispatch(
@@ -77,13 +80,27 @@ export const useActivitiesWatcher = ({
     );
   };
 
+  // Fetch activities at first load
   useEffect(() => {
-    if (!isEqual(prevFilters, filters)) {
+    dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch activities when filters or sorters are changed.
+  useEffect(() => {
+    if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
       console.log('DO FETCHING');
       doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prevFilters, filters, origin]);
+  }, [prevFilters, prevSorters, filters, sorters, origin]);
+
+  // Force fetching activities
+  useEffect(() => {
+    if (trigger) {
+      doFetchingActivities();
+    }
+  }, [trigger]);
 
   useEffect(() => {
     if (trigger) {

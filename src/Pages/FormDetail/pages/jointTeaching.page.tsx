@@ -27,32 +27,6 @@ const JointTeachingPage = () => {
     createLoadingSelector([GENERATE_JOINT_TEACHING_GROUP]),
   );
 
-  // const selectSelectedFilterValues = useMemo(
-  //   () => makeSelectSelectedFilterValues(),
-  //   [],
-  // );
-  // const selectedFilterValues = useSelector((state) =>
-  //   selectSelectedFilterValues(state, formId),
-  // );
-
-  // const selectActivitiesForForm = useMemo(
-  //   () => makeSelectActivitiesForForm(),
-  //   [],
-  // );
-
-  // const selectJointTeachingParamSorting = useMemo(
-  //   () => makeSelectSortParamsForJointTeaching(),
-  //   [],
-  // );
-
-  // const selectedSortingParams = useSelector((state) =>
-  //   selectJointTeachingParamSorting(state, formId),
-  // );
-
-  // const activities = useSelector((state) =>
-  //   selectActivitiesForForm(state, formId),
-  // );
-
   const onGenerate = async () => {
     await dispatch(generateJointTeachingGroup({ formId }));
     dispatch(fetchJointTeachingGroupsForForm({ formId }));

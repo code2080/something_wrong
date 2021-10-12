@@ -14,6 +14,7 @@ import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.s
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 import { resetFormFilterValues } from '../../Redux/Filters/filters.actions';
 import { resetActivitySorting } from '../../Redux/GlobalUI/globalUI.actions';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const HasReservationsAlert = ({ formId }) => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const HasReservationsAlert = ({ formId }) => {
     dispatch(deleteActivities(formId));
     dispatch(unlockActivityDesigner({ formId }));
     dispatch(resetFormFilterValues({ formId }));
-    dispatch(resetActivitySorting({ formId }));
+    dispatch(resetActivitySorting(formId, ACTIVITIES_TABLE));
   };
 
   const handleDeleteReservations = (responses: any[] = []) => {
