@@ -286,9 +286,9 @@ const ActivityActionsDropdown = ({
           .map((key) => (
             <Menu.Item
               disabled={
-                ['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
-                !hasAssistedSchedulingPermissions &&
-                isScheduling
+                isScheduling ||
+                (['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
+                  !hasAssistedSchedulingPermissions)
               }
               key={key}
             >
@@ -338,7 +338,7 @@ ActivityActionsDropdown.propTypes = {
 
 ActivityActionsDropdown.defaultProps = {
   buttonType: 'default',
-  isScheduling: undefined,
+  isScheduling: false,
 };
 
 export default connect(

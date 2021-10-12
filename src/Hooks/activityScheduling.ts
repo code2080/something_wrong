@@ -10,6 +10,10 @@ import {
   updateActivitiesWithSchedulingResults,
 } from '../Utils/scheduling.helpers';
 import { updateActivities } from '../Redux/Activities/activities.actions';
+import {
+  startSchedulingActivities,
+  finishSchedulingActivities,
+} from 'Redux/ActivityScheduling/activityScheduling.actions';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
@@ -108,12 +112,22 @@ const useActivityScheduling = ({
         return new Promise<
           [formInstanceId: string, results: ActivityValueValidation[]]
         >((resolve) => {
+          dispatch(
+            startSchedulingActivities(
+              activitiesOfFormInstance.map(({ _id }) => _id),
+            ),
+          );
           scheduleActivities(
             activitiesOfFormInstance,
             formType,
             reservationMode,
             teCoreAPI[teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES],
             (schedulingReturns: ActivityValueValidation[]) => {
+              dispatch(
+                finishSchedulingActivities(
+                  activitiesOfFormInstance.map(({ _id }) => _id),
+                ),
+              );
               resolve([formInstanceId, schedulingReturns]);
             },
             objectRequests,

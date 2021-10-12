@@ -1,5 +1,4 @@
-import { TActivity } from 'Types/Activity.type';
-import * as activityTypes from '../Activities/activities.actionTypes';
+import * as types from './activityScheduling.actionTypes';
 
 export interface ActivitySchedulingState {
   scheduling: {
@@ -12,40 +11,36 @@ export const initialState: ActivitySchedulingState = {
 
 export default (state: ActivitySchedulingState = initialState, action) => {
   switch (action.type) {
-    case activityTypes.UPDATE_ACTIVITIES_REQUEST: {
-      const { activities } = action.payload;
+    case types.START_SCHEDULING_ACTIVITIES: {
+      const { activityIds } = action.payload;
       return {
         ...state,
         scheduling: {
           ...state.scheduling,
-          ...activities.reduce(
-            (results, activity: TActivity) => ({
+          ...activityIds.reduce((results, activityId) => {
+            return {
               ...results,
-              [activity._id]: true,
-            }),
-            {},
-          ),
+              [activityId]: true,
+            };
+          }, {}),
         },
       };
     }
 
-    case activityTypes.UPDATE_ACTIVITIES_FAILURE:
-    case activityTypes.UPDATE_ACTIVITIES_SUCCESS: {
-      const { activities } = action.payload;
-
+    case types.FINISH_SCHEDULING_ACTIVITIES: {
+      const { activityIds } = action.payload;
       return {
         ...state,
         scheduling: {
           ...state.scheduling,
-          ...activities.reduce(
-            (results, activity: TActivity) => ({
+          ...activityIds.reduce((results, activityId) => {
+            return {
               ...results,
-              [activity._id]: false,
-            }),
-            {},
-          ),
-        },
-      };
+              [activityId]: false,
+            };
+          }, {}),
+        }
+      }
     }
 
     default:
