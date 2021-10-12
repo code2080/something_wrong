@@ -38,13 +38,14 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
+  const prevSorters = usePrevious(sorters);
   useEffect(() => {
-    if (!isEqual(prevFilters, filters)) {
+    if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
       console.log('DO FETCHING');
       dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prevFilters, filters, origin]);
+  }, [prevFilters, prevSorters, filters, sorters, origin]);
 
   const submissionPayload = useMemo(() => {
     const sections = form.sections;
