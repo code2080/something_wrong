@@ -37,7 +37,6 @@ const timingCols = {
     title: 'Start time',
     key: 'startTime',
     dataIndex: null,
-    width: 150,
     render: (activity, activityIndex) => {
       return (
         <SortableTableCell className={`startTime_${activity._id}`}>
@@ -60,7 +59,6 @@ const timingCols = {
   endTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'End time',
     key: 'endTime',
-    width: 150,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`endTime_${activity._id}`}>
@@ -82,7 +80,6 @@ const timingCols = {
   startTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'Start after or at:',
     key: 'startTime',
-    width: 200,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`startTimeOrAt_${activity._id}`}>
@@ -103,7 +100,6 @@ const timingCols = {
   }),
   endTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'End before or at:',
-    width: 200,
     key: 'endTime',
     dataIndex: null,
     render: (activity, activityIndex) => (
@@ -125,7 +121,6 @@ const timingCols = {
   }),
   length: (mapping, columnPrefix, renderer) => ({
     title: 'Length',
-    width: 70,
     key: 'length',
     dataIndex: null,
     render: (activity, activityIndex) => (
@@ -147,7 +142,6 @@ const timingCols = {
   padding: (mapping, columnPrefix, renderer) => ({
     title: 'Padding',
     key: 'padding',
-    width: 70,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`padding_${activity._id}`}>
@@ -167,7 +161,6 @@ const timingCols = {
   weekday: (mapping, columnPrefix, renderer) => ({
     title: 'Weekday',
     key: 'weekday',
-    width: 70,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`weekday_${activity._id}`}>
@@ -188,7 +181,6 @@ const timingCols = {
   dateRanges: (mapping) => ({
     title: 'Date ranges',
     key: 'dateRanges',
-    width: 120,
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`dateRanges_${activity._id}`}>
@@ -206,7 +198,6 @@ const timingCols = {
   time: (mapping, columnPrefix, renderer) => ({
     title: 'Exact time',
     key: 'time',
-    width: 120,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`time_${activity._id}`}>
