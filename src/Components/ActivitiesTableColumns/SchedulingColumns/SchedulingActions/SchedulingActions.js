@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 // COMPONENTS
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 import { selectIsBetaOrDev } from '../../../../Redux/Auth/auth.selectors';
+import { selectActivitySchedulingById } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';
@@ -12,6 +13,7 @@ import './SchedulingActions.scss';
 
 const SchedulingActions = ({ activity, selectedRowKeys }) => {
   const isBeta = useSelector(selectIsBetaOrDev);
+  const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
   return (
     <div className='scheduling-actions-column--wrapper'>
@@ -26,7 +28,11 @@ const SchedulingActions = ({ activity, selectedRowKeys }) => {
           selectedRowKeys={selectedRowKeys}
         />
       )}
-      <ActionsDropdown buttonType='ellipsis' activity={activity} />
+      <ActionsDropdown
+        buttonType='ellipsis'
+        activity={activity}
+        isScheduling={isScheduling}
+      />
     </div>
   );
 };

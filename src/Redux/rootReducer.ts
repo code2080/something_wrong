@@ -22,6 +22,7 @@ import elements from './Elements/elements.reducer';
 import constraints from './Constraints/constraints.reducer';
 import filterLookupMap from './FilterLookupMap/filterLookupMap.reducer';
 import jointTeaching from './JointTeaching/jointTeaching.reducer';
+import activityScheduling from './ActivityScheduling/activityScheduling.reducer';
 import { LOGOUT } from './Auth/auth.actionTypes';
 
 const appReducer = combineReducers({
@@ -45,6 +46,7 @@ const appReducer = combineReducers({
   constraints,
   filterLookupMap,
   jointTeaching,
+  activityScheduling,
 });
 
 const rootReducer = (state, action) => {
