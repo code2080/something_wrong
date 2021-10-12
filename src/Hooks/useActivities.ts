@@ -33,6 +33,10 @@ import * as tableTypes from 'Constants/tables.constants';
 const schemaQueriesMapping: { [key: string]: IndexedObject } = {
   [tableTypes.UNMATCHED_ACTIVITIES_TABLE]: {
     matchedJointTeachingId: null,
+    // TODO: Workaround solution. Need to ask BE for some api changes.
+    'jointTeaching.object': {
+      $exists: true,
+    },
   },
 };
 
