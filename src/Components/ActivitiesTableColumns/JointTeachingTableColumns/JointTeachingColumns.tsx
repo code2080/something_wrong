@@ -35,5 +35,6 @@ export const JointTeachingColumn = () => [
         </div>
       );
     },
+    sorter: true,
   },
 ];
