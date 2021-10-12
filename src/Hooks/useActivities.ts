@@ -33,6 +33,10 @@ import * as tableTypes from 'Constants/tables.constants';
 const schemaQueriesMapping: { [key: string]: IndexedObject } = {
   [tableTypes.UNMATCHED_ACTIVITIES_TABLE]: {
     matchedJointTeachingId: null,
+    // TODO: Workaround solution. Need to ask BE for some api changes.
+    'jointTeaching.object': {
+      $exists: true,
+    },
   },
 };
 
@@ -81,7 +85,7 @@ export const useActivitiesWatcher = ({
     dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   // Fetch activities when filters or sorters are changed.
   useEffect(() => {
     if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
