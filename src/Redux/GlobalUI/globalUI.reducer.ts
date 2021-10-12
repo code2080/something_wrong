@@ -115,7 +115,7 @@ const reducer = (state = initialState, action) => {
           ...state.activitySorting,
           [`${formId}${tableType}`]: {
             ...state.activitySorting[`${formId}${tableType}`],
-            sortParams: {},
+            sortParams: null,
           },
         },
       };
