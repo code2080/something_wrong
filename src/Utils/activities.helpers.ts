@@ -496,12 +496,23 @@ const getFieldConstraintValue = (
   submission: TFormInstance,
   sectionId: string,
   elementId: string,
+  eventIdOrRowIdx: string | null,
 ): null | number => {
-  const activityValue = submission.values[sectionId].find(
-    (value) => value.elementId === elementId,
-  );
-  if (!activityValue) return null;
-  const value = activityValue.value;
+  const submissionValues = submission.values[sectionId];
+
+  // Regular section is just the values array, while recurring sections are objects with eventId or rowIdx as key
+  const isRegularSection = Array.isArray(submissionValues);
+
+  const values = isRegularSection
+    ? submissionValues
+    : submissionValues[eventIdOrRowIdx as string]?.values;
+
+  // If we have regular section we will find the value with only id
+  const elementValue = values.find((value) => value.elementId === elementId);
+
+  if (!elementValue) return null;
+
+  const value = elementValue.value;
   if (!value || isNaN(value)) return null;
   return value;
 };
@@ -531,10 +542,15 @@ export const populateWithFieldConstraint = ({
   const objectField = { typeExtId, fieldExtId };
 
   return activities.map((activity) => {
-    const { formInstanceId } = activity;
+    const { formInstanceId, eventId, rowIdx } = activity;
     const submission = submissions.find(({ _id }) => _id === formInstanceId);
     if (!submission) return activity;
-    const value = getFieldConstraintValue(submission, sectionId, elementId);
+    const value = getFieldConstraintValue(
+      submission,
+      sectionId,
+      elementId,
+      eventId ?? rowIdx,
+    );
     const fieldConstraintData = { objectField, operator, value };
     return { ...activity, fieldConstraint: fieldConstraintData };
   });
