@@ -69,14 +69,6 @@ const UnmatchedActivities = ({ formId }: Props) => {
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
   );
 
-  const selectAll = () => {
-    console.log('click');
-  };
-
-  const deselectAll = () => {
-    console.log('click');
-  };
-
   const createJointTeachingMatch = () => {
     setCreateNewGroupVisible(true);
   };
@@ -102,11 +94,19 @@ const UnmatchedActivities = ({ formId }: Props) => {
     return _.isEmpty(sortedActivities) ? activities : sortedActivities;
   }, [activities, keyedActivities, sortOrder]);
 
+  const handleSelectAll = () => {
+    setSelectedRowKeys(tableDataSource.map(({ _id }) => _id));
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedRowKeys([]);
+  };
+
   return (
     <div>
       <JointTeachingToolbar
-        onSelectAll={selectAll}
-        onDeselectAll={deselectAll}
+        onSelectAll={handleSelectAll}
+        onDeselectAll={handleDeselectAll}
         onCreateJointTeachingMatch={createJointTeachingMatch}
         onAddJointTeachingMatch={addJointTeachingMatch}
         selectedRowKeys={selectedRowKeys}

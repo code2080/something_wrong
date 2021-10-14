@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
 import { useState } from 'react';
+import OperatorRenderer from './Parameters/OperatorRenderer';
 
 const { Option } = Select;
 
@@ -123,7 +124,7 @@ const ParameterCascader = ({
       >
         {availableOperators.map((operator) => (
           <Option key={operator} value={operator}>
-            {operator}
+            {OperatorRenderer(operator)}
           </Option>
         ))}
       </Select>{' '}

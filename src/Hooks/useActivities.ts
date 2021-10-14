@@ -102,6 +102,12 @@ export const useActivitiesWatcher = ({
     }
   }, [trigger]);
 
+  useEffect(() => {
+    if (trigger) {
+      doFetchingActivities();
+    }
+  }, [trigger]);
+
   const submissionPayload = useMemo(() => {
     const sections = form.sections;
     const submissionValues = submissions.map((submission) => submission.values);

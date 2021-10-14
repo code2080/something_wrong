@@ -15,7 +15,7 @@ const App = () => {
         coreAPI={{
           setToolbarContent: (content) => setToolbarContent(content),
         }}
-        env='beta'
+        env='amLocalhost'
       />
     </div>
   );

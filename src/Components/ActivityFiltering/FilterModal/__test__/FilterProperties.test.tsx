@@ -26,7 +26,11 @@ describe('Filter Properties column tests', () => {
         onSelect={handleSelect}
         getOptionLabel={getOptionLabel}
       />,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
   });
   it('Render without crashes', () => {
