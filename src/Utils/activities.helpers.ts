@@ -510,9 +510,7 @@ const getFieldConstraintValue = (
   // If we have regular section we will find the value with only id
   const elementValue = values.find((value) => value.elementId === elementId);
 
-  if (!elementValue) return null;
-
-  const value = elementValue.value;
+  const value = elementValue?.value;
   if (!value || isNaN(value)) return null;
   return value;
 };
