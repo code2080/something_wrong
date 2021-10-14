@@ -124,14 +124,12 @@ const JointTeachingGroupsTable = (props: Props) => {
   };
   const onMerge = async (groupIds: Key[]) => {
     // Filter to make sure we only merge the ones that are not yet merged
-    const filteredGroupIds = groups.flatMap((group) =>
-      groupIds.filter(
-        (groupId) => group._id === groupId && group.status === 'NOT_MERGED',
-      ),
+    const filteredGroupIds = groups.filter(
+      (group) => groupIds.includes(group._id) && group.status === 'NOT_MERGED',
     );
 
     execThenRefetch(
-      filteredGroupIds.map((groupId) =>
+      filteredGroupIds.forEach((groupId) =>
         dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
       ),
     );
@@ -139,14 +137,12 @@ const JointTeachingGroupsTable = (props: Props) => {
 
   const onRevert = async (groupIds: Key[]) => {
     // Filter to make sure we only revert the ones that are not yet merged
-    const filteredGroupIds = groups.flatMap((group) =>
-      groupIds.filter(
-        (groupId) => group._id === groupId && group.status === 'MERGED',
-      ),
+    const filteredGroupIds = groups.filter(
+      (group) => groupIds.includes(group._id) && group.status === 'MERGED',
     );
 
     execThenRefetch(
-      filteredGroupIds.map((groupId) =>
+      filteredGroupIds.forEach((groupId) =>
         dispatch(
           revertJointTeachingGroup({ formId, jointTeachingId: groupId }),
         ),
