@@ -37,6 +37,11 @@ export const fetchActivitiesForForm = (
   { filters, sorters, schemaQueries },
   tableType = ACTIVITIES_TABLE,
 ) => {
+  const defaultSettings = {
+    includeSubmission: 'SINGLE',
+    jointTeaching: 'INCLUDE',
+    matchCriteria: 'SOME',
+  };
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
   const { settings, ...others } = _filters || {};
@@ -47,7 +52,7 @@ export const fetchActivitiesForForm = (
       filter: isEmptyDeep(others)
         ? undefined
         : new ActivityFilterPayload(others),
-      settings,
+      settings: settings ?? defaultSettings,
       sorting: sorting == null ? undefined : sorting,
       schemaQueries,
     },

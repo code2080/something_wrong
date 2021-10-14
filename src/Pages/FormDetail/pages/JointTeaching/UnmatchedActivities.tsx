@@ -20,12 +20,15 @@ import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 
 interface Props {
   formId: string;
 }
 const UnmatchedActivities = ({ formId }: Props) => {
   const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
+  const [selectJointTeachingGroupVisible, setSelectJointTeachingGroupVisible] =
+    useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
@@ -72,6 +75,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
 
   const addJointTeachingMatch = () => {
     console.log('addJointTeachingMatch');
+    setSelectJointTeachingGroupVisible(true);
   };
 
   const selectJointTeachingSortingOrder = useMemo(
@@ -131,6 +135,18 @@ const UnmatchedActivities = ({ formId }: Props) => {
         activities={activities.filter(({ _id }) =>
           selectedRowKeys.includes(_id),
         )}
+      />
+      <SelectJointTeachingGroupToAddActivitiesModal
+        formId={formId}
+        visible={selectJointTeachingGroupVisible}
+        onCancel={(refetchNeeded?: boolean) => {
+          if (refetchNeeded) {
+            setTriggerFetchingActivities(triggerFetchingActivities + 1);
+          }
+          setSelectedRowKeys([]);
+          setSelectJointTeachingGroupVisible(false);
+        }}
+        selectedActivityIds={selectedRowKeys}
       />
     </div>
   );

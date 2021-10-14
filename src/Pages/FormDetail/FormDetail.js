@@ -142,7 +142,9 @@ const FormPage = () => {
           key={TAB_CONSTANT.ACTIVITIES}
           forceRender
         >
-          <ActivitiesPage />
+          {selectedFormDetailTab === TAB_CONSTANT.ACTIVITIES && (
+            <ActivitiesPage />
+          )}
         </Tabs.TabPane>
         {hasActivityDesignPermission && (
           <Tabs.TabPane

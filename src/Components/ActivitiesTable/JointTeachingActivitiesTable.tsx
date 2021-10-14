@@ -292,33 +292,35 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               },
             },
           ]),
-          post: compact([
-            typeof onRemove === 'function' && {
-              title: 'Actions',
-              width: 120,
-              align: 'center',
-              render: (activity: TActivity) => {
-                if (Number(activity.sequenceIdx) < 0) {
-                  return (
-                    <Button
-                      size='small'
-                      onClick={() => setAddActivityModalVisible(true)}
-                    >
-                      Add more
-                    </Button>
-                  );
-                }
-                return (
-                  <Popconfirm
-                    title='Are you sure you want to delete this activity from group?'
-                    onConfirm={() => onRemove(activity._id)}
-                  >
-                    <Button type='link' icon={<DeleteOutlined />} danger />
-                  </Popconfirm>
-                );
-              },
-            },
-          ]),
+          post: readonly
+            ? undefined
+            : compact([
+                typeof onRemove === 'function' && {
+                  title: 'Actions',
+                  width: '140px',
+                  align: 'center',
+                  render: (activity: TActivity) => {
+                    if (Number(activity.sequenceIdx) < 0) {
+                      return (
+                        <Button
+                          size='small'
+                          onClick={() => setAddActivityModalVisible(true)}
+                        >
+                          Add more
+                        </Button>
+                      );
+                    }
+                    return (
+                      <Popconfirm
+                        title='Are you sure you want to delete this activity from group?'
+                        onConfirm={() => onRemove(activity._id)}
+                      >
+                        <Button type='link' icon={<DeleteOutlined />} danger />
+                      </Popconfirm>
+                    );
+                  },
+                },
+              ]),
         }}
         footer={footer ? () => footer : undefined}
         pagination={false}
