@@ -35,6 +35,7 @@ type Props = {
   onScheduleActivities(activities: TActivity[]): void;
   onDeleteActivities(activities: TActivity[]): void;
   allActivities: TActivity[];
+  onCreateMatchCallback: () => void;
 };
 
 /**
@@ -50,6 +51,7 @@ const ActivitiesToolbar = ({
   onScheduleActivities,
   onDeleteActivities,
   allActivities,
+  onCreateMatchCallback,
 }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
@@ -154,6 +156,7 @@ const ActivitiesToolbar = ({
         <JointTeachingGroupMerger
           activities={selectedActivities}
           formId={formId}
+          onCreateMatchCallback={onCreateMatchCallback}
         />
       )}
       <ActivityFiltering

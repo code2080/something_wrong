@@ -6,6 +6,7 @@ import {
   ReactChild,
   ReactChildren,
 } from 'react';
+import { useSelector } from 'react-redux';
 import { isEmpty, omit } from 'lodash';
 
 // COMPONENTS
@@ -13,23 +14,25 @@ import { FormInstance } from 'antd/lib/form/Form';
 import { Form } from 'antd';
 
 // TYPES
-
-// HELPERS
-import { useSelector } from 'react-redux';
+import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
 import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
+
+// HELPERS
+import {
+  validateFilterQuery,
+  beautifyObject,
+  reparseKey,
+} from './FilterModal.helper';
+
+// SELETORS
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
   selectFieldLabelsMapping,
   selectObjectLabelsMapping,
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
-import {
-  validateFilterQuery,
-  beautifyObject,
-  reparseKey,
-} from './FilterModal.helper';
-import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
+import { selectActivityTagsForForm } from 'Redux/ActivityTag/activityTag.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -84,6 +87,10 @@ const Provider = ({
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
+  const activityTags = useSelector(selectActivityTagsForForm)(formId).reduce(
+    (tagsMap, tag) => ({ ...tagsMap, null: 'N/A', [tag._id]: tag.name }),
+    {},
+  );
   const objectLabelsMapping = useSelector(selectObjectLabelsMapping());
   const fieldsLabelMapping = useSelector(selectFieldLabelsMapping());
   const allLabels = useSelector(selectAllLabels());
@@ -97,11 +104,18 @@ const Provider = ({
         }),
         {},
       ),
+      tag: activityTags,
       ...objectLabelsMapping,
       ...fieldsLabelMapping,
       ...allLabels,
     };
-  }, [submissions, objectLabelsMapping, fieldsLabelMapping, allLabels]);
+  }, [
+    submissions,
+    objectLabelsMapping,
+    fieldsLabelMapping,
+    allLabels,
+    activityTags,
+  ]);
 
   const getOptionLabel = (field: string, id?: string) => {
     if (id) {

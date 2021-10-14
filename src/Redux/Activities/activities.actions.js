@@ -34,13 +34,17 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
 
 export const fetchActivitiesForForm = (
   formId,
-  filter,
-  sortingParam,
+  { filters, sorters, schemaQueries },
   tableType = ACTIVITIES_TABLE,
 ) => {
-  const sorting = sortingParam;
-  const _filter = deFlattenObject(filter);
-  const { settings, ...others } = _filter || {};
+  const defaultSettings = {
+    includeSubmission: 'SINGLE',
+    jointTeaching: 'INCLUDE',
+    matchCriteria: 'SOME',
+  };
+  const sorting = sorters;
+  const _filters = deFlattenObject(filters);
+  const { settings, ...others } = _filters || {};
   return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId, tableType),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
@@ -48,8 +52,9 @@ export const fetchActivitiesForForm = (
       filter: isEmptyDeep(others)
         ? undefined
         : new ActivityFilterPayload(others),
-      settings,
+      settings: settings ?? defaultSettings,
       sorting: sorting == null ? undefined : sorting,
+      schemaQueries,
     },
   });
 };

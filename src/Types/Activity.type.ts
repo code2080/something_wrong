@@ -19,6 +19,8 @@ export type TActivity = {
   organizationId?: string;
   originJointTeachingGroup?: string;
   jointTeaching?: { object: string; typeExtId: string };
+  matchedJointTeachingId?: string;
+  jointTeachingGroupId?: string;
   scopedObject?: string;
   isInactive(): boolean;
 };

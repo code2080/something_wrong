@@ -22,10 +22,38 @@ import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
+
+// TYPES
 import { TActivity } from 'Types/Activity.type';
 import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
+import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
+import * as tableTypes from 'Constants/tables.constants';
 
-export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
+// CONSTANTS
+const schemaQueriesMapping: { [key: string]: IndexedObject } = {
+  [tableTypes.UNMATCHED_ACTIVITIES_TABLE]: {
+    matchedJointTeachingId: null,
+    // TODO: Workaround solution. Need to ask BE for some api changes.
+    'jointTeaching.object': {
+      $exists: true,
+    },
+  },
+};
+
+interface Props {
+  formId: string;
+  filters: IndexedObject;
+  sorters?: null | IndexedObject;
+  origin: string;
+  trigger?: number;
+}
+export const useActivitiesWatcher = ({
+  formId,
+  filters,
+  sorters,
+  origin,
+  trigger,
+}: Props) => {
   const teCoreAPI = useTECoreAPI();
   const selectForm = useMemo(() => makeSelectForm(), []);
   const form = useSelector((state) => selectForm(state, formId));
@@ -40,20 +68,45 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
   const prevFilters = usePrevious(filters);
   const prevSorters = usePrevious(sorters);
 
+  // Fetch activities list there is any change in filters or sorters
+
+  const doFetchingActivities = () => {
+    dispatch(
+      fetchActivitiesForForm(
+        formId,
+        { filters, sorters, schemaQueries: schemaQueriesMapping[origin] },
+        origin,
+      ),
+    );
+  };
+
   // Fetch activities at first load
   useEffect(() => {
     dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch activities list there is any change in filters or sorters
+  // Fetch activities when filters or sorters are changed.
   useEffect(() => {
     if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
       console.log('DO FETCHING');
-      dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
+      doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prevFilters, prevSorters, filters, sorters, origin]);
+
+  // Force fetching activities
+  useEffect(() => {
+    if (trigger) {
+      doFetchingActivities();
+    }
+  }, [trigger]);
+
+  useEffect(() => {
+    if (trigger) {
+      doFetchingActivities();
+    }
+  }, [trigger]);
 
   const submissionPayload = useMemo(() => {
     const sections = form.sections;
@@ -72,6 +125,7 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.sections, form.objectScope, submissions, activities.length]);
   useFetchLabelsFromExtIds(submissionPayload);
 
@@ -106,6 +160,7 @@ export const useActivitiesObjectWatcher = ({
       fields: [],
       types: [],
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
 
   useFetchLabelsFromExtIds(teCoreObjectPayload);

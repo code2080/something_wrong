@@ -20,13 +20,17 @@ import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 
 interface Props {
   formId: string;
 }
 const UnmatchedActivities = ({ formId }: Props) => {
   const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
+  const [selectJointTeachingGroupVisible, setSelectJointTeachingGroupVisible] =
+    useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
   const design = useSelector(selectDesignForForm)(formId);
 
@@ -58,19 +62,12 @@ const UnmatchedActivities = ({ formId }: Props) => {
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
     origin: UNMATCHED_ACTIVITIES_TABLE,
+    trigger: triggerFetchingActivities,
   });
 
   const activities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
   );
-
-  const selectAll = () => {
-    console.log('click');
-  };
-
-  const deselectAll = () => {
-    console.log('click');
-  };
 
   const createJointTeachingMatch = () => {
     setCreateNewGroupVisible(true);
@@ -78,6 +75,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
 
   const addJointTeachingMatch = () => {
     console.log('addJointTeachingMatch');
+    setSelectJointTeachingGroupVisible(true);
   };
 
   const selectJointTeachingSortingOrder = useMemo(
@@ -96,11 +94,19 @@ const UnmatchedActivities = ({ formId }: Props) => {
     return _.isEmpty(sortedActivities) ? activities : sortedActivities;
   }, [activities, keyedActivities, sortOrder]);
 
+  const handleSelectAll = () => {
+    setSelectedRowKeys(tableDataSource.map(({ _id }) => _id));
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedRowKeys([]);
+  };
+
   return (
     <div>
       <JointTeachingToolbar
-        onSelectAll={selectAll}
-        onDeselectAll={deselectAll}
+        onSelectAll={handleSelectAll}
+        onDeselectAll={handleDeselectAll}
         onCreateJointTeachingMatch={createJointTeachingMatch}
         onAddJointTeachingMatch={addJointTeachingMatch}
         selectedRowKeys={selectedRowKeys}
@@ -118,14 +124,29 @@ const UnmatchedActivities = ({ formId }: Props) => {
       />
       <CreateNewJointTeachingGroupModal
         visible={createNewGroupVisible}
-        onCancel={() => {
+        onCancel={(refetchNeeded?: boolean) => {
           setCreateNewGroupVisible(false);
           setSelectedRowKeys([]);
+          if (refetchNeeded) {
+            setTriggerFetchingActivities(triggerFetchingActivities + 1);
+          }
         }}
         formId={formId}
         activities={activities.filter(({ _id }) =>
           selectedRowKeys.includes(_id),
         )}
+      />
+      <SelectJointTeachingGroupToAddActivitiesModal
+        formId={formId}
+        visible={selectJointTeachingGroupVisible}
+        onCancel={(refetchNeeded?: boolean) => {
+          if (refetchNeeded) {
+            setTriggerFetchingActivities(triggerFetchingActivities + 1);
+          }
+          setSelectedRowKeys([]);
+          setSelectJointTeachingGroupVisible(false);
+        }}
+        selectedActivityIds={selectedRowKeys}
       />
     </div>
   );
