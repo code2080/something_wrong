@@ -47,6 +47,35 @@ export const createJointTeachingGroup = ({ formId, activityIds }) => {
   });
 };
 
+const createThenMergeJointTeachingGroupFlow = (formId: string) => ({
+  request: () => ({
+    type: types.CREATE_THEN_MERGE_JOINT_TEACHING_GROUP_REQUEST,
+  }),
+  success: (response) => ({
+    type: types.CREATE_THEN_MERGE_JOINT_TEACHING_GROUP_SUCCESS,
+    payload: { ...response, formId },
+  }),
+  failure: (err) => ({
+    type: types.CREATE_THEN_MERGE_JOINT_TEACHING_GROUP_FAILURE,
+    payload: { ...err },
+  }),
+});
+
+export const createThenMergeJointTeachingGroup = ({
+  formId,
+  activityIds,
+  conflicts,
+}) => {
+  return asyncAction.POST({
+    flow: createThenMergeJointTeachingGroupFlow(formId),
+    endpoint: `${getBaseEndpoint(formId)}/merge-and-create`,
+    params: {
+      activityIds,
+      conflicts,
+    },
+  });
+};
+
 const mergeJointTeachingGroupFlow = (formId: string) => ({
   request: () => ({ type: types.MERGE_JOINT_TEACHING_GROUP_REQUEST }),
   success: (response) => ({
