@@ -1,6 +1,7 @@
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as types from './jointTeaching.actionTypes';
+import { JointTeachingConflict } from 'Models/JointTeachingGroup.model';
 
 const getBaseEndpoint = (formId: string) =>
   `${getEnvParams().AM_BE_URL}forms/${formId}/joint-teaching`;
@@ -37,12 +38,21 @@ const createJointTeachingGroupFlow = (formId: string) => ({
   }),
 });
 
-export const createJointTeachingGroup = ({ formId, activityIds }) => {
+export const createJointTeachingGroup = ({
+  formId,
+  activityIds,
+  conflicts,
+}: {
+  formId: string;
+  activityIds: string[];
+  conflicts?: JointTeachingConflict[];
+}) => {
   return asyncAction.POST({
     flow: createJointTeachingGroupFlow(formId),
     endpoint: `${getBaseEndpoint(formId)}`,
     params: {
       activityIds,
+      conflicts,
     },
   });
 };
@@ -65,6 +75,10 @@ export const createThenMergeJointTeachingGroup = ({
   formId,
   activityIds,
   conflicts,
+}: {
+  formId: string;
+  activityIds: string[];
+  conflicts?: JointTeachingConflict[];
 }) => {
   return asyncAction.POST({
     flow: createThenMergeJointTeachingGroupFlow(formId),

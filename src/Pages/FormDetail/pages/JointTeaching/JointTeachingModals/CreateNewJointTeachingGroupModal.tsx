@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { keyBy } from 'lodash';
 
-import { Modal, ModalProps, Button } from 'antd';
+import { Modal, ModalProps, Button, Popover } from 'antd';
 import { TActivity } from 'Types/Activity.type';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -110,6 +110,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       createJointTeachingGroup({
         formId,
         activityIds: activities.map(({ _id }) => _id),
+        conflicts: selectedValues,
       }),
     );
     if (typeof onCancel === 'function') {
@@ -154,14 +155,16 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
               Create
             </Button>
             &nbsp;&nbsp;
-            <Button
-              onClick={onCreateAndMerge}
-              type='primary'
-              disabled={!canBePaired || !canBeMerge}
-              loading={!!merging}
-            >
-              Create and merge
-            </Button>
+            <Popover trigger={canBePaired ? [] : ['hover']} content="The joint teaching object or the timing doesn't match for those activities">
+              <Button
+                onClick={onCreateAndMerge}
+                type='primary'
+                disabled={!canBePaired || !canBeMerge}
+                loading={!!merging}
+              >
+                Create and merge
+              </Button>
+            </Popover>
             &nbsp;&nbsp;
             <Button type='default' onClick={() => onCancel()}>
               Cancel
