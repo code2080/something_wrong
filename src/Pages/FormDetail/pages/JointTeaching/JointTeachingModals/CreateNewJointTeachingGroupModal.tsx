@@ -155,7 +155,10 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
               Create
             </Button>
             &nbsp;&nbsp;
-            <Popover trigger={canBePaired ? [] : ['hover']} content="The joint teaching object or the timing doesn't match for those activities">
+            <Popover
+              trigger={canBePaired ? [] : ['hover']}
+              content="The joint teaching object or the timing doesn't match for those activities"
+            >
               <Button
                 onClick={onCreateAndMerge}
                 type='primary'
