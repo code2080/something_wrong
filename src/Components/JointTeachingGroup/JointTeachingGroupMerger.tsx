@@ -116,11 +116,10 @@ const JointTeachingGroupMerger = ({ activities = [], formId }: Props) => {
     dispatch(updateActivities(formId, null, inactivatedActivities));
     await dispatch(createActivity({ formId, activity: mergedActivity }));
     dispatch(
-      fetchActivitiesForForm(
-        formId,
-        selectedFilterValues,
-        selectedSortingParams,
-      ),
+      fetchActivitiesForForm(formId, {
+        filter: selectedFilterValues,
+        sorter: selectedSortingParams,
+      }),
     );
   };
 
