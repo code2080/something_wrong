@@ -8,11 +8,13 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import _ from 'lodash';
 
 // SELECTORS
 interface Props {
   formId: string;
   selectedRows: Key[];
+  groups: any;
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onMerge: (ids: Key[]) => void;
@@ -20,12 +22,29 @@ interface Props {
 }
 const JointTeachingGroupsTableToolbar = ({
   selectedRows,
+  formId,
+  groups,
   onSelectAll,
   onDeselectAll,
   onMerge,
   onRevert,
-  formId,
 }: Props) => {
+  const disableMergeSelectedBtn = () =>
+    _.isEmpty(
+      groups.filter(
+        (group) =>
+          _.includes(selectedRows, group._id) && group.status === 'NOT_MERGED',
+      ),
+    );
+
+  const disableRevertSelectedBtn = () =>
+    _.isEmpty(
+      groups.filter(
+        (group) =>
+          _.includes(selectedRows, group._id) && group.status === 'MERGED',
+      ),
+    );
+
   const selectedFilterValues = useSelector(
     selectSelectedFilterValues({ formId, origin: MATCHED_ACTIVITIES_TABLE }),
   );
@@ -55,7 +74,7 @@ const JointTeachingGroupsTableToolbar = ({
       </Button>
       <Button
         onClick={() => onMerge(selectedRows)}
-        disabled={!selectedRows.length}
+        disabled={!selectedRows.length || disableMergeSelectedBtn()}
         type='link'
         size='small'
       >
@@ -63,7 +82,7 @@ const JointTeachingGroupsTableToolbar = ({
       </Button>
       <Button
         onClick={() => onRevert(selectedRows)}
-        disabled={!selectedRows.length}
+        disabled={!selectedRows.length || disableRevertSelectedBtn}
         type='link'
         size='small'
       >
