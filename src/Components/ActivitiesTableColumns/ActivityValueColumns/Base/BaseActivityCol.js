@@ -283,6 +283,7 @@ const BaseActivityCol = ({
         </Dropdown>
       </div>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     _activityValue,
     activity,

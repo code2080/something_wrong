@@ -142,6 +142,7 @@ const ActivityActionsDropdown = ({
         schedulingReturns.map(({ activityId }) => activityId),
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [activities, activity.formId, activity.formInstanceId, updateActivities],
   );
 

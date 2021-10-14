@@ -45,6 +45,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     if (visible) {
       doCalculating();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const doCreate = async (e) => {

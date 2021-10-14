@@ -38,6 +38,7 @@ const JointTeachingMatchedOn = ({
       }),
       {},
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allElements]);
 
   const getTypeByExtId = (extId: string) => {

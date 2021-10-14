@@ -72,6 +72,7 @@ export const useActivitiesWatcher = ({ formId, filters, sorters, origin }) => {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.sections, form.objectScope, submissions, activities.length]);
   useFetchLabelsFromExtIds(submissionPayload);
 
@@ -106,6 +107,7 @@ export const useActivitiesObjectWatcher = ({
       fields: [],
       types: [],
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
 
   useFetchLabelsFromExtIds(teCoreObjectPayload);
