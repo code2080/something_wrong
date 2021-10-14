@@ -21,6 +21,10 @@ import {
 } from '../../../../Redux/Activities/activities.actions';
 import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';
 import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
+import {
+  startSchedulingActivities,
+  finishSchedulingActivities,
+} from 'Redux/ActivityScheduling/activityScheduling.actions';
 
 // COMPONENTS
 import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
@@ -59,6 +63,8 @@ const mapActionsToProps = {
   updateActivities,
   setFormInstanceSchedulingProgress,
   abortJob,
+  startSchedulingActivities,
+  finishSchedulingActivities,
 };
 
 const activityActions = {
@@ -105,6 +111,9 @@ const ActivityActionsDropdown = ({
   teCoreAPI,
   setFormInstanceSchedulingProgress,
   abortJob,
+  isScheduling,
+  startSchedulingActivities,
+  finishSchedulingActivities,
 }) => {
   const { formInstanceId, formId } = activity;
   const mixpanel = useMixpanel();
@@ -128,6 +137,9 @@ const ActivityActionsDropdown = ({
         activity.formId,
         activity.formInstanceId,
         updateActivitiesWithSchedulingResults(activities, schedulingReturns),
+      );
+      finishSchedulingActivities(
+        schedulingReturns.map(({ activityId }) => activityId),
       );
     },
     [activities, activity.formId, activity.formInstanceId, updateActivities],
@@ -205,6 +217,8 @@ const ActivityActionsDropdown = ({
   };
 
   const handleScheduleActivities = (activities: TActivity[], key: string) => {
+    const activityIds = activities.map(({ _id }) => _id);
+    startSchedulingActivities(activityIds);
     trackScheduleActivities(activities);
     const results = scheduleActivities(
       activities,
@@ -285,8 +299,9 @@ const ActivityActionsDropdown = ({
           .map((key) => (
             <Menu.Item
               disabled={
-                ['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
-                !hasAssistedSchedulingPermissions
+                isScheduling ||
+                (['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
+                  !hasAssistedSchedulingPermissions)
               }
               key={key}
             >
@@ -295,7 +310,7 @@ const ActivityActionsDropdown = ({
           ))}
       </Menu>
     ),
-    [handleMenuClick, activity, hasAssistedSchedulingPermissions],
+    [handleMenuClick, activity, hasAssistedSchedulingPermissions, isScheduling],
   );
   return (
     <Dropdown
@@ -331,10 +346,14 @@ ActivityActionsDropdown.propTypes = {
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
+  isScheduling: PropTypes.bool,
+  startSchedulingActivities: PropTypes.func.isRequired,
+  finishSchedulingActivities: PropTypes.func.isRequired,
 };
 
 ActivityActionsDropdown.defaultProps = {
   buttonType: 'default',
+  isScheduling: false,
 };
 
 export default connect(

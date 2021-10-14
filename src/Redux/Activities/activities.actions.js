@@ -6,6 +6,8 @@ import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as activitiesActionTypes from './activities.actionTypes';
 
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+
 import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
@@ -34,7 +36,7 @@ export const fetchActivitiesForForm = (
   formId,
   filter,
   sortingParam,
-  tableType,
+  tableType = ACTIVITIES_TABLE,
 ) => {
   const sorting = sortingParam;
   const _filter = deFlattenObject(filter);
@@ -219,21 +221,24 @@ export const updateActivity = (activity) =>
     params: { activity },
   });
 
-const updateActivitiesFlow = {
-  request: () => ({ type: activitiesActionTypes.UPDATE_ACTIVITIES_REQUEST }),
+const updateActivitiesFlow = (activities) => ({
+  request: () => ({
+    type: activitiesActionTypes.UPDATE_ACTIVITIES_REQUEST,
+    payload: { activities },
+  }),
   success: (response) => ({
     type: activitiesActionTypes.UPDATE_ACTIVITIES_SUCCESS,
     payload: { ...response },
   }),
   failure: (err) => ({
     type: activitiesActionTypes.UPDATE_ACTIVITIES_FAILURE,
-    payload: { ...err },
+    payload: { ...err, activities },
   }),
-};
+});
 
 export const updateActivities = (formId, formInstanceId, activities) =>
   asyncAction.PUT({
-    flow: updateActivitiesFlow,
+    flow: updateActivitiesFlow(activities),
     endpoint: `${getEnvParams().AM_BE_URL}activity`,
     params: {
       formId,

@@ -73,7 +73,7 @@ const ColumnWrapper = ({
   }, [activity, activityValues, mapping, prop, type]);
 
   return (
-    <div className='column--wrapper' style={{ display: 'flex' }}>
+    <div className='column--wrapper' style={{ display: 'flex', gridGap: 8 }}>
       {renderedPayload}
     </div>
   );

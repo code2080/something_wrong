@@ -27,11 +27,17 @@ import { DeleteOutlined } from '@ant-design/icons';
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
 
 // CONSTANTS
-import { FETCH_JOINT_TEACHING_GROUPS_FOR_FORM } from 'Redux/JointTeaching/jointTeaching.actionTypes';
+import {
+  DELETE_ACTIVITY_FROM_JOINT_TEACHING_GROUP,
+  FETCH_JOINT_TEACHING_GROUPS_FOR_FORM,
+  MERGE_JOINT_TEACHING_GROUP,
+  REVERT_JOINT_TEACHING_GROUP,
+} from 'Redux/JointTeaching/jointTeaching.actionTypes';
 import JointTeachingGroup, {
   MAX_MATCHING_SCORE,
   ConflictType,
   JointTeachingConflict,
+  JointTeachingStatus,
 } from 'Models/JointTeachingGroup.model';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import StatusLabel from 'Components/StatusLabel/StatusLabel';
@@ -61,32 +67,53 @@ const JointTeachingGroupsTable = (props: Props) => {
     selectDesignForForm(state)(formId),
   );
 
+  const buttonDisabled = useSelector(
+    createLoadingSelector([
+      MERGE_JOINT_TEACHING_GROUP,
+      REVERT_JOINT_TEACHING_GROUP,
+      DELETE_ACTIVITY_FROM_JOINT_TEACHING_GROUP,
+    ]),
+  );
+
   // actions
   const onFetchJointTeachingGroups = () => {
     return dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
+
+  /**
+    @function execThenRefetch
+    @description parallel processing queue, then refetch the joint teaching matches
+    @param {Array<Promise>}}
+  **/
+  const execThenRefetch = async (queue: Array<Promise<any>>) => {
+    await Promise.all(queue);
+    onFetchJointTeachingGroups();
+  };
+
   const onDeleteActivity = async (
     jointTeachingId: string,
     activityId: string,
   ) => {
-    await dispatch(
-      deleteActivityFromJointTeachingGroup({
-        formId,
-        jointTeachingId,
-        activityIds: [activityId],
-      }),
-    );
-    onFetchJointTeachingGroups();
+    execThenRefetch([
+      dispatch(
+        deleteActivityFromJointTeachingGroup({
+          formId,
+          jointTeachingId,
+          activityIds: [activityId],
+        }),
+      ),
+    ]);
   };
   const onAddActivity = async (jointTeachingId: string, activityIds: Key[]) => {
-    await dispatch(
-      addActivityToJointTeachingGroup({
-        formId,
-        jointTeachingId,
-        activityIds,
-      }),
-    );
-    onFetchJointTeachingGroups();
+    execThenRefetch([
+      dispatch(
+        addActivityToJointTeachingGroup({
+          formId,
+          jointTeachingId,
+          activityIds,
+        }),
+      ),
+    ]);
   };
 
   const onSelectAll = () => {
@@ -96,31 +123,38 @@ const JointTeachingGroupsTable = (props: Props) => {
     setSelectedRows([]);
   };
   const onMerge = async (groupIds: Key[]) => {
-    await Promise.all(
+    execThenRefetch(
       groupIds.map((groupId) =>
         dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
       ),
     );
-    dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
   const onRevert = async (groupIds: Key[]) => {
-    await Promise.all(
+    execThenRefetch(
       groupIds.map((groupId) =>
         dispatch(
           revertJointTeachingGroup({ formId, jointTeachingId: groupId }),
         ),
       ),
     );
-    dispatch(fetchJointTeachingGroupsForForm({ formId }));
   };
-  const onDelete = async (jointTeachingId: string) => {
-    await dispatch(
-      deleteJointTeachingGroup({
-        formId,
-        jointTeachingId,
-      }),
-    );
-    onFetchJointTeachingGroups();
+  const onDelete = async (jointTeaching: JointTeachingGroup) => {
+    if (jointTeaching.status === JointTeachingStatus.MERGED) {
+      await dispatch(
+        revertJointTeachingGroup({
+          formId,
+          jointTeachingId: jointTeaching._id,
+        }),
+      );
+    }
+    execThenRefetch([
+      dispatch(
+        deleteJointTeachingGroup({
+          formId,
+          jointTeachingId: jointTeaching._id,
+        }),
+      ),
+    ]);
   };
 
   const onSelectValue = (
@@ -181,6 +215,7 @@ const JointTeachingGroupsTable = (props: Props) => {
           type='primary'
           danger
           onClick={() => onRevert([group._id])}
+          disabled={!!buttonDisabled}
         >
           Revert
         </Button>
@@ -190,7 +225,7 @@ const JointTeachingGroupsTable = (props: Props) => {
         size='small'
         type='primary'
         onClick={() => onMerge([group._id])}
-        disabled={!group.conflictsResolved}
+        disabled={!group.conflictsResolved || !!buttonDisabled}
       >
         Merge
       </Button>
@@ -260,7 +295,7 @@ const JointTeachingGroupsTable = (props: Props) => {
             {mergeBtn(group)}
             <Popconfirm
               title='Are you sure you want to delete this joint teaching match?'
-              onConfirm={() => onDelete(group._id)}
+              onConfirm={() => onDelete(group)}
             >
               <Button type='link' danger icon={<DeleteOutlined />} />
             </Popconfirm>
