@@ -141,6 +141,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         .uniq()
         .value(),
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     showResult,
     activities,
@@ -175,6 +176,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       ...selectedJointTeachingValue,
       ...selectedValues,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
 
   const columnPrefixRenderer = (type, [activity, __], [activityValue, ___]) => {
