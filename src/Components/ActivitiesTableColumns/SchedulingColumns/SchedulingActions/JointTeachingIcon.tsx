@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { ShrinkOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Popover } from 'antd';
 import { useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
@@ -103,6 +103,26 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   );
   const icon = <RiShareBoxFill />;
 
+  if (activity?.originJointTeachingGroup || activity?.jointTeachingGroupId)
+    return (
+      <>
+        <Popover
+          trigger={['hover']}
+          content='Activity is a merged joint teaching match'
+        >
+          <Button
+            icon={<ShrinkOutlined />}
+            style={{
+              border: 'none',
+              color: 'green',
+              background: 'none',
+              margin: '0 0.4rem',
+            }}
+          />
+        </Popover>
+      </>
+    );
+
   if (localTeachingObject) {
     return (
       <>
@@ -122,21 +142,6 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
       </>
     );
   }
-  if (activity?.originJointTeachingGroup)
-    return (
-      <>
-        <Button
-          icon={<ShrinkOutlined />}
-          disabled
-          style={{
-            border: 'none',
-            color: 'green',
-            background: 'none',
-            margin: '0 0.4rem',
-          }}
-        />
-      </>
-    );
 
   return (
     <>
