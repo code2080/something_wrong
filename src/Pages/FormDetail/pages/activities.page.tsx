@@ -41,6 +41,9 @@ const ActivitiesPage = () => {
   const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
 
+  // For refecth activities
+  const [fetchingTrigger, setFetchingTrigger] = useState(0);
+
   /**
    * SELECTORS
    */
@@ -104,6 +107,7 @@ const ActivitiesPage = () => {
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
     origin: ACTIVITIES_TABLE,
+    trigger: fetchingTrigger,
   });
 
   const design = useSelector(selectDesignForForm)(formId);
@@ -171,6 +175,9 @@ const ActivitiesPage = () => {
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
         allActivities={tableDataSource}
+        onCreateMatchCallback={() => {
+          setFetchingTrigger(fetchingTrigger + 1);
+        }}
       />
       <ActivityTable
         design={design}
