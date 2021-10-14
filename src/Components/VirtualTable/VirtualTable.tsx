@@ -16,7 +16,6 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
     props;
   const [tableWidth, setTableWidth] = useState(0);
   const ref = useRef(null);
-
   const columnswithSelection = [
     SelectionColumn({
       rowSelection,
@@ -61,6 +60,13 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
   };
 
   useEffect(() => resetVirtualGrid, [tableWidth]);
+  useEffect(() => {
+    if (!ref.current) return;
+    const current: ResizeObserver = ref.current;
+    const parentWidth =
+      (current?.currentElement as HTMLElement)?.offsetWidth ?? 0;
+    setTableWidth(parentWidth);
+  }, [!ref]);
 
   const renderVirtualList = (
     rawData: readonly object[],
