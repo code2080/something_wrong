@@ -65,7 +65,7 @@ const JointTeachingPage = () => {
             style={{ color: 'black' }}
             loading={!!generating}
           >
-            Generate joint teaching matching
+            Generate joint teaching matches
           </Button>
         )}
       </div>
