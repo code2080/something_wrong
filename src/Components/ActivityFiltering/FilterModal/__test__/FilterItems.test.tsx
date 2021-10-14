@@ -27,7 +27,11 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
     expect(screen.getByText('Select date interval')).toBeInTheDocument();
   });
@@ -41,7 +45,11 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
     expect(screen.getByText('Select time interval')).toBeInTheDocument();
   });
@@ -55,7 +63,11 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
     await waitFor(() => {
       screen.getAllByText('60924c137c04ee0025094bd0');
@@ -77,7 +89,11 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
     await waitFor(() => {
       screen.getAllByText('equipment_C-KV Hyrbil');
@@ -99,7 +115,11 @@ describe('Filter Items column tests', () => {
           getOptionLabel={getOptionLabel}
         />
       </Form>,
-      { initialState: { auth: { env: 'beta' } } },
+      {
+        initialState: {
+          auth: { env: 'beta', user: { permissions: ['tePref:pic:aebeta'] } },
+        },
+      },
     );
     await waitFor(() => {
       screen.getAllByText('Quae earum soluta au');
