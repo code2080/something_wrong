@@ -13,7 +13,7 @@ const OperatorRenderer = (value: string) => {
     case '=':
       return 'Equals to';
     default:
-      return null;
+      return value;
   }
 };
 
