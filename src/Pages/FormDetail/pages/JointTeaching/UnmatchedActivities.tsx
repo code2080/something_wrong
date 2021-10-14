@@ -88,19 +88,19 @@ const UnmatchedActivities = ({ formId }: Props) => {
     return _.isEmpty(sortedActivities) ? activities : sortedActivities;
   }, [activities, keyedActivities, sortOrder]);
 
-  const selectAll = () => {
-    setSelectedRowKeys(tableDataSource.map((a) => a._id));
+  const handleSelectAll = () => {
+    setSelectedRowKeys(tableDataSource.map(({ _id }) => _id));
   };
 
-  const deselectAll = () => {
+  const handleDeselectAll = () => {
     setSelectedRowKeys([]);
   };
 
   return (
     <div>
       <JointTeachingToolbar
-        onSelectAll={selectAll}
-        onDeselectAll={deselectAll}
+        onSelectAll={handleSelectAll}
+        onDeselectAll={handleDeselectAll}
         onCreateJointTeachingMatch={createJointTeachingMatch}
         onAddJointTeachingMatch={addJointTeachingMatch}
         selectedRowKeys={selectedRowKeys}
