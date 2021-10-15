@@ -9,6 +9,7 @@ import { setFilterValues } from 'Redux/Filters/filters.actions';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import JointTeachingGroup from 'Models/JointTeachingGroup.model';
+import _ from 'lodash';
 
 // SELECTORS
 interface Props {
@@ -59,7 +60,7 @@ const JointTeachingGroupsTableToolbar = ({
       </Button>
       <Button
         onClick={onDeselectAll}
-        disabled={!selectedRowIds.length}
+        disabled={_.isEmpty(selectedRowIds)}
         type='link'
         size='small'
       >
@@ -67,7 +68,7 @@ const JointTeachingGroupsTableToolbar = ({
       </Button>
       <Button
         onClick={() => onMerge(canBeMergedGroups.map(({ _id }) => _id))}
-        disabled={!canBeMergedGroups.length}
+        disabled={_.isEmpty(canBeMergedGroups)}
         type='link'
         size='small'
       >
@@ -75,7 +76,7 @@ const JointTeachingGroupsTableToolbar = ({
       </Button>
       <Button
         onClick={() => onRevert(canBeRevertedGroups.map(({ _id }) => _id))}
-        disabled={!canBeRevertedGroups.length}
+        disabled={_.isEmpty(canBeRevertedGroups)}
         type='link'
         size='small'
       >
