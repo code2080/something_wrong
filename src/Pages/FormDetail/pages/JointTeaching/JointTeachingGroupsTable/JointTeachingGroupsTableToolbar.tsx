@@ -1,4 +1,4 @@
-import React, { Key } from 'react';
+import React, { Key, useMemo } from 'react';
 
 import { Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -8,13 +8,13 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import JointTeachingGroup from 'Models/JointTeachingGroup.model';
 import _ from 'lodash';
 
 // SELECTORS
 interface Props {
   formId: string;
-  selectedRows: Key[];
-  groups: any;
+  selectedRows: JointTeachingGroup[];
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onMerge: (ids: Key[]) => void;
@@ -23,23 +23,20 @@ interface Props {
 const JointTeachingGroupsTableToolbar = ({
   selectedRows,
   formId,
-  groups,
   onSelectAll,
   onDeselectAll,
   onMerge,
   onRevert,
 }: Props) => {
-  const disableMergeSelectedBtn = _.isEmpty(
-    groups.filter(
-      (group) =>
-        selectedRows.includes(group._id) && group.status === 'NOT_MERGED',
-    ),
+  const selectedRowIds = useMemo(
+    () => selectedRows.map(({ _id }) => _id),
+    [selectedRows],
   );
-
-  const disableRevertSelectedBtn = _.isEmpty(
-    groups.filter(
-      (group) => selectedRows.includes(group._id) && group.status === 'MERGED',
-    ),
+  const canBeMergedGroups = selectedRows.filter(
+    (group) => group.status === 'NOT_MERGED' && group.conflictsResolved,
+  );
+  const canBeRevertedGroups = selectedRows.filter(
+    (group) => group.status !== 'NOT_MERGED',
   );
 
   const selectedFilterValues = useSelector(
@@ -56,30 +53,30 @@ const JointTeachingGroupsTableToolbar = ({
     <div className='activities-toolbar--wrapper' style={{ padding: '8px' }}>
       <span>
         Selected:&nbsp;
-        {selectedRows.length}
+        {selectedRowIds.length}
       </span>
       <Button onClick={onSelectAll} type='link' size='small'>
         Select all
       </Button>
       <Button
         onClick={onDeselectAll}
-        disabled={!selectedRows.length}
+        disabled={_.isEmpty(selectedRowIds)}
         type='link'
         size='small'
       >
         Deselect all
       </Button>
       <Button
-        onClick={() => onMerge(selectedRows)}
-        disabled={!selectedRows.length || disableMergeSelectedBtn}
+        onClick={() => onMerge(canBeMergedGroups.map(({ _id }) => _id))}
+        disabled={_.isEmpty(canBeMergedGroups)}
         type='link'
         size='small'
       >
         Merge selected
       </Button>
       <Button
-        onClick={() => onRevert(selectedRows)}
-        disabled={!selectedRows.length || disableRevertSelectedBtn}
+        onClick={() => onRevert(canBeRevertedGroups.map(({ _id }) => _id))}
+        disabled={_.isEmpty(canBeRevertedGroups)}
         type='link'
         size='small'
       >
