@@ -20,25 +20,25 @@ const reducer = (
     case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
       const { activities: activityObjs } = action.payload;
-      const activities = activityObjs.map((el) => new Activity(el));
+      const activities = activityObjs.map(
+        (activity) => new Activity(activity),
+      ) as TActivity[];
 
-      const updState = activities.reduce((s, a) => {
-        const activityIdx = state[a.formId][a.formInstanceId].findIndex(
-          (el) => el._id === a._id,
-        );
+      return activities.reduce((updatedState, activity) => {
         return {
-          ...s,
-          [a.formId]: {
-            ...s[a.formId],
-            [a.formInstanceId]: [
-              ...s[a.formId][a.formInstanceId].slice(0, activityIdx),
-              a,
-              ...state[a.formId][a.formInstanceId].slice(activityIdx + 1),
+          ...updatedState,
+          [activity.formId]: {
+            ...(updatedState[activity.formId] || {}),
+            [activity.formInstanceId]: [
+              ...(
+                updatedState[activity.formId]?.[activity.formInstanceId] || []
+              ).map((oldActivity) =>
+                oldActivity._id === activity._id ? activity : oldActivity,
+              ),
             ],
           },
         };
       }, state);
-      return updState;
     }
 
     case types.REORDER_ACTIVITIES_REQUEST: {
