@@ -40,7 +40,7 @@ const HoverAndClickPopOver = ({
         background: 'none',
         color: '#40a9ff',
         height: '24px',
-        marginLeft: '0.4rem',
+        margin: '0 0.4rem',
       })
     : (style = origStyle);
   return (
