@@ -299,7 +299,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
             : compact([
                 typeof onRemove === 'function' && {
                   title: 'Actions',
-                  width: '140px',
+                  width: 100,
                   align: 'center',
                   render: (activity: TActivity) => {
                     if (Number(activity.sequenceIdx) < 0) {
