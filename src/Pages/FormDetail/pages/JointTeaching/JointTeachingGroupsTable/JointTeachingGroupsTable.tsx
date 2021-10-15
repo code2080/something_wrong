@@ -126,31 +126,16 @@ const JointTeachingGroupsTable = (props: Props) => {
   };
 
   const onMerge = async (groupIds: Key[]) => {
-    // Filter to make sure we only merge the ones that are not yet merged
-    const filteredGroupIds = groups
-      .filter(
-        (group) =>
-          groupIds.includes(group._id) && group.status === 'NOT_MERGED',
-      )
-      .map(({ _id }) => _id);
-
     execThenRefetch(
-      filteredGroupIds.map((groupId) =>
+      groupIds.map((groupId) =>
         dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
       ),
     );
   };
 
   const onRevert = async (groupIds: Key[]) => {
-    // Filter to make sure we only revert the ones that are not yet merged
-    const filteredGroupIds = groups
-      .filter(
-        (group) => groupIds.includes(group._id) && group.status === 'MERGED',
-      )
-      .map(({ _id }) => _id);
-
     execThenRefetch(
-      filteredGroupIds.map((groupId) =>
+      groupIds.map((groupId) =>
         dispatch(
           revertJointTeachingGroup({ formId, jointTeachingId: groupId }),
         ),
@@ -354,10 +339,9 @@ const JointTeachingGroupsTable = (props: Props) => {
           formId={formId}
           onSelectAll={onSelectAll}
           onDeselectAll={onDeselectAll}
-          onMerge={() => onMerge(selectedRows)}
-          onRevert={() => onRevert(selectedRows)}
-          selectedRows={selectedRows}
-          groups={groups}
+          onMerge={(groupIds) => onMerge(groupIds)}
+          onRevert={(groupIds) => onRevert(groupIds)}
+          selectedRows={groups.filter(({ _id }) => selectedRows.includes(_id))}
         />
       )}
       <DynamicTable
