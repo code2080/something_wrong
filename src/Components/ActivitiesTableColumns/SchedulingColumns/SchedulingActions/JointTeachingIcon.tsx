@@ -114,7 +114,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
             icon={<ShrinkOutlined />}
             style={{
               border: 'none',
-              color: 'green',
+              color: 'darkseagreen',
               background: 'none',
               margin: '0 0.4rem',
             }}
