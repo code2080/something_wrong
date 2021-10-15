@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { keyBy } from 'lodash';
 
-import { Modal, ModalProps, Button, Popover } from 'antd';
+import { Modal, ModalProps, Button } from 'antd';
 import { TActivity } from 'Types/Activity.type';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -125,16 +125,21 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     });
   };
   const onCreateAndMerge = async () => {
-    const res = await dispatch(
-      createThenMergeJointTeachingGroup({
-        formId,
-        activityIds: activities.map(({ _id }) => _id),
-        conflicts: selectedValues,
-      }),
-    );
-    if (!(res instanceof Error)) {
-      onCancel(true);
-    }
+    jointTeachingCalculating.addActivitiesToJointTeachingMatchRequest({
+      canBePaired,
+      onSubmit: async () => {
+        const res = await dispatch(
+          createThenMergeJointTeachingGroup({
+            formId,
+            activityIds: activities.map(({ _id }) => _id),
+            conflicts: selectedValues,
+          }),
+        );
+        if (!(res instanceof Error)) {
+          onCancel(true);
+        }
+      },
+    });
   };
 
   return (
@@ -156,19 +161,14 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
               Create
             </Button>
             &nbsp;&nbsp;
-            <Popover
-              trigger={canBePaired ? [] : ['hover']}
-              content="The joint teaching object or the timing doesn't match for those activities"
+            <Button
+              onClick={onCreateAndMerge}
+              type='primary'
+              disabled={!canBeMerge}
+              loading={!!merging}
             >
-              <Button
-                onClick={onCreateAndMerge}
-                type='primary'
-                disabled={!canBePaired || !canBeMerge}
-                loading={!!merging}
-              >
-                Create and merge
-              </Button>
-            </Popover>
+              Create and merge
+            </Button>
             &nbsp;&nbsp;
             <Button type='default' onClick={() => onCancel()}>
               Cancel
