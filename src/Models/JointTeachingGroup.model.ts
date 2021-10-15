@@ -80,9 +80,11 @@ export default class JointTeachingGroup {
    * @description To make sure new model can use all the getters
    * @returns new JointTeachingGroup
    */
-  private reload(data: {
-    [key in keyof JointTeachingGroup]: JointTeachingGroup[keyof JointTeachingGroup];
-  }): JointTeachingGroup {
+  private reload(
+    data: {
+      [key in keyof JointTeachingGroup]: JointTeachingGroup[keyof JointTeachingGroup];
+    },
+  ): JointTeachingGroup {
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
