@@ -54,7 +54,7 @@ const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Form type:</span>
-        <span className='value'>{formType.toLowerCase()}</span>
+        <span className='value'>{formType?.toLowerCase() ?? 'N/A'}</span>
       </div>
       <div className='toolbar--section-flex'>
         <span className='label'>Acceptance status:</span>
