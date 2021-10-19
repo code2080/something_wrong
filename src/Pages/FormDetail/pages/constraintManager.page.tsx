@@ -100,6 +100,7 @@ const ConstraintManagerPage = () => {
 
     tecoreAPI.getFieldIds({
       typeExtIds,
+      integerFieldsOnly: true,
       callback: (result) => {
         setFields(result);
       },

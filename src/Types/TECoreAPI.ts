@@ -18,9 +18,11 @@ export type TECoreAPI = {
 
   getFieldIds({
     typeExtIds,
+    integerFieldsOnly,
     callback,
   }: {
     typeExtIds: string[];
+    integerFieldsOnly?: boolean;
     callback: (results: getFieldIdsReturn) => void;
   }): void;
   requestManuallyScheduleActivity({
