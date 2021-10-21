@@ -27,18 +27,6 @@ import { selectExtIds } from 'Redux/TE/te.selectors';
 import { TActivity } from 'Types/Activity.type';
 import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
-import * as tableTypes from 'Constants/tables.constants';
-
-// CONSTANTS
-const schemaQueriesMapping: { [key: string]: IndexedObject } = {
-  [tableTypes.UNMATCHED_ACTIVITIES_TABLE]: {
-    matchedJointTeachingId: null,
-    // TODO: Workaround solution. Need to ask BE for some api changes.
-    'jointTeaching.object': {
-      $exists: true,
-    },
-  },
-};
 
 interface Props {
   formId: string;
@@ -70,13 +58,7 @@ export const useActivitiesWatcher = ({
 
   // Fetch activities list there is any change in filters or sorters
   const doFetchingActivities = () => {
-    dispatch(
-      fetchActivitiesForForm(
-        formId,
-        { filters, sorters, schemaQueries: schemaQueriesMapping[origin] },
-        origin,
-      ),
-    );
+    dispatch(fetchActivitiesForForm(formId, { filters, sorters }, origin));
   };
 
   // Fetch activities when filters or sorters are changed.

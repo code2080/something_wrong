@@ -1,5 +1,7 @@
 import { Form, DatePicker, TimePicker } from 'antd';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { ItemsMapping } from './FilterModal.type';
+import FilterOptions from './FilterOptionsSelectbox';
 
 export const REPLACED_KEY = '____';
 export const NESTED_FIELDS = ['objects', 'fields'];
@@ -40,39 +42,19 @@ export const FILTER_ITEMS_MAPPING = (
         },
       }
     : {}),
-  // startTime: {
-  //   name: 'startTime',
-  //   title: 'Start time',
-  //   label: 'Start time',
-  //   render: () => (
-  //     <Form.Item label="Select start time" name="startTime">
-  //       <TETimePicker format="HH:mm" />
-  //     </Form.Item>
-  //   ),
-  // },
-  // endTime: {
-  //   name: 'endTime',
-  //   title: 'End time',
-  //   label: 'End time',
-  //   render: () => (
-  //     <Form.Item label="Select end time" name="endTime">
-  //       <TETimePicker format="HH:mm" />
-  //     </Form.Item>
-  //   ),
-  // },
-  // submitter: generateSelectComponent({
-  //   title: 'Submitter',
-  //   name: 'submitter',
-  //   label: 'Select submitters',
-  // }),
-  // tag: generateSelectComponent({
-  //   title: 'Tag',
-  //   name: 'tag',
-  //   label: 'Select tags',
-  // }),
-  // primaryObject: generateSelectComponent({
-  //   title: 'Primary object',
-  //   name: 'primaryObject',
-  //   label: 'Priamry object',
-  // })
+  status: {
+    name: 'status',
+    title: 'Status',
+    label: 'Status',
+    render: () => (
+      <FilterOptions
+        options={Object.keys(EActivityStatus).map((key) => ({
+          label: key,
+          value: key,
+        }))}
+        label='Status'
+        name='status'
+      />
+    ),
+  },
 });

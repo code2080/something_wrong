@@ -12,6 +12,7 @@ import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
+import { getActivityFilterSchemaQuery } from '../../Utils/activities.helpers';
 
 const fetchActivitiesForFormFlow = (formId, tableType) => ({
   request: () => ({
@@ -34,7 +35,7 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
 
 export const fetchActivitiesForForm = (
   formId,
-  { filters, sorters, schemaQueries },
+  { filters, sorters },
   tableType = ACTIVITIES_TABLE,
 ) => {
   const defaultSettings = {
@@ -44,7 +45,7 @@ export const fetchActivitiesForForm = (
   };
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
-  const { settings, ...others } = _filters || {};
+  const { settings, status, ...others } = _filters || {};
   return asyncAction.POST({
     flow: fetchActivitiesForFormFlow(formId, tableType),
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
@@ -54,7 +55,7 @@ export const fetchActivitiesForForm = (
         : new ActivityFilterPayload(others),
       settings: settings ?? defaultSettings,
       sorting: sorting == null ? undefined : sorting,
-      schemaQueries,
+      schemaQueries: getActivityFilterSchemaQuery({ status }, tableType),
     },
   });
 };
