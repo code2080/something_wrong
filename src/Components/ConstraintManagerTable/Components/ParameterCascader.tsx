@@ -3,7 +3,7 @@ import { CascaderValueType } from 'antd/lib/cascader';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OperatorRenderer from './Parameters/OperatorRenderer';
 
 const { Option } = Select;
@@ -28,6 +28,15 @@ type Props = {
   ) => void;
 };
 
+const transformParameters = (
+  oldParameters: ParameterType | undefined,
+  key: string,
+): CascaderValueType | undefined => {
+  return Array.isArray(oldParameters)
+    ? oldParameters.flatMap((param) => param?.[key])
+    : oldParameters?.[key];
+};
+
 const ParameterCascader = ({
   constraintId,
   paramFields,
@@ -45,20 +54,18 @@ const ParameterCascader = ({
     })),
   );
 
-  const firstParam = Array.isArray(oldParameters)
-    ? oldParameters.flatMap((param) => param?.firstParam)
-    : oldParameters?.firstParam;
-  const lastParam = Array.isArray(oldParameters)
-    ? oldParameters.flatMap((param) => param?.lastParam)
-    : oldParameters?.lastParam;
-
   const [parameters, setParameters] = useState<{
     firstParam?: CascaderValueType;
     lastParam?: CascaderValueType;
-  }>({
-    firstParam: firstParam,
-    lastParam: lastParam,
-  });
+  }>({});
+
+  useEffect(() => {
+    setParameters({
+      firstParam: transformParameters(oldParameters, 'firstParam'),
+      lastParam: transformParameters(oldParameters, 'lastParam'),
+    });
+  }, [oldParameters]);
+
   const fieldOptions = activityDesignObj
     ? [
         ...Object.keys(activityDesignObj).map((objField) => ({
@@ -91,11 +98,12 @@ const ParameterCascader = ({
           children: fieldOptions,
         },
       ];
+
   return (
     <div>
       <Cascader
         notFoundContent={MissingOptionsMessage}
-        defaultValue={parameters?.firstParam}
+        value={parameters?.firstParam}
         options={options.filter(({ value }) => value === 'Form')}
         size='small'
         getPopupContainer={() =>
@@ -113,7 +121,7 @@ const ParameterCascader = ({
         }}
       />{' '}
       <Select
-        defaultValue={operator}
+        value={OperatorRenderer(operator)}
         size='small'
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
@@ -130,7 +138,7 @@ const ParameterCascader = ({
       </Select>{' '}
       <Cascader
         notFoundContent={MissingOptionsMessage}
-        defaultValue={parameters?.lastParam}
+        value={parameters?.lastParam}
         options={options.filter(({ value }) => value === 'Objects')}
         size='small'
         getPopupContainer={() =>

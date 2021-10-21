@@ -33,6 +33,7 @@ const renderConstraintParameters = (
     'parameters',
     allConstraints,
   );
+
   return !isEmpty(parameters) ? (
     <ParameterCascader
       constraintId={constraintId}
