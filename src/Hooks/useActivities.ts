@@ -93,12 +93,7 @@ export const useActivitiesWatcher = ({
     if (trigger) {
       doFetchingActivities();
     }
-  }, [trigger]);
-
-  useEffect(() => {
-    if (trigger) {
-      doFetchingActivities();
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
   const submissionPayload = useMemo(() => {
