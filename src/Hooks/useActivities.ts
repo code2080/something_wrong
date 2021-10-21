@@ -69,7 +69,6 @@ export const useActivitiesWatcher = ({
   const prevSorters = usePrevious(sorters);
 
   // Fetch activities list there is any change in filters or sorters
-
   const doFetchingActivities = () => {
     dispatch(
       fetchActivitiesForForm(
@@ -79,12 +78,6 @@ export const useActivitiesWatcher = ({
       ),
     );
   };
-
-  // Fetch activities at first load
-  useEffect(() => {
-    dispatch(fetchActivitiesForForm(formId, filters, sorters, origin));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Fetch activities when filters or sorters are changed.
   useEffect(() => {
