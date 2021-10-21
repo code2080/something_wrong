@@ -134,7 +134,9 @@ const FormPage = () => {
         )}
         {isBeta && hasAssistedSchedulingPermission && (
           <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
-            <JointTeachingPage />
+            {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+              <JointTeachingPage />
+            )}
           </Tabs.TabPane>
         )}
         <Tabs.TabPane
