@@ -121,7 +121,7 @@ const ParameterCascader = ({
         }}
       />{' '}
       <Select
-        value={operator}
+        value={OperatorRenderer(operator)}
         size='small'
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
