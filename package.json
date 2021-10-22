@@ -16,7 +16,7 @@
     "test": "cross-env CI=1 TZ=Europe/Stockholm react-scripts test --env=jsdom --passWithNoTests --colors",
     "test:silent": "yarn test --silent",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "echo skipping build",
+    "build": "rm -rf dist && rollup -c",
     "start": "rollup -c -w --environment BUILD:development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:diff": "f(){ eslint $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"([^/])(src).*(.[jt]sx?)$)\");};f",
