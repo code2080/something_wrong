@@ -23,7 +23,7 @@ export class ActivityFilterPayload {
   timing?: TATimingQuery;
 
   constructor(data) {
-    const { date, time, settings, ...rest } = data;
+    const { date, time, settings, filterLookUp, ...rest } = data;
     const [startDate, endDate] = date || [];
     const [startTime, endTime] = time || [];
     this.timing = {
