@@ -17,6 +17,8 @@ import { Form } from 'antd';
 import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
 import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // HELPERS
 import {
@@ -46,6 +48,7 @@ export interface ValueProps {
   onSubmit: (cb?: (values) => void) => void;
   filterLookupMap: any;
   getOptionLabel: (field: string, id?: string) => string;
+  tableType?: string;
 }
 
 const emptyValue: ValueProps = {
@@ -61,6 +64,7 @@ const emptyValue: ValueProps = {
   onSubmit: () => false,
   filterLookupMap: {},
   getOptionLabel: () => '',
+  tableType: ACTIVITIES_TABLE,
 };
 
 const Context = createContext(emptyValue);
@@ -71,6 +75,7 @@ interface Props {
   form: FormInstance;
   formId: string;
   defaultMapping: TActivityFilterQuery;
+  tableType?: string;
 }
 
 const Provider = ({
@@ -79,6 +84,7 @@ const Provider = ({
   defaultMapping,
   form,
   formId,
+  tableType,
 }: Props) => {
   const [selectedProperty, setSelectedProperty] = useState<string>('date');
   const [values, setValues] = useState({});
@@ -190,6 +196,7 @@ const Provider = ({
           },
         }),
         getOptionLabel,
+        tableType,
       }}
     >
       <Form

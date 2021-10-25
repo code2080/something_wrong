@@ -1,6 +1,9 @@
 import { Row, Col, Form, Radio } from 'antd';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { selectIsBetaOrDev } from '../../../Redux/Auth/auth.selectors';
+import FilterModalContainer from './FilterModalContainer';
 
 const CRITERIAS = [
   {
@@ -38,6 +41,7 @@ const JOINT_TEACHING_OPTIONS = [
 ];
 const FilterSettings = () => {
   const isBeta = useSelector(selectIsBetaOrDev);
+  const { tableType } = useContext(FilterModalContainer.Context);
 
   return (
     <div>
@@ -72,7 +76,7 @@ const FilterSettings = () => {
                 </Radio.Group>
               </Form.Item>
             </Col>
-            {isBeta && (
+            {isBeta && tableType === ACTIVITIES_TABLE && (
               <Col span={12}>
                 <Form.Item
                   label='Joint teaching activities'

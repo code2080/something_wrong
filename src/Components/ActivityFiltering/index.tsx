@@ -43,6 +43,7 @@ const ActivityFiltering = ({
         onClose={() => setShowModal(false)}
         selectedFilterValues={selectedFilterValues}
         onSubmit={onSubmit}
+        tableType={tableType}
       />
     </div>
   );
