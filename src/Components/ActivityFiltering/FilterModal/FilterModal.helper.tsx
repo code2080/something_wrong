@@ -1,6 +1,6 @@
 import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 
-import _, { set } from 'lodash';
+import _, { capitalize, set } from 'lodash';
 
 import { SelectOption } from './FilterModal.type';
 import FilterOptions from './FilterOptionsSelectbox';
@@ -149,3 +149,6 @@ export const flattenObject = (object, parentKey, level) => {
     };
   }, {});
 };
+
+export const toActivityStatusDisplay = (status: string) =>
+  capitalize(status).replace(/_/g, ' ');

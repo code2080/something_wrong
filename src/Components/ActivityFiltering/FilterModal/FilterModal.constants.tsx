@@ -1,5 +1,6 @@
 import { Form, DatePicker, TimePicker } from 'antd';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { toActivityStatusDisplay } from './FilterModal.helper';
 import { ItemsMapping } from './FilterModal.type';
 import FilterOptions from './FilterOptionsSelectbox';
 
@@ -49,7 +50,7 @@ export const FILTER_ITEMS_MAPPING = (
     render: () => (
       <FilterOptions
         options={Object.keys(EActivityStatus).map((key) => ({
-          label: key,
+          label: toActivityStatusDisplay(key),
           value: key,
         }))}
         label='Status'
