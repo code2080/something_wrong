@@ -17,7 +17,6 @@ import { Form } from 'antd';
 import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
 import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
 import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // HELPERS
