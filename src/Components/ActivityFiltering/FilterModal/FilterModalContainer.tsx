@@ -24,6 +24,7 @@ import {
   validateFilterQuery,
   beautifyObject,
   reparseKey,
+  toActivityStatusDisplay,
 } from './FilterModal.helper';
 
 // SELETORS
@@ -34,6 +35,7 @@ import {
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from 'Redux/ActivityTag/activityTag.selectors';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -110,6 +112,13 @@ const Provider = ({
         {},
       ),
       tag: activityTags,
+      status: Object.keys(EActivityStatus).reduce(
+        (results, key) => ({
+          ...results,
+          [key]: toActivityStatusDisplay(key),
+        }),
+        {},
+      ),
       ...objectLabelsMapping,
       ...fieldsLabelMapping,
       ...allLabels,

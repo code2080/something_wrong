@@ -1,4 +1,4 @@
-import _, { keyBy } from 'lodash';
+import _, { isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -23,6 +23,8 @@ import {
   JointTeachingConflictMapping,
   SUPPORTED_VALUE_TYPES,
 } from 'Models/JointTeachingGroup.model';
+import { isEmptyDeep } from './general.helpers';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 // CONSTANTS
 // FUNCTIONS
 /**
@@ -663,4 +665,26 @@ export const calculateActivityConflicts = (
     }),
     {},
   ) as { [key in ConflictType]: ActivityValueType };
+};
+
+const schemaQueriesMapping = {
+  [UNMATCHED_ACTIVITIES_TABLE]: {
+    matchedJointTeachingId: null,
+    // TODO: Workaround solution. Need to ask BE for some api changes.
+    'jointTeaching.object': {
+      $exists: true,
+    },
+  },
+};
+
+export const getActivityFilterSchemaQuery = ({ status }, tableType) => {
+  const queryFromMap = schemaQueriesMapping[tableType] || {};
+  const schemaQuery = {
+    ...queryFromMap,
+    activityStatus: !isEmpty(status) && {
+      $in: status,
+    },
+  };
+  if (isEmptyDeep(schemaQuery)) return undefined;
+  return schemaQuery;
 };

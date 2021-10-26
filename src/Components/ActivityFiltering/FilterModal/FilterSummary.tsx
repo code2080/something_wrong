@@ -77,7 +77,7 @@ const FilterSummary = ({
   }, [onClear, values.time]);
 
   const otherFieldsDisplays = useMemo(() => {
-    const fields = ['submitter', 'tag', 'primaryObject'];
+    const fields = ['submitter', 'tag', 'primaryObject', 'status'];
     return fields
       .filter((key) => !isEmpty(values[key]))
       .map((key) => {
