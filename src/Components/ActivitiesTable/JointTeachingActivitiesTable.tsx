@@ -269,7 +269,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
             },
             {
               title: 'Primary object',
-              key: 'scopedObject',
+              key: 'primaryObject',
               width: 250,
               render: (act: TActivityResult) => {
                 return (
