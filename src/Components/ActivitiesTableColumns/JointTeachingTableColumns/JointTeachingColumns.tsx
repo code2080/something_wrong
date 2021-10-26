@@ -6,7 +6,7 @@ import SortableTableCell from '../../DynamicTable/SortableTableCell';
 export const JointTeachingColumn = () => [
   {
     title: 'Joint teaching object',
-    key: 'activityScheduling',
+    key: 'jointTeachingObject',
     dataIndex: undefined,
     width: 240,
     render: (activity: TActivity) => (
@@ -24,7 +24,7 @@ export const JointTeachingColumn = () => [
   },
   {
     title: 'Primary object',
-    key: 'scopedObject',
+    key: 'primaryObject',
     width: 250,
     render: (act: TActivity) => {
       return (
