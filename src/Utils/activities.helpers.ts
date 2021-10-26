@@ -681,9 +681,11 @@ export const getActivityFilterSchemaQuery = ({ status }, tableType) => {
   const queryFromMap = schemaQueriesMapping[tableType] || {};
   const schemaQuery = {
     ...queryFromMap,
-    activityStatus: !isEmpty(status) && {
-      $in: status,
-    },
+    activityStatus: isEmpty(status)
+      ? undefined
+      : {
+          $in: status,
+        },
   };
   if (isEmptyDeep(schemaQuery)) return undefined;
   return schemaQuery;
