@@ -19,6 +19,7 @@ import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import type { TFilterLookUpMap } from 'Types/FilterLookUp.type';
 import type { GetExtIdPropsPayload } from 'Types/TECorePayloads.type';
 import { FETCH_ACTIVITY_FILTER_LOOKUP_MAP } from 'Redux/FilterLookupMap/filterLookupMap.actionTypes';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // COMPONENTS
 import FilterSettings from './FilterSettings';
@@ -38,6 +39,7 @@ type Props = {
   onClose?(): void;
   selectedFilterValues: any;
   onSubmit: (values) => void;
+  tableType?: string;
 };
 
 const getLabelsFromProp = {
@@ -80,6 +82,7 @@ const FilterModal = ({
   formId,
   selectedFilterValues,
   onSubmit,
+  tableType = ACTIVITIES_TABLE,
 }: Props) => {
   const dispatch = useDispatch();
   const [form] = useForm();
@@ -119,6 +122,7 @@ const FilterModal = ({
       form={form}
       formId={formId}
       defaultMapping={isVisible ? selectedFilterValues : {}}
+      tableType={tableType}
     >
       {({ onSubmit }) => {
         return (

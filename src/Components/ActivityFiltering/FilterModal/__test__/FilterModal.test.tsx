@@ -1,9 +1,14 @@
 import moment from 'moment';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, cleanup } from '@testing-library/react';
 import FilterModal from '../FilterModal';
 import { storeForTestingFilter } from '../../../../Mock/Store';
 
 import { renderWithState } from '../../../../Utils/test.utils';
+import {
+  ACTIVITIES_TABLE,
+  MATCHED_ACTIVITIES_TABLE,
+  UNMATCHED_ACTIVITIES_TABLE,
+} from 'Constants/tables.constants';
 
 describe('Filter Modal tests', () => {
   beforeEach(() => {
@@ -19,6 +24,8 @@ describe('Filter Modal tests', () => {
       },
     );
   });
+
+  afterEach(cleanup);
 
   it('Render without crashes', () => {
     expect(screen.getByText('Filter activities')).toBeInTheDocument();
@@ -115,5 +122,62 @@ describe('Filter Modal tests', () => {
 
     expect(screen.getByText('Time interval:')).toBeInTheDocument();
     expect(screen.getByText('09:30 ~ 10:30')).toBeInTheDocument();
+  });
+
+  it('Hide Joint teaching settings if tableType is MATCHED_ACTIVITIES_TABLE', () => {
+    cleanup();
+    renderWithState(
+      <FilterModal
+        formId='60acfd026b58240023ae588b'
+        isVisible
+        selectedFilterValues={{}}
+        onSubmit={() => {}}
+        tableType={MATCHED_ACTIVITIES_TABLE}
+      />,
+      {
+        initialState: storeForTestingFilter,
+      },
+    );
+    expect(
+      screen.queryByText('Only joint teaching activities'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('Hide Joint teaching settings if tableType is UNMATCHED_ACTIVITIES_TABLE', () => {
+    cleanup();
+    renderWithState(
+      <FilterModal
+        formId='60acfd026b58240023ae588b'
+        isVisible
+        selectedFilterValues={{}}
+        onSubmit={() => {}}
+        tableType={UNMATCHED_ACTIVITIES_TABLE}
+      />,
+      {
+        initialState: storeForTestingFilter,
+      },
+    );
+    expect(
+      screen.queryByText('Only joint teaching activities'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('Show Joint teaching settings if tableType is ACTIVITIES_TABLE', () => {
+    cleanup();
+    renderWithState(
+      <FilterModal
+        formId='60acfd026b58240023ae588b'
+        isVisible
+        selectedFilterValues={{}}
+        onSubmit={() => {}}
+        tableType={ACTIVITIES_TABLE}
+      />,
+      {
+        initialState: storeForTestingFilter,
+      },
+    );
+    expect(
+      screen.getByText('Only joint teaching activities'),
+    ).toBeInTheDocument();
   });
 });

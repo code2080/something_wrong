@@ -68,7 +68,9 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   ) => {
     const updatedActivities = selectedActivitiesInRow.map((activity) => ({
       ...activity,
-      jointTeaching: { ...activity.jointTeaching, object: jointTeachingObject },
+      jointTeaching: jointTeachingObject
+        ? { object: jointTeachingObject }
+        : null,
     }));
     dispatch(updateActivities(formId, formInstanceId, updatedActivities));
   };
