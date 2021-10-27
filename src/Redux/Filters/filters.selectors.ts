@@ -73,6 +73,6 @@ export const selectFilterIsActivated = (formId: string, tableType?: string) =>
 export const selectSelectedFilterValues = ({ formId, origin = '' }) =>
   createSelector(filterstate, (filters) =>
     filters[`${formId}${origin}`] ?? origin === ACTIVITIES_TABLE
-      ? INITIAL_FILTER_VALUES
-      : omit(INITIAL_FILTER_VALUES, 'status'),
+      ? (INITIAL_FILTER_VALUES as any)
+      : (omit(INITIAL_FILTER_VALUES, 'status') as any),
   );
