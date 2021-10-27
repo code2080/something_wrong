@@ -71,8 +71,12 @@ export const selectFilterIsActivated = (formId: string, tableType?: string) =>
   });
 
 export const selectSelectedFilterValues = ({ formId, origin = '' }) =>
-  createSelector(filterstate, (filters) =>
-    filters[`${formId}${origin}`] ?? origin === ACTIVITIES_TABLE
-      ? (INITIAL_FILTER_VALUES as any)
-      : (omit(INITIAL_FILTER_VALUES, 'status') as any),
-  );
+  createSelector(filterstate, (filters) => {
+    const selectedFilterValues = filters[`${formId}${origin}`];
+    return (
+      selectedFilterValues ??
+      (origin === ACTIVITIES_TABLE
+        ? (INITIAL_FILTER_VALUES as any)
+        : (omit(INITIAL_FILTER_VALUES, 'status') as any))
+    );
+  });
