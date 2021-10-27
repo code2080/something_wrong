@@ -13,3 +13,7 @@ export const determineContentOfValue = (activityValue) => {
   if (Array.isArray(activityValue.value)) return submissionValueTypes.OBJECT;
   return submissionValueTypes.FILTER;
 };
+
+export const compareActivityValue = (sourceAct, destAct) => {
+  console.log(sourceAct, destAct);
+};

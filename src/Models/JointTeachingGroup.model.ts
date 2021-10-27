@@ -18,11 +18,14 @@ export enum ConflictType {
   VALUES = 'values',
 }
 
+export type JointTeachingConflictResolution = Array<
+  string | number | undefined | null
+>;
 export type JointTeachingConflict = {
   _id?: string;
   type: ConflictType;
   extId: string;
-  resolution: string[];
+  resolution: JointTeachingConflictResolution;
 };
 
 export type JointTeachingConflictMapping = {
@@ -106,6 +109,7 @@ export default class JointTeachingGroup {
       },
       {},
     );
+
     return conflictsMapping;
   }
 

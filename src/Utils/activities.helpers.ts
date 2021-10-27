@@ -1,4 +1,4 @@
-import _, { isEmpty, keyBy } from 'lodash';
+import _, { flatMap, isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -6,7 +6,11 @@ import {
   TConstraintInstance,
 } from '../Types/ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
-import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
+import {
+  ActivityValue,
+  CategoryField,
+  ValueType,
+} from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -622,7 +626,9 @@ export const getConflictsResolvingStatus = (
 export const calculateActivityConflictsByType = (
   type: ConflictType,
   activities: TActivity[],
-  _selectedValues: { [type: string]: { [key: string]: string } },
+  _selectedValues: {
+    [type: string]: { [key: string]: Array<ValueType | undefined> };
+  },
 ): { [key: string]: ActivityValueType } => {
   const uniqueValues = getUniqueValues(activities);
   const selectedValues = _selectedValues[type];
@@ -634,25 +640,20 @@ export const calculateActivityConflictsByType = (
     if (_values.length === 1)
       return {
         ...results,
-        [key]: _values[0],
+        [key]: _values[0].value,
       };
-
-    const foundActivity = activities.find(
-      (act) => act._id === selectedValues[key],
-    );
-    if (!foundActivity) return results;
-
-    // If multiple values
     return {
       ...results,
-      [key]: foundActivity[type].find((val) => val.extId === key),
+      [key]: flatMap(selectedValues[key]),
     };
   }, {});
 };
 
 export const calculateActivityConflicts = (
   activities: TActivity[],
-  selectedValues: { [type: string]: { [key: string]: string } },
+  selectedValues: {
+    [type: string]: { [key: string]: Array<ValueType | undefined> };
+  },
 ) => {
   return Object.values(ConflictType).reduce(
     (results, type) => ({

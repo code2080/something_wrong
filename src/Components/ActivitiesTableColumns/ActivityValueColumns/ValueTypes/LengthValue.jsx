@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // HELPERS
 import { minToHourMinDisplay } from '../../../../Utils/moment.helpers';
 
-const LengthValue = ({ value }) => {
+const convertToLengthValue = value => {
   const { days, hours, minutes } = minToHourMinDisplay(value);
 
   const formattedValue = days
@@ -11,10 +11,14 @@ const LengthValue = ({ value }) => {
     : `${hours}:${minutes}`;
 
   return formattedValue;
+}
+const LengthValue = ({ value }) => {
+  const _value = Array.isArray(value) ? value : [value];
+  return _value.map(val => convertToLengthValue(val)).join(', ');
 };
 
 LengthValue.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number]).isRequired,
   extId: PropTypes.string.isRequired,
   activityId: PropTypes.string.isRequired,
 };

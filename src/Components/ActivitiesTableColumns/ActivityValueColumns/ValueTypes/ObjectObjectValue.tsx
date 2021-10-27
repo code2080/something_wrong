@@ -77,7 +77,12 @@ const ObjectObjectValue = ({
     values.map((val) => labels[val]);
 
   const valueDisplay = element
-    ? renderElementValue(values, element)
+    ? values.map((val, valIndex) => (
+        <>
+          <span key={valIndex}>{renderElementValue(val, element)}</span>
+          {valIndex < values.length - 1 && `, `}
+        </>
+      ))
     : replaceWithLabels(values, labels);
 
   const requestComponents = requests

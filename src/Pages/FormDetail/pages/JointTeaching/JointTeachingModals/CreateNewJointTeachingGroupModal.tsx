@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { keyBy } from 'lodash';
+import { flatten, keyBy } from 'lodash';
 
 import { Modal, ModalProps, Button } from 'antd';
 import { TActivity } from 'Types/Activity.type';
-import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
+import JointTeachingActivitiesTable, {
+  SelectedConflictValue,
+} from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS
@@ -21,7 +23,11 @@ import {
   CREATE_JOINT_TEACHING_GROUP,
   CREATE_THEN_MERGE_JOINT_TEACHING_GROUP,
 } from 'Redux/JointTeaching/jointTeaching.actionTypes';
-import { JointTeachingConflict } from 'Models/JointTeachingGroup.model';
+import {
+  ConflictType,
+  JointTeachingConflict,
+  JointTeachingConflictResolution,
+} from 'Models/JointTeachingGroup.model';
 
 // HELPERS
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
@@ -68,29 +74,20 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
 
   const jointTeachingCalculating = useJointTeachingCalculating({ formId });
 
-  const onSelectValue = (type, checked, activityValue) => {
-    if (checked) {
-      setSelectedValues([
-        ...selectedValues,
-        {
-          type,
-          resolution: Array.isArray(activityValue[0]?.value)
-            ? activityValue[0]?.value
-            : [activityValue[0]?.value],
-          extId: activityValue[0]?.extId,
-        },
-      ]);
-    } else {
-      const foundItemIdx = selectedValues.findIndex(
-        (val) => val.extId === activityValue[0]?.extId && type === val.type,
-      );
-      if (foundItemIdx > -1) {
-        setSelectedValues([
-          ...selectedValues.slice(0, foundItemIdx),
-          ...selectedValues.slice(foundItemIdx + 1),
-        ]);
-      }
-    }
+  const onSelectValue = (values: SelectedConflictValue) => {
+    const updatedValues = Object.entries(values).flatMap(
+      ([type, typeValues]) => {
+        return Object.entries(typeValues).map(([extId, value]) => {
+          console.log('value >>>>>', value);
+          return {
+            type: type as ConflictType,
+            resolution: flatten(value) as JointTeachingConflictResolution,
+            extId,
+          };
+        });
+      },
+    );
+    setSelectedValues(updatedValues);
   };
 
   useEffect(() => {
