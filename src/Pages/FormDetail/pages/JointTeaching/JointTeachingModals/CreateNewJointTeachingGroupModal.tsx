@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { keyBy } from 'lodash';
+import 'antd/dist/antd.css';
 
 import { Modal, ModalProps, Button } from 'antd';
 import { TActivity } from 'Types/Activity.type';
 import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
 import { useDispatch, useSelector } from 'react-redux';
+import openNotificationWithIcon from '../../../../../Utils/notifications.helper';
 
 // ACTIONS
 import {
@@ -107,7 +109,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
   }, [visible]);
 
   const doCreate = async () => {
-    await dispatch(
+    const check = await dispatch(
       createJointTeachingGroup({
         formId,
         activityIds: activities.map(({ _id }) => _id),
@@ -117,7 +119,12 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     if (typeof onCancel === 'function') {
       onCancel(true);
     }
+
+    if (check.status === 200 && check.data) {
+      openNotificationWithIcon('success', check.data[0].activities.length);
+    }
   };
+
   const onCreate = () => {
     jointTeachingCalculating.addActivitiesToJointTeachingMatchRequest({
       canBePaired,
