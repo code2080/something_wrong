@@ -5,4 +5,5 @@ branch=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed s/.*[/]//)
 echo Linting and prettying modified files. Diffing with $branch
 yarn lint:diff $branch
 yarn prettier:diff $branch
+yarn ts:lint
 yarn test
