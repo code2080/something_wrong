@@ -561,7 +561,11 @@ export const populateWithFieldConstraint = ({
 };
 
 const getValuesType = (values) => {
-  if (Array.isArray(values)) return _.uniq(values.map((val) => typeof val));
+  if (Array.isArray(values)) {
+    if (values.length > 1) return ['array'];
+    return _.uniq(values.map((val) => typeof val));
+  }
+
   return [typeof values];
 };
 

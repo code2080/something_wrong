@@ -78,7 +78,6 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     const updatedValues = Object.entries(values).flatMap(
       ([type, typeValues]) => {
         return Object.entries(typeValues).map(([extId, value]) => {
-          console.log('value >>>>>', value);
           return {
             type: type as ConflictType,
             resolution: flatten(value) as JointTeachingConflictResolution,

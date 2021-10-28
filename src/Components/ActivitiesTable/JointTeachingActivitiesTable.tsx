@@ -229,9 +229,9 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
           checked={(
             selectedJointTeachingValue[type][activityValue[0].extId] || []
           ).some((selectedVals) => {
-            return activityValue.every((actVal) =>
-              isEqual(flatten([actVal.value]), flatten([selectedVals])),
-            );
+            return activityValue.every((actVal) => {
+              return isEqual(flatten([actVal.value]), flatten([selectedVals]));
+            });
           })}
           onChange={(e) => {
             onSelectedValuesChange(type, e.target.checked, activityValue);

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { compact } from 'lodash';
 
 // HELPERS
 import { minToHourMinDisplay } from '../../../../Utils/moment.helpers';
@@ -14,7 +15,7 @@ const convertToLengthValue = value => {
 }
 const LengthValue = ({ value }) => {
   const _value = Array.isArray(value) ? value : [value];
-  return _value.map(val => convertToLengthValue(val)).join(', ');
+  return compact(_value).map(val => convertToLengthValue(val)).join(', ');
 };
 
 LengthValue.propTypes = {
