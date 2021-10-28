@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { keyBy } from 'lodash';
-import 'antd/dist/antd.css';
 
 import { Modal, ModalProps, Button } from 'antd';
 import { TActivity } from 'Types/Activity.type';
