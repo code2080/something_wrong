@@ -1,5 +1,6 @@
 import { notification } from 'antd';
-const openNotificationWithIcon = (type, numberJoinTeaching) => {
+
+export const generateJointTeachingMatchNotifications = (type, numberJoinTeaching) => {
   switch (type) {
     case 'success':
       notification[type]({
@@ -14,4 +15,3 @@ const openNotificationWithIcon = (type, numberJoinTeaching) => {
   }
 };
 
-export default openNotificationWithIcon;
