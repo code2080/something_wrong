@@ -20,6 +20,11 @@ export type TATimingQuery = {
 };
 
 export type TActivityFilterQuery = {
+  settings?: {
+    matchCriteria: string;
+    includeSubmission: string;
+    jointTeaching: string;
+  };
   submitter?: string[];
   tag?: string[];
   primaryObject?: string[];

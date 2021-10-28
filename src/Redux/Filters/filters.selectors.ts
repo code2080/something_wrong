@@ -9,6 +9,7 @@ import { isEmptyDeep } from 'Utils/general.helpers';
 import { INITIAL_FILTER_VALUES } from 'Components/ActivityFiltering/FilterModal/FilterModal.constants';
 import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const filterstate = (state) => state.filters;
 
@@ -69,8 +70,13 @@ export const selectFilterIsActivated = (formId: string, tableType?: string) =>
     return !isEmptyDeep(formFilterQueriesWithoutSettings);
   });
 
-export const selectSelectedFilterValues = ({ formId, origin }) =>
-  createSelector(
-    filterstate,
-    (filters) => filters[`${formId}${origin || ''}`] || {},
-  );
+export const selectSelectedFilterValues = ({ formId, origin = '' }) =>
+  createSelector(filterstate, (filters) => {
+    const selectedFilterValues = filters[`${formId}${origin}`];
+    return (
+      selectedFilterValues ??
+      (origin === ACTIVITIES_TABLE
+        ? (INITIAL_FILTER_VALUES as any)
+        : (omit(INITIAL_FILTER_VALUES, 'status') as any))
+    );
+  });
