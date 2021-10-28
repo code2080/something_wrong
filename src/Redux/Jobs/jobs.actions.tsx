@@ -13,24 +13,6 @@ import { selectSelectedConstraintConfiguration } from '../ConstraintConfiguratio
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 import * as types from './jobs.actionTypes';
 
-const fetchAllJobsFlow = {
-  request: () => ({ type: types.FETCH_ALL_JOBS_REQUEST }),
-  success: (response) => ({
-    type: types.FETCH_ALL_JOBS_SUCCESS,
-    payload: { ...response },
-  }),
-  failure: (err) => ({
-    type: types.FETCH_ALL_JOBS_FAILURE,
-    payload: { ...err },
-  }),
-};
-
-export const fetchAllJobs = () =>
-  asyncAction.GET({
-    flow: fetchAllJobsFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}jobs?limit=200`,
-  });
-
 export const updateJobFromWS = (job) => ({
   type: types.UPDATE_JOB_SUCCESS,
   payload: { job },

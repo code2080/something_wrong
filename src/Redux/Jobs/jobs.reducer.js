@@ -7,20 +7,6 @@ import initialState from './jobs.initialState';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.FETCH_ALL_JOBS_SUCCESS: {
-      const { results = [] } = action.payload;
-      return results.reduce(
-        (state, curr) => ({
-          ...state,
-          [curr.formId]: {
-            ..._.get(state, `${curr.formId}`, {}),
-            [curr._id]: new Job(curr),
-          },
-        }),
-        state,
-      );
-    }
-
     case types.CREATE_JOB_FAILURE: {
       return state;
     }
