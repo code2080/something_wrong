@@ -13,7 +13,6 @@ import {
   fetchOrg,
 } from '../../Redux/Auth/auth.actions';
 import { fetchForms } from '../../Redux/Forms/forms.actions';
-import { fetchAllJobs } from '../../Redux/Jobs/jobs.actions';
 import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
@@ -42,7 +41,6 @@ const mapActionsToProps = {
   fetchObjectRequests,
   setBreadcrumbs,
   fetchMapping,
-  fetchAllJobs,
   fetchOrg,
   fetchIntegrationSettings,
 };
@@ -54,7 +52,6 @@ const FormList = ({
   fetchElements,
   fetchUsers,
   fetchMapping,
-  fetchAllJobs,
   fetchOrg,
   fetchIntegrationSettings,
   fetchObjectRequests,
@@ -80,7 +77,6 @@ const FormList = ({
   useEffect(() => {
     fetchForms();
     fetchOrg();
-    fetchAllJobs();
     fetchElements();
     setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
     fetchObjectRequests();
@@ -133,7 +129,6 @@ FormList.propTypes = {
   fetchObjectRequests: PropTypes.func.isRequired,
   fetchMapping: PropTypes.func.isRequired,
   setBreadcrumbs: PropTypes.func.isRequired,
-  fetchAllJobs: PropTypes.func.isRequired,
   fetchOrg: PropTypes.func.isRequired,
   fetchIntegrationSettings: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
