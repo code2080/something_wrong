@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { Job } from '../../Models/Job.model';
 import * as types from './jobs.actionTypes';
 
