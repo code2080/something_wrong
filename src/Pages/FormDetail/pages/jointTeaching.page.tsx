@@ -18,6 +18,7 @@ import {
   generateJointTeachingGroup,
 } from 'Redux/JointTeaching/jointTeaching.actions';
 import { GENERATE_JOINT_TEACHING_GROUP } from 'Redux/JointTeaching/jointTeaching.actionTypes';
+import { generateJointTeachingMatchNotifications } from '../../../Utils/notifications.helper';
 
 const JointTeachingPage = () => {
   const dispatch = useDispatch();
@@ -28,8 +29,17 @@ const JointTeachingPage = () => {
   );
 
   const onGenerate = async () => {
-    await dispatch(generateJointTeachingGroup({ formId }));
+    const { status, data } = await dispatch(
+      generateJointTeachingGroup({ formId }),
+    );
     dispatch(fetchJointTeachingGroupsForForm({ formId }));
+
+    if (status === 200) {
+      generateJointTeachingMatchNotifications(
+        data.length > 0 ? 'success' : 'warning',
+        data.length,
+      );
+    }
   };
 
   const renderTab = () => {

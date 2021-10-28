@@ -118,6 +118,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       onCancel(true);
     }
   };
+
   const onCreate = () => {
     jointTeachingCalculating.addActivitiesToJointTeachingMatchRequest({
       canBePaired,
