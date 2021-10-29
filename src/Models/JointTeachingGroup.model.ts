@@ -5,6 +5,7 @@ import { groupBy, keyBy, uniq } from 'lodash';
 import { getConflictsResolvingStatus } from 'Utils/activities.helpers';
 
 export const SUPPORTED_VALUE_TYPES = ['string', 'number'];
+export const NOT_SUPPORTED_ELEMENT_TYPES = ['ELEMENT_TYPE_INPUT_TIME'];
 export const MAX_MATCHING_SCORE = 6;
 
 export enum JointTeachingStatus {

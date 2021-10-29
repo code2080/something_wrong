@@ -26,6 +26,7 @@ import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import {
   ConflictType,
   JointTeachingConflictMapping,
+  NOT_SUPPORTED_ELEMENT_TYPES,
   SUPPORTED_VALUE_TYPES,
 } from 'Models/JointTeachingGroup.model';
 import { isEmptyDeep } from './general.helpers';
@@ -576,11 +577,13 @@ const getValuesType = (values) => {
  * @description If activity value is not string or number[], or has more than 1 elements, return null
  * @param {ConflictType} type
  * @param {TActivity[]} activities
+ * @param {undefined | {[key: string]: string}} elementTypeMapping
  * @return {IndexedActivityValueType}
  */
 export const getAllValuesFromActivities = (
-  type,
-  activities,
+  type: ConflictType,
+  activities: TActivity[],
+  elementTypeMapping?: { [key: string]: string },
 ): IndexedActivityValueType => {
   const allValues = {};
   activities.forEach((act) => {
@@ -588,7 +591,11 @@ export const getAllValuesFromActivities = (
     Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
       const valueTypes = getValuesType(item.value);
       const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
-      if (unsupportedTypes.length) {
+      const elementType = elementTypeMapping?.[item.elementId as string];
+      if (
+        unsupportedTypes.length ||
+        (elementType && NOT_SUPPORTED_ELEMENT_TYPES.includes(elementType))
+      ) {
         allValues[item.extId] = null;
       } else if (Array.isArray(allValues[item.extId])) {
         if (
@@ -609,10 +616,12 @@ export const getAllValuesFromActivities = (
  * @function getUniqueValues
  * @description Return all uniqued activities values
  * @param {TActivity[]} activities
+ * @param {undefined | {[key: string]: string}} elementTypeMapping
  * @return {[type: ConflictType]: string[]}
  */
 export const getUniqueValues = (
   activities: TActivity[],
+  elementTypeMapping?: { [key: string]: string },
 ): { [conflictType in ConflictType]: IndexedActivityValueType } => {
   const initialValues = { values: {}, timing: {} };
   if (_.isEmpty(activities))
@@ -627,7 +636,7 @@ export const getUniqueValues = (
   return Object.values(ConflictType).reduce(
     (results, type) => ({
       ...results,
-      [type]: getAllValuesFromActivities(type, activities),
+      [type]: getAllValuesFromActivities(type, activities, elementTypeMapping),
     }),
     initialValues,
   );

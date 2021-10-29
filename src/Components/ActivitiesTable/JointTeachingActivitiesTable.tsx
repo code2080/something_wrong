@@ -21,14 +21,14 @@ import { useSelector } from 'react-redux';
 // SELECTORS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import {
-  calculateActivityConflicts,
-  getUniqueValues,
-} from 'Utils/activities.helpers';
+import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
+import {
+  selectActivitiesForForm,
+  selectActivitiesUniqueValues,
+} from '../../Redux/Activities/activities.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
 import { ActivityValue, ValueType } from 'Types/ActivityValue.type';
 import {
@@ -97,10 +97,9 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
-
-  const uniqueValues = useMemo(() => {
-    return getUniqueValues(activities);
-  }, [activities]);
+  const uniqueValues = useSelector(
+    selectActivitiesUniqueValues(formId, activities),
+  );
 
   const indexedSubmissions = useMemo(() => {
     return keyBy(submissions, '_id');
@@ -154,7 +153,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   ]);
   const finalActivities = compact([...activities, resultsRow]);
 
-  console.log('activities >>>>>>', activities);
   useEffect(() => {
     if (!conflicts) return;
     const initialSelectedValues = Object.entries(conflicts).reduce(
