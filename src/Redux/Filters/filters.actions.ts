@@ -10,10 +10,6 @@ import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 import * as types from './filters.actionTypes';
 
 // TYPES
-type TActionLoadFilter = {
-  filterId: string;
-};
-
 type TActionUpdateFilter = {
   filterId: string;
   key: string;
@@ -85,11 +81,6 @@ export const fetchLookupMap = (payload: TActionSetActivityLookupMap) => {
     params: { formId },
   });
 };
-
-export const loadFilter = ({ filterId }: TActionLoadFilter) => ({
-  type: types.LOAD_FILTER,
-  payload: { filterId },
-});
 
 export const updateFilter = ({
   filterId,

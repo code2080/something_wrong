@@ -2,15 +2,6 @@ import FilterLookUpMap from '../../Types/FilterLookUp.type';
 import * as types from './filters.actionTypes';
 import { initialState } from './filters.initialState';
 
-const loadFiltersFromLS = (filterId: string) => {
-  const stringedFilter = localStorage.getItem(filterId);
-  if (stringedFilter) return JSON.parse(stringedFilter);
-  return {};
-};
-
-const saveFilterToLS = (filterId: string, filter: any) =>
-  localStorage.setItem(filterId, JSON.stringify(filter));
-
 const reducer = (state: any = initialState, action) => {
   switch (action.type) {
     case types.SET_ACTIVITY_FILTER_INCLUSION: {
@@ -45,19 +36,9 @@ const reducer = (state: any = initialState, action) => {
       };
     }
 
-    case types.LOAD_FILTER: {
-      const { filterId } = action.payload;
-      const filter = loadFiltersFromLS(filterId);
-      return {
-        ...state,
-        [filterId]: filter,
-      };
-    }
-
     case types.SET_FILTER: {
       if (!action || !action.payload || !action.payload.filterId) return state;
       const { filterId, filter } = action.payload;
-      saveFilterToLS(filterId, filter);
       return {
         ...state,
         [filterId]: filter,
@@ -71,7 +52,6 @@ const reducer = (state: any = initialState, action) => {
         ...(state[filterId] || {}),
         [key]: value,
       };
-      saveFilterToLS(filterId, updFilter);
       return {
         ...state,
         [filterId]: {
