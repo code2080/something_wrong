@@ -9,6 +9,7 @@ import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   ActivityValue,
   CategoryField,
+  IndexedActivityValueType,
   ValueType,
 } from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
@@ -569,8 +570,19 @@ const getValuesType = (values) => {
   return [typeof values];
 };
 
-const getAllValuesFromActivities = (type, activities) => {
-  const allValues: { [extId: string]: null | ActivityValue[] } = {};
+/**
+ * @function getAllValuesFromActivities
+ * @description get all uniq values from activities
+ * @description If activity value is not string or number[], or has more than 1 elements, return null
+ * @param {ConflictType} type
+ * @param {TActivity[]} activities
+ * @return {IndexedActivityValueType}
+ */
+export const getAllValuesFromActivities = (
+  type,
+  activities,
+): IndexedActivityValueType => {
+  const allValues = {};
   activities.forEach((act) => {
     const indexedValues = keyBy(act[type], 'extId');
     Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
@@ -593,15 +605,23 @@ const getAllValuesFromActivities = (type, activities) => {
   });
   return allValues;
 };
-
-export const getUniqueValues = (activities: TActivity[]) => {
+/**
+ * @function getUniqueValues
+ * @description Return all uniqued activities values
+ * @param {TActivity[]} activities
+ * @return {[type: ConflictType]: string[]}
+ */
+export const getUniqueValues = (
+  activities: TActivity[],
+): { [conflictType in ConflictType]: IndexedActivityValueType } => {
+  const initialValues = { values: {}, timing: {} };
   if (_.isEmpty(activities))
     return Object.values(ConflictType).reduce(
       (results, type) => ({
         ...results,
-        [type]: {},
+        [type]: [],
       }),
-      {},
+      initialValues,
     );
 
   return Object.values(ConflictType).reduce(
@@ -609,7 +629,7 @@ export const getUniqueValues = (activities: TActivity[]) => {
       ...results,
       [type]: getAllValuesFromActivities(type, activities),
     }),
-    {},
+    initialValues,
   );
 };
 export const getConflictsResolvingStatus = (
@@ -626,7 +646,16 @@ export const getConflictsResolvingStatus = (
     });
   });
 };
-
+/**
+ * @function calculateActivityConflictsByType
+ * @description
+ * @param {ConflictType} type
+ * @param {TActivity[]} activities
+ * @param {({
+ *     [type: string]: { [key: string]: Array<ValueType | undefined> };
+ *   })} _selectedValues
+ * @return {{ [key: string]: ActivityValueType }}
+ */
 export const calculateActivityConflictsByType = (
   type: ConflictType,
   activities: TActivity[],

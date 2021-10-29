@@ -25,6 +25,14 @@ import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.sel
 import { Button, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
+import JointTeachingActivitiesTable, {
+  SelectedConflictValue,
+} from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
+import StatusLabel from 'Components/StatusLabel/StatusLabel';
+import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
+import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
+import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
+import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 // CONSTANTS
 import {
@@ -40,16 +48,8 @@ import JointTeachingGroup, {
   JointTeachingStatus,
   JointTeachingConflictResolution,
 } from 'Models/JointTeachingGroup.model';
-import JointTeachingActivitiesTable, {
-  SelectedConflictValue,
-} from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
-import StatusLabel from 'Components/StatusLabel/StatusLabel';
 
 import './JointTeachingGroupsTable.scss';
-import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
-import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
-import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
-import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 interface Props {
   readonly?: boolean;

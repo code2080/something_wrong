@@ -154,6 +154,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
   ]);
   const finalActivities = compact([...activities, resultsRow]);
 
+  console.log('activities >>>>>>', activities);
   useEffect(() => {
     if (!conflicts) return;
     const initialSelectedValues = Object.entries(conflicts).reduce(
