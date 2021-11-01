@@ -4,6 +4,7 @@ import { Form, Input, Button, Popconfirm } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
+import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // ACTIONS
 import { setSchedulingStatusOfActivities } from '../../../../Redux/Activities/activities.actions';
@@ -73,6 +74,7 @@ type SchedulingCheckboxProps = {
 
 const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
   const dispatch = useDispatch();
+  const teCoreAPI = useTECoreAPI();
   const { formId } = useParams() as { formId: string };
 
   const [showInvertedState, setShowInvertedState] = useState(false);
@@ -90,16 +92,20 @@ const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
   };
 
   const onUnscheduleActivity = () => {
-    dispatch(
-      setSchedulingStatusOfActivities(formId, [
-        {
-          activityId: activity._id,
-          activityStatus: EActivityStatus.NOT_SCHEDULED,
-          errorDetails: null,
-          reservationId: null,
-        },
-      ]),
-    );
+    teCoreAPI.deleteReservations({
+      activities: [activity],
+      callback: () =>
+        dispatch(
+          setSchedulingStatusOfActivities(formId, [
+            {
+              activityId: activity._id,
+              activityStatus: EActivityStatus.NOT_SCHEDULED,
+              errorDetails: null,
+              reservationId: null,
+            },
+          ]),
+        ),
+    });
   };
 
   const derivedSchedulingStatus = getClassNameForSchedulingStatus(
