@@ -24,7 +24,7 @@ type Props = {
   onUpdate: (
     constraintId: string,
     field: string,
-    value: ParameterType | string,
+    value: ParameterType[] | string,
   ) => void;
 };
 
@@ -114,10 +114,12 @@ const ParameterCascader = ({
             firstParam: selected,
             lastParam: parameters.lastParam,
           });
-          onUpdate(constraintId, 'parameters', {
-            firstParam: selected,
-            lastParam: parameters.lastParam,
-          });
+          onUpdate(constraintId, 'parameters', [
+            {
+              firstParam: selected,
+              lastParam: parameters.lastParam,
+            },
+          ]);
         }}
       />{' '}
       <Select
@@ -149,10 +151,12 @@ const ParameterCascader = ({
             firstParam: parameters.firstParam,
             lastParam: selected,
           });
-          onUpdate(constraintId, 'parameters', {
-            firstParam: parameters.firstParam,
-            lastParam: selected,
-          });
+          onUpdate(constraintId, 'parameters', [
+            {
+              firstParam: parameters.firstParam,
+              lastParam: selected,
+            },
+          ]);
         }}
       />
     </div>
