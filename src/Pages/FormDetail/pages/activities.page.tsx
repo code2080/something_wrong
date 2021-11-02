@@ -102,7 +102,7 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  useActivitiesWatcher({
+  const { onLoadMore } = useActivitiesWatcher({
     formId,
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
@@ -190,6 +190,7 @@ const ActivitiesPage = () => {
           pre: SchedulingColumns(selectedRowKeys, isBeta),
           post: StaticColumns,
         }}
+        onLoadMore={onLoadMore}
       />
     </>
   );

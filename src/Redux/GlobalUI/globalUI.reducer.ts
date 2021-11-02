@@ -135,7 +135,11 @@ const reducer = (state = initialState, action) => {
           ...state.activitySorting,
           [`${formId}${tableType}`]: {
             ...(state.activitySorting[`${formId}${tableType}`] || {}),
-            sortOrder: activities.map((a) => a._id),
+            sortOrder: [
+              ...(state.activitySorting[`${formId}${tableType}`]?.sortOrder ||
+                []),
+              ...activities.map((a) => a._id),
+            ],
           },
         },
       };

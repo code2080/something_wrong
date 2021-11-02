@@ -96,8 +96,12 @@ const reducer = (
           actionMeta: { formId, sections, tableType },
         },
       } = action;
-      const activities = updateActivitiesForForm(activitityObjs, sections);
       const formIdValue = tableType ? formId + tableType : formId;
+      const activities = updateActivitiesForForm(
+        activitityObjs,
+        sections,
+        state[formIdValue],
+      );
 
       return {
         ...state,

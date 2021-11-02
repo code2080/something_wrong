@@ -23,6 +23,7 @@ interface Props extends TableProps<any> {
     [activityValue, valueIndex],
   ) => void;
   renderer?: (type: ConflictType, activity: TActivity, extId: string) => void;
+  onLoadMore?: () => void;
 }
 
 const ActivityTable = ({
@@ -38,6 +39,7 @@ const ActivityTable = ({
   },
   columnPrefix,
   renderer,
+  onLoadMore,
   ...props
 }: Props) => {
   useActivitiesObjectWatcher({ activities });
@@ -69,7 +71,7 @@ const ActivityTable = ({
       dataSource={activities}
       rowClassName='test-row'
       rowKey='_id'
-      loading={isLoading && !activities?.length}
+      loading={isLoading}
       rowSelection={
         selectedActivities && {
           selectedRowKeys: selectedActivities,
@@ -78,6 +80,7 @@ const ActivityTable = ({
       }
       onChange={(pagination, filters, sorter) => onSort(sorter)}
       {...props}
+      onLoadMore={onLoadMore}
     />
   );
 };

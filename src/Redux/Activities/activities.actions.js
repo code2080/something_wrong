@@ -35,7 +35,7 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
 
 export const fetchActivitiesForForm = (
   formId,
-  { filters, sorters },
+  { filters, sorters, pagination = { page: 1, limit: 10 } },
   tableType = ACTIVITIES_TABLE,
 ) => {
   const sorting = sorters;
@@ -51,6 +51,7 @@ export const fetchActivitiesForForm = (
       settings: settings,
       sorting: sorting == null ? undefined : sorting,
       schemaQueries: getActivityFilterSchemaQuery({ status }, tableType),
+      pagination,
     },
   });
 };
