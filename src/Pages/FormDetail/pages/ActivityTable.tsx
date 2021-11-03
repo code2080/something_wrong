@@ -93,6 +93,7 @@ const ActivityTable = ({
       onChange={(pagination, filter, sorter) => {
         onSort(sorter);
       }}
+      resizable
       {...props}
     />
   );
