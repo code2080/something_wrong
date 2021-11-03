@@ -6,7 +6,8 @@ import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-import VirtualTable from '../../../Components/VirtualTable/VirtualTable';
+import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
+
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
 
 interface Props extends TableProps<any> {
@@ -14,6 +15,7 @@ interface Props extends TableProps<any> {
   activities: TActivity[];
   selectedActivities?: Key[];
   isLoading?: boolean;
+  paginationParams?: { limit: number; currentPage: number; totalPages: number };
   onSelect?(selectedRowKeys: Key[]): void;
   onSort?(sorter: SorterResult<object> | SorterResult<object>[]): void;
   additionalColumns?: { pre?: ColumnsType<object>; post?: ColumnsType<object> };
@@ -23,13 +25,14 @@ interface Props extends TableProps<any> {
     [activityValue, valueIndex],
   ) => void;
   renderer?: (type: ConflictType, activity: TActivity, extId: string) => void;
-  onLoadMore?: () => void;
+  onSetCurrentPaginationParams?: (page: number, limit: number) => void;
 }
 
 const ActivityTable = ({
   design,
   activities,
   isLoading = false,
+  paginationParams,
   selectedActivities,
   onSelect = _.noop,
   onSort = _.noop,
@@ -39,14 +42,16 @@ const ActivityTable = ({
   },
   columnPrefix,
   renderer,
-  onLoadMore,
+  onSetCurrentPaginationParams,
   ...props
 }: Props) => {
   useActivitiesObjectWatcher({ activities });
-
   const calculateAvailableTableHeight = () => {
     return ((window as any).tePrefsHeight ?? 500) - 110;
   };
+  const totalPages =
+    (paginationParams?.limit as number) *
+    (paginationParams?.totalPages as number);
 
   const [yScroll] = useState(calculateAvailableTableHeight());
   const tableColumns = useMemo(
@@ -61,7 +66,7 @@ const ActivityTable = ({
     [design, columnPrefix, renderer],
   );
   return (
-    <VirtualTable
+    <DynamicTable
       scroll={{ y: yScroll }}
       columns={[
         ...(additionalColumns.pre ?? []),
@@ -78,9 +83,17 @@ const ActivityTable = ({
           onChange: (selectedRowKeys) => onSelect(selectedRowKeys as Key[]),
         }
       }
-      onChange={(pagination, filters, sorter) => onSort(sorter)}
+      pagination={{
+        total: totalPages || 10,
+        onChange: (page, limit) => {
+          if (onSetCurrentPaginationParams)
+            onSetCurrentPaginationParams(page, limit);
+        },
+      }}
+      onChange={(pagination, filter, sorter) => {
+        onSort(sorter);
+      }}
       {...props}
-      onLoadMore={onLoadMore}
     />
   );
 };
