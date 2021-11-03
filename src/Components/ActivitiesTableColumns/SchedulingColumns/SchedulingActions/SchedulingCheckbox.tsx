@@ -141,7 +141,7 @@ const SchedulingCheckbox = ({ activity }: SchedulingCheckboxProps) => {
       )}
       {activity.activityStatus === EActivityStatus.SCHEDULED && (
         <Popconfirm
-          title='Are you sure you want to unschedule this activity?'
+          title='Are you sure you want to cancel this activity?'
           onConfirm={onUnscheduleActivity}
           okText='Yes'
           cancelText='No'
