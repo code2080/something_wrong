@@ -35,7 +35,7 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
 
 export const fetchActivitiesForForm = (
   formId,
-  { filters, sorters, pagination = { page: 1, limit: 10 } },
+  { filters, sorters, pagination },
   tableType = ACTIVITIES_TABLE,
 ) => {
   const sorting = sorters;

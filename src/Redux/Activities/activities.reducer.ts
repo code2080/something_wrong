@@ -92,21 +92,25 @@ const reducer = (
     case types.FETCH_ACTIVITIES_FOR_FORM_SUCCESS: {
       const {
         payload: {
-          activities: activitityObjs,
-          actionMeta: { formId, sections, tableType },
+          activities,
+          actionMeta: { formId, tableType },
+          paginationParams: { totalPages, currentPage, limit },
         },
       } = action;
       const formIdValue = tableType ? formId + tableType : formId;
-      const activities = updateActivitiesForForm(
-        activitityObjs,
-        sections,
-        state[formIdValue],
-      );
-
       return {
         ...state,
-        [formIdValue]: {
-          ...activities,
+        [formIdValue]: _.groupBy(
+          activities.map((activity) => new Activity(activity)),
+          'formInstanceId',
+        ),
+        paginationParams: {
+          ...state.paginationParams,
+          [formId]: {
+            totalPages,
+            currentPage,
+            limit,
+          },
         },
       };
     }
