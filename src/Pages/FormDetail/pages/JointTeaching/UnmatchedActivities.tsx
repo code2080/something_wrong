@@ -3,6 +3,7 @@ import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import {
+  makeSelectPaginationParamsForForm,
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
 } from 'Redux/GlobalUI/globalUI.selectors';
@@ -57,11 +58,16 @@ const UnmatchedActivities = ({ formId }: Props) => {
       formId,
     ),
   );
-  useActivitiesWatcher({
+  const selectedPaginationParams = useSelector((state) =>
+    makeSelectPaginationParamsForForm()(state, formId),
+  );
+
+  const { setCurrentPaginationParams } = useActivitiesWatcher({
     formId,
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
     origin: UNMATCHED_ACTIVITIES_TABLE,
+    pagination: selectedPaginationParams,
     trigger: triggerFetchingActivities,
   });
 
@@ -74,7 +80,6 @@ const UnmatchedActivities = ({ formId }: Props) => {
   };
 
   const addJointTeachingMatch = () => {
-    console.log('addJointTeachingMatch');
     setSelectJointTeachingGroupVisible(true);
   };
 
@@ -121,6 +126,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
         additionalColumns={{
           pre: JointTeachingColumn(),
         }}
+        onSetCurrentPaginationParams={setCurrentPaginationParams}
       />
       <CreateNewJointTeachingGroupModal
         visible={createNewGroupVisible}

@@ -13,6 +13,7 @@ import SelectionColumn from './SelectionColumn';
 
 interface Props extends TableProps<any> {
   onLoadMore?: () => void;
+  paginationParams: { limit: Number; currentPage: Number; totalPages: Number };
 }
 const VirtualTable = (props: Props) => {
   const { columns, scroll, rowSelection, rowKey, dataSource, className } =

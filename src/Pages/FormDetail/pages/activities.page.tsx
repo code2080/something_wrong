@@ -30,6 +30,7 @@ import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import {
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
+  makeSelectPaginationParamsForForm,
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
@@ -72,6 +73,15 @@ const ActivitiesPage = () => {
     selectActivitiesForForm(state, formId, ACTIVITIES_TABLE),
   );
 
+  const selectPaginationParamsForForm = useMemo(
+    () => makeSelectPaginationParamsForForm(),
+    [],
+  );
+
+  const selectedPaginationParams = useSelector((state) =>
+    selectPaginationParamsForForm(state, formId),
+  );
+
   const allActivities = Object.values(activities).flat();
   const keyedActivities = _.keyBy(allActivities, '_id');
 
@@ -102,11 +112,12 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  const { onLoadMore } = useActivitiesWatcher({
+  const { setCurrentPaginationParams } = useActivitiesWatcher({
     formId,
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
     origin: ACTIVITIES_TABLE,
+    pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
 
@@ -190,7 +201,8 @@ const ActivitiesPage = () => {
           pre: SchedulingColumns(selectedRowKeys, isBeta),
           post: StaticColumns,
         }}
-        onLoadMore={onLoadMore}
+        paginationParams={selectedPaginationParams}
+        onSetCurrentPaginationParams={setCurrentPaginationParams}
       />
     </>
   );
