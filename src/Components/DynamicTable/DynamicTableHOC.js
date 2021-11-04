@@ -70,6 +70,7 @@ const DynamicTableHOC = ({
   rowSelection,
   rowClassName,
   nowrap,
+  ...props
 }) => {
   const history = useHistory();
   /**
@@ -270,6 +271,7 @@ const DynamicTableHOC = ({
               sortDirections={['descend', 'ascend']}
               onRow={onRowHandler}
               {...otherProps}
+              {...props}
               rowClassName={rowClassName}
             />
           </DndProvider>
@@ -302,6 +304,7 @@ DynamicTableHOC.propTypes = {
   rowSelection: PropTypes.object,
   rowClassName: PropTypes.string,
   nowrap: PropTypes.bool,
+  props: PropTypes.object,
 };
 
 DynamicTableHOC.defaultProps = {
