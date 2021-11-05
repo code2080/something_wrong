@@ -609,11 +609,7 @@ export const getAllValuesFromActivities = (
 
   activities.forEach((act) => {
     const indexedValues = keyBy(act[type], 'extId');
-    console.log('indexedValues', indexedValues);
     Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
-      if (item.extId === 'activity') {
-        console.log('item.value >>>>>', item);
-      }
       if (unsupportedExtIds.includes(item.extId)) {
         allValues[item.extId] = null;
       } else if (Array.isArray(allValues[item.extId])) {
