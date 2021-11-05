@@ -1,4 +1,4 @@
-import _, { isEmpty, keyBy } from 'lodash';
+import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -6,7 +6,12 @@ import {
   TConstraintInstance,
 } from '../Types/ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
-import { ActivityValue, CategoryField } from '../Types/ActivityValue.type';
+import {
+  ActivityValue,
+  CategoryField,
+  IndexedActivityValueType,
+  ValueType,
+} from '../Types/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -21,6 +26,7 @@ import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import {
   ConflictType,
   JointTeachingConflictMapping,
+  NOT_SUPPORTED_ELEMENT_TYPES,
   SUPPORTED_VALUE_TYPES,
 } from 'Models/JointTeachingGroup.model';
 import { isEmptyDeep } from './general.helpers';
@@ -557,18 +563,58 @@ export const populateWithFieldConstraint = ({
 };
 
 const getValuesType = (values) => {
-  if (Array.isArray(values)) return _.uniq(values.map((val) => typeof val));
+  if (Array.isArray(values)) {
+    if (values.length > 1) return ['array'];
+    return _.uniq(values.map((val) => typeof val));
+  }
+
   return [typeof values];
 };
 
-const getAllValuesFromActivities = (type, activities) => {
-  const allValues: { [extId: string]: null | ActivityValue[] } = {};
+/**
+ * @function getAllValuesFromActivities
+ * @description get all uniq values from activities
+ * @description If activity value is not string or number[], or has more than 1 elements, return null
+ * @param {ConflictType} type
+ * @param {TActivity[]} activities
+ * @param {undefined | {[key: string]: string}} elementTypeMapping
+ * @return {IndexedActivityValueType}
+ */
+export const getAllValuesFromActivities = (
+  type: ConflictType,
+  activities: TActivity[],
+  elementTypeMapping?: { [key: string]: string },
+): IndexedActivityValueType => {
+  const allValues = {};
+  const allActivitiesValues = activities.flatMap((act) => act[type]);
+  const groupedValuesByExtId = groupBy(allActivitiesValues, 'extId');
+  const unsupportedExtIds = Object.keys(groupedValuesByExtId).filter(
+    (extId: string) => {
+      const valuesOfExtId = groupedValuesByExtId[extId];
+      return valuesOfExtId.some((val: ActivityValue) => {
+        const valueTypes = getValuesType(val.value);
+        const unsupportedTypes = _.difference(
+          valueTypes,
+          SUPPORTED_VALUE_TYPES,
+        );
+        const elementType = elementTypeMapping?.[val.elementId as string];
+        return (
+          unsupportedTypes.length ||
+          (elementType && NOT_SUPPORTED_ELEMENT_TYPES.includes(elementType)) ||
+          (Array.isArray(val.value) && val.value.length > 1)
+        );
+      });
+    },
+  );
+
   activities.forEach((act) => {
     const indexedValues = keyBy(act[type], 'extId');
+    console.log('indexedValues', indexedValues);
     Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
-      const valueTypes = getValuesType(item.value);
-      const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
-      if (unsupportedTypes.length) {
+      if (item.extId === 'activity') {
+        console.log('item.value >>>>>', item);
+      }
+      if (unsupportedExtIds.includes(item.extId)) {
         allValues[item.extId] = null;
       } else if (Array.isArray(allValues[item.extId])) {
         if (
@@ -585,23 +631,33 @@ const getAllValuesFromActivities = (type, activities) => {
   });
   return allValues;
 };
-
-export const getUniqueValues = (activities: TActivity[]) => {
+/**
+ * @function getUniqueValues
+ * @description Return all uniqued activities values
+ * @param {TActivity[]} activities
+ * @param {undefined | {[key: string]: string}} elementTypeMapping
+ * @return {[type: ConflictType]: string[]}
+ */
+export const getUniqueValues = (
+  activities: TActivity[],
+  elementTypeMapping?: { [key: string]: string },
+): { [conflictType in ConflictType]: IndexedActivityValueType } => {
+  const initialValues = { values: {}, timing: {} };
   if (_.isEmpty(activities))
     return Object.values(ConflictType).reduce(
       (results, type) => ({
         ...results,
-        [type]: {},
+        [type]: [],
       }),
-      {},
+      initialValues,
     );
 
   return Object.values(ConflictType).reduce(
     (results, type) => ({
       ...results,
-      [type]: getAllValuesFromActivities(type, activities),
+      [type]: getAllValuesFromActivities(type, activities, elementTypeMapping),
     }),
-    {},
+    initialValues,
   );
 };
 export const getConflictsResolvingStatus = (
@@ -618,11 +674,22 @@ export const getConflictsResolvingStatus = (
     });
   });
 };
-
+/**
+ * @function calculateActivityConflictsByType
+ * @description
+ * @param {ConflictType} type
+ * @param {TActivity[]} activities
+ * @param {({
+ *     [type: string]: { [key: string]: Array<ValueType | undefined> };
+ *   })} _selectedValues
+ * @return {{ [key: string]: ActivityValueType }}
+ */
 export const calculateActivityConflictsByType = (
   type: ConflictType,
   activities: TActivity[],
-  _selectedValues: { [type: string]: { [key: string]: string } },
+  _selectedValues: {
+    [type: string]: { [key: string]: Array<ValueType | undefined> };
+  },
 ): { [key: string]: ActivityValueType } => {
   const uniqueValues = getUniqueValues(activities);
   const selectedValues = _selectedValues[type];
@@ -634,25 +701,20 @@ export const calculateActivityConflictsByType = (
     if (_values.length === 1)
       return {
         ...results,
-        [key]: _values[0],
+        [key]: _values[0].value,
       };
-
-    const foundActivity = activities.find(
-      (act) => act._id === selectedValues[key],
-    );
-    if (!foundActivity) return results;
-
-    // If multiple values
     return {
       ...results,
-      [key]: foundActivity[type].find((val) => val.extId === key),
+      [key]: flatMap(selectedValues[key]),
     };
   }, {});
 };
 
 export const calculateActivityConflicts = (
   activities: TActivity[],
-  selectedValues: { [type: string]: { [key: string]: string } },
+  selectedValues: {
+    [type: string]: { [key: string]: Array<ValueType | undefined> };
+  },
 ) => {
   return Object.values(ConflictType).reduce(
     (results, type) => ({
