@@ -136,11 +136,7 @@ const reducer = (state = initialState, action) => {
           ...state.activitySorting,
           [`${formId}${tableType}`]: {
             ...(state.activitySorting[`${formId}${tableType}`] || {}),
-            sortOrder: [
-              ...(state.activitySorting[`${formId}${tableType}`]?.sortOrder ||
-                []),
-              activities.map((a) => a._id),
-            ],
+            sortOrder: activities.map((a) => a._id),
           },
         },
         paginationParams: {
