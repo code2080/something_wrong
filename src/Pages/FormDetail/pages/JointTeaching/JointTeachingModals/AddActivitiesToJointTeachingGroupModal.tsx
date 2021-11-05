@@ -1,45 +1,44 @@
-import React, { useState, useEffect, Key } from 'react';
+import React, { useEffect, Key, useMemo } from 'react';
 import { Modal, ModalProps } from 'antd';
-import { useSelector } from 'react-redux';
-
-// COMPONENTS
-import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
-
-// TYPES
-import { TActivity } from 'Types/Activity.type';
+import { useDispatch, useSelector } from 'react-redux';
 
 // SELECTORS
 import { selectJointTeachingGroupById } from 'Redux/JointTeaching/jointTeaching.selectors';
+import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
+
+// ACTIONS
+import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
+
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
+import UnmatchedActivitiesTable from '../Components/UnmatchedActivitiesTable';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props extends ModalProps {
   formId: string;
-  activities: TActivity[];
   jointTeachingGroupId?: string;
   onSubmit?: (activityIds: Key[]) => void;
 }
 const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
-  const {
-    visible,
-    onCancel,
-    formId,
-    jointTeachingGroupId,
-    activities,
-    onSubmit,
-  } = props;
+  const dispatch = useDispatch();
+  const { visible, onCancel, formId, jointTeachingGroupId, onSubmit } = props;
   const jointTeachingGroup = useSelector(
     selectJointTeachingGroupById({ formId, jointTeachingGroupId }),
   );
   const jointTeachingCalculating = useJointTeachingCalculating({ formId });
-  const [selectedActivities, setSelectedActivities] = useState<Key[]>([]);
+  const selectedActivities = useSelector(
+    selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
+  );
+  const selectedActivityIds = useMemo(() => {
+    return selectedActivities.map(({ _id }) => _id);
+  }, [selectedActivities]);
 
   const doSubmit = (e) => {
-    if (typeof onSubmit === 'function') onSubmit(selectedActivities);
+    if (typeof onSubmit === 'function') onSubmit(selectedActivityIds);
     if (typeof onCancel === 'function') onCancel(e);
   };
   const onOk = async (e) => {
     const canBePaired = await jointTeachingCalculating.activitiesCanBePaired([
-      ...selectedActivities,
+      ...selectedActivityIds,
       ...(jointTeachingGroup?.activityIds || []),
     ]);
     jointTeachingCalculating.addActivitiesToJointTeachingMatchRequest({
@@ -49,9 +48,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!visible) {
-      setSelectedActivities([]);
-    }
+    dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
   }, [visible]);
 
   return (
@@ -67,7 +64,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
       okText='Add selection'
       onOk={onOk}
       okButtonProps={{
-        disabled: !selectedActivities.length,
+        disabled: !selectedActivityIds.length,
       }}
       cancelButtonProps={{
         style: {
@@ -75,13 +72,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
         },
       }}
     >
-      <JointTeachingActivitiesTable
-        readonly
-        formId={formId}
-        activities={activities}
-        selectedActivities={selectedActivities}
-        onSelect={(activityIds) => setSelectedActivities(activityIds)}
-      />
+      <UnmatchedActivitiesTable formId={formId} triggerFetching={0} />
     </Modal>
   );
 };

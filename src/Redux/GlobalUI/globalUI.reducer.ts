@@ -141,11 +141,22 @@ const reducer = (state = initialState, action) => {
         },
         paginationParams: {
           ...state.paginationParams,
-          [formId]: {
+          [`${formId}${tableType}`]: {
             totalPages,
             currentPage,
             limit,
           },
+        },
+      };
+    }
+
+    case types.SET_SELECTED_ACTIVITIES: {
+      const { tableType, activities } = action.payload;
+      return {
+        ...state,
+        selectedActivities: {
+          ...state.selectedActivities,
+          [tableType]: activities,
         },
       };
     }

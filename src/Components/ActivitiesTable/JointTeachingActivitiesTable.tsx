@@ -20,8 +20,6 @@ import {
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import {
   ConflictType,
@@ -48,9 +46,14 @@ interface Props {
   onSelect?(selectedRowKeys: Key[]): void;
   conflicts?: JointTeachingConflictMapping;
   loading?: boolean;
+  selectable?: boolean;
+  tableType?: string;
+  hasPagination?: boolean;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
+  onSetCurrentPaginationParams?: (page: number, limit: number) => void;
+  paginationParams?: { limit: number; currentPage: number; totalPages: number };
 }
 interface TActivityResult extends TActivity {
   jointTeachings: Array<{ object: string; typeExtId: string }>;
@@ -82,10 +85,11 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     conflicts,
     loading,
     jointTeachingGroupId,
+    tableType,
+    selectable,
+    onSetCurrentPaginationParams,
+    paginationParams,
   } = props;
-  const unmatchedActivities = useSelector(
-    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
-  );
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
@@ -112,6 +116,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
 
     return {
       ...firstActivity,
+      _id: 'result-row',
       timing: firstActivity.timing.map((val) => {
         return (
           mergedActivityTiming[val.extId] || {
@@ -214,6 +219,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     <div>
       {header}
       <ActivityTable
+        selectable={selectable}
+        tableType={tableType}
         loading={loading}
         className={`joint-teaching-activities-table ${
           showResult ? 'show-result' : ''
@@ -239,7 +246,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               width: 100,
               title: 'Activity',
               key: 'index',
-              dataIndex: 'index',
               className: 'cell--activity-index',
               render: (_, __, rowIndex: number) => {
                 if (!showResult) return `Activity ${1 + rowIndex}`;
@@ -328,12 +334,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         pagination={false}
         selectedActivities={selectedActivities}
         onSelect={onSelect}
+        onSetCurrentPaginationParams={onSetCurrentPaginationParams}
+        paginationParams={paginationParams}
       />
       <AddActivitiesToJointTeachingGroupModal
         formId={formId}
         visible={addActivityModalVisible}
         onCancel={() => setAddActivityModalVisible(false)}
-        activities={unmatchedActivities}
         onSubmit={onAddActivity}
         jointTeachingGroupId={jointTeachingGroupId}
       />

@@ -152,6 +152,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       width={900}
     >
       <JointTeachingActivitiesTable
+        selectable={false}
         loading={!!calculating}
         showResult
         formId={formId}

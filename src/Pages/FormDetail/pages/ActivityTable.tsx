@@ -9,8 +9,13 @@ import { createActivitiesTableColumnsFromMapping } from '../../../Components/Act
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
+import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 
 interface Props extends TableProps<any> {
+  tableType?: string;
+  selectable?: boolean;
   design: any;
   activities: TActivity[];
   selectedActivities?: Key[];
@@ -33,8 +38,6 @@ const ActivityTable = ({
   activities,
   isLoading = false,
   paginationParams,
-  selectedActivities,
-  onSelect = _.noop,
   onSort = _.noop,
   additionalColumns = {
     pre: [],
@@ -43,8 +46,12 @@ const ActivityTable = ({
   columnPrefix,
   renderer,
   onSetCurrentPaginationParams,
+  tableType,
+  selectable = true,
   ...props
 }: Props) => {
+  const dispatch = useDispatch();
+  const selectedActivities = useSelector(selectSelectedActivities(tableType));
   useActivitiesObjectWatcher({ activities });
   const calculateAvailableTableHeight = () => {
     return ((window as any).tePrefsHeight ?? 500) - 110;
@@ -65,9 +72,14 @@ const ActivityTable = ({
         : [],
     [design, columnPrefix, renderer],
   );
+
+  const onRowSelect = (selectedRowKeys, selectedRows) => {
+    dispatch(selectActivitiesInTable(tableType, selectedRows));
+  };
+
   return (
     <DynamicTable
-      scroll={{ y: yScroll }}
+      scroll={{ y: yScroll, x: 'max-content' }}
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
@@ -78,12 +90,15 @@ const ActivityTable = ({
       rowKey='_id'
       loading={isLoading}
       rowSelection={
-        selectedActivities && {
-          selectedRowKeys: selectedActivities,
-          onChange: (selectedRowKeys) => onSelect(selectedRowKeys as Key[]),
+        selectable && {
+          selectedRowKeys: selectedActivities.map(({ _id }) => _id),
+          onChange: onRowSelect,
+          preserveSelectedRowKeys: true,
         }
       }
       pagination={{
+        current: paginationParams?.currentPage || 1,
+        pageSize: paginationParams?.limit || 10,
         total: totalPages || 10,
         onChange: (page, limit) => {
           if (onSetCurrentPaginationParams)
