@@ -43,5 +43,5 @@ export const makeSelectPaginationParamsForForm = () =>
 export const selectSelectedActivities = (tableType) =>
   createSelector(
     globalUIState,
-    (globalUI) => globalUI.selectedActivities[tableType] || [],
+    (globalUI): string[] => globalUI.selectedActivities[tableType] || [],
   );

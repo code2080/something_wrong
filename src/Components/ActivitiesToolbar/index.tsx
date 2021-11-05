@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
-import { activityFilterFn } from 'Utils/activities.helpers';
+// import { activityFilterFn } from 'Utils/activities.helpers';
 import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
@@ -27,6 +27,7 @@ import { TActivity } from '../../Types/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
+import { makeSelectAllActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 
 type Props = {
   selectedRowKeys: Key[];
@@ -63,14 +64,16 @@ const ActivitiesToolbar = ({
     selectAllActivitiesAreScheduling(formId),
   );
 
-  const selectedActivities: TActivity[] = useSelector(
-    selectSelectedActivities(ACTIVITIES_TABLE),
-  );
+  // const selectedActivities = useSelector(
+  //   selectSelectedActivities(ACTIVITIES_TABLE),
+  // );
 
-  const deleteableActivities: TActivity[] = useMemo(
-    () => selectedActivities.filter(activityFilterFn.canBeSelected),
-    [selectedActivities],
-  );
+  /// TODO: Add logic to cancel only activities that are cancellable
+  // const deleteableActivities: TActivity[] = useMemo(
+  //   () => selectedActivities.filter(activityFilterFn.canBeSelected),
+  //   [selectedActivities],
+  // );
+  const deleteableActivities = [];
 
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
@@ -86,7 +89,11 @@ const ActivitiesToolbar = ({
       <Popover
         overlayClassName='activity-tag-popover--wrapper'
         title='Tag activity'
-        content={<ActivityTagPopover activities={selectedActivities} />}
+        content={
+          <ActivityTagPopover
+            activities={/* selectedActivities  TODO: Fix tagging */ []}
+          />
+        }
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
@@ -117,7 +124,9 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onScheduleActivities(selectedActivities)}
+        onClick={() =>
+          onScheduleActivities(/* selectedActivities TODO: Fix scheduling */ [])
+        }
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
         Schedule selected activities
@@ -146,7 +155,7 @@ const ActivitiesToolbar = ({
       <TagSelectedActivitiesButton />
       {isBetaOrDev && (
         <JointTeachingGroupMerger
-          activities={selectedActivities}
+          activities={/* selectedActivities TODO: Fix joint teaching */ []}
           formId={formId}
           onCreateMatchCallback={onCreateMatchCallback}
         />

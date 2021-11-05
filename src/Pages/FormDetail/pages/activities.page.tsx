@@ -21,7 +21,10 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
-import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import {
+  makeSelectActivitiesForForm,
+  makeSelectAllActivityIdsForForm,
+} from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
 
@@ -50,10 +53,12 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const selectedRows = useSelector(selectSelectedActivities(ACTIVITIES_TABLE));
-  const selectedRowKeys = useMemo(() => {
-    return selectedRows.map(({ _id }) => _id);
-  }, [selectedRows]);
+  const selectedRowKeys = useSelector(
+    selectSelectedActivities(ACTIVITIES_TABLE),
+  );
+  // const selectedRowKeys = useMemo(() => {
+  //   return selectedRows.map(({ _id }) => _id);
+  // }, [selectedRows]);
 
   // Select filters
   const selectedFilterValues = useSelector(
@@ -126,8 +131,13 @@ const ActivitiesPage = () => {
     pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
-
   const design = useSelector(selectDesignForForm)(formId);
+  const selectAllActivityIdsForForm = makeSelectAllActivityIdsForForm();
+
+  const allActivityIds = useSelector((state) =>
+    selectAllActivityIdsForForm(state, formId),
+  );
+
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
@@ -142,8 +152,8 @@ const ActivitiesPage = () => {
       reservationMode,
     });
 
-  const onSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, tableDataSource));
+  const handleSelectAll = () => {
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
   };
 
   const onDeselectAll = () => {
@@ -186,7 +196,7 @@ const ActivitiesPage = () => {
     <>
       <ActivitiesToolbar
         selectedRowKeys={selectedRowKeys}
-        onSelectAll={onSelectAll}
+        onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}

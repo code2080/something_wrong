@@ -48,12 +48,9 @@ const UnmatchedActivities = ({ formId }: Props) => {
     createLoadingSelector([FETCH_ACTIVITIES_FOR_FORM]),
   );
 
-  const selectedActivities = useSelector(
+  const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
-  const selectedRowKeys = useMemo(() => {
-    return selectedActivities.map(({ _id }) => _id);
-  }, [selectedActivities]);
 
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
