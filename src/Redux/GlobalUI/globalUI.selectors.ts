@@ -35,9 +35,8 @@ export const makeSelectSortOrderForActivities = (tableType: string) =>
 export const makeSelectPaginationParamsForForm = () =>
   createSelector(
     globalUIState,
-    (_, formId: string) => formId,
-    (uiState, formId) =>
-      uiState.paginationParams[formId] || uiState.paginationParams,
+    (_, formId: string, tableType) => `${formId}${tableType}`,
+    (uiState, formId) => uiState.paginationParams[formId] || {},
   );
 
 export const selectSelectedActivities = (tableType) =>

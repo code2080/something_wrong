@@ -85,7 +85,7 @@ const ActivitiesPage = () => {
   );
 
   const selectedPaginationParams = useSelector((state) =>
-    selectPaginationParamsForForm(state, formId),
+    selectPaginationParamsForForm(state, formId, ACTIVITIES_TABLE),
   );
 
   const allActivities = Object.values(activities).flat();
