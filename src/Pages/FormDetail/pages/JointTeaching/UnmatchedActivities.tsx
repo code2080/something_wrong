@@ -1,26 +1,37 @@
+import React, { useState, useMemo } from 'react';
+import _ from 'lodash';
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
-import React, { useState, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+// SELECTORS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import {
   makeSelectPaginationParamsForForm,
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
+  selectSelectedActivities,
 } from 'Redux/GlobalUI/globalUI.selectors';
+import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
+
+// COMPONNETS
 import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
+import { TActivity } from 'Types/Activity.type';
+
+// CONSTANTS
 import { SorterResult } from 'antd/lib/table/interface';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
+// ACTIONS
 import {
   setActivitySorting,
   resetActivitySorting,
+  selectActivitiesInTable,
 } from 'Redux/GlobalUI/globalUI.actions';
-import { TActivity } from 'Types/Activity.type';
-import _ from 'lodash';
 import ActivityTable from '../ActivityTable';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
-import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
-import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 
 interface Props {
@@ -30,10 +41,19 @@ const UnmatchedActivities = ({ formId }: Props) => {
   const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
   const [selectJointTeachingGroupVisible, setSelectJointTeachingGroupVisible] =
     useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
   const design = useSelector(selectDesignForForm)(formId);
+  const isLoading = useSelector(
+    createLoadingSelector([FETCH_ACTIVITIES_FOR_FORM]),
+  );
+
+  const selectedActivities = useSelector(
+    selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
+  );
+  const selectedRowKeys = useMemo(() => {
+    return selectedActivities.map(({ _id }) => _id);
+  }, [selectedActivities]);
 
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
@@ -100,11 +120,13 @@ const UnmatchedActivities = ({ formId }: Props) => {
   }, [activities, keyedActivities, sortOrder]);
 
   const handleSelectAll = () => {
-    setSelectedRowKeys(tableDataSource.map(({ _id }) => _id));
+    dispatch(
+      selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, tableDataSource),
+    );
   };
 
   const handleDeselectAll = () => {
-    setSelectedRowKeys([]);
+    dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
   };
 
   return (
@@ -118,11 +140,11 @@ const UnmatchedActivities = ({ formId }: Props) => {
       />
       <ActivityTable
         design={design}
-        // isLoading={isLoading}
+        tableType={UNMATCHED_ACTIVITIES_TABLE}
+        isLoading={!!isLoading}
         activities={tableDataSource}
         onSort={onSortActivities}
         selectedActivities={selectedRowKeys}
-        onSelect={setSelectedRowKeys}
         additionalColumns={{
           pre: JointTeachingColumn(),
         }}
@@ -132,7 +154,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
         visible={createNewGroupVisible}
         onCancel={(refetchNeeded?: boolean) => {
           setCreateNewGroupVisible(false);
-          setSelectedRowKeys([]);
+          handleDeselectAll();
           if (refetchNeeded) {
             setTriggerFetchingActivities(triggerFetchingActivities + 1);
           }
@@ -149,7 +171,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
           if (refetchNeeded) {
             setTriggerFetchingActivities(triggerFetchingActivities + 1);
           }
-          setSelectedRowKeys([]);
+          handleDeselectAll();
           setSelectJointTeachingGroupVisible(false);
         }}
         selectedActivityIds={selectedRowKeys}

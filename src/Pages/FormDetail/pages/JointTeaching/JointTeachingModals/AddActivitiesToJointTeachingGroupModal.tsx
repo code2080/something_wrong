@@ -11,6 +11,7 @@ import { TActivity } from 'Types/Activity.type';
 // SELECTORS
 import { selectJointTeachingGroupById } from 'Redux/JointTeaching/jointTeaching.selectors';
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
+import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props extends ModalProps {
   formId: string;
@@ -77,6 +78,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
     >
       <JointTeachingActivitiesTable
         readonly
+        selectable={false}
         formId={formId}
         activities={activities}
         selectedActivities={selectedActivities}

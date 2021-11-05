@@ -48,6 +48,8 @@ interface Props {
   onSelect?(selectedRowKeys: Key[]): void;
   conflicts?: JointTeachingConflictMapping;
   loading?: boolean;
+  selectable?: boolean;
+  tableType?: string;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
@@ -82,6 +84,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     conflicts,
     loading,
     jointTeachingGroupId,
+    tableType,
+    selectable,
   } = props;
   const unmatchedActivities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
@@ -112,6 +116,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
 
     return {
       ...firstActivity,
+      _id: 'result-row',
       timing: firstActivity.timing.map((val) => {
         return (
           mergedActivityTiming[val.extId] || {
@@ -214,6 +219,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     <div>
       {header}
       <ActivityTable
+        selectable={selectable}
+        tableType={tableType}
         loading={loading}
         className={`joint-teaching-activities-table ${
           showResult ? 'show-result' : ''
@@ -239,7 +246,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               width: 100,
               title: 'Activity',
               key: 'index',
-              dataIndex: 'index',
               className: 'cell--activity-index',
               render: (_, __, rowIndex: number) => {
                 if (!showResult) return `Activity ${1 + rowIndex}`;

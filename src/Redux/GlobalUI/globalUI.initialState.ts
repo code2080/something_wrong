@@ -17,4 +17,5 @@ export default {
     totalPages?: Number;
   },
   jointTeaching: [] as any,
+  selectedActivities: {},
 };

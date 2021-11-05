@@ -143,7 +143,7 @@ export const getColumnObjectArrayForTable = (
       }),
       render: nowrap
         ? col.render
-        : (val, el) =>
+        : (val, el, rowIdx) =>
             col.render ? (
               <EllipsisTruncater
                 width={calculateColumnWidth({
@@ -155,7 +155,7 @@ export const getColumnObjectArrayForTable = (
                   numberOfFixedWidthColumns,
                 })}
               >
-                {col.render(val, el)}
+                {col.render(val, el, rowIdx)}
               </EllipsisTruncater>
             ) : (
               <EllipsisTruncater

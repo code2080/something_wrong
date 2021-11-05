@@ -48,6 +48,7 @@ import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
 import JointTeachingMatchedOn from './JointTeachingMatchedOn';
+import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props {
   readonly?: boolean;
@@ -355,6 +356,8 @@ const JointTeachingGroupsTable = (props: Props) => {
           const isMerged = group.status === JointTeachingStatus.MERGED;
           return (
             <JointTeachingActivitiesTable
+              tableType={MATCHED_ACTIVITIES_TABLE}
+              selectable={false}
               conflicts={group.conflictsMapping}
               showResult
               readonly={readonly || isMerged}

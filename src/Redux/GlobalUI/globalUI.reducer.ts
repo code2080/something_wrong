@@ -136,11 +136,7 @@ const reducer = (state = initialState, action) => {
           ...state.activitySorting,
           [`${formId}${tableType}`]: {
             ...(state.activitySorting[`${formId}${tableType}`] || {}),
-            sortOrder: [
-              ...(state.activitySorting[`${formId}${tableType}`]?.sortOrder ||
-                []),
-              activities.map((a) => a._id),
-            ],
+            sortOrder: activities.map((a) => a._id),
           },
         },
         paginationParams: {
@@ -150,6 +146,17 @@ const reducer = (state = initialState, action) => {
             currentPage,
             limit,
           },
+        },
+      };
+    }
+
+    case types.SET_SELECTED_ACTIVITIES: {
+      const { tableType, activities } = action.payload;
+      return {
+        ...state,
+        selectedActivities: {
+          ...state.selectedActivities,
+          [tableType]: activities,
         },
       };
     }
