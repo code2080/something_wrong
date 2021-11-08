@@ -25,12 +25,9 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
     selectJointTeachingGroupById({ formId, jointTeachingGroupId }),
   );
   const jointTeachingCalculating = useJointTeachingCalculating({ formId });
-  const selectedActivities = useSelector(
+  const selectedActivityIds = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
-  const selectedActivityIds = useMemo(() => {
-    return selectedActivities.map(({ _id }) => _id);
-  }, [selectedActivities]);
 
   const doSubmit = (e) => {
     if (typeof onSubmit === 'function') onSubmit(selectedActivityIds);

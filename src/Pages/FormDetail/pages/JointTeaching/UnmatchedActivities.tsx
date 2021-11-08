@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import _ from 'lodash';
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -97,7 +97,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
           }
         }}
         formId={formId}
-        activities={selectedActivities}
+        activityIds={selectedRowKeys}
       />
       <SelectJointTeachingGroupToAddActivitiesModal
         formId={formId}

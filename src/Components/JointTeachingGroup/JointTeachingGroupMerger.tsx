@@ -1,18 +1,17 @@
 import { Button } from 'antd';
-import { TActivity } from 'Types/Activity.type';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import CreateNewJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/CreateNewJointTeachingGroupModal';
 
 type Props = {
-  activities: TActivity[];
+  activityIds: string[];
   formId: string;
   onCreateMatchCallback: () => void;
 };
 
 const JointTeachingGroupMerger = ({
-  activities = [],
+  activityIds = [],
   formId,
   onCreateMatchCallback,
 }: Props) => {
@@ -23,7 +22,7 @@ const JointTeachingGroupMerger = ({
       <Button
         size='small'
         type='link'
-        disabled={activities.length < 2}
+        disabled={activityIds.length < 2}
         onClick={() => setVisible(true)}
       >
         Create joint teaching match
@@ -38,7 +37,7 @@ const JointTeachingGroupMerger = ({
           }
         }}
         formId={formId}
-        activities={activities}
+        activityIds={activityIds}
       />
     </div>
   );

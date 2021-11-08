@@ -28,12 +28,16 @@ import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
 import { getUniqueValues } from 'Utils/activities.helpers';
 
 interface Props extends Omit<ModalProps, 'onCancel'> {
-  activities: TActivity[];
+  activityIds: string[];
   formId: string;
   onCancel: (refetchNeeded?: boolean) => void;
 }
 const CreateNewJointTeachingGroupModal = (props: Props) => {
-  const { visible, onCancel, activities, formId } = props;
+  const { visible, onCancel, activityIds, formId } = props;
+
+  console.log(activityIds);
+  const activities: TActivity[] = []; // TODO: get selected activities activityIds
+
   const [canBePaired, setCanBePaired] = useState(false);
   const [selectedValues, setSelectedValues] = useState<JointTeachingConflict[]>(
     [],
