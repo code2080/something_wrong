@@ -20,7 +20,7 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
     payload: { actionMeta: { formId, origin } },
   }),
   success: (response) => {
-    const storeState = window.tePrefsLibStore.getState();
+    const storeState = (window as any).tePrefsLibStore.getState();
     const sections = storeState.forms[formId].sections;
     return {
       type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
@@ -317,7 +317,8 @@ const createActivityFlow = {
   }),
   success: (response) => {
     notification.success({
-      getContainer: () => document.getElementById('te-prefs-lib'),
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       message: 'Activities merged',
       description: 'Successfully merged the activities!',
     });
