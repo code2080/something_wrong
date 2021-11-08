@@ -1,4 +1,4 @@
-import _, { flatMap, isEmpty, keyBy } from 'lodash';
+import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -586,16 +586,31 @@ export const getAllValuesFromActivities = (
   elementTypeMapping?: { [key: string]: string },
 ): IndexedActivityValueType => {
   const allValues = {};
+  const allActivitiesValues = activities.flatMap((act) => act[type]);
+  const groupedValuesByExtId = groupBy(allActivitiesValues, 'extId');
+  const unsupportedExtIds = Object.keys(groupedValuesByExtId).filter(
+    (extId: string) => {
+      const valuesOfExtId = groupedValuesByExtId[extId];
+      return valuesOfExtId.some((val: ActivityValue) => {
+        const valueTypes = getValuesType(val.value);
+        const unsupportedTypes = _.difference(
+          valueTypes,
+          SUPPORTED_VALUE_TYPES,
+        );
+        const elementType = elementTypeMapping?.[val.elementId as string];
+        return (
+          unsupportedTypes.length ||
+          (elementType && NOT_SUPPORTED_ELEMENT_TYPES.includes(elementType)) ||
+          (Array.isArray(val.value) && val.value.length > 1)
+        );
+      });
+    },
+  );
+
   activities.forEach((act) => {
     const indexedValues = keyBy(act[type], 'extId');
     Object.values(activities[0][type] as ActivityValue[]).forEach((item) => {
-      const valueTypes = getValuesType(item.value);
-      const unsupportedTypes = _.difference(valueTypes, SUPPORTED_VALUE_TYPES);
-      const elementType = elementTypeMapping?.[item.elementId as string];
-      if (
-        unsupportedTypes.length ||
-        (elementType && NOT_SUPPORTED_ELEMENT_TYPES.includes(elementType))
-      ) {
+      if (unsupportedExtIds.includes(item.extId)) {
         allValues[item.extId] = null;
       } else if (Array.isArray(allValues[item.extId])) {
         if (

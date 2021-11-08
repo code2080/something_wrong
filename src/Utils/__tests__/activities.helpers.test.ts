@@ -718,8 +718,14 @@ describe('Activity helpers tests', () => {
   describe('Activities in joint teaching', () => {
     it('Should return all unique activity values', () => {
       const activities = cloneDeep(dummyJointTeachingActivities);
-      const allTiming = getAllValuesFromActivities('timing', activities);
-      const allValues = getAllValuesFromActivities('values', activities);
+      const allTiming = getAllValuesFromActivities(
+        ConflictType.TIMING,
+        activities,
+      );
+      const allValues = getAllValuesFromActivities(
+        ConflictType.VALUES,
+        activities,
+      );
       expect(allTiming).toBeTruthy();
       expect(allTiming.length).toHaveLength(2);
       expect(allTiming.startDate).toBeNull();
@@ -739,7 +745,10 @@ describe('Activity helpers tests', () => {
       );
       activities[1].values[idx2].value = ['_te_2469'];
 
-      const allValues2 = getAllValuesFromActivities('values', activities);
+      const allValues2 = getAllValuesFromActivities(
+        ConflictType.VALUES,
+        activities,
+      );
       expect(allValues2.accinfo).toHaveLength(4);
       expect(allValues2.user_iac).toHaveLength(2);
     });

@@ -1,17 +1,21 @@
 import { useState, useEffect, useRef, useMemo, Key } from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { debounce } from 'lodash';
 import ResizeObserver from 'rc-resize-observer';
 import classNames from 'classnames';
-import { Table } from 'antd';
+import { Table, TableProps } from 'antd';
 
 import './VirtualTable.scss';
 import { ColumnType } from 'antd/lib/table';
 import { TActivity } from '../../Types/Activity.type';
 import SelectionColumn from './SelectionColumn';
 
-const VirtualTable = (props: Parameters<typeof Table>[0]) => {
+interface Props extends TableProps<any> {
+  onLoadMore?: () => void;
+  paginationParams: { limit: Number; currentPage: Number; totalPages: Number };
+}
+const VirtualTable = (props: Props) => {
   const { columns, scroll, rowSelection, rowKey, dataSource, className } =
     props;
   const [tableWidth, setTableWidth] = useState(0);
@@ -70,10 +74,19 @@ const VirtualTable = (props: Parameters<typeof Table>[0]) => {
 
   const renderVirtualList = (
     rawData: readonly object[],
-    { scrollbarSize, ref, onScroll }: any,
+    { scrollbarSize, ref }: any,
   ) => {
     ref.current = connectObject;
     const totalHeight = rawData.length * 30;
+
+    const onScroll = (e) => {
+      if (e.verticalScrollDirection !== 'forward') return;
+      if (typeof props.onLoadMore === 'function') {
+        if (e.scrollTop + (scroll?.y || 0) >= totalHeight) {
+          debounce(props.onLoadMore, 150)();
+        }
+      }
+    };
 
     const Cell = ({ rowIndex, columnIndex }) => {
       const rowData = rawData[rowIndex] as any;

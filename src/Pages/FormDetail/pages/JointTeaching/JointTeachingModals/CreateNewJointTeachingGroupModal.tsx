@@ -114,6 +114,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       onCancel(true);
     }
   };
+
   const onCreate = () => {
     jointTeachingCalculating.addActivitiesToJointTeachingMatchRequest({
       canBePaired,
@@ -147,6 +148,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       width={900}
     >
       <JointTeachingActivitiesTable
+        selectable={false}
         loading={!!calculating}
         showResult
         formId={formId}

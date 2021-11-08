@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isEqual, isEmpty, uniqWith } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,6 +34,7 @@ interface Props {
   sorters?: null | IndexedObject;
   origin: string;
   trigger?: number;
+  pagination: { currentPage: number; limit: number; totalPages: number };
 }
 export const useActivitiesWatcher = ({
   formId,
@@ -41,6 +42,7 @@ export const useActivitiesWatcher = ({
   sorters,
   origin,
   trigger,
+  pagination,
 }: Props) => {
   const teCoreAPI = useTECoreAPI();
   const selectForm = useMemo(() => makeSelectForm(), []);
@@ -49,6 +51,10 @@ export const useActivitiesWatcher = ({
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const extIds = useSelector(selectExtIds);
 
+  const [totalPages, setTotalPages] = useState(pagination?.totalPages);
+  const [page, setPage] = useState(pagination?.currentPage || 1);
+  const [limit, setLimit] = useState(pagination?.limit || 10);
+
   const activities = useSelector(
     selectActivitiesForForm({ formId: form._id, tableType: origin }),
   );
@@ -56,15 +62,32 @@ export const useActivitiesWatcher = ({
   const prevFilters = usePrevious(filters);
   const prevSorters = usePrevious(sorters);
 
+  const setCurrentPaginationParams = (page: number, limit: number) => {
+    setPage(page);
+    setLimit(limit);
+  };
+
   // Fetch activities list there is any change in filters or sorters
-  const doFetchingActivities = () => {
-    dispatch(fetchActivitiesForForm(formId, { filters, sorters }, origin));
+  const doFetchingActivities = async () => {
+    const res = await dispatch(
+      fetchActivitiesForForm(
+        formId,
+        {
+          filters,
+          sorters,
+          pagination: { page, limit },
+        },
+        origin,
+      ),
+    );
+    if (res) {
+      setTotalPages(res.paginationParams?.totalPages ?? 1);
+    }
   };
 
   // Fetch activities when filters or sorters are changed.
   useEffect(() => {
     if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
-      console.log('DO FETCHING');
       doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,6 +100,13 @@ export const useActivitiesWatcher = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
+
+  // Fetch when changing page
+  useEffect(() => {
+    if (page && page <= totalPages) {
+      doFetchingActivities();
+    }
+  }, [page, limit]);
 
   const submissionPayload = useMemo(() => {
     const sections = form.sections;
@@ -104,6 +134,10 @@ export const useActivitiesWatcher = ({
     fetchLabelsFromExtIds(teCoreAPI, dispatch, extIds, activityPayload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
+
+  return {
+    setCurrentPaginationParams,
+  };
 };
 
 export const useActivitiesObjectWatcher = ({

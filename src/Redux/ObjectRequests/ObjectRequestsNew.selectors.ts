@@ -1,4 +1,4 @@
-import { createSelector } from '../../../node_modules/reselect/lib/index';
+import { createSelector } from 'reselect';
 import { submissionsState } from '../FormSubmissions/formSubmissions.selectors';
 import { ObjectRequest } from './ObjectRequests.types';
 
