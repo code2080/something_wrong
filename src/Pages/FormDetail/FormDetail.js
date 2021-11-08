@@ -15,6 +15,7 @@ import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
+  selectActivitiesInTable,
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
@@ -34,6 +35,11 @@ import {
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import {
+  ACTIVITIES_TABLE,
+  UNMATCHED_ACTIVITIES_TABLE,
+  MATCHED_ACTIVITIES_TABLE,
+} from 'Constants/tables.constants';
 
 import {
   ASSISTED_SCHEDULING_PERMISSION_NAME,
@@ -99,6 +105,13 @@ const FormPage = () => {
         mode: form.reservationmode,
         callback: ({ _res }) => {},
       });
+    [
+      ACTIVITIES_TABLE,
+      UNMATCHED_ACTIVITIES_TABLE,
+      MATCHED_ACTIVITIES_TABLE,
+    ].forEach((tableType) => {
+      dispatch(selectActivitiesInTable(tableType));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
