@@ -141,7 +141,7 @@ const reducer = (state = initialState, action) => {
         },
         paginationParams: {
           ...state.paginationParams,
-          [formId]: {
+          [`${formId}${tableType}`]: {
             totalPages,
             currentPage,
             limit,

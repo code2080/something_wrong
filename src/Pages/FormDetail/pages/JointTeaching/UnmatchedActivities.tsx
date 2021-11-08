@@ -4,35 +4,22 @@ import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import { useDispatch, useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import {
-  makeSelectPaginationParamsForForm,
   makeSelectSortOrderForActivities,
-  makeSelectSortParamsForActivities,
   selectSelectedActivities,
 } from 'Redux/GlobalUI/globalUI.selectors';
 import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
-import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
-import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // COMPONNETS
-import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { TActivity } from 'Types/Activity.type';
 
 // CONSTANTS
-import { SorterResult } from 'antd/lib/table/interface';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
 // ACTIONS
-import {
-  setActivitySorting,
-  resetActivitySorting,
-  selectActivitiesInTable,
-} from 'Redux/GlobalUI/globalUI.actions';
-import ActivityTable from '../ActivityTable';
+import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
 import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
+import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
 
 interface Props {
   formId: string;
@@ -43,51 +30,12 @@ const UnmatchedActivities = ({ formId }: Props) => {
     useState(false);
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
-  const design = useSelector(selectDesignForForm)(formId);
-  const isLoading = useSelector(
-    createLoadingSelector([FETCH_ACTIVITIES_FOR_FORM]),
-  );
 
   const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
 
-  const onSortActivities = (sorter: SorterResult<object>): void => {
-    if (!sorter?.columnKey) return;
-    sorter?.order
-      ? dispatch(
-          setActivitySorting(
-            formId,
-            sorter.columnKey,
-            sorter.order,
-            UNMATCHED_ACTIVITIES_TABLE,
-          ),
-        )
-      : dispatch(resetActivitySorting(formId, UNMATCHED_ACTIVITIES_TABLE));
-  };
-
-  const selectedFilterValues = useSelector(
-    selectSelectedFilterValues({ formId, origin: UNMATCHED_ACTIVITIES_TABLE }),
-  );
-  const selectedSortingParams = useSelector((state) =>
-    makeSelectSortParamsForActivities(UNMATCHED_ACTIVITIES_TABLE)(
-      state,
-      formId,
-    ),
-  );
-  const selectedPaginationParams = useSelector((state) =>
-    makeSelectPaginationParamsForForm()(state, formId),
-  );
-
-  const { setCurrentPaginationParams } = useActivitiesWatcher({
-    formId,
-    filters: selectedFilterValues,
-    sorters: selectedSortingParams,
-    origin: UNMATCHED_ACTIVITIES_TABLE,
-    pagination: selectedPaginationParams,
-    trigger: triggerFetchingActivities,
-  });
-
+  // TODO: Should be removed later
   const activities = useSelector(
     selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
   );
@@ -135,17 +83,9 @@ const UnmatchedActivities = ({ formId }: Props) => {
         onAddJointTeachingMatch={addJointTeachingMatch}
         selectedRowKeys={selectedRowKeys}
       />
-      <ActivityTable
-        design={design}
-        tableType={UNMATCHED_ACTIVITIES_TABLE}
-        isLoading={!!isLoading}
-        activities={tableDataSource}
-        onSort={onSortActivities}
-        selectedActivities={selectedRowKeys}
-        additionalColumns={{
-          pre: JointTeachingColumn(),
-        }}
-        onSetCurrentPaginationParams={setCurrentPaginationParams}
+      <UnmatchedActivitiesTable
+        formId={formId}
+        triggerFetching={triggerFetchingActivities}
       />
       <CreateNewJointTeachingGroupModal
         visible={createNewGroupVisible}
@@ -157,9 +97,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
           }
         }}
         formId={formId}
-        activities={activities.filter(({ _id }) =>
-          selectedRowKeys.includes(_id),
-        )}
+        activities={selectedActivities}
       />
       <SelectJointTeachingGroupToAddActivitiesModal
         formId={formId}

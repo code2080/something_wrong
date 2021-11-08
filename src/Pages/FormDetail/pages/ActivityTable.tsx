@@ -97,6 +97,8 @@ const ActivityTable = ({
         }
       }
       pagination={{
+        current: paginationParams?.currentPage || 1,
+        pageSize: paginationParams?.limit || 10,
         total: totalPages || 10,
         onChange: (page, limit) => {
           if (onSetCurrentPaginationParams)

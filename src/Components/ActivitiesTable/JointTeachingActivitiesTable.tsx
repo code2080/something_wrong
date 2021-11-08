@@ -20,8 +20,6 @@ import {
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import {
   ConflictType,
@@ -50,9 +48,12 @@ interface Props {
   loading?: boolean;
   selectable?: boolean;
   tableType?: string;
+  hasPagination?: boolean;
 }
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
+  onSetCurrentPaginationParams?: (page: number, limit: number) => void;
+  paginationParams?: { limit: number; currentPage: number; totalPages: number };
 }
 interface TActivityResult extends TActivity {
   jointTeachings: Array<{ object: string; typeExtId: string }>;
@@ -86,10 +87,9 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     jointTeachingGroupId,
     tableType,
     selectable,
+    onSetCurrentPaginationParams,
+    paginationParams,
   } = props;
-  const unmatchedActivities = useSelector(
-    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
-  );
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
@@ -334,12 +334,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         pagination={false}
         selectedActivities={selectedActivities}
         onSelect={onSelect}
+        onSetCurrentPaginationParams={onSetCurrentPaginationParams}
+        paginationParams={paginationParams}
       />
       <AddActivitiesToJointTeachingGroupModal
         formId={formId}
         visible={addActivityModalVisible}
         onCancel={() => setAddActivityModalVisible(false)}
-        activities={unmatchedActivities}
         onSubmit={onAddActivity}
         jointTeachingGroupId={jointTeachingGroupId}
       />
