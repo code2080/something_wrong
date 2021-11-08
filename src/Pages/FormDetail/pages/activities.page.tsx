@@ -56,9 +56,6 @@ const ActivitiesPage = () => {
   const selectedRowKeys = useSelector(
     selectSelectedActivities(ACTIVITIES_TABLE),
   );
-  // const selectedRowKeys = useMemo(() => {
-  //   return selectedRows.map(({ _id }) => _id);
-  // }, [selectedRows]);
 
   // Select filters
   const selectedFilterValues = useSelector(
@@ -142,7 +139,7 @@ const ActivitiesPage = () => {
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
 
-  /**
+  /*
    * EVENT HANDLERS
    */
   const { handleScheduleActivities, handleDeleteActivities } =
