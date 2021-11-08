@@ -96,6 +96,7 @@ const ActivityTable = ({
           selectedRowKeys: selectedActivitiesIds,
           onChange: onRowSelect,
           preserveSelectedRowKeys: true,
+          hideSelectAll: true,
         }
       }
       pagination={{
