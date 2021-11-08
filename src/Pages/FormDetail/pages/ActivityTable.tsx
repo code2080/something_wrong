@@ -51,7 +51,9 @@ const ActivityTable = ({
   ...props
 }: Props) => {
   const dispatch = useDispatch();
-  const selectedActivitiesIds = useSelector(selectSelectedActivities(tableType));
+  const selectedActivitiesIds = useSelector(
+    selectSelectedActivities(tableType),
+  );
   useActivitiesObjectWatcher({ activities });
   const calculateAvailableTableHeight = () => {
     return ((window as any).tePrefsHeight ?? 500) - 110;
