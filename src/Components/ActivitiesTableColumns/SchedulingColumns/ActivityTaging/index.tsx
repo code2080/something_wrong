@@ -11,21 +11,26 @@ import ActivityTagPopover from './Popover';
 import './index.scss';
 
 type Props = {
-  activities: TActivity[];
+  activity: TActivity;
 };
 
-const ActivityTagSelector = ({ activities }: Props) => {
+const ActivityTagSelector = ({ activity }: Props) => {
   const { formId }: { formId: string } = useParams();
   const selectedActivityTag: TActivityTag | null = useSelector(
     selectActivityTag,
-  )(formId, activities[0].tagId);
+  )(formId, activity.tagId);
 
   return (
     <div className='activity-tag'>
       <Popover
         overlayClassName='activity-tag-popover--wrapper'
         title='Tag activity'
-        content={<ActivityTagPopover activities={activities} />}
+        content={
+          <ActivityTagPopover
+            selectedActivityIds={[activity._id]}
+            selectedTagId={activity.tagId}
+          />
+        }
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }

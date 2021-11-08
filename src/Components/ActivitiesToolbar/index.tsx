@@ -1,4 +1,4 @@
-import { Key, useMemo } from 'react';
+import { Key } from 'react';
 import { Button, Divider, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
-// import { activityFilterFn } from 'Utils/activities.helpers';
 import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
@@ -26,8 +25,6 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 import { TActivity } from '../../Types/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
-import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
-import { makeSelectAllActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 
 type Props = {
   selectedRowKeys: Key[];
@@ -64,15 +61,6 @@ const ActivitiesToolbar = ({
     selectAllActivitiesAreScheduling(formId),
   );
 
-  // const selectedActivities = useSelector(
-  //   selectSelectedActivities(ACTIVITIES_TABLE),
-  // );
-
-  /// TODO: Add logic to cancel only activities that are cancellable
-  // const deleteableActivities: TActivity[] = useMemo(
-  //   () => selectedActivities.filter(activityFilterFn.canBeSelected),
-  //   [selectedActivities],
-  // );
   const deleteableActivities = [];
 
   const hasSchedulingPermissions = useSelector(
@@ -91,7 +79,7 @@ const ActivitiesToolbar = ({
         title='Tag activity'
         content={
           <ActivityTagPopover
-            activities={/* selectedActivities  TODO: Fix tagging */ []}
+            selectedActivityIds={selectedRowKeys as string[]}
           />
         }
         getPopupContainer={() =>
