@@ -75,8 +75,8 @@ const ActivityTable = ({
     [design, columnPrefix, renderer],
   );
 
-  const onRowSelect = (selectedRowKeys, selectedRows) => {
-    dispatch(selectActivitiesInTable(tableType, selectedRows));
+  const onRowSelect = (selectedRowKeys: string[]) => {
+    dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
   };
 
   return (
