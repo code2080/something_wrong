@@ -6,7 +6,6 @@ import { AppstoreOutlined } from '@ant-design/icons';
 import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
 import { TActivity } from '../../../../Types/Activity.type';
-import { TActivityTag } from '../../../../Types/ActivityTag.type';
 import ActivityTagPopover from './Popover';
 import './index.scss';
 
@@ -16,9 +15,10 @@ type Props = {
 
 const ActivityTagSelector = ({ activity }: Props) => {
   const { formId }: { formId: string } = useParams();
-  const selectedActivityTag: TActivityTag | null = useSelector(
-    selectActivityTag,
-  )(formId, activity.tagId);
+  const selectedActivityTag = useSelector(selectActivityTag)(
+    formId,
+    activity.tagId,
+  );
 
   return (
     <div className='activity-tag'>
@@ -28,7 +28,7 @@ const ActivityTagSelector = ({ activity }: Props) => {
         content={
           <ActivityTagPopover
             selectedActivityIds={[activity._id]}
-            selectedTagId={activity.tagId}
+            selectedTagId={selectedActivityTag?._id}
           />
         }
         getPopupContainer={() =>
