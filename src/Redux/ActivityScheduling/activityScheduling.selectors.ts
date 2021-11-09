@@ -22,6 +22,7 @@ export const selectAllActivitiesAreScheduling = (formId: string) =>
     stateSelector,
     activityStateSelector,
     (activityScheduling, activity) => {
+      // TODO: This doesnt work with SSP
       const activities = activity[formId];
       if (!activities) return false;
 

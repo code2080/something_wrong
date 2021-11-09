@@ -103,16 +103,13 @@ const useActivityScheduling = ({
 
   const getActivities = async (activityIds: string[]): Promise<TActivity[]> => {
     const token = await getToken();
-    const response = await axios.get(
-      `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
-      {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          Authorization: `Bearer ${token}`,
-        },
-        params: { activityIds: activityIds },
+    const response = await axios.get(`${getEnvParams().AM_BE_URL}activity`, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${token}`,
       },
-    );
+      params: { activityIds: activityIds },
+    });
 
     // TODO: add proper error handling and refactor/break into utils file instead
     return (response?.data?.activities ?? []).map((a) => new Activity(a));
