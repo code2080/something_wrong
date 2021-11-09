@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Dictionary, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { getToken } from '../Utils/tokenHelpers';
 // ACTIONS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
@@ -14,6 +13,7 @@ import {
   startSchedulingActivities,
   finishSchedulingActivities,
 } from 'Redux/ActivityScheduling/activityScheduling.actions';
+import { getActivities } from '../Utils/activities.helpers';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
@@ -25,7 +25,6 @@ import { makeSelectSubmissions } from '../Redux/FormSubmissions/formSubmissions.
 // TYPES
 import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
-import { Activity } from '../Models/Activity.model';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
@@ -33,9 +32,6 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
-import { selectActivityScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
-import axios from 'axios';
-import { getEnvParams } from 'configs';
 
 type Props = {
   formType: string;
@@ -53,7 +49,6 @@ const useActivityScheduling = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
-  const schedulingActivities = useSelector(selectActivityScheduling());
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -69,26 +64,26 @@ const useActivityScheduling = ({
   const { openConfirmModal } = SchedulingStatusModal();
 
   const checkActivitiesInFormInstance = (groupedActivities) => {
-    return groupBy(Object.keys(groupedActivities), (formInstanceId) => {
-      const unScheduleActivities = (allActivities[formInstanceId] || []).filter(
+    return groupBy(Object.keys(groupedActivities), (submissionId) => {
+      const unScheduleActivities = (allActivities[submissionId] || []).filter(
         (activity: TActivity) =>
           activity.activityStatus === EActivityStatus.NOT_SCHEDULED,
       );
-      const fI = indexedFormInstances[formInstanceId];
+      const submission = indexedFormInstances[submissionId];
 
-      const activitiesInFormInstance = groupedActivities[formInstanceId];
-      switch (fI.teCoreProps.schedulingProgress) {
+      const activitiesInSubmission = groupedActivities[submissionId];
+      switch (submission.teCoreProps.schedulingProgress) {
         // If NOT_SCHEDULED
         case teCoreSchedulingProgress.NOT_SCHEDULED: {
-          if (unScheduleActivities.length === activitiesInFormInstance.length)
+          if (unScheduleActivities.length === activitiesInSubmission.length)
             return teCoreSchedulingProgress.SCHEDULING_FINISHED;
-          if (unScheduleActivities.length > activitiesInFormInstance.length)
+          if (unScheduleActivities.length > activitiesInSubmission.length)
             return teCoreSchedulingProgress.IN_PROGRESS;
           return null;
         }
 
         case teCoreSchedulingProgress.IN_PROGRESS:
-          if (unScheduleActivities.length === activitiesInFormInstance.length)
+          if (unScheduleActivities.length === activitiesInSubmission.length)
             return teCoreSchedulingProgress.SCHEDULING_FINISHED;
           return null;
 
@@ -99,20 +94,6 @@ const useActivityScheduling = ({
           return null;
       }
     });
-  };
-
-  const getActivities = async (activityIds: string[]): Promise<TActivity[]> => {
-    const token = await getToken();
-    const response = await axios.get(`${getEnvParams().AM_BE_URL}activity`, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${token}`,
-      },
-      params: { activityIds: activityIds },
-    });
-
-    // TODO: add proper error handling and refactor/break into utils file instead
-    return (response?.data?.activities ?? []).map((a) => new Activity(a));
   };
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
