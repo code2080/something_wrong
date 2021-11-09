@@ -113,8 +113,8 @@ const useActivityScheduling = ({
         params: { activityIds: activityIds },
       },
     );
- 
-      // TODO: add proper error handling and refactor/break into utils file instead
+
+    // TODO: add proper error handling and refactor/break into utils file instead
     return (response?.data?.activities ?? []).map((a) => new Activity(a));
   };
 
