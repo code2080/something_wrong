@@ -129,7 +129,10 @@ const ActivitiesPage = () => {
     trigger: fetchingTrigger,
   });
   const design = useSelector(selectDesignForForm)(formId);
-  const selectAllActivityIdsForForm = makeSelectAllActivityIdsForForm();
+  const selectAllActivityIdsForForm = useMemo(
+    () => makeSelectAllActivityIdsForForm(),
+    [],
+  );
 
   const allActivityIds = useSelector((state) =>
     selectAllActivityIdsForForm(state, formId),
