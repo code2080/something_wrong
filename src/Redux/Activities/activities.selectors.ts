@@ -57,10 +57,11 @@ export const selectActivitiesForForm = ({ formId, tableType }) =>
       return Object.values(activity[activitiesTableId] || {})
         .flat()
         .map((activity: Activity) => {
-          activity.updateScopedObject(
-            formSubmissions?.[activity.formInstanceId]?.scopedObject,
-          );
-          return activity as TActivity;
+          return new Activity({
+            ...activity,
+            scopedObject:
+              formSubmissions?.[activity.formInstanceId]?.scopedObject,
+          }) as TActivity;
         });
     },
   );
