@@ -1,4 +1,4 @@
-import { Key, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 import {
   setActivitySorting,
   resetActivitySorting,
+  selectActivitiesInTable,
 } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
@@ -30,6 +31,8 @@ import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import {
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
+  makeSelectPaginationParamsForForm,
+  selectSelectedActivities,
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
@@ -47,6 +50,10 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
+  const selectedRows = useSelector(selectSelectedActivities(ACTIVITIES_TABLE));
+  const selectedRowKeys = useMemo(() => {
+    return selectedRows.map(({ _id }) => _id);
+  }, [selectedRows]);
 
   // Select filters
   const selectedFilterValues = useSelector(
@@ -70,6 +77,15 @@ const ActivitiesPage = () => {
 
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId, ACTIVITIES_TABLE),
+  );
+
+  const selectPaginationParamsForForm = useMemo(
+    () => makeSelectPaginationParamsForForm(),
+    [],
+  );
+
+  const selectedPaginationParams = useSelector((state) =>
+    selectPaginationParamsForForm(state, formId, ACTIVITIES_TABLE),
   );
 
   const allActivities = Object.values(activities).flat();
@@ -102,16 +118,16 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  useActivitiesWatcher({
+  const { setCurrentPaginationParams } = useActivitiesWatcher({
     formId,
     filters: selectedFilterValues,
     sorters: selectedSortingParams,
     origin: ACTIVITIES_TABLE,
+    pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
 
   const design = useSelector(selectDesignForForm)(formId);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
@@ -127,11 +143,11 @@ const ActivitiesPage = () => {
     });
 
   const onSelectAll = () => {
-    setSelectedRowKeys(tableDataSource.map((a) => a._id));
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, tableDataSource));
   };
 
   const onDeselectAll = () => {
-    setSelectedRowKeys([]);
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
 
   const onScheduleActivities = async (activities: TActivity[]) => {
@@ -180,16 +196,17 @@ const ActivitiesPage = () => {
         }}
       />
       <ActivityTable
+        tableType={ACTIVITIES_TABLE}
         design={design}
         isLoading={isLoading}
         activities={tableDataSource}
         onSort={onSortActivities}
-        selectedActivities={selectedRowKeys}
-        onSelect={setSelectedRowKeys}
         additionalColumns={{
           pre: SchedulingColumns(selectedRowKeys, isBeta),
           post: StaticColumns,
         }}
+        paginationParams={selectedPaginationParams}
+        onSetCurrentPaginationParams={setCurrentPaginationParams}
       />
     </>
   );

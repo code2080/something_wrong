@@ -1,5 +1,13 @@
 import React, { useMemo, ReactChild, useState, Key, useEffect } from 'react';
-import _, { chain, compact, isEmpty, isEqual, keyBy, uniq } from 'lodash';
+import _, {
+  chain,
+  compact,
+  flatten,
+  isEmpty,
+  isEqual,
+  keyBy,
+  uniq,
+} from 'lodash';
 
 // COMPONENTS
 import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
@@ -13,22 +21,21 @@ import { useSelector } from 'react-redux';
 // SELECTORS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import {
-  calculateActivityConflicts,
-  getUniqueValues,
-} from 'Utils/activities.helpers';
+import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
-import { UNMATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
-import { ActivityValue } from 'Types/ActivityValue.type';
+import { selectActivitiesUniqueValues } from '../../Redux/Activities/activities.selectors';
+import { ActivityValue, ValueType } from 'Types/ActivityValue.type';
 import {
   ConflictType,
   JointTeachingConflictMapping,
 } from 'Models/JointTeachingGroup.model';
 import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
 
+export interface SelectedConflictValue {
+  [type: string]: { [key: string]: Array<ValueType | undefined> };
+}
 interface Props {
   formId: string;
   activities: TActivity[];
@@ -36,11 +43,7 @@ interface Props {
   showResult?: boolean;
   onRemove?: (activityId: string) => void;
   onAddActivity?: (activityIds: Key[]) => void;
-  onSelectValue?: (
-    type: ConflictType,
-    checked: boolean,
-    activityValue: ActivityValue,
-  ) => void;
+  onSelectValue?: (values: SelectedConflictValue) => void;
   footer?: ReactChild;
   header?: ReactChild;
   selectedActivities?: Key[];
@@ -48,9 +51,15 @@ interface Props {
   onSelect?(selectedRowKeys: Key[]): void;
   conflicts?: JointTeachingConflictMapping;
   loading?: boolean;
+  selectable?: boolean;
+  tableType?: string;
+  hasPagination?: boolean;
 }
+
 interface TableProps extends Omit<Props, ''> {
   allElementIds: string[];
+  onSetCurrentPaginationParams?: (page: number, limit: number) => void;
+  paginationParams?: { limit: number; currentPage: number; totalPages: number };
 }
 interface TActivityResult extends TActivity {
   jointTeachings: Array<{ object: string; typeExtId: string }>;
@@ -58,12 +67,11 @@ interface TActivityResult extends TActivity {
 }
 
 const JointTeachingActivitiesTable = (props: TableProps) => {
-  const [selectedJointTeachingValue, setSelectedJointTeachingValue] = useState<{
-    [type: string]: { [key: string]: string };
-  }>({
-    [ConflictType.VALUES]: {},
-    [ConflictType.TIMING]: {},
-  });
+  const [selectedJointTeachingValue, setSelectedJointTeachingValue] =
+    useState<SelectedConflictValue>({
+      [ConflictType.VALUES]: {},
+      [ConflictType.TIMING]: {},
+    });
 
   const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
   const {
@@ -82,18 +90,18 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     conflicts,
     loading,
     jointTeachingGroupId,
+    tableType,
+    selectable,
+    onSetCurrentPaginationParams,
+    paginationParams,
   } = props;
-  const unmatchedActivities = useSelector(
-    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
-  );
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
-
-  const uniqueValues = useMemo(() => {
-    return getUniqueValues(activities);
-  }, [activities]);
+  const uniqueValues = useSelector(
+    selectActivitiesUniqueValues(formId, activities),
+  );
 
   const indexedSubmissions = useMemo(() => {
     return keyBy(submissions, '_id');
@@ -109,20 +117,17 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
       calculateActivityConflicts(activities, selectedJointTeachingValue);
 
     if (!firstActivity) return null;
-
     return {
       ...firstActivity,
-      timing: firstActivity.timing.map((val) => {
-        return (
-          mergedActivityTiming[val.extId] || {
-            ...val,
-            value: null,
-          }
-        );
-      }),
-      values: firstActivity.values.map((val) => {
-        return mergedActivityValues[val.extId] || [];
-      }),
+      _id: 'result-row',
+      timing: firstActivity.timing.map((val) => ({
+        ...val,
+        value: mergedActivityTiming[val.extId] || [],
+      })),
+      values: firstActivity.values.map((val) => ({
+        ...val,
+        value: mergedActivityValues[val.extId] || [],
+      })),
       submitters: chain(formInstanceIds)
         .map((formInstanceId) => indexedSubmissions[formInstanceId]?.submitter)
         .uniq()
@@ -153,31 +158,67 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
 
   useEffect(() => {
     if (!conflicts) return;
-    const selectedValues = {};
-    Object.keys(conflicts).forEach((type) => {
-      selectedValues[type] = {};
-      const typeValues = conflicts[type];
-      Object.keys(typeValues).forEach((extId) => {
-        const val = typeValues[extId];
-        const foundActivity = activities.find((act) => {
-          return act[type].find((values) =>
-            isEqual(
-              Array.isArray(values.value) ? values.value : [values.value],
-              val.resolution,
-            ),
-          );
-        });
-        if (foundActivity) {
-          selectedValues[type][extId] = foundActivity._id;
-        }
-      });
-    });
+    const initialSelectedValues = Object.entries(conflicts).reduce(
+      (results, [type, values]) => {
+        return {
+          ...results,
+          [type]: Object.entries(values).reduce(
+            (typeResults, [extId, conflictValue]) => ({
+              ...typeResults,
+              [extId]: conflictValue.resolution,
+            }),
+            {},
+          ),
+        };
+      },
+      {},
+    );
     setSelectedJointTeachingValue({
       ...selectedJointTeachingValue,
-      ...selectedValues,
+      ...initialSelectedValues,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
+
+  const onSelectedValuesChange = (
+    type: ConflictType,
+    checked: boolean,
+    activityValues: ActivityValue[],
+  ) => {
+    const extId = activityValues[0].extId;
+    const isArray = Array.isArray(activityValues[0].value);
+    let updatedSelectedValues = {};
+    if (checked) {
+      updatedSelectedValues = {
+        ...selectedJointTeachingValue,
+        [type]: {
+          ...selectedJointTeachingValue[type],
+          [extId]: [
+            ...(isArray ? selectedJointTeachingValue[type][extId] || [] : []),
+            ...flatten(
+              activityValues.map((activityValue) => activityValue.value),
+            ),
+          ],
+        },
+      };
+    } else {
+      updatedSelectedValues = {
+        ...selectedJointTeachingValue,
+        [type]: {
+          ...selectedJointTeachingValue[type],
+          [extId]: selectedJointTeachingValue[type][extId].filter((item) => {
+            return !activityValues.every((actVal) =>
+              isEqual(flatten([actVal.value]), flatten([item])),
+            );
+          }),
+        },
+      };
+    }
+    setSelectedJointTeachingValue(updatedSelectedValues);
+    if (typeof onSelectValue === 'function') {
+      onSelectValue(updatedSelectedValues);
+    }
+  };
 
   const columnPrefixRenderer = (type, [activity, __], [activityValue, ___]) => {
     if (!activity || !activityValue || Number(activity?.sequenceIdx) < 0)
@@ -188,21 +229,15 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     if (uniqueValues[type][activityValue[0].extId].length > 1) {
       return (
         <Checkbox
-          checked={
-            selectedJointTeachingValue[type][activityValue[0].extId] ===
-            activity._id
-          }
-          onChange={(e) => {
-            setSelectedJointTeachingValue({
-              ...selectedJointTeachingValue,
-              [type]: {
-                ...(selectedJointTeachingValue[type] || {}),
-                [activityValue[0].extId]: e.target.checked ? activity._id : '',
-              },
+          checked={(
+            selectedJointTeachingValue[type][activityValue[0].extId] || []
+          ).some((selectedVals) => {
+            return activityValue.every((actVal) => {
+              return isEqual(flatten([actVal.value]), flatten([selectedVals]));
             });
-            if (typeof onSelectValue === 'function') {
-              onSelectValue(type, e.target.checked, activityValue);
-            }
+          })}
+          onChange={(e) => {
+            onSelectedValuesChange(type, e.target.checked, activityValue);
           }}
         />
       );
@@ -214,6 +249,8 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     <div>
       {header}
       <ActivityTable
+        selectable={selectable}
+        tableType={tableType}
         loading={loading}
         className={`joint-teaching-activities-table ${
           showResult ? 'show-result' : ''
@@ -239,7 +276,6 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
               width: 100,
               title: 'Activity',
               key: 'index',
-              dataIndex: 'index',
               className: 'cell--activity-index',
               render: (_, __, rowIndex: number) => {
                 if (!showResult) return `Activity ${1 + rowIndex}`;
@@ -328,12 +364,13 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         pagination={false}
         selectedActivities={selectedActivities}
         onSelect={onSelect}
+        onSetCurrentPaginationParams={onSetCurrentPaginationParams}
+        paginationParams={paginationParams}
       />
       <AddActivitiesToJointTeachingGroupModal
         formId={formId}
         visible={addActivityModalVisible}
         onCancel={() => setAddActivityModalVisible(false)}
-        activities={unmatchedActivities}
         onSubmit={onAddActivity}
         jointTeachingGroupId={jointTeachingGroupId}
       />

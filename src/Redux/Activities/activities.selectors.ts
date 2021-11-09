@@ -8,7 +8,10 @@ import {
   TEObject,
   TEObjectFilter,
 } from '../../Types/TECorePayloads.type';
-import { extractValuesFromActivityValues } from '../../Utils/activities.helpers';
+import {
+  extractValuesFromActivityValues,
+  getUniqueValues,
+} from '../../Utils/activities.helpers';
 import { ActivityValue } from '../../Types/ActivityValue.type';
 import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
@@ -23,6 +26,8 @@ type TActivityMap = {
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
 const submissionStateSelector = (state) => state.submissions;
+const elementsStateSelector = (state) => state.elements;
+const formStateSelector = (state) => state.forms;
 
 const activitySchedulingStateSelector = (state: any): ActivitySchedulingState =>
   state.activityScheduling;
@@ -174,4 +179,19 @@ export const selectActivityStatus = (actvity: TActivity) =>
     return activityScheduling.scheduling[actvity._id]
       ? EActivityStatus.QUEUED
       : actvity.activityStatus;
+  });
+
+export const selectActivitiesUniqueValues = (formId, activities: TActivity[]) =>
+  createSelector(elementsStateSelector, formStateSelector, ({ map }, forms) => {
+    const form = forms[formId];
+    const { sections } = form;
+    const elementTypeMapping: { [key: string]: string } = sections
+      .flatMap((section) => section.elements)
+      .reduce((results, element) => {
+        return {
+          ...results,
+          [element._id]: map[element.elementId]?.type,
+        };
+      }, {});
+    return getUniqueValues(activities, elementTypeMapping);
   });

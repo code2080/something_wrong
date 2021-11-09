@@ -8,7 +8,6 @@ import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
 import { activityFilterFn } from 'Utils/activities.helpers';
-import { makeSelectActivitiesForFormAndIds } from 'Redux/Activities/activities.selectors';
 import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
@@ -27,6 +26,7 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 import { TActivity } from '../../Types/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 
 type Props = {
   selectedRowKeys: Key[];
@@ -63,16 +63,8 @@ const ActivitiesToolbar = ({
     selectAllActivitiesAreScheduling(formId),
   );
 
-  const selectActivitiesForFormAndIds = useMemo(
-    () => makeSelectActivitiesForFormAndIds(),
-    [],
-  );
-
-  const selectedActivities: TActivity[] = useSelector((state) =>
-    selectActivitiesForFormAndIds(state, {
-      formId,
-      activityIds: selectedRowKeys as string[],
-    }),
+  const selectedActivities: TActivity[] = useSelector(
+    selectSelectedActivities(ACTIVITIES_TABLE),
   );
 
   const deleteableActivities: TActivity[] = useMemo(

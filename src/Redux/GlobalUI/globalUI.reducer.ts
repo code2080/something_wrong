@@ -126,6 +126,7 @@ const reducer = (state = initialState, action) => {
         payload: {
           activities,
           actionMeta: { formId, tableType },
+          paginationParams: { totalPages, currentPage, limit },
         },
       } = action;
       if (!action || !action.payload) return state;
@@ -137,6 +138,25 @@ const reducer = (state = initialState, action) => {
             ...(state.activitySorting[`${formId}${tableType}`] || {}),
             sortOrder: activities.map((a) => a._id),
           },
+        },
+        paginationParams: {
+          ...state.paginationParams,
+          [`${formId}${tableType}`]: {
+            totalPages,
+            currentPage,
+            limit,
+          },
+        },
+      };
+    }
+
+    case types.SET_SELECTED_ACTIVITIES: {
+      const { tableType, activities } = action.payload;
+      return {
+        ...state,
+        selectedActivities: {
+          ...state.selectedActivities,
+          [tableType]: activities,
         },
       };
     }

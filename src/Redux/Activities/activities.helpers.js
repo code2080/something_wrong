@@ -16,9 +16,14 @@ import { getActivityValuesBasedOnElement } from '../../Utils/ActivityValues/help
  * @function updateActivitiesForForm
  * @description creates an updated state for the formIds activities
  * @param {Activity[]} activities
+ * @param {[formInstanceId: string]: Activity[]}
  * @returns {Object} updatedFormState
  */
-export const updateActivitiesForForm = (activities, sections) =>
+export const updateActivitiesForForm = (
+  activities,
+  sections,
+  activitiesInStore = {},
+) =>
   activities
     .map(
       (el, idx) =>
@@ -36,7 +41,7 @@ export const updateActivitiesForForm = (activities, sections) =>
           activity,
         ],
       }),
-      {},
+      activitiesInStore,
     );
 
 /**

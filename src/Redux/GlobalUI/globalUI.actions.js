@@ -15,6 +15,7 @@ import {
   GO_TO_PREVIOUS_TAB,
   SET_SORTING_FOR_ACTIVITIES,
   RESET_SORTING_FOR_ACTIVITIES,
+  SET_SELECTED_ACTIVITIES,
 } from './globalUI.actionTypes';
 
 export const setBreadcrumbs = (fragments) => ({
@@ -113,4 +114,9 @@ export const setActivitySorting = (
 export const resetActivitySorting = (formId, tableType) => ({
   type: RESET_SORTING_FOR_ACTIVITIES,
   payload: { formId, tableType },
+});
+
+export const selectActivitiesInTable = (tableType, activities) => ({
+  type: SET_SELECTED_ACTIVITIES,
+  payload: { tableType, activities },
 });
