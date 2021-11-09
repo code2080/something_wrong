@@ -237,6 +237,7 @@ const ActivityActionsDropdown = ({
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
+        // TODO: change to ids instead
         case 'SCHEDULE_ALL':
           handleScheduleActivities(
             activities.filter(
@@ -246,7 +247,7 @@ const ActivityActionsDropdown = ({
           );
           break;
         case 'SCHEDULE':
-          handleScheduleActivities([activity], key);
+          handleScheduleActivities([activity._id], key);
           break;
         case 'DELETE':
           teCoreAPI[activityActions[key].callname]({

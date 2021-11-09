@@ -157,19 +157,19 @@ const ActivitiesPage = () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
 
-  const onScheduleActivities = async (activities: TActivity[]) => {
-    await handleScheduleActivities(activities);
+  const onScheduleActivities = async (activityIds: string[]) => {
+    await handleScheduleActivities(activityIds);
     onDeselectAll();
   };
 
-  const onDeleteActivities = async (activities: TActivity[]) => {
+  const onDeleteActivities = async (activityIds: string[]) => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
       title: 'Canncel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
-        await handleDeleteActivities(activities);
+        await handleDeleteActivities(activityIds);
         onDeselectAll();
       },
     });
@@ -197,7 +197,7 @@ const ActivitiesPage = () => {
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
-        allActivities={tableDataSource}
+        allActivities={allActivityIds}
         onCreateMatchCallback={() => {
           setFetchingTrigger(fetchingTrigger + 1);
         }}

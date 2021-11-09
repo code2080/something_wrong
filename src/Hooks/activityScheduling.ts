@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Dictionary, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { getToken } from '../Utils/tokenHelpers';
 // ACTIONS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
@@ -23,9 +23,9 @@ import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import { makeSelectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
 
 // TYPES
-import { TFormInstance } from '../Types/FormInstance.type';
 import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
+import { Activity } from '../Models/Activity.model';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
@@ -34,6 +34,8 @@ import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
 import { selectActivityScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import axios from 'axios';
+import { getEnvParams } from 'configs';
 
 type Props = {
   formType: string;
@@ -72,7 +74,7 @@ const useActivityScheduling = ({
         (activity: TActivity) =>
           activity.activityStatus === EActivityStatus.NOT_SCHEDULED,
       );
-      const fI = indexedFormInstances[formInstanceId] as TFormInstance;
+      const fI = indexedFormInstances[formInstanceId];
 
       const activitiesInFormInstance = groupedActivities[formInstanceId];
       switch (fI.teCoreProps.schedulingProgress) {
@@ -99,10 +101,25 @@ const useActivityScheduling = ({
     });
   };
 
-  const handleScheduleActivities = async (_activities: TActivity[]) => {
-    const activities = _activities.filter(
-      (act) => !schedulingActivities[act._id],
+  const getActivities = async (activityIds: string[]): Promise<TActivity[]> => {
+    const token = await getToken();
+    const response = await axios.get(
+      `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${token}`,
+        },
+        params: { activityIds: activityIds },
+      },
     );
+ 
+      // TODO: add proper error handling and refactor/break into utils file instead
+    return (response?.data?.activities ?? []).map((a) => new Activity(a));
+  };
+
+  const handleScheduleActivities = async (selectedActivityIds: string[]) => {
+    const activities = await getActivities(selectedActivityIds);
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
@@ -126,6 +143,16 @@ const useActivityScheduling = ({
               dispatch(
                 finishSchedulingActivities(
                   activitiesOfFormInstance.map(({ _id }) => _id),
+                ),
+              );
+              dispatch(
+                updateActivities(
+                  formId,
+                  formInstanceId,
+                  updateActivitiesWithSchedulingResults(
+                    activitiesOfFormInstance,
+                    schedulingReturns,
+                  ),
                 ),
               );
               resolve([formInstanceId, schedulingReturns]);
@@ -186,7 +213,8 @@ const useActivityScheduling = ({
     );
   };
 
-  const handleDeleteActivities = async (activities: TActivity[]) => {
+  const handleDeleteActivities = async (activityIds: string[]) => {
+    const activities = await getActivities(activityIds);
     const groupedByFormInstance = groupBy(
       activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',

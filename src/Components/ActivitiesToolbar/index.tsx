@@ -22,7 +22,6 @@ import './index.scss';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 
 // TYPES
-import { TActivity } from '../../Types/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
@@ -30,9 +29,9 @@ type Props = {
   selectedRowKeys: Key[];
   onSelectAll(): void;
   onDeselectAll(): void;
-  onScheduleActivities(activities: TActivity[]): void;
-  onDeleteActivities(activities: TActivity[]): void;
-  allActivities: TActivity[];
+  onScheduleActivities(activities: string[]): void;
+  onDeleteActivities(activities: string[]): void;
+  allActivities: string[];
   onCreateMatchCallback: () => void;
 };
 
@@ -112,9 +111,7 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() =>
-          onScheduleActivities(/* selectedActivities TODO: Fix scheduling */ [])
-        }
+        onClick={() => onScheduleActivities(selectedRowKeys as string[])}
         disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
       >
         Schedule selected activities
@@ -143,7 +140,7 @@ const ActivitiesToolbar = ({
       <TagSelectedActivitiesButton />
       {isBetaOrDev && (
         <JointTeachingGroupMerger
-          activities={/* selectedActivities TODO: Fix joint teaching */ []}
+          activityIds={selectedRowKeys as string[]}
           formId={formId}
           onCreateMatchCallback={onCreateMatchCallback}
         />
