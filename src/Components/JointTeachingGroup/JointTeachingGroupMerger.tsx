@@ -1,5 +1,4 @@
 import { Button } from 'antd';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import CreateNewJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/CreateNewJointTeachingGroupModal';
@@ -31,7 +30,6 @@ const JointTeachingGroupMerger = ({
         visible={visible}
         onCancel={(refetchNeeded?: boolean) => {
           setVisible(false);
-          console.log(refetchNeeded);
           if (refetchNeeded) {
             onCreateMatchCallback();
           }
@@ -41,10 +39,6 @@ const JointTeachingGroupMerger = ({
       />
     </div>
   );
-};
-
-JointTeachingGroupMerger.propTypes = {
-  activities: PropTypes.array,
 };
 
 export default JointTeachingGroupMerger;
