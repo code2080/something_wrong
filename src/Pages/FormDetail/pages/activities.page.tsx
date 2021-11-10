@@ -195,7 +195,7 @@ const ActivitiesPage = () => {
   return (
     <>
       <ActivitiesToolbar
-        selectedRowKeys={selectedRowKeys}
+        selectedActivityIds={selectedRowKeys}
         onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}

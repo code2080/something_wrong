@@ -26,7 +26,7 @@ import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 type Props = {
-  selectedRowKeys: Key[];
+  selectedActivityIds: string[];
   onSelectAll(): void;
   onDeselectAll(): void;
   onScheduleActivities(activities: string[]): void;
@@ -42,7 +42,7 @@ type Props = {
  * x) Schedule activities
  */
 const ActivitiesToolbar = ({
-  selectedRowKeys,
+  selectedActivityIds,
   onSelectAll,
   onDeselectAll,
   onScheduleActivities,
@@ -60,15 +60,13 @@ const ActivitiesToolbar = ({
     selectAllActivitiesAreScheduling(formId),
   );
 
-  const deleteableActivities = [];
-
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
   const isBetaOrDev = useSelector(selectIsBetaOrDev);
 
   const TagSelectedActivitiesButton = () =>
-    !selectedRowKeys?.length ? (
+    !selectedActivityIds?.length ? (
       <Button size='small' type='link' disabled>
         Tag selected activities
       </Button>
@@ -78,7 +76,7 @@ const ActivitiesToolbar = ({
         title='Tag activity'
         content={
           <ActivityTagPopover
-            selectedActivityIds={selectedRowKeys as string[]}
+            selectedActivityIds={selectedActivityIds as string[]}
           />
         }
         getPopupContainer={() =>
@@ -95,7 +93,7 @@ const ActivitiesToolbar = ({
 
   return (
     <div className='activities-toolbar--wrapper'>
-      Activities selected:&nbsp; {selectedRowKeys?.length ?? 0}
+      Activities selected:&nbsp; {selectedActivityIds?.length ?? 0}
       <Button size='small' type='link' onClick={onSelectAll}>
         Select all
       </Button>
@@ -103,7 +101,7 @@ const ActivitiesToolbar = ({
         size='small'
         type='link'
         onClick={onDeselectAll}
-        disabled={!selectedRowKeys?.length}
+        disabled={!selectedActivityIds?.length}
       >
         Deselect all
       </Button>
@@ -111,8 +109,8 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onScheduleActivities(selectedRowKeys as string[])}
-        disabled={!selectedRowKeys?.length || !hasSchedulingPermissions}
+        onClick={() => onScheduleActivities(selectedActivityIds)}
+        disabled={!selectedActivityIds?.length || !hasSchedulingPermissions}
       >
         Schedule selected activities
       </Button>
@@ -131,8 +129,7 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onDeleteActivities(deleteableActivities)}
-        disabled={!deleteableActivities?.length || !hasSchedulingPermissions}
+        onClick={() => onDeleteActivities(selectedActivityIds)}
       >
         Cancel selected reservations
       </Button>
@@ -140,7 +137,7 @@ const ActivitiesToolbar = ({
       <TagSelectedActivitiesButton />
       {isBetaOrDev && (
         <JointTeachingGroupMerger
-          activityIds={selectedRowKeys as string[]}
+          activityIds={selectedActivityIds}
           formId={formId}
           onCreateMatchCallback={onCreateMatchCallback}
         />
