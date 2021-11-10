@@ -32,4 +32,9 @@ $iconDimension: 25px;
     color: $bittersweet;
     font-size: 0.6rem;
   }
+
+  .ant-form-text {
+    display: flex !important;
+    flex-wrap: wrap;
+  }
 }

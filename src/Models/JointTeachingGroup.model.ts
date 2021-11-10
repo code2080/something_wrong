@@ -5,6 +5,7 @@ import { groupBy, keyBy, uniq } from 'lodash';
 import { getConflictsResolvingStatus } from 'Utils/activities.helpers';
 
 export const SUPPORTED_VALUE_TYPES = ['string', 'number'];
+export const NOT_SUPPORTED_ELEMENT_TYPES = ['ELEMENT_TYPE_INPUT_TIME'];
 export const MAX_MATCHING_SCORE = 6;
 
 export enum JointTeachingStatus {
@@ -18,11 +19,14 @@ export enum ConflictType {
   VALUES = 'values',
 }
 
+export type JointTeachingConflictResolution = Array<
+  string | number | undefined | null
+>;
 export type JointTeachingConflict = {
   _id?: string;
   type: ConflictType;
   extId: string;
-  resolution: string[];
+  resolution: JointTeachingConflictResolution;
 };
 
 export type JointTeachingConflictMapping = {
@@ -106,6 +110,7 @@ export default class JointTeachingGroup {
       },
       {},
     );
+
     return conflictsMapping;
   }
 

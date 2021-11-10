@@ -1,8 +1,14 @@
 import {
   hydrateObjectRequests,
   populateWithFieldConstraint,
+  getUniqueValues,
+  getAllValuesFromActivities,
+  calculateActivityConflictsByType,
 } from '../activities.helpers';
 import populateWithFieldConstraintMock from '../__mock__/activities.helpers.mock';
+import { dummyJointTeachingActivities } from 'Mock/Activities';
+import { ConflictType } from 'Models/JointTeachingGroup.model';
+import { cloneDeep } from 'lodash';
 
 describe('Activity helpers tests', () => {
   const activity = {
@@ -706,6 +712,75 @@ describe('Activity helpers tests', () => {
         populateWithFieldConstraintMock as any,
       );
       expect([expected]).toEqual(returnedActivity);
+    });
+  });
+
+  describe('Activities in joint teaching', () => {
+    it('Should return all unique activity values', () => {
+      const activities = cloneDeep(dummyJointTeachingActivities);
+      const allTiming = getAllValuesFromActivities(
+        ConflictType.TIMING,
+        activities,
+      );
+      const allValues = getAllValuesFromActivities(
+        ConflictType.VALUES,
+        activities,
+      );
+      expect(allTiming).toBeTruthy();
+      expect(allTiming.length).toHaveLength(2);
+      expect(allTiming.startDate).toBeNull();
+
+      expect(allValues).toBeTruthy();
+      expect(allValues.accinfo).toHaveLength(3);
+      expect(allValues.user_iac).toHaveLength(3);
+
+      const idx = activities[0].values.findIndex(
+        (val) => val.extId === 'accinfo',
+      );
+      activities[0].values[idx].value = ['hasBeenChanged'];
+
+      const idx2 = activities[1].values.findIndex(
+        (val) =>
+          val.extId === 'user_iac' && val.value && val.value[0] === '_te_2473',
+      );
+      activities[1].values[idx2].value = ['_te_2469'];
+
+      const allValues2 = getAllValuesFromActivities(
+        ConflictType.VALUES,
+        activities,
+      );
+      expect(allValues2.accinfo).toHaveLength(4);
+      expect(allValues2.user_iac).toHaveLength(2);
+    });
+
+    it('Should return list of activity values indexed by ConflictStatus and extId', () => {
+      const activities = cloneDeep(dummyJointTeachingActivities);
+      const uniqueValues = getUniqueValues(activities);
+      expect(uniqueValues).toBeTruthy();
+      expect(uniqueValues.timing.length).toHaveLength(2);
+      expect(uniqueValues.values.eventtype).toHaveLength(1);
+      expect(uniqueValues.values.headcount).toHaveLength(2);
+      expect(uniqueValues.values.evt_option).toHaveLength(3);
+
+      activities[0].values[0].value = ['hasBeenChanged'];
+      const uniqueValues2 = getUniqueValues(activities);
+      expect(uniqueValues2).toBeTruthy();
+      expect(uniqueValues2.values.eventtype).toHaveLength(2);
+    });
+
+    it('Calculate activities conflicts', () => {
+      const conflicts = calculateActivityConflictsByType(
+        ConflictType.VALUES,
+        dummyJointTeachingActivities,
+        {
+          values: {
+            eventtype: ['_te_2480', 'anotherValue'],
+            evt_option: ['_te_2470', '_te_2472', '_te_2471'],
+          },
+        },
+      );
+      expect(conflicts.eventtype).toHaveLength(1);
+      expect(conflicts.evt_option).toHaveLength(3);
     });
   });
 });

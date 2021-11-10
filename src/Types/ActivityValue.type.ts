@@ -43,3 +43,7 @@ export type ActivityValue = {
   eventId?: string | null;
   rowIdx?: number | null;
 };
+
+export type IndexedActivityValueType = {
+  [extId: string]: null | ActivityValue[];
+};

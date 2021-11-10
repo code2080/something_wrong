@@ -45,7 +45,9 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
   };
 
   useEffect(() => {
-    dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
+    if (visible) {
+      dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
+    }
   }, [dispatch, visible]);
 
   return (
