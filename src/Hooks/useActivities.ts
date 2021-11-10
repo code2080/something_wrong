@@ -106,6 +106,7 @@ export const useActivitiesWatcher = ({
     if (page && page <= totalPages) {
       doFetchingActivities();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit]);
 
   const submissionPayload = useMemo(() => {

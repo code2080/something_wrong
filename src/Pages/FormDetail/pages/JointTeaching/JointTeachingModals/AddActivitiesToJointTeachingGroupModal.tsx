@@ -1,4 +1,4 @@
-import React, { useEffect, Key, useMemo } from 'react';
+import React, { useEffect, Key } from 'react';
 import { Modal, ModalProps } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -46,7 +46,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
 
   useEffect(() => {
     dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
-  }, [visible]);
+  }, [dispatch, visible]);
 
   return (
     <Modal

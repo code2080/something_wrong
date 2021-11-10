@@ -360,7 +360,6 @@ ActivityActionsDropdown.propTypes = {
   jobs: PropTypes.array.isRequired,
   updateActivity: PropTypes.func.isRequired,
   updateActivities: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
