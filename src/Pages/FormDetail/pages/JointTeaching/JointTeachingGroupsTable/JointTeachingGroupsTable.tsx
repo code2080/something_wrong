@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Key } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { compact, isEmpty } from 'lodash';
+import { cloneDeep, compact, flatten, isEmpty, isEqual, remove } from 'lodash';
 
 // ACTIONS
 import {
@@ -25,6 +25,14 @@ import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.sel
 import { Button, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
+import JointTeachingActivitiesTable, {
+  SelectedConflictValue,
+} from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
+import StatusLabel from 'Components/StatusLabel/StatusLabel';
+import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
+import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
+import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
+import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 
 // CONSTANTS
 import {
@@ -38,16 +46,10 @@ import JointTeachingGroup, {
   ConflictType,
   JointTeachingConflict,
   JointTeachingStatus,
+  JointTeachingConflictResolution,
 } from 'Models/JointTeachingGroup.model';
-import JointTeachingActivitiesTable from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
-import StatusLabel from 'Components/StatusLabel/StatusLabel';
 
 import './JointTeachingGroupsTable.scss';
-import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
-import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
-import { ActivityValue } from 'Types/ActivityValue.type';
-import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';
-import JointTeachingMatchedOn from './JointTeachingMatchedOn';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props {
@@ -163,54 +165,99 @@ const JointTeachingGroupsTable = (props: Props) => {
     ]);
   };
 
-  const onSelectValue = (
-    jointTeaching: JointTeachingGroup,
-    {
-      type,
-      checked,
-      activityValue,
-    }: { type: ConflictType; checked: boolean; activityValue: ActivityValue },
-  ) => {
-    if (isEmpty(activityValue)) return;
-    const { conflictsMapping } = jointTeaching;
-    const { value, extId } = activityValue[0];
-    const resolution = Array.isArray(value) ? value : [value];
-    const foundConflict = conflictsMapping[type]?.[extId];
-    if (checked) {
-      if (foundConflict) {
+  const onDeleteConflicts = (
+    jointTeachingId: string,
+    conflicts: JointTeachingConflict[],
+  ) =>
+    Promise.all(
+      conflicts.map((conflict) =>
         dispatch(
-          updateJointTeachingConflict({
+          removeJointTeachingConflict({
             formId,
-            jointTeachingId: jointTeaching._id,
-            conflict: {
-              _id: foundConflict._id,
-              resolution,
-            },
+            jointTeachingId: jointTeachingId,
+            conflictId: conflict._id,
           }),
-        );
-      } else {
-        const conflict: JointTeachingConflict = {
-          type,
-          resolution,
-          extId,
-        };
+        ),
+      ),
+    );
+
+  const onAddConflicts = (
+    jointTeachingId: string,
+    conflicts: JointTeachingConflict[],
+  ) =>
+    Promise.all(
+      conflicts.map((conflict) =>
         dispatch(
           addJointTeachingConflict({
             formId,
-            jointTeachingId: jointTeaching._id,
+            jointTeachingId: jointTeachingId,
             conflict,
           }),
-        );
+        ),
+      ),
+    );
+
+  const onUpdateConflicts = (
+    jointTeachingId: string,
+    conflicts: JointTeachingConflict[],
+  ) =>
+    Promise.all(
+      conflicts.map((conflict) =>
+        dispatch(
+          updateJointTeachingConflict({
+            formId,
+            jointTeachingId: jointTeachingId,
+            conflict: {
+              _id: conflict._id,
+              resolution: conflict.resolution,
+            },
+          }),
+        ),
+      ),
+    );
+
+  const onSelectValue = (
+    jointTeaching: JointTeachingGroup,
+    _values: SelectedConflictValue,
+  ) => {
+    const values = cloneDeep(_values);
+    const conflicts = [...jointTeaching.conflicts];
+    const conflictsToDelete = remove(conflicts, (conflict) => {
+      if (isEmpty(values[conflict.type][conflict.extId])) {
+        delete values[conflict.type][conflict.extId];
+        return true;
       }
-    } else {
-      dispatch(
-        removeJointTeachingConflict({
-          formId,
-          jointTeachingId: jointTeaching._id,
-          conflictId: foundConflict._id,
-        }),
-      );
-    }
+    });
+    const conflictsToUpdate = compact(
+      conflicts.map((conflict) => {
+        const resolution = values[conflict.type][conflict.extId];
+        const updatedResolution = values[conflict.type][conflict.extId];
+        delete values[conflict.type][conflict.extId];
+        if (isEqual(conflict.resolution, updatedResolution)) return null;
+        return {
+          ...conflict,
+          resolution: flatten(resolution as JointTeachingConflictResolution),
+        };
+      }),
+    );
+    const conflictsToAdd = Object.entries(values).flatMap(
+      ([type, typeValues]) => {
+        return Object.entries(typeValues)
+          .filter(([, resolution]) => !isEmpty(resolution))
+          .map(([extId, resolution]) => {
+            return {
+              type: type as ConflictType,
+              extId,
+              resolution: flatten(
+                resolution as JointTeachingConflictResolution,
+              ),
+            };
+          });
+      },
+    );
+    onDeleteConflicts(jointTeaching._id, conflictsToDelete);
+    onUpdateConflicts(jointTeaching._id, conflictsToUpdate);
+    onAddConflicts(jointTeaching._id, conflictsToAdd);
   };
 
   const mergeBtn = (group: JointTeachingGroup) => {
@@ -369,9 +416,7 @@ const JointTeachingGroupsTable = (props: Props) => {
               onAddActivity={(activityIds: Key[]) => {
                 onAddActivity(group._id, activityIds);
               }}
-              onSelectValue={(type, checked, activityValue) =>
-                onSelectValue(group, { type, checked, activityValue })
-              }
+              onSelectValue={(values) => onSelectValue(group, values)}
               jointTeachingGroupId={group._id}
             />
           );

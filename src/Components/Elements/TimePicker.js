@@ -10,7 +10,7 @@ import './Pickers.scss';
 const TimePicker = ({ value }) => {
   const _value = useMemo(() => {
     if (value === null || value === undefined) return 'N/A';
-    if (typeof value === 'string') return moment(value).format(TIME_FORMAT);
+    if (isNaN(Number(value))) return moment(value).format(TIME_FORMAT);
     return moment().startOf('day').add(value, 'minutes').format(TIME_FORMAT);
   }, [value]);
   return (
