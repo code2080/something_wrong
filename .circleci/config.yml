@@ -6,6 +6,13 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
   jira: circleci/jira@1.3.1
 
+jobs:
+  build:
+    docker:
+      - image: posquit0/docker-cd
+    steps:
+      - jira/notify
+
 # Orchestrate or schedule a set of jobs
 workflows:
   # Name the workflow "welcome"
@@ -15,7 +22,7 @@ workflows:
       - welcome/run
   build:
     jobs:
-      - jira/notify:
+      - build:
           filters: &build-filters
             tags:
               only: /^v.*/
