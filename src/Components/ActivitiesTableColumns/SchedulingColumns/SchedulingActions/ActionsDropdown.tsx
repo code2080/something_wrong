@@ -43,6 +43,9 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
+import { makeSelectAllActivityIdsForForm } from 'Redux/Activities/activities.selectors';
+import useActivityScheduling from 'Hooks/activityScheduling';
+import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 
 const mapStateToProps = (state, { activity }) => {
   const activities =
@@ -72,6 +75,7 @@ const activityActions = {
     label: 'Schedule submission',
     filterFn: activityFilterFn.canBeScheduled,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+    isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
   },
   SCHEDULE: {
     label: 'Schedule activity',
@@ -94,6 +98,7 @@ const activityActions = {
     callname: teCoreCallnames.STOP_SCHEDULING,
   },
   DELETE_ALL: {
+    isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
     label: 'Cancel all reservations',
     filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
@@ -105,6 +110,7 @@ const ActivityActionsDropdown = ({
   activity,
   jobs,
   mSStatus,
+  // TODO: SSP: Change to activityIds instead
   activities,
   updateActivity,
   updateActivities,
@@ -122,6 +128,16 @@ const ActivityActionsDropdown = ({
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
+  const selectForm = useMemo(() => makeSelectForm(), []);
+  const form = useSelector(state => selectForm(state, formId));
+  const { /* handleScheduleActivities, */ handleDeleteActivities } =
+  useActivityScheduling({
+    formId,
+    formType: form?.formType ?? '',
+    reservationMode: form?.reservationMode ?? ''
+  });
+  const selectAllActivityIds = useMemo(() => makeSelectAllActivityIdsForForm(), []);
+  const allActivityIds = useSelector(state => selectAllActivityIds(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];
@@ -239,7 +255,9 @@ const ActivityActionsDropdown = ({
       switch (key) {
         // TODO: change to ids instead
         case 'SCHEDULE_ALL':
+          // TODO: SSP: To be able to do this properly we need the BE to send us a list of all activities and their forminstanceid, or we need to add formInstanceid as a query to the get activities call
           handleScheduleActivities(
+            // TODO: SSP: Move this logic inside of handleScheduleActivities
             activities.filter(
               (a) => a.activityStatus !== EActivityStatus.SCHEDULED,
             ),
@@ -256,10 +274,7 @@ const ActivityActionsDropdown = ({
           });
           break;
         case 'DELETE_ALL':
-          teCoreAPI[activityActions[key].callname]({
-            activities,
-            callback: onDeleteActivities,
-          });
+          handleDeleteActivities(allActivityIds);
           break;
         case 'STOP_SCHEDULING':
           jobs.forEach((job) => {
@@ -301,7 +316,7 @@ const ActivityActionsDropdown = ({
           .map((key) => (
             <Menu.Item
               disabled={
-                isScheduling ||
+                activityActions[key]?.isDisabled || isScheduling ||
                 (['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
                   !hasAssistedSchedulingPermissions)
               }
