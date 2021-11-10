@@ -9,11 +9,8 @@ orbs:
 jobs:
   build:
     docker:
-      - image: posquit0/docker-cd
+      - image: cimg/base:2021.04
     steps:
-      - run:
-          name: Install curl and jq
-          command: apt install curl jq
       - jira/notify
 
 # Orchestrate or schedule a set of jobs
