@@ -21,7 +21,10 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
-import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import {
+  makeSelectActivitiesForForm,
+  makeSelectAllActivityIdsForForm,
+} from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
 
@@ -50,10 +53,9 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const selectedRows = useSelector(selectSelectedActivities(ACTIVITIES_TABLE));
-  const selectedRowKeys = useMemo(() => {
-    return selectedRows.map(({ _id }) => _id);
-  }, [selectedRows]);
+  const selectedRowKeys = useSelector(
+    selectSelectedActivities(ACTIVITIES_TABLE),
+  );
 
   // Select filters
   const selectedFilterValues = useSelector(
@@ -126,13 +128,21 @@ const ActivitiesPage = () => {
     pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
-
   const design = useSelector(selectDesignForForm)(formId);
+  const selectAllActivityIdsForForm = useMemo(
+    () => makeSelectAllActivityIdsForForm(),
+    [],
+  );
+
+  const allActivityIds = useSelector((state) =>
+    selectAllActivityIdsForForm(state, formId),
+  );
+
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
 
-  /**
+  /*
    * EVENT HANDLERS
    */
   const { handleScheduleActivities, handleDeleteActivities } =
@@ -142,27 +152,27 @@ const ActivitiesPage = () => {
       reservationMode,
     });
 
-  const onSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, tableDataSource));
+  const handleSelectAll = () => {
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
   };
 
   const onDeselectAll = () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
 
-  const onScheduleActivities = async (activities: TActivity[]) => {
-    await handleScheduleActivities(activities);
+  const onScheduleActivities = async (activityIds: string[]) => {
+    await handleScheduleActivities(activityIds);
     onDeselectAll();
   };
 
-  const onDeleteActivities = async (activities: TActivity[]) => {
+  const onDeleteActivities = async (activityIds: string[]) => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
       title: 'Canncel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
-        await handleDeleteActivities(activities);
+        await handleDeleteActivities(activityIds);
         onDeselectAll();
       },
     });
@@ -185,12 +195,12 @@ const ActivitiesPage = () => {
   return (
     <>
       <ActivitiesToolbar
-        selectedRowKeys={selectedRowKeys}
-        onSelectAll={onSelectAll}
+        selectedActivityIds={selectedRowKeys}
+        onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
-        allActivities={tableDataSource}
+        allActivities={allActivityIds}
         onCreateMatchCallback={() => {
           setFetchingTrigger(fetchingTrigger + 1);
         }}

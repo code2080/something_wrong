@@ -71,9 +71,9 @@ export const createActivitiesTableColumnsFromMapping = (
       key: 'activityTag',
       dataIndex: undefined,
       width: 100,
-      render: (activity) => (
+      render: (activity: TActivity) => (
         <SortableTableCell className={`activityTag${activity._id}`}>
-          <ActivityTag activities={[activity]} />
+          <ActivityTag activity={activity} />
         </SortableTableCell>
       ),
       sorter: true,

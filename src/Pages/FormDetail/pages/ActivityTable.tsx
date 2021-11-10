@@ -51,7 +51,9 @@ const ActivityTable = ({
   ...props
 }: Props) => {
   const dispatch = useDispatch();
-  const selectedActivities = useSelector(selectSelectedActivities(tableType));
+  const selectedActivitiesIds = useSelector(
+    selectSelectedActivities(tableType),
+  );
   useActivitiesObjectWatcher({ activities });
   const calculateAvailableTableHeight = () => {
     return ((window as any).tePrefsHeight ?? 500) - 110;
@@ -73,8 +75,8 @@ const ActivityTable = ({
     [design, columnPrefix, renderer],
   );
 
-  const onRowSelect = (selectedRowKeys, selectedRows) => {
-    dispatch(selectActivitiesInTable(tableType, selectedRows));
+  const onRowSelect = (selectedRowKeys: string[]) => {
+    dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
   };
 
   return (
@@ -91,9 +93,10 @@ const ActivityTable = ({
       loading={isLoading}
       rowSelection={
         selectable && {
-          selectedRowKeys: selectedActivities.map(({ _id }) => _id),
+          selectedRowKeys: selectedActivitiesIds,
           onChange: onRowSelect,
           preserveSelectedRowKeys: true,
+          hideSelectAll: true,
         }
       }
       pagination={{

@@ -95,15 +95,22 @@ const reducer = (
           activities,
           actionMeta: { formId, tableType },
           paginationParams: { totalPages, currentPage, limit },
+          allActivityIds,
         },
       } = action;
       const formIdValue = tableType ? formId + tableType : formId;
       return {
         ...state,
-        [formIdValue]: _.groupBy(
-          activities.map((activity) => new Activity(activity)),
-          'formInstanceId',
-        ),
+        allActivityIds: {
+          ...(state.allActivitiyIds || {}),
+          [formIdValue]: allActivityIds,
+        },
+        [formIdValue]: {
+          ..._.groupBy(
+            activities.map((activity) => new Activity(activity)),
+            'formInstanceId',
+          ),
+        },
         paginationParams: {
           ...state.paginationParams,
           [formId]: {

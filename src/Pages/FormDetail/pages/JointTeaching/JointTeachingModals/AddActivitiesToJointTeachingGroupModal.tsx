@@ -1,4 +1,4 @@
-import React, { useEffect, Key, useMemo } from 'react';
+import React, { useEffect, Key } from 'react';
 import { Modal, ModalProps } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,12 +25,9 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
     selectJointTeachingGroupById({ formId, jointTeachingGroupId }),
   );
   const jointTeachingCalculating = useJointTeachingCalculating({ formId });
-  const selectedActivities = useSelector(
+  const selectedActivityIds = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
-  const selectedActivityIds = useMemo(() => {
-    return selectedActivities.map(({ _id }) => _id);
-  }, [selectedActivities]);
 
   const doSubmit = (e) => {
     if (typeof onSubmit === 'function') onSubmit(selectedActivityIds);
@@ -51,7 +48,7 @@ const AddActivitiesToJointTeachingGroupModal = (props: Props) => {
     if (visible) {
       dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
     }
-  }, [visible]);
+  }, [dispatch, visible]);
 
   return (
     <Modal

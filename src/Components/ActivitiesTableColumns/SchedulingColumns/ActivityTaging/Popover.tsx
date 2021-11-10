@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Input } from 'antd';
@@ -13,40 +13,27 @@ import { createActivityTag } from '../../../../Redux/ActivityTag/activityTag.act
 // TYPES
 import { TActivityTag } from '../../../../Types/ActivityTag.type';
 
-import { TActivity } from '../../../../Types/Activity.type';
 import ActivityTagListItem from './ListItem';
 
 type Props = {
-  activities: TActivity[];
+  selectedActivityIds: string[];
+  selectedTagId?: string | null;
 };
 
-const ActivityTagPopover = ({ activities }: Props) => {
+const ActivityTagPopover = ({ selectedActivityIds, selectedTagId }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
   const activityTags: TActivityTag[] = useSelector(selectActivityTagsForForm)(
     formId,
   );
 
-  /**
-   * MEMOIZED PROPS
-   */
-  const selectedActivityTagId = useMemo(() => {
-    if (!activities || !activities.length) return null;
-    // Need to first check if all activities are on the same activity tag
-    const hasSameTagValue = activities.every((a) =>
-      activities.every((b) => b.tagId === a.tagId),
-    );
-    if (hasSameTagValue) return activities[0].tagId;
-    return null;
-  }, [activities]);
-
-  /**
+  /*
    * STATE
    */
   const [filterQuery, setFilterQuery] = useState('');
   const [newTagName, setNewTagName] = useState('');
 
-  /**
+  /*
    * EVENT HANDLERS
    */
   const onCreateActivityTag = (name: string) => {
@@ -88,9 +75,9 @@ const ActivityTagPopover = ({ activities }: Props) => {
             .map((activityTag, i) => (
               <ActivityTagListItem
                 key={`idx-${i}`}
-                activityIds={activities.map((el) => el._id)}
+                activityIds={selectedActivityIds}
                 activityTag={activityTag}
-                isSelected={selectedActivityTagId === activityTag._id}
+                isSelected={selectedTagId === activityTag._id}
               />
             ))}
         </div>

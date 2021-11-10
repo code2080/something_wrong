@@ -13,6 +13,7 @@ import {
   revertActivityValueToSubmission,
 } from './activities.helpers';
 import { getActivityFilterSchemaQuery } from '../../Utils/activities.helpers';
+import { TActivity } from 'Types/Activity.type';
 
 const fetchActivitiesForFormFlow = (formId, tableType) => ({
   request: () => ({
@@ -20,7 +21,7 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
     payload: { actionMeta: { formId, origin } },
   }),
   success: (response) => {
-    const storeState = window.tePrefsLibStore.getState();
+    const storeState = (window as any).tePrefsLibStore.getState();
     const sections = storeState.forms[formId].sections;
     return {
       type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
@@ -317,7 +318,8 @@ const createActivityFlow = {
   }),
   success: (response) => {
     notification.success({
-      getContainer: () => document.getElementById('te-prefs-lib'),
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       message: 'Activities merged',
       description: 'Successfully merged the activities!',
     });
@@ -335,3 +337,39 @@ export const createActivity = ({ formId, activity }) =>
     endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
     params: activity,
   });
+
+const getSelectedActivitiesFlow = (
+  callback: (activities: TActivity[]) => void,
+) => ({
+  request: () => ({
+    type: activitiesActionTypes.GET_SELECTED_ACTIVITIES_REQUEST,
+  }),
+  failure: (err) => ({
+    type: activitiesActionTypes.GET_SELECTED_ACTIVITIES_FAILURE,
+    payload: err,
+  }),
+  success: (response: { activities: TActivity[] }) => {
+    // TODO: Test this!
+    callback(response.activities);
+    return {
+      type: activitiesActionTypes.GET_SELECTED_ACTIVITIES_SUCCESS,
+      payload: response,
+    };
+  },
+});
+
+export const getSelectedActivities = ({
+  selectedActivityIds,
+  formId,
+  callback,
+}: {
+  selectedActivityIds: string[];
+  formId: string;
+  callback(selectedActivities: TActivity[]): void;
+}) => {
+  return asyncAction.GET({
+    flow: getSelectedActivitiesFlow(callback),
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+    params: { activityIds: selectedActivityIds },
+  });
+};

@@ -6,26 +6,31 @@ import { AppstoreOutlined } from '@ant-design/icons';
 import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
 import { TActivity } from '../../../../Types/Activity.type';
-import { TActivityTag } from '../../../../Types/ActivityTag.type';
 import ActivityTagPopover from './Popover';
 import './index.scss';
 
 type Props = {
-  activities: TActivity[];
+  activity: TActivity;
 };
 
-const ActivityTagSelector = ({ activities }: Props) => {
+const ActivityTagSelector = ({ activity }: Props) => {
   const { formId }: { formId: string } = useParams();
-  const selectedActivityTag: TActivityTag | null = useSelector(
-    selectActivityTag,
-  )(formId, activities[0].tagId);
+  const selectedActivityTag = useSelector(selectActivityTag)(
+    formId,
+    activity.tagId,
+  );
 
   return (
     <div className='activity-tag'>
       <Popover
         overlayClassName='activity-tag-popover--wrapper'
         title='Tag activity'
-        content={<ActivityTagPopover activities={activities} />}
+        content={
+          <ActivityTagPopover
+            selectedActivityIds={[activity._id]}
+            selectedTagId={selectedActivityTag?._id}
+          />
+        }
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }

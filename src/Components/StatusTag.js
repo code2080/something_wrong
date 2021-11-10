@@ -6,7 +6,7 @@ import { Tag } from 'antd';
 import {
   themeColors,
   themeColorTextColor,
-} from '../Constants/themeColors.constants.js';
+} from '../Constants/themeColors.constants';
 
 const StatusTag = ({ children, color }) => {
   const resolvedColor = useMemo(() => {
