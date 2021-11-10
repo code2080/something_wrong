@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // SELECTORS
@@ -41,12 +41,9 @@ const UnmatchedActivitiesTable = ({ formId, triggerFetching }: Props) => {
     createLoadingSelector([FETCH_ACTIVITIES_FOR_FORM]),
   );
 
-  const selectedActivities = useSelector(
+  const selectedActivityIds = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
-  const selectedRowKeys = useMemo(() => {
-    return selectedActivities.map(({ _id }) => _id);
-  }, [selectedActivities]);
 
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
@@ -116,7 +113,7 @@ const UnmatchedActivitiesTable = ({ formId, triggerFetching }: Props) => {
       isLoading={!!isLoading}
       activities={tableDataSource}
       onSort={onSortActivities}
-      selectedActivities={selectedRowKeys}
+      selectedActivities={selectedActivityIds}
       additionalColumns={{
         pre: JointTeachingColumn(),
       }}
