@@ -620,7 +620,7 @@ export const getAllValuesFromActivities = (
       } else if (Array.isArray(allValues[item.extId])) {
         if (
           !allValues[item.extId]?.some((val) =>
-            _.isEqual(val.value, indexedValues[item.extId].value),
+            _.isEqual(val?.value, indexedValues[item.extId]?.value),
           )
         ) {
           allValues[item.extId]?.push(indexedValues[item.extId]);
