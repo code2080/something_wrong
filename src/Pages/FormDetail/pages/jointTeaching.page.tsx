@@ -29,15 +29,15 @@ const JointTeachingPage = () => {
   );
 
   const onGenerate = async () => {
-    const { status, data } = await dispatch(
+    const generateResponse = await dispatch(
       generateJointTeachingGroup({ formId }),
     );
     dispatch(fetchJointTeachingGroupsForForm({ formId }));
 
-    if (status === 200) {
+    if (!(generateResponse instanceof Error)) {
       generateJointTeachingMatchNotifications(
-        data.length > 0 ? 'success' : 'warning',
-        data.length,
+        generateResponse?.data.length > 0 ? 'success' : 'warning',
+        generateResponse?.data.length,
       );
     }
   };
