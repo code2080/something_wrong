@@ -11,6 +11,9 @@ jobs:
     docker:
       - image: posquit0/docker-cd
     steps:
+      - run:
+          name: Install curl and jq
+          command: apt install curl jq
       - jira/notify
 
 # Orchestrate or schedule a set of jobs
