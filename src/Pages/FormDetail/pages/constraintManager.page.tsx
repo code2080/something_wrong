@@ -24,14 +24,12 @@ import {
   selectSelectedConstraintConfiguration,
 } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
-  ConstraintConfiguration,
-  ConstraintInstance,
   TConstraintConfiguration,
   TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 
-import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
+import { TConstraint } from '../../../Types/Constraint.type';
 import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
@@ -191,20 +189,7 @@ const ConstraintManagerPage = () => {
 
   const handleCreateConstrConf = useCallback(() => {
     const doCreate = async () => {
-      const newConstrConf = ConstraintConfiguration.create({
-        formId,
-        name: 'New constraint configuration',
-        constraints: (allConstraints || [])
-          .filter(
-            (constraint: TConstraint) =>
-              constraint.type === EConstraintType.DEFAULT ||
-              constraint.type === EConstraintType.OTHER,
-          )
-          .map((constraint: TConstraint) =>
-            ConstraintInstance.createFromConstraint(constraint),
-          ),
-      });
-      const res = await dispatch(createConstraintConfigurations(newConstrConf));
+      const res = await dispatch(createConstraintConfigurations(formId));
       if (res?._id) handleSelectConstrConf(res?._id);
     };
     doCreate();
@@ -231,10 +216,6 @@ const ConstraintManagerPage = () => {
     () => getConstrOfType('OTHER', localConstrConf, allConstraints),
     [localConstrConf, allConstraints],
   );
-
-  useEffect(() => {
-    if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
-  }, [constrConfs, localConstrConf, handleCreateConstrConf]);
 
   return (
     <div className='constraint-manager--wrapper'>
