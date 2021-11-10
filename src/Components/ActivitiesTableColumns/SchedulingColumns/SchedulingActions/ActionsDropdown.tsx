@@ -40,7 +40,7 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { useMixpanel, useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
-import { makeSelectAllActivityIdsForForm } from 'Redux/Activities/activities.selectors';
+import { makeSelectFilteredActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 import useActivityScheduling from 'Hooks/activityScheduling';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 
@@ -135,12 +135,12 @@ const ActivityActionsDropdown = ({
       formType: formType,
       reservationMode: reservationMode,
     });
-  const selectAllActivityIds = useMemo(
-    () => makeSelectAllActivityIdsForForm(),
+  const selectFilteredActivityIds = useMemo(
+    () => makeSelectFilteredActivityIdsForForm(),
     [],
   );
-  const allActivityIds = useSelector((state) =>
-    selectAllActivityIds(state, formId),
+  const filteredActivityIds = useSelector((state) =>
+    selectFilteredActivityIds(state, formId),
   );
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const hasAssistedSchedulingPermissions = useSelector(
@@ -274,7 +274,7 @@ const ActivityActionsDropdown = ({
           });
           break;
         case 'DELETE_ALL':
-          handleDeleteActivities(allActivityIds);
+          handleDeleteActivities(filteredActivityIds);
           break;
         case 'STOP_SCHEDULING':
           jobs.forEach((job) => {

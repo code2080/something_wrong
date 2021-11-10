@@ -23,7 +23,7 @@ import {
 // SELECTORS
 import {
   makeSelectActivitiesForForm,
-  makeSelectAllActivityIdsForForm,
+  makeSelectFilteredActivityIdsForForm,
 } from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
@@ -129,13 +129,13 @@ const ActivitiesPage = () => {
     trigger: fetchingTrigger,
   });
   const design = useSelector(selectDesignForForm)(formId);
-  const selectAllActivityIdsForForm = useMemo(
-    () => makeSelectAllActivityIdsForForm(),
+  const selectFilteredActivityIdsForForm = useMemo(
+    () => makeSelectFilteredActivityIdsForForm(),
     [],
   );
 
-  const allActivityIds = useSelector((state) =>
-    selectAllActivityIdsForForm(state, formId),
+  const filteredActivityIds = useSelector((state) =>
+    selectFilteredActivityIdsForForm(state, formId),
   );
 
   const isLoading = useSelector(
@@ -153,7 +153,7 @@ const ActivitiesPage = () => {
     });
 
   const handleSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, filteredActivityIds));
   };
 
   const onDeselectAll = () => {
@@ -200,7 +200,7 @@ const ActivitiesPage = () => {
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
-        allActivities={allActivityIds}
+        allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {
           setFetchingTrigger(fetchingTrigger + 1);
         }}

@@ -100,6 +100,7 @@ const ActivityTable = ({
         }
       }
       pagination={{
+        size: 'small',
         current: paginationParams?.currentPage || 1,
         pageSize: paginationParams?.limit || 10,
         total: totalPages || 10,
