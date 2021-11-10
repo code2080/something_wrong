@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { ShrinkOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
@@ -61,6 +61,10 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
     'objects',
     localTeachingObject,
   );
+
+  useEffect(() => {
+    setTeachingObject(activity?.jointTeaching?.object || null);
+  }, [activity.jointTeaching]);
 
   const updateObjects = (
     selectedActivitiesInRow: TActivity[],
