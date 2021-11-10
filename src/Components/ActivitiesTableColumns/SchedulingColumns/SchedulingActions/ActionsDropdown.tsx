@@ -26,9 +26,6 @@ import {
   finishSchedulingActivities,
 } from 'Redux/ActivityScheduling/activityScheduling.actions';
 
-// COMPONENTS
-import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
-
 // CONSTANTS
 import { teCoreCallnames } from '../../../../Constants/teCoreActions.constants';
 import { teCoreSchedulingProgress } from '../../../../Constants/teCoreProps.constants';
@@ -40,7 +37,7 @@ import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import { useMixpanel } from '../../../../Hooks/TECoreApiHooks';
+import { useMixpanel, useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import { TActivity } from '../../../../Types/Activity.type';
 import { makeSelectAllActivityIdsForForm } from 'Redux/Activities/activities.selectors';
@@ -114,7 +111,6 @@ const ActivityActionsDropdown = ({
   activities,
   updateActivity,
   updateActivities,
-  teCoreAPI,
   setFormInstanceSchedulingProgress,
   abortJob,
   isScheduling,
@@ -123,26 +119,30 @@ const ActivityActionsDropdown = ({
 }) => {
   const { formInstanceId, formId } = activity;
   const mixpanel = useMixpanel();
+  const teCoreAPI = useTECoreAPI();
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
   const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector(state => selectForm(state, formId));
+  const { formType = '', reservationMode = '' } = useSelector((state) =>
+    selectForm(state, formId),
+  );
   const { /* handleScheduleActivities, */ handleDeleteActivities } =
-  useActivityScheduling({
-    formId,
-    formType: form?.formType ?? '',
-    reservationMode: form?.reservationMode ?? ''
-  });
-  const selectAllActivityIds = useMemo(() => makeSelectAllActivityIdsForForm(), []);
-  const allActivityIds = useSelector(state => selectAllActivityIds(state, formId));
+    useActivityScheduling({
+      formId,
+      formType: formType,
+      reservationMode: reservationMode,
+    });
+  const selectAllActivityIds = useMemo(
+    () => makeSelectAllActivityIdsForForm(),
+    [],
+  );
+  const allActivityIds = useSelector((state) =>
+    selectAllActivityIds(state, formId),
+  );
   const activityDesign = useSelector(selectDesignForForm)(formId);
-  const [formType, reservationMode] = useSelector((state: any) => {
-    const form = state.forms[formId];
-    return [form.formType, form.reservationMode];
-  });
   const hasAssistedSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
@@ -316,7 +316,8 @@ const ActivityActionsDropdown = ({
           .map((key) => (
             <Menu.Item
               disabled={
-                activityActions[key]?.isDisabled || isScheduling ||
+                activityActions[key]?.isDisabled ||
+                isScheduling ||
                 (['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
                   !hasAssistedSchedulingPermissions)
               }
@@ -376,4 +377,4 @@ ActivityActionsDropdown.defaultProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps,
-)(withTECoreAPI(ActivityActionsDropdown));
+)(ActivityActionsDropdown);
