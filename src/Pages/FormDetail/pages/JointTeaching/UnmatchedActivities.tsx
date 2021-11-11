@@ -23,12 +23,15 @@ import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
 
 interface Props {
   formId: string;
+  triggerFetchingActivities: number;
+  setTriggerFetchingActivities: (trigger: number) => void;
 }
-const UnmatchedActivities = ({ formId }: Props) => {
+const UnmatchedActivities = (props: Props) => {
+  const { formId, triggerFetchingActivities, setTriggerFetchingActivities } =
+    props;
   const [createNewGroupVisible, setCreateNewGroupVisible] = useState(false);
   const [selectJointTeachingGroupVisible, setSelectJointTeachingGroupVisible] =
     useState(false);
-  const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
 
   const selectedRowKeys = useSelector(

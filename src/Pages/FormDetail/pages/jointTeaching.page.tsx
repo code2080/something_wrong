@@ -13,10 +13,7 @@ import MatchedActivities from './JointTeaching/MatchedActivities';
 // ACTIONS
 
 import './jointTeaching.page.scss';
-import {
-  fetchJointTeachingGroupsForForm,
-  generateJointTeachingGroup,
-} from 'Redux/JointTeaching/jointTeaching.actions';
+import { generateJointTeachingGroup } from 'Redux/JointTeaching/jointTeaching.actions';
 import { GENERATE_JOINT_TEACHING_GROUP } from 'Redux/JointTeaching/jointTeaching.actionTypes';
 import { generateJointTeachingMatchNotifications } from '../../../Utils/notifications.helper';
 
@@ -28,12 +25,13 @@ const JointTeachingPage = () => {
     createLoadingSelector([GENERATE_JOINT_TEACHING_GROUP]),
   );
 
+  const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
+
   const onGenerate = async () => {
     const { status, data } = await dispatch(
       generateJointTeachingGroup({ formId }),
     );
-    dispatch(fetchJointTeachingGroupsForForm({ formId }));
-
+    setTriggerFetchingActivities(triggerFetchingActivities + 1);
     if (status === 200) {
       generateJointTeachingMatchNotifications(
         data.length > 0 ? 'success' : 'warning',
@@ -47,7 +45,13 @@ const JointTeachingPage = () => {
       case 'matchedTab':
         return <MatchedActivities />;
       default:
-        return <UnmatchedActivities formId={formId} />;
+        return (
+          <UnmatchedActivities
+            formId={formId}
+            triggerFetchingActivities={triggerFetchingActivities}
+            setTriggerFetchingActivities={setTriggerFetchingActivities}
+          />
+        );
     }
   };
 
