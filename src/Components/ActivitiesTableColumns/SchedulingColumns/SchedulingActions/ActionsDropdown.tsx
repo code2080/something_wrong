@@ -76,7 +76,6 @@ const activityActions = {
     label: 'Schedule submission',
     filterFn: activityFilterFn.canBeScheduled,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-    // isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
   },
   SCHEDULE: {
     label: 'Schedule activity',
@@ -99,8 +98,7 @@ const activityActions = {
     callname: teCoreCallnames.STOP_SCHEDULING,
   },
   DELETE_ALL: {
-    // isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
-    label: 'Cancel all reservations on form',
+    label: 'Cancel all reservations from the submission',
     filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
@@ -330,7 +328,6 @@ const ActivityActionsDropdown = ({
           .map((key) => (
             <Menu.Item
               disabled={
-                activityActions[key]?.isDisabled ||
                 isScheduling ||
                 (['SCHEDULE', 'SCHEDULE_ALL'].includes(key) &&
                   !hasAssistedSchedulingPermissions)
