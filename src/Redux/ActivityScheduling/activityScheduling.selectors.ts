@@ -63,5 +63,5 @@ export const makeSelectAllActivityidsForForminstance = () =>
       formInstanceId,
     }),
     (activities, { formId, formInstanceId }) =>
-      activities?.byFormInstanceId?.[formId]?.[formInstanceId],
+      activities?.byFormInstanceId?.[formId]?.[formInstanceId] ?? [],
   );

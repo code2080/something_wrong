@@ -29,7 +29,7 @@ import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
 // HOOKS
-import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
+import { useMixpanel, useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
 
@@ -44,6 +44,7 @@ const useActivityScheduling = ({
   reservationMode,
 }: Props) => {
   const dispatch = useDispatch();
+  const mixpanel = useMixpanel();
   const teCoreAPI = useTECoreAPI();
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
@@ -62,6 +63,16 @@ const useActivityScheduling = ({
   );
 
   const { openConfirmModal } = SchedulingStatusModal();
+
+  const trackScheduleActivities = (
+    activities: string[] = [],
+    formId: string,
+  ) => {
+    mixpanel?.track('scheduleActivities', {
+      formId,
+      nrOfActivities: activities.length,
+    });
+  };
 
   const checkActivitiesInFormInstance = (groupedActivities) => {
     return groupBy(Object.keys(groupedActivities), (submissionId) => {
@@ -102,6 +113,8 @@ const useActivityScheduling = ({
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
+
+    trackScheduleActivities(selectedActivityIds, formId);
     const queue = Object.entries(groupedActivities).map(
       ([formInstanceId, activitiesOfFormInstance]) => {
         return new Promise<
