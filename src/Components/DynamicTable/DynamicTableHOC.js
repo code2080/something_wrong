@@ -33,6 +33,7 @@ import {
   filterDataSource,
   getTableComponents,
 } from './helpers';
+import { isEmpty } from 'lodash';
 
 const COLUMNS_WIDTH = 'COLUMNS_WIDTH';
 
@@ -228,8 +229,8 @@ const DynamicTableHOC = ({
     [showFilter, onSearch, _cols],
   );
   const _tableComponents = useMemo(
-    () => getTableComponents(draggable),
-    [draggable],
+    () => getTableComponents(!isEmpty(_dataSource) && draggable),
+    [draggable, _dataSource],
   );
 
   const otherProps = useMemo(

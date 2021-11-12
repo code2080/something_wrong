@@ -95,7 +95,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     selectable,
     onSetCurrentPaginationParams,
     paginationParams,
-    resizable
+    resizable,
   } = props;
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>

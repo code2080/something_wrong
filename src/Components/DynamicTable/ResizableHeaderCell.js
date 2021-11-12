@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Resizable } from 'react-resizable';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { getHeaderCellWidth } from '../../Utils/dom.helper';
 import ColumnHeader from './ColumnHeader';
 
@@ -30,8 +30,7 @@ const ResizableCell = (props) => {
     const tableHeader = node.closest('table');
     if (!tableHeader) return;
 
-    const col =
-      tableHeader.childNodes[0].childNodes[index];
+    const col = tableHeader.childNodes[0].childNodes[index];
 
     if (!col) return;
 
@@ -44,13 +43,12 @@ const ResizableCell = (props) => {
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
-    
+
     const tableHeaderWrapper = tableHeader.closest('.ant-table-header');
     if (!tableHeaderWrapper) return;
     const tableContent =
       tableHeaderWrapper.nextElementSibling?.querySelector('table');
-    const contentCol =
-      tableContent.childNodes[0].childNodes[index];
+    const contentCol = tableContent.childNodes[0].childNodes[index];
     contentCol.style.width = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
@@ -87,6 +85,15 @@ const ResizableCell = (props) => {
       setMinCellWidth(50 + getHeaderCellWidth(ref.current));
     }
   }, [!ref]);
+
+  // Incase table is empty, there is no <colgroup>
+  useEffect(() => {
+    if (!ref.current) return;
+    const colgroup = ref.current.closest('table').querySelector('colgroup');
+    if (isEmpty(colgroup)) {
+      ref.current.style.width = `${minCellWidth}px`;
+    }
+  }, [minCellWidth, !ref]);
 
   return (
     <Resizable
