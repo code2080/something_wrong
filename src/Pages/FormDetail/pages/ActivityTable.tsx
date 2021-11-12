@@ -76,7 +76,6 @@ const ActivityTable = ({
 
   return (
     <DynamicTable
-      scroll={{ y: 'max-content', x: 'max-content' }}
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
