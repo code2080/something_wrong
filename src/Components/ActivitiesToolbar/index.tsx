@@ -34,7 +34,7 @@ type Props = {
   onCreateMatchCallback: () => void;
 };
 
-/**
+/*
  * OPTIONS FOR ACTIVITIES
  * x) View selection
  * x) Tag activities
@@ -74,9 +74,7 @@ const ActivitiesToolbar = ({
         overlayClassName='activity-tag-popover--wrapper'
         title='Tag activity'
         content={
-          <ActivityTagPopover
-            selectedActivityIds={selectedActivityIds as string[]}
-          />
+          <ActivityTagPopover selectedActivityIds={selectedActivityIds} />
         }
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
