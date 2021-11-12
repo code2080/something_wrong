@@ -43,10 +43,7 @@ import { TActivity } from '../../../../Types/Activity.type';
 import { makeSelectFilteredActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 import useActivityScheduling from 'Hooks/activityScheduling';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
-import {
-  makeSelectAllActivityIdsForForm,
-  makeSelectAllActivityidsForForminstance,
-} from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import { makeSelectAllActivityidsForForminstance } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 const mapStateToProps = (state, { activity }) => {
   const activities =
