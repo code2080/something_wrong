@@ -6,16 +6,13 @@ import { Modal, Dropdown, Menu, Button } from 'antd';
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 // HELPERS
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { activityFilterFn } from 'Utils/activities.helpers';
-import { updateActivitiesWithSchedulingResults } from '../../../../Utils/scheduling.helpers';
 
 // ACTIONS
 import {
   updateActivity,
   updateActivities,
 } from '../../../../Redux/Activities/activities.actions';
-import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';
 import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
 import {
   startSchedulingActivities,
@@ -33,8 +30,6 @@ import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import { TActivity } from '../../../../Types/Activity.type';
-import { makeSelectFilteredActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 import useActivityScheduling from 'Hooks/activityScheduling';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 import { makeSelectAllActivityidsForForminstance } from 'Redux/ActivityScheduling/activityScheduling.selectors';
@@ -54,7 +49,6 @@ const mapStateToProps = (state, { activity }) => {
 const mapActionsToProps = {
   updateActivity,
   updateActivities,
-  setFormInstanceSchedulingProgress,
   abortJob,
   startSchedulingActivities,
   finishSchedulingActivities,
@@ -98,12 +92,9 @@ const ActivityActionsDropdown = ({
   activity,
   jobs,
   mSStatus,
-  updateActivity,
-  updateActivities,
   setFormInstanceSchedulingProgress,
   abortJob,
   isScheduling,
-  finishSchedulingActivities,
 }) => {
   const { formInstanceId, formId } = activity;
   const teCoreAPI = useTECoreAPI();
@@ -131,48 +122,9 @@ const ActivityActionsDropdown = ({
       formType: formType,
       reservationMode: reservationMode,
     });
-  const selectFilteredActivityIds = useMemo(
-    () => makeSelectFilteredActivityIdsForForm(),
-    [],
-  );
-  const filteredActivityIds = useSelector((state) =>
-    selectFilteredActivityIds(state, formId),
-  );
+
   const hasAssistedSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
-  );
-
-  const onFinishScheduleMultiple = useCallback(
-    (activities: TActivity[]) => (schedulingReturns) => {
-      updateActivities(
-        activity.formId,
-        activity.formInstanceId,
-        updateActivitiesWithSchedulingResults(activities, schedulingReturns),
-      );
-      finishSchedulingActivities(
-        schedulingReturns.map(({ activityId }) => activityId),
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activity.formId, activity.formInstanceId, updateActivities],
-  );
-
-  const onDeleteActivities = useCallback(
-    (responses) => {
-      // Check result parameter to see if everything went well or not
-      responses.forEach((res) => {
-        if (!_.get(res, 'result.details')) {
-          const updatedActivity = {
-            ...res.activity,
-            schedulingDate: null,
-            activityStatus: EActivityStatus.NOT_SCHEDULED,
-            reservationId: null,
-          };
-          updateActivity(updatedActivity);
-        }
-      });
-    },
-    [updateActivity],
   );
 
   const updateSchedulingProgress = useCallback(() => {
@@ -211,7 +163,7 @@ const ActivityActionsDropdown = ({
             formInstanceId,
             schedulingProgress: teCoreSchedulingProgress.SCHEDULING_FINISHED,
           }),
-        onCancel: () => {},
+        onCancel: _.noop,
       });
     }
   }, [
@@ -225,22 +177,17 @@ const ActivityActionsDropdown = ({
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
-        // TODO: change to ids instead
         case 'SCHEDULE_ALL':
-          // TODO: SSP: To be able to do this properly we need the BE to send us a list of all activities and their forminstanceid, or we need to add formInstanceid as a query to the get activities call
           handleScheduleActivities(activitiesByFormInstance);
           break;
         case 'SCHEDULE':
           handleScheduleActivities([activity._id]);
           break;
         case 'DELETE':
-          teCoreAPI[activityActions[key].callname]({
-            activities: [activity],
-            callback: onDeleteActivities,
-          });
+          handleDeleteActivities([activity._id]);
           break;
         case 'DELETE_ALL':
-          handleDeleteActivities(filteredActivityIds);
+          handleDeleteActivities(activitiesByFormInstance);
           break;
         case 'STOP_SCHEDULING':
           jobs.forEach((job) => {
@@ -265,8 +212,6 @@ const ActivityActionsDropdown = ({
       formInstanceId,
       formType,
       jobs,
-      onDeleteActivities,
-      onFinishScheduleMultiple,
       reservationMode,
       teCoreAPI,
       updateSchedulingProgress,
@@ -321,13 +266,10 @@ ActivityActionsDropdown.propTypes = {
   buttonType: PropTypes.string,
   activity: PropTypes.object.isRequired,
   jobs: PropTypes.array.isRequired,
-  updateActivity: PropTypes.func.isRequired,
-  updateActivities: PropTypes.func.isRequired,
   mSStatus: PropTypes.object.isRequired,
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
   isScheduling: PropTypes.bool,
-  finishSchedulingActivities: PropTypes.func.isRequired,
 };
 
 ActivityActionsDropdown.defaultProps = {
