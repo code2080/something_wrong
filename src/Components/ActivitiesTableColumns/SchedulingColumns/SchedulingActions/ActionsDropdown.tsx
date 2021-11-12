@@ -8,7 +8,7 @@ import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 // HELPERS
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { activityFilterFn } from 'Utils/activities.helpers';
+import { activityFilterFn, getActivities } from 'Utils/activities.helpers';
 import {
   scheduleActivities,
   updateActivitiesWithSchedulingResults,
@@ -43,6 +43,10 @@ import { TActivity } from '../../../../Types/Activity.type';
 import { makeSelectFilteredActivityIdsForForm } from 'Redux/Activities/activities.selectors';
 import useActivityScheduling from 'Hooks/activityScheduling';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
+import {
+  makeSelectAllActivityIdsForForm,
+  makeSelectAllActivityidsForForminstance,
+} from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 const mapStateToProps = (state, { activity }) => {
   const activities =
@@ -72,7 +76,7 @@ const activityActions = {
     label: 'Schedule submission',
     filterFn: activityFilterFn.canBeScheduled,
     callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-    isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
+    // isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
   },
   SCHEDULE: {
     label: 'Schedule activity',
@@ -95,7 +99,7 @@ const activityActions = {
     callname: teCoreCallnames.STOP_SCHEDULING,
   },
   DELETE_ALL: {
-    isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
+    // isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
     label: 'Cancel all reservations',
     filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
@@ -125,6 +129,15 @@ const ActivityActionsDropdown = ({
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
+  const selectAllActivityIdsByFormInstance = useMemo(
+    () => makeSelectAllActivityidsForForminstance(),
+    [],
+  );
+
+  const activitiesByFormInstance = useSelector((state) =>
+    selectAllActivityIdsByFormInstance(state, formId, formInstanceId),
+  );
+
   const selectForm = useMemo(() => makeSelectForm(), []);
   const { formType = '', reservationMode = '' } = useSelector((state) =>
     selectForm(state, formId),
@@ -233,8 +246,12 @@ const ActivityActionsDropdown = ({
     });
   };
 
-  const handleScheduleActivities = (activities: TActivity[], key: string) => {
-    const activityIds = activities.map(({ _id }) => _id);
+  const handleScheduleActivities = async (
+    activityIds: string[],
+    key: string,
+  ) => {
+    // const activityIds = activities.map(({ _id }) => _id);
+    const activities = await getActivities(activityIds);
     startSchedulingActivities(activityIds);
     trackScheduleActivities(activities);
     const results = scheduleActivities(
@@ -257,10 +274,7 @@ const ActivityActionsDropdown = ({
         case 'SCHEDULE_ALL':
           // TODO: SSP: To be able to do this properly we need the BE to send us a list of all activities and their forminstanceid, or we need to add formInstanceid as a query to the get activities call
           handleScheduleActivities(
-            // TODO: SSP: Move this logic inside of handleScheduleActivities
-            activities.filter(
-              (a) => a.activityStatus !== EActivityStatus.SCHEDULED,
-            ),
+            activitiesByFormInstance,
             key,
           );
           break;
