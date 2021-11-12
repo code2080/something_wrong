@@ -20,7 +20,7 @@ const BasicHeaderCell = (props) => (
 );
 
 const ResizableCell = (props) => {
-  const { width, children, index, onResized, expandable, ...restProps } = props;
+  const { width, children, index, onResized, ...restProps } = props;
   const [minCellWidth, setMinCellWidth] = useState(0);
 
   const ref = useRef(null);
@@ -28,17 +28,11 @@ const ResizableCell = (props) => {
     e.preventDefault();
     e.stopPropagation();
     const tableHeader = node.closest('table');
-    const tableHeaderWrapper = tableHeader.closest('.ant-table-header');
-    if (!tableHeader || !tableHeaderWrapper) return;
-
-    const tableContent =
-      tableHeaderWrapper.nextElementSibling?.querySelector('table');
-    if (!tableContent) return;
+    if (!tableHeader) return;
 
     const col =
-      tableHeader.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
-    const contentCol =
-      tableContent.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
+      tableHeader.childNodes[0].childNodes[index];
+
     if (!col) return;
 
     changedWidth = e.pageX - start;
@@ -46,7 +40,22 @@ const ResizableCell = (props) => {
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
+    col.style.minWidth = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
+    
+    const tableHeaderWrapper = tableHeader.closest('.ant-table-header');
+    if (!tableHeaderWrapper) return;
+    const tableContent =
+      tableHeaderWrapper.nextElementSibling?.querySelector('table');
+    const contentCol =
+      tableContent.childNodes[0].childNodes[index];
     contentCol.style.width = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
+    contentCol.style.widthWidth = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
@@ -77,7 +86,7 @@ const ResizableCell = (props) => {
     if (ref && ref.current) {
       setMinCellWidth(50 + getHeaderCellWidth(ref.current));
     }
-  }, [ref]);
+  }, [!ref]);
 
   return (
     <Resizable

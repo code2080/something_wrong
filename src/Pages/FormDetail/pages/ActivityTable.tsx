@@ -31,6 +31,7 @@ interface Props extends TableProps<any> {
     [activityValue, valueIndex],
   ) => void;
   renderer?: (type: ConflictType, activity: TActivity, extId: string) => void;
+  resizable?: boolean;
   onSetCurrentPaginationParams?: (page: number, limit: number) => void;
 }
 
@@ -49,6 +50,7 @@ const ActivityTable = ({
   onSetCurrentPaginationParams,
   tableType,
   selectable = true,
+  resizable = true,
   ...props
 }: Props) => {
   const dispatch = useDispatch();
@@ -104,7 +106,7 @@ const ActivityTable = ({
       onChange={(pagination, filter, sorter) => {
         onSort(sorter);
       }}
-      resizable
+      resizable={resizable}
       {...props}
     />
   );

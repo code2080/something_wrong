@@ -210,10 +210,10 @@ const DynamicTableHOC = ({
       _width,
       fixedWidthCols.length,
       resizable,
-      expandedRowRender,
+      !expandedRowRender,
       columnWidths,
       nowrap,
-      rowSelection,
+      !rowSelection,
     ],
   );
 
