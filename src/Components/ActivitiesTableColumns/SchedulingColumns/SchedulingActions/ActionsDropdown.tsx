@@ -100,7 +100,7 @@ const activityActions = {
   },
   DELETE_ALL: {
     // isDisabled: true, // TODO: SSP: Disabled as it doesn't work with SSP yet
-    label: 'Cancel all reservations',
+    label: 'Cancel all reservations on form',
     filterFn: activityFilterFn.canBeSelected,
     callname: teCoreCallnames.DELETE_RESERVATIONS,
   },
