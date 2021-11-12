@@ -268,10 +268,7 @@ const ActivityActionsDropdown = ({
         // TODO: change to ids instead
         case 'SCHEDULE_ALL':
           // TODO: SSP: To be able to do this properly we need the BE to send us a list of all activities and their forminstanceid, or we need to add formInstanceid as a query to the get activities call
-          handleScheduleActivities(
-            activitiesByFormInstance,
-            key,
-          );
+          handleScheduleActivities(activitiesByFormInstance, key);
           break;
         case 'SCHEDULE':
           handleScheduleActivities([activity._id], key);
