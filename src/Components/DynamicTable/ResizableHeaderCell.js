@@ -27,15 +27,26 @@ const ResizableCell = (props) => {
   const onResize = (e, { node, _size }) => {
     e.preventDefault();
     e.stopPropagation();
-    const table = node.closest('table');
-    const col = table.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
+    const tableHeader = node.closest('table');
+    const tableHeaderWrapper = tableHeader.closest('.ant-table-header');
+    if (!tableHeader || !tableHeaderWrapper) return;
+
+    const tableContent =
+      tableHeaderWrapper.nextElementSibling?.querySelector('table');
+    if (!tableContent) return;
+
+    const col =
+      tableHeader.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
+    const contentCol =
+      tableContent.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
     if (!col) return;
+
     changedWidth = e.pageX - start;
     col.style.width = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
-    col.style.minWidth = `${_.max([
+    contentCol.style.width = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
@@ -53,7 +64,9 @@ const ResizableCell = (props) => {
     start = 0;
     changedWidth = 0;
     setTimeout(() => {
-      ref.current.removeEventListener('click', terminateClickEvent);
+      if (ref.current) {
+        ref.current.removeEventListener('click', terminateClickEvent);
+      }
     }, 300);
   };
 

@@ -5,13 +5,14 @@ import _ from 'lodash';
 import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
-import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+import { CreateActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
+import { selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
 
 interface Props extends TableProps<any> {
   tableType?: string;
@@ -58,17 +59,14 @@ const ActivityTable = ({
   const totalPages =
     (paginationParams?.limit as number) *
     (paginationParams?.totalPages as number);
-  const tableColumns = useMemo(
-    () =>
-      design
-        ? createActivitiesTableColumnsFromMapping(
-            design,
-            columnPrefix,
-            renderer,
-          )
-        : [],
-    [design, columnPrefix, renderer],
-  );
+
+  const tableColumns = design
+    ? CreateActivitiesTableColumnsFromMapping({
+        design,
+        columnPrefix,
+        renderer,
+      })
+    : [];
 
   const onRowSelect = (selectedRowKeys: string[]) => {
     dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
