@@ -55,14 +55,9 @@ const ActivityTable = ({
     selectSelectedActivities(tableType),
   );
   useActivitiesObjectWatcher({ activities });
-  const calculateAvailableTableHeight = () => {
-    return ((window as any).tePrefsHeight ?? 500) - 110;
-  };
   const totalPages =
     (paginationParams?.limit as number) *
     (paginationParams?.totalPages as number);
-
-  const [yScroll] = useState(calculateAvailableTableHeight());
   const tableColumns = useMemo(
     () =>
       design
@@ -81,7 +76,7 @@ const ActivityTable = ({
 
   return (
     <DynamicTable
-      scroll={{ y: yScroll, x: 'max-content' }}
+      scroll={{ y: 'max-content', x: 'max-content' }}
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
