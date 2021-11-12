@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
@@ -44,7 +43,6 @@ import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
-  const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
 
   // For refecth activities
@@ -212,7 +210,7 @@ const ActivitiesPage = () => {
         activities={tableDataSource}
         onSort={onSortActivities}
         additionalColumns={{
-          pre: SchedulingColumns(selectedRowKeys, isBeta),
+          pre: SchedulingColumns(selectedRowKeys),
           post: StaticColumns,
         }}
         paginationParams={selectedPaginationParams}

@@ -27,10 +27,7 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 // SELECTORS
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
@@ -79,7 +76,6 @@ const FormPage = () => {
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
   );
-  const isBeta = useSelector(selectIsBetaOrDev);
   const hasAssistedSchedulingPermission = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
@@ -143,13 +139,12 @@ const FormPage = () => {
             <ObjectRequestsPage />
           </Tabs.TabPane>
         )}
-        {isBeta && hasAssistedSchedulingPermission && (
-          <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
-            {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
-              <JointTeachingPage />
-            )}
-          </Tabs.TabPane>
-        )}
+        {/* TODO: Does the customers need to buy assisted scheduling? */}
+        <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
+          {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+            <JointTeachingPage />
+          )}
+        </Tabs.TabPane>
         <Tabs.TabPane
           tab='ACTIVITIES'
           key={TAB_CONSTANT.ACTIVITIES}

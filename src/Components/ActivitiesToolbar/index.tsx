@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
-import { hasPermission, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
+import { hasPermission } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
@@ -62,7 +62,6 @@ const ActivitiesToolbar = ({
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const isBetaOrDev = useSelector(selectIsBetaOrDev);
 
   const TagSelectedActivitiesButton = () =>
     !selectedActivityIds?.length ? (
@@ -132,13 +131,11 @@ const ActivitiesToolbar = ({
       </Button>
       <Divider type='vertical' />
       <TagSelectedActivitiesButton />
-      {isBetaOrDev && (
-        <JointTeachingGroupMerger
-          activityIds={selectedActivityIds}
-          formId={formId}
-          onCreateMatchCallback={onCreateMatchCallback}
-        />
-      )}
+      <JointTeachingGroupMerger
+        activityIds={selectedActivityIds}
+        formId={formId}
+        onCreateMatchCallback={onCreateMatchCallback}
+      />
       <ActivityFiltering
         selectedFilterValues={selectedFilterValues}
         onSubmit={(values) => {
