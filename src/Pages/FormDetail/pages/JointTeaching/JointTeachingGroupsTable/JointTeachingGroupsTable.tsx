@@ -51,6 +51,7 @@ import JointTeachingGroup, {
 
 import './JointTeachingGroupsTable.scss';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import { mergedMatchActivitiesNotifications } from '../../../../../Utils/notifications.helper';
 
 interface Props {
   readonly?: boolean;
@@ -129,11 +130,17 @@ const JointTeachingGroupsTable = (props: Props) => {
   };
 
   const onMerge = async (groupIds: Key[]) => {
-    execThenRefetch(
+    const mergeResponse = await Promise.all(
       groupIds.map((groupId) =>
         dispatch(mergeJointTeachingGroup({ formId, jointTeachingId: groupId })),
       ),
     );
+
+    if (mergeResponse instanceof Error) {
+      mergedMatchActivitiesNotifications('warning');
+    }
+
+    onFetchJointTeachingGroups();
   };
 
   const onRevert = async (groupIds: Key[]) => {
