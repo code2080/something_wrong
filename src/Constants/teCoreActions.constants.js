@@ -254,9 +254,9 @@ export const teCoreActions = {
   },
   GET_RELATED_GROUPS: {
     callname: teCoreCallnames.GET_RELATED_GROUPS,
-    mockFunction: (_payload, callback) => {
+    mockFunction: ({ objectExtIds, typeExtId, callback }) => {
       const mockResult = {};
-      _payload.objectIds.forEach((oId) => {
+      objectExtIds.forEach((oId) => {
         mockResult[oId] = ['teacher_hare', 'teacher_grubbe'];
       });
       callback(mockResult);
