@@ -261,5 +261,5 @@ export const teCoreActions = {
       });
       callback(mockResult);
     },
-  }
+  },
 };
