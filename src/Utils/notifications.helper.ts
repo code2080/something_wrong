@@ -1,8 +1,8 @@
 import { notification } from 'antd';
 
 export const generateJointTeachingMatchNotifications = (
-  type,
-  numberJoinTeaching,
+  type: string,
+  numberJoinTeaching?: number,
 ) => {
   notification[type]({
     getContainer: () => document.getElementById('te-prefs-lib'),
@@ -10,6 +10,8 @@ export const generateJointTeachingMatchNotifications = (
     message:
       type === 'success'
         ? `${numberJoinTeaching} joint teaching matches were created`
-        : 'No joint teaching matches were created',
+        : type === 'warning'
+        ? 'No joint teaching matches were created'
+        : 'There is an error occured when generating joint teaching',
   });
 };

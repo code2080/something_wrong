@@ -33,12 +33,14 @@ const JointTeachingPage = () => {
       generateJointTeachingGroup({ formId }),
     );
     dispatch(fetchJointTeachingGroupsForForm({ formId }));
-
-    if (!(generateResponse instanceof Error)) {
+    console.log(generateResponse, ' check generate response');
+    if (!(generateResponse instanceof Error) && generateResponse) {
       generateJointTeachingMatchNotifications(
         generateResponse?.data.length > 0 ? 'success' : 'warning',
         generateResponse?.data.length,
       );
+    } else {
+      generateJointTeachingMatchNotifications('error');
     }
   };
 
