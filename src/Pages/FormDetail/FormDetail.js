@@ -15,6 +15,7 @@ import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
+  selectActivitiesInTable,
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
@@ -26,14 +27,16 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 // SELECTORS
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import {
+  ACTIVITIES_TABLE,
+  UNMATCHED_ACTIVITIES_TABLE,
+  MATCHED_ACTIVITIES_TABLE,
+} from 'Constants/tables.constants';
 
 import {
   ASSISTED_SCHEDULING_PERMISSION_NAME,
@@ -73,7 +76,6 @@ const FormPage = () => {
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
   );
-  const isBeta = useSelector(selectIsBetaOrDev);
   const hasAssistedSchedulingPermission = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
@@ -99,6 +101,13 @@ const FormPage = () => {
         mode: form.reservationmode,
         callback: ({ _res }) => {},
       });
+    [
+      ACTIVITIES_TABLE,
+      UNMATCHED_ACTIVITIES_TABLE,
+      MATCHED_ACTIVITIES_TABLE,
+    ].forEach((tableType) => {
+      dispatch(selectActivitiesInTable(tableType));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
@@ -130,13 +139,12 @@ const FormPage = () => {
             <ObjectRequestsPage />
           </Tabs.TabPane>
         )}
-        {isBeta && hasAssistedSchedulingPermission && (
-          <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
-            {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
-              <JointTeachingPage />
-            )}
-          </Tabs.TabPane>
-        )}
+        {/* TODO: Does the customers need to buy assisted scheduling? */}
+        <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
+          {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+            <JointTeachingPage />
+          )}
+        </Tabs.TabPane>
         <Tabs.TabPane
           tab='ACTIVITIES'
           key={TAB_CONSTANT.ACTIVITIES}

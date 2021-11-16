@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 // COMPONENTS
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
-import { selectIsBetaOrDev } from '../../../../Redux/Auth/auth.selectors';
 import { selectActivitySchedulingById } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
@@ -12,7 +11,6 @@ import JointTeachingIcon from './JointTeachingIcon';
 import './SchedulingActions.scss';
 
 const SchedulingActions = ({ activity, selectedRowKeys }) => {
-  const isBeta = useSelector(selectIsBetaOrDev);
   const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
   return (
@@ -22,12 +20,10 @@ const SchedulingActions = ({ activity, selectedRowKeys }) => {
       )}
       <SchedulingCheckbox activity={activity} />
       <SelectActivityButton activity={activity} />
-      {isBeta && (
-        <JointTeachingIcon
-          activity={activity}
-          selectedRowKeys={selectedRowKeys}
-        />
-      )}
+      <JointTeachingIcon
+        activity={activity}
+        selectedRowKeys={selectedRowKeys}
+      />
       <ActionsDropdown
         buttonType='ellipsis'
         activity={activity}

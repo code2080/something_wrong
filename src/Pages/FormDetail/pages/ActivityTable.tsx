@@ -1,4 +1,4 @@
-import { Key, useMemo, useState } from 'react';
+import { Key, useMemo } from 'react';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
@@ -51,16 +51,13 @@ const ActivityTable = ({
   ...props
 }: Props) => {
   const dispatch = useDispatch();
-  const selectedActivities = useSelector(selectSelectedActivities(tableType));
+  const selectedActivitiesIds = useSelector(
+    selectSelectedActivities(tableType),
+  );
   useActivitiesObjectWatcher({ activities });
-  const calculateAvailableTableHeight = () => {
-    return ((window as any).tePrefsHeight ?? 500) - 110;
-  };
   const totalPages =
     (paginationParams?.limit as number) *
     (paginationParams?.totalPages as number);
-
-  const [yScroll] = useState(calculateAvailableTableHeight());
   const tableColumns = useMemo(
     () =>
       design
@@ -73,13 +70,12 @@ const ActivityTable = ({
     [design, columnPrefix, renderer],
   );
 
-  const onRowSelect = (selectedRowKeys, selectedRows) => {
-    dispatch(selectActivitiesInTable(tableType, selectedRows));
+  const onRowSelect = (selectedRowKeys: string[]) => {
+    dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
   };
 
   return (
     <DynamicTable
-      scroll={{ y: yScroll, x: 'max-content' }}
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
@@ -91,12 +87,14 @@ const ActivityTable = ({
       loading={isLoading}
       rowSelection={
         selectable && {
-          selectedRowKeys: selectedActivities.map(({ _id }) => _id),
+          selectedRowKeys: selectedActivitiesIds,
           onChange: onRowSelect,
           preserveSelectedRowKeys: true,
+          hideSelectAll: true,
         }
       }
       pagination={{
+        size: 'small',
         current: paginationParams?.currentPage || 1,
         pageSize: paginationParams?.limit || 10,
         total: totalPages || 10,

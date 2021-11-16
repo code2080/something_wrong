@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Modal, ModalProps, Button } from 'antd';
 import { flatten, keyBy } from 'lodash';
 
-import { Modal, ModalProps, Button } from 'antd';
-import { TActivity } from 'Types/Activity.type';
 import JointTeachingActivitiesTable, {
   SelectedConflictValue,
 } from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
@@ -31,15 +30,30 @@ import {
 
 // HELPERS
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
-import { getUniqueValues } from 'Utils/activities.helpers';
+import { getActivities, getUniqueValues } from 'Utils/activities.helpers';
+import { TActivity } from 'Types/Activity.type';
 
 interface Props extends Omit<ModalProps, 'onCancel'> {
-  activities: TActivity[];
+  activityIds: string[];
   formId: string;
   onCancel: (refetchNeeded?: boolean) => void;
 }
 const CreateNewJointTeachingGroupModal = (props: Props) => {
-  const { visible, onCancel, activities, formId } = props;
+  const { visible, onCancel, activityIds, formId } = props;
+  const [activities, setActivities] = useState<TActivity[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const fetchedActivities = await getActivities(activityIds);
+      // Check if mounted to avoid uppdating if component has been unmounted (avoiding memory leaks)
+      if (mounted) setActivities(fetchedActivities);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [activityIds]);
+
   const [canBePaired, setCanBePaired] = useState(false);
   const [selectedValues, setSelectedValues] = useState<JointTeachingConflict[]>(
     [],

@@ -62,12 +62,21 @@ export const selectActivitiesForForm = ({ formId, tableType }) =>
       return Object.values(activity[activitiesTableId] || {})
         .flat()
         .map((activity: Activity) => {
-          activity.updateScopedObject(
-            formSubmissions?.[activity.formInstanceId]?.scopedObject,
-          );
-          return activity as TActivity;
+          return new Activity({
+            ...activity,
+            scopedObject:
+              formSubmissions?.[activity.formInstanceId]?.scopedObject,
+          }) as TActivity;
         });
     },
+  );
+
+export const makeSelectFilteredActivityIdsForForm = () =>
+  createSelector(
+    activityStateSelector,
+    (_, formId: string) => formId,
+    (activities, formId: string): string[] =>
+      activities?.filteredActivityIds?.[formId] ?? [],
   );
 
 export const makeSelectActivitiesForFormAndIds = () =>

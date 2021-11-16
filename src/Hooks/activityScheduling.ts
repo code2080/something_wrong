@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Dictionary, groupBy, isEmpty, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-
 // ACTIONS
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
@@ -14,6 +13,7 @@ import {
   startSchedulingActivities,
   finishSchedulingActivities,
 } from 'Redux/ActivityScheduling/activityScheduling.actions';
+import { getActivities } from '../Utils/activities.helpers';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../Constants/teCoreProps.constants';
@@ -23,17 +23,15 @@ import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import { makeSelectSubmissions } from '../Redux/FormSubmissions/formSubmissions.selectors';
 
 // TYPES
-import { TFormInstance } from '../Types/FormInstance.type';
 import { makeSelectActivitiesForForm } from '../Redux/Activities/activities.selectors';
 import { TActivity } from '../Types/Activity.type';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 
 // HOOKS
-import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
+import { useMixpanel, useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
-import { selectActivityScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 
 type Props = {
   formType: string;
@@ -46,12 +44,12 @@ const useActivityScheduling = ({
   reservationMode,
 }: Props) => {
   const dispatch = useDispatch();
+  const mixpanel = useMixpanel();
   const teCoreAPI = useTECoreAPI();
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
-  const schedulingActivities = useSelector(selectActivityScheduling());
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -66,27 +64,37 @@ const useActivityScheduling = ({
 
   const { openConfirmModal } = SchedulingStatusModal();
 
+  const trackScheduleActivities = (
+    activities: string[] = [],
+    formId: string,
+  ) => {
+    mixpanel?.track('scheduleActivities', {
+      formId,
+      nrOfActivities: activities.length,
+    });
+  };
+
   const checkActivitiesInFormInstance = (groupedActivities) => {
-    return groupBy(Object.keys(groupedActivities), (formInstanceId) => {
-      const unScheduleActivities = (allActivities[formInstanceId] || []).filter(
+    return groupBy(Object.keys(groupedActivities), (submissionId) => {
+      const unScheduleActivities = (allActivities[submissionId] || []).filter(
         (activity: TActivity) =>
           activity.activityStatus === EActivityStatus.NOT_SCHEDULED,
       );
-      const fI = indexedFormInstances[formInstanceId] as TFormInstance;
+      const submission = indexedFormInstances[submissionId];
 
-      const activitiesInFormInstance = groupedActivities[formInstanceId];
-      switch (fI.teCoreProps.schedulingProgress) {
+      const activitiesInSubmission = groupedActivities[submissionId];
+      switch (submission.teCoreProps.schedulingProgress) {
         // If NOT_SCHEDULED
         case teCoreSchedulingProgress.NOT_SCHEDULED: {
-          if (unScheduleActivities.length === activitiesInFormInstance.length)
+          if (unScheduleActivities.length === activitiesInSubmission.length)
             return teCoreSchedulingProgress.SCHEDULING_FINISHED;
-          if (unScheduleActivities.length > activitiesInFormInstance.length)
+          if (unScheduleActivities.length > activitiesInSubmission.length)
             return teCoreSchedulingProgress.IN_PROGRESS;
           return null;
         }
 
         case teCoreSchedulingProgress.IN_PROGRESS:
-          if (unScheduleActivities.length === activitiesInFormInstance.length)
+          if (unScheduleActivities.length === activitiesInSubmission.length)
             return teCoreSchedulingProgress.SCHEDULING_FINISHED;
           return null;
 
@@ -99,14 +107,14 @@ const useActivityScheduling = ({
     });
   };
 
-  const handleScheduleActivities = async (_activities: TActivity[]) => {
-    const activities = _activities.filter(
-      (act) => !schedulingActivities[act._id],
-    );
+  const handleScheduleActivities = async (selectedActivityIds: string[]) => {
+    const activities = await getActivities(selectedActivityIds);
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
     );
+
+    trackScheduleActivities(selectedActivityIds, formId);
     const queue = Object.entries(groupedActivities).map(
       ([formInstanceId, activitiesOfFormInstance]) => {
         return new Promise<
@@ -126,6 +134,16 @@ const useActivityScheduling = ({
               dispatch(
                 finishSchedulingActivities(
                   activitiesOfFormInstance.map(({ _id }) => _id),
+                ),
+              );
+              dispatch(
+                updateActivities(
+                  formId,
+                  formInstanceId,
+                  updateActivitiesWithSchedulingResults(
+                    activitiesOfFormInstance,
+                    schedulingReturns,
+                  ),
                 ),
               );
               resolve([formInstanceId, schedulingReturns]);
@@ -186,7 +204,8 @@ const useActivityScheduling = ({
     );
   };
 
-  const handleDeleteActivities = async (activities: TActivity[]) => {
+  const handleDeleteActivities = async (activityIds: string[]) => {
+    const activities = await getActivities(activityIds);
     const groupedByFormInstance = groupBy(
       activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',

@@ -1,6 +1,5 @@
 import { TConstraintConfiguration } from 'Types/ConstraintConfiguration.type';
 import { asyncAction } from '../../Utils/actionHelpers';
-import { ConstraintConfiguration } from '../../Models/ConstraintConfiguration.model';
 import { getEnvParams } from '../../configs';
 import * as types from './constraintConfigurations.actionTypes';
 
@@ -41,23 +40,15 @@ const createConstraintsConfigurationsFlow = {
 };
 
 export const createConstraintConfigurations =
-  (constrConf, callback = null) =>
+  (formId, callback = null) =>
   async (dispatch) => {
-    const { formId, description, constraints } = constrConf;
-    const constraintConfiguration = new ConstraintConfiguration({
-      name: 'New constraint configuration',
-      formId,
-      description: description || ' ',
-      constraints,
-      constraintConfigurationId: ' ',
-    });
     return dispatch(
       asyncAction.POST({
         flow: createConstraintsConfigurationsFlow,
         endpoint: `${
           getEnvParams().AM_BE_URL
         }forms/${formId}/constraint-configurations`,
-        params: constraintConfiguration,
+        params: formId,
         postAction: { callback },
       }),
     );

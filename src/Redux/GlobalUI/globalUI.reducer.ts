@@ -151,7 +151,7 @@ const reducer = (state = initialState, action) => {
     }
 
     case types.SET_SELECTED_ACTIVITIES: {
-      const { tableType, activities } = action.payload;
+      const { tableType, activities = [] } = action.payload;
       return {
         ...state,
         selectedActivities: {

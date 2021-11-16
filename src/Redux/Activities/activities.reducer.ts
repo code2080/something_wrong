@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from '../../Models/Activity.model';
 import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
@@ -95,15 +95,40 @@ const reducer = (
           activities,
           actionMeta: { formId, tableType },
           paginationParams: { totalPages, currentPage, limit },
+          filteredActivityIds,
+          allActivities,
         },
       } = action;
       const formIdValue = tableType ? formId + tableType : formId;
       return {
         ...state,
-        [formIdValue]: _.groupBy(
-          activities.map((activity) => new Activity(activity)),
-          'formInstanceId',
-        ),
+        filteredActivityIds: {
+          ...(state.allActivitiyIds || {}),
+          [formIdValue]: filteredActivityIds,
+        },
+        byFormId: {
+          [formIdValue]: Object.keys(allActivities),
+        },
+        byFormInstanceId: {
+          [formIdValue]: Object.values(
+            allActivities as Dictionary<{
+              formInstanceId: string;
+              _id: string;
+            }>,
+          ).reduce<Dictionary<string[]>>(
+            (res, { _id, formInstanceId }) => ({
+              ...res,
+              [formInstanceId]: [...(res[formInstanceId] ?? []), _id],
+            }),
+            {},
+          ),
+        },
+        [formIdValue]: {
+          ..._.groupBy(
+            activities.map((activity) => new Activity(activity)),
+            'formInstanceId',
+          ),
+        },
         paginationParams: {
           ...state.paginationParams,
           [formId]: {

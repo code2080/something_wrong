@@ -1,4 +1,4 @@
-import { setToken } from '../../Utils/tokenHelpers';
+import { deleteToken, setToken } from '../../Utils/tokenHelpers';
 import { authenticationStatuses } from '../../Constants/auth.constants';
 import * as types from './auth.actionTypes';
 import { actionsToSignOutOnFailure } from './auth.constants';
@@ -148,7 +148,7 @@ const reducer = (state = initialState, action) => {
       };
 
     case types.LOGIN_FAILURE:
-      setToken(null);
+      deleteToken();
       return {
         ...state,
         authenticationStatus: authenticationStatuses.NOT_AUTHENTICATED,

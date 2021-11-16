@@ -2,12 +2,22 @@
 version: 2.1
 # Use a package of configuration called an orb.
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
+  jira: circleci/jira@1.3.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - jira/notify
+
 # Orchestrate or schedule a set of jobs
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  build:
     jobs:
-      - welcome/run
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

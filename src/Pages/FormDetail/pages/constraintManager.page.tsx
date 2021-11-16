@@ -24,21 +24,18 @@ import {
   selectSelectedConstraintConfiguration,
 } from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import {
-  ConstraintConfiguration,
-  ConstraintInstance,
   TConstraintConfiguration,
   TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 
-import { EConstraintType, TConstraint } from '../../../Types/Constraint.type';
+import { TConstraint } from '../../../Types/Constraint.type';
 import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectIsBetaOrDev } from '../../../Redux/Auth/auth.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
 
 const getConstrOfType = (
@@ -78,7 +75,6 @@ const ConstraintManagerPage = () => {
   const form = useSelector((state) => selectForm(state, formId));
 
   const activityDesign = useSelector(selectDesignForForm)(formId);
-  const hasAEBetaPermission = useSelector(selectIsBetaOrDev);
   const tecoreAPI = useTECoreAPI();
   /**
    * STATE
@@ -191,20 +187,7 @@ const ConstraintManagerPage = () => {
 
   const handleCreateConstrConf = useCallback(() => {
     const doCreate = async () => {
-      const newConstrConf = ConstraintConfiguration.create({
-        formId,
-        name: 'New constraint configuration',
-        constraints: (allConstraints || [])
-          .filter(
-            (constraint: TConstraint) =>
-              constraint.type === EConstraintType.DEFAULT ||
-              constraint.type === EConstraintType.OTHER,
-          )
-          .map((constraint: TConstraint) =>
-            ConstraintInstance.createFromConstraint(constraint),
-          ),
-      });
-      const res = await dispatch(createConstraintConfigurations(newConstrConf));
+      const res = await dispatch(createConstraintConfigurations(formId));
       if (res?._id) handleSelectConstrConf(res?._id);
     };
     doCreate();
@@ -232,10 +215,6 @@ const ConstraintManagerPage = () => {
     [localConstrConf, allConstraints],
   );
 
-  useEffect(() => {
-    if (_.isEmpty(constrConfs) && !localConstrConf) handleCreateConstrConf();
-  }, [constrConfs, localConstrConf, handleCreateConstrConf]);
-
   return (
     <div className='constraint-manager--wrapper'>
       <ConstraintManagerTopBar
@@ -259,16 +238,14 @@ const ConstraintManagerPage = () => {
               pagination={false}
             />
           </Collapse.Panel>
-          {hasAEBetaPermission && (
-            <Collapse.Panel key='CUSTOM' header='Custom constraints'>
-              <Table
-                columns={constraintManagercolumns}
-                dataSource={customConstraints}
-                rowKey='constraintId'
-                pagination={false}
-              />
-            </Collapse.Panel>
-          )}
+          <Collapse.Panel key='CUSTOM' header='Custom constraints'>
+            <Table
+              columns={constraintManagercolumns}
+              dataSource={customConstraints}
+              rowKey='constraintId'
+              pagination={false}
+            />
+          </Collapse.Panel>
         </Collapse>
       )}
     </div>

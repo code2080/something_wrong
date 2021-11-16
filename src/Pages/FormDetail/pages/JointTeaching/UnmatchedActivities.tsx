@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import _ from 'lodash';
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,12 +31,9 @@ const UnmatchedActivities = ({ formId }: Props) => {
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
   const dispatch = useDispatch();
 
-  const selectedActivities = useSelector(
+  const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
   );
-  const selectedRowKeys = useMemo(() => {
-    return selectedActivities.map(({ _id }) => _id);
-  }, [selectedActivities]);
 
   // TODO: Should be removed later
   const activities = useSelector(
@@ -100,7 +97,7 @@ const UnmatchedActivities = ({ formId }: Props) => {
           }
         }}
         formId={formId}
-        activities={selectedActivities}
+        activityIds={selectedRowKeys}
       />
       <SelectJointTeachingGroupToAddActivitiesModal
         formId={formId}

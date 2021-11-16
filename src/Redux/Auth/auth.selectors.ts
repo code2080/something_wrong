@@ -14,6 +14,10 @@ export const hasPermission = (permission = '') =>
     permissions.includes(permission),
   );
 
+/**
+ * Will return true if the app is running outside of production/staging.
+ * Currently used as a feature flag
+ */
 export const selectIsBetaOrDev = (state) =>
   !['production', 'staging'].includes(selectEnvironment(state)) &&
   hasPermission(AEBETA_PERMISSION)(state);

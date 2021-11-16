@@ -1,10 +1,10 @@
 import moment from 'moment';
 
 // COMPONENTS
-import LengthValue from '../ValueTypes/LengthValue.jsx';
-import PaddingValue from '../ValueTypes/PaddingValue.jsx';
-import DateRangesValue from '../ValueTypes/DateRangesValue.jsx';
-import TimeSlotTimeValue from '../ValueTypes/TimeSlotTimeValue.jsx';
+import LengthValue from '../ValueTypes/LengthValue';
+import PaddingValue from '../ValueTypes/PaddingValue';
+import DateRangesValue from '../ValueTypes/DateRangesValue';
+import TimeSlotTimeValue from '../ValueTypes/TimeSlotTimeValue';
 import ExactTimeModeTimeValue from '../ValueTypes/ExactTimeModeTimeValue';
 import TimeValue from '../ValueTypes/TimeValue';
 import WeekdayValue from '../ValueTypes/WeekdayValue';

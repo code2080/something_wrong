@@ -1,3 +1,6 @@
+import { Activity } from '../Models/Activity.model';
+import { getToken } from './tokenHelpers';
+
 import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
@@ -31,6 +34,8 @@ import {
 } from 'Models/JointTeachingGroup.model';
 import { isEmptyDeep } from './general.helpers';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import axios from 'axios';
+import { getEnvParams } from 'configs';
 // CONSTANTS
 // FUNCTIONS
 /**
@@ -615,7 +620,7 @@ export const getAllValuesFromActivities = (
       } else if (Array.isArray(allValues[item.extId])) {
         if (
           !allValues[item.extId]?.some((val) =>
-            _.isEqual(val.value, indexedValues[item.extId].value),
+            _.isEqual(val?.value, indexedValues[item.extId]?.value),
           )
         ) {
           allValues[item.extId]?.push(indexedValues[item.extId]);
@@ -747,4 +752,20 @@ export const getActivityFilterSchemaQuery = ({ status }, tableType) => {
   };
   if (isEmptyDeep(schemaQuery)) return undefined;
   return schemaQuery;
+};
+
+export const getActivities = async (
+  activityIds: string[],
+): Promise<TActivity[]> => {
+  const token = await getToken();
+  const response = await axios.get(`${getEnvParams().AM_BE_URL}activity`, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${token}`,
+    },
+    params: { activityIds: activityIds },
+  });
+
+  // TODO: add proper error handling
+  return (response?.data?.activities ?? []).map((a) => new Activity(a));
 };

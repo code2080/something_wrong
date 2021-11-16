@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
@@ -21,7 +20,10 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
-import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import {
+  makeSelectActivitiesForForm,
+  makeSelectFilteredActivityIdsForForm,
+} from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
 
@@ -41,7 +43,6 @@ import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
-  const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
 
   // For refecth activities
@@ -50,10 +51,9 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const selectedRows = useSelector(selectSelectedActivities(ACTIVITIES_TABLE));
-  const selectedRowKeys = useMemo(() => {
-    return selectedRows.map(({ _id }) => _id);
-  }, [selectedRows]);
+  const selectedRowKeys = useSelector(
+    selectSelectedActivities(ACTIVITIES_TABLE),
+  );
 
   // Select filters
   const selectedFilterValues = useSelector(
@@ -126,13 +126,21 @@ const ActivitiesPage = () => {
     pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
-
   const design = useSelector(selectDesignForForm)(formId);
+  const selectFilteredActivityIdsForForm = useMemo(
+    () => makeSelectFilteredActivityIdsForForm(),
+    [],
+  );
+
+  const filteredActivityIds = useSelector((state) =>
+    selectFilteredActivityIdsForForm(state, formId),
+  );
+
   const isLoading = useSelector(
     createLoadingSelector(['FETCH_ACTIVITIES_FOR_FORM']),
   ) as boolean;
 
-  /**
+  /*
    * EVENT HANDLERS
    */
   const { handleScheduleActivities, handleDeleteActivities } =
@@ -142,27 +150,27 @@ const ActivitiesPage = () => {
       reservationMode,
     });
 
-  const onSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, tableDataSource));
+  const handleSelectAll = () => {
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, filteredActivityIds));
   };
 
   const onDeselectAll = () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
 
-  const onScheduleActivities = async (activities: TActivity[]) => {
-    await handleScheduleActivities(activities);
+  const onScheduleActivities = async (activityIds: string[]) => {
+    await handleScheduleActivities(activityIds);
     onDeselectAll();
   };
 
-  const onDeleteActivities = async (activities: TActivity[]) => {
+  const onDeleteActivities = async (activityIds: string[]) => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
       title: 'Canncel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
-        await handleDeleteActivities(activities);
+        await handleDeleteActivities(activityIds);
         onDeselectAll();
       },
     });
@@ -185,12 +193,12 @@ const ActivitiesPage = () => {
   return (
     <>
       <ActivitiesToolbar
-        selectedRowKeys={selectedRowKeys}
-        onSelectAll={onSelectAll}
+        selectedActivityIds={selectedRowKeys}
+        onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
-        allActivities={tableDataSource}
+        allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {
           setFetchingTrigger(fetchingTrigger + 1);
         }}
@@ -202,7 +210,7 @@ const ActivitiesPage = () => {
         activities={tableDataSource}
         onSort={onSortActivities}
         additionalColumns={{
-          pre: SchedulingColumns(selectedRowKeys, isBeta),
+          pre: SchedulingColumns(selectedRowKeys),
           post: StaticColumns,
         }}
         paginationParams={selectedPaginationParams}
