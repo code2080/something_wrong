@@ -14,9 +14,7 @@ const ActivityTracksSelector = ({ activity }: Props) => {
       <Popover
         overlayClassName='activity-tag-popover--wrapper'
         title='Tracks'
-        content={
-          activity.tracks ? activity.tracks : 0
-        }
+        content={activity.tracks ? activity.tracks : 0}
         getPopupContainer={() =>
           document.getElementById('te-prefs-lib') as HTMLElement
         }
