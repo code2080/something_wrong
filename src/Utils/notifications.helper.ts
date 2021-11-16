@@ -13,11 +13,3 @@ export const generateJointTeachingMatchNotifications = (
         : 'No joint teaching matches were created',
   });
 };
-
-export const mergedMatchActivitiesNotifications = (type) => {
-  notification[type]({
-    getContainer: () => document.getElementById('te-prefs-lib'),
-    getPopupContainer: () => document.getElementById('te-prefs-lib'),
-    message: type === 'warning' ?? 'Can not merge these matched activities',
-  });
-};

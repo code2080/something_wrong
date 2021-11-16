@@ -45,6 +45,7 @@ export default class JointTeachingGroup {
   primaryObjects: string[];
   matchingScore: number;
   matchingOn: { [key: string]: string[] };
+  isScheduled: boolean;
 
   constructor({
     _id,
@@ -55,6 +56,7 @@ export default class JointTeachingGroup {
     matchingScore,
     matchingOn,
     primaryObjects,
+    isScheduled,
   }: {
     _id: string;
     activityIds: string[];
@@ -65,6 +67,7 @@ export default class JointTeachingGroup {
     primaryObjects: null | string[];
     matchingScore: number;
     matchingOn: { [key: string]: string[] };
+    isScheduled: boolean;
   }) {
     this._id = _id;
     this.activityIds = activities;
@@ -77,6 +80,7 @@ export default class JointTeachingGroup {
       primaryObjects || uniq(activitiesDetail.map((act) => act.scopedObject));
     this.matchingScore = matchingScore || 0;
     this.matchingOn = matchingOn || {};
+    this.isScheduled = isScheduled || false;
   }
 
   /**
