@@ -5,6 +5,7 @@ import type { ColumnsType } from 'antd/lib/table';
 import ActivityStatusCol from '../../Components/ActivitiesTableColumns/SchedulingColumns/StatusCol/ActivityStatusCol';
 import SortableTableCell from '../../Components/DynamicTable/SortableTableCell';
 import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging';
+import ActivityTracks from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTracks';
 
 // COLUMNS
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
@@ -66,6 +67,18 @@ export const createActivitiesTableColumnsFromMapping = (
   );
 
   return [
+    {
+      title: 'Tracks',
+      key: 'activityTracks',
+      dataIndex: undefined,
+      width: 100,
+      render: (activity: TActivity) => (
+        <SortableTableCell className={`activityTracks${activity._id}`}>
+          <ActivityTracks activity={activity} />
+        </SortableTableCell>
+      ),
+      sorter: true,
+    },
     {
       title: 'Tag',
       key: 'activityTag',
