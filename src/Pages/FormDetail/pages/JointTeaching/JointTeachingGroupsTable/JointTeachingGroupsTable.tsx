@@ -275,7 +275,7 @@ const JointTeachingGroupsTable = (props: Props) => {
 
     if (group.isScheduled === true)
       return (
-        <Tooltip title='These matched activities can not be merged'>
+        <Tooltip title='These matched activities can not be merged as it contains scheduled activities'>
           <Button
             size='small'
             type='primary'
