@@ -1,4 +1,4 @@
-import { Key, useMemo } from 'react';
+import { Key } from 'react';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
@@ -12,7 +12,6 @@ import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
-import { selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
 
 interface Props extends TableProps<any> {
   tableType?: string;
