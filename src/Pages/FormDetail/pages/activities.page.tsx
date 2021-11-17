@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
@@ -23,7 +22,7 @@ import {
 // SELECTORS
 import {
   makeSelectActivitiesForForm,
-  makeSelectAllActivityIdsForForm,
+  makeSelectFilteredActivityIdsForForm,
 } from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
@@ -44,7 +43,6 @@ import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
-  const isBeta = useSelector(selectIsBetaOrDev);
   const { formId } = useParams<{ formId: string }>();
 
   // For refecth activities
@@ -129,13 +127,13 @@ const ActivitiesPage = () => {
     trigger: fetchingTrigger,
   });
   const design = useSelector(selectDesignForForm)(formId);
-  const selectAllActivityIdsForForm = useMemo(
-    () => makeSelectAllActivityIdsForForm(),
+  const selectFilteredActivityIdsForForm = useMemo(
+    () => makeSelectFilteredActivityIdsForForm(),
     [],
   );
 
-  const allActivityIds = useSelector((state) =>
-    selectAllActivityIdsForForm(state, formId),
+  const filteredActivityIds = useSelector((state) =>
+    selectFilteredActivityIdsForForm(state, formId),
   );
 
   const isLoading = useSelector(
@@ -153,7 +151,7 @@ const ActivitiesPage = () => {
     });
 
   const handleSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, filteredActivityIds));
   };
 
   const onDeselectAll = () => {
@@ -200,7 +198,7 @@ const ActivitiesPage = () => {
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onDeleteActivities={onDeleteActivities}
-        allActivities={allActivityIds}
+        allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {
           setFetchingTrigger(fetchingTrigger + 1);
         }}
@@ -212,7 +210,7 @@ const ActivitiesPage = () => {
         activities={tableDataSource}
         onSort={onSortActivities}
         additionalColumns={{
-          pre: SchedulingColumns(selectedRowKeys, isBeta),
+          pre: SchedulingColumns(selectedRowKeys),
           post: StaticColumns,
         }}
         paginationParams={selectedPaginationParams}

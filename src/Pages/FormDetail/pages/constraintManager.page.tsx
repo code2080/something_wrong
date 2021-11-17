@@ -36,7 +36,6 @@ import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityD
 import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { selectIsBetaOrDev } from '../../../Redux/Auth/auth.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
 
 const getConstrOfType = (
@@ -76,7 +75,6 @@ const ConstraintManagerPage = () => {
   const form = useSelector((state) => selectForm(state, formId));
 
   const activityDesign = useSelector(selectDesignForForm)(formId);
-  const hasAEBetaPermission = useSelector(selectIsBetaOrDev);
   const tecoreAPI = useTECoreAPI();
   /**
    * STATE
@@ -240,16 +238,14 @@ const ConstraintManagerPage = () => {
               pagination={false}
             />
           </Collapse.Panel>
-          {hasAEBetaPermission && (
-            <Collapse.Panel key='CUSTOM' header='Custom constraints'>
-              <Table
-                columns={constraintManagercolumns}
-                dataSource={customConstraints}
-                rowKey='constraintId'
-                pagination={false}
-              />
-            </Collapse.Panel>
-          )}
+          <Collapse.Panel key='CUSTOM' header='Custom constraints'>
+            <Table
+              columns={constraintManagercolumns}
+              dataSource={customConstraints}
+              rowKey='constraintId'
+              pagination={false}
+            />
+          </Collapse.Panel>
         </Collapse>
       )}
     </div>

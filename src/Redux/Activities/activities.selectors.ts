@@ -71,12 +71,12 @@ export const selectActivitiesForForm = ({ formId, tableType }) =>
     },
   );
 
-export const makeSelectAllActivityIdsForForm = () =>
+export const makeSelectFilteredActivityIdsForForm = () =>
   createSelector(
     activityStateSelector,
     (_, formId: string) => formId,
     (activities, formId: string): string[] =>
-      activities?.allActivityIds?.[formId] ?? [],
+      activities?.filteredActivityIds?.[formId] ?? [],
   );
 
 export const makeSelectActivitiesForFormAndIds = () =>

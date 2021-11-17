@@ -1,4 +1,4 @@
-import { Key, useMemo, useState } from 'react';
+import { Key, useMemo } from 'react';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
@@ -55,14 +55,9 @@ const ActivityTable = ({
     selectSelectedActivities(tableType),
   );
   useActivitiesObjectWatcher({ activities });
-  const calculateAvailableTableHeight = () => {
-    return ((window as any).tePrefsHeight ?? 500) - 110;
-  };
   const totalPages =
     (paginationParams?.limit as number) *
     (paginationParams?.totalPages as number);
-
-  const [yScroll] = useState(calculateAvailableTableHeight());
   const tableColumns = useMemo(
     () =>
       design
@@ -81,7 +76,6 @@ const ActivityTable = ({
 
   return (
     <DynamicTable
-      scroll={{ y: yScroll, x: 'max-content' }}
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
@@ -100,6 +94,7 @@ const ActivityTable = ({
         }
       }
       pagination={{
+        size: 'small',
         current: paginationParams?.currentPage || 1,
         pageSize: paginationParams?.limit || 10,
         total: totalPages || 10,
