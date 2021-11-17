@@ -120,8 +120,7 @@ export const hydrateObjectRequests = (
 };
 
 export const activityIsReadOnly = (status) =>
-  // TODO: Temporarily disables editing activities until we ensure it works again
-  true || [EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(status);
+  [EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
   activityValue: ActivityValue,
