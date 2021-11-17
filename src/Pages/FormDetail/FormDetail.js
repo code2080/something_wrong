@@ -60,6 +60,7 @@ export const TAB_CONSTANT = {
   ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
   CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER',
   JOINT_TEACHING: 'JOINT_TEACHING',
+  GROUP_MANAGEMENT: 'GROUP_MANAGEMENT',
 };
 
 const FormPage = () => {
@@ -142,6 +143,14 @@ const FormPage = () => {
         {/* TODO: Does the customers need to buy assisted scheduling? */}
         <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
           {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+            <JointTeachingPage />
+          )}
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab='GROUP MANAGEMENT'
+          key={TAB_CONSTANT.GROUP_MANAGEMENT}
+        >
+          {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
             <JointTeachingPage />
           )}
         </Tabs.TabPane>
