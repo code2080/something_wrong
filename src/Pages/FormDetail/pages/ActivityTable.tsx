@@ -1,11 +1,11 @@
-import { Key, useMemo } from 'react';
+import { Key } from 'react';
 import { TActivity } from 'Types/Activity.type';
 import _ from 'lodash';
 
 import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
-import { createActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+import { CreateActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
@@ -30,6 +30,7 @@ interface Props extends TableProps<any> {
     [activityValue, valueIndex],
   ) => void;
   renderer?: (type: ConflictType, activity: TActivity, extId: string) => void;
+  resizable?: boolean;
   onSetCurrentPaginationParams?: (page: number, limit: number) => void;
 }
 
@@ -48,6 +49,7 @@ const ActivityTable = ({
   onSetCurrentPaginationParams,
   tableType,
   selectable = true,
+  resizable = true,
   ...props
 }: Props) => {
   const dispatch = useDispatch();
@@ -58,17 +60,14 @@ const ActivityTable = ({
   const totalPages =
     (paginationParams?.limit as number) *
     (paginationParams?.totalPages as number);
-  const tableColumns = useMemo(
-    () =>
-      design
-        ? createActivitiesTableColumnsFromMapping(
-            design,
-            columnPrefix,
-            renderer,
-          )
-        : [],
-    [design, columnPrefix, renderer],
-  );
+
+  const tableColumns = design
+    ? CreateActivitiesTableColumnsFromMapping({
+        design,
+        columnPrefix,
+        renderer,
+      })
+    : [];
 
   const onRowSelect = (selectedRowKeys: string[]) => {
     dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
@@ -108,7 +107,7 @@ const ActivityTable = ({
       onChange={(pagination, filter, sorter) => {
         onSort(sorter);
       }}
-      resizable
+      resizable={resizable}
       {...props}
     />
   );

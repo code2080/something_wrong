@@ -107,25 +107,16 @@ export const getColumnObjectArrayForTable = (
   hasExpandedRowRenderer,
   onResizeColumn,
   nowrap,
+  additionalColumns = 0,
 ) =>
   columns
     // Filter out non-visible columns
     .filter((col) => isColumnVisible(col, visibleColumns))
     // Map each column definition with the right handlers
-    .map((col, idx, arr) => ({
-      ...col,
-      width: allowResizing
-        ? calculateColumnWidth({
-            title: col.title,
-            columnIdx: idx,
-            columnWidths,
-            totalAvailableWidth,
-            totalNumberOfColumns: arr.length,
-            numberOfFixedWidthColumns,
-          })
-        : col.width,
-      onHeaderCell: () => ({
-        resizable: allowResizing && col.resizable !== false,
+    .map((col, _idx, arr) => {
+      const idx = additionalColumns + _idx;
+      return {
+        ...col,
         width: allowResizing
           ? calculateColumnWidth({
               title: col.title,
@@ -136,42 +127,55 @@ export const getColumnObjectArrayForTable = (
               numberOfFixedWidthColumns,
             })
           : col.width,
-        title: col.title,
-        index: idx,
-        expandable: hasExpandedRowRenderer,
-        onResized: (newWidth) => onResizeColumn(newWidth, idx),
-      }),
-      render: nowrap
-        ? col.render
-        : (val, el, rowIdx) =>
-            col.render ? (
-              <EllipsisTruncater
-                width={calculateColumnWidth({
-                  title: col.title,
-                  columnIdx: idx,
-                  columnWidths,
-                  totalAvailableWidth,
-                  totalNumberOfColumns: arr.length,
-                  numberOfFixedWidthColumns,
-                })}
-              >
-                {col.render(val, el, rowIdx)}
-              </EllipsisTruncater>
-            ) : (
-              <EllipsisTruncater
-                width={calculateColumnWidth({
-                  title: col.title,
-                  columnIdx: idx,
-                  columnWidths,
-                  totalAvailableWidth,
-                  totalNumberOfColumns: arr.length,
-                  numberOfFixedWidthColumns,
-                })}
-              >
-                {val}
-              </EllipsisTruncater>
-            ),
-    }));
+        onHeaderCell: () => ({
+          resizable: allowResizing && col.resizable !== false,
+          width: allowResizing
+            ? calculateColumnWidth({
+                title: col.title,
+                columnIdx: idx,
+                columnWidths,
+                totalAvailableWidth,
+                totalNumberOfColumns: arr.length,
+                numberOfFixedWidthColumns,
+              })
+            : col.width,
+          title: col.title,
+          index: idx,
+          expandable: hasExpandedRowRenderer,
+          onResized: (newWidth) => onResizeColumn(newWidth, idx),
+        }),
+        render: nowrap
+          ? col.render
+          : (val, el, rowIdx) =>
+              col.render ? (
+                <EllipsisTruncater
+                  width={calculateColumnWidth({
+                    title: col.title,
+                    columnIdx: idx,
+                    columnWidths,
+                    totalAvailableWidth,
+                    totalNumberOfColumns: arr.length,
+                    numberOfFixedWidthColumns,
+                  })}
+                >
+                  {col.render(val, el, rowIdx)}
+                </EllipsisTruncater>
+              ) : (
+                <EllipsisTruncater
+                  width={calculateColumnWidth({
+                    title: col.title,
+                    columnIdx: idx,
+                    columnWidths,
+                    totalAvailableWidth,
+                    totalNumberOfColumns: arr.length,
+                    numberOfFixedWidthColumns,
+                  })}
+                >
+                  {val}
+                </EllipsisTruncater>
+              ),
+      };
+    });
 
 /**
  * @function shouldShowFilterBar

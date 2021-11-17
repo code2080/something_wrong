@@ -3,6 +3,11 @@
   table {
     table-layout: fixed;
   }
+  .ant-table-thead th:nth-last-child(2) {
+    .react-resizable-handle {
+      display: none;
+    }
+  }
   .react-resizable {
     position: relative;
     background-clip: padding-box;

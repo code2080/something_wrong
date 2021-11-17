@@ -8,7 +8,7 @@ import DynamicTable from '../DynamicTable/DynamicTableHOC';
 import ExpandedPane from '../TableColumns/Components/ExpandedPane';
 
 // HELPERS
-import { createActivitiesTableColumnsFromMapping } from '../ActivitiesTableColumns/ActivitiesTableColumns';
+import { CreateActivitiesTableColumnsFromMapping } from '../ActivitiesTableColumns/ActivitiesTableColumns';
 
 // CONSTANTS
 import { tableViews } from '../../Constants/tableViews.constants';
@@ -60,7 +60,11 @@ const ActivitiesTable = ({
     }
   };
   const columns = design
-    ? createActivitiesTableColumnsFromMapping(design, columnPrefix, renderer)
+    ? CreateActivitiesTableColumnsFromMapping({
+        design,
+        columnPrefix,
+        renderer,
+      })
     : [];
   const dataSource = getActivityDataSource(activities);
 

@@ -422,6 +422,7 @@ const JointTeachingGroupsTable = (props: Props) => {
             <JointTeachingActivitiesTable
               tableType={MATCHED_ACTIVITIES_TABLE}
               selectable={false}
+              resizable={false}
               conflicts={group.conflictsMapping}
               showResult
               readonly={readonly || isMerged}
