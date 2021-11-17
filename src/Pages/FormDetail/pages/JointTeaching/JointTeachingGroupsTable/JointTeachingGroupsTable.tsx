@@ -322,7 +322,10 @@ const JointTeachingGroupsTable = (props: Props) => {
       key: 'conflictsResolved',
       render: (jointTeachingGroup: JointTeachingGroup) => (
         <JointTeachingGroupStatusCheck
-          conflictsResolved={jointTeachingGroup.conflictsResolved}
+          conflictsResolved={
+            jointTeachingGroup.conflictsResolved &&
+            !jointTeachingGroup.isScheduled
+          }
         />
       ),
       width: 32,
