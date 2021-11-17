@@ -768,6 +768,6 @@ export const getActivities = async (
 
   // TODO: add proper error handling
   return (response?.data?.activities ?? [])
-    .filter((a) => a.values)
+    .filter((a) => !isEmpty(a.values))
     .map((a) => new Activity(a));
 };
