@@ -22,8 +22,8 @@ import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // COMPONENTS
-import { Button, Popconfirm } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Tooltip } from 'antd';
+import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
 import JointTeachingActivitiesTable, {
   SelectedConflictValue,
@@ -51,7 +51,6 @@ import JointTeachingGroup, {
 
 import './JointTeachingGroupsTable.scss';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-
 interface Props {
   readonly?: boolean;
   onGroupSelect?: (group: JointTeachingGroup) => void;
@@ -273,6 +272,21 @@ const JointTeachingGroupsTable = (props: Props) => {
           Revert
         </Button>
       );
+
+    if (group.isScheduled === true)
+      return (
+        <Tooltip title='These matched activities can not be merged as it contains scheduled activities'>
+          <Button
+            size='small'
+            type='primary'
+            disabled
+            style={{ padding: '0 2px' }}
+          >
+            <WarningOutlined /> Merge
+          </Button>
+        </Tooltip>
+      );
+
     return (
       <Button
         size='small'
@@ -308,7 +322,10 @@ const JointTeachingGroupsTable = (props: Props) => {
       key: 'conflictsResolved',
       render: (jointTeachingGroup: JointTeachingGroup) => (
         <JointTeachingGroupStatusCheck
-          conflictsResolved={jointTeachingGroup.conflictsResolved}
+          conflictsResolved={
+            jointTeachingGroup.conflictsResolved &&
+            !jointTeachingGroup.isScheduled
+          }
         />
       ),
       width: 32,
