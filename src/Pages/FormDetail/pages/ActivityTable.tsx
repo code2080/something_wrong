@@ -108,7 +108,7 @@ const ActivityTable = ({
             onSetCurrentPaginationParams(page, limit);
         },
         showSizeChanger: true,
-        pageSizeOptions: [10, 20, 30, 40, 50],
+        pageSizeOptions: [10, 20, 30, 40, 50, 100],
       }}
       onChange={(pagination, filter, sorter) => {
         onSort(sorter);
