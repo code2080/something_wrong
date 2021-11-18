@@ -61,6 +61,22 @@ export const selectExtIdLabel = createSelector(
       getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
 );
 
+export const selectIndexedExtIdLabel = createSelector(
+  selectExtIdProps,
+  (extIdProps) => (allActivityValues: Array<[Field, string]>) => {
+    return allActivityValues.reduce((values, [field, extId]) => {
+      return {
+        ...values,
+        [`${field}_${extId}`]: getLabelFromExtId(extIdProps, {
+          field,
+          extId,
+          fallbackVal: extId,
+        }),
+      };
+    }, {});
+  },
+);
+
 export const selectMultipleExtIdLabels = createSelector(
   selectExtIdProps,
   (extIdProps) =>

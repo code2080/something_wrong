@@ -33,6 +33,7 @@ import {
   filterDataSource,
   getTableComponents,
 } from './helpers';
+import { isEmpty } from 'lodash';
 
 const COLUMNS_WIDTH = 'COLUMNS_WIDTH';
 
@@ -185,8 +186,11 @@ const DynamicTableHOC = ({
 
   // Memoized variable with the visible column definitions
   const _cols = useMemo(
-    () =>
-      getColumnObjectArrayForTable(
+    () => {
+      let additionalColumns = 0;
+      if (rowSelection) additionalColumns += 1;
+      if (expandedRowRender) additionalColumns += 1;
+      return getColumnObjectArrayForTable(
         columns,
         visibleCols,
         visibleColumnsKey.map((key) => columnWidths[key]),
@@ -196,7 +200,9 @@ const DynamicTableHOC = ({
         !!expandedRowRender,
         onResizeColumn,
         nowrap,
-      ),
+        additionalColumns,
+      );
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       columns,
@@ -205,9 +211,10 @@ const DynamicTableHOC = ({
       _width,
       fixedWidthCols.length,
       resizable,
-      expandedRowRender,
+      !expandedRowRender,
       columnWidths,
       nowrap,
+      !rowSelection,
     ],
   );
 
@@ -222,8 +229,8 @@ const DynamicTableHOC = ({
     [showFilter, onSearch, _cols],
   );
   const _tableComponents = useMemo(
-    () => getTableComponents(draggable),
-    [draggable],
+    () => getTableComponents(!isEmpty(_dataSource) && draggable),
+    [draggable, _dataSource],
   );
 
   const otherProps = useMemo(

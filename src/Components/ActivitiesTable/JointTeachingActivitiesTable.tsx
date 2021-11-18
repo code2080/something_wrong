@@ -52,6 +52,7 @@ interface Props {
   conflicts?: JointTeachingConflictMapping;
   loading?: boolean;
   selectable?: boolean;
+  resizable?: boolean;
   tableType?: string;
   hasPagination?: boolean;
 }
@@ -94,6 +95,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
     selectable,
     onSetCurrentPaginationParams,
     paginationParams,
+    resizable,
   } = props;
   const design = useSelector(selectDesignForForm)(formId);
   const submissions = useSelector((state) =>
@@ -366,6 +368,7 @@ const JointTeachingActivitiesTable = (props: TableProps) => {
         onSelect={onSelect}
         onSetCurrentPaginationParams={onSetCurrentPaginationParams}
         paginationParams={paginationParams}
+        resizable={resizable}
       />
       <AddActivitiesToJointTeachingGroupModal
         formId={formId}
