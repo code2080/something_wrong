@@ -10,7 +10,7 @@ import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.select
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
 
-// COMPONENtS
+// COMPONENTS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
 // ACTIONS
 import {

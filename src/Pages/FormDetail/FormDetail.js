@@ -51,6 +51,7 @@ import ActivitiesPage from './pages/activities.page';
 import FormInfoPage from './pages/formInfo.page';
 import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
+import GroupManagementPage from './pages/groupManagement.page';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -151,7 +152,7 @@ const FormPage = () => {
           key={TAB_CONSTANT.GROUP_MANAGEMENT}
         >
           {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
-            <JointTeachingPage />
+            <GroupManagementPage />
           )}
         </Tabs.TabPane>
         <Tabs.TabPane
