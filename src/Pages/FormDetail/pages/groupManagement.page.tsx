@@ -210,23 +210,22 @@ const GroupManagementPage = () => {
         activities={tableDataSource}
         onSort={onSortActivities}
         additionalColumns={{
-          pre: [...SchedulingColumns(selectedRowKeys), {
-    title: 'GM Status',
-    key: 'groupManagementStatus',
-    dataIndex: undefined,
-    width: 110,
-    render: (activity: TActivity) => (
-      <SortableTableCell className={`activityScheduling_${activity._id}`}>
-        <StatusLabel
-            color={
-              'default'
-            }
-          >
-            {'Allocated'}
-          </StatusLabel>
-      </SortableTableCell>
-    ),
-  }],
+          pre: [
+            ...SchedulingColumns(selectedRowKeys),
+            {
+              title: 'GM Status',
+              key: 'groupManagementStatus',
+              dataIndex: undefined,
+              width: 110,
+              render: (activity: TActivity) => (
+                <SortableTableCell
+                  className={`activityScheduling_${activity._id}`}
+                >
+                  <StatusLabel color={'default'}>{'Allocated'}</StatusLabel>
+                </SortableTableCell>
+              ),
+            },
+          ],
           post: StaticColumns,
         }}
         paginationParams={selectedPaginationParams}
