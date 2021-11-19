@@ -160,6 +160,7 @@ const ActivitiesPage = () => {
 
   const onScheduleActivities = async (activityIds: string[]) => {
     await handleScheduleActivities(activityIds);
+    setFetchingTrigger(fetchingTrigger + 1);
     onDeselectAll();
   };
 
@@ -171,6 +172,7 @@ const ActivitiesPage = () => {
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
         await handleDeleteActivities(activityIds);
+        setFetchingTrigger(fetchingTrigger + 1);
         onDeselectAll();
       },
     });
@@ -210,7 +212,10 @@ const ActivitiesPage = () => {
         activities={tableDataSource}
         onSort={onSortActivities}
         additionalColumns={{
-          pre: SchedulingColumns(selectedRowKeys),
+          pre: SchedulingColumns(selectedRowKeys, {
+            onDelete: onDeleteActivities,
+            onSchedule: onScheduleActivities,
+          }),
           post: StaticColumns,
         }}
         paginationParams={selectedPaginationParams}
