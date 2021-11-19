@@ -42,6 +42,7 @@ export const FILTER_ITEMS_MAPPING = (
                 format='HH:mm'
                 allowEmpty={[true, true]}
                 minuteStep={30}
+                clearIcon={false}
               />
             </Form.Item>
           ),
