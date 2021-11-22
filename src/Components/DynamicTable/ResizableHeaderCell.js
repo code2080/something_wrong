@@ -82,7 +82,9 @@ const ResizableCell = (props) => {
       el.addEventListener('click', terminateClickEvent);
     });
     if (ref && ref.current) {
-      setMinCellWidth(50 + getHeaderCellWidth(ref.current));
+      setMinCellWidth(
+        Math.max(50 + getHeaderCellWidth(ref.current), restProps.width || 0),
+      );
     }
   }, [!ref]);
 

@@ -67,6 +67,7 @@ export const getTotalAvailableWidth = (
  * @param {Number} totalAvailableWidth
  * @param {Number} totalNumberOfColumns
  * @param {Number} numberOfFixedWidthColumns
+ * @param {Number | undefined} fixedWidth
  * @returns Number
  */
 const calculateColumnWidth = ({
@@ -76,7 +77,9 @@ const calculateColumnWidth = ({
   totalAvailableWidth,
   totalNumberOfColumns,
   numberOfFixedWidthColumns,
+  fixedWidth,
 }) => {
+  if (fixedWidth) return fixedWidth;
   return Math.max(
     50 + title.length * 5.5,
     columnWidths[columnIdx]
@@ -114,6 +117,7 @@ export const getColumnObjectArrayForTable = (
     .filter((col) => isColumnVisible(col, visibleColumns))
     // Map each column definition with the right handlers
     .map((col, _idx, arr) => {
+      const fixedWidth = col.width || col.fixedWidth;
       const idx = additionalColumns + _idx;
       return {
         ...col,
@@ -125,8 +129,9 @@ export const getColumnObjectArrayForTable = (
               totalAvailableWidth,
               totalNumberOfColumns: arr.length,
               numberOfFixedWidthColumns,
+              fixedWidth,
             })
-          : col.width,
+          : fixedWidth,
         onHeaderCell: () => ({
           resizable: allowResizing && col.resizable !== false,
           width: allowResizing
@@ -137,8 +142,9 @@ export const getColumnObjectArrayForTable = (
                 totalAvailableWidth,
                 totalNumberOfColumns: arr.length,
                 numberOfFixedWidthColumns,
+                fixedWidth: fixedWidth,
               })
-            : col.width,
+            : fixedWidth,
           title: col.title,
           index: idx,
           expandable: hasExpandedRowRenderer,
@@ -156,6 +162,7 @@ export const getColumnObjectArrayForTable = (
                     totalAvailableWidth,
                     totalNumberOfColumns: arr.length,
                     numberOfFixedWidthColumns,
+                    fixedWidth,
                   })}
                 >
                   {col.render(val, el, rowIdx)}
@@ -169,6 +176,7 @@ export const getColumnObjectArrayForTable = (
                     totalAvailableWidth,
                     totalNumberOfColumns: arr.length,
                     numberOfFixedWidthColumns,
+                    fixedWidth,
                   })}
                 >
                   {val}
