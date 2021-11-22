@@ -51,19 +51,14 @@ const ObjectObjectValue = ({
   if (elementType === elementTypes.ELEMENT_TYPE_DATASOURCE) {
     return (
       <>
-        {stdValue.map((item, itemIndex) =>
-          item.split(',').map((val, valIndex) => {
-            const request = _.find(objectRequests, ['_id', val]);
-            return request ? (
-              <ObjectRequestDropdown key={request._id} request={request} />
-            ) : (
-              <DatasourceReadonly
-                key={`${itemIndex}_${valIndex}`}
-                value={labels[val]}
-              />
-            );
-          }),
-        )}
+        {stdValue.map((extId, itemIndex) => {
+          const request = _.find(objectRequests, ['_id', extId]);
+          return request ? (
+            <ObjectRequestDropdown key={request._id} request={request} />
+          ) : (
+            <DatasourceReadonly key={itemIndex} value={labels[extId]} />
+          );
+        })}
       </>
     );
   }
