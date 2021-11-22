@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "@allpro/react-router-pause": "^1.1.3",
-    "antd": "^4.1.0",
+    "antd": "4.17.0",
     "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "cross-env": "^7.0.3",
@@ -162,7 +162,7 @@
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "@ant-design/icons": "^4.6.2",
-    "antd": "^4.1.0",
+    "antd": "4.16.3",
     "axios": "^0.21.1",
     "bufferutil": "^4.0.3",
     "classnames": "^2.3.1",
