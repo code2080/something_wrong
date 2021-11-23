@@ -28,4 +28,21 @@ describe('ObjectObjectValue component tests', () => {
     renderWithState(<ObjectObjectValue value={['testExtId']} />);
     screen.getByText('testExtId');
   });
+
+  it('renders label when extid contains comma char', () => {
+    renderWithState(<ObjectObjectValue value={['testwith, comma']} />, {
+      initialState: {
+        te: {
+          extIdProps: {
+            objects: {
+              'testwith, comma': {
+                label: 'Test label',
+              },
+            },
+          },
+        },
+      },
+    });
+    screen.getByText('Test label');
+  });
 });

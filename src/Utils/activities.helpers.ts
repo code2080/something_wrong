@@ -499,7 +499,7 @@ export const activityConvertFn = {
 };
 
 const isFieldConstraint = (constraint: TConstraintInstance) =>
-  constraint.parameters.find(
+  _.compact(constraint.parameters || []).find(
     ({ firstParam, lastParam }) =>
       firstParam && lastParam && firstParam.length > 0 && lastParam.length > 0,
   );
