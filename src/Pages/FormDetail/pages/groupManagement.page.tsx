@@ -170,8 +170,8 @@ const GroupManagementPage = () => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
-      title: 'Canncel reservations',
-      content: 'Are you sure you want to cancel these reservations?',
+      title: 'Deallocate activities',
+      content: 'Are you sure you want to deallocate these activities?',
       onOk: async () => {
         await handleDeleteActivities(activityIds);
         onDeselectAll();
@@ -213,15 +213,14 @@ const GroupManagementPage = () => {
           pre: [
             ...SchedulingColumns(selectedRowKeys),
             {
-              title: 'GM Status',
+              title: 'Group status',
               key: 'groupManagementStatus',
               dataIndex: undefined,
               width: 110,
               render: (activity: TActivity) => (
                 <SortableTableCell
                   className={`activityScheduling_${activity._id}`}
-                >
-                  <StatusLabel color={'default'}>{'Allocated'}</StatusLabel>
+                >{ Math.random() > 0.5 ? (<StatusLabel color={'success'}>{'Allocated'}</StatusLabel>): <StatusLabel color={'default'}>{'Not allocated'}</StatusLabel>}
                 </SortableTableCell>
               ),
             },
