@@ -170,7 +170,7 @@ const GroupManagementPage = () => {
     // Display GUI allowing the user to set up a chain of allocations
     // Run allocation chain
     // *   Filter out activity objects of the selected type (which may have been assigned by an earlier allocation)
-    // *   Call Core to get related objects for the objects
+    // *   Call Core to get related objects for the objects - getRelatedGroups
     // *   Assign related objects to the activities
     // *   Repeat for each allocation in the chain
     // *   Note that a later step is allowed to be for a type assigned in an earlier step, so the type may not be present on the activities initially
