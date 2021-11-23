@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
+import _, { filter } from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
@@ -162,10 +162,24 @@ const GroupManagementPage = () => {
   };
 
   const onAllocateActivities = async (activityIds: string[]) => {
-    await handleScheduleActivities(activityIds);
+    console.log(activityIds, filteredActivityIds, activities);
+    // await handleScheduleActivities(activityIds);
+    // Get full activities - by filtering activities for the selected activityIds?
+    // Find the object types on the activities (so we know what can be selected in the GUI)
+    // Find the "relatable" types. How do we find them? Configuration? Do we need another Core API call?
+    // Display GUI allowing the user to set up a chain of allocations
+    // Run allocation chain
+    // *   Filter out activity objects of the selected type (which may have been assigned by an earlier allocation)
+    // *   Call Core to get related objects for the objects
+    // *   Assign related objects to the activities
+    // *   Repeat for each allocation in the chain
+    // *   Note that a later step is allowed to be for a type assigned in an earlier step, so the type may not be present on the activities initially
+    // Persist allocation results
+    // Present allocation results
     onDeselectAll();
   };
 
+  // TODO What happens when you deallocate? How do we know what to remove?
   const onDeallocateActivities = async (activityIds: string[]) => {
     Modal.confirm({
       getContainer: () =>
@@ -173,7 +187,7 @@ const GroupManagementPage = () => {
       title: 'Deallocate activities',
       content: 'Are you sure you want to deallocate these activities?',
       onOk: async () => {
-        await handleDeleteActivities(activityIds);
+        //await handleDeleteActivities(activityIds);
         onDeselectAll();
       },
     });
