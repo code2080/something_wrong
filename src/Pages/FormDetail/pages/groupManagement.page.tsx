@@ -220,7 +220,14 @@ const GroupManagementPage = () => {
               render: (activity: TActivity) => (
                 <SortableTableCell
                   className={`activityScheduling_${activity._id}`}
-                >{ Math.random() > 0.5 ? (<StatusLabel color={'success'}>{'Allocated'}</StatusLabel>): <StatusLabel color={'default'}>{'Not allocated'}</StatusLabel>}
+                >
+                  {Math.random() > 0.5 ? (
+                    <StatusLabel color={'success'}>{'Allocated'}</StatusLabel>
+                  ) : (
+                    <StatusLabel color={'default'}>
+                      {'Not allocated'}
+                    </StatusLabel>
+                  )}
                 </SortableTableCell>
               ),
             },
