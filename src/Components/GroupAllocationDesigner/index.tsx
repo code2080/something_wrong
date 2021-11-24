@@ -46,7 +46,12 @@ const AllocationSection = ({
   );
 };
 
-const SectionData = () => {
+type SectionData = {
+  selectedType: string | undefined;
+  selectedGroupType: string | undefined;
+};
+
+const createSectionData = (): SectionData => {
   return {
     selectedType: undefined,
     selectedGroupType: undefined,
@@ -58,7 +63,9 @@ const GroupAllocationDesigner = ({
   selectableGroupTypes,
   onAllocateGroups,
 }: Props) => {
-  const [allocationSections, setAllocationSections] = useState([SectionData()]);
+  const [allocationSections, setAllocationSections] = useState([
+    createSectionData(),
+  ]);
   return (
     <div className='group-allocation-designer--wrapper'>
       Object allocation
@@ -83,7 +90,7 @@ const GroupAllocationDesigner = ({
       <Button
         size='large'
         onClick={() => {
-          let newSections = [...allocationSections, SectionData()];
+          let newSections = [...allocationSections, createSectionData()];
           setAllocationSections(newSections);
         }}
         disabled={false}
