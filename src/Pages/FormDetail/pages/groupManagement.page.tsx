@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _, { filter } from 'lodash';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
-import { Modal } from 'antd';
+import { Modal, Popover } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
@@ -43,6 +43,7 @@ import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import GroupAllocationDesigner from 'Components/GroupAllocationDesigner';
 
 const GroupManagementPage = () => {
   const dispatch = useDispatch();
@@ -209,6 +210,11 @@ const GroupManagementPage = () => {
 
   return (
     <>
+      <Popover>
+        <GroupAllocationDesigner selectableTypes={["Lokal", "Klass"]} selectableGroupTypes={["Studentgrupp", "Undergrupp"]} onAllocateGroups={function (allocations): void {
+          console.log(allocations);
+        } }/>
+      </Popover>
       <GroupManagementToolbar
         selectedActivityIds={selectedRowKeys}
         onSelectAll={handleSelectAll}
