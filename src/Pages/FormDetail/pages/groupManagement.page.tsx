@@ -211,9 +211,13 @@ const GroupManagementPage = () => {
   return (
     <>
       <Popover>
-        <GroupAllocationDesigner selectableTypes={["Lokal", "Klass"]} selectableGroupTypes={["Studentgrupp", "Undergrupp"]} onAllocateGroups={function (allocations): void {
-          console.log(allocations);
-        } }/>
+        <GroupAllocationDesigner
+          selectableTypes={['Lokal', 'Klass']}
+          selectableGroupTypes={['Studentgrupp', 'Undergrupp']}
+          onAllocateGroups={function (allocations): void {
+            console.log(allocations);
+          }}
+        />
       </Popover>
       <GroupManagementToolbar
         selectedActivityIds={selectedRowKeys}
