@@ -77,12 +77,12 @@ const GroupAllocationDesigner = ({
           selectedType={section.selectedType}
           selectedGroupType={section.selectedGroupType}
           onTypeChanged={(newType) => {
-            console.log(newType);
             section.selectedType = newType;
+            setAllocationSections([...allocationSections]);
           }}
           onGroupTypeChanged={(newGroupType) => {
-            console.log(newGroupType);
             section.selectedGroupType = newGroupType;
+            setAllocationSections([...allocationSections]);
           }}
         />
       ))}

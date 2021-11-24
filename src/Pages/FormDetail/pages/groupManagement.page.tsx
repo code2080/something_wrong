@@ -212,8 +212,8 @@ const GroupManagementPage = () => {
     <>
       <Popover>
         <GroupAllocationDesigner
-          selectableTypes={['Lokal', 'Klass']}
-          selectableGroupTypes={['Studentgrupp', 'Undergrupp']}
+          selectableTypes={['-', 'Lokal', 'Klass']}
+          selectableGroupTypes={['-', 'Studentgrupp', 'Undergrupp']}
           onAllocateGroups={function (allocations): void {
             console.log(allocations);
           }}
