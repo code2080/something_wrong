@@ -58,6 +58,7 @@ const getConstrOfType = (
 const ConstraintManagerPage = () => {
   const { formId }: { formId: string } = useParams();
   const allConstraints: TConstraint[] = useSelector(selectConstraints);
+
   const dispatch = useDispatch() as any;
   const selectedConstraitConfiguration = useSelector((state) =>
     selectSelectedConstraintConfiguration(state, formId),

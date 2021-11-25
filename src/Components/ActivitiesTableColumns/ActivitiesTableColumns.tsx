@@ -1,5 +1,5 @@
 // COMPONENTS
-import { Field } from 'Redux/TE/te.selectors';
+import { Field, selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
 import { TActivity } from 'Types/Activity.type';
 import type { ColumnsType } from 'antd/lib/table';
 import ActivityStatusCol from '../../Components/ActivitiesTableColumns/SchedulingColumns/StatusCol/ActivityStatusCol';
@@ -8,16 +8,16 @@ import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColum
 
 // COLUMNS
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
-import TitleCell from './new/TitleCell';
 import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
+import { useSelector } from 'react-redux';
 
-export const createActivitiesTableColumnsFromMapping = (
+export const CreateActivitiesTableColumnsFromMapping = ({
   design,
   columnPrefix,
   renderer,
-) => {
+}) => {
   const _design = new ActivityDesign(design);
   const allActivityValues = [
     ...Object.keys(_design.objects).map(
@@ -28,11 +28,15 @@ export const createActivitiesTableColumnsFromMapping = (
     ),
   ];
 
+  const titleMapping = useSelector(selectIndexedExtIdLabel)(
+    allActivityValues,
+  ) as string;
+
   const activityValueColumns = allActivityValues.reduce<ColumnsType<object>>(
     (values, [field, extId], valueIndex) => [
       ...values,
       {
-        title: <TitleCell extId={extId} field={field} />,
+        title: titleMapping[`${field}_${extId}`],
         key: extId,
         render: (activity: TActivity, activityIndex) => (
           <ColumnWrapper

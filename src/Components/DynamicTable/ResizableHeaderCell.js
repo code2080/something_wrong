@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Resizable } from 'react-resizable';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { getHeaderCellWidth } from '../../Utils/dom.helper';
 import ColumnHeader from './ColumnHeader';
 
@@ -20,22 +20,40 @@ const BasicHeaderCell = (props) => (
 );
 
 const ResizableCell = (props) => {
-  const { width, children, index, onResized, expandable, ...restProps } = props;
+  const { width, children, index, onResized, ...restProps } = props;
   const [minCellWidth, setMinCellWidth] = useState(0);
 
   const ref = useRef(null);
   const onResize = (e, { node, _size }) => {
     e.preventDefault();
     e.stopPropagation();
-    const table = node.closest('table');
-    const col = table.childNodes[0].childNodes[index + (expandable ? 1 : 0)];
+    const tableHeader = node.closest('table');
+    if (!tableHeader) return;
+
+    const col = tableHeader.childNodes[0].childNodes[index];
+
     if (!col) return;
+
     changedWidth = e.pageX - start;
     col.style.width = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
     col.style.minWidth = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
+
+    const tableHeaderWrapper = tableHeader.closest('.ant-table-header');
+    if (!tableHeaderWrapper) return;
+    const tableContent =
+      tableHeaderWrapper.nextElementSibling?.querySelector('table');
+    const contentCol = tableContent.childNodes[0].childNodes[index];
+    contentCol.style.width = `${_.max([
+      Number(width + changedWidth),
+      minCellWidth,
+    ])}px`;
+    contentCol.style.widthWidth = `${_.max([
       Number(width + changedWidth),
       minCellWidth,
     ])}px`;
@@ -53,7 +71,9 @@ const ResizableCell = (props) => {
     start = 0;
     changedWidth = 0;
     setTimeout(() => {
-      ref.current.removeEventListener('click', terminateClickEvent);
+      if (ref.current) {
+        ref.current.removeEventListener('click', terminateClickEvent);
+      }
     }, 300);
   };
 
@@ -62,9 +82,20 @@ const ResizableCell = (props) => {
       el.addEventListener('click', terminateClickEvent);
     });
     if (ref && ref.current) {
-      setMinCellWidth(50 + getHeaderCellWidth(ref.current));
+      setMinCellWidth(
+        Math.max(50 + getHeaderCellWidth(ref.current), restProps.width || 0),
+      );
     }
-  }, [ref]);
+  }, [!ref]);
+
+  // Incase table is empty, there is no <colgroup>
+  useEffect(() => {
+    if (!ref.current) return;
+    const colgroup = ref.current.closest('table').querySelector('colgroup');
+    if (isEmpty(colgroup)) {
+      ref.current.style.width = `${minCellWidth}px`;
+    }
+  }, [minCellWidth, !ref]);
 
   return (
     <Resizable

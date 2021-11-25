@@ -7,9 +7,9 @@ const OperatorRenderer = (value: string) => {
     case '<':
     case '&lt;':
       return 'Less than';
-    case '=<':
-    case '=&lt;':
-      return 'Equals or less then';
+    case '<=':
+    case '&lt;=':
+      return 'Less or equals to';
     case '=':
       return 'Equals to';
     default:

@@ -120,8 +120,7 @@ export const hydrateObjectRequests = (
 };
 
 export const activityIsReadOnly = (status) =>
-  // TODO: Temporarily disables editing activities until we ensure it works again
-  true || [EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(status);
+  [EActivityStatus.SCHEDULED, EActivityStatus.QUEUED].includes(status);
 
 const mapActivityValueToTEValue = (
   activityValue: ActivityValue,
@@ -500,7 +499,7 @@ export const activityConvertFn = {
 };
 
 const isFieldConstraint = (constraint: TConstraintInstance) =>
-  constraint.parameters.find(
+  _.compact(constraint.parameters || []).find(
     ({ firstParam, lastParam }) =>
       firstParam && lastParam && firstParam.length > 0 && lastParam.length > 0,
   );
@@ -767,5 +766,7 @@ export const getActivities = async (
   });
 
   // TODO: add proper error handling
-  return (response?.data?.activities ?? []).map((a) => new Activity(a));
+  return (response?.data?.activities ?? [])
+    .filter((a) => !isEmpty(a.values))
+    .map((a) => new Activity(a));
 };

@@ -35,6 +35,7 @@ export const teCoreCallnames = {
   VALIDATE_RESERVATIONS: 'validateReservations',
   GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
   REQUEST_MANUALLY_SCHEDULE_ACTIVITY: 'requestManuallyScheduleActivity',
+  GET_RELATED_GROUPS: 'getRelatedGroups',
 };
 
 export const teCoreActions = {
@@ -249,6 +250,16 @@ export const teCoreActions = {
     callname: teCoreCallnames.REQUEST_MANUALLY_SCHEDULE_ACTIVITY,
     mockFunction: (_payload, callback) => {
       callback(['testReservationId']);
+    },
+  },
+  GET_RELATED_GROUPS: {
+    callname: teCoreCallnames.GET_RELATED_GROUPS,
+    mockFunction: ({ objectExtIds, typeExtId, callback }) => {
+      const mockResult = {};
+      objectExtIds.forEach((oId) => {
+        mockResult[oId] = ['teacher_hare', 'teacher_grubbe'];
+      });
+      callback(mockResult);
     },
   },
 };
