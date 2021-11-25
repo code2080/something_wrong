@@ -28,15 +28,17 @@ const JointTeachingPage = () => {
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
 
   const onGenerate = async () => {
-    const { status, data } = await dispatch(
+    const generateResponse = await dispatch(
       generateJointTeachingGroup({ formId }),
     );
     setTriggerFetchingActivities(triggerFetchingActivities + 1);
-    if (status === 200) {
+    if (!(generateResponse instanceof Error) && generateResponse) {
       generateJointTeachingMatchNotifications(
-        data.length > 0 ? 'success' : 'warning',
-        data.length,
+        generateResponse?.data.length > 0 ? 'success' : 'warning',
+        generateResponse?.data.length,
       );
+    } else {
+      generateJointTeachingMatchNotifications('error');
     }
   };
 
