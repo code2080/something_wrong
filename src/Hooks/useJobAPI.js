@@ -42,7 +42,9 @@ export const useJobWSAPI = () => {
       // Set the active job id and form id
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
-      job && dispatch(fetchActivitiesForForm(formId, {}));
+      if (job && job.status && !['NOT_STARTED'].includes(job.status)) {
+        dispatch(fetchActivitiesForForm(formId, {}));
+      }
     });
     return () => {
       // When component unmounts, close the connection
