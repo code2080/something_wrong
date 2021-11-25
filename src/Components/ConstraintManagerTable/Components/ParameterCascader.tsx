@@ -1,10 +1,11 @@
-import { Select, Cascader } from 'antd';
+import { Select } from 'antd';
 import { CascaderValueType } from 'antd/lib/cascader';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectMultipleExtIdLabels } from 'Redux/TE/te.selectors';
 import { useEffect, useState } from 'react';
 import OperatorRenderer from './Parameters/OperatorRenderer';
+import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
 
 const { Option } = Select;
 
@@ -101,7 +102,7 @@ const ParameterCascader = ({
 
   return (
     <div>
-      <Cascader
+      <CascaderWithTooltip
         notFoundContent={MissingOptionsMessage}
         value={parameters?.firstParam}
         options={options.filter(({ value }) => value === 'Form')}
@@ -138,7 +139,7 @@ const ParameterCascader = ({
           </Option>
         ))}
       </Select>{' '}
-      <Cascader
+      <CascaderWithTooltip
         notFoundContent={MissingOptionsMessage}
         value={parameters?.lastParam}
         options={options.filter(({ value }) => value === 'Objects')}
