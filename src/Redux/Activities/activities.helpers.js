@@ -195,7 +195,7 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
   const { extId, submissionValue } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
   if (
-    timingMode !== activityTimeModes.EXACT &&
+    timingMode === activityTimeModes.EXACT &&
     (extId === 'startTime' || extId === 'endTime')
   ) {
     return revertMultipleActivityValues(['startTime', 'endTime'], activity);
