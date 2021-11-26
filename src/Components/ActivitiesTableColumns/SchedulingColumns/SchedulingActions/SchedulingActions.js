@@ -10,7 +10,7 @@ import ActionsDropdown from './ActionsDropdown';
 import JointTeachingIcon from './JointTeachingIcon';
 import './SchedulingActions.scss';
 
-const SchedulingActions = ({ activity, selectedRowKeys }) => {
+const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
   const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
   return (
@@ -28,6 +28,7 @@ const SchedulingActions = ({ activity, selectedRowKeys }) => {
         buttonType='ellipsis'
         activity={activity}
         isScheduling={isScheduling}
+        actions={actions}
       />
     </div>
   );
@@ -36,6 +37,7 @@ const SchedulingActions = ({ activity, selectedRowKeys }) => {
 SchedulingActions.propTypes = {
   activity: PropTypes.object.isRequired,
   selectedRowKeys: PropTypes.array,
+  actions: PropTypes.array,
 };
 
 export default SchedulingActions;

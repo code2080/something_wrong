@@ -108,7 +108,11 @@ const useActivityScheduling = ({
   };
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
-    const activities = await getActivities(selectedActivityIds);
+    const activities = (await getActivities(selectedActivityIds)).filter(
+      (activity) =>
+        activity.activityStatus !== EActivityStatus.INACTIVE &&
+        activity.activityStatus !== EActivityStatus.SCHEDULED,
+    );
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
