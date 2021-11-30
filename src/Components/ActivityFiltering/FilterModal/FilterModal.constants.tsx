@@ -17,9 +17,7 @@ export const INITIAL_FILTER_VALUES = {
   status: Object.keys(omit(EActivityStatus, 'INACTIVE')),
 } as const;
 
-export const FILTER_ITEMS_MAPPING = (
-  isBeta: boolean = false,
-): ItemsMapping => ({
+export const FILTER_ITEMS_MAPPING: ItemsMapping = {
   date: {
     name: 'date',
     title: 'Date',
@@ -30,25 +28,21 @@ export const FILTER_ITEMS_MAPPING = (
       </Form.Item>
     ),
   },
-  ...(isBeta
-    ? {
-        time: {
-          name: 'time',
-          title: 'Time',
-          label: 'Time',
-          render: () => (
-            <Form.Item label='Select time interval' name='time'>
-              <TimePicker.RangePicker
-                format='HH:mm'
-                allowEmpty={[true, true]}
-                minuteStep={30}
-                clearIcon={false}
-              />
-            </Form.Item>
-          ),
-        },
-      }
-    : {}),
+  time: {
+    name: 'time',
+    title: 'Time',
+    label: 'Time',
+    render: () => (
+      <Form.Item label='Select time interval' name='time'>
+        <TimePicker.RangePicker
+          format='HH:mm'
+          allowEmpty={[true, true]}
+          minuteStep={30}
+          clearIcon={false}
+        />
+      </Form.Item>
+    ),
+  },
   status: {
     name: 'status',
     title: 'Status',
@@ -64,4 +58,4 @@ export const FILTER_ITEMS_MAPPING = (
       />
     ),
   },
-});
+};
