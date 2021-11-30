@@ -44,3 +44,8 @@ export const selectSelectedActivities = (tableType) =>
     globalUIState,
     (globalUI): string[] => globalUI.selectedActivities[tableType] || [],
   );
+export const selectActivitiesFetchingHandler = (tableType) =>
+  createSelector(
+    globalUIState,
+    (globalUI): number => globalUI.activitiesFetchingHandler[tableType] || 0,
+  );
