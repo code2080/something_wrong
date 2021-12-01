@@ -27,7 +27,6 @@ import { tableViews } from '../../Constants/tableViews.constants';
 import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { fetchElements } from '../../Redux/Elements/elements.actions';
-import { formStatus } from '../../Constants/formStatuses.constants';
 
 const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
 const mapStateToProps = (state) => ({
@@ -61,21 +60,17 @@ const FormList = ({
 }) => {
   const forms = useSelector(selectAllForms);
 
-  const filteredForms = useMemo(() => {
-    return forms.filter((form) => form.status !== formStatus.DRAFT);
-  }, [forms]);
-
   const objectScopes = useMemo(
     () => ({
       types: _.uniq(
-        filteredForms.reduce(
+        forms.reduce(
           (objScopes, form) =>
             form.objectScope ? [...objScopes, form.objectScope] : objScopes,
           [],
         ),
       ),
     }),
-    [filteredForms],
+    [forms],
   );
 
   useFetchLabelsFromExtIds(objectScopes);
@@ -112,7 +107,7 @@ const FormList = ({
           tableColumns.form.FORM_STATUS,
           tableColumns.form.RESPONSE_TRACKER,
         ]}
-        dataSource={filteredForms}
+        dataSource={forms}
         rowKey='_id'
         isLoading={isLoading}
         onRow={(form) => ({
