@@ -9,13 +9,17 @@ import FormSubmissionFilterBar from '../../../Components/FormSubmissionFilters/F
 import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 
 // HOOKS
-import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import {
+  useFetchLabelsFromExtIds,
+  useTECoreAPI,
+} from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
+import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import {
@@ -79,6 +83,32 @@ const SubmissionsOverviewPage = () => {
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );
+
+  const submissionPayload = useMemo(() => {
+    const initialPayload = {
+      objects: submissions.flatMap(({ scopedObject }) => scopedObject),
+      fields: [],
+      types: [],
+    };
+    const sections = form.sections;
+    const submissionValues = submissions.map((submission) => submission.values);
+    const teValues = _.isEmpty(submissionValues)
+      ? initialPayload
+      : getExtIdPropsPayload({
+          sections,
+          submissionValues,
+          objectScope: form.objectScope,
+          activities: [],
+        });
+    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+
+    return {
+      ...teValues,
+      objects: [...teValues.objects, ...scopedObjectExtids],
+    };
+  }, [form.sections, form.objectScope, submissions]);
+
+  useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EFFECTS
