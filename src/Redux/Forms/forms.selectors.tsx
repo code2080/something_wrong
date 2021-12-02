@@ -17,8 +17,8 @@ export const makeSelectForm = () =>
 export const selectAllForms = createSelector(formState, (forms) =>
   Object.keys(forms)
     .map((key) => forms[key])
-    .filter((form) =>
-      ![formStatus.DRAFT, formStatus.ARCHIVED].includes(form.status),
+    .filter(
+      (form) => ![formStatus.DRAFT, formStatus.ARCHIVED].includes(form.status),
     )
     .sort(
       (a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf(),
