@@ -29,7 +29,7 @@ const InlineEdit = ({
 
   const onFinishCallback = useCallback(
     (finishVal) => {
-      const valToUse = finishVal != null ? finishVal : value;
+      const valToUse = finishVal ?? value;
       onFinish(valToUse);
     },
     [onFinish, value],

@@ -194,20 +194,19 @@ export const revertActivityValueToSubmission = (activityValue, activity) => {
    */
   const { extId, submissionValue } = activityValue;
   const timingMode = getTimingModeForActivity(activity);
-  if (
-    timingMode !== activityTimeModes.EXACT &&
-    (extId === 'startTime' || extId === 'endTime')
-  ) {
-    return revertMultipleActivityValues(['startTime', 'endTime'], activity);
-  } else {
-    return updateActivityWithNewValue(
-      {
-        ...activityValue,
-        valueMode: ActivityValueMode.FROM_SUBMISSION,
-        value: submissionValue,
-      },
-      activity,
-      findObjectPathForActivityValue(extId, activity),
-    );
+  if (timingMode === activityTimeModes.EXACT && extId === 'startTime') {
+    return revertMultipleActivityValues(['startTime'], activity);
+  } else if (timingMode === activityTimeModes.EXACT && extId === 'endTime') {
+    return revertMultipleActivityValues(['endTime'], activity);
   }
+
+  return updateActivityWithNewValue(
+    {
+      ...activityValue,
+      valueMode: ActivityValueMode.FROM_SUBMISSION,
+      value: submissionValue,
+    },
+    activity,
+    findObjectPathForActivityValue(extId, activity),
+  );
 };
