@@ -32,6 +32,8 @@ import {
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+
 import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import {
   makeSelectSortOrderForActivities,
@@ -208,11 +210,29 @@ const GroupManagementPage = () => {
       : dispatch(resetActivitySorting(formId, ACTIVITIES_TABLE));
   };
 
+  /**
+   * STATE VARS
+   */
+
+  const [availableTypes, setAvailableTypes] = useState([]);
+
+  const teCoreAPI = useTECoreAPI();
+  useEffect(() => {
+    async function execTypes() {
+      const _availableTypes = await teCoreAPI.getAllocationTypes();
+      setAvailableTypes(
+        _availableTypes instanceof Object ? _availableTypes.subtypes : [],
+      );
+    }
+    execTypes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Popover>
         <GroupAllocationDesigner
-          selectableTypes={['-', 'Lokal', 'Klass']}
+          selectableTypes={availableTypes}
           selectableGroupTypes={['-', 'Studentgrupp', 'Undergrupp']}
           onAllocateGroups={function (allocations): void {
             console.log(allocations);

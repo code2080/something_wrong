@@ -2,13 +2,13 @@ import { Button, Divider, Select } from 'antd';
 import { useState } from 'react';
 
 type Props = {
-  selectableTypes: string[];
+  selectableTypes: any[];
   selectableGroupTypes: string[];
   onAllocateGroups(allocations: any): void;
 };
 
 type AllocationSectionProps = {
-  selectableTypes: string[];
+  selectableTypes: any[];
   selectableGroupTypes: string[];
   selectedType: string | undefined;
   selectedGroupType: string | undefined;
@@ -29,8 +29,8 @@ const AllocationSection = ({
       Type to allocate:{' '}
       <Select value={selectedType} onChange={onTypeChanged}>
         {selectableTypes.map((type) => (
-          <Select.Option key={type} value={type}>
-            {type}
+          <Select.Option key={type.extid} value={type.extid}>
+            {type.name}
           </Select.Option>
         ))}
       </Select>
