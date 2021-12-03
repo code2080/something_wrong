@@ -36,6 +36,7 @@ export const teCoreCallnames = {
   GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
   REQUEST_MANUALLY_SCHEDULE_ACTIVITY: 'requestManuallyScheduleActivity',
   GET_RELATED_GROUPS: 'getRelatedGroups',
+  GET_ALLOCATION_TYPES: 'getAllocationTypes',
 };
 
 export const teCoreActions = {
@@ -261,5 +262,9 @@ export const teCoreActions = {
       });
       callback(mockResult);
     },
+  },
+  GET_ALLOCATION_TYPES: {
+    callname: teCoreCallnames.GET_ALLOCATION_TYPES,
+    mockFunction: () => reservationTypes,
   },
 };
