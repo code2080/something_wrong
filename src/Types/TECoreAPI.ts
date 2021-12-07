@@ -39,11 +39,9 @@ export type TECoreAPI = {
   getRelatedGroups({
     objectExtIds,
     typeExtId,
-    callback,
   }: {
     objectExtIds: string[];
     typeExtId: string;
-    callback: (relatedGroups: getRelatedGroupsReturn) => void;
   }): void;
   // To be extended
   [apiCall: string]: any;
