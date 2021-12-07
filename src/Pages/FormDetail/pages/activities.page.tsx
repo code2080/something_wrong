@@ -168,7 +168,7 @@ const ActivitiesPage = () => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
-      title: 'Canncel reservations',
+      title: 'Cancel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
         await handleDeleteActivities(activityIds);
