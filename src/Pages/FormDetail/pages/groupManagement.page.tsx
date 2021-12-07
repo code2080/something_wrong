@@ -174,7 +174,10 @@ const GroupManagementPage = () => {
     // Run allocation chain
     // *   Filter out activity objects of the selected type (which may have been assigned by an earlier allocation)
     // *   Call Core to get related objects for the objects - getRelatedGroups
-    const allocationTypes = await teCoreAPI.getRelatedGroups(objectExtIds, typeExtId, )
+    const allocationTypes = await teCoreAPI.getRelatedGroups(
+      objectExtIds,
+      typeExtId,
+    );
     // *   Assign related objects to the activities
     // *   Repeat for each allocation in the chain
     // *   Note that a later step is allowed to be for a type assigned in an earlier step, so the type may not be present on the activities initially
