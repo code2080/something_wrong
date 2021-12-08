@@ -9,13 +9,17 @@ import FormSubmissionFilterBar from '../../../Components/FormSubmissionFilters/F
 import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 
 // HOOKS
-import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import {
+  useTECoreAPI,
+  useFetchLabelsFromExtIds,
+} from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
+import { selectElementTypesMap } from 'Redux/Elements/element.selectors';
 
 // ACTIONS
 import {
@@ -41,6 +45,8 @@ import { teCoreCallnames } from '../../../Constants/teCoreActions.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFilter.interface';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import { SECTION_VERTICAL } from 'Constants/sectionTypes.constants';
+import { determineSectionType } from '../../../Utils/determineSectionType.helpers';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
@@ -59,6 +65,7 @@ const SubmissionsOverviewPage = () => {
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
+  const elementTypeMap = useSelector(selectElementTypesMap());
   const filters = useSelector(selectFilter)(
     `${formId}_SUBMISSIONS`,
     FormSubmissionFilterInterface,
@@ -79,6 +86,57 @@ const SubmissionsOverviewPage = () => {
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );
+
+  // const verticalSections = useMemo(() => {
+  //   return form.sections.filter(section => determineSectionType(section) === SECTION_VERTICAL);
+  // }, [form]);
+
+  // console.log(verticalSections);
+
+  // const payload = useMemo(
+  //   () =>
+  //     getExtIdPropsPayload({
+  //       sections: form.sections,
+  //       objectRequests: objectRequests,
+  //       submissionValues: formInstance.values,
+  //       activities,
+  //     }),
+  //   // TODO: memoize and readd dependencies
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [form],
+  // );
+  // useFetchLabelsFromExtIds({
+  //   objects: scopedObjectIds,
+  // });
+  useEffect(() => {
+    const verticalSections = form.sections.filter(
+      (section) => determineSectionType(section) === SECTION_VERTICAL,
+    );
+
+    const elementsMapping = verticalSections.reduce((results, section) => {
+      return {
+        ...results,
+        ...section.elements
+          .filter((elm) => elementTypeMap[elm.elementId])
+          .reduce(
+            (elmResults, element) => ({
+              ...elmResults,
+              [element._id]: elementTypeMap[element.elementId].type,
+            }),
+            {},
+          ),
+      };
+    }, {});
+    const allValues = submissions.flatMap((submission) => {
+      return verticalSections
+        .map((section) => submission.values[section._id])
+        .filter(({ elementId, value }) => {
+          console.log(elementId, elementsMapping[elementId]);
+          return elementsMapping[elementId];
+        });
+    });
+    console.log('verticalSections', verticalSections, allValues);
+  }, [submissions, form, scopedObjectIds]);
 
   /**
    * EFFECTS

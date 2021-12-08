@@ -106,6 +106,7 @@ export const getElementsForMapping = ({
   settings = {},
 }: any) => {
   if (!formSections || !formSections.length || !mapping) return [];
+  const { elementsMapping } = settings;
   // Ensure only one repeating section can be used
   const firstRepeatingSection = getRepeatingSection(formSections);
 
@@ -142,6 +143,7 @@ export const getElementsForMapping = ({
         ...section.elements.map((element) => ({
           value: element._id,
           label: element.label,
+          elementType: elementsMapping?.[element.elementId]?.type,
         })),
       ],
     };

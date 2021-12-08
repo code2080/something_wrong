@@ -17,6 +17,7 @@ import FieldMapping from '../../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
+import AdditionalFields from 'Components/ActivityDesigner/AdditionalFields';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
@@ -66,6 +67,7 @@ import {
 // STYLES
 import './activityDesigner.page.scss';
 import { ActivityDesign } from '../../../Models/ActivityDesign.model';
+import { selectElementTypesMap } from '../../../Redux/Elements/element.selectors';
 
 const ActivityDesignPage = () => {
   const { formId } = useParams();
@@ -95,6 +97,7 @@ const ActivityDesignPage = () => {
   const isSaving = useSelector(
     createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
   );
+  const elementsMapping = useSelector(selectElementTypesMap());
   /**
    * STATE VARS
    */
@@ -152,6 +155,7 @@ const ActivityDesignPage = () => {
         mapping: design,
         settings: {
           primaryObject: form.objectScope,
+          elementsMapping,
         },
       }),
     [form, design],
@@ -216,6 +220,12 @@ const ActivityDesignPage = () => {
     setDesign(updateFieldPropOnActivityDesign(design, formId, fieldDesign));
     leavingPageContext.setIsModified(true);
     leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
+  };
+
+  const onUpdateDesign = dataToUpdate => {
+    setDesign({ ...design, ...dataToUpdate });
+    leavingPageContext.setIsModified(true);
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign); 
   };
 
   const onUnlockClick = () => {
@@ -360,6 +370,24 @@ const ActivityDesignPage = () => {
             mappingOptions={mappingOptions}
             fieldOptions={fieldOptions}
             onChange={updateFieldDesignCallback}
+            disabled={hasActivities || !isEditable}
+          />
+        </div>
+
+        <div className='activity-designer--type-header'>
+          <div>Additional fields</div>
+          <div>Mapping</div>
+        </div>
+        <div className='activity-designer--list'>
+          <AdditionalFields
+            mapping={design}
+            mappingOptions={mappingOptions}
+            onChange={activityType => onUpdateDesign({
+              additionalFields: {
+                ...design.additionalFields,
+                activityType,
+              }
+            })}
             disabled={hasActivities || !isEditable}
           />
         </div>
