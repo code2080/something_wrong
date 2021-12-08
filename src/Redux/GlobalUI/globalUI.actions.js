@@ -1,5 +1,6 @@
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
+import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 import {
   SET_BREADCRUMBS,
@@ -16,6 +17,8 @@ import {
   SET_SORTING_FOR_ACTIVITIES,
   RESET_SORTING_FOR_ACTIVITIES,
   SET_SELECTED_ACTIVITIES,
+  FORCE_FETCHING_ACTIVITIES,
+  RESET_ACTIVITIES_FETCHING_HANDLER,
 } from './globalUI.actionTypes';
 
 export const setBreadcrumbs = (fragments) => ({
@@ -119,4 +122,19 @@ export const resetActivitySorting = (formId, tableType) => ({
 export const selectActivitiesInTable = (tableType, activities) => ({
   type: SET_SELECTED_ACTIVITIES,
   payload: { tableType, activities },
+});
+
+export const forceFetchingActivities = (tableType = ACTIVITIES_TABLE) => ({
+  type: FORCE_FETCHING_ACTIVITIES,
+  payload: {
+    tableType,
+  },
+});
+
+export const forceFetchingActivitiesHandler = () => ({
+  type: FORCE_FETCHING_ACTIVITIES,
+});
+
+export const resetActivitiesFetchingHandler = () => ({
+  type: RESET_ACTIVITIES_FETCHING_HANDLER,
 });
