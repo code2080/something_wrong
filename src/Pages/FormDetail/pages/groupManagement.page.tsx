@@ -166,19 +166,29 @@ const GroupManagementPage = () => {
 
   const onAllocateActivities = async (activityIds: string[]) => {
     console.log(activityIds, filteredActivityIds, activities);
-    // await handleScheduleActivities(activityIds);
     // Get full activities - by filtering activities for the selected activityIds?
+    // const fullActivities = activities.filter(activitty => activityIds.indexOf(activity.id) !== -1);
     // Find the object types on the activities (so we know what can be selected in the GUI)
+    // const typesOnActivities = getObjectTypesPresentOnActivities(activities);
     // Find the "relatable" types. How do we find them? Configuration? Do we need another Core API call?
     // Display GUI allowing the user to set up a chain of allocations
     // Run allocation chain
     // *   Filter out activity objects of the selected type (which may have been assigned by an earlier allocation)
-    // *   Call Core to get related objects for the objects - getRelatedGroups
+    // *   Call Core to get related objects for the objects - getRelatedGroups (think we can do this once per type for all activities)
     // const allocationTypes = await teCoreAPI.getRelatedGroups(objectExtIds, typeExtId)
     // *   Assign related objects to the activities
+    // *   Check the number of tracks on the activity
+    // *   Divide the objects among the tracks (an activity with no tracks gets all objects)
+    // *   activities.forEach(activity => {
+    // *    if(!activity.tracks) {
+    // *      addObjectsToActivity(activity, objects);
+    // *    } else {
+    // *      splitObjectsAmongTracks(activity, objects);
+    // *    }
+    // *   });
     // *   Repeat for each allocation in the chain
     // *   Note that a later step is allowed to be for a type assigned in an earlier step, so the type may not be present on the activities initially
-    // Persist allocation results
+    // Persist allocation results?
     // Present allocation results
     onDeselectAll();
   };
