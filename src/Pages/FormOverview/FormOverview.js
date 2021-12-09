@@ -59,6 +59,7 @@ const FormList = ({
   history,
 }) => {
   const forms = useSelector(selectAllForms);
+
   const objectScopes = useMemo(
     () => ({
       types: _.uniq(

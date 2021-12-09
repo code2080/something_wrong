@@ -16,6 +16,7 @@ export default {
     limit: Number;
     totalPages?: Number;
   },
+  activitiesFetchingHandler: {},
   jointTeaching: [] as any,
   selectedActivities: {},
 };

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ import {
   setActivitySorting,
   resetActivitySorting,
   selectActivitiesInTable,
+  forceFetchingActivities,
 } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
@@ -35,6 +36,7 @@ import {
   makeSelectSortParamsForActivities,
   makeSelectPaginationParamsForForm,
   selectSelectedActivities,
+  selectActivitiesFetchingHandler,
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
@@ -44,15 +46,15 @@ import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 const ActivitiesPage = () => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-
-  // For refecth activities
-  const [fetchingTrigger, setFetchingTrigger] = useState(0);
-
   /**
    * SELECTORS
    */
   const selectedRowKeys = useSelector(
     selectSelectedActivities(ACTIVITIES_TABLE),
+  );
+
+  const fetchingTrigger = useSelector(
+    selectActivitiesFetchingHandler(ACTIVITIES_TABLE),
   );
 
   // Select filters
@@ -158,9 +160,13 @@ const ActivitiesPage = () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
 
+  const doFetchingActivities = () => {
+    dispatch(forceFetchingActivities(ACTIVITIES_TABLE));
+  };
+
   const onScheduleActivities = async (activityIds: string[]) => {
     await handleScheduleActivities(activityIds);
-    setFetchingTrigger(fetchingTrigger + 1);
+    doFetchingActivities();
     onDeselectAll();
   };
 
@@ -168,11 +174,11 @@ const ActivitiesPage = () => {
     Modal.confirm({
       getContainer: () =>
         document.getElementById('te-prefs-lib') || document.body,
-      title: 'Canncel reservations',
+      title: 'Cancel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
         await handleDeleteActivities(activityIds);
-        setFetchingTrigger(fetchingTrigger + 1);
+        doFetchingActivities();
         onDeselectAll();
       },
     });
@@ -202,7 +208,7 @@ const ActivitiesPage = () => {
         onDeleteActivities={onDeleteActivities}
         allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {
-          setFetchingTrigger(fetchingTrigger + 1);
+          doFetchingActivities();
         }}
       />
       <ActivityTable

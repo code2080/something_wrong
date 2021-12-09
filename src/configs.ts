@@ -12,7 +12,7 @@ const envVarMap = {
   },
   staging: {
     API_URL: `https://preferences.timeedit.io/${apiVersion}/`,
-    AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://app-auth.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
@@ -21,7 +21,7 @@ const envVarMap = {
   },
   beta: {
     API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
-    AUTH_URL: `https://auth-beta.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://app-auth-beta.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin-beta.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
@@ -30,7 +30,7 @@ const envVarMap = {
   },
   localhost: {
     API_URL: `http://localhost:3002/${apiVersion}/`,
-    AUTH_URL: `https://auth.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://app-auth.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',
@@ -39,7 +39,7 @@ const envVarMap = {
   },
   amLocalhost: {
     API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
-    AUTH_URL: `https://auth-beta.timeedit.io/${apiVersion}/`,
+    AUTH_URL: `https://app-auth-beta.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin-beta.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
     APP_NAME: 'tePIC',

@@ -161,6 +161,24 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.FORCE_FETCHING_ACTIVITIES: {
+      const { tableType } = action.payload;
+      return {
+        ...state,
+        activitiesFetchingHandler: {
+          ...state.activitiesFetchingHandler,
+          [tableType]: (state.activitiesFetchingHandler[tableType] || 0) + 1,
+        },
+      };
+    }
+
+    case types.RESET_ACTIVITIES_FETCHING_HANDLER: {
+      return {
+        ...state,
+        activitiesFetchingHandler: {},
+      };
+    }
+
     default:
       return state;
   }

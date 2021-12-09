@@ -15,6 +15,7 @@ import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
+  resetActivitiesFetchingHandler,
   selectActivitiesInTable,
   setBreadcrumbs,
   setFormDetailTab,
@@ -110,6 +111,13 @@ const FormPage = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
+
+  // Reset all form related state
+  useEffect(() => {
+    return () => {
+      dispatch(resetActivitiesFetchingHandler());
+    };
+  }, []);
 
   // Effect to get all TE values into redux state
   // useFetchLabelsFromExtIds(submissionPayload);

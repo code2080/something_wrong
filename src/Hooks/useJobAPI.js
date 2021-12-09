@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getEnvParams } from '../configs';
 import { abortJob, updateJobFromWS } from '../Redux/Jobs/jobs.actions';
-import { fetchActivitiesForForm } from '../Redux/Activities/activities.actions';
+import { forceFetchingActivities } from '../Redux/GlobalUI/globalUI.actions';
 
 export const useJobWSAPI = () => {
   const socket = useRef(null);
@@ -43,7 +43,7 @@ export const useJobWSAPI = () => {
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
       if (job && job.status && !['NOT_STARTED'].includes(job.status)) {
-        dispatch(fetchActivitiesForForm(formId, {}));
+        dispatch(forceFetchingActivities());
       }
     });
     return () => {
