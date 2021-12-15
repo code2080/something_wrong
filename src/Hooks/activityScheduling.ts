@@ -32,6 +32,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useMixpanel, useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
+import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 
 type Props = {
   formType: string;
@@ -50,6 +51,7 @@ const useActivityScheduling = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
+  const isBeta = useSelector(selectIsBetaOrDev);
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -154,6 +156,7 @@ const useActivityScheduling = ({
             },
             objectRequests,
             activityDesign,
+            isBeta,
           );
         });
       },
