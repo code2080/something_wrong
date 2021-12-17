@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import { Switch, InputNumber /* , Select */ } from 'antd';
+import { Switch, InputNumber } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
 import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
