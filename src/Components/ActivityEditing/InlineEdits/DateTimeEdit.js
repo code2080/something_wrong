@@ -23,6 +23,7 @@ const DateTimeEdit = ({ value, onFinish }) => {
       allowClear={false}
       onChange={(value) => onFinish(value)}
       onSelect={(value) => setNewValue(value)}
+      open
       onOpenChange={(open) => {
         if (!open) {
           onFinish(newValue);
