@@ -36,7 +36,6 @@ const DateTimeEdit = ({ value, onFinish }) => {
 
 DateTimeEdit.propTypes = {
   value: PropTypes.string,
-  setValue: PropTypes.func.isRequired,
   onFinish: PropTypes.func.isRequired,
 };
 
