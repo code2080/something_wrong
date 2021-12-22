@@ -257,10 +257,12 @@ export const teCoreActions = {
     callname: teCoreCallnames.GET_RELATED_GROUPS,
     mockFunction: ({ objectExtIds, typeExtId, callback }) => {
       const mockResult = {};
-      objectExtIds.forEach((oId) => {
+      (objectExtIds || []).forEach((oId) => {
         mockResult[oId] = ['teacher_hare', 'teacher_grubbe'];
       });
-      callback(mockResult);
+      if (typeof callback === 'function') {
+        callback(mockResult);
+      }
     },
   },
   GET_ALLOCATION_TYPES: {

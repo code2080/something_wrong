@@ -222,10 +222,10 @@ const ActivityDesignPage = () => {
     leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
   };
 
-  const onUpdateDesign = dataToUpdate => {
+  const onUpdateDesign = (dataToUpdate) => {
     setDesign({ ...design, ...dataToUpdate });
     leavingPageContext.setIsModified(true);
-    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign); 
+    leavingPageContext.setExecuteFuncBeforeLeave(() => onSaveDesign);
   };
 
   const onUnlockClick = () => {
@@ -382,12 +382,14 @@ const ActivityDesignPage = () => {
           <AdditionalFields
             mapping={design}
             mappingOptions={mappingOptions}
-            onChange={activityType => onUpdateDesign({
-              additionalFields: {
-                ...design.additionalFields,
-                activityType,
-              }
-            })}
+            onChange={(activityType) =>
+              onUpdateDesign({
+                additionalFields: {
+                  ...design.additionalFields,
+                  activityType,
+                },
+              })
+            }
             disabled={hasActivities || !isEditable}
           />
         </div>

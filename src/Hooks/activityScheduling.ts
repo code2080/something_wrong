@@ -108,7 +108,9 @@ const useActivityScheduling = ({
   };
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
-    const activities = await getActivities(selectedActivityIds);
+    const activities = await getActivities({
+      activityIds: selectedActivityIds,
+    });
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
@@ -205,7 +207,7 @@ const useActivityScheduling = ({
   };
 
   const handleDeleteActivities = async (activityIds: string[]) => {
-    const activities = await getActivities(activityIds);
+    const activities = await getActivities({ activityIds });
     const groupedByFormInstance = groupBy(
       activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',

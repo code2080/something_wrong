@@ -1,4 +1,4 @@
-import { Button, Divider, Popover } from 'antd';
+import { Button, Divider } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,8 +10,6 @@ import { hasPermission } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
-import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
-import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
 import ActivityFiltering from '../ActivityFiltering';
 
 // STYLES

@@ -1,47 +1,72 @@
-import { Button, Divider, Select } from 'antd';
-import { useState } from 'react';
+import { Button, Select, Modal, ModalProps } from 'antd';
+import { useMemo, useState } from 'react';
 
-type Props = {
+import './GroupAllocationDesigner.scss';
+
+interface Props extends ModalProps {
   selectableTypes: any[];
-  selectableGroupTypes: string[];
   onAllocateGroups(allocations: any): void;
-};
+  activityDesign: any;
+}
 
 type AllocationSectionProps = {
   selectableTypes: any[];
-  selectableGroupTypes: string[];
   selectedType: string | undefined;
   selectedGroupType: string | undefined;
   onTypeChanged(newType: string): void;
   onGroupTypeChanged(newType: string): void;
+  activityDesign: any;
 };
 
 const AllocationSection = ({
   selectableTypes,
-  selectableGroupTypes,
   selectedType,
   selectedGroupType,
   onTypeChanged,
   onGroupTypeChanged,
+  activityDesign,
 }: AllocationSectionProps) => {
+  const selectableGroupTypes = useMemo(() => {
+    const activityDesignObjects = Object.keys(activityDesign.objects);
+    return selectableTypes.filter(
+      (field) =>
+        field.extid !== selectedType &&
+        activityDesignObjects.includes(field.extid),
+    );
+  }, [activityDesign, selectableTypes, selectedType]);
+
   return (
     <div className='group-allocation-section--wrapper'>
-      Type to allocate:{' '}
-      <Select value={selectedType} onChange={onTypeChanged}>
-        {selectableTypes.map((type) => (
-          <Select.Option key={type.extid} value={type.extid}>
-            {type.name}
-          </Select.Option>
-        ))}
-      </Select>
-      Allocate based on:{' '}
-      <Select value={selectedGroupType} onChange={onGroupTypeChanged}>
-        {selectableGroupTypes.map((type) => (
-          <Select.Option key={type} value={type}>
-            {type}
-          </Select.Option>
-        ))}
-      </Select>
+      <div>
+        Select type to allocate:{' '}
+        <Select
+          showSearch
+          value={selectedType}
+          onChange={onTypeChanged}
+          style={{ width: '100%' }}
+        >
+          {selectableTypes.map((type) => (
+            <Select.Option key={type.extid} value={type.extid}>
+              {type.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
+      <span>Allocate based on: </span>
+      <div style={{ display: 'flex' }}>
+        <span style={{ marginRight: 20 }}>Relation to:{'     '}</span>
+        <Select
+          value={selectedGroupType}
+          onChange={onGroupTypeChanged}
+          style={{ flex: 1 }}
+        >
+          {selectableGroupTypes.map((item) => (
+            <Select.Option key={item.id} value={item.extid}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
     </div>
   );
 };
@@ -60,51 +85,68 @@ const createSectionData = (): SectionData => {
 
 const GroupAllocationDesigner = ({
   selectableTypes,
-  selectableGroupTypes,
   onAllocateGroups,
+  visible,
+  onCancel,
+  activityDesign,
 }: Props) => {
   const [allocationSections, setAllocationSections] = useState([
     createSectionData(),
   ]);
+
   return (
-    <div className='group-allocation-designer--wrapper'>
-      Object allocation
-      <Divider type='horizontal' />
-      {allocationSections.map((section) => (
-        <AllocationSection
-          selectableTypes={selectableTypes}
-          selectableGroupTypes={selectableGroupTypes}
-          selectedType={section.selectedType}
-          selectedGroupType={section.selectedGroupType}
-          onTypeChanged={(newType) => {
-            section.selectedType = newType;
-            setAllocationSections([...allocationSections]);
+    <Modal
+      visible={visible}
+      onCancel={onCancel}
+      title='Object allocation'
+      okText='Allocate'
+      footer={
+        <div style={{ width: '80%', margin: 'auto' }}>
+          <Button
+            type='primary'
+            onClick={() => onAllocateGroups(allocationSections)}
+            block
+          >
+            Allocate
+          </Button>
+        </div>
+      }
+    >
+      <div className='group-allocation-designer--wrapper'>
+        {allocationSections.map((section, sectionIdx) => (
+          <>
+            <AllocationSection
+              key={sectionIdx}
+              selectableTypes={selectableTypes}
+              selectedType={section.selectedType}
+              selectedGroupType={section.selectedGroupType}
+              onTypeChanged={(newType) => {
+                section.selectedType = newType;
+                setAllocationSections([...allocationSections]);
+              }}
+              onGroupTypeChanged={(newGroupType) => {
+                section.selectedGroupType = newGroupType;
+                setAllocationSections([...allocationSections]);
+              }}
+              activityDesign={activityDesign}
+            />
+            {/* <Divider type='horizontal' /> */}
+          </>
+        ))}
+        {/* <Button
+          ghost
+          type="primary"
+          onClick={() => {
+            const newSections = [...allocationSections, createSectionData()];
+            setAllocationSections(newSections);
           }}
-          onGroupTypeChanged={(newGroupType) => {
-            section.selectedGroupType = newGroupType;
-            setAllocationSections([...allocationSections]);
-          }}
-        />
-      ))}
-      <Divider type='horizontal' />
-      <Button
-        size='large'
-        onClick={() => {
-          let newSections = [...allocationSections, createSectionData()];
-          setAllocationSections(newSections);
-        }}
-        disabled={false}
-      >
-        Add allocation
-      </Button>
-      <Button
-        size='large'
-        onClick={() => onAllocateGroups(allocationSections)}
-        disabled={false}
-      >
-        Allocate
-      </Button>
-    </div>
+          disabled={false}
+          size="small"
+        >
+          <PlusSquareOutlined />Add allocation
+        </Button> */}
+      </div>
+    </Modal>
   );
 };
 

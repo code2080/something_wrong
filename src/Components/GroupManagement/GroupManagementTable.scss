@@ -1,0 +1,18 @@
+.single-submission-table {
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid #f0f0f0;
+
+  table {
+    width: auto !important;
+    min-width: 0 !important;
+
+    td {
+      min-width: 100px;
+    }
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: #f0f0f0;
+  }
+}
