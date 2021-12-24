@@ -13,6 +13,7 @@ import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { useSelector } from 'react-redux';
+import { uniq } from 'lodash';
 
 export const CreateActivitiesTableColumnsFromMapping = ({
   design,
@@ -28,6 +29,8 @@ export const CreateActivitiesTableColumnsFromMapping = ({
       (fieldKey) => ['fields', fieldKey] as [Field, string],
     ),
   ];
+
+  console.log('allActivityValues, allActivityValues', allActivityValues);
 
   const titleMapping = useSelector(selectIndexedExtIdLabel)(
     allActivityValues,
@@ -110,4 +113,44 @@ export const CreateActivitiesTableColumnsFromMapping = ({
     ...TimingColumns[_design.timing.mode](_design, columnPrefix, renderer),
     ...activityValueColumns,
   ];
+};
+
+export const CreateActivitiesAllocatedTableColumns = ({
+  activities,
+  design,
+}) => {
+  const _design = new ActivityDesign(design);
+  const _activities = activities.map((act) => ({
+    ...act,
+    values: act.values.filter((val) => val.isAllocated),
+  }));
+  console.log('_activities', _activities);
+
+  const allocatedFields = uniq(
+    _activities.flatMap((act) =>
+      act.values
+        .filter((actVal) => actVal.isAllocated)
+        .map((actVal) => actVal.extId),
+    ),
+  );
+
+  const titleMapping = useSelector(selectIndexedExtIdLabel)(
+    allocatedFields.map((field) => ['types', field as string]),
+  ) as string;
+
+  console.log('titleMapping', titleMapping);
+
+  return allocatedFields.map((field) => ({
+    title: titleMapping[`types_${field}`],
+    key: field,
+    render: (activity: TActivity) => (
+      <ColumnWrapper
+        activity={activity}
+        type='VALUE'
+        prop={field as string}
+        mapping={_design}
+        readonly
+      />
+    ),
+  }));
 };

@@ -2,10 +2,10 @@ export const initialState = {
   extIdProps: {
     objects: {
       _te_2501: {
-        label: 'TE 2501',
+        label: 'Lecture',
       },
       Exam: {
-        label: 'Exam 123',
+        label: 'Exam',
       },
       _te_2468: {
         label: 'TE 2468',

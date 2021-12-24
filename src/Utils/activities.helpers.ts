@@ -760,8 +760,8 @@ export const getActivities = async ({
   activityIds?: string[];
   formInstanceIds?: string[];
 }): Promise<TActivity[]> => {
+  if (isEmpty(activityIds) && isEmpty(formInstanceIds)) return [];
   const token = await getToken();
-  console.log('formInstanceIds', formInstanceIds);
   const response = await axios.get(`${getEnvParams().AM_BE_URL}activity`, {
     headers: {
       'Access-Control-Allow-Origin': '*',

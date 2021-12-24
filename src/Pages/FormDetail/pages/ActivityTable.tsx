@@ -5,7 +5,10 @@ import _ from 'lodash';
 import { TableProps } from 'antd';
 import type { ColumnsType, SorterResult } from 'antd/lib/table/interface';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
-import { CreateActivitiesTableColumnsFromMapping } from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+import {
+  CreateActivitiesAllocatedTableColumns,
+  CreateActivitiesTableColumnsFromMapping,
+} from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
 import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
@@ -69,6 +72,10 @@ const ActivityTable = ({
       })
     : [];
 
+  const allocatedColumns = CreateActivitiesAllocatedTableColumns({
+    activities,
+    design,
+  });
   const onRowSelect = (selectedRowKeys: string[]) => {
     dispatch(selectActivitiesInTable(tableType, selectedRowKeys));
   };
@@ -78,6 +85,7 @@ const ActivityTable = ({
       columns={[
         ...(additionalColumns.pre ?? []),
         ...tableColumns,
+        ...allocatedColumns,
         ...(additionalColumns.post ?? []),
       ]}
       dataSource={activities}

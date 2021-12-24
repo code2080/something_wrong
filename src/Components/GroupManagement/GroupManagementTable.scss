@@ -1,3 +1,11 @@
+
+.group-management-table {
+  .ant-table-row.empty {
+    .ant-table-row-expand-icon {
+      display: none;
+    }
+  }
+}
 .single-submission-table {
   display: inline-block;
   margin: 10px;

@@ -17,6 +17,7 @@ type Props = {
     activity: TActivity,
     activityValues: ActivityValue[],
   ) => ReactChild;
+  readonly?: boolean;
 };
 
 const getAllActivityValuesForDesignProperty = (
@@ -35,6 +36,7 @@ const ColumnWrapper = ({
   mapping,
   columnPrefix,
   renderer,
+  readonly,
 }: Props) => {
   // Memoize all matching activity values
   const activityValues = useMemo(
@@ -63,6 +65,7 @@ const ColumnWrapper = ({
                 type={type}
                 prop={prop}
                 mapping={mapping}
+                readonly={readonly}
               />
             </>
           ))}

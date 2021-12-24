@@ -1,3 +1,5 @@
+import { AllocationStatus } from './groupMangement.constants';
+
 export const allocateRelatedObjectsToGroups = ({
   allocationLevel,
   submission,
@@ -29,7 +31,18 @@ export const allocateRelatedObjectsToGroups = ({
   }
   return {};
 };
-
+export const hasAllocatedActivity = (activities): boolean =>
+  activities.some((act) => act.values.some((actVal) => actVal.isAllocated));
+export const getSubmissionAllocationStatus = (activities): AllocationStatus => {
+  const hasAllocated = hasAllocatedActivity(activities);
+  if (!hasAllocated) return 0;
+  console.log('activities', activities);
+  return activities.some((act) =>
+    act.values.some((actVal) => actVal.isAllocated),
+  )
+    ? 1
+    : -1;
+};
 export const allocateCondition = ({
   allocationLevel,
   submission,

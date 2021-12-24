@@ -3,7 +3,7 @@ import { compact, groupBy, isEmpty, keyBy, uniq } from 'lodash';
 
 // COMPONENTS
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
-import { Table, Button, Tooltip } from 'antd';
+import { Table, Button, Tooltip, Modal } from 'antd';
 
 // HELPERS
 import { determineSectionType } from 'Utils/determineSectionType.helpers';
@@ -25,8 +25,13 @@ import {
   ShareAltOutlined,
 } from '@ant-design/icons';
 import { getActivities } from 'Utils/activities.helpers';
-import { allocateRelatedObjectsToGroups } from './groupManagement.helpers';
+import {
+  allocateRelatedObjectsToGroups,
+  hasAllocatedActivity,
+} from './groupManagement.helpers';
 import { updateActivities } from 'Redux/Activities/activities.actions';
+import { TActivity } from 'Types/Activity.type';
+import AllocationStatus from './AllocationStatus';
 
 // UTILS
 const getActivityTypeInGroup = (tracks, activityType) => {
@@ -42,13 +47,15 @@ const getActivityTypeInGroup = (tracks, activityType) => {
 type SubmissionItemGroup = {
   groupId: string;
   tracks: any[];
+  activities: TActivity[];
   activityTypeValue: string;
   invalid: boolean;
   numberOfGroups?: number;
+  isAllocated?: boolean;
 };
 type SubmissionItemType = {
   _id: string;
-  status: string;
+  status: number;
   submitter: string;
   scopedObject: string;
   activityTypes: any[];
@@ -106,15 +113,13 @@ const SingeSubmissionTable = ({
     {
       title: 'Status',
       render: (item) =>
-        item.invalid ? (
-          <Tooltip title='All tracks in group must have same activity type'>
-            <CloseCircleOutlined
-              style={{ fontSize: 16 }}
-              className='text--error'
-            />
-          </Tooltip>
-        ) : (
+        item.isAllocated ? (
           <CheckCircleTwoTone style={{ fontSize: 16 }} />
+        ) : (
+          <CloseCircleOutlined
+            style={{ fontSize: 16 }}
+            className='text--error'
+          />
         ),
     },
     {
@@ -134,10 +139,6 @@ const SingeSubmissionTable = ({
         );
       },
       width: 80,
-    },
-    {
-      title: 'Groups',
-      render: (item) => item.numberOfGroups,
     },
     {
       title: 'Total activities',
@@ -165,6 +166,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [allocatingGroupIds, setAllocatingGroupIds] = useState<string[]>([]);
   const [activities, setActivities] = useState({});
+  const [loading, setLoading] = useState(false);
 
   /* EFFECTS */
   useEffect(() => {
@@ -189,45 +191,11 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
     return design.additionalFields?.activityType || [];
   }, [design]);
 
-  const columns = [
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
-    {
-      title: 'Submitter',
-      dataIndex: 'submitter',
-    },
-    {
-      title: objectScopeLabel,
-      dataIndex: 'scopedObject',
-    },
-    {
-      title: 'Activity types',
-      dataIndex: 'activityTypes',
-      render: (activityTypes) => activityTypes.length,
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (record) => (
-        <Button
-          onClick={() => {
-            setAllocatingGroupIds([record._id]);
-            setAllocationModalVisible(true);
-          }}
-          size='small'
-          // disabled={record.invalid}
-        >
-          Allocate
-        </Button>
-      ),
-    },
-  ];
-
   const dataSource: SubmissionItemType[] = useMemo(() => {
     return submissions.map((submission) => {
       const { submitter, values, scopedObject, _id } = submission;
+      const acts = activities[_id] || [];
+      const indexedActs = keyBy(acts, (act) => act.rowIdx || act.eventId);
       const sectionValues = values[activityType[0]] || {};
       const allValues = Object.keys(sectionValues).map((rowId) => {
         return (sectionValues[rowId]?.values || []).find(
@@ -254,53 +222,68 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       }, {});
 
       const groupedValues = groupBy(sectionValues, 'parentId');
-      const finalGroups: SubmissionItemGroup[] = Object.entries(
+      const allGroups: SubmissionItemGroup[] = Object.entries(
         groupedValues,
       ).map(([parentId, tracks]) => {
+        const activities = compact(tracks.map(({ id }) => indexedActs[id]));
         const activityTypeValue = getActivityTypeInGroup(tracks, activityType);
         return {
           groupId: parentId,
           tracks,
+          activities,
+          isAllocated: hasAllocatedActivity(activities),
           activityTypeValue: (activityTypeValue[0] || '') as string,
           invalid: activityTypeValue.length !== 1,
         };
       });
+
       const groupedGroups = groupBy(
-        finalGroups,
+        allGroups,
         (group) =>
           `${group.activityTypeValue}_${group.tracks.length}_${group.invalid}`,
       );
+      const finalGroups = Object.entries(groupedGroups)
+        .map(([, groups]) => {
+          return {
+            ...groups[0],
+            numberOfGroups: groups.length,
+          };
+        })
+        .sort((a: SubmissionItemGroup, b: SubmissionItemGroup) =>
+          a.activityTypeValue.localeCompare(b.activityTypeValue),
+        );
+
+      const allocatedGroups = finalGroups.filter((group) => group.isAllocated);
+      const allocationStatus =
+        allocatedGroups.length === 0
+          ? 0
+          : allocatedGroups.length === finalGroups.length
+          ? 1
+          : -1;
       return {
         _id,
-        status: 'Allocated',
+        status: allocationStatus,
         submitter: submitter,
         scopedObject,
         activityTypes: Object.entries(indexedTypes).map(([, value]) => value),
-        groups: Object.entries(groupedGroups)
-          .map(([, groups]) => {
-            return {
-              ...groups[0],
-              numberOfGroups: groups.length,
-            };
-          })
-          .sort((a: SubmissionItemGroup, b: SubmissionItemGroup) =>
-            a.activityTypeValue.localeCompare(b.activityTypeValue),
-          ),
+        groups: finalGroups,
         allValues,
         indexedTypes,
-        invalid: finalGroups.some((group) => group.invalid),
+        invalid: allGroups.some((group) => group.invalid),
       };
     });
-  }, [supportedSectionIds, submissions, activityType]);
+  }, [supportedSectionIds, submissions, activityType, activities]);
 
+  const doGetActivities = async (formInstanceIds: string[]) => {
+    setLoading(true);
+    const _acts = await getActivities({
+      formInstanceIds,
+    });
+    setActivities({ ...activities, ...groupBy(_acts, 'formInstanceId') });
+    setLoading(false);
+  };
   useEffect(() => {
-    const doGetActivities = async () => {
-      const activities = await getActivities({
-        formInstanceIds: dataSource.map(({ _id }) => _id),
-      });
-      setActivities(groupBy(activities, 'formInstanceId'));
-    };
-    doGetActivities();
+    doGetActivities(dataSource.map(({ _id }) => _id));
   }, [dataSource.length]);
 
   /* CALLBACKS */
@@ -311,8 +294,31 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
     setAllocatingGroupIds(selectedRowKeys);
     setAllocationModalVisible(true);
   };
-  const onDeallocateActivities = () => {
-    console.log('onDeallocateActivities', selectedRowKeys);
+  const onDeallocateActivities = async (submissions: SubmissionItemType[]) => {
+    Modal.confirm({
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') || document.body,
+      title: 'Deallocate activities',
+      content: 'Are you sure you want to deallocate these activities?',
+      onOk: async () => {
+        setLoading(true);
+        await Promise.all(
+          submissions.map((submission) => {
+            const updatedActivities = submission.groups.flatMap((group) =>
+              group.activities.map((act) => ({
+                ...act,
+                values: act.values.filter((val) => !val.isAllocated),
+              })),
+            );
+            return dispatch(
+              updateActivities(formId, submission._id, updatedActivities),
+            );
+          }),
+        );
+        doGetActivities(submissions.map(({ _id }) => _id));
+        onDeselectAll();
+      },
+    });
   };
 
   const onCloseModal = () => {
@@ -382,54 +388,124 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       {},
     );
 
-    console.log('mergedAllocations >>>', mergedAllocations);
-    allocatingGroupIds.forEach((submissionId, idx) => {
-      const acts = activities[submissionId];
-      const updatedActivities = acts
-        .filter((act) =>
-          Object.keys(mergedAllocations).some(
-            (key) => mergedAllocations[key]?.[idx]?.[act.rowIdx || act.eventId],
-          ),
-        )
-        .map((act) => {
-          return {
-            ...act,
-            values: [
-              ...act.values,
-              ...Object.keys(mergedAllocations)
-                .filter(
-                  (selectedType) =>
-                    mergedAllocations[selectedType]?.[idx]?.[
-                      act.rowIdx || act.eventId
-                    ],
-                )
-                .map((selectedType) => {
-                  return {
-                    elementId: activityType[1],
-                    eventId: act.eventId,
-                    extId: selectedType,
-                    rowIdx: act.rowIdx,
-                    sectionId: activityType[0],
-                    submissionValue:
+    setLoading(true);
+    await Promise.all(
+      allocatingGroupIds.map((submissionId, idx) => {
+        const acts = activities[submissionId];
+        const updatedActivities = acts
+          .filter((act) =>
+            Object.keys(mergedAllocations).some(
+              (key) =>
+                mergedAllocations[key]?.[idx]?.[act.rowIdx || act.eventId],
+            ),
+          )
+          .map((act) => {
+            return {
+              ...act,
+              values: [
+                ...act.values,
+                ...Object.keys(mergedAllocations)
+                  .filter(
+                    (selectedType) =>
                       mergedAllocations[selectedType]?.[idx]?.[
                         act.rowIdx || act.eventId
                       ],
-                    submissionValueType: 'OBJECT',
-                    type: 'object',
-                    value:
-                      mergedAllocations[selectedType]?.[idx]?.[
-                        act.rowIdx || act.eventId
-                      ],
-                    valueMode: 'FROM_SUBMISSION',
-                    isAllocated: true,
-                  };
-                }, []),
-            ],
-          };
-        });
-      dispatch(updateActivities(formId, submissionId, updatedActivities));
-    });
+                  )
+                  .map((selectedType) => {
+                    return {
+                      elementId: activityType[1],
+                      eventId: act.eventId,
+                      extId: selectedType,
+                      rowIdx: act.rowIdx,
+                      sectionId: activityType[0],
+                      submissionValue:
+                        mergedAllocations[selectedType]?.[idx]?.[
+                          act.rowIdx || act.eventId
+                        ],
+                      submissionValueType: 'OBJECT',
+                      type: 'object',
+                      value:
+                        mergedAllocations[selectedType]?.[idx]?.[
+                          act.rowIdx || act.eventId
+                        ],
+                      valueMode: 'FROM_SUBMISSION',
+                      isAllocated: true,
+                    };
+                  }, []),
+              ],
+            };
+          });
+        return dispatch(
+          updateActivities(formId, submissionId, updatedActivities),
+        );
+      }),
+    );
+    doGetActivities(allocatingGroupIds);
   };
+
+  const actionColumnRenderer = (record: SubmissionItemType) => {
+    if (record.status !== 0) {
+      return (
+        <Button
+          onClick={() => {
+            onDeallocateActivities([record]);
+          }}
+          size='small'
+        >
+          Deallocate
+        </Button>
+      );
+    }
+    let errorMessage: string = '';
+    if (!record.activityTypes.length)
+      errorMessage = 'There is on activity types';
+    else if (record.invalid)
+      errorMessage = 'All tracks in group must have same activity type';
+    if (errorMessage)
+      return (
+        <Button size='small' disabled={!!errorMessage}>
+          Allocate
+        </Button>
+      );
+    return (
+      <Button
+        size='small'
+        disabled={!!errorMessage}
+        onClick={() => {
+          setAllocatingGroupIds([record._id]);
+          setAllocationModalVisible(true);
+        }}
+      >
+        Allocate
+      </Button>
+    );
+  };
+
+  const columns = [
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      render: (status) => <AllocationStatus status={status} />,
+    },
+    {
+      title: 'Submitter',
+      dataIndex: 'submitter',
+    },
+    {
+      title: objectScopeLabel,
+      dataIndex: 'scopedObject',
+    },
+    {
+      title: 'Activity types',
+      dataIndex: 'activityTypes',
+      render: (activityTypes) => activityTypes.length,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: actionColumnRenderer,
+    },
+  ];
 
   return (
     <div>
@@ -445,14 +521,21 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
         onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onAllocateActivities={startAllocatingActivities}
-        onDeallocateActivities={onDeallocateActivities}
+        onDeallocateActivities={() =>
+          onDeallocateActivities(
+            dataSource.filter((item) => selectedRowKeys.includes(item._id)),
+          )
+        }
         allActivities={[]}
       />
       <DynamicTable
+        className='group-management-table'
+        loading={loading}
         columns={columns}
         dataSource={dataSource}
         rowKey='_id'
-        expandedRowRender={(record) => {
+        expandedRowRender={(record: SubmissionItemType) => {
+          if (!record.activityTypes.length) return null;
           return (
             <SingeSubmissionTable
               objectScopeLabel={objectScopeLabel || objectScope}
@@ -464,7 +547,13 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
         rowSelection={{
           selectedRowKeys,
           onChange: (selectedRows) => setSelectedRowKeys(selectedRows),
+          getCheckboxProps: (record: SubmissionItemType) => ({
+            disabled: record.invalid || !record.activityTypes.length,
+          }),
         }}
+        onRow={(record: SubmissionItemType) => ({
+          className: !record.activityTypes.length ? 'empty' : '',
+        })}
       />
     </div>
   );

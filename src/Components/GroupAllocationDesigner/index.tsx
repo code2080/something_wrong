@@ -45,11 +45,16 @@ const AllocationSection = ({
           onChange={onTypeChanged}
           style={{ width: '100%' }}
         >
-          {selectableTypes.map((type) => (
-            <Select.Option key={type.extid} value={type.extid}>
-              {type.name}
-            </Select.Option>
-          ))}
+          {selectableTypes
+            .filter(
+              ({ extid }) =>
+                !Object.keys(activityDesign.objects || {}).includes(extid),
+            )
+            .map((type) => (
+              <Select.Option key={type.extid} value={type.extid}>
+                {type.name}
+              </Select.Option>
+            ))}
         </Select>
       </div>
       <span>Allocate based on: </span>
