@@ -183,6 +183,7 @@ export const scheduleActivities = (
   cFn: (result: ActivityValueValidation[]) => void,
   objRequests: ObjectRequest[],
   activityDesign?: ActivityDesign,
+  isBeta = false,
 ) => {
   // Preprocess all activities
   const preprocessingMap = activities
@@ -233,6 +234,8 @@ export const scheduleActivities = (
 
   // Edge case: all activities have schedulingAlgorithm EXACT
   if (
+    // Feature flag: DEV-468
+    !isBeta &&
     validatedActivities.every(
       (el) => el.schedulingAlgorithm === schedulingAlgorithms.EXACT,
     )

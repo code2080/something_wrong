@@ -3,7 +3,7 @@ import { TActivity } from 'Types/Activity.type';
 import SortableTableCell from '../../DynamicTable/SortableTableCell';
 import SchedulingActions from './SchedulingActions/SchedulingActions';
 
-export const SchedulingColumns = (selectedRowKeys: Key[] = []) => [
+export const SchedulingColumns = (selectedRowKeys: Key[] = [], actions) => [
   {
     title: '',
     key: 'activityScheduling',
@@ -15,6 +15,7 @@ export const SchedulingColumns = (selectedRowKeys: Key[] = []) => [
         <SchedulingActions
           activity={activity}
           selectedRowKeys={selectedRowKeys}
+          actions={actions}
         />
       </SortableTableCell>
     ),

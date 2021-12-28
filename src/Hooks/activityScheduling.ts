@@ -32,6 +32,7 @@ import { ActivityValueValidation } from '../Types/ActivityValueValidation.type';
 import { useMixpanel, useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectFormObjectRequest } from '../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import SchedulingStatusModal from './schedulingStatusConfirmModal';
+import { selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 
 type Props = {
   formType: string;
@@ -50,6 +51,7 @@ const useActivityScheduling = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const activityDesign = useSelector(selectDesignForForm)(formId);
+  const isBeta = useSelector(selectIsBetaOrDev);
   const indexedFormInstances = useMemo(
     () => keyBy(submissions, '_id'),
     [submissions],
@@ -108,9 +110,14 @@ const useActivityScheduling = ({
   };
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
-    const activities = await getActivities({
+    const _activities = await getActivities({
       activityIds: selectedActivityIds,
     });
+    const activities = _activities.filter(
+      (activity) =>
+        activity.activityStatus !== EActivityStatus.INACTIVE &&
+        activity.activityStatus !== EActivityStatus.SCHEDULED,
+    );
     const groupedActivities = groupBy(
       activities,
       ({ formInstanceId }) => formInstanceId,
@@ -152,6 +159,7 @@ const useActivityScheduling = ({
             },
             objectRequests,
             activityDesign,
+            isBeta,
           );
         });
       },

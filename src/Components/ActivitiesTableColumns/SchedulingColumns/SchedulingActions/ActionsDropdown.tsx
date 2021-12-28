@@ -30,7 +30,6 @@ import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import useActivityScheduling from 'Hooks/activityScheduling';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 import { makeSelectAllActivityidsForForminstance } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
@@ -95,6 +94,7 @@ const ActivityActionsDropdown = ({
   setFormInstanceSchedulingProgress,
   abortJob,
   isScheduling,
+  actions,
 }) => {
   const { formInstanceId, formId } = activity;
   const teCoreAPI = useTECoreAPI();
@@ -116,12 +116,17 @@ const ActivityActionsDropdown = ({
     selectForm(state, formId),
   );
 
-  const { handleScheduleActivities, handleDeleteActivities } =
-    useActivityScheduling({
-      formId,
-      formType: formType,
-      reservationMode: reservationMode,
-    });
+  const handleScheduleActivities = (activityIds: string[]) => {
+    if (typeof actions.onSchedule === 'function') {
+      actions.onSchedule(activityIds);
+    }
+  };
+
+  const handleDeleteActivities = (activityIds: string[]) => {
+    if (typeof actions.onDelete === 'function') {
+      actions.onDelete(activityIds);
+    }
+  };
 
   const hasAssistedSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
@@ -270,6 +275,7 @@ ActivityActionsDropdown.propTypes = {
   setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
   abortJob: PropTypes.func.isRequired,
   isScheduling: PropTypes.bool,
+  actions: PropTypes.object,
 };
 
 ActivityActionsDropdown.defaultProps = {

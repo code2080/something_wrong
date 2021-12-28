@@ -8,7 +8,7 @@ const getValueDisplay = (row, col) => {
   const { render, dataIndex } = col;
   if (typeof render !== 'function') return row[dataIndex];
   if (col.dataIndex) return render(row[col.dataIndex], row);
-  return render(row);
+  return render(row, row);
 };
 
 const ExpandedPane = ({ columns, row }) => (

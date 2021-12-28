@@ -10,8 +10,8 @@ import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 
 // HOOKS
 import {
+  // useFetchLabelsFromExtIds,
   useTECoreAPI,
-  useFetchLabelsFromExtIds,
 } from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
@@ -20,6 +20,7 @@ import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
 import { selectElementTypesMap } from 'Redux/Elements/element.selectors';
+// import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import {
@@ -87,27 +88,6 @@ const SubmissionsOverviewPage = () => {
     [form, submissions],
   );
 
-  // const verticalSections = useMemo(() => {
-  //   return form.sections.filter(section => determineSectionType(section) === SECTION_VERTICAL);
-  // }, [form]);
-
-  // console.log(verticalSections);
-
-  // const payload = useMemo(
-  //   () =>
-  //     getExtIdPropsPayload({
-  //       sections: form.sections,
-  //       objectRequests: objectRequests,
-  //       submissionValues: formInstance.values,
-  //       activities,
-  //     }),
-  //   // TODO: memoize and readd dependencies
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [form],
-  // );
-  // useFetchLabelsFromExtIds({
-  //   objects: scopedObjectIds,
-  // });
   useEffect(() => {
     const verticalSections = form.sections.filter(
       (section) => determineSectionType(section) === SECTION_VERTICAL,
@@ -130,13 +110,38 @@ const SubmissionsOverviewPage = () => {
     const allValues = submissions.flatMap((submission) => {
       return verticalSections
         .map((section) => submission.values[section._id])
-        .filter(({ elementId, value }) => {
+        .filter(({ elementId }) => {
           console.log(elementId, elementsMapping[elementId]);
           return elementsMapping[elementId];
         });
     });
     console.log('verticalSections', verticalSections, allValues);
   }, [submissions, form, scopedObjectIds]);
+  // const submissionPayload = useMemo(() => {
+  //   const initialPayload = {
+  //     objects: submissions.flatMap(({ scopedObject }) => scopedObject),
+  //     fields: [],
+  //     types: [],
+  //   };
+  //   const sections = form.sections;
+  //   const submissionValues = submissions.map((submission) => submission.values);
+  //   const teValues = _.isEmpty(submissionValues)
+  //     ? initialPayload
+  //     : getExtIdPropsPayload({
+  //         sections,
+  //         submissionValues,
+  //         objectScope: form.objectScope,
+  //         activities: [],
+  //       });
+  //   const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+
+  //   return {
+  //     ...teValues,
+  //     objects: [...teValues.objects, ...scopedObjectExtids],
+  //   };
+  // }, [form.sections, form.objectScope, submissions]);
+
+  // useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EFFECTS

@@ -12,7 +12,14 @@ const CascaderWithTooltip = (props: CascaderProps & { separator?: string }) => {
             document.getElementById('te-prefs-lib') as HTMLElement
           }
         >
-          <span style={{ width: '100%', display: 'block' }}>
+          <span
+            style={{
+              width: '100%',
+              display: 'block',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
             {label.join(props.separator ?? defaultSeparator)}
           </span>
         </Tooltip>
