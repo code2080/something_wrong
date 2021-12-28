@@ -344,10 +344,12 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
                   )
                   .flatMap((val) => val.value);
               });
-              const relatedObjects = (await teCoreAPI.getRelatedGroups({  // The result is not a flat array
-                objectIds: compact(uniq(objectIds)),                      // But rather an object with a key per objectIds
-                typeId: selectedGroupType,                                // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
-              })) || [                                                    // Ids can appear related to multiple objectIds.
+              const relatedObjects = (await teCoreAPI.getRelatedGroups({
+                // The result is not a flat array
+                objectIds: compact(uniq(objectIds)), // But rather an object with a key per objectIds
+                typeId: selectedGroupType, // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
+              })) || [
+                // Ids can appear related to multiple objectIds.
                 'te_1',
                 'te_2',
                 'te_3',
