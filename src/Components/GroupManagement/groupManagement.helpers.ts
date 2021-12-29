@@ -1,5 +1,9 @@
 import { AllocationStatus } from './groupMangement.constants';
 
+export type AllocatedObject = {
+  [rowIdxOrEventId: string]: string | null | undefined;
+};
+
 export const allocateRelatedObjectsToGroups = ({
   allocationLevel,
   submission,
@@ -8,27 +12,35 @@ export const allocateRelatedObjectsToGroups = ({
   allocationLevel: number;
   submission: any;
   relatedObjects: string[];
-}) => {
+}): AllocatedObject => {
   if (allocationLevel === 0) {
-    return submission.groups
-      .filter((group) => relatedObjects.length % group.tracks.length === 0)
-      .reduce((results, group) => {
-        return {
-          ...results,
-          ...group.tracks.reduce(
-            (groupResults, track, trackIndex) => ({
-              ...groupResults,
-              [track.id]: relatedObjects.slice(
-                (trackIndex * relatedObjects.length) / group.tracks.length,
-                ((trackIndex + 1) * relatedObjects.length) /
-                  group.tracks.length,
-              ),
-            }),
-            {},
-          ),
-        };
-      }, {});
+    return (
+      submission.groups
+        // Only allocate for the group which divisible by relatedObjects
+        .filter(
+          (group) => relatedObjects.length % group.activities.length === 0,
+        )
+        .reduce((results, group) => {
+          return {
+            ...results,
+            ...group.activities.reduce(
+              (groupResults, act, trackIndex) => ({
+                ...groupResults,
+                [act.rowIdx || act.eventId]: relatedObjects.slice(
+                  (trackIndex * relatedObjects.length) /
+                    group.activities.length,
+                  ((trackIndex + 1) * relatedObjects.length) /
+                    group.activities.length,
+                ),
+              }),
+              {},
+            ),
+          };
+        }, {})
+    );
   }
+
+  // The logic if difference for another level
   return {};
 };
 export const hasAllocatedActivity = (activities): boolean =>

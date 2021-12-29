@@ -26,6 +26,7 @@ import {
 } from '@ant-design/icons';
 import { getActivities } from 'Utils/activities.helpers';
 import {
+  AllocatedObject,
   allocateRelatedObjectsToGroups,
   hasAllocatedActivity,
 } from './groupManagement.helpers';
@@ -34,13 +35,13 @@ import { TActivity } from 'Types/Activity.type';
 import AllocationStatus from './AllocationStatus';
 
 // UTILS
-const getActivityTypeInGroup = (tracks, activityType) => {
-  if (isEmpty(tracks) || isEmpty(activityType)) return [];
-  const activityTypeElementIdx = tracks[0].values.findIndex(
+const getActivityTypeInGroup = (activities, activityType) => {
+  if (isEmpty(activities) || isEmpty(activityType)) return [];
+  const activityTypeElementIdx = activities[0].values.findIndex(
     (val) => val.elementId === activityType[1],
   );
   return uniq(
-    tracks.flatMap((track) => track.values[activityTypeElementIdx]?.value),
+    activities.flatMap((track) => track.values[activityTypeElementIdx]?.value),
   );
 };
 
@@ -134,7 +135,7 @@ const SingeSubmissionTable = ({
           >
             <ShareAltOutlined />
             &nbsp;
-            {(item.tracks || []).length}
+            {(item.activities || []).length}
           </Button>
         );
       },
@@ -142,7 +143,7 @@ const SingeSubmissionTable = ({
     },
     {
       title: 'Total activities',
-      render: (item) => item.numberOfGroups * item.tracks.length,
+      render: (item) => item.numberOfGroups * item.activities.length,
     },
   ];
   return (
@@ -197,36 +198,51 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       const acts = activities[_id] || [];
       const indexedActs = keyBy(acts, (act) => act.rowIdx || act.eventId);
       const sectionValues = values[activityType[0]] || {};
-      const allValues = Object.keys(sectionValues).map((rowId) => {
-        return (sectionValues[rowId]?.values || []).find(
-          (val) => val.elementId === activityType[1],
-        )?.value?.[0];
+      const allValues: string[] = acts.flatMap((act) => {
+        return (
+          act.values
+            // Filter out allocated value
+            .filter(({ isAllocated }) => !isAllocated)
+            // Filter out empty value and only keep activityType value
+            .filter(
+              ({ elementId, value }) =>
+                elementId === activityType[1] && !isEmpty(value),
+            )
+            .map(({ value }) => (Array.isArray(value) ? value[0] : value))
+        );
       });
-      const indexedTypes = compact(allValues).reduce((results, item) => {
-        if (results[item]) {
+
+      const indexedTypes = compact(allValues).reduce(
+        (results, item: string) => {
+          if (results[item]) {
+            return {
+              ...results,
+              [item]: {
+                ...results[item],
+                total: (results[item]?.total || 0) + 1,
+              },
+            };
+          }
           return {
             ...results,
             [item]: {
-              ...results[item],
-              total: (results[item]?.total || 0) + 1,
+              total: 1,
+              extId: item,
             },
           };
-        }
-        return {
-          ...results,
-          [item]: {
-            total: 1,
-            extId: item,
-          },
-        };
-      }, {});
+        },
+        {},
+      );
 
       const groupedValues = groupBy(sectionValues, 'parentId');
       const allGroups: SubmissionItemGroup[] = Object.entries(
         groupedValues,
       ).map(([parentId, tracks]) => {
         const activities = compact(tracks.map(({ id }) => indexedActs[id]));
-        const activityTypeValue = getActivityTypeInGroup(tracks, activityType);
+        const activityTypeValue = getActivityTypeInGroup(
+          activities,
+          activityType,
+        );
         return {
           groupId: parentId,
           tracks,
@@ -240,7 +256,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       const groupedGroups = groupBy(
         allGroups,
         (group) =>
-          `${group.activityTypeValue}_${group.tracks.length}_${group.invalid}`,
+          `${group.activityTypeValue}_${group.activities.length}_${group.invalid}`,
       );
       const finalGroups = Object.entries(groupedGroups)
         .map(([, groups]) => {
@@ -265,7 +281,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
         status: allocationStatus,
         submitter: submitter,
         scopedObject,
-        activityTypes: Object.entries(indexedTypes).map(([, value]) => value),
+        activityTypes: Object.keys(indexedTypes),
         groups: finalGroups,
         allValues,
         indexedTypes,
@@ -302,6 +318,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       content: 'Are you sure you want to deallocate these activities?',
       onOk: async () => {
         setLoading(true);
+        // Remove activity value which has isAllocated === true
         await Promise.all(
           submissions.map((submission) => {
             const updatedActivities = submission.groups.flatMap((group) =>
@@ -332,44 +349,43 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       allocations.map(async (allocation, allocationLevel) => {
         const indexedDatasource = keyBy(dataSource, '_id');
         const { selectedGroupType, selectedType } = allocation;
-        const relatedGroups: Array<Array<string | undefined | null>> =
-          await Promise.all(
-            allocatingGroupIds.map(async (formInstanceId) => {
-              const submission = indexedDatasource[formInstanceId];
-              const allocatingActivities = activities[formInstanceId];
-              const objectIds = allocatingActivities.flatMap(({ values }) => {
-                return values
-                  .filter(
-                    (val) => !isEmpty(val.value) && val.extId === selectedType,
-                  )
-                  .flatMap((val) => val.value);
-              });
-              const relatedObjects = (await teCoreAPI.getRelatedGroups({
-                // The result is not a flat array
-                objectIds: compact(uniq(objectIds)), // But rather an object with a key per objectIds
-                typeId: selectedGroupType, // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
-              })) || [
-                // Ids can appear related to multiple objectIds.
-                'te_1',
-                'te_2',
-                'te_3',
-                'te_4',
-                'te_5',
-                'te_6',
-                'te_7',
-                'te_8',
-                'te_9',
-                'te_10',
-              ];
+        const relatedGroups: AllocatedObject[] = await Promise.all(
+          allocatingGroupIds.map(async (formInstanceId) => {
+            const submission = indexedDatasource[formInstanceId];
+            const allocatingActivities = activities[formInstanceId];
+            const objectIds = allocatingActivities.flatMap(({ values }) => {
+              return values
+                .filter(
+                  (val) => !isEmpty(val.value) && val.extId === selectedType,
+                )
+                .flatMap((val) => val.value);
+            });
+            const relatedObjects = (await teCoreAPI.getRelatedGroups({
+              // The result is not a flat array
+              objectIds: compact(uniq(objectIds)), // But rather an object with a key per objectIds
+              typeId: selectedGroupType, // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
+            })) || [
+              // Ids can appear related to multiple objectIds.
+              'te_1',
+              'te_2',
+              'te_3',
+              'te_4',
+              'te_5',
+              'te_6',
+              'te_7',
+              'te_8',
+              'te_9',
+              'te_10',
+            ];
 
-              const allocatedActivities = allocateRelatedObjectsToGroups({
-                allocationLevel,
-                submission,
-                relatedObjects,
-              });
-              return allocatedActivities;
-            }),
-          );
+            const allocatedActivities = allocateRelatedObjectsToGroups({
+              allocationLevel,
+              submission,
+              relatedObjects,
+            });
+            return allocatedActivities;
+          }),
+        );
         return relatedGroups;
       }),
     );
@@ -379,7 +395,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
     onCloseModal();
     if (isEmpty(allocations)) return;
     const allocatedTracks = await getRelatedGroups(allocations);
-    const mergedAllocations = allocations.reduce(
+    const mergedAllocations: AllocatedObject = allocations.reduce(
       (results, allocation, allocationIndex) => {
         const { selectedType } = allocation;
         return {
@@ -406,6 +422,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
               ...act,
               values: [
                 ...act.values,
+                // Add new activity value
                 ...Object.keys(mergedAllocations)
                   .filter(
                     (selectedType) =>

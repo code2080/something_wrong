@@ -30,8 +30,6 @@ export const CreateActivitiesTableColumnsFromMapping = ({
     ),
   ];
 
-  console.log('allActivityValues, allActivityValues', allActivityValues);
-
   const titleMapping = useSelector(selectIndexedExtIdLabel)(
     allActivityValues,
   ) as string;
