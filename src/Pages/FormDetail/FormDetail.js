@@ -28,7 +28,10 @@ import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurati
 // SELECTORS
 import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import { hasPermission } from '../../Redux/Auth/auth.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
@@ -84,6 +87,7 @@ const FormPage = () => {
   );
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
+  const isBeta = useSelector(selectIsBetaOrDev);
 
   useEffect(() => {
     dispatch(fetchFormSubmissions(formId));
@@ -155,14 +159,16 @@ const FormPage = () => {
             <JointTeachingPage />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane
-          tab='GROUP MANAGEMENT'
-          key={TAB_CONSTANT.GROUP_MANAGEMENT}
-        >
-          {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
-            <GroupManagementPage />
-          )}
-        </Tabs.TabPane>
+        {isBeta && (
+          <Tabs.TabPane
+            tab='GROUP MANAGEMENT'
+            key={TAB_CONSTANT.GROUP_MANAGEMENT}
+          >
+            {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
+              <GroupManagementPage />
+            )}
+          </Tabs.TabPane>
+        )}
         <Tabs.TabPane
           tab='ACTIVITIES'
           key={TAB_CONSTANT.ACTIVITIES}
