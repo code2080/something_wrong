@@ -42,6 +42,7 @@ export type ActivityValue = {
   elementId?: string | null;
   eventId?: string | null;
   rowIdx?: number | null;
+  isAllocated?: boolean;
 };
 
 export type IndexedActivityValueType = {

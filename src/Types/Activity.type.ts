@@ -23,4 +23,5 @@ export type TActivity = {
   jointTeachingGroupId?: string;
   scopedObject?: string;
   isInactive(): boolean;
+  tracks: number | null;
 };

@@ -110,7 +110,10 @@ const useActivityScheduling = ({
   };
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
-    const activities = (await getActivities(selectedActivityIds)).filter(
+    const _activities = await getActivities({
+      activityIds: selectedActivityIds,
+    });
+    const activities = _activities.filter(
       (activity) =>
         activity.activityStatus !== EActivityStatus.INACTIVE &&
         activity.activityStatus !== EActivityStatus.SCHEDULED,
@@ -212,7 +215,7 @@ const useActivityScheduling = ({
   };
 
   const handleDeleteActivities = async (activityIds: string[]) => {
-    const activities = await getActivities(activityIds);
+    const activities = await getActivities({ activityIds });
     const groupedByFormInstance = groupBy(
       activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',

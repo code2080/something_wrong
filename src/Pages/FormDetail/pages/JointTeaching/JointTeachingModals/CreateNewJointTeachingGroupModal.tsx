@@ -45,7 +45,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const fetchedActivities = await getActivities(activityIds);
+      const fetchedActivities = await getActivities({ activityIds });
       // Check if mounted to avoid uppdating if component has been unmounted (avoiding memory leaks)
       if (mounted) setActivities(fetchedActivities);
     })();

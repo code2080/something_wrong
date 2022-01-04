@@ -36,6 +36,7 @@ export const teCoreCallnames = {
   GET_FIELDIDS_FOR_TYPES: 'getFieldIds',
   REQUEST_MANUALLY_SCHEDULE_ACTIVITY: 'requestManuallyScheduleActivity',
   GET_RELATED_GROUPS: 'getRelatedGroups',
+  GET_ALLOCATION_TYPES: 'getAllocationTypes',
 };
 
 export const teCoreActions = {
@@ -256,10 +257,16 @@ export const teCoreActions = {
     callname: teCoreCallnames.GET_RELATED_GROUPS,
     mockFunction: ({ objectExtIds, typeExtId, callback }) => {
       const mockResult = {};
-      objectExtIds.forEach((oId) => {
+      (objectExtIds || []).forEach((oId) => {
         mockResult[oId] = ['teacher_hare', 'teacher_grubbe'];
       });
-      callback(mockResult);
+      if (typeof callback === 'function') {
+        callback(mockResult);
+      }
     },
+  },
+  GET_ALLOCATION_TYPES: {
+    callname: teCoreCallnames.GET_ALLOCATION_TYPES,
+    mockFunction: () => reservationTypes,
   },
 };

@@ -37,14 +37,12 @@ export type TECoreAPI = {
     callback: (reservationIds: string[]) => void;
   }): void;
   getRelatedGroups({
-    objectExtIds,
-    typeExtId,
-    callback,
+    objectIds,
+    typeId,
   }: {
-    objectExtIds: string[];
-    typeExtId: string;
-    callback: (relatedGroups: getRelatedGroupsReturn) => void;
-  }): void;
+    objectIds: string[];
+    typeId: string;
+  }): string[];
   // To be extended
   [apiCall: string]: any;
 };

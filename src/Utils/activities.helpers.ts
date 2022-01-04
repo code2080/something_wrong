@@ -753,16 +753,21 @@ export const getActivityFilterSchemaQuery = ({ status }, tableType) => {
   return schemaQuery;
 };
 
-export const getActivities = async (
-  activityIds: string[],
-): Promise<TActivity[]> => {
+export const getActivities = async ({
+  activityIds,
+  formInstanceIds,
+}: {
+  activityIds?: string[];
+  formInstanceIds?: string[];
+}): Promise<TActivity[]> => {
+  if (isEmpty(activityIds) && isEmpty(formInstanceIds)) return [];
   const token = await getToken();
   const response = await axios.get(`${getEnvParams().AM_BE_URL}activity`, {
     headers: {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
     },
-    params: { activityIds: activityIds },
+    params: { activityIds: activityIds, formInstanceIds },
   });
 
   // TODO: add proper error handling

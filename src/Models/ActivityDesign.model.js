@@ -8,6 +8,7 @@ export class ActivityDesign {
   fields;
   propSettings;
   isEditable;
+  additionalFields;
 
   constructor({
     name,
@@ -19,6 +20,7 @@ export class ActivityDesign {
     isEditable,
     hasTiming,
     useTimeslots,
+    additionalFields,
   }) {
     this.name = name;
     this.formId = formId;
@@ -27,5 +29,6 @@ export class ActivityDesign {
     this.fields = fields || {};
     this.propSettings = propSettings || {};
     this.isEditable = isEditable || false;
+    this.additionalFields = additionalFields;
   }
 }

@@ -10,7 +10,7 @@ import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 
 // HOOKS
 import {
-  useFetchLabelsFromExtIds,
+  // useFetchLabelsFromExtIds,
   useTECoreAPI,
 } from '../../../Hooks/TECoreApiHooks';
 
@@ -19,7 +19,8 @@ import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
-import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
+import { selectElementTypesMap } from 'Redux/Elements/element.selectors';
+// import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import {
@@ -45,6 +46,8 @@ import { teCoreCallnames } from '../../../Constants/teCoreActions.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFilter.interface';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import { SECTION_VERTICAL } from 'Constants/sectionTypes.constants';
+import { determineSectionType } from '../../../Utils/determineSectionType.helpers';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
@@ -63,6 +66,7 @@ const SubmissionsOverviewPage = () => {
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
+  const elementTypeMap = useSelector(selectElementTypesMap());
   const filters = useSelector(selectFilter)(
     `${formId}_SUBMISSIONS`,
     FormSubmissionFilterInterface,
@@ -84,31 +88,60 @@ const SubmissionsOverviewPage = () => {
     [form, submissions],
   );
 
-  const submissionPayload = useMemo(() => {
-    const initialPayload = {
-      objects: submissions.flatMap(({ scopedObject }) => scopedObject),
-      fields: [],
-      types: [],
-    };
-    const sections = form.sections;
-    const submissionValues = submissions.map((submission) => submission.values);
-    const teValues = _.isEmpty(submissionValues)
-      ? initialPayload
-      : getExtIdPropsPayload({
-          sections,
-          submissionValues,
-          objectScope: form.objectScope,
-          activities: [],
+  useEffect(() => {
+    const verticalSections = form.sections.filter(
+      (section) => determineSectionType(section) === SECTION_VERTICAL,
+    );
+
+    const elementsMapping = verticalSections.reduce((results, section) => {
+      return {
+        ...results,
+        ...section.elements
+          .filter((elm) => elementTypeMap[elm.elementId])
+          .reduce(
+            (elmResults, element) => ({
+              ...elmResults,
+              [element._id]: elementTypeMap[element.elementId].type,
+            }),
+            {},
+          ),
+      };
+    }, {});
+    const allValues = submissions.flatMap((submission) => {
+      return verticalSections
+        .map((section) => submission.values[section._id])
+        .filter(({ elementId }) => {
+          console.log(elementId, elementsMapping[elementId]);
+          return elementsMapping[elementId];
         });
-    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+    });
+    console.log('verticalSections', verticalSections, allValues);
+  }, [submissions, form, scopedObjectIds]);
+  // const submissionPayload = useMemo(() => {
+  //   const initialPayload = {
+  //     objects: submissions.flatMap(({ scopedObject }) => scopedObject),
+  //     fields: [],
+  //     types: [],
+  //   };
+  //   const sections = form.sections;
+  //   const submissionValues = submissions.map((submission) => submission.values);
+  //   const teValues = _.isEmpty(submissionValues)
+  //     ? initialPayload
+  //     : getExtIdPropsPayload({
+  //         sections,
+  //         submissionValues,
+  //         objectScope: form.objectScope,
+  //         activities: [],
+  //       });
+  //   const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
-    return {
-      ...teValues,
-      objects: [...teValues.objects, ...scopedObjectExtids],
-    };
-  }, [form.sections, form.objectScope, submissions]);
+  //   return {
+  //     ...teValues,
+  //     objects: [...teValues.objects, ...scopedObjectExtids],
+  //   };
+  // }, [form.sections, form.objectScope, submissions]);
 
-  useFetchLabelsFromExtIds(submissionPayload);
+  // useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EFFECTS

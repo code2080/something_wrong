@@ -61,6 +61,7 @@ const ColumnContent = ({
   revertToSubmissionValue,
   setExtIdPropsForObject,
   teCoreAPI,
+  readonly,
 }) => {
   const dispatch = useDispatch();
   const spotlightedElRef = useRef(null);
@@ -278,6 +279,13 @@ const ColumnContent = ({
     viewProps.view,
   ]);
 
+  if (readonly) {
+    return (
+      <div className={'column-content--wrapper'} ref={spotlightedElRef}>
+        {memoizedRender}
+      </div>
+    );
+  }
   return (
     <Dropdown
       overlay={
@@ -311,6 +319,7 @@ ColumnContent.propTypes = {
   revertToSubmissionValue: PropTypes.func.isRequired,
   setExtIdPropsForObject: PropTypes.func.isRequired,
   teCoreAPI: PropTypes.object.isRequired,
+  readonly: PropTypes.bool,
 };
 
 ColumnContent.defaultProps = {
@@ -319,6 +328,7 @@ ColumnContent.defaultProps = {
   type: 'VALUE',
   formatFn: (value) => value,
   mapping: null,
+  readonly: false,
 };
 
 export default connect(null, mapActionsToProps)(withTECoreAPI(ColumnContent));

@@ -1,0 +1,14 @@
+@import '../../Styles/globals.scss';
+
+.activities-toolbar--wrapper {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: 2px $outerComponentPadding;
+
+  .ant-btn {
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    padding: 0 6px;
+  }
+}
