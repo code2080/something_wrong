@@ -117,16 +117,17 @@ const constraintManagerTableColumns = (
     dataIndex: undefined,
     key: 'weight',
     // eslint-disable-next-line react/prop-types
-    render: ({ constraintId, weight, isHardConstraint }) => (
-      <InputNumber
-        min={1}
-        max={100}
-        value={weight}
-        disabled={isHardConstraint}
-        size='small'
-        onChange={(val) => onUpdateValue(constraintId, 'weight', val)}
-      />
-    ),
+    render: ({ constraintId, weight, isHardConstraint }) =>
+      weight ? (
+        <InputNumber
+          min={1}
+          max={100}
+          value={weight}
+          disabled={isHardConstraint}
+          size='small'
+          onChange={(val) => onUpdateValue(constraintId, 'weight', val)}
+        />
+      ) : null,
   },
 ];
 
