@@ -97,7 +97,7 @@ const FormPage = () => {
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
-    dispatch(fetchActivityInWorkerProgress(formId))
+    dispatch(fetchActivityInWorkerProgress(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },

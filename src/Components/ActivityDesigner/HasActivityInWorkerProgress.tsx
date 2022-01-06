@@ -9,7 +9,8 @@ const HasActivityInWorkerProgress = () => (
     description={
       <>
         <div>
-          Initialization of operations may take a few minutes because of the enormous amount of activities
+          Initialization of operations may take a few minutes because of the
+          enormous amount of activities
         </div>
       </>
     }

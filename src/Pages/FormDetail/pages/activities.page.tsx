@@ -103,7 +103,9 @@ const ActivitiesPage = () => {
     selectActivitySortingOrder(state, formId),
   );
 
-  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(formId)
+  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(
+    formId,
+  );
 
   const tableDataSource = useMemo(() => {
     const sortedActivities = _.compact<TActivity>(

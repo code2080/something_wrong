@@ -377,8 +377,8 @@ export const getSelectedActivities = ({
 
 export const updateActivityInWorkerProgress = ({ formId }) => ({
   type: activitiesActionTypes.UPDATE_ACTIVITY_IN_WORKER_PROGRESS,
-  payload: { formId }
-})
+  payload: { formId },
+});
 
 const fetchActivityInWorkerProgressFlow = {
   request: () => ({
@@ -397,5 +397,7 @@ const fetchActivityInWorkerProgressFlow = {
 export const fetchActivityInWorkerProgress = (formId) =>
   asyncAction.GET({
     flow: fetchActivityInWorkerProgressFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/worker-progress`,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }forms/${formId}/activities/worker-progress`,
   });

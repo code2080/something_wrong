@@ -188,7 +188,7 @@ const reducer = (
         payload: {
           design: any;
           activities: { [formInstanceId: string]: TActivity[] };
-          isWorkProgress?: boolean
+          isWorkProgress?: boolean;
         };
       };
 
@@ -197,9 +197,9 @@ const reducer = (
           ...state,
           inWorkerProgress: {
             ...state.inWorkerProgress,
-            [design.formId]: true
-          }
-        }
+            [design.formId]: true,
+          },
+        };
       }
 
       const activityFormState = Object.entries(activities || {}).reduce<{
@@ -317,35 +317,35 @@ const reducer = (
 
     case types.UPDATE_ACTIVITY_IN_WORKER_PROGRESS: {
       const {
-        payload: { formId }
+        payload: { formId },
       } = action;
 
       return {
         ...state,
         inWorkerProgress: {
           ...state.inWorkerProgress,
-          [formId]: undefined
-        }
+          [formId]: undefined,
+        },
       };
     }
 
     case types.GET_ACTIVITIES_IN_WORKER_PROGRESS_SUCCESS: {
       const {
-        payload: { workerProgress, formId }
+        payload: { workerProgress, formId },
       } = action;
 
       if (!workerProgress) {
         return {
           ...state,
-        }
+        };
       }
 
       return {
         ...state,
         inWorkerProgress: {
           ...state.inWorkerProgress,
-          [formId]: workerProgress.status === 'PENDING' ? true : undefined
-        }
+          [formId]: workerProgress.status === 'PENDING' ? true : undefined,
+        },
       };
     }
 

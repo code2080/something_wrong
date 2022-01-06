@@ -22,7 +22,10 @@ import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/Ha
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
-import { makeSelectActivitiesForForm, activityInWorkerProgressSelector } from '../../../Redux/Activities/activities.selectors';
+import {
+  makeSelectActivitiesForForm,
+  activityInWorkerProgressSelector,
+} from '../../../Redux/Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
   selectValidTypesOnReservationMode,
@@ -99,7 +102,9 @@ const ActivityDesignPage = () => {
     createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
   );
   const elementsMapping = useSelector(selectElementTypesMap());
-  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(formId)
+  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(
+    formId,
+  );
   /**
    * STATE VARS
    */
