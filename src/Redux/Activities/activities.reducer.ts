@@ -183,14 +183,26 @@ const reducer = (
 
     case activityDesignerTypes.UPDATE_MAPPING_FOR_FORM_SUCCESS: {
       const {
-        payload: { design, activities },
+        payload: { design, activities, isWorkProgress },
       } = action as {
         payload: {
           design: any;
           activities: { [formInstanceId: string]: TActivity[] };
+          isWorkProgress?: boolean
         };
       };
-      const activityFormState = (Object.entries(activities) || []).reduce<{
+
+      if (isWorkProgress) {
+        return {
+          ...state,
+          inWorkerProgress: {
+            ...state.inWorkerProgress,
+            [design.formId]: true
+          }
+        }
+      }
+
+      const activityFormState = Object.entries(activities || {}).reduce<{
         [formInstanceId: string]: TActivity[];
       }>((fIState, [formInstanceId, activityObjs]) => {
         const as = activityObjs.map(
@@ -300,6 +312,40 @@ const reducer = (
       return {
         ...state,
         [formId]: _.omit(state[formId], formInstanceId),
+      };
+    }
+
+    case types.UPDATE_ACTIVITY_IN_WORKER_PROGRESS: {
+      const {
+        payload: { formId }
+      } = action;
+
+      return {
+        ...state,
+        inWorkerProgress: {
+          ...state.inWorkerProgress,
+          [formId]: undefined
+        }
+      };
+    }
+
+    case types.GET_ACTIVITIES_IN_WORKER_PROGRESS_SUCCESS: {
+      const {
+        payload: { workerProgress, formId }
+      } = action;
+
+      if (!workerProgress) {
+        return {
+          ...state,
+        }
+      }
+
+      return {
+        ...state,
+        inWorkerProgress: {
+          ...state.inWorkerProgress,
+          [formId]: workerProgress.status === 'PENDING' ? true : undefined
+        }
       };
     }
 

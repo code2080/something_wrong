@@ -32,6 +32,10 @@ const formStateSelector = (state) => state.forms;
 const activitySchedulingStateSelector = (state: any): ActivitySchedulingState =>
   state.activityScheduling;
 
+export const activityInWorkerProgressSelector = createSelector(activityStateSelector, (activities) => (formId: string) => {
+  return activities?.inWorkerProgress?.[formId] ?? false
+})
+
 export const makeSelectActivitiesForForm = () =>
   createSelector(
     activityStateSelector,

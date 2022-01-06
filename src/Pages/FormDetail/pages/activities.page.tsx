@@ -9,6 +9,7 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
+import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // COMPONENTS
 import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
@@ -24,6 +25,7 @@ import {
 import {
   makeSelectActivitiesForForm,
   makeSelectFilteredActivityIdsForForm,
+  activityInWorkerProgressSelector,
 } from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
@@ -100,6 +102,8 @@ const ActivitiesPage = () => {
   const sortOrder = useSelector((state) =>
     selectActivitySortingOrder(state, formId),
   );
+
+  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(formId)
 
   const tableDataSource = useMemo(() => {
     const sortedActivities = _.compact<TActivity>(
@@ -211,6 +215,7 @@ const ActivitiesPage = () => {
           doFetchingActivities();
         }}
       />
+      {hasActivitiesInProgress && <HasActivityInWorkerProgress />}
       <ActivityTable
         tableType={ACTIVITIES_TABLE}
         design={design}

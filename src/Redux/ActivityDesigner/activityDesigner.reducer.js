@@ -32,6 +32,7 @@ const reducer = (state = initialState, action) => {
       const {
         payload: { design },
       } = action;
+
       return {
         ...state,
         [design.formId]: {

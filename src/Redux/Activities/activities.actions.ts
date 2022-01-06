@@ -36,9 +36,10 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
 
 export const fetchActivitiesForForm = (
   formId,
-  { filters, sorters, pagination },
+  options,
   tableType = ACTIVITIES_TABLE,
 ) => {
+  const { filters, sorters, pagination = { limit: 10, page: 1 } } = options;
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
   const { settings, status, ...others } = _filters || {};
@@ -373,3 +374,28 @@ export const getSelectedActivities = ({
     params: { activityIds: selectedActivityIds },
   });
 };
+
+export const updateActivityInWorkerProgress = ({ formId }) => ({
+  type: activitiesActionTypes.UPDATE_ACTIVITY_IN_WORKER_PROGRESS,
+  payload: { formId }
+})
+
+const fetchActivityInWorkerProgressFlow = {
+  request: () => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_REQUEST,
+  }),
+  success: (response) => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_FAILURE,
+    payload: { ...err },
+  }),
+};
+
+export const fetchActivityInWorkerProgress = (formId) =>
+  asyncAction.GET({
+    flow: fetchActivityInWorkerProgressFlow,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/worker-progress`,
+  });
