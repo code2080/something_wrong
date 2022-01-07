@@ -18,10 +18,14 @@ import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
 import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
 import AdditionalFields from 'Components/ActivityDesigner/AdditionalFields';
+import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
-import { makeSelectActivitiesForForm } from '../../../Redux/Activities/activities.selectors';
+import {
+  makeSelectActivitiesForForm,
+  activityInWorkerProgressSelector,
+} from '../../../Redux/Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
   selectValidTypesOnReservationMode,
@@ -98,6 +102,9 @@ const ActivityDesignPage = () => {
     createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
   );
   const elementsMapping = useSelector(selectElementTypesMap());
+  const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(
+    formId,
+  );
   /**
    * STATE VARS
    */
@@ -317,7 +324,7 @@ const ActivityDesignPage = () => {
                 size='small'
                 onClick={onUnlockClick}
                 loading={isSaving}
-                disabled={hasActivities}
+                disabled={hasActivities || hasActivitiesInProgress}
               >
                 Unlock
               </Button>
@@ -335,6 +342,7 @@ const ActivityDesignPage = () => {
           </div>
         </div>
         {hasActivities && <HasReservationsAlert formId={formId} />}
+        {hasActivitiesInProgress && <HasActivityInWorkerProgress />}
         <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>
