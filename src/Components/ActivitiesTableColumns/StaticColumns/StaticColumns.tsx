@@ -5,7 +5,7 @@ import SubmissionColumn from './SubmissionColumn';
 export const StaticColumns = [
   {
     title: 'Submission',
-    key: 'formInstanceId',
+    key: 'metadata.submitter',
     width: 170,
     render: (activity) => (
       <SortableTableCell

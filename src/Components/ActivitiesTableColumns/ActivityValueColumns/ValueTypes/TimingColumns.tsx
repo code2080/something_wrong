@@ -16,7 +16,7 @@ import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
 const timingCols = {
   mode: (mapping) => ({
     title: 'Timing mode',
-    key: 'mode',
+    key: 'metadata.mode',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`mode_${activity._id}`}>
@@ -35,7 +35,7 @@ const timingCols = {
   }),
   startTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'Start time',
-    key: 'startTime',
+    key: 'metadata.startTimeInDate',
     dataIndex: null,
     render: (activity, activityIndex) => {
       return (
@@ -58,7 +58,7 @@ const timingCols = {
   }),
   endTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'End time',
-    key: 'endTime',
+    key: 'metadata.endTimeInDate',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`endTime_${activity._id}`}>
@@ -79,7 +79,7 @@ const timingCols = {
   }),
   startTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'Start after or at:',
-    key: 'startTime',
+    key: 'metadata.startTimeInMinute',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`startTimeOrAt_${activity._id}`}>
@@ -100,7 +100,7 @@ const timingCols = {
   }),
   endTimeTimeslots: (mapping, columnPrefix, renderer) => ({
     title: 'End before or at:',
-    key: 'endTime',
+    key: 'metadata.endTimeInMinute',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`endTimeOrAt_${activity._id}`}>
@@ -121,7 +121,7 @@ const timingCols = {
   }),
   length: (mapping, columnPrefix, renderer) => ({
     title: 'Length',
-    key: 'length',
+    key: 'metadata.length',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`length_${activity._id}`}>
@@ -141,7 +141,7 @@ const timingCols = {
   }),
   padding: (mapping, columnPrefix, renderer) => ({
     title: 'Padding',
-    key: 'padding',
+    key: 'metada.padding',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`padding_${activity._id}`}>
@@ -160,7 +160,7 @@ const timingCols = {
   }),
   weekday: (mapping, columnPrefix, renderer) => ({
     title: 'Weekday',
-    key: 'weekday',
+    key: 'metadata.weekday',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`weekday_${activity._id}`}>
@@ -180,7 +180,7 @@ const timingCols = {
   }),
   dateRanges: (mapping) => ({
     title: 'Date ranges',
-    key: 'dateRanges',
+    key: 'metadata.dateRanges',
     dataIndex: null,
     render: (activity) => (
       <SortableTableCell className={`dateRanges_${activity._id}`}>
@@ -197,7 +197,7 @@ const timingCols = {
   }),
   time: (mapping, columnPrefix, renderer) => ({
     title: 'Exact time',
-    key: 'time',
+    key: 'metadata.time',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`time_${activity._id}`}>

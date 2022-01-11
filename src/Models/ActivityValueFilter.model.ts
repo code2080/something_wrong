@@ -12,12 +12,10 @@ const objectToString = (values, object, prefix) => {
   });
 };
 export class ActivityFilterPayload {
-  object: any = {};
-  field: any = {};
-  startDate?: string;
-  endDate?: string;
-  startTime?: string;
-  endTime?: string;
+  startTimeInDate?: string;
+  endTimeInDate?: string;
+  startTimeInMinute?: string;
+  endTimeInMinute?: string;
   submitter: string[] = [];
   tag: string[] = [];
   primaryObject: string[] = [];
@@ -28,10 +26,11 @@ export class ActivityFilterPayload {
     const { date, time, settings, filterLookUp, ...rest } = data;
     const [startDate, endDate] = date || [];
     const [startTime, endTime] = time || [];
-    this.startDate = startDate && moment.utc(startDate).format(DATE_FORMAT);
-    this.endDate = endDate && moment.utc(startDate).format(DATE_FORMAT);
-    this.startTime = startTime && moment.utc(startTime).format(TIME_FORMAT);
-    this.endTime = endTime && moment.utc(startTime).format(TIME_FORMAT);
+    this.startTimeInDate =
+      startDate && moment.utc(startDate).format(DATE_FORMAT);
+    this.endTimeInDate = endDate && moment.utc(endDate).format(DATE_FORMAT);
+    this.startTimeInMinute = startTime && moment(startTime).format(TIME_FORMAT);
+    this.endTimeInMinute = endTime && moment(endTime).format(TIME_FORMAT);
     const { fields, objects, ...results } = deFlattenObject(rest);
     Object.keys(results).forEach((key) => {
       this[key] = results[key];

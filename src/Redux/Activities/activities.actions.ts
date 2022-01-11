@@ -48,7 +48,11 @@ const convertToUrlParams = (filters: any = {}) => {
     queryObject.order = `${sorting.key},${sorting.direction}`;
   }
   return Object.keys(queryObject)
-    .filter((key) => !isEmpty(queryObject[key]))
+    .filter((key) => {
+      if (typeof queryObject[key] === 'number') return true;
+      if ([null, undefined].indexOf(queryObject[key]) >= 0) return false;
+      return !isEmpty(Object.keys(queryObject[key]));
+    })
     .reduce((results, key) => {
       return {
         ...results,
@@ -74,8 +78,8 @@ export const fetchActivitiesForForm = (
     ...(isEmptyDeep(others) ? {} : new ActivityFilterPayload(others)),
     settings: {
       ...settings,
-      formId,
     },
+    activityStatus: status,
     sorting: sorting == null ? undefined : sorting,
     pagination,
   });
