@@ -94,7 +94,6 @@ export const CreateActivitiesTableColumnsFromMapping = ({
           <ActivityTag activity={activity} />
         </SortableTableCell>
       ),
-      sorter: true,
     },
     {
       title: 'Status',
@@ -122,7 +121,6 @@ export const CreateActivitiesAllocatedTableColumns = ({
     ...act,
     values: act.values.filter((val) => val.isAllocated),
   }));
-  console.log('_activities', _activities);
 
   const allocatedFields = uniq(
     _activities.flatMap((act) =>
@@ -135,8 +133,6 @@ export const CreateActivitiesAllocatedTableColumns = ({
   const titleMapping = useSelector(selectIndexedExtIdLabel)(
     allocatedFields.map((field) => ['types', field as string]),
   ) as string;
-
-  console.log('titleMapping', titleMapping);
 
   return allocatedFields.map((field) => ({
     title: titleMapping[`types_${field}`],
