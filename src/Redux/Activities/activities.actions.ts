@@ -12,10 +12,10 @@ import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
-import { getActivityFilterSchemaQuery } from '../../Utils/activities.helpers';
 import { TActivity } from 'Types/Activity.type';
+import { flatten, isEmpty } from 'lodash';
 
-const fetchActivitiesForFormFlow = (formId, tableType) => ({
+const fetchActivitiesForFormFlow = (formId, tableType, pagination) => ({
   request: () => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId, origin } },
@@ -25,7 +25,10 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
     const sections = storeState.forms[formId].sections;
     return {
       type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-      payload: { ...response, actionMeta: { formId, sections, tableType } },
+      payload: {
+        ...response,
+        actionMeta: { formId, sections, tableType, pagination },
+      },
     };
   },
   failure: (err) => ({
@@ -33,6 +36,31 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
     payload: { ...err, actionMeta: { formId } },
   }),
 });
+
+const convertToUrlParams = (filters: any = {}) => {
+  const { settings, sorting, pagination, ...rest } = filters;
+  const queryObject = {
+    ...(settings || {}),
+    ...(pagination || {}),
+    ...rest,
+  };
+  if (!isEmpty(sorting)) {
+    queryObject.order = `${sorting.key},${sorting.direction}`;
+  }
+  return Object.keys(queryObject)
+    .filter((key) => !isEmpty(queryObject[key]))
+    .reduce((results, key) => {
+      return {
+        ...results,
+        [key]: flatten([queryObject[key]]).join(','),
+      };
+    }, {});
+  // .map(key => {
+  //   if (Array.isArray(queryObject[key])) return `${key}=${queryObject[key].join(',')}`;
+  //   return `${key}=${queryObject[key]}`
+  // });
+  // return queryObject;
+};
 
 export const fetchActivitiesForForm = (
   formId,
@@ -42,18 +70,28 @@ export const fetchActivitiesForForm = (
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
   const { settings, status, ...others } = _filters || {};
-  return asyncAction.POST({
-    flow: fetchActivitiesForFormFlow(formId, tableType),
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
-    params: {
-      filter: isEmptyDeep(others)
-        ? undefined
-        : new ActivityFilterPayload(others),
-      settings: settings,
-      sorting: sorting == null ? undefined : sorting,
-      schemaQueries: getActivityFilterSchemaQuery({ status }, tableType),
-      pagination,
+  const filterUrl = convertToUrlParams({
+    ...(isEmptyDeep(others) ? {} : new ActivityFilterPayload(others)),
+    settings: {
+      ...settings,
+      formId,
     },
+    sorting: sorting == null ? undefined : sorting,
+    pagination,
+  });
+  return asyncAction.GET({
+    flow: fetchActivitiesForFormFlow(formId, tableType, pagination),
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+    // params: {
+    //   filter: isEmptyDeep(others)
+    //     ? undefined
+    //     : new ActivityFilterPayload(others),
+    //   settings: settings,
+    //   sorting: sorting == null ? undefined : sorting,
+    //   schemaQueries: getActivityFilterSchemaQuery({ status }, tableType),
+    //   pagination,
+    // },
+    params: filterUrl,
   });
 };
 const fetchActivitiesForFormInstanceFlow = {

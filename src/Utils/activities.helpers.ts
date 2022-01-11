@@ -770,6 +770,8 @@ export const getActivities = async ({
     params: { activityIds: activityIds, formInstanceIds },
   });
 
+  console.log('------', response);
+
   // TODO: add proper error handling
   return (response?.data?.activities ?? [])
     .filter((a) => !isEmpty(a.values))

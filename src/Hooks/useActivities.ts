@@ -81,7 +81,7 @@ export const useActivitiesWatcher = ({
       ),
     );
     if (res) {
-      setTotalPages(res.paginationParams?.totalPages ?? 1);
+      setTotalPages(res.totalPage ?? 1);
     }
   };
 

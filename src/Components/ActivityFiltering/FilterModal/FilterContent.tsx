@@ -18,7 +18,7 @@ const FilterContent = () => {
     getOptionLabel,
   } = useContext(FilterModalContainer.Context);
 
-  console.log('filterLookupMap', filterLookupMap);
+  // console.log('filterLookupMap', filterLookupMap);
   return (
     <div>
       <Row gutter={16} className='filter-modal__content'>

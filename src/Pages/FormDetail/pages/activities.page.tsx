@@ -81,6 +81,8 @@ const ActivitiesPage = () => {
     selectActivitiesForForm(state, formId, ACTIVITIES_TABLE),
   );
 
+  console.log('activities >>>>>', activities);
+
   const selectPaginationParamsForForm = useMemo(
     () => makeSelectPaginationParamsForForm(),
     [],
