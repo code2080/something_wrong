@@ -56,7 +56,6 @@ export const useActivitiesWatcher = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const extIds = useSelector(selectExtIds);
-  const allActivities = useSelector(selectAllActivities());
 
   const [totalPages, setTotalPages] = useState(pagination?.totalPages);
   const [page, setPage] = useState(pagination?.currentPage || 1);
@@ -143,6 +142,20 @@ export const useActivitiesWatcher = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
 
+  useEffect(() => {
+    console.log('origin changed =>>>>', origin);
+    dispatch(resetAllActivities());
+  }, [origin, formId]);
+
+  return {
+    setCurrentPaginationParams,
+  };
+};
+
+export const useAllActivities = ({ formId, filters }) => {
+  const dispatch = useDispatch();
+  const allActivities = useSelector(selectAllActivities());
+
   const getAllActivityIds = async () => {
     if (allActivities)
       return (allActivities as IndexedObject[]).map(({ _id }) => _id);
@@ -151,7 +164,7 @@ export const useActivitiesWatcher = ({
         formId,
         {
           filters,
-          sorters,
+          sorters: {},
           pagination: {},
           getAll: true,
         },
@@ -160,14 +173,7 @@ export const useActivitiesWatcher = ({
     );
     return res?.activities.map(({ _id }) => _id);
   };
-
-  useEffect(() => {
-    console.log('origin changed =>>>>', origin);
-    dispatch(resetAllActivities());
-  }, [origin, formId]);
-
   return {
-    setCurrentPaginationParams,
     getAllActivityIds,
   };
 };

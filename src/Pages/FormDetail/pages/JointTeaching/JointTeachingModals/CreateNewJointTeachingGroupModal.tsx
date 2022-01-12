@@ -32,6 +32,7 @@ import {
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
 import { getActivities, getUniqueValues } from 'Utils/activities.helpers';
 import { TActivity } from 'Types/Activity.type';
+import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
 
 interface Props extends Omit<ModalProps, 'onCancel'> {
   activityIds: string[];
@@ -61,7 +62,10 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
     [],
   );
   const calculating = useSelector(
-    createLoadingSelector([CALCULATE_JOINT_TEACHING_MATCHING_SCORE]),
+    createLoadingSelector([
+      CALCULATE_JOINT_TEACHING_MATCHING_SCORE,
+      FETCH_ACTIVITIES_FOR_FORM,
+    ]),
   );
   const creating = useSelector(
     createLoadingSelector([CREATE_JOINT_TEACHING_GROUP]),

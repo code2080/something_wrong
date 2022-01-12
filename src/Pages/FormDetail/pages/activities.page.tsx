@@ -40,7 +40,7 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { useActivitiesWatcher, useAllActivities } from 'Hooks/useActivities';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
@@ -120,15 +120,18 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  const { setCurrentPaginationParams, getAllActivityIds } =
-    useActivitiesWatcher({
-      formId,
-      filters: selectedFilterValues,
-      sorters: selectedSortingParams,
-      origin: ACTIVITIES_TABLE,
-      pagination: selectedPaginationParams,
-      trigger: fetchingTrigger,
-    });
+  const { setCurrentPaginationParams } = useActivitiesWatcher({
+    formId,
+    filters: selectedFilterValues,
+    sorters: selectedSortingParams,
+    origin: ACTIVITIES_TABLE,
+    pagination: selectedPaginationParams,
+    trigger: fetchingTrigger,
+  });
+  const { getAllActivityIds } = useAllActivities({
+    formId,
+    filters: selectedFilterValues,
+  });
   const design = useSelector(selectDesignForForm)(formId);
   const selectFilteredActivityIdsForForm = useMemo(
     () => makeSelectFilteredActivityIdsForForm(),

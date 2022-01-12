@@ -1,17 +1,9 @@
-import { useState, useMemo } from 'react';
-import _ from 'lodash';
+import { useState } from 'react';
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 import { useDispatch, useSelector } from 'react-redux';
 
 // SELECTORS
-import {
-  makeSelectSortOrderForActivities,
-  selectSelectedActivities,
-} from 'Redux/GlobalUI/globalUI.selectors';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
-
-// COMPONNETS
-import { TActivity } from 'Types/Activity.type';
+import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 
 // CONSTANTS
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
@@ -20,6 +12,8 @@ import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
+import { useAllActivities } from 'Hooks/useActivities';
+import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 interface Props {
   formId: string;
@@ -34,13 +28,16 @@ const UnmatchedActivities = (props: Props) => {
     useState(false);
   const dispatch = useDispatch();
 
+  const selectedFilterValues = useSelector(
+    selectSelectedFilterValues({ formId, origin: UNMATCHED_ACTIVITIES_TABLE }),
+  );
+  const { getAllActivityIds } = useAllActivities({
+    formId,
+    filters: selectedFilterValues,
+  });
+
   const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
-  );
-
-  // TODO: Should be removed later
-  const activities = useSelector(
-    selectActivitiesForForm({ formId, tableType: UNMATCHED_ACTIVITIES_TABLE }),
   );
 
   const createJointTeachingMatch = () => {
@@ -51,25 +48,10 @@ const UnmatchedActivities = (props: Props) => {
     setSelectJointTeachingGroupVisible(true);
   };
 
-  const selectJointTeachingSortingOrder = useMemo(
-    () => makeSelectSortOrderForActivities(UNMATCHED_ACTIVITIES_TABLE),
-    [],
-  );
-  const sortOrder = useSelector((state) =>
-    selectJointTeachingSortingOrder(state, formId),
-  );
-  const keyedActivities = _.keyBy(activities, '_id');
-
-  const tableDataSource = useMemo(() => {
-    const sortedActivities = _.compact<TActivity>(
-      sortOrder?.map((activityId) => keyedActivities?.[activityId]),
-    );
-    return _.isEmpty(sortedActivities) ? activities : sortedActivities;
-  }, [activities, keyedActivities, sortOrder]);
-
-  const handleSelectAll = () => {
+  const handleSelectAll = async () => {
+    const allActivityIds = await getAllActivityIds();
     dispatch(
-      selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, tableDataSource),
+      selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, allActivityIds),
     );
   };
 
