@@ -80,11 +80,6 @@ const convertToUrlParams = (filters: any = {}) => {
         [key]: flatten([queryObject[key]]).join(','),
       };
     }, {});
-  // .map(key => {
-  //   if (Array.isArray(queryObject[key])) return `${key}=${queryObject[key].join(',')}`;
-  //   return `${key}=${queryObject[key]}`
-  // });
-  // return queryObject;
 };
 
 export const fetchActivitiesForForm = (

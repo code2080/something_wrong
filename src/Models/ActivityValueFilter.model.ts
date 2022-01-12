@@ -20,8 +20,6 @@ export class ActivityFilterPayload {
   tag: string[] = [];
   primaryObject: string[] = [];
 
-  // startDate, endDate, startTime, endTime, submitter, tag, primaryObject,
-
   constructor(data) {
     const { date, time, settings, filterLookUp, ...rest } = data;
     const [startDate, endDate] = date || [];
