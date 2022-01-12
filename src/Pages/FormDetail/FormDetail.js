@@ -20,7 +20,7 @@ import {
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
-// import { fetchActivitiesForForm } from '../../Redux/Activities/activities.actions';
+import { fetchActivityInWorkerProgress } from '../../Redux/Activities/activities.actions';
 import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
@@ -56,6 +56,7 @@ import FormInfoPage from './pages/formInfo.page';
 import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
+import useActivityGeneratorWSAPI from '../../Hooks/useActivityGeneratorWSAPI';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -72,6 +73,7 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams();
+  useActivityGeneratorWSAPI();
 
   /**
    * SELECTORS
@@ -95,6 +97,7 @@ const FormPage = () => {
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
+    dispatch(fetchActivityInWorkerProgress(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },

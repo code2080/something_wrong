@@ -94,7 +94,6 @@ export const CreateActivitiesTableColumnsFromMapping = ({
           <ActivityTag activity={activity} />
         </SortableTableCell>
       ),
-      sorter: true,
     },
     {
       title: 'Status',

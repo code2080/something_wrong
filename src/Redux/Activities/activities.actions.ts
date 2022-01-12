@@ -84,9 +84,15 @@ const convertToUrlParams = (filters: any = {}) => {
 
 export const fetchActivitiesForForm = (
   formId,
-  { filters, sorters, pagination, getAll = false },
+  options,
   tableType = ACTIVITIES_TABLE,
 ) => {
+  const {
+    filters,
+    sorters,
+    pagination = { limit: 10, page: 1 },
+    getAll = false,
+  } = options;
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
   const { settings, status, ...others } = _filters || {};
@@ -447,3 +453,29 @@ export const getSelectedActivities = ({
 export const resetAllActivities = () => ({
   type: activitiesActionTypes.RESET_ALL_ACTIVITIES,
 });
+export const updateActivityInWorkerProgress = ({ formId }) => ({
+  type: activitiesActionTypes.UPDATE_ACTIVITY_IN_WORKER_PROGRESS,
+  payload: { formId },
+});
+
+const fetchActivityInWorkerProgressFlow = {
+  request: () => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_REQUEST,
+  }),
+  success: (response) => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: activitiesActionTypes.GET_ACTIVITIES_IN_WORKER_PROGRESS_FAILURE,
+    payload: { ...err },
+  }),
+};
+
+export const fetchActivityInWorkerProgress = (formId) =>
+  asyncAction.GET({
+    flow: fetchActivityInWorkerProgressFlow,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }forms/${formId}/activities/worker-progress`,
+  });
