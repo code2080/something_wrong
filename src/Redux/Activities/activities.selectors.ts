@@ -25,6 +25,9 @@ import { EActivityStatus } from 'Types/ActivityStatus.enum';
 type TActivityMap = {
   // To be updated
   allActivities: null | IndexedObject[];
+  inWorkerProgress: {
+    [formId: string]: undefined | boolean;
+  }
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
