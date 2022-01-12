@@ -29,6 +29,7 @@ type Props = {
   onSelectAll(): void;
   onDeselectAll(): void;
   onScheduleActivities(activities: string[]): void;
+  onScheduleAllActivities(): void;
   onDeleteActivities(activities: string[]): void;
   allActivities: string[];
   onCreateMatchCallback: () => void;
@@ -48,6 +49,7 @@ const ActivitiesToolbar = ({
   onDeleteActivities,
   allActivities,
   onCreateMatchCallback,
+  onScheduleAllActivities,
 }: Props) => {
   const dispatch = useDispatch();
   const { formId }: { formId: string } = useParams();
@@ -113,7 +115,7 @@ const ActivitiesToolbar = ({
       <Button
         size='small'
         type='link'
-        onClick={() => onScheduleActivities(allActivities)}
+        onClick={() => onScheduleAllActivities()}
         disabled={
           !allActivities?.length ||
           !hasSchedulingPermissions ||

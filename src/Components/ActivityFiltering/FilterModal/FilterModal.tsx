@@ -98,8 +98,6 @@ const FilterModal = ({
     }),
   );
 
-  console.log('filterLookupMap, filterLookupMap', filterLookupMap);
-
   const teCorePayload = useMemo(
     () => getTECorePayload(rawFilterLookupMap),
     [rawFilterLookupMap],

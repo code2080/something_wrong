@@ -10,12 +10,7 @@ import * as types from './activities.actionTypes';
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
 
-const reducer = (
-  state: {
-    [formId: string]: { [formInstanceId: string]: TActivity[] };
-  } = initialState,
-  action,
-) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
@@ -136,6 +131,20 @@ const reducer = (
             limit: pagination?.limit,
           },
         },
+      };
+    }
+
+    case types.FETCH_ALL_ACTIVITIES_FOR_FORM_SUCCESS: {
+      return {
+        ...state,
+        allActivities: action.payload.activities,
+      };
+    }
+
+    case types.RESET_ALL_ACTIVITIES: {
+      return {
+        ...state,
+        allActivities: null,
       };
     }
 

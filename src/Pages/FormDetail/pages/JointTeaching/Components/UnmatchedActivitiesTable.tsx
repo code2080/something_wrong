@@ -79,7 +79,10 @@ const UnmatchedActivitiesTable = ({ formId, triggerFetching }: Props) => {
 
   const { setCurrentPaginationParams } = useActivitiesWatcher({
     formId,
-    filters: selectedFilterValues,
+    filters: {
+      ...selectedFilterValues,
+      'settings.jointTeaching': 'ONLY',
+    },
     sorters: selectedSortingParams,
     origin: UNMATCHED_ACTIVITIES_TABLE,
     pagination: selectedPaginationParams,

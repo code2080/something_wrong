@@ -120,14 +120,15 @@ const ActivitiesPage = () => {
   /**
    * HOOKS
    */
-  const { setCurrentPaginationParams } = useActivitiesWatcher({
-    formId,
-    filters: selectedFilterValues,
-    sorters: selectedSortingParams,
-    origin: ACTIVITIES_TABLE,
-    pagination: selectedPaginationParams,
-    trigger: fetchingTrigger,
-  });
+  const { setCurrentPaginationParams, getAllActivityIds } =
+    useActivitiesWatcher({
+      formId,
+      filters: selectedFilterValues,
+      sorters: selectedSortingParams,
+      origin: ACTIVITIES_TABLE,
+      pagination: selectedPaginationParams,
+      trigger: fetchingTrigger,
+    });
   const design = useSelector(selectDesignForForm)(formId);
   const selectFilteredActivityIdsForForm = useMemo(
     () => makeSelectFilteredActivityIdsForForm(),
@@ -152,8 +153,9 @@ const ActivitiesPage = () => {
       reservationMode,
     });
 
-  const handleSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, filteredActivityIds));
+  const handleSelectAll = async () => {
+    const allActivityIds: string[] = await getAllActivityIds();
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
   };
 
   const onDeselectAll = () => {
@@ -168,6 +170,14 @@ const ActivitiesPage = () => {
     await handleScheduleActivities(activityIds);
     doFetchingActivities();
     onDeselectAll();
+  };
+
+  const onScheduleAllActivities = async () => {
+    const allActivityIds: string[] = await getAllActivityIds();
+    if (allActivityIds) {
+      await onScheduleActivities(allActivityIds);
+      doFetchingActivities();
+    }
   };
 
   const onDeleteActivities = async (activityIds: string[]) => {
@@ -205,6 +215,7 @@ const ActivitiesPage = () => {
         onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
+        onScheduleAllActivities={onScheduleAllActivities}
         onDeleteActivities={onDeleteActivities}
         allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {
