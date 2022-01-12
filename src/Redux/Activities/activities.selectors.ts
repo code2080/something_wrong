@@ -27,7 +27,7 @@ type TActivityMap = {
   allActivities: null | IndexedObject[];
   inWorkerProgress: {
     [formId: string]: undefined | boolean;
-  }
+  };
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
