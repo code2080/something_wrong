@@ -185,7 +185,6 @@ const ActivitiesPage = () => {
     const allActivityIds: string[] = await getAllActivityIds();
     if (allActivityIds) {
       await onScheduleActivities(allActivityIds);
-      doFetchingActivities();
     }
   };
 

@@ -775,23 +775,3 @@ export const getActivities = async ({
     .filter((a) => !isEmpty(a.values))
     .map((a) => new Activity(a));
 };
-
-export const getAllActivities = async (
-  formId: string,
-): Promise<TActivity[]> => {
-  const token = await getToken();
-  const response = await axios.get(
-    `${getEnvParams().AM_BE_URL}/forms/${formId}/all-activities`,
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  // TODO: add proper error handling
-  return (response?.data?.activities ?? [])
-    .filter((a) => !isEmpty(a.values))
-    .map((a) => new Activity(a));
-};
