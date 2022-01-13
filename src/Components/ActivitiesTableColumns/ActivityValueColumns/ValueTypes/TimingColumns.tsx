@@ -141,7 +141,7 @@ const timingCols = {
   }),
   padding: (mapping, columnPrefix, renderer) => ({
     title: 'Padding',
-    key: 'metada.padding',
+    key: 'metadata.padding',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`padding_${activity._id}`}>
