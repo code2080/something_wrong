@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { compact, groupBy, isEmpty, keyBy, uniq } from 'lodash';
+import { compact, flatten, groupBy, isEmpty, keyBy, map, uniq } from 'lodash';
 
 // COMPONENTS
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
-import { Table, Button, Tooltip, Modal } from 'antd';
+import { Table, Button, Tooltip, Modal, notification } from 'antd';
 
 // HELPERS
 import { determineSectionType } from 'Utils/determineSectionType.helpers';
@@ -234,7 +234,13 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
         {},
       );
 
-      const groupedValues = groupBy(sectionValues, 'parentId');
+      const groupedValues = groupBy(
+        map(sectionValues, (item) => ({
+          ...item,
+          parentId: item.parentId || item.id,
+        })),
+        'parentId',
+      );
       const allGroups: SubmissionItemGroup[] = Object.entries(
         groupedValues,
       ).map(([parentId, tracks]) => {
@@ -356,28 +362,26 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
             const objectIds = allocatingActivities.flatMap(({ values }) => {
               return values
                 .filter(
-                  (val) => !isEmpty(val.value) && val.extId === selectedType,
+                  (val) =>
+                    !isEmpty(val.value) && val.extId === selectedGroupType,
                 )
                 .flatMap((val) => val.value);
             });
-            const relatedObjects = (await teCoreAPI.getRelatedGroups({
+            const _relatedGroups = await teCoreAPI.getRelatedGroups({
               // The result is not a flat array
               objectIds: compact(uniq(objectIds)), // But rather an object with a key per objectIds
-              typeId: selectedGroupType, // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
-            })) || [
-              // Ids can appear related to multiple objectIds.
-              'te_1',
-              'te_2',
-              'te_3',
-              'te_4',
-              'te_5',
-              'te_6',
-              'te_7',
-              'te_8',
-              'te_9',
-              'te_10',
-            ];
-
+              typeId: selectedType, // {objectId1: ['te_1', 'te_2', ...], objectId2: []}
+            });
+            // Keep this logger for awhile
+            console.log('_relatedGroups >>>', _relatedGroups);
+            const relatedObjects = flatten(Object.values(_relatedGroups || {}));
+            if (isEmpty(relatedObjects)) {
+              notification.error({
+                getContainer: () =>
+                  document.getElementById('te-prefs-lib') as HTMLElement,
+                message: 'There is no related objects',
+              });
+            }
             const allocatedActivities = allocateRelatedObjectsToGroups({
               allocationLevel,
               submission,
@@ -394,7 +398,9 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
   const onAllocateActivities = async (allocations) => {
     onCloseModal();
     if (isEmpty(allocations)) return;
+    setLoading(true);
     const allocatedTracks = await getRelatedGroups(allocations);
+
     const mergedAllocations: AllocatedObject = allocations.reduce(
       (results, allocation, allocationIndex) => {
         const { selectedType } = allocation;
@@ -405,9 +411,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       },
       {},
     );
-
-    setLoading(true);
-    await Promise.all(
+    const updateActivitiesRes = await Promise.all(
       allocatingGroupIds.map((submissionId, idx) => {
         const acts = activities[submissionId];
         const updatedActivities = acts
@@ -454,12 +458,18 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
               ],
             };
           });
-        return dispatch(
-          updateActivities(formId, submissionId, updatedActivities),
-        );
+        if (!isEmpty(updatedActivities)) {
+          return dispatch(
+            updateActivities(formId, submissionId, updatedActivities),
+          );
+        }
+        return null;
       }),
     );
-    doGetActivities(allocatingGroupIds);
+    setLoading(false);
+    if (updateActivitiesRes.some((item) => item)) {
+      doGetActivities(allocatingGroupIds);
+    }
   };
 
   const actionColumnRenderer = (record: SubmissionItemType) => {
