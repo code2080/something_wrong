@@ -42,7 +42,7 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { useActivitiesWatcher, useAllActivities } from 'Hooks/useActivities';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
@@ -134,6 +134,10 @@ const ActivitiesPage = () => {
     pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
+  const { getAllActivityIds } = useAllActivities({
+    formId,
+    filters: selectedFilterValues,
+  });
   const design = useSelector(selectDesignForForm)(formId);
   const selectFilteredActivityIdsForForm = useMemo(
     () => makeSelectFilteredActivityIdsForForm(),
@@ -158,8 +162,9 @@ const ActivitiesPage = () => {
       reservationMode,
     });
 
-  const handleSelectAll = () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, filteredActivityIds));
+  const handleSelectAll = async () => {
+    const allActivityIds: string[] = await getAllActivityIds();
+    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
   };
 
   const onDeselectAll = () => {
@@ -174,6 +179,13 @@ const ActivitiesPage = () => {
     await handleScheduleActivities(activityIds);
     doFetchingActivities();
     onDeselectAll();
+  };
+
+  const onScheduleAllActivities = async () => {
+    const allActivityIds: string[] = await getAllActivityIds();
+    if (allActivityIds) {
+      await onScheduleActivities(allActivityIds);
+    }
   };
 
   const onDeleteActivities = async (activityIds: string[]) => {
@@ -211,6 +223,7 @@ const ActivitiesPage = () => {
         onSelectAll={handleSelectAll}
         onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
+        onScheduleAllActivities={onScheduleAllActivities}
         onDeleteActivities={onDeleteActivities}
         allActivities={filteredActivityIds}
         onCreateMatchCallback={() => {

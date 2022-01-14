@@ -12,7 +12,10 @@ import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookup
 import { useFetchLabelsFromExtIds } from 'Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { selectFormActivityLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.selectors';
+import {
+  selectExactFormActivityLookupMap,
+  selectFormActivityLookupMap,
+} from 'Redux/FilterLookupMap/filterLookupMap.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
@@ -87,11 +90,17 @@ const FilterModal = ({
   const dispatch = useDispatch();
   const [form] = useForm();
 
-  const filterLookupMap = useSelector(selectFormActivityLookupMap(formId));
+  const rawFilterLookupMap = useSelector(selectFormActivityLookupMap(formId));
+  const filterLookupMap = useSelector(
+    selectExactFormActivityLookupMap({
+      formId,
+      filterLookupMap: rawFilterLookupMap,
+    }),
+  );
 
   const teCorePayload = useMemo(
-    () => getTECorePayload(filterLookupMap),
-    [filterLookupMap],
+    () => getTECorePayload(rawFilterLookupMap),
+    [rawFilterLookupMap],
   );
   useFetchLabelsFromExtIds(teCorePayload);
 

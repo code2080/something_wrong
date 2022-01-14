@@ -14,11 +14,17 @@ import {
 } from 'Hooks/TECoreApiHooks';
 
 // ACTIONS
-import { fetchActivitiesForForm } from 'Redux/Activities/activities.actions';
+import {
+  fetchActivitiesForForm,
+  resetAllActivities,
+} from 'Redux/Activities/activities.actions';
 
 // SELECTORS
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import {
+  selectActivitiesForForm,
+  selectAllActivities,
+} from 'Redux/Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
@@ -81,7 +87,7 @@ export const useActivitiesWatcher = ({
       ),
     );
     if (res) {
-      setTotalPages(res.paginationParams?.totalPages ?? 1);
+      setTotalPages(res.totalPage ?? 1);
     }
   };
 
@@ -136,8 +142,39 @@ export const useActivitiesWatcher = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities.length]);
 
+  useEffect(() => {
+    console.log('origin changed =>>>>', origin);
+    dispatch(resetAllActivities());
+  }, [origin, formId]);
+
   return {
     setCurrentPaginationParams,
+  };
+};
+
+export const useAllActivities = ({ formId, filters }) => {
+  const dispatch = useDispatch();
+  const allActivities = useSelector(selectAllActivities());
+
+  const getAllActivityIds = async () => {
+    if (allActivities)
+      return (allActivities as IndexedObject[]).map(({ _id }) => _id);
+    const res = await dispatch(
+      fetchActivitiesForForm(
+        formId,
+        {
+          filters,
+          sorters: {},
+          pagination: {},
+          getAll: true,
+        },
+        origin,
+      ),
+    );
+    return res?.activities.map(({ _id }) => _id);
+  };
+  return {
+    getAllActivityIds,
   };
 };
 

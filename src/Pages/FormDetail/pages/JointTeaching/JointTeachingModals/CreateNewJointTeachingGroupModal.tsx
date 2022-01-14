@@ -32,6 +32,7 @@ import {
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
 import { getActivities, getUniqueValues } from 'Utils/activities.helpers';
 import { TActivity } from 'Types/Activity.type';
+import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
 
 interface Props extends Omit<ModalProps, 'onCancel'> {
   activityIds: string[];
@@ -44,22 +45,27 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
 
   useEffect(() => {
     let mounted = true;
-    (async () => {
-      const fetchedActivities = await getActivities({ activityIds });
-      // Check if mounted to avoid uppdating if component has been unmounted (avoiding memory leaks)
-      if (mounted) setActivities(fetchedActivities);
-    })();
+    if (visible) {
+      (async () => {
+        const fetchedActivities = await getActivities({ activityIds });
+        // Check if mounted to avoid uppdating if component has been unmounted (avoiding memory leaks)
+        if (mounted) setActivities(fetchedActivities);
+      })();
+    }
     return () => {
       mounted = false;
     };
-  }, [activityIds]);
+  }, [activityIds, visible]);
 
   const [canBePaired, setCanBePaired] = useState(false);
   const [selectedValues, setSelectedValues] = useState<JointTeachingConflict[]>(
     [],
   );
   const calculating = useSelector(
-    createLoadingSelector([CALCULATE_JOINT_TEACHING_MATCHING_SCORE]),
+    createLoadingSelector([
+      CALCULATE_JOINT_TEACHING_MATCHING_SCORE,
+      FETCH_ACTIVITIES_FOR_FORM,
+    ]),
   );
   const creating = useSelector(
     createLoadingSelector([CREATE_JOINT_TEACHING_GROUP]),
@@ -106,7 +112,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
   useEffect(() => {
     const doCalculating = async () => {
       const canBePaired = await jointTeachingCalculating.activitiesCanBePaired(
-        activities.map(({ _id }) => _id),
+        activityIds,
       );
       setCanBePaired(canBePaired);
     };
@@ -114,7 +120,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       doCalculating();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+  }, [visible, activityIds]);
 
   const doCreate = async () => {
     await dispatch(
@@ -160,6 +166,7 @@ const CreateNewJointTeachingGroupModal = (props: Props) => {
       onCancel={() => onCancel()}
       footer={false}
       width={900}
+      destroyOnClose
     >
       <JointTeachingActivitiesTable
         selectable={false}

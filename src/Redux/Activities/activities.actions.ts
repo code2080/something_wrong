@@ -12,10 +12,10 @@ import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
-import { getActivityFilterSchemaQuery } from '../../Utils/activities.helpers';
 import { TActivity } from 'Types/Activity.type';
+import { flatten, isEmpty } from 'lodash';
 
-const fetchActivitiesForFormFlow = (formId, tableType) => ({
+const fetchActivitiesForFormFlow = (formId, tableType, pagination) => ({
   request: () => ({
     type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_REQUEST,
     payload: { actionMeta: { formId, origin } },
@@ -25,7 +25,10 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
     const sections = storeState.forms[formId].sections;
     return {
       type: activitiesActionTypes.FETCH_ACTIVITIES_FOR_FORM_SUCCESS,
-      payload: { ...response, actionMeta: { formId, sections, tableType } },
+      payload: {
+        ...response,
+        actionMeta: { formId, sections, tableType, pagination },
+      },
     };
   },
   failure: (err) => ({
@@ -34,27 +37,99 @@ const fetchActivitiesForFormFlow = (formId, tableType) => ({
   }),
 });
 
+const fetchAllActivitiesForFormFlow = (formId) => ({
+  request: () => ({
+    type: activitiesActionTypes.FETCH_ALL_ACTIVITIES_FOR_FORM_REQUEST,
+  }),
+  success: (response) => {
+    return {
+      type: activitiesActionTypes.FETCH_ALL_ACTIVITIES_FOR_FORM_SUCCESS,
+      payload: {
+        ...response,
+        actionMeta: { formId },
+      },
+    };
+  },
+  failure: () => ({
+    type: activitiesActionTypes.FETCH_ALL_ACTIVITIES_FOR_FORM_FAILURE,
+    payload: {
+      formId,
+    },
+  }),
+});
+
+const convertToUrlParams = (filters: any = {}) => {
+  const { settings, sorting, pagination, ...rest } = filters;
+  const queryObject = {
+    ...(settings || {}),
+    ...(pagination || {}),
+    ...rest,
+  };
+  if (!isEmpty(sorting)) {
+    queryObject.order = `${sorting.key},${sorting.direction}`;
+  }
+  return Object.keys(queryObject)
+    .filter((key) => {
+      if (typeof queryObject[key] === 'number') return true;
+      if ([null, undefined].indexOf(queryObject[key]) >= 0) return false;
+      return !isEmpty(Object.keys(queryObject[key]));
+    })
+    .reduce((results, key) => {
+      return {
+        ...results,
+        [key]: flatten([queryObject[key]]).join(','),
+      };
+    }, {});
+};
+
 export const fetchActivitiesForForm = (
   formId,
   options,
   tableType = ACTIVITIES_TABLE,
 ) => {
-  const { filters, sorters, pagination = { limit: 10, page: 1 } } = options;
+  const {
+    filters,
+    sorters,
+    pagination = { limit: 10, page: 1 },
+    getAll = false,
+  } = options;
   const sorting = sorters;
   const _filters = deFlattenObject(filters);
   const { settings, status, ...others } = _filters || {};
-  return asyncAction.POST({
-    flow: fetchActivitiesForFormFlow(formId, tableType),
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities/filters`,
-    params: {
-      filter: isEmptyDeep(others)
-        ? undefined
-        : new ActivityFilterPayload(others),
-      settings: settings,
+
+  if (!getAll) {
+    const filterUrl = convertToUrlParams({
+      ...(isEmptyDeep(others) ? {} : new ActivityFilterPayload(others)),
+      settings: {
+        ...settings,
+      },
+      activityStatus: status,
       sorting: sorting == null ? undefined : sorting,
-      schemaQueries: getActivityFilterSchemaQuery({ status }, tableType),
       pagination,
+    });
+    return asyncAction.GET({
+      flow: fetchActivitiesForFormFlow(formId, tableType, pagination),
+      endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+      params: filterUrl,
+    });
+  }
+
+  const filterUrl = convertToUrlParams({
+    ...(isEmptyDeep(others) ? {} : new ActivityFilterPayload(others)),
+    settings: {
+      ...settings,
     },
+    activityStatus: status,
+    pagination: {
+      page: 1,
+      limit: -1,
+    },
+    fields: ['_id', 'formInstanceId'],
+  });
+  return asyncAction.GET({
+    flow: fetchAllActivitiesForFormFlow(formId),
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+    params: filterUrl,
   });
 };
 const fetchActivitiesForFormInstanceFlow = {
@@ -375,6 +450,9 @@ export const getSelectedActivities = ({
   });
 };
 
+export const resetAllActivities = () => ({
+  type: activitiesActionTypes.RESET_ALL_ACTIVITIES,
+});
 export const updateActivityInWorkerProgress = ({ formId }) => ({
   type: activitiesActionTypes.UPDATE_ACTIVITY_IN_WORKER_PROGRESS,
   payload: { formId },

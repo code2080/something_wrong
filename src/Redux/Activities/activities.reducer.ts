@@ -1,4 +1,4 @@
-import _, { Dictionary } from 'lodash';
+import _ from 'lodash';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from '../../Models/Activity.model';
 import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
@@ -10,12 +10,7 @@ import * as types from './activities.actionTypes';
 import initialState from './activities.initialState';
 import { updateActivitiesForForm } from './activities.helpers';
 
-const reducer = (
-  state: {
-    [formId: string]: { [formInstanceId: string]: TActivity[] };
-  } = initialState,
-  action,
-) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ASSIGN_ACTIVITIES_TO_TAG_SUCCESS:
     case types.SET_SCHEDULING_STATUS_OF_ACTIVITIES_SUCCESS: {
@@ -93,35 +88,34 @@ const reducer = (
       const {
         payload: {
           activities,
-          actionMeta: { formId, tableType },
-          paginationParams: { totalPages, currentPage, limit },
-          filteredActivityIds,
-          allActivities,
+          actionMeta: { formId, tableType, pagination },
+          totalPage,
         },
       } = action;
       const formIdValue = tableType ? formId + tableType : formId;
       return {
         ...state,
+        list: activities,
         filteredActivityIds: {
           ...(state.allActivitiyIds || {}),
-          [formIdValue]: filteredActivityIds,
+          [formIdValue]: activities.map(({ _id }) => _id),
         },
         byFormId: {
-          [formIdValue]: Object.keys(allActivities),
+          // [formIdValue]: Object.keys(allActivities),
         },
         byFormInstanceId: {
-          [formIdValue]: Object.values(
-            allActivities as Dictionary<{
-              formInstanceId: string;
-              _id: string;
-            }>,
-          ).reduce<Dictionary<string[]>>(
-            (res, { _id, formInstanceId }) => ({
-              ...res,
-              [formInstanceId]: [...(res[formInstanceId] ?? []), _id],
-            }),
-            {},
-          ),
+          // [formIdValue]: Object.values(
+          //   allActivities as Dictionary<{
+          //     formInstanceId: string;
+          //     _id: string;
+          //   }>,
+          // ).reduce<Dictionary<string[]>>(
+          //   (res, { _id, formInstanceId }) => ({
+          //     ...res,
+          //     [formInstanceId]: [...(res[formInstanceId] ?? []), _id],
+          //   }),
+          //   {},
+          // ),
         },
         [formIdValue]: {
           ..._.groupBy(
@@ -132,11 +126,25 @@ const reducer = (
         paginationParams: {
           ...state.paginationParams,
           [formId]: {
-            totalPages,
-            currentPage,
-            limit,
+            totalPages: totalPage,
+            currentPage: pagination?.page,
+            limit: pagination?.limit,
           },
         },
+      };
+    }
+
+    case types.FETCH_ALL_ACTIVITIES_FOR_FORM_SUCCESS: {
+      return {
+        ...state,
+        allActivities: action.payload.activities,
+      };
+    }
+
+    case types.RESET_ALL_ACTIVITIES: {
+      return {
+        ...state,
+        allActivities: null,
       };
     }
 

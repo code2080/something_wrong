@@ -125,11 +125,11 @@ const reducer = (state = initialState, action) => {
       const {
         payload: {
           activities,
-          actionMeta: { formId, tableType },
-          paginationParams: { totalPages, currentPage, limit },
+          actionMeta: { formId, tableType, pagination },
+          totalPage,
         },
       } = action;
-      if (!action || !action.payload) return state;
+      //   if (!action || !action.payload) return state;
       return {
         ...state,
         activitySorting: {
@@ -142,9 +142,9 @@ const reducer = (state = initialState, action) => {
         paginationParams: {
           ...state.paginationParams,
           [`${formId}${tableType}`]: {
-            totalPages,
-            currentPage,
-            limit,
+            totalPages: totalPage,
+            currentPage: pagination?.page,
+            limit: pagination?.limit,
           },
         },
       };

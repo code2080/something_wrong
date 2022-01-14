@@ -9,11 +9,9 @@ export const REPLACED_KEY = '____';
 export const NESTED_FIELDS = ['objects', 'fields'];
 
 export const INITIAL_FILTER_VALUES = {
-  settings: {
-    matchCriteria: 'SOME',
-    includeSubmission: 'SINGLE',
-    jointTeaching: 'INCLUDE',
-  },
+  'settings.matchCriteria': 'SOME',
+  'settings.includeSubmission': 'SINGLE',
+  'settings.jointTeaching': 'INCLUDE',
   status: Object.keys(omit(EActivityStatus, 'INACTIVE')),
 } as const;
 

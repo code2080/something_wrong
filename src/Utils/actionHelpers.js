@@ -173,6 +173,7 @@ function createThunkAction({
         return response.data;
       })
       .catch((error) => {
+        console.log('Error@actionHelpers.js >>> ', error);
         allApis[endpoint].inprogress = false;
         const { response } = error;
 

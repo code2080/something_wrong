@@ -13,14 +13,21 @@ import {
   getUniqueValues,
 } from '../../Utils/activities.helpers';
 import { ActivityValue } from '../../Types/ActivityValue.type';
-import { ObjectRequest } from '../ObjectRequests/ObjectRequests.types';
+import {
+  IndexedObject,
+  ObjectRequest,
+} from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
 import { ActivitySchedulingState } from 'Redux/ActivityScheduling/activityScheduling.reducer';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 // TYPES
 type TActivityMap = {
-  [formId: string]: { [formInstanceId: string]: TActivity[] };
+  // To be updated
+  allActivities: null | IndexedObject[];
+  inWorkerProgress: {
+    [formId: string]: undefined | boolean;
+  };
 };
 
 const activityStateSelector = (state: any): TActivityMap =>
@@ -211,3 +218,6 @@ export const selectActivitiesUniqueValues = (formId, activities: TActivity[]) =>
       }, {});
     return getUniqueValues(activities, elementTypeMapping);
   });
+
+export const selectAllActivities = () =>
+  createSelector(activityStateSelector, (activity) => activity.allActivities);
