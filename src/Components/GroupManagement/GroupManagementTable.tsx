@@ -458,7 +458,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
               ],
             };
           });
-        if (!isEmpty) {
+        if (!isEmpty(updatedActivities)) {
           return dispatch(
             updateActivities(formId, submissionId, updatedActivities),
           );
