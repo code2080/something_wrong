@@ -115,7 +115,6 @@ const SubmissionsOverviewPage = () => {
           return elementsMapping[elementId];
         });
     });
-    console.log('verticalSections', verticalSections, allValues);
   }, [submissions, form, scopedObjectIds]);
   // const submissionPayload = useMemo(() => {
   //   const initialPayload = {

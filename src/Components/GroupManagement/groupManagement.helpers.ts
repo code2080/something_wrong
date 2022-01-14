@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { AllocationStatus } from './groupMangement.constants';
 
 export type AllocatedObject = {
@@ -13,6 +14,7 @@ export const allocateRelatedObjectsToGroups = ({
   submission: any;
   relatedObjects: string[];
 }): AllocatedObject => {
+  if (isEmpty(relatedObjects)) return {};
   if (allocationLevel === 0) {
     return (
       submission.groups
