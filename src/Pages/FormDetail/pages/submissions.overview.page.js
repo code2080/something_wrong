@@ -19,8 +19,6 @@ import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { selectFilter } from '../../../Redux/Filters/filters.selectors';
 import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
-import { selectElementTypesMap } from 'Redux/Elements/element.selectors';
-// import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import {
@@ -46,8 +44,6 @@ import { teCoreCallnames } from '../../../Constants/teCoreActions.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
 import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFilter.interface';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { SECTION_VERTICAL } from 'Constants/sectionTypes.constants';
-import { determineSectionType } from '../../../Utils/determineSectionType.helpers';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
@@ -66,7 +62,6 @@ const SubmissionsOverviewPage = () => {
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
-  const elementTypeMap = useSelector(selectElementTypesMap());
   const filters = useSelector(selectFilter)(
     `${formId}_SUBMISSIONS`,
     FormSubmissionFilterInterface,
@@ -88,34 +83,6 @@ const SubmissionsOverviewPage = () => {
     [form, submissions],
   );
 
-  useEffect(() => {
-    const verticalSections = form.sections.filter(
-      (section) => determineSectionType(section) === SECTION_VERTICAL,
-    );
-
-    const elementsMapping = verticalSections.reduce((results, section) => {
-      return {
-        ...results,
-        ...section.elements
-          .filter((elm) => elementTypeMap[elm.elementId])
-          .reduce(
-            (elmResults, element) => ({
-              ...elmResults,
-              [element._id]: elementTypeMap[element.elementId].type,
-            }),
-            {},
-          ),
-      };
-    }, {});
-    const allValues = submissions.flatMap((submission) => {
-      return verticalSections
-        .map((section) => submission.values[section._id])
-        .filter(({ elementId }) => {
-          console.log(elementId, elementsMapping[elementId]);
-          return elementsMapping[elementId];
-        });
-    });
-  }, [submissions, form, scopedObjectIds]);
   // const submissionPayload = useMemo(() => {
   //   const initialPayload = {
   //     objects: submissions.flatMap(({ scopedObject }) => scopedObject),
