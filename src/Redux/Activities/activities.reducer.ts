@@ -89,7 +89,7 @@ const reducer = (state = initialState, action) => {
         payload: {
           activities,
           actionMeta: { formId, tableType, pagination },
-          totalPage,
+          totalPages,
         },
       } = action;
       const formIdValue = tableType ? formId + tableType : formId;
@@ -126,7 +126,7 @@ const reducer = (state = initialState, action) => {
         paginationParams: {
           ...state.paginationParams,
           [formId]: {
-            totalPages: totalPage,
+            totalPages,
             currentPage: pagination?.page,
             limit: pagination?.limit,
           },

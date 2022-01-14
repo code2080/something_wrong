@@ -21,10 +21,7 @@ import {
 
 // SELECTORS
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
-import {
-  selectActivitiesForForm,
-  selectAllActivities,
-} from 'Redux/Activities/activities.selectors';
+import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
@@ -42,6 +39,38 @@ interface Props {
   trigger?: number;
   pagination: { currentPage: number; limit: number; totalPages: number };
 }
+
+export const useAllActivities = ({ formId, filters }) => {
+  const dispatch = useDispatch();
+  const prevFilters = usePrevious(filters);
+
+  const getAllActivityIds = async () => {
+    const res = await dispatch(
+      fetchActivitiesForForm(
+        formId,
+        {
+          filters,
+          sorters: {},
+          pagination: {},
+          getAll: true,
+        },
+        origin,
+      ),
+    );
+    return res?.activities.map(({ _id }) => _id);
+  };
+
+  useEffect(() => {
+    if (!isEqual(prevFilters, filters)) {
+      getAllActivityIds();
+    }
+  }, [filters, prevFilters]);
+
+  return {
+    getAllActivityIds,
+  };
+};
+
 export const useActivitiesWatcher = ({
   formId,
   filters,
@@ -56,6 +85,7 @@ export const useActivitiesWatcher = ({
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const extIds = useSelector(selectExtIds);
+  useAllActivities({ formId, filters });
 
   const [totalPages, setTotalPages] = useState(pagination?.totalPages);
   const [page, setPage] = useState(pagination?.currentPage || 1);
@@ -87,7 +117,7 @@ export const useActivitiesWatcher = ({
       ),
     );
     if (res) {
-      setTotalPages(res.totalPage ?? 1);
+      setTotalPages(res.totalPages ?? 1);
     }
   };
 
@@ -149,32 +179,6 @@ export const useActivitiesWatcher = ({
 
   return {
     setCurrentPaginationParams,
-  };
-};
-
-export const useAllActivities = ({ formId, filters }) => {
-  const dispatch = useDispatch();
-  const allActivities = useSelector(selectAllActivities());
-
-  const getAllActivityIds = async () => {
-    if (allActivities)
-      return (allActivities as IndexedObject[]).map(({ _id }) => _id);
-    const res = await dispatch(
-      fetchActivitiesForForm(
-        formId,
-        {
-          filters,
-          sorters: {},
-          pagination: {},
-          getAll: true,
-        },
-        origin,
-      ),
-    );
-    return res?.activities.map(({ _id }) => _id);
-  };
-  return {
-    getAllActivityIds,
   };
 };
 

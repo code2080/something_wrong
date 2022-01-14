@@ -26,6 +26,7 @@ import {
   makeSelectActivitiesForForm,
   makeSelectFilteredActivityIdsForForm,
   activityInWorkerProgressSelector,
+  selectAllActivityIds,
 } from '../../../Redux/Activities/activities.selectors';
 
 // HELPERS
@@ -42,7 +43,7 @@ import {
 } from '../../../Redux/GlobalUI/globalUI.selectors';
 import { TActivity } from '../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
-import { useActivitiesWatcher, useAllActivities } from 'Hooks/useActivities';
+import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {
@@ -134,10 +135,9 @@ const ActivitiesPage = () => {
     pagination: selectedPaginationParams,
     trigger: fetchingTrigger,
   });
-  const { getAllActivityIds } = useAllActivities({
-    formId,
-    filters: selectedFilterValues,
-  });
+
+  const allActivityIds = useSelector(selectAllActivityIds());
+
   const design = useSelector(selectDesignForForm)(formId);
   const selectFilteredActivityIdsForForm = useMemo(
     () => makeSelectFilteredActivityIdsForForm(),
@@ -163,7 +163,6 @@ const ActivitiesPage = () => {
     });
 
   const handleSelectAll = async () => {
-    const allActivityIds: string[] = await getAllActivityIds();
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
   };
 
@@ -182,7 +181,6 @@ const ActivitiesPage = () => {
   };
 
   const onScheduleAllActivities = async () => {
-    const allActivityIds: string[] = await getAllActivityIds();
     if (allActivityIds) {
       await onScheduleActivities(allActivityIds);
     }

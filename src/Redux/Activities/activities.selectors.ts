@@ -221,3 +221,8 @@ export const selectActivitiesUniqueValues = (formId, activities: TActivity[]) =>
 
 export const selectAllActivities = () =>
   createSelector(activityStateSelector, (activity) => activity.allActivities);
+
+export const selectAllActivityIds = () =>
+  createSelector(activityStateSelector, (activity) =>
+    (activity.allActivities || []).map(({ _id }) => _id),
+  );

@@ -109,11 +109,12 @@ function createThunkAction({
   callback = null,
   isParallel = false,
 }) {
+  const endpointWithParams = `${method}_${endpoint}_${JSON.stringify(params)}`;
   const { CancelToken } = axios;
-  if (allApis[endpoint]) {
-    allApis[endpoint].inprogress = true;
+  if (allApis[endpointWithParams]) {
+    allApis[endpointWithParams].inprogress = true;
   } else {
-    allApis[endpoint] = {
+    allApis[endpointWithParams] = {
       inprogress: true,
     };
   }
@@ -140,21 +141,21 @@ function createThunkAction({
       dispatch(request(params, postAction));
     }
     if (
-      typeof allApis[endpoint].cancel === 'function' &&
-      allApis[endpoint].inprogress
+      typeof allApis[endpointWithParams].cancel === 'function' &&
+      allApis[endpointWithParams].inprogress
     ) {
-      allApis[endpoint].cancel('DUPLICATED_CANCELLED');
-      allApis[endpoint].inprogress = false;
+      allApis[endpointWithParams].cancel('DUPLICATED_CANCELLED');
+      allApis[endpointWithParams].inprogress = false;
     }
     option.cancelToken = new CancelToken((c) => {
       if (!isParallel) {
-        allApis[endpoint].cancel = c;
+        allApis[endpointWithParams].cancel = c;
       }
     });
 
     return axios(fullUrl, option)
       .then((response) => {
-        allApis[endpoint].inprogress = false;
+        allApis[endpointWithParams].inprogress = false;
         doDispatch(
           { ...flow, dispatch, getState },
           params,
@@ -174,15 +175,15 @@ function createThunkAction({
       })
       .catch((error) => {
         console.log('Error@actionHelpers.js >>> ', error);
-        allApis[endpoint].inprogress = false;
+        allApis[endpointWithParams].inprogress = false;
         const { response } = error;
 
         // If call was unauthorized, retry with token
         if (error.message === 'UNAUTHORIZED_CANCELLED') {
-          allApis[endpoint].recall = () => {
+          allApis[endpointWithParams].recall = () => {
             option.headers.Authorization = `Bearer ${getToken()}`;
             option.cancelToken = new CancelToken((c) => {
-              allApis[endpoint].cancel = c;
+              allApis[endpointWithParams].cancel = c;
             });
             return axios(fullUrl, option).then((newResponse) => {
               doDispatch(
