@@ -124,6 +124,7 @@ export const useActivitiesWatcher = ({
   // Fetch activities when filters or sorters are changed.
   useEffect(() => {
     if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
+      setCurrentPaginationParams(1, 10);
       doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
