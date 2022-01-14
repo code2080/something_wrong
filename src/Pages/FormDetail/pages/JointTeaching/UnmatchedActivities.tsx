@@ -12,8 +12,7 @@ import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
-import { useAllActivities } from 'Hooks/useActivities';
-import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
+import { selectAllActivityIds } from 'Redux/Activities/activities.selectors';
 
 interface Props {
   formId: string;
@@ -28,13 +27,7 @@ const UnmatchedActivities = (props: Props) => {
     useState(false);
   const dispatch = useDispatch();
 
-  const selectedFilterValues = useSelector(
-    selectSelectedFilterValues({ formId, origin: UNMATCHED_ACTIVITIES_TABLE }),
-  );
-  const { getAllActivityIds } = useAllActivities({
-    formId,
-    filters: selectedFilterValues,
-  });
+  const allActivityIds = useSelector(selectAllActivityIds());
 
   const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
@@ -49,7 +42,6 @@ const UnmatchedActivities = (props: Props) => {
   };
 
   const handleSelectAll = async () => {
-    const allActivityIds = await getAllActivityIds();
     dispatch(
       selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, allActivityIds),
     );
