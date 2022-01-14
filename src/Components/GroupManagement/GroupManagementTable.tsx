@@ -3,7 +3,7 @@ import { compact, flatten, groupBy, isEmpty, keyBy, map, uniq } from 'lodash';
 
 // COMPONENTS
 import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
-import { Table, Button, Tooltip, Modal } from 'antd';
+import { Table, Button, Tooltip, Modal, notification } from 'antd';
 
 // HELPERS
 import { determineSectionType } from 'Utils/determineSectionType.helpers';
@@ -375,6 +375,13 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
             // Keep this logger for awhile
             console.log('_relatedGroups >>>', _relatedGroups);
             const relatedObjects = flatten(Object.values(_relatedGroups || {}));
+            if (isEmpty(relatedObjects)) {
+              notification.error({
+                getContainer: () =>
+                  document.getElementById('te-prefs-lib') as HTMLElement,
+                message: 'There is no related objects',
+              });
+            }
             const allocatedActivities = allocateRelatedObjectsToGroups({
               allocationLevel,
               submission,
@@ -391,6 +398,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
   const onAllocateActivities = async (allocations) => {
     onCloseModal();
     if (isEmpty(allocations)) return;
+    setLoading(true);
     const allocatedTracks = await getRelatedGroups(allocations);
 
     const mergedAllocations: AllocatedObject = allocations.reduce(
@@ -403,8 +411,7 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
       },
       {},
     );
-    setLoading(true);
-    await Promise.all(
+    const updateActivitiesRes = await Promise.all(
       allocatingGroupIds.map((submissionId, idx) => {
         const acts = activities[submissionId];
         const updatedActivities = acts
@@ -459,7 +466,10 @@ const GroupManagementTable = ({ submissions, form, design }: Props) => {
         return null;
       }),
     );
-    doGetActivities(allocatingGroupIds);
+    setLoading(false);
+    if (updateActivitiesRes.some((item) => item)) {
+      doGetActivities(allocatingGroupIds);
+    }
   };
 
   const actionColumnRenderer = (record: SubmissionItemType) => {
