@@ -100,33 +100,37 @@ const constraintManagerTableColumns = (
   },
   {
     title: 'Hard Constraint',
-    dataIndex: 'isHardConstraint',
+    dataIndex: undefined,
     key: 'isHardConstraint',
-    render: (isHardConstraint, ci) => (
-      <Switch
-        checked={isHardConstraint}
-        size='small'
-        onChange={(checked) =>
-          onUpdateValue(ci.constraintId, 'isHardConstraint', checked)
-        }
-      />
-    ),
+    render: (hardConstraint, ci) => {
+      return hardConstraint.weight !== null ? (
+        <Switch
+          checked={hardConstraint.isHardConstraint}
+          size='small'
+          onChange={(checked) =>
+            onUpdateValue(ci.constraintId, 'isHardConstraint', checked)
+          }
+        />
+      ) : null;
+    },
   },
   {
     title: 'Weight',
     dataIndex: undefined,
     key: 'weight',
     // eslint-disable-next-line react/prop-types
-    render: ({ constraintId, weight, isHardConstraint }) => (
-      <InputNumber
-        min={1}
-        max={100}
-        value={weight}
-        disabled={isHardConstraint}
-        size='small'
-        onChange={(val) => onUpdateValue(constraintId, 'weight', val)}
-      />
-    ),
+    render: ({ constraintId, weight, isHardConstraint }) => {
+      return weight !== null ? (
+        <InputNumber
+          min={1}
+          max={100}
+          value={weight}
+          disabled={isHardConstraint}
+          size='small'
+          onChange={(val) => onUpdateValue(constraintId, 'weight', val)}
+        />
+      ) : null;
+    },
   },
 ];
 
