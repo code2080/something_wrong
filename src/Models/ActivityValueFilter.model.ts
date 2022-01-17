@@ -1,4 +1,4 @@
-import { flatten, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import {
   deFlattenObject,
@@ -42,10 +42,12 @@ export class ActivityFilterPayload {
     if (objects) {
       const allObjects = Object.keys(objects).reduce((objectResults, key) => {
         if (isObject(objects[key])) {
-          return {
-            ...objectResults,
-            [key]: flatten(Object.values(objects[key])),
-          };
+          return Object.keys(objects[key]).reduce((childResults, childKey) => {
+            return {
+              ...childResults,
+              [childKey]: objects[key][childKey],
+            };
+          }, []);
         }
 
         return {
