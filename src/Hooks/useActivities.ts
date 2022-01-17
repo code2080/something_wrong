@@ -123,12 +123,19 @@ export const useActivitiesWatcher = ({
 
   // Fetch activities when filters or sorters are changed.
   useEffect(() => {
-    if (!isEqual(prevFilters, filters) || !isEqual(prevSorters, sorters)) {
-      setCurrentPaginationParams(1, 10);
+    if (!isEqual(prevFilters, filters)) {
+      if (page !== 1) {
+        setCurrentPaginationParams(1, 10);
+      } else {
+        doFetchingActivities();
+      }
+      return;
+    }
+    if (!isEqual(prevSorters, sorters)) {
       doFetchingActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prevFilters, prevSorters, filters, sorters, origin]);
+  }, [prevFilters, prevSorters, filters, sorters, origin, page]);
 
   // Force fetching activities
   useEffect(() => {
