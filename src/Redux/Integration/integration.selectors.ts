@@ -201,7 +201,9 @@ const extractPayloadFromTemplatesAndGroups = (
     .filter((section) => determineSectionType(section) !== SECTION_VERTICAL)
     .map((s) => s._id)
     .flatMap((sectionId) =>
-      arraySubmissionValues.map((values) => values?.[sectionId]),
+      arraySubmissionValues
+        .filter((values) => values?.[sectionId])
+        .map((values) => values?.[sectionId]),
     ) as {
     [eventIdOrRowIdx: string]: {
       id: string;
