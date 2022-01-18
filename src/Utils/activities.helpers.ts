@@ -11,7 +11,6 @@ import {
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   ActivityValue,
-  CategoryField,
   IndexedActivityValueType,
   ValueType,
 } from '../Types/ActivityValue.type';
