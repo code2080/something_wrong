@@ -133,12 +133,7 @@ const mapActivityValueToTEValue = (
       // Array means it's an array of objectextids, object means that it's an objectfilter
       return Array.isArray(value)
         ? (value as string[]).map((objExtId) => new TEObject(extId, objExtId))
-        : new TEObjectFilter(
-            extId,
-            (value as CategoryField).categories.map(
-              ({ id, values }) => new TEField(id, values),
-            ),
-          );
+        : new TEObjectFilter(extId, [new TEField(extId, [value] as string[])]);
     }
     default:
       return null;
