@@ -31,9 +31,9 @@ const schedulingActivityFlow = {
   }),
 };
 
-export const schedulingActivity = ({ formId, activityIds, coreUserId }) =>
+export const schedulingActivity = ({ activityIds, coreUserId }) =>
   asyncAction.POST({
     flow: schedulingActivityFlow,
     endpoint: `${getEnvParams().AM_BE_URL}activity/scheduling`,
-    params: { formId, activityIds, coreUserId },
+    params: { activityIds, coreUserId },
   });
