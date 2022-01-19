@@ -66,13 +66,13 @@ export const makeSelectActivitiesForForm = () =>
     },
   );
 
-export const selectActivitiesForForm = ({ formId, tableType }) =>
+export const selectActivitiesForForm = ({ formId, tableType = '' }) =>
   createSelector(
     activityStateSelector,
     submissionStateSelector,
     (activity, submission) => {
       const formSubmissions = submission[formId] || {};
-      const activitiesTableId = `${formId}${tableType || ''}`;
+      const activitiesTableId = `${formId}${tableType}`;
       return Object.values(activity[activitiesTableId] || {})
         .flat()
         .map((activity: Activity) => {

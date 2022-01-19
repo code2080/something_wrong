@@ -5,6 +5,7 @@ import { scheduleActivities } from '../Utils/scheduling.helpers';
 import chunk from 'lodash/chunk';
 import { updateActivities } from '../Redux/Activities/activities.actions';
 import { getActivities } from '../Utils/activities.helpers';
+import { startSchedulingActivities } from 'Redux/ActivityScheduling/activityScheduling.actions';
 
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
@@ -17,10 +18,10 @@ type Props = {
 const useActivityScheduling = ({ formId }: Props) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
-
   const coreUserId = useSelector(selectCoreUserId);
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
+    dispatch(startSchedulingActivities(selectedActivityIds));
     scheduleActivities(selectedActivityIds, coreUserId, dispatch);
   };
 
