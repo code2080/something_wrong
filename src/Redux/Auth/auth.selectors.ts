@@ -26,3 +26,6 @@ export const selectAuthedUserId = createSelector(
   selectAuthedUser,
   (user) => user.id,
 );
+
+export const selectCoreUserId = (state): number =>
+  state?.auth?.coreUserId ?? -1;
