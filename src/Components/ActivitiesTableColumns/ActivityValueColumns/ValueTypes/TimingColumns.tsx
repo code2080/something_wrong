@@ -35,7 +35,7 @@ const timingCols = {
   }),
   startTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'Start time',
-    key: 'metadata.startTimeInDate',
+    key: 'metadata.startTime',
     dataIndex: null,
     render: (activity, activityIndex) => {
       return (
@@ -58,7 +58,7 @@ const timingCols = {
   }),
   endTimeExact: (mapping, columnPrefix, renderer) => ({
     title: 'End time',
-    key: 'metadata.endTimeInDate',
+    key: 'metadata.endTime',
     dataIndex: null,
     render: (activity, activityIndex) => (
       <SortableTableCell className={`endTime_${activity._id}`}>
