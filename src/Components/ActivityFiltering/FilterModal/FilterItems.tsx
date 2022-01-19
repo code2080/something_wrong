@@ -44,8 +44,10 @@ const FilterItems = ({
 
     const dynamicProperty = get(allProperties, selectedProperty);
     if (dynamicProperty) {
-      const options = Object.keys(dynamicProperty).filter((key) =>
-        Array.isArray(dynamicProperty[key]),
+      const options = Object.keys(dynamicProperty).filter(
+        (key) =>
+          Array.isArray(dynamicProperty[key]) ||
+          Number(dynamicProperty[key]) > 0,
       );
       const otherOptions = Object.keys(dynamicProperty).filter((key) =>
         isObject(dynamicProperty[key]),
