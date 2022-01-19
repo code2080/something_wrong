@@ -44,6 +44,7 @@ const HasReservationsAlert = ({ formId }) => {
   };
 
   const handleDeleteReservations = (responses: any[] = []) => {
+    // TODO: Make sure reservations are deleted!
     // Check result parameter to see if everything went well or not
     responses.forEach((res) => {
       if (!res?.result?.details) {

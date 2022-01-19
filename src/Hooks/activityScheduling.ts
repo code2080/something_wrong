@@ -24,8 +24,16 @@ const useActivityScheduling = ({ formId }: Props) => {
     scheduleActivities(selectedActivityIds, coreUserId, dispatch);
   };
 
-  const handleDeleteActivities = async (activityIds: string[]) => {
-    const activities = await getActivities({ activityIds });
+  const handleCancelReservations = async (activityIds: string[]) => {
+    const chunkedIds = chunk(activityIds, 50);
+    const activities = (
+      await Promise.all(
+        chunkedIds.flatMap((idChunk) =>
+          getActivities({ activityIds: idChunk }),
+        ),
+      )
+    ).flat();
+
     const groupedByFormInstance = groupBy(
       activities.filter(activityFilterFn.canBeSelected),
       'formInstanceId',
@@ -51,7 +59,7 @@ const useActivityScheduling = ({ formId }: Props) => {
 
   return {
     handleScheduleActivities,
-    handleDeleteActivities,
+    handleCancelReservations,
   };
 };
 export default useActivityScheduling;
