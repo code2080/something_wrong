@@ -176,7 +176,7 @@ const ActivitiesPage = () => {
 
   const onScheduleActivities = async (activityIds: string[]) => {
     await handleScheduleActivities(activityIds);
-    doFetchingActivities();
+    // doFetchingActivities();
     onDeselectAll();
   };
 

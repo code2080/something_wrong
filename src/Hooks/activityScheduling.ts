@@ -1,14 +1,15 @@
-import { groupBy } from 'lodash';
+import { groupBy, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
 import { scheduleActivities } from '../Utils/scheduling.helpers';
 import chunk from 'lodash/chunk';
 import { updateActivities } from '../Redux/Activities/activities.actions';
 import { getActivities } from '../Utils/activities.helpers';
-import { startSchedulingActivities } from 'Redux/ActivityScheduling/activityScheduling.actions';
 
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
+import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { EActivityStatus } from '../Types/ActivityStatus.enum';
 
 type Props = {
   formType: string;
@@ -19,10 +20,23 @@ const useActivityScheduling = ({ formId }: Props) => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const coreUserId = useSelector(selectCoreUserId);
+  const pulledActivities = useSelector(selectActivitiesForForm({ formId }));
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
-    dispatch(startSchedulingActivities(selectedActivityIds));
-    scheduleActivities(selectedActivityIds, coreUserId, dispatch);
+    const keyByActivities = keyBy(pulledActivities, '_id');
+    // filtering out invalid activities by compare with the pulled activity to reduce the redundant activity in the FE
+    const validActivityIds = selectedActivityIds.filter((activityId) => {
+      if (
+        !keyByActivities[activityId] ||
+        ![EActivityStatus.SCHEDULED, EActivityStatus.INACTIVE].includes(
+          keyByActivities[activityId].activityStatus,
+        )
+      )
+        return true;
+      return false;
+    });
+
+    scheduleActivities(validActivityIds, formId, coreUserId, dispatch);
   };
 
   const handleCancelReservations = async (activityIds: string[]) => {

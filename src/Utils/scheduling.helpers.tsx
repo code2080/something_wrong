@@ -126,12 +126,14 @@ export const determineSchedulingAlgorithmForActivity = (activity) => {
 
 export const scheduleActivities = (
   activityIds: string[],
+  formId: string,
   coreUserId: number,
   dispatch: any,
 ) => {
   dispatch(
     schedulingActivity({
       activityIds,
+      formId,
       coreUserId,
     }),
   );

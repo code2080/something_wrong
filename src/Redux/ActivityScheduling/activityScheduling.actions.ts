@@ -18,8 +18,9 @@ export const finishSchedulingActivities = (
 });
 
 const schedulingActivityFlow = {
-  request: () => ({
+  request: ({ activityIds, formId }) => ({
     type: types.SCHEDULING_ACTIVITY_REQUEST,
+    payload: { activityIds, formId },
   }),
   success: (response) => ({
     type: types.SCHEDULING_ACTIVITY_SUCCESS,
@@ -31,9 +32,9 @@ const schedulingActivityFlow = {
   }),
 };
 
-export const schedulingActivity = ({ activityIds, coreUserId }) =>
+export const schedulingActivity = ({ activityIds, formId, coreUserId }) =>
   asyncAction.POST({
     flow: schedulingActivityFlow,
     endpoint: `${getEnvParams().AM_BE_URL}activity/scheduling`,
-    params: { activityIds, coreUserId },
+    params: { activityIds, coreUserId, formId },
   });
