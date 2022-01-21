@@ -25,16 +25,13 @@ const useActivityScheduling = ({ formId }: Props) => {
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
     const keyByActivities = keyBy(pulledActivities, '_id');
     // filtering out invalid activities by compare with the pulled activity to reduce the redundant activity in the FE
-    const validActivityIds = selectedActivityIds.filter((activityId) => {
-      if (
+    const validActivityIds = selectedActivityIds.filter(
+      (activityId) =>
         !keyByActivities[activityId] ||
         ![EActivityStatus.SCHEDULED, EActivityStatus.INACTIVE].includes(
           keyByActivities[activityId].activityStatus,
-        )
-      )
-        return true;
-      return false;
-    });
+        ),
+    );
 
     scheduleActivities(validActivityIds, formId, coreUserId, dispatch);
   };
