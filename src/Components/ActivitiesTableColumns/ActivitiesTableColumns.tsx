@@ -13,13 +13,12 @@ import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { useSelector } from 'react-redux';
-import { uniq } from 'lodash';
+import _, { uniq } from 'lodash';
 
-export const CreateActivitiesTableColumnsFromMapping = ({
-  design,
-  columnPrefix,
-  renderer,
-}) => {
+export const CreateActivitiesTableColumnsFromMapping = (
+  { design, columnPrefix, renderer },
+  isBeta: boolean = false,
+) => {
   const _design = new ActivityDesign(design);
   const allActivityValues = [
     ...Object.keys(_design.objects).map(
@@ -71,8 +70,8 @@ export const CreateActivitiesTableColumnsFromMapping = ({
     [],
   );
 
-  return [
-    {
+  return _.compact([
+    isBeta && {
       title: 'Tracks',
       key: 'activityTracks',
       dataIndex: undefined,
@@ -109,7 +108,7 @@ export const CreateActivitiesTableColumnsFromMapping = ({
     },
     ...TimingColumns[_design.timing.mode](_design, columnPrefix, renderer),
     ...activityValueColumns,
-  ];
+  ]);
 };
 
 export const CreateActivitiesAllocatedTableColumns = ({
