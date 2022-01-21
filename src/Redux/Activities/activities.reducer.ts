@@ -3,8 +3,10 @@ import { TActivity } from 'Types/Activity.type';
 import { Activity } from '../../Models/Activity.model';
 import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
+import * as activitySchedulingTypes from '../ActivityScheduling/activityScheduling.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
 import * as types from './activities.actionTypes';
+import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 
 // INITIAL STATE
 import initialState from './activities.initialState';
@@ -354,6 +356,64 @@ const reducer = (state = initialState, action) => {
           ...state.inWorkerProgress,
           [formId]: workerProgress.status === 'PENDING' ? true : undefined,
         },
+      };
+    }
+
+    case activitySchedulingTypes.SCHEDULING_ACTIVITY_REQUEST: {
+      const {
+        payload: { activityIds, formId },
+      } = action;
+      return {
+        ...state,
+        [formId]: Object.entries(state[formId]).reduce(
+          (acc, [formInstanceId, activities]: any[]) => {
+            return {
+              ...acc,
+              [formInstanceId]: activities.map((activity) => {
+                if (activityIds.includes(activity._id)) {
+                  return new Activity({
+                    ...activity,
+                    activityStatus: EActivityStatus.QUEUED,
+                  });
+                }
+                return activity;
+              }),
+            };
+          },
+          {},
+        ),
+      };
+    }
+
+    case activitySchedulingTypes.SCHEDULING_ACTIVITY_SUCCESS: {
+      const {
+        payload: { invalidActivity = [], formId },
+      } = action;
+      const invalidActivityIds = invalidActivity.map(
+        (item) => item.activity._id,
+      );
+      const keyByActivityIds = _.keyBy(invalidActivity, 'activity._id');
+
+      return {
+        ...state,
+        [formId]: Object.entries(state[formId]).reduce(
+          (acc, [formInstanceId, activities]: any[]) => {
+            return {
+              ...acc,
+              [formInstanceId]: activities.map((activity) => {
+                if (invalidActivityIds.includes(activity._id)) {
+                  return new Activity({
+                    ...activity,
+                    activityStatus:
+                      keyByActivityIds[activity._id].activityStatus,
+                  });
+                }
+                return activity;
+              }),
+            };
+          },
+          {},
+        ),
       };
     }
 

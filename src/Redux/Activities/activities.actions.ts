@@ -14,6 +14,7 @@ import {
 } from './activities.helpers';
 import { TActivity } from 'Types/Activity.type';
 import { flatten, isEmpty } from 'lodash';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 const fetchActivitiesForFormFlow = (formId, tableType, pagination) => ({
   request: () => ({
@@ -341,7 +342,15 @@ export const setSchedulingStatusOfActivitiesFlow = {
   }),
 };
 
-export const setSchedulingStatusOfActivities = (formId, schedulingStatuses) =>
+export const setSchedulingStatusOfActivities = (
+  formId: string,
+  schedulingStatuses: {
+    activityId: string;
+    activityStatus: EActivityStatus;
+    errorDetails: string | null;
+    reservationId: string | null;
+  }[],
+) =>
   asyncAction.POST({
     flow: setSchedulingStatusOfActivitiesFlow,
     endpoint: `${

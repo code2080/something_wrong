@@ -1,10 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
 
-// HELPERS
-import { ActivityValueValidation } from 'Types/ActivityValueValidation.type';
-import { SchedulingReturn } from '../Models/SchedulingReturn.model';
-
 // MODELS
 import { SchedulingError } from '../Models/SchedulingError.model';
 import { ActivityDesign } from '../Models/ActivityDesign.model';
@@ -14,25 +10,15 @@ import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
-import {
-  activityValueStatuses,
-  activityStatusProps,
-} from '../Constants/activityStatuses.constants';
+import { activityValueStatuses } from '../Constants/activityStatuses.constants';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
-import { createJob } from '../Redux/Jobs/jobs.actions';
-import { schedulingModes } from '../Constants/schedulingModes.constants';
-import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { TActivity } from '../Types/Activity.type';
-import {
-  getTimingModeForActivity,
-  hydrateObjectRequests,
-} from './activities.helpers';
+import { getTimingModeForActivity } from './activities.helpers';
 import {
   validateTiming,
   validateValue,
   validateActivityByMandatoryFieldValue,
 } from './activityValues.validation';
-import { formatActivityForExactScheduling } from './exactScheduling.helpers';
 import { schedulingActivity } from '../Redux/ActivityScheduling/activityScheduling.actions';
 
 /**
@@ -93,25 +79,6 @@ export const determineSchedulingAlgorithmForActivityValue = (
   return schedulingAlgorithms.EXACT;
 };
 
-const parseTECoreResultsToScheduleReturns = (teCoreReturns) =>
-  teCoreReturns.map((el) => {
-    const status =
-      el.result.result && el.result.result < 0
-        ? EActivityStatus.FAILED
-        : EActivityStatus.SCHEDULED;
-    return {
-      activityId: el.activityId,
-      result: {
-        status,
-        reservationId:
-          status === EActivityStatus.SCHEDULED ? el.result.reference : null,
-        errorCode: status === EActivityStatus.FAILED ? el.result.result : null,
-        errorMessage:
-          status === EActivityStatus.FAILED ? el.result.details : null,
-      },
-    };
-  });
-
 export const validateActivity = (
   activity: TActivity,
   activityDesign: ActivityDesign,
@@ -157,140 +124,19 @@ export const determineSchedulingAlgorithmForActivity = (activity) => {
   if (hasBestFitObject) return schedulingAlgorithms.BEST_FIT_OBJECT;
 };
 
-/**
- * @function getBindingSchedulingAlgorithm
- * @description determines the binding (ie most complicated) scheduling algorithm in a set of activities
- * @param {Array<Activities>} activities the activities to process
- * @returns schedulingAlgorithm: String
- */
-const getBindingSchedulingAlgorithm = (activities: TActivity[]): string => {
-  const schedA = activities.map((a) =>
-    determineSchedulingAlgorithmForActivity(a),
-  );
-  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT_TIME)) {
-    return schedulingAlgorithms.BEST_FIT_OBJECT_TIME;
-  }
-  if (schedA.some((a) => a === schedulingAlgorithms.BEST_FIT_OBJECT)) {
-    return schedulingAlgorithms.BEST_FIT_OBJECT;
-  }
-  return schedulingAlgorithms.BEST_FIT_TIME;
-};
-
 export const scheduleActivities = (
-  activities: TActivity[],
-  formType: string,
-  reservationMode: string,
-  teCoreScheduleFn,
-  cFn: (result: ActivityValueValidation[]) => void,
-  objRequests: ObjectRequest[],
-  activityDesign?: ActivityDesign,
-  isBeta = false,
+  activityIds: string[],
+  formId: string,
+  coreUserId: number,
+  dispatch: any,
 ) => {
-  if (isBeta) {
-    const {
-      auth: { coreUserId },
-    } = (window as any).tePrefsLibStore.getState();
-    const activityIds = activities.map((activity) => activity._id);
-    const formId = activities[0].formId;
-    (window as any).tePrefsLibStore.dispatch(
-      schedulingActivity({
-        formId,
-        activityIds,
-        coreUserId,
-      }),
-    );
-  } else {
-    // Preprocess all activities
-    const preprocessingMap = activities
-      .map((a) => {
-        const validates = validateActivity(a, activityDesign);
-        return {
-          activity: hydrateObjectRequests(a, objRequests) as TActivity,
-          activityId: a._id,
-          validates,
-          result: validates
-            ? null
-            : new SchedulingReturn({
-                status: EActivityStatus.VALIDATION_ERROR,
-                errorCode: EActivityStatus.VALIDATION_ERROR,
-                errorMessage:
-                  activityStatusProps[EActivityStatus.VALIDATION_ERROR]
-                    ?.label ?? EActivityStatus.VALIDATION_ERROR,
-              }),
-        };
-      })
-      .map((a) => {
-        if (!a.validates)
-          return { ...a, schedulingAlgorithm: null, reservation: null };
-        const schedulingAlgorithm = determineSchedulingAlgorithmForActivity(
-          a.activity,
-        );
-        return {
-          ...a,
-          schedulingAlgorithm,
-          result: null,
-          reservation:
-            schedulingAlgorithm === schedulingAlgorithms.EXACT
-              ? formatActivityForExactScheduling(a.activity)
-              : null,
-        };
-      });
-    // filter invalidate activities
-    const [noResultActivities, validatedActivities] = _.partition(
-      preprocessingMap,
-      (activity) => activity.result != null,
-    );
-    const failedActivities = noResultActivities.map((a) => ({
-      activityId: a.activityId,
-      result: a.result,
-    }));
-
-    if ((failedActivities || []).length > 0) cFn(failedActivities);
-
-    // Edge case: all activities have schedulingAlgorithm EXACT
-    if (
-      // Feature flag: DEV-468
-      !isBeta &&
-      validatedActivities.every(
-        (el) => el.schedulingAlgorithm === schedulingAlgorithms.EXACT,
-      )
-    ) {
-      // Get the ones we're able to schedule
-      const toSchedule = validatedActivities
-        .filter((a) => a.result == null)
-        .map((a) => ({ activityId: a.activityId, reservation: a.reservation }));
-
-      if (toSchedule.length === 0) return [];
-
-      teCoreScheduleFn({
-        reservations: toSchedule,
-        formInfo: {
-          formType,
-          reservationMode,
-        },
-        callback: (teCoreResults) =>
-          cFn([...parseTECoreResultsToScheduleReturns(teCoreResults)]),
-      });
-      return toSchedule;
-    }
-    // General case: start an automated scheduling job
-    const a = preprocessingMap
-      .filter((a) => a.validates)
-      .map((a) => a.activity);
-    if (a.length) {
-      (window as any).tePrefsLibStore.dispatch(
-        createJob({
-          activities: a,
-          type: getBindingSchedulingAlgorithm(a),
-          formId: a[0].formId,
-          formInstanceIds: a.map((a) => a.formInstanceId),
-          callback: cFn,
-          meta: { schedulingMode: schedulingModes.MULTIPLE },
-        }),
-      );
-    }
-    return a;
-  }
+  dispatch(
+    schedulingActivity({
+      activityIds,
+      formId,
+      coreUserId,
+    }),
+  );
 };
 
 export const updateActivitiesWithSchedulingResults = (

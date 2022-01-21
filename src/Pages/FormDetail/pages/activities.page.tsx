@@ -155,7 +155,7 @@ const ActivitiesPage = () => {
   /*
    * EVENT HANDLERS
    */
-  const { handleScheduleActivities, handleDeleteActivities } =
+  const { handleScheduleActivities, handleCancelReservations } =
     useActivityScheduling({
       formId,
       formType,
@@ -176,7 +176,7 @@ const ActivitiesPage = () => {
 
   const onScheduleActivities = async (activityIds: string[]) => {
     await handleScheduleActivities(activityIds);
-    doFetchingActivities();
+    // doFetchingActivities();
     onDeselectAll();
   };
 
@@ -193,7 +193,7 @@ const ActivitiesPage = () => {
       title: 'Cancel reservations',
       content: 'Are you sure you want to cancel these reservations?',
       onOk: async () => {
-        await handleDeleteActivities(activityIds);
+        await handleCancelReservations(activityIds);
         doFetchingActivities();
         onDeselectAll();
       },
