@@ -155,12 +155,15 @@ const ActivitiesPage = () => {
   /*
    * EVENT HANDLERS
    */
-  const { handleScheduleActivities, handleCancelReservations } =
-    useActivityScheduling({
-      formId,
-      formType,
-      reservationMode,
-    });
+  const {
+    handleScheduleActivities,
+    handleCancelReservations,
+    handleScheduleActivitiesByFormInstanceId,
+  } = useActivityScheduling({
+    formId,
+    formType,
+    reservationMode,
+  });
 
   const handleSelectAll = async () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
@@ -176,7 +179,13 @@ const ActivitiesPage = () => {
 
   const onScheduleActivities = async (activityIds: string[]) => {
     await handleScheduleActivities(activityIds);
-    // doFetchingActivities();
+    onDeselectAll();
+  };
+
+  const onScheduleActivitiesByFormInstanceId = async (
+    formInstanceId: string,
+  ) => {
+    await handleScheduleActivitiesByFormInstanceId(formInstanceId);
     onDeselectAll();
   };
 
@@ -239,6 +248,7 @@ const ActivitiesPage = () => {
           pre: SchedulingColumns(selectedRowKeys, {
             onDelete: onDeleteActivities,
             onSchedule: onScheduleActivities,
+            onScheduleByFormInstanceId: onScheduleActivitiesByFormInstanceId,
           }),
           post: StaticColumns,
         }}

@@ -32,9 +32,37 @@ const schedulingActivityFlow = {
   }),
 };
 
+const schedulingActivityByFormInstanceIdFlow = {
+  request: ({ formId, formInstanceId }) => ({
+    type: types.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_REQUEST,
+    payload: { formId, formInstanceId },
+  }),
+  success: (response) => ({
+    type: types.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_SUCCESS,
+    payload: { ...response },
+  }),
+  failure: (err) => ({
+    type: types.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_FAILED,
+    payload: { ...err },
+  }),
+};
+
 export const schedulingActivity = ({ activityIds, formId, coreUserId }) =>
   asyncAction.POST({
     flow: schedulingActivityFlow,
     endpoint: `${getEnvParams().AM_BE_URL}activity/scheduling`,
     params: { activityIds, coreUserId, formId },
+  });
+
+export const schedulingActivityByFormInstanceId = ({
+  formInstanceId,
+  formId,
+  coreUserId,
+}) =>
+  asyncAction.POST({
+    flow: schedulingActivityByFormInstanceIdFlow,
+    endpoint: `${
+      getEnvParams().AM_BE_URL
+    }activity/form-instances/${formInstanceId}/scheduling`,
+    params: { coreUserId, formId, formInstanceId },
   });
