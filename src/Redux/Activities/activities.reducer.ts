@@ -399,7 +399,10 @@ const reducer = (state = initialState, action) => {
             (activity) =>
               new Activity({
                 ...(activity as any),
-                activityStatus: EActivityStatus.QUEUED,
+                activityStatus:
+                  activity.activityStatus === EActivityStatus.SCHEDULED
+                    ? EActivityStatus.SCHEDULED
+                    : EActivityStatus.QUEUED,
               }),
           ),
         },
