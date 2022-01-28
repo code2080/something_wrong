@@ -195,17 +195,16 @@ const ActivityActionsDropdown = ({
     ({ key }) => {
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
-        case 'SCHEDULE_ALL':
+        case 'SCHEDULE_SUBMISSION':
           handleScheduleActivitiesByFormInstanceId(formInstanceId);
           break;
         case 'SCHEDULE':
           handleScheduleActivities([activity._id]);
           break;
-        case 'DELETE':
+        case 'CANCEL':
           handleDeleteActivities([activity._id]);
           break;
-        case 'DELETE_ALL':
-          // TODO: Hide on prod
+        case 'CANCEL_ON_SUBMISSION':
           handleDeleteActivities(activitiesByFormInstance);
           break;
         case 'STOP_SCHEDULING':
