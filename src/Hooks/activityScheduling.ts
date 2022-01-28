@@ -1,7 +1,10 @@
 import { groupBy, keyBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { activityConvertFn, activityFilterFn } from 'Utils/activities.helpers';
-import { scheduleActivities } from '../Utils/scheduling.helpers';
+import {
+  scheduleActivities,
+  scheduleActivitiesByFormInstanceId,
+} from '../Utils/scheduling.helpers';
 import chunk from 'lodash/chunk';
 import { updateActivities } from '../Redux/Activities/activities.actions';
 import { getActivities } from '../Utils/activities.helpers';
@@ -34,6 +37,17 @@ const useActivityScheduling = ({ formId }: Props) => {
     );
 
     scheduleActivities(validActivityIds, formId, coreUserId, dispatch);
+  };
+
+  const handleScheduleActivitiesByFormInstanceId = async (
+    formInstanceId: string,
+  ) => {
+    scheduleActivitiesByFormInstanceId(
+      formInstanceId,
+      formId,
+      coreUserId,
+      dispatch,
+    );
   };
 
   const handleCancelReservations = async (activityIds: string[]) => {
@@ -71,6 +85,7 @@ const useActivityScheduling = ({ formId }: Props) => {
 
   return {
     handleScheduleActivities,
+    handleScheduleActivitiesByFormInstanceId,
     handleCancelReservations,
   };
 };

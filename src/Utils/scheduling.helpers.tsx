@@ -19,7 +19,10 @@ import {
   validateValue,
   validateActivityByMandatoryFieldValue,
 } from './activityValues.validation';
-import { schedulingActivity } from '../Redux/ActivityScheduling/activityScheduling.actions';
+import {
+  schedulingActivity,
+  schedulingActivityByFormInstanceId,
+} from '../Redux/ActivityScheduling/activityScheduling.actions';
 
 /**
  * @function createSchedulingReturns
@@ -133,6 +136,21 @@ export const scheduleActivities = (
   dispatch(
     schedulingActivity({
       activityIds,
+      formId,
+      coreUserId,
+    }),
+  );
+};
+
+export const scheduleActivitiesByFormInstanceId = (
+  formInstanceId: string,
+  formId: string,
+  coreUserId: number,
+  dispatch: any,
+) => {
+  dispatch(
+    schedulingActivityByFormInstanceId({
+      formInstanceId,
       formId,
       coreUserId,
     }),
