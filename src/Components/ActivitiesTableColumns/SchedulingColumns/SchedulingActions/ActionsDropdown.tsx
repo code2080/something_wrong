@@ -88,7 +88,7 @@ const ActivityActionsDropdown = ({
   );
 
   const activityActions = {
-    SCHEDULE_ALL: {
+    SCHEDULE_SUBMISSION: {
       label: 'Schedule submission',
       filterFn: activityFilterFn.canBeScheduled,
       callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
@@ -103,7 +103,7 @@ const ActivityActionsDropdown = ({
       filterFn: activityFilterFn.canBeSelected,
       callname: teCoreCallnames.SELECT_RESERVATION,
     },
-    DELETE: {
+    CANCEL: {
       label: 'Cancel reservation',
       filterFn: activityFilterFn.canBeSelected,
       callname: teCoreCallnames.DELETE_RESERVATIONS,
@@ -114,7 +114,7 @@ const ActivityActionsDropdown = ({
       callname: teCoreCallnames.STOP_SCHEDULING,
     },
     ...((isBeta && {
-      DELETE_ALL: {
+      CANCEL_ON_SUBMISSION: {
         label: 'Cancel all reservations from the submission',
         filterFn: activityFilterFn.canBeSelected,
         callname: teCoreCallnames.DELETE_RESERVATIONS,
