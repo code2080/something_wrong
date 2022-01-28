@@ -129,6 +129,12 @@ const ActivityActionsDropdown = ({
     }
   };
 
+  const handleScheduleActivitiesByFormInstanceId = (formInstanceId: string) => {
+    if (typeof actions.onSchedule === 'function') {
+      actions.onScheduleByFormInstanceId(formInstanceId);
+    }
+  };
+
   const handleDeleteActivities = (activityIds: string[]) => {
     if (typeof actions.onDelete === 'function') {
       actions.onDelete(activityIds);
@@ -190,7 +196,7 @@ const ActivityActionsDropdown = ({
       if (!activityActions[key] || !activityActions[key].callname) return;
       switch (key) {
         case 'SCHEDULE_ALL':
-          handleScheduleActivities(activitiesByFormInstance);
+          handleScheduleActivitiesByFormInstanceId(formInstanceId);
           break;
         case 'SCHEDULE':
           handleScheduleActivities([activity._id]);

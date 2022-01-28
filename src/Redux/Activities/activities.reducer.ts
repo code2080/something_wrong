@@ -385,7 +385,32 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case activitySchedulingTypes.SCHEDULING_ACTIVITY_SUCCESS: {
+    case activitySchedulingTypes.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_REQUEST: {
+      const {
+        payload: { formInstanceId, formId },
+      } = action;
+      if (!state?.[formId]?.[formInstanceId]) return state;
+
+      return {
+        ...state,
+        [formId]: {
+          ...state[formId],
+          [formInstanceId]: state[formId][formInstanceId].map(
+            (activity) =>
+              new Activity({
+                ...(activity as any),
+                activityStatus:
+                  activity.activityStatus === EActivityStatus.SCHEDULED
+                    ? EActivityStatus.SCHEDULED
+                    : EActivityStatus.QUEUED,
+              }),
+          ),
+        },
+      };
+    }
+
+    case activitySchedulingTypes.SCHEDULING_ACTIVITY_SUCCESS:
+    case activitySchedulingTypes.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_SUCCESS: {
       const {
         payload: { invalidActivity = [], formId },
       } = action;
