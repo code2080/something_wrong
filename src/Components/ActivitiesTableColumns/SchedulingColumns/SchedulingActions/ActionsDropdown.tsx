@@ -27,7 +27,10 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
-import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
@@ -53,39 +56,6 @@ const mapActionsToProps = {
   finishSchedulingActivities,
 };
 
-const activityActions = {
-  SCHEDULE_ALL: {
-    label: 'Schedule submission',
-    filterFn: activityFilterFn.canBeScheduled,
-    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-  },
-  SCHEDULE: {
-    label: 'Schedule activity',
-    filterFn: activityFilterFn.canBeScheduled,
-    callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-  },
-  SELECT: {
-    label: 'Select reservation',
-    filterFn: activityFilterFn.canBeSelected,
-    callname: teCoreCallnames.SELECT_RESERVATION,
-  },
-  DELETE: {
-    label: 'Cancel reservation',
-    filterFn: activityFilterFn.canBeSelected,
-    callname: teCoreCallnames.DELETE_RESERVATIONS,
-  },
-  STOP_SCHEDULING: {
-    label: 'Stop scheduling',
-    filterFn: activityFilterFn.canBeStopped,
-    callname: teCoreCallnames.STOP_SCHEDULING,
-  },
-  DELETE_ALL: {
-    label: 'Cancel all reservations from the submission',
-    filterFn: activityFilterFn.canBeSelected,
-    callname: teCoreCallnames.DELETE_RESERVATIONS,
-  },
-};
-
 const ActivityActionsDropdown = ({
   buttonType,
   activity,
@@ -99,6 +69,7 @@ const ActivityActionsDropdown = ({
   const { formInstanceId, formId } = activity;
   const teCoreAPI = useTECoreAPI();
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
+  const isBeta = useSelector(selectIsBetaOrDev);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
@@ -115,6 +86,42 @@ const ActivityActionsDropdown = ({
   const { formType = '', reservationMode = '' } = useSelector((state) =>
     selectForm(state, formId),
   );
+
+  const activityActions = {
+    SCHEDULE_ALL: {
+      label: 'Schedule submission',
+      filterFn: activityFilterFn.canBeScheduled,
+      callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+    },
+    SCHEDULE: {
+      label: 'Schedule activity',
+      filterFn: activityFilterFn.canBeScheduled,
+      callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+    },
+    SELECT: {
+      label: 'Select reservation',
+      filterFn: activityFilterFn.canBeSelected,
+      callname: teCoreCallnames.SELECT_RESERVATION,
+    },
+    DELETE: {
+      label: 'Cancel reservation',
+      filterFn: activityFilterFn.canBeSelected,
+      callname: teCoreCallnames.DELETE_RESERVATIONS,
+    },
+    STOP_SCHEDULING: {
+      label: 'Stop scheduling',
+      filterFn: activityFilterFn.canBeStopped,
+      callname: teCoreCallnames.STOP_SCHEDULING,
+    },
+    ...((isBeta && {
+      DELETE_ALL: {
+        label: 'Cancel all reservations from the submission',
+        filterFn: activityFilterFn.canBeSelected,
+        callname: teCoreCallnames.DELETE_RESERVATIONS,
+      },
+    }) ||
+      {}),
+  };
 
   const handleScheduleActivities = (activityIds: string[]) => {
     if (typeof actions.onSchedule === 'function') {
@@ -192,6 +199,7 @@ const ActivityActionsDropdown = ({
           handleDeleteActivities([activity._id]);
           break;
         case 'DELETE_ALL':
+          // TODO: Hide on prod
           handleDeleteActivities(activitiesByFormInstance);
           break;
         case 'STOP_SCHEDULING':
