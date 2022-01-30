@@ -1,7 +1,8 @@
+import axios from 'axios';
+import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
 import { Activity } from '../Models/Activity.model';
 import { getToken } from './tokenHelpers';
 
-import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
 // CONSTANTS
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import {
@@ -33,7 +34,7 @@ import {
 } from 'Models/JointTeachingGroup.model';
 import { isEmptyDeep } from './general.helpers';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import axios from 'axios';
+import { convertToUrlParams } from '../Redux/Activities/activities.actions';
 import { getEnvParams } from 'configs';
 // CONSTANTS
 // FUNCTIONS
@@ -768,4 +769,67 @@ export const getActivities = async ({
   return (response?.data?.activities ?? [])
     .filter((a) => !isEmpty(a.values))
     .map((a) => new Activity(a));
+};
+
+type GetActivitiesWithFilterResponse = {
+  activities: TActivity[];
+  totalActivities: number;
+  totalPages: number;
+};
+
+export const getActivitiesByFormIdWithFilter = async (
+  formId,
+  { filter, options, fields = {} },
+): Promise<GetActivitiesWithFilterResponse> => {
+  const transformFilter = convertToUrlParams({
+    ...filter,
+    ...options,
+    fields,
+  });
+  const token = await getToken();
+  const response = await axios.get(
+    `${getEnvParams().AM_BE_URL}forms/${formId}/activities`,
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${token}`,
+      },
+      params: transformFilter,
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteReservationAsync = (
+  activities,
+  teCoreAPI,
+): Promise<TActivity[]> =>
+  new Promise((resolve, reject) => {
+    try {
+      teCoreAPI.deleteReservations({
+        activities,
+        callback: () => resolve(activities.map(activityConvertFn.toDeleted)),
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+export const updatedMultipleActivity = async (
+  activities: TActivity[],
+): Promise<TActivity[]> => {
+  const token = await getToken();
+  const response = await axios.put(
+    `${getEnvParams().AM_BE_URL}activity`,
+    { activities },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return response.data;
 };

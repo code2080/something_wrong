@@ -409,6 +409,30 @@ const reducer = (state = initialState, action) => {
       };
     }
 
+    case types.RESET_ACTIVITY_ON_CANCEL_RESERVATION_BY_FORMINSTANCE_ID: {
+      const {
+        payload: { formInstanceId, formId },
+      } = action;
+      if (!state?.[formId]?.[formInstanceId]) return state;
+
+      return {
+        ...state,
+        [formId]: {
+          ...state[formId],
+          [formInstanceId]: state[formId][formInstanceId].map((activity) => {
+            if (activity.activityStatus !== EActivityStatus.SCHEDULED)
+              return activity;
+            return new Activity({
+              ...(activity as any),
+              activityStatus: EActivityStatus.NOT_SCHEDULED,
+              schedulingTimestamp: null,
+              reservationId: null,
+            });
+          }),
+        },
+      };
+    }
+
     case activitySchedulingTypes.SCHEDULING_ACTIVITY_SUCCESS:
     case activitySchedulingTypes.SCHEDULING_ACTIVITY_FORM_INSTANCE_ID_SUCCESS: {
       const {

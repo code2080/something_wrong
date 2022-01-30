@@ -159,6 +159,7 @@ const ActivitiesPage = () => {
     handleScheduleActivities,
     handleCancelReservations,
     handleScheduleActivitiesByFormInstanceId,
+    handleCancelReservationsByFormInstanceId,
   } = useActivityScheduling({
     formId,
     formType,
@@ -209,6 +210,20 @@ const ActivitiesPage = () => {
     });
   };
 
+  const onDeleteActivitiesByFormInstanceId = async (formInstanceId: string) => {
+    Modal.confirm({
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') || document.body,
+      title: 'Cancel reservations',
+      content: 'Are you sure you want to cancel these reservations?',
+      onOk: async () => {
+        await handleCancelReservationsByFormInstanceId(formInstanceId);
+        doFetchingActivities();
+        onDeselectAll();
+      },
+    });
+  };
+
   const onSortActivities = (sorter: SorterResult<object>): void => {
     if (!sorter?.columnKey) return;
     sorter?.order
@@ -247,6 +262,7 @@ const ActivitiesPage = () => {
         additionalColumns={{
           pre: SchedulingColumns(selectedRowKeys, {
             onDelete: onDeleteActivities,
+            onDeleteByFormInstanceId: onDeleteActivitiesByFormInstanceId,
             onSchedule: onScheduleActivities,
             onScheduleByFormInstanceId: onScheduleActivitiesByFormInstanceId,
           }),

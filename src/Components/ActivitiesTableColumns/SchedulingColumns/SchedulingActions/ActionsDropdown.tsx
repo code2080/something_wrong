@@ -34,7 +34,6 @@ import {
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
-import { makeSelectAllActivityidsForForminstance } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
 
 const mapStateToProps = (state, { activity }) => {
@@ -72,14 +71,6 @@ const ActivityActionsDropdown = ({
   const isBeta = useSelector(selectIsBetaOrDev);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
-  );
-  const selectAllActivityIdsByFormInstance = useMemo(
-    () => makeSelectAllActivityidsForForminstance(),
-    [],
-  );
-
-  const activitiesByFormInstance = useSelector((state) =>
-    selectAllActivityIdsByFormInstance(state, formId, formInstanceId),
   );
 
   const selectForm = useMemo(() => makeSelectForm(), []);
@@ -130,8 +121,14 @@ const ActivityActionsDropdown = ({
   };
 
   const handleScheduleActivitiesByFormInstanceId = (formInstanceId: string) => {
-    if (typeof actions.onSchedule === 'function') {
+    if (typeof actions.onScheduleByFormInstanceId === 'function') {
       actions.onScheduleByFormInstanceId(formInstanceId);
+    }
+  };
+
+  const handleDeleteActivitiesByFormInstanceId = (formInstanceId: string) => {
+    if (typeof actions.onDeleteByFormInstanceId === 'function') {
+      actions.onDeleteByFormInstanceId(formInstanceId);
     }
   };
 
@@ -205,7 +202,7 @@ const ActivityActionsDropdown = ({
           handleDeleteActivities([activity._id]);
           break;
         case 'CANCEL_ON_SUBMISSION':
-          handleDeleteActivities(activitiesByFormInstance);
+          handleDeleteActivitiesByFormInstanceId(formInstanceId);
           break;
         case 'STOP_SCHEDULING':
           jobs.forEach((job) => {

@@ -59,7 +59,7 @@ const fetchAllActivitiesForFormFlow = (formId) => ({
   }),
 });
 
-const convertToUrlParams = (filters: any = {}) => {
+export const convertToUrlParams = (filters: any = {}) => {
   const { settings, sorting, pagination, ...rest } = filters;
   const queryObject = {
     ...(settings || {}),
@@ -488,3 +488,11 @@ export const fetchActivityInWorkerProgress = (formId) =>
       getEnvParams().AM_BE_URL
     }forms/${formId}/activities/worker-progress`,
   });
+
+export const resetActivitiesOnCancelReservationByFormInstanceId = ({
+  formInstanceId,
+  formId,
+}) => ({
+  type: activitiesActionTypes.RESET_ACTIVITY_ON_CANCEL_RESERVATION_BY_FORMINSTANCE_ID,
+  payload: { formInstanceId, formId },
+});

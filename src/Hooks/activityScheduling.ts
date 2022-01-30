@@ -6,8 +6,16 @@ import {
   scheduleActivitiesByFormInstanceId,
 } from '../Utils/scheduling.helpers';
 import chunk from 'lodash/chunk';
-import { updateActivities } from '../Redux/Activities/activities.actions';
-import { getActivities } from '../Utils/activities.helpers';
+import {
+  updateActivities,
+  resetActivitiesOnCancelReservationByFormInstanceId,
+} from '../Redux/Activities/activities.actions';
+import {
+  getActivities,
+  getActivitiesByFormIdWithFilter,
+  deleteReservationAsync,
+  updatedMultipleActivity,
+} from '../Utils/activities.helpers';
 
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
@@ -83,10 +91,45 @@ const useActivityScheduling = ({ formId }: Props) => {
     );
   };
 
+  const handleCancelReservationsByFormInstanceId = async (
+    formInstanceId: string,
+  ) => {
+    let flag = false;
+    const limit = 50;
+    // update activity status in redux store
+    dispatch(
+      resetActivitiesOnCancelReservationByFormInstanceId({
+        formInstanceId,
+        formId,
+      }),
+    );
+    while (!flag) {
+      // getting activity by formInstanceId
+      const { activities } = await getActivitiesByFormIdWithFilter(formId, {
+        filter: { formInstanceId, activityStatus: EActivityStatus.SCHEDULED },
+        options: { pagination: { page: 1, limit } },
+      });
+
+      // exit the loop when there are no scheduled activities
+      if (!activities || activities.length === 0) {
+        flag = true;
+        return;
+      }
+
+      // execute delete reservation in te-core
+      const cancelledActivities = await deleteReservationAsync(
+        activities,
+        teCoreAPI,
+      );
+      await updatedMultipleActivity(cancelledActivities); // calling updating activity status API
+    }
+  };
+
   return {
     handleScheduleActivities,
-    handleScheduleActivitiesByFormInstanceId,
     handleCancelReservations,
+    handleScheduleActivitiesByFormInstanceId,
+    handleCancelReservationsByFormInstanceId,
   };
 };
 export default useActivityScheduling;
