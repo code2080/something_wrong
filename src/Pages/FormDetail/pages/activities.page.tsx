@@ -219,7 +219,6 @@ const ActivitiesPage = () => {
       onOk: async () => {
         await handleCancelReservationsByFormInstanceId(formInstanceId);
         doFetchingActivities();
-        onDeselectAll();
       },
     });
   };

@@ -21,6 +21,7 @@ import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
 import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { CRITERIA_OPTIONS } from 'Constants/filterSetting.constants';
 
 type Props = {
   formType: string;
@@ -106,7 +107,11 @@ const useActivityScheduling = ({ formId }: Props) => {
     while (!flag) {
       // getting activity by formInstanceId
       const { activities } = await getActivitiesByFormIdWithFilter(formId, {
-        filter: { formInstanceId, activityStatus: EActivityStatus.SCHEDULED },
+        filter: {
+          matchCriteria: CRITERIA_OPTIONS.ALL,
+          formInstanceId,
+          activityStatus: EActivityStatus.SCHEDULED,
+        },
         options: { pagination: { page: 1, limit } },
       });
 
@@ -121,6 +126,7 @@ const useActivityScheduling = ({ formId }: Props) => {
         activities,
         teCoreAPI,
       );
+
       await updatedMultipleActivity(cancelledActivities); // calling updating activity status API
     }
   };

@@ -1,42 +1,13 @@
 import { Row, Col, Form, Radio } from 'antd';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
+import {
+  CRITERIAS,
+  MODES,
+  JOINT_TEACHING_OPTIONS,
+} from 'Constants/filterSetting.constants';
 import { useContext } from 'react';
 import FilterModalContainer from './FilterModalContainer';
 
-const CRITERIAS = [
-  {
-    label: 'Match all',
-    value: 'ALL',
-  },
-  {
-    label: 'Match one',
-    value: 'SOME',
-  },
-];
-const MODES = [
-  {
-    label: 'Single activity',
-    value: 'SINGLE',
-  },
-  {
-    label: 'All in submission',
-    value: 'ALL',
-  },
-];
-const JOINT_TEACHING_OPTIONS = [
-  {
-    label: 'Include',
-    value: 'INCLUDE',
-  },
-  {
-    label: 'Exclude',
-    value: 'EXCLUDE',
-  },
-  {
-    label: 'Only joint teaching activities',
-    value: 'ONLY',
-  },
-];
 const FilterSettings = () => {
   const { tableType } = useContext(FilterModalContainer.Context);
 
