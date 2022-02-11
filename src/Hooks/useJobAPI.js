@@ -24,7 +24,9 @@ export const useJobWSAPI = () => {
     const socketUrl = url.slice(0, url.length - 3);
 
     // Init websocket connection
-    socket.current = io(socketUrl);
+    socket.current = io(socketUrl, {
+      transports: ['websocket'],
+    });
     // Set handlers for connection, disconnection
     socket.current.on('connect', () => {
       console.log('WS connection initialized, starting dedicated session');
