@@ -15,10 +15,13 @@ const useActivityGeneratorWSAPI = () => {
   useEffect(() => {
     const url = `${getEnvParams().AM_BE_URL}`;
     const socketUrl = url.slice(0, url.length - 3);
-    const socket = socketIOClient(socketUrl);
+    const socket = socketIOClient(socketUrl, {
+      transports: ['websocket'],
+    });
     if (formId) {
       socket.emit('activityGeneration', { formId });
       socket.on('activityGeneration', ({ status, formId }) => {
+        console.log(`activities are created for formId: ${formId}`);
         if (status === 'DONE')
           dispatch(forceFetchingActivities(ACTIVITIES_TABLE));
         dispatch(updateActivityInWorkerProgress({ formId }));
