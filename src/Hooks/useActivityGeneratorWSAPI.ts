@@ -19,7 +19,9 @@ const useActivityGeneratorWSAPI = () => {
       transports: ['websocket'],
     });
     if (formId) {
-      socket.emit('activityGeneration', { formId });
+      socket.emit('activityGeneration', { formId }, (response) => {
+        console.log('=== activityGeneration emit event ===', response);
+      });
       socket.on('activityGeneration', ({ status, formId }) => {
         console.log(`activities are created for formId: ${formId}`);
         if (status === 'DONE')
