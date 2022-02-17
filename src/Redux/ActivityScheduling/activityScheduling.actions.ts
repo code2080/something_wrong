@@ -47,22 +47,28 @@ const schedulingActivityByFormInstanceIdFlow = {
   }),
 };
 
-export const schedulingActivity = ({ activityIds, formId, coreUserId }) =>
+export const schedulingActivity = ({
+  activityIds,
+  formId,
+  coreUserId,
+  isBeta = false,
+}) =>
   asyncAction.POST({
     flow: schedulingActivityFlow,
     endpoint: `${getEnvParams().AM_BE_URL}activity/scheduling`,
-    params: { activityIds, coreUserId, formId },
+    params: { activityIds, coreUserId, formId, isBeta },
   });
 
 export const schedulingActivityByFormInstanceId = ({
   formInstanceId,
   formId,
   coreUserId,
+  isBeta = false,
 }) =>
   asyncAction.POST({
     flow: schedulingActivityByFormInstanceIdFlow,
     endpoint: `${
       getEnvParams().AM_BE_URL
     }activity/form-instances/${formInstanceId}/scheduling`,
-    params: { coreUserId, formId, formInstanceId },
+    params: { coreUserId, formId, formInstanceId, isBeta },
   });

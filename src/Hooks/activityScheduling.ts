@@ -18,7 +18,7 @@ import {
 } from '../Utils/activities.helpers';
 
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
-import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
+import { selectCoreUserId, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { CRITERIA_OPTIONS } from 'Constants/filterSetting.constants';
@@ -33,6 +33,7 @@ const useActivityScheduling = ({ formId }: Props) => {
   const teCoreAPI = useTECoreAPI();
   const coreUserId = useSelector(selectCoreUserId);
   const pulledActivities = useSelector(selectActivitiesForForm({ formId }));
+  const isBeta = useSelector(selectIsBetaOrDev);
 
   const handleScheduleActivities = async (selectedActivityIds: string[]) => {
     const keyByActivities = keyBy(pulledActivities, '_id');
@@ -45,7 +46,7 @@ const useActivityScheduling = ({ formId }: Props) => {
         ),
     );
 
-    scheduleActivities(validActivityIds, formId, coreUserId, dispatch);
+    scheduleActivities(validActivityIds, formId, coreUserId, dispatch, isBeta);
   };
 
   const handleScheduleActivitiesByFormInstanceId = async (
@@ -56,6 +57,7 @@ const useActivityScheduling = ({ formId }: Props) => {
       formId,
       coreUserId,
       dispatch,
+      isBeta,
     );
   };
 

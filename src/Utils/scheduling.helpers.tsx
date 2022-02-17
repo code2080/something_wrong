@@ -132,12 +132,14 @@ export const scheduleActivities = (
   formId: string,
   coreUserId: number,
   dispatch: any,
+  isBeta = false,
 ) => {
   dispatch(
     schedulingActivity({
       activityIds,
       formId,
       coreUserId,
+      isBeta,
     }),
   );
 };
@@ -147,12 +149,14 @@ export const scheduleActivitiesByFormInstanceId = (
   formId: string,
   coreUserId: number,
   dispatch: any,
+  isBeta = false,
 ) => {
   dispatch(
     schedulingActivityByFormInstanceId({
       formInstanceId,
       formId,
       coreUserId,
+      isBeta,
     }),
   );
 };
