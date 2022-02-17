@@ -10,7 +10,7 @@ $inactiveJobLabelWidth: 230px;
   .active-job--wrapper {
     display: flex;
     align-items: center;
-    .label.active {
+    .label.isActive {
       width: $activeJobLabelWidth;
     }
     .label.inactive {

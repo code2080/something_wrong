@@ -1,9 +1,11 @@
 import { createSelector } from 'reselect';
 import { jobStatus } from '../../Constants/jobStatuses.constants';
+import { JobState } from './jobs.initialState';
 
-const jobStateSelector = (state) => state.jobs;
+// todo: fully type the entire state and just import it
+const jobStateSelector = (state: { jobs: JobState }): JobState => state.jobs;
 
-export const selectJobsForForm = (formId) =>
+export const selectJobsForForm = (formId: string) =>
   createSelector(jobStateSelector, (jobs) => jobs[formId] || []);
 
 export const selectJobFromForm = createSelector(
@@ -17,7 +19,7 @@ export const selectJobFromForm = createSelector(
   },
 );
 
-export const selectJobForActivities = (formId, activityIds = []) =>
+export const selectJobForActivities = (formId: string, activityIds: string[]) =>
   createSelector(selectJobsForForm(formId), (formJobs) => {
     const jobIds = Object.keys(formJobs).filter((jobId) => {
       if (!formJobs[jobId].activities || !formJobs[jobId].activities.length) {

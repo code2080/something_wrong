@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectJobFromForm } from '../../Redux/Jobs/jobs.selectors';
 
 // HOOKS
-import { useJobWSAPI } from '../../Hooks/useJobAPI';
+import { useJobWSAPI } from '../../Hooks/useJobWSAPI';
 
 // STYLES
 import './JobToolbar.scss';
@@ -24,7 +24,7 @@ const JobToolbar = () => {
   return (
     <div className='job-toolbar--wrapper'>
       <div className='active-job--wrapper'>
-        <span className={`label ${hasActiveJob ? 'active' : 'inactive'}`}>
+        <span className={`label ${hasActiveJob ? 'isActive' : 'inactive'}`}>
           {hasActiveJob
             ? 'Scheduling job in progress'
             : 'No active automatic scheduling job'}

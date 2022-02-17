@@ -1,9 +1,10 @@
+import { TActivity } from 'Types/Activity.type';
 import { jobStatus } from '../Constants/jobStatuses.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 
 export class Job {
   _id;
-  activities;
+  activities: TActivity[];
   type;
   organizationId;
   userId;

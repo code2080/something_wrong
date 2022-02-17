@@ -45,7 +45,7 @@ export const selectTimeslotsForSection = createSelector(
 export const selectSectionDesign = createSelector(
   formState,
   (forms) => (formId: string, sectionId: string) => {
-    const form = forms[formId];
+    const form = forms[formId] ?? undefined;
     return form && form.sections.find((section) => section._id === sectionId);
   },
 );

@@ -14,7 +14,7 @@ type Props = {
 };
 
 const ActivityTagSelector = ({ activity }: Props) => {
-  const { formId }: { formId: string } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const selectedActivityTag = useSelector(selectActivityTag)(
     formId,
     activity.tagId,

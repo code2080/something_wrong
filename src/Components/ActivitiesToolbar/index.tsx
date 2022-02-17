@@ -52,7 +52,7 @@ const ActivitiesToolbar = ({
   onScheduleAllActivities,
 }: Props) => {
   const dispatch = useDispatch();
-  const { formId }: { formId: string } = useParams();
+  const { formId } = useParams<{ formId: string }>();
 
   const selectedFilterValues = useSelector(
     selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }),

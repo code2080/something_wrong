@@ -7,7 +7,7 @@ const submissionsStateSelector = (state) => state.submissions;
 export const selectFormActivityLookupMap = (formId: string) =>
   createSelector(
     stateSelector,
-    (filterLookupMap) => filterLookupMap.activities[formId] || {},
+    (filterLookupMap) => filterLookupMap.activities[formId] ?? {},
   );
 
 export const selectExactFormActivityLookupMap = ({ formId, filterLookupMap }) =>

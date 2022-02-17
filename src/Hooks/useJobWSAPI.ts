@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getEnvParams } from '../configs';
@@ -7,10 +7,10 @@ import { abortJob, updateJobFromWS } from '../Redux/Jobs/jobs.actions';
 import { forceFetchingActivities } from '../Redux/GlobalUI/globalUI.actions';
 
 export const useJobWSAPI = () => {
-  const socket = useRef(null);
+  const socket = useRef<Socket | null>(null);
   const dispatch = useDispatch();
   const [activeJobId, setActiveJobId] = useState(null);
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
 
   const stopJob = () => {
     if (activeJobId && formId) {
@@ -30,7 +30,7 @@ export const useJobWSAPI = () => {
     // Set handlers for connection, disconnection
     socket.current.on('connect', () => {
       console.log('WS connection initialized, starting dedicated session');
-      socket.current.emit('watchJobs', { formId });
+      socket.current?.emit('watchJobs', { formId });
     });
     socket.current.on('connect_error', (args) => console.log(args));
     socket.current.on('disconnect', (reason) =>
@@ -38,19 +38,19 @@ export const useJobWSAPI = () => {
     );
     // Event listener for job update
     socket.current.on('jobUpdate', ({ job }) => {
-      const jobId = job ? job._id : null;
+      const jobId = job?._id ?? null;
       console.log(`Received job update: ${jobId}`);
       setActiveJobId(jobId);
       // Set the active job id and form id
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
-      if (job && job.status && !['NOT_STARTED'].includes(job.status)) {
+      if (job?.status !== 'NOT_STARTED') {
         dispatch(forceFetchingActivities());
       }
     });
     return () => {
       // When component unmounts, close the connection
-      socket.current.disconnect();
+      socket.current?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

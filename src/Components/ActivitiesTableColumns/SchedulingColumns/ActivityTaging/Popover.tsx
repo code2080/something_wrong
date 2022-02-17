@@ -22,7 +22,7 @@ type Props = {
 
 const ActivityTagPopover = ({ selectedActivityIds, selectedTagId }: Props) => {
   const dispatch = useDispatch();
-  const { formId }: { formId: string } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const activityTags: TActivityTag[] = useSelector(selectActivityTagsForForm)(
     formId,
   );

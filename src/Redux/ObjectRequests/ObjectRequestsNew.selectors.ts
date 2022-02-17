@@ -27,7 +27,7 @@ export const selectFormObjectRequest = (formId: string) =>
     selectObjectRequestsList(),
     submissionsState,
     (requests, submissionState) => {
-      const submissions = submissionState[formId] || {};
+      const submissions = submissionState[formId] ?? {};
       const submissionIds = Object.keys(submissions);
       return requests
         .filter(({ formInstanceId }) => submissionIds.includes(formInstanceId))

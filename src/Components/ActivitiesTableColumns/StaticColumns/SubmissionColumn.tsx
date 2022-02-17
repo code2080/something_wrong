@@ -21,7 +21,7 @@ type Props = {
 };
 
 const SubmissionColumn = ({ formInstanceId }: Props) => {
-  const { formId }: { formId: string } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const { firstName, lastName, scopedObject } = useSelector((state) =>

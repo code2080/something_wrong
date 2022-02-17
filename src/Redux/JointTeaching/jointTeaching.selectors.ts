@@ -6,7 +6,7 @@ const activityStateSelector = (state) => state.activities;
 
 export const selectJointTeachingGroupsForForm = (formId: string) =>
   createSelector(stateSelector, activityStateSelector, (jointTeaching) => {
-    const groups = jointTeaching.groups[formId] || [];
+    const groups = jointTeaching.groups[formId] ?? [];
     // TODO: Do not filter JT matches by filtered activities
     // const activities = activity[`${formId}${MATCHED_ACTIVITIES_TABLE}`];
     // if (!activities) return groups;

@@ -95,7 +95,7 @@ export const updateView =
     );
   };
 
-export const setFormDetailTab = (tab, submission = null) => ({
+export const setFormDetailTab = (tab, submission: string | null = null) => ({
   type: SET_FORM_DETAIL_TAB,
   payload: { tab, submission },
 });

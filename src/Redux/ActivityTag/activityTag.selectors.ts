@@ -5,8 +5,7 @@ const activityTagStateSelector = (state: any) => state.activityTags;
 
 export const selectActivityTagsForForm = createSelector(
   activityTagStateSelector,
-  (activityTags) => (formId: string) =>
-    activityTags[formId] ? activityTags[formId] : [],
+  (activityTags) => (formId: string) => activityTags[formId] ?? [],
 );
 
 export const selectActivityTag = createSelector(

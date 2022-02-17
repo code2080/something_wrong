@@ -25,7 +25,7 @@ export const selectAllActivitiesAreScheduling = (formId: string) =>
     activityStateSelector,
     (activityScheduling, activity) => {
       // TODO: SSP: This doesnt work with SSP
-      const activities = activity[formId];
+      const activities = activity[formId] ?? undefined;
       if (!activities) return false;
 
       const allActivityIds = Object.values(activities).flatMap((acts) =>
