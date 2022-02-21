@@ -10,7 +10,10 @@ type SubmissionState = {
 export const submissionsState = (state): SubmissionState =>
   state.submissions || {};
 
-export const makeSelectSubmissions = () =>
+export const makeSelectSubmissions = (): ((
+  state: any,
+  formId: string,
+) => any) =>
   createSelector(
     submissionsState,
     (_, formId: string) => formId,

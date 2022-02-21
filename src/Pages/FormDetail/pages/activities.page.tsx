@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -33,7 +33,6 @@ import {
 
 // HOOKS
 import useActivityScheduling from '../../../Hooks/activityScheduling';
-import { getExtIdsFromActivities } from '../../../Utils/ActivityValues/helpers';
 import {
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
@@ -119,10 +118,6 @@ const ActivitiesPage = () => {
     const form = state.forms[formId];
     return [form.formType, form.reservationMode];
   });
-
-  useEffect(() => {
-    getExtIdsFromActivities(Object.values(activities).flat());
-  }, [activities]);
 
   /**
    * HOOKS

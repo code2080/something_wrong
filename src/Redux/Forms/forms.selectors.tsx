@@ -7,7 +7,7 @@ import { formStatus } from '../../Constants/formStatuses.constants';
 const formState = (state) => state.forms || {};
 const elementState = (state) => state.elements;
 
-export const makeSelectForm = () =>
+export const makeSelectForm = (): ((state: any, formId: string) => any) =>
   createSelector(
     formState,
     (_, formId: string) => formId,

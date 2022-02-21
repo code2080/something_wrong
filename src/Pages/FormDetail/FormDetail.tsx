@@ -9,7 +9,10 @@ import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 
 // HOOKS
-import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
+import {
+  useFetchLabelsFromExtIds,
+  useTECoreAPI,
+} from '../../Hooks/TECoreApiHooks';
 
 // ACTIONS
 import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
@@ -40,7 +43,7 @@ import {
   ACTIVITIES_TABLE,
   UNMATCHED_ACTIVITIES_TABLE,
   MATCHED_ACTIVITIES_TABLE,
-} from 'Constants/tables.constants';
+} from '../../Constants/tables.constants';
 
 import {
   ASSISTED_SCHEDULING_PERMISSION_NAME,
@@ -57,6 +60,8 @@ import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
 import useActivityGeneratorWSAPI from '../../Hooks/useActivityGeneratorWSAPI';
+import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
+import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -72,7 +77,7 @@ export const TAB_CONSTANT = {
 const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   useActivityGeneratorWSAPI();
 
   /**
@@ -80,6 +85,10 @@ const FormPage = () => {
    */
   const selectForm = useMemo(() => makeSelectForm(), []);
   const form = useSelector((state) => selectForm(state, formId));
+  const selectFormSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) =>
+    selectFormSubmissions(state, formId),
+  );
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
   const hasActivityDesignPermission = useSelector(
     hasPermission(AE_ACTIVITY_PERMISSION),
@@ -126,10 +135,30 @@ const FormPage = () => {
     return () => {
       dispatch(resetActivitiesFetchingHandler());
     };
-  }, []);
+  }, [dispatch]);
+
+  const submissionPayload = useMemo(() => {
+    const initialPayload = { objects: [], types: [], fields: [] };
+    const sections = form.sections;
+    const submissionValues = submissions.map((submission) => submission.values);
+    const teValues = _.isEmpty(submissionValues)
+      ? initialPayload
+      : getExtIdPropsPayload({
+          sections,
+          submissionValues,
+          objectScope: form.objectScope,
+          activities: [],
+        });
+    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+
+    return {
+      ...teValues,
+      objects: [...teValues.objects, ...scopedObjectExtids],
+    };
+  }, [form.sections, form.objectScope, submissions]);
 
   // Effect to get all TE values into redux state
-  // useFetchLabelsFromExtIds(submissionPayload);
+  useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EVENT HANDLERS

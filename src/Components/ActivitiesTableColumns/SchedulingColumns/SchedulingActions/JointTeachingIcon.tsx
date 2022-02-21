@@ -49,7 +49,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   const form = useSelector((state) => selectForm(state, formId));
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const scopedObjectIds = useMemo(
-    () =>
+    (): string[] =>
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );

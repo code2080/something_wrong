@@ -119,7 +119,7 @@ export const resetActivitySorting = (formId, tableType) => ({
   payload: { formId, tableType },
 });
 
-export const selectActivitiesInTable = (tableType, activities) => ({
+export const selectActivitiesInTable = (tableType, activities?: string[]) => ({
   type: SET_SELECTED_ACTIVITIES,
   payload: { tableType, activities },
 });
