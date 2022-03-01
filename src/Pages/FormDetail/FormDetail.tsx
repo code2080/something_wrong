@@ -59,7 +59,6 @@ import FormInfoPage from './pages/formInfo.page';
 import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
-import useActivityGeneratorWSAPI from '../../Hooks/useActivityGeneratorWSAPI';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
@@ -78,7 +77,6 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams<{ formId: string }>();
-  useActivityGeneratorWSAPI();
 
   /**
    * SELECTORS
