@@ -26,7 +26,7 @@ export const useJobWSAPI = () => {
       // Set the active job id and form id
       // Update the redux store
       job && dispatch(updateJobFromWS(job));
-      if (job && job.status && ![jobStatus.NOT_STARTED].includes(job.status)) {
+      if (![jobStatus.NOT_STARTED].includes(job?.status)) {
         dispatch(forceFetchingActivities());
       }
     });
