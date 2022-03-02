@@ -17,12 +17,12 @@ const abortJobFlow = {
 };
 
 export const abortJob =
-  ({ jobId, formId }) =>
+  ({ formId }) =>
   async (dispatch) =>
     dispatch(
       asyncAction.POST({
         flow: abortJobFlow,
-        endpoint: `${getEnvParams().AM_BE_URL}jobs/${jobId}/stop`,
+        endpoint: `${getEnvParams().AM_BE_URL}jobs/${formId}/stop`,
         params: { formId },
       }),
     );

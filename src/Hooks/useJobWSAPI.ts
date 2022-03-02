@@ -14,8 +14,8 @@ export const useJobWSAPI = () => {
   const { formId } = useParams<{ formId: string }>();
 
   const stopJob = () => {
-    if (activeJobId && formId) {
-      dispatch(abortJob({ jobId: activeJobId, formId }));
+    if (formId) {
+      dispatch(abortJob({ formId }));
     }
   };
 
