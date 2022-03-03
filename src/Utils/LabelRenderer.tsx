@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useFetchLabelsFromExtIds } from '../Hooks/TECoreApiHooks';
-import { GetExtIdPropsPayload } from '../Types/TECorePayloads.type';
+import { TGetExtIdPropsPayload } from '../Types/TECorePayloads.type';
 
 type Props = {
   type: string | null;
@@ -10,7 +10,7 @@ type Props = {
 
 const LabelRenderer = ({ type, extId }: Props): JSX.Element => {
   const payload = useMemo(
-    () => ({ [type ?? '']: [extId] } as GetExtIdPropsPayload),
+    () => ({ [type ?? '']: [extId] } as TGetExtIdPropsPayload),
     [type, extId],
   );
   useFetchLabelsFromExtIds(payload);

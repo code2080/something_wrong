@@ -1,5 +1,5 @@
 import {
-  GetExtIdPropsPayload,
+  TGetExtIdPropsPayload,
   PopulateSelectionPayload,
 } from './TECorePayloads.type';
 
@@ -13,7 +13,7 @@ export type getRelatedGroupsReturn = {
 
 export type TECoreAPI = {
   populateSelection(payload: PopulateSelectionPayload): void;
-  getExtIdProps(payload: GetExtIdPropsPayload): any;
+  getExtIdProps(payload: TGetExtIdPropsPayload): any;
   getCurrentUser({
     callback,
   }: {

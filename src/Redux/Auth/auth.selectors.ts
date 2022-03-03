@@ -2,9 +2,10 @@ import { AEBETA_PERMISSION } from 'Constants/permissions.constants';
 import { createSelector } from 'reselect';
 
 const selectAuthUserPermissions = (state) => state.auth.user.permissions;
-const selectAuthedUser = (state) => state.auth.user;
+
 const selectAuthedOrg = (state) => state.auth.org;
 
+export const selectAuthedUser = (state) => state.auth.user;
 export const selectEnvironment = (state) => state.auth.env ?? 'production';
 
 export const selectOrgId = createSelector(selectAuthedOrg, (org) => org._id);

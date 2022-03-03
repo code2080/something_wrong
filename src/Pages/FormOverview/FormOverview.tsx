@@ -1,8 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
@@ -20,67 +18,44 @@ import { fetchMapping } from '../../Redux/Integration/integration.actions';
 
 // SELECTORS
 import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
+import { selectAuthedUser } from '../../Redux/Auth/auth.selectors';
+import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 
 // CONSTANTS
 import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
-import { selectAllForms } from '../../Redux/Forms/forms.selectors';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { fetchElements } from '../../Redux/Elements/elements.actions';
+import { getAllObjectScopesOnForms } from 'Utils/forms.helpers';
+import { TForm } from 'Types/Form.type';
 
-const loadingSelector = createLoadingSelector(['FETCH_FORMS']);
-const mapStateToProps = (state) => ({
-  isLoading: loadingSelector(state),
-  user: state.auth.user,
-});
+const FormList = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-const mapActionsToProps = {
-  fetchForms,
-  fetchElements,
-  fetchUsers,
-  fetchObjectRequests,
-  setBreadcrumbs,
-  fetchMapping,
-  fetchOrg,
-  fetchIntegrationSettings,
-};
-
-const FormList = ({
-  user,
-  isLoading,
-  fetchForms,
-  fetchElements,
-  fetchUsers,
-  fetchMapping,
-  fetchOrg,
-  fetchIntegrationSettings,
-  fetchObjectRequests,
-  setBreadcrumbs,
-  history,
-}) => {
+  /**
+   * SELECTORS
+   */
   const forms = useSelector(selectAllForms);
+  const isLoadingForms = useSelector(createLoadingSelector(['FETCH_FORMS']));
+  const user = useSelector(selectAuthedUser);
 
-  const objectScopes = useMemo(
-    () => ({
-      types: _.uniq(
-        forms.reduce(
-          (objScopes, form) =>
-            form.objectScope ? [...objScopes, form.objectScope] : objScopes,
-          [],
-        ),
-      ),
-    }),
-    [forms],
-  );
+  /**
+   * MEMOIZED PROPS
+   */
+  const objectScopes = useMemo(() => getAllObjectScopesOnForms(forms), [forms]);
 
   useFetchLabelsFromExtIds(objectScopes);
 
+  /**
+   * EFFECTS
+   */
   useEffect(() => {
-    fetchForms();
-    fetchOrg();
-    fetchElements();
-    setBreadcrumbs([{ path: '/forms', label: 'Forms' }]);
-    fetchObjectRequests();
+    dispatch(fetchForms());
+    dispatch(fetchOrg());
+    dispatch(fetchElements());
+    dispatch(setBreadcrumbs([{ path: '/forms', label: 'Forms' }]));
+    dispatch(fetchObjectRequests());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -109,8 +84,8 @@ const FormList = ({
         ]}
         dataSource={forms}
         rowKey='_id'
-        isLoading={isLoading}
-        onRow={(form) => ({
+        isLoading={isLoadingForms}
+        onRow={(form: TForm) => ({
           onClick: () => history.push(`/forms/${form._id}`),
         })}
         pagination={false}
@@ -121,25 +96,4 @@ const FormList = ({
   );
 };
 
-FormList.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  user: PropTypes.object,
-  fetchForms: PropTypes.func.isRequired,
-  fetchElements: PropTypes.func.isRequired,
-  fetchUsers: PropTypes.func.isRequired,
-  fetchObjectRequests: PropTypes.func.isRequired,
-  fetchMapping: PropTypes.func.isRequired,
-  setBreadcrumbs: PropTypes.func.isRequired,
-  fetchOrg: PropTypes.func.isRequired,
-  fetchIntegrationSettings: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
-};
-
-FormList.defaultProps = {
-  forms: [],
-  user: null,
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapActionsToProps)(FormList),
-);
+export default FormList;

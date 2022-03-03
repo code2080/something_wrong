@@ -34,7 +34,7 @@ export type PopulateSelectionPayload = {
   endTime?: string;
 };
 
-export type GetExtIdPropsPayload = {
+export type TGetExtIdPropsPayload = {
   objects: (TEObject | string)[];
   fields: string[];
   types: string[];

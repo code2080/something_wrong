@@ -16,7 +16,7 @@ import {
   SECTION_CONNECTED,
 } from '../../Constants/sectionTypes.constants';
 import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
-import { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
+import { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 
 const selectIntegration = (state) => state.integration;
 const selectReservationModes = (state) => state.integration.reservationModes;
@@ -158,7 +158,7 @@ const extractPayloadFromActivities = (activities: TActivity[]) => {
     ['objects', '', a.jointTeaching?.object],
   ]);
 
-  return allExtIdPairs.reduce<GetExtIdPropsPayload>(
+  return allExtIdPairs.reduce<TGetExtIdPropsPayload>(
     (payload, [type, _, extId]) => {
       const newPayloadWithExtId = {
         ...payload,
@@ -191,7 +191,7 @@ const extractPayloadFromObjectRequests = (requests) =>
 const extractPayloadFromTemplatesAndGroups = (
   sections: any[],
   submissionValues: { [sectionId: string]: any }[],
-): Partial<GetExtIdPropsPayload> => {
+): Partial<TGetExtIdPropsPayload> => {
   if (!sections || !submissionValues) return {};
   const arraySubmissionValues = Array.isArray(submissionValues)
     ? submissionValues
@@ -336,7 +336,7 @@ export const getExtIdPropsPayload = ({
   activities?: TActivity[];
   objectRequests?: ObjectRequest[];
   objectScope?: string | null;
-}): GetExtIdPropsPayload => {
+}): TGetExtIdPropsPayload => {
   if (isEmpty(sections) || isEmpty(submissionValues))
     return emptyExtIdPropsPayload;
   const elements = getAllElementsFromSections(sections, submissionValues);

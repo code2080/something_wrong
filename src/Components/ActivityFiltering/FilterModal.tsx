@@ -12,7 +12,7 @@ import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.sele
 
 import PropertySelector from '../PropertySelector';
 import type { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
-import type { GetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
+import type { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.selectors';
@@ -111,12 +111,12 @@ const getLabelsFromProp = {
 
 const getTECorePayload = (
   filterMap: TFilterLookUpMap,
-): GetExtIdPropsPayload => {
+): TGetExtIdPropsPayload => {
   const labels: { field: 'fields' | 'types' | 'objects'; extId: string }[] =
     Object.entries(filterMap).flatMap(
       ([property, values]) => getLabelsFromProp[property]?.(values) ?? null,
     );
-  return _.compact(labels).reduce<GetExtIdPropsPayload>(
+  return _.compact(labels).reduce<TGetExtIdPropsPayload>(
     (payload, label) => ({
       ...payload,
       [label.field]: _.uniq([...(payload[label.field] ?? []), label.extId]),

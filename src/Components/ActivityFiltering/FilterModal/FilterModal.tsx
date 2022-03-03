@@ -20,7 +20,7 @@ import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
 import type { TFilterLookUpMap } from 'Types/FilterLookUp.type';
-import type { GetExtIdPropsPayload } from 'Types/TECorePayloads.type';
+import type { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
 import { FETCH_ACTIVITY_FILTER_LOOKUP_MAP } from 'Redux/FilterLookupMap/filterLookupMap.actionTypes';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
@@ -67,12 +67,12 @@ const getLabelsFromProp = {
 
 const getTECorePayload = (
   filterMap: TFilterLookUpMap,
-): GetExtIdPropsPayload => {
+): TGetExtIdPropsPayload => {
   const labels: { field: 'fields' | 'types' | 'objects'; extId: string }[] =
     Object.entries(filterMap).flatMap(
       ([property, values]) => getLabelsFromProp[property]?.(values) ?? null,
     );
-  return _.compact(labels).reduce<GetExtIdPropsPayload>(
+  return _.compact(labels).reduce<TGetExtIdPropsPayload>(
     (payload, label) => ({
       ...payload,
       [label.field]: _.uniq([...(payload[label.field] ?? []), label.extId]),

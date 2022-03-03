@@ -9,7 +9,7 @@ import {
 } from '../../Constants/elementTypes.constants';
 import { extractValuesFromActivityValues } from '../activities.helpers';
 import {
-  GetExtIdPropsPayload,
+  TGetExtIdPropsPayload,
   TEField,
   TEObject,
   TEObjectFilter,
@@ -142,7 +142,7 @@ export const getFVForOtherValue = (activityValue: any): any[] | null => {
 const extractExtIdsFromValues = (values: {
   fields: TEField[];
   objects: (TEObject | TEObjectFilter)[];
-}): GetExtIdPropsPayload => {
+}): TGetExtIdPropsPayload => {
   const [objectIds, objFilters]: [any[], any[]] = _.partition(
     values.objects,
     (obj) => obj instanceof TEObject,
@@ -173,7 +173,7 @@ const extractExtIdsFromValues = (values: {
 
 export const getExtIdsFromActivities = (
   activities: TActivity[],
-): GetExtIdPropsPayload => {
+): TGetExtIdPropsPayload => {
   if (_.isEmpty(activities)) return { objects: [], fields: [], types: [] };
   const activityValues = _(activities)
     .flatMap()

@@ -28,7 +28,7 @@ import { selectExtIds } from 'Redux/TE/te.selectors';
 
 // TYPES
 import { TActivity } from 'Types/Activity.type';
-import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
+import { TGetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { useSubmissions } from './useSubmissions';
 
@@ -200,7 +200,7 @@ export const useActivitiesObjectWatcher = ({
 }: {
   activities: TActivity[];
 }) => {
-  const teCoreObjectPayload: GetExtIdPropsPayload = useMemo(() => {
+  const teCoreObjectPayload: TGetExtIdPropsPayload = useMemo(() => {
     const primaryObjects = activities
       .filter((activity: TActivity) => activity.scopedObject)
       .map(({ scopedObject }) => scopedObject || '');

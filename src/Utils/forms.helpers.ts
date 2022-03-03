@@ -1,3 +1,4 @@
+import { uniq } from 'lodash';
 import { SECTION_VERTICAL } from '../Constants/sectionTypes.constants';
 import { elementTypeMapping } from '../Constants/elementTypes.constants';
 import { datasourceValueTypes } from '../Constants/datasource.constants';
@@ -7,6 +8,25 @@ import {
   pickElement,
   findElementValueInSubmissionFromId,
 } from './elements.helpers';
+
+// TYPES
+import { TForm } from 'Types/Form.type';
+import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
+
+/**
+ * @function getAllObjectScopesOnForms
+ * @description reduces an array of forms down to all the unique object scopes
+ * @param {TForm[]} forms
+ * @returns {Record<string, string[]>}
+ */
+ export const getAllObjectScopesOnForms = (forms: TForm[]): TGetExtIdPropsPayload => {
+  const allObjectScopes = forms.reduce(
+    (objScopes: string[], form) => form.objectScope ? [...objScopes, form.objectScope] : objScopes,
+    [],
+  );
+
+  return {types: uniq(allObjectScopes), objects: [], fields: [] };
+};
 
 /**
  * @function extractSubmissionColumns
@@ -253,7 +273,7 @@ export const parseTECoreGetObjectsReturn = (results) =>
 export const traversedClassList = (element) => {
   if (!element) return [];
   let currentNode = element;
-  const classes = [];
+  const classes: any[] = [];
   do {
     classes.push(...currentNode.classList);
     currentNode = currentNode.parentNode;

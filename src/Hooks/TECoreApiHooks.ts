@@ -6,7 +6,7 @@ import { selectExtIds } from '../Redux/TE/te.selectors';
 import { setTEDataForValues } from '../Redux/TE/te.actions';
 import { TECoreAPIContext } from '../Components/TECoreAPI/context';
 import { TECoreAPI } from '../Types/TECoreAPI';
-import { GetExtIdPropsPayload, TEObject } from '../Types/TECorePayloads.type';
+import { TGetExtIdPropsPayload, TEObject } from '../Types/TECorePayloads.type';
 
 export const useTECoreAPI = (): TECoreAPI => {
   const teCoreAPI: any = useContext(TECoreAPIContext);
@@ -22,9 +22,9 @@ export const fetchLabelsFromExtIds = (
   teCoreAPI: TECoreAPI,
   dispatch: Dispatch,
   extIds: string[],
-  payload: GetExtIdPropsPayload,
+  payload: TGetExtIdPropsPayload,
 ) => {
-  async function exec(nonNullPayload: GetExtIdPropsPayload) {
+  async function exec(nonNullPayload: TGetExtIdPropsPayload) {
     const extIdProps = await teCoreAPI.getExtIdProps(nonNullPayload);
     dispatch(setTEDataForValues(extIdProps));
   }
@@ -35,7 +35,7 @@ export const fetchLabelsFromExtIds = (
     ),
     types: _.compact(payload.types),
     fields: _.compact(payload.fields),
-  } as GetExtIdPropsPayload;
+  } as TGetExtIdPropsPayload;
   const payloadExtids = _.flatMap(nonNullPayload);
   const missingExtIdsInStore = !payloadExtids.every(
     (extId) =>
@@ -45,7 +45,7 @@ export const fetchLabelsFromExtIds = (
   if (!_.isEmpty(payloadExtids) && missingExtIdsInStore) exec(nonNullPayload);
 };
 
-export const useFetchLabelsFromExtIds = (payload: GetExtIdPropsPayload) => {
+export const useFetchLabelsFromExtIds = (payload: TGetExtIdPropsPayload) => {
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
   const extIds = useSelector(selectExtIds) as string[];
