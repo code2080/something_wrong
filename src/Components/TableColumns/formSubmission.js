@@ -21,8 +21,9 @@ import SubmissionActionButton from './Components/SubmissionActionButton';
 export const formSubmission = {
   NAME: {
     title: 'Submitter',
-    key: 'submitter',
-    dataIndex: 'submitter',
+    key: 'recipientId',
+    dataIndex: 'firstName',
+    render: (recipientId, submission) => submission.submitter,
     sorter: (a, b) => a.submitter.localeCompare(b.submitter),
   },
   SUBMISSION_DATE: {
@@ -36,13 +37,15 @@ export const formSubmission = {
     return {
       title: 'Primary object',
       key: 'scopedObject',
-      dataIndex: 'scopedObject',
-      render: (val) => {
-        const request = objectRequests.find((request) => request._id === val);
+      dataIndex: 'scopedObjectLabel',
+      render: (_, { scopedObject }) => {
+        const request = objectRequests.find(
+          (request) => request._id === scopedObject,
+        );
         return request ? (
           <ObjectRequestValue request={request} />
         ) : (
-          <ScopedObject objectExtId={val} />
+          <ScopedObject objectExtId={scopedObject} />
         );
       },
       sorter: (a, b) => sortAlpha(a.scopedObject, b.scopedObject),
@@ -59,8 +62,8 @@ export const formSubmission = {
   SCHEDULING_PROGRESS: {
     title: 'Scheduling progress',
     key: 'schedulingProgress',
-    dataIndex: 'teCoreProps',
-    render: (teCoreProps) =>
+    dataIndex: 'teCoreProps.schedulingProgress',
+    render: (_, { teCoreProps }) =>
       teCoreProps ? (
         <StatusLabel
           color={
@@ -82,8 +85,8 @@ export const formSubmission = {
   ACCEPTANCE_STATUS: {
     title: 'Acceptance status',
     key: 'acceptanceStatus',
-    dataIndex: 'teCoreProps',
-    render: (teCoreProps) => (
+    dataIndex: 'teCoreProps.acceptanceStatus',
+    render: (_, { teCoreProps }) => (
       <AcceptanceStatus
         acceptanceStatus={teCoreProps.acceptanceStatus}
         acceptanceComment={teCoreProps.acceptanceComment}
@@ -126,12 +129,13 @@ export const formSubmission = {
   IS_STARRED: (dispatch, disabled) => ({
     title: 'Is starred',
     key: 'isStarred',
-    dataIndex: 'teCoreProps',
+    dataIndex: 'teCoreProps.isStarred',
     sorter: (a, b) =>
       sortBoolean(a.teCoreProps.isStarred, b.teCoreProps.isStarred),
     align: 'center',
     fixedWidth: 100,
-    render: (teCoreProps, item) => {
+    render: (_, item) => {
+      const { teCoreProps } = item;
       const { isStarred } = teCoreProps;
       const iconProps = {
         style: { fontSize: '0.9rem', color: themeColors.jungleGreen },

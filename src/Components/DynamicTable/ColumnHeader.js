@@ -8,9 +8,10 @@ const ColumnHeader = ({ width, children, className, title }) => {
   const subtract = hasSorter ? 36 : 16;
   const sorter = _.get(
     children,
-    `[${children.length - 1}].props.children.props.children.props.children[1]`,
+    `[${children.length - 1}].props.children.props.children`,
     [],
   );
+
   return (
     <div>
       <div
@@ -32,7 +33,7 @@ const ColumnHeader = ({ width, children, className, title }) => {
             top: '0px',
           }}
         >
-          {sorter}
+          {sorter[sorter.length - 1] || null}
         </div>
       )}
     </div>

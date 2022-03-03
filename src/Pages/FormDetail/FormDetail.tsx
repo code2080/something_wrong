@@ -15,7 +15,6 @@ import {
 } from '../../Hooks/TECoreApiHooks';
 
 // ACTIONS
-import { fetchFormSubmissions } from '../../Redux/FormSubmissions/formSubmissions.actions';
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import {
   resetActivitiesFetchingHandler,
@@ -99,7 +98,6 @@ const FormPage = () => {
   const isBeta = useSelector(selectIsBetaOrDev);
 
   useEffect(() => {
-    dispatch(fetchFormSubmissions(formId));
     dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
     dispatch(fetchConstraints());

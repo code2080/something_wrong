@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { get } from 'lodash';
 import { Modal, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -30,6 +30,7 @@ import FilterContent from './FilterContent';
 import FilterModalContainer from './FilterModalContainer';
 
 import './FilterModal.scss';
+import { useRecipients } from 'Hooks/useRecipients';
 
 const propTypes = {
   isVisible: PropTypes.bool,
@@ -89,6 +90,7 @@ const FilterModal = ({
 }: Props) => {
   const dispatch = useDispatch();
   const [form] = useForm();
+  const { fetchRecipients } = useRecipients();
 
   const rawFilterLookupMap = useSelector(selectFormActivityLookupMap(formId));
   const filterLookupMap = useSelector(
@@ -108,10 +110,16 @@ const FilterModal = ({
     createLoadingSelector([FETCH_ACTIVITY_FILTER_LOOKUP_MAP]),
   );
 
-  useEffect(
-    () => isVisible && dispatch(fetchActivityFilterLookupMap({ formId })),
-    [dispatch, formId, isVisible],
-  );
+  useEffect(() => {
+    const doGetFilterLookupMap = async () => {
+      const res = await dispatch(fetchActivityFilterLookupMap({ formId }));
+      const submissionIds = Object.keys(get(res, 'lookupMap.submitter', {}));
+      fetchRecipients(submissionIds);
+    };
+    if (isVisible) {
+      doGetFilterLookupMap();
+    }
+  }, [dispatch, formId, isVisible]);
   const handleCancel = useCallback(() => {
     onClose();
     // eslint-disable-next-line react-hooks/exhaustive-deps

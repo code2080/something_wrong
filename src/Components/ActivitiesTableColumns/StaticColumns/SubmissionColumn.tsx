@@ -14,6 +14,8 @@ import './SubmissionColumn.scss';
 import { selectExtIdLabel } from '../../../Redux/TE/te.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 import ObjectRequestValue from '../../Elements/ObjectRequestValue';
+import { isEmpty } from 'lodash';
+import { TFormInstance } from 'Types/FormInstance.type';
 
 // TYPES
 type Props = {
@@ -24,18 +26,21 @@ const SubmissionColumn = ({ formInstanceId }: Props) => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
-  const { firstName, lastName, scopedObject } = useSelector((state) =>
+  const formInstance = useSelector((state) =>
     selectFormInstance(state, {
       formId,
       formInstanceId,
     }),
-  );
+  ) as TFormInstance;
 
+  const { scopedObject, firstName, lastName } = formInstance;
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   const primaryObject = useSelector(selectExtIdLabel)(
     'objects',
     scopedObject as string,
   );
+
+  if (isEmpty(formInstance)) return null;
 
   /**
    * EVENT HANDLERS

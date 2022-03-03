@@ -36,6 +36,7 @@ import {
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from 'Redux/ActivityTag/activityTag.selectors';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { selectRecipientsMap } from 'Redux/Recipients/recipients.selectors';
 
 export interface ValueProps {
   selectedProperty: string;
@@ -94,6 +95,9 @@ const Provider = ({
   const submissions = useSelector((state) =>
     makeSelectSubmissions()(state, formId),
   );
+
+  const recipients = useSelector(selectRecipientsMap());
+
   const activityTags = useSelector(selectActivityTagsForForm)(formId).reduce(
     (tagsMap, tag) => ({ ...tagsMap, null: 'N/A', [tag._id]: tag.name }),
     {},
@@ -104,13 +108,25 @@ const Provider = ({
 
   const optionsLabelMapping = useMemo(() => {
     return {
-      submitter: submissions.reduce(
-        (results, submission) => ({
-          ...results,
-          [submission.recipientId as string]: submission.submitter,
-        }),
-        {},
-      ),
+      submitter: {
+        ...submissions.reduce(
+          (results, submission) => ({
+            ...results,
+            [submission.recipientId as string]: submission.submitter,
+          }),
+          {},
+        ),
+        ...Object.keys(recipients || {}).reduce(
+          (results, recipientId) => ({
+            ...results,
+            [recipientId]: [
+              recipients[recipientId].firstName,
+              recipients[recipientId].lastName,
+            ].join(' '),
+          }),
+          {},
+        ),
+      },
       tag: activityTags,
       status: Object.keys(EActivityStatus).reduce(
         (results, key) => ({

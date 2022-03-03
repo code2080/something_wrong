@@ -80,3 +80,8 @@ export const selectSelectedFilterValues = ({ formId, origin = '' }) =>
         : (omit(INITIAL_FILTER_VALUES, 'status') as any))
     );
   });
+
+export const selectFilterValueForSubmissions = ({ formId }) =>
+  createSelector(filterstate, (filters) => {
+    return filters[`${formId}_SUBMISSIONS`];
+  });

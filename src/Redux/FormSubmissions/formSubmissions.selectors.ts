@@ -1,10 +1,17 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
-import { sortTime } from '../../Components/TableColumns/Helpers/sorters';
+import { compact, isEmpty } from 'lodash';
 import { TFormInstance } from '../../Types/FormInstance.type';
 
 type SubmissionState = {
-  [formId: string]: { [formInstanceId: string]: TFormInstance };
+  [formId: string]: {
+    list: string[];
+    mapped: {
+      byId: {
+        [formInstanceId: string]: TFormInstance;
+      };
+    };
+    total: number;
+  };
 };
 
 export const submissionsState = (state): SubmissionState =>
@@ -17,10 +24,13 @@ export const makeSelectSubmissions = (): ((
   createSelector(
     submissionsState,
     (_, formId: string) => formId,
-    (submissions, formId) => {
-      const submissionsForForm = submissions[formId] || {};
-      return _.flatMap<TFormInstance>(submissionsForForm).sort(
-        (a: any, b: any) => sortTime(a.updatedAt, b.updatedAt),
+    (submissions, formId): TFormInstance[] => {
+      const formSubmissions = submissions[formId];
+      if (isEmpty(formSubmissions)) return [];
+      return compact(
+        (formSubmissions.list || []).map(
+          (id) => formSubmissions.mapped.byId[id],
+        ),
       );
     },
   );
@@ -30,7 +40,41 @@ export const makeSelectFormInstance = () =>
     submissionsState,
     (_, { formId, formInstanceId }) => ({ formId, formInstanceId }),
     (submissions, { formId, formInstanceId }): TFormInstance => {
-      const submissionsForForm = submissions[formId] || {};
-      return submissionsForForm[formInstanceId] || {};
+      return submissions[formId]?.mapped.byId[formInstanceId] ?? {};
     },
+  );
+
+export const selectFormInstance = (formId, formInstanceId) =>
+  createSelector(
+    submissionsState,
+    (submissions) => submissions[formId]?.mapped.byId[formInstanceId] ?? {},
+  );
+
+export const selectFormSubmissions = (formId: string, submissionIds) =>
+  createSelector(submissionsState, (submissions) => {
+    const formSubmissions = submissions[formId];
+    if (!formSubmissions) return [];
+    return compact(
+      submissionIds.map(
+        (submissionId) => formSubmissions.mapped?.byId[submissionId],
+      ),
+    );
+  });
+
+export const selectFormSubmissionIds = (formId: string) =>
+  createSelector(submissionsState, (submissions) => {
+    const formSubmissions = submissions[formId];
+    return formSubmissions?.list || [];
+  });
+
+export const selectFormSubmissionsTotal = (formId: string) =>
+  createSelector(
+    submissionsState,
+    (submissions) => submissions[formId]?.total ?? 0,
+  );
+
+export const selectAllSubmissionsForForm = (formId: string) =>
+  createSelector(
+    submissionsState,
+    (submissions) => submissions[formId]?.mapped?.byId ?? {},
   );

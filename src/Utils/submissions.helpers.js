@@ -95,3 +95,13 @@ export const parseFormSectionValues = (formInstanceValues, formSections) => {
     }, {}),
   };
 };
+
+export const convertToSubmissionsFilterQuery = (filters, options = {}) => {
+  const { userId } = options;
+  const results = {};
+  if (_.isEmpty(filters)) return results;
+  if (filters.onlyOwn) results['teCoreProps.assignedTo'] = userId;
+  if (filters.onlyStarred) results['teCoreProps.isStarred'] = true;
+  if (filters.freeTextFilter) results.freetext = filters.freeTextFilter;
+  return results;
+};

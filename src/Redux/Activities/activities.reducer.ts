@@ -97,7 +97,10 @@ const reducer = (state = initialState, action) => {
       const formIdValue = tableType ? formId + tableType : formId;
       return {
         ...state,
-        list: activities,
+        list: {
+          ...state.list,
+          [formIdValue]: activities,
+        },
         filteredActivityIds: {
           ...(state.allActivitiyIds || {}),
           [formIdValue]: activities.map(({ _id }) => _id),
@@ -118,6 +121,13 @@ const reducer = (state = initialState, action) => {
           //   }),
           //   {},
           // ),
+        },
+        byId: {
+          ...state.byId,
+          ..._.keyBy(
+            activities.map((act) => new Activity(act)),
+            '_id',
+          ),
         },
         [formIdValue]: {
           ..._.groupBy(

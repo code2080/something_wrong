@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { isEqual, isEmpty, uniqWith } from 'lodash';
+import { isEqual, isEmpty, uniqWith, uniq } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { initialState as initialPayload } from 'Redux/TE/te.helpers';
@@ -30,6 +30,7 @@ import { selectExtIds } from 'Redux/TE/te.selectors';
 import { TActivity } from 'Types/Activity.type';
 import { GetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
+import { useSubmissions } from './useSubmissions';
 
 interface Props {
   formId: string;
@@ -84,6 +85,7 @@ export const useActivitiesWatcher = ({
   const form = useSelector((state) => selectForm(state, formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
+  const { fetchSubmissions } = useSubmissions({ formId });
   const extIds = useSelector(selectExtIds);
   useAllActivities({ formId, filters });
 
@@ -117,6 +119,9 @@ export const useActivitiesWatcher = ({
       ),
     );
     if (res) {
+      fetchSubmissions(
+        uniq(res.activities.map(({ formInstanceId }) => formInstanceId)),
+      );
       setTotalPages(res.totalPages ?? 1);
     }
   };

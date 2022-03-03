@@ -24,6 +24,9 @@ import { EActivityStatus } from 'Types/ActivityStatus.enum';
 // TYPES
 type TActivityMap = {
   // To be updated
+  list: {
+    [formId: string]: TActivity[];
+  };
   allActivities: null | IndexedObject[];
   inWorkerProgress: {
     [formId: string]: undefined | boolean;
@@ -72,16 +75,16 @@ export const selectActivitiesForForm = ({ formId, tableType = '' }) =>
     submissionStateSelector,
     (activity, submission) => {
       const formSubmissions = submission[formId] || {};
-      const activitiesTableId = `${formId}${tableType}`;
-      return Object.values(activity[activitiesTableId] || {})
-        .flat()
-        .map((activity: Activity) => {
+      const activitiesTableId = `${formId}${tableType || ''}`;
+      return (activity.list[activitiesTableId] || []).map(
+        (activity: Activity) => {
           return new Activity({
             ...activity,
             scopedObject:
               formSubmissions?.[activity.formInstanceId]?.scopedObject,
           }) as TActivity;
-        });
+        },
+      );
     },
   );
 

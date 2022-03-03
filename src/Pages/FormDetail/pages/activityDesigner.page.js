@@ -91,6 +91,7 @@ const ActivityDesignPage = () => {
   const activities = useSelector((state) =>
     selectActivitiesForForm(state, formId),
   );
+
   const validTypes = useSelector(selectValidTypesOnReservationMode)(
     form.reservationMode,
   );

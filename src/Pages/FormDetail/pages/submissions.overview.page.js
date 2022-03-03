@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
@@ -10,15 +11,15 @@ import FilterModal from '../../../Components/FormSubmissionFilters/FilterModal';
 
 // HOOKS
 import {
-  // useFetchLabelsFromExtIds,
+  useFetchLabelsFromExtIds,
   useTECoreAPI,
 } from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
-import { selectFilter } from '../../../Redux/Filters/filters.selectors';
-import { makeSelectSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
+import { selectFilterValueForSubmissions } from '../../../Redux/Filters/filters.selectors';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
+import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
 import {
@@ -30,20 +31,26 @@ import {
 import {
   extractSubmissionColumns,
   extractSubmissionData,
-  applyScopedObjectFilters,
-  filterFormInstancesOnAuthedUser,
-  parseTECoreGetObjectsReturn,
   traversedClassList,
 } from '../../../Utils/forms.helpers';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
+import {
+  toOrderDirection,
+  usePaginationAndSorting,
+} from 'Hooks/usePaginationAndSorting';
 
 // CONSTANTS
 import { tableColumns } from '../../../Components/TableColumns';
-import { formatElementValue } from '../../../Utils/elements.helpers';
 import { teCoreCallnames } from '../../../Constants/teCoreActions.constants';
 import { tableViews } from '../../../Constants/tableViews.constants';
-import { FormSubmissionFilterInterface } from '../../../Models/FormSubmissionFilter.interface';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
+import {
+  selectFormSubmissionIds,
+  selectFormSubmissions,
+  selectFormSubmissionsTotal,
+} from '../../../Redux/FormSubmissions/formSubmissions.selectors';
+import { fetchFormSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.actions';
+import { convertToSubmissionsFilterQuery } from '../../../Utils/submissions.helpers';
 
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
@@ -58,21 +65,18 @@ const SubmissionsOverviewPage = () => {
    */
   const selectForm = useMemo(() => makeSelectForm(), []);
   const form = useSelector((state) => selectForm(state, formId));
-  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-  const submissions = useSelector((state) => selectSubmissions(state, formId));
+  const submissionIds = useSelector(selectFormSubmissionIds(formId));
+  const submissions = useSelector(selectFormSubmissions(formId, submissionIds));
+  const submissionsTotal = useSelector(selectFormSubmissionsTotal(formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
-  const filters = useSelector(selectFilter)(
-    `${formId}_SUBMISSIONS`,
-    FormSubmissionFilterInterface,
-  );
+
   const userId = useSelector(selectAuthedUserId);
   const objectRequests = useSelector(selectFormObjectRequest(formId));
   /**
    * STATE
    */
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [scopedObjects, setScopedObjects] = useState([]);
 
   /**
    * MEMOIZED VALUES
@@ -80,34 +84,34 @@ const SubmissionsOverviewPage = () => {
   const scopedObjectIds = useMemo(
     () =>
       form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
-    [form, submissions],
+    [form, submissionIds],
   );
 
-  // const submissionPayload = useMemo(() => {
-  //   const initialPayload = {
-  //     objects: submissions.flatMap(({ scopedObject }) => scopedObject),
-  //     fields: [],
-  //     types: [],
-  //   };
-  //   const sections = form.sections;
-  //   const submissionValues = submissions.map((submission) => submission.values);
-  //   const teValues = _.isEmpty(submissionValues)
-  //     ? initialPayload
-  //     : getExtIdPropsPayload({
-  //         sections,
-  //         submissionValues,
-  //         objectScope: form.objectScope,
-  //         activities: [],
-  //       });
-  //   const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+  const submissionPayload = useMemo(() => {
+    const initialPayload = {
+      objects: submissions.flatMap(({ scopedObject }) => scopedObject),
+      fields: [],
+      types: [],
+    };
+    const sections = form.sections;
+    const submissionValues = submissions.map((submission) => submission.values);
+    const teValues = _.isEmpty(submissionValues)
+      ? initialPayload
+      : getExtIdPropsPayload({
+          sections,
+          submissionValues,
+          objectScope: form.objectScope,
+          activities: [],
+        });
+    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
-  //   return {
-  //     ...teValues,
-  //     objects: [...teValues.objects, ...scopedObjectExtids],
-  //   };
-  // }, [form.sections, form.objectScope, submissions]);
+    return {
+      ...teValues,
+      objects: [...teValues.objects, ...scopedObjectExtids],
+    };
+  }, [form.sections, form.objectScope, submissionIds]);
 
-  // useFetchLabelsFromExtIds(submissionPayload);
+  useFetchLabelsFromExtIds(submissionPayload);
 
   /**
    * EFFECTS
@@ -116,8 +120,7 @@ const SubmissionsOverviewPage = () => {
     if (scopedObjectIds && scopedObjectIds.length > 0)
       teCoreAPI[teCoreCallnames.GET_OBJECTS_BY_EXTID]({
         extids: scopedObjectIds,
-        callback: (results) =>
-          setScopedObjects(parseTECoreGetObjectsReturn(results)),
+        callback: () => {},
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
@@ -135,8 +138,9 @@ const SubmissionsOverviewPage = () => {
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(
     () => extractSubmissionData(submissions, _cols),
-    [submissions, _cols],
+    [submissionIds, _cols],
   );
+
   const _dataSource = useMemo(
     () =>
       submissions.map((submission) => {
@@ -149,55 +153,64 @@ const SubmissionsOverviewPage = () => {
     [submissions, _elementTableData],
   );
 
-  const columns = useMemo(
-    () =>
-      _.compact([
-        tableColumns.formSubmission.ASSIGNMENT,
-        tableColumns.formSubmission.NAME,
-        tableColumns.formSubmission.SUBMISSION_DATE,
-        tableColumns.formSubmission.IS_STARRED(dispatch, isSaving),
-        tableColumns.formSubmission.SCOPED_OBJECT(objectRequests),
-        tableColumns.formSubmission.ACCEPTANCE_STATUS,
-        tableColumns.formSubmission.SCHEDULING_PROGRESS,
-        form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
-        ..._cols,
-        tableColumns.formSubmission.ACTION_BUTTON,
-      ]),
-    [dispatch, isSaving, objectRequests, form.objectScope, _cols],
-  );
+  const filterQuery = useSelector(selectFilterValueForSubmissions({ formId }));
+  const currentUserId = useSelector(selectAuthedUserId);
 
-  const filteredDatasource = useMemo(() => {
-    const { freeTextFilter, scopedObject } = filters;
-    // Normalized free text filter
-    const query = freeTextFilter.toString().toLowerCase();
+  const onFetchSubmissions = ({ current, pageSize, order, orderBy }) => {
+    dispatch(
+      fetchFormSubmissions(formId, {
+        page: current,
+        perPage: pageSize,
+        order,
+        orderBy,
+        ...convertToSubmissionsFilterQuery(filterQuery, { userId }),
+      }),
+    );
+  };
 
-    // Filter data source by iterating over each of the visible columns and determine if one of them contains the query
-    return _dataSource
-      .filter((el) =>
-        filters.onlyOwn ? filterFormInstancesOnAuthedUser(el, userId) : true,
-      )
-      .filter((el) => !filters.onlyStarred || el.teCoreProps.isStarred)
-      .filter((el) =>
-        Object.keys(scopedObject).filter((key) => scopedObject[key].length > 0)
-          .length > 0
-          ? applyScopedObjectFilters(el, scopedObjects, scopedObject)
-          : true,
-      )
-      .filter((el) =>
-        query.length >= 3
-          ? columns.some((col) => {
-              if (!el[col.dataIndex]) return false;
-              const formattedValue = formatElementValue(el[col.dataIndex]);
-              return (
-                formattedValue.toString().toLowerCase().indexOf(query) > -1
-              );
-            })
-          : true,
-      )
-      .sort((a, b) => {
-        return a.index - b.index;
-      });
-  }, [filters, _dataSource, userId, scopedObjects, columns]);
+  const { pagination, sorting, onChange, onSortingChange } =
+    usePaginationAndSorting({
+      onChangeCallback: ({ current, pageSize, order, orderBy }) => {
+        onFetchSubmissions({
+          current,
+          pageSize,
+          order: toOrderDirection(order),
+          orderBy,
+        });
+      },
+    });
+
+  useEffect(() => {
+    const { current, pageSize } = pagination;
+    const { order, orderBy } = sorting;
+    onFetchSubmissions({
+      current,
+      pageSize,
+      order: toOrderDirection(order),
+      orderBy,
+    });
+  }, [filterQuery, currentUserId]);
+
+  const columns = useMemo(() => {
+    const allCols = _.compact([
+      tableColumns.formSubmission.ASSIGNMENT,
+      tableColumns.formSubmission.NAME,
+      tableColumns.formSubmission.SUBMISSION_DATE,
+      tableColumns.formSubmission.IS_STARRED(dispatch, isSaving),
+      tableColumns.formSubmission.SCOPED_OBJECT(objectRequests),
+      tableColumns.formSubmission.ACCEPTANCE_STATUS,
+      tableColumns.formSubmission.SCHEDULING_PROGRESS,
+      form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
+      ..._cols,
+      tableColumns.formSubmission.ACTION_BUTTON,
+    ]);
+    return allCols.map((col) => ({
+      ...col,
+      // sortOrder:
+      sorter: col.dataIndex ? () => 0 : undefined,
+    }));
+    // return allCols;
+  }, [dispatch, isSaving, objectRequests, form.objectScope, _cols, sorting]);
 
   return (
     <>
@@ -215,7 +228,7 @@ const SubmissionsOverviewPage = () => {
       />
       <DynamicTable
         columns={columns}
-        dataSource={filteredDatasource}
+        dataSource={_dataSource}
         rowKey='_id'
         onRow={(formInstance) => ({
           onClick: (e) => {
@@ -230,7 +243,14 @@ const SubmissionsOverviewPage = () => {
         isLoading={isLoading}
         showFilter={false}
         datasourceId={tableViews.SUBMISSION_OVERVIEW}
-        resizable
+        pagination={{
+          ...pagination,
+          onChange,
+          total: submissionsTotal,
+        }}
+        onChange={(_, __, sorter) => {
+          onSortingChange(sorter.order, sorter.field);
+        }}
       />
     </>
   );

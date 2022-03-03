@@ -23,8 +23,8 @@ import {
 
 // SELECTORS
 import {
-  makeSelectActivitiesForForm,
   makeSelectFilteredActivityIdsForForm,
+  selectActivitiesForForm,
   activityInWorkerProgressSelector,
   selectAllActivityIds,
 } from '../../../Redux/Activities/activities.selectors';
@@ -74,13 +74,8 @@ const ActivitiesPage = () => {
     selectActivityParamSorting(state, formId),
   );
 
-  const selectActivitiesForForm = useMemo(
-    () => makeSelectActivitiesForForm(),
-    [],
-  );
-
-  const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId, ACTIVITIES_TABLE),
+  const activities = useSelector(
+    selectActivitiesForForm({ formId, tableType: ACTIVITIES_TABLE }),
   );
 
   const selectPaginationParamsForForm = useMemo(

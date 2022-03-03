@@ -39,7 +39,7 @@ export const extractSubmissionColumns = (form) => {
           dataIndex: el._id,
           key: el._id,
           sectionId: section._id,
-          sorter: (a, b) => a[el._id] - b[el._id],
+          // sorter: (a, b) => a[el._id] - b[el._id],
           render: (value) => renderElementValue(value, el),
         })),
     ],

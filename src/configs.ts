@@ -20,7 +20,7 @@ const envVarMap = {
     AM_BE_URL: `https://activity-manager.timeedit.io/${apiVersion}/`,
   },
   beta: {
-    API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
+    API_URL: `http://localhost:3012/${apiVersion}/`,
     AUTH_URL: `https://app-auth-beta.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin-beta.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',
@@ -29,7 +29,7 @@ const envVarMap = {
     AM_BE_URL: `https://beta-activity-manager.timeedit.io/${apiVersion}/`,
   },
   localhost: {
-    API_URL: `http://localhost:3002/${apiVersion}/`,
+    API_URL: `https://preferences-beta.timeedit.io/${apiVersion}/`,
     AUTH_URL: `https://app-auth.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin.timeedit.io/${apiVersion}/`,
     APP_ID: '5ce6501aa34e8a7737977c2a',

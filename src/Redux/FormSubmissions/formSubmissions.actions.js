@@ -32,10 +32,11 @@ const fetchFormSubmissionsFlow = {
   }),
 };
 
-export const fetchFormSubmissions = (formId) =>
+export const fetchFormSubmissions = (formId, query) =>
   asyncAction.GET({
     flow: fetchFormSubmissionsFlow,
     endpoint: `forms/${formId}/submissions`,
+    params: query,
   });
 
 const setFormInstanceAcceptanceStatusFlow = {

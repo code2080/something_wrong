@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -6,7 +6,7 @@ import { Button, Modal, Form, Input, Switch } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 // ACTIONS
-import { updateFilter } from '../../Redux/Filters/filters.actions';
+import { updateFilter, setFilter } from '../../Redux/Filters/filters.actions';
 
 // SELECTORS
 import { selectFilter } from '../../Redux/Filters/filters.selectors';
@@ -36,6 +36,7 @@ const mapStateToProps = (state, { objectScope, formId }) => {
 
 const mapActionsToProps = {
   updateFilter,
+  setFilter,
 };
 
 const FilterModal = ({
@@ -43,34 +44,35 @@ const FilterModal = ({
   isVisible,
   onClose,
   filters,
-  objectScopeLabel,
-  fields,
   updateFilter,
+  setFilter,
 }) => {
+  const [localFilters, setLocalFilters] = useState(filters);
+
   const onSaveAndClose = useCallback(() => {
+    setFilter({
+      filterId: `${formId}_SUBMISSIONS`,
+      filter: localFilters,
+    });
     onClose();
-  }, [onClose]);
+  }, [onClose, localFilters, updateFilter]);
 
   const onCancel = useCallback(() => {
     onClose();
   }, [onClose]);
 
+  const onUpdateFilter = (key, value) => {
+    setLocalFilters({
+      ...localFilters,
+      [key]: value,
+    });
+  };
+
   const onUpdateFilterSimple = useCallback(
     (key, value) => {
-      updateFilter({ filterId: `${formId}_SUBMISSIONS`, key, value });
+      onUpdateFilter(key, value);
     },
-    [formId, updateFilter],
-  );
-
-  const onUpdateScopedObjectFilter = useCallback(
-    (extId, value) => {
-      updateFilter({
-        filterId: `${formId}_SUBMISSIONS`,
-        key: 'scopedObject',
-        value: { ...filters.scopedObject, [extId]: value },
-      });
-    },
-    [formId, filters, updateFilter],
+    [formId, localFilters],
   );
 
   return (
@@ -93,7 +95,7 @@ const FilterModal = ({
         <Form.Item label='Free text filter'>
           <Input
             placeholder='Filter...'
-            value={filters.freeTextFilter}
+            value={localFilters.freeTextFilter}
             onChange={(e) =>
               onUpdateFilterSimple('freeTextFilter', e.target.value)
             }
@@ -103,37 +105,20 @@ const FilterModal = ({
         </Form.Item>
         <Form.Item label='Show only own submissions'>
           <Switch
-            checked={filters.onlyOwn}
+            checked={localFilters.onlyOwn}
             onChange={(onlyOwn) => onUpdateFilterSimple('onlyOwn', onlyOwn)}
             size='small'
           />
         </Form.Item>
         <Form.Item label='Show only starred submissions'>
           <Switch
-            checked={filters.onlyStarred}
+            checked={localFilters.onlyStarred}
             onChange={(onlyStarred) =>
               onUpdateFilterSimple('onlyStarred', onlyStarred)
             }
             size='small'
           />
         </Form.Item>
-      </div>
-      <div className='filter-modal--pane'>
-        <div className='filter-modal__pane--title'>{`Primary object filters ${
-          objectScopeLabel ? `(${objectScopeLabel})` : ''
-        }`}</div>
-        {(fields || []).map((field) => (
-          <Form.Item label={field.fieldLabel} key={field.fieldExtId}>
-            <Input
-              size='small'
-              placeholder='Filter...'
-              value={filters.scopedObject[field.fieldExtId]}
-              onChange={(e) =>
-                onUpdateScopedObjectFilter(field.fieldExtId, e.target.value)
-              }
-            />
-          </Form.Item>
-        ))}
       </div>
     </Modal>
   );
@@ -145,8 +130,7 @@ FilterModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   filters: PropTypes.object.isRequired,
   updateFilter: PropTypes.func.isRequired,
-  objectScopeLabel: PropTypes.string,
-  fields: PropTypes.array,
+  setFilter: PropTypes.func.isRequired,
 };
 
 FilterModal.defaultProps = {
