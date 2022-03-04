@@ -54,13 +54,12 @@ const ManageAssigneesList = ({ users, selfUID, isAssigned, onToggleUser }) => {
       locale={{
         emptyText: isAssigned ? 'No users assigned' : 'No users found',
       }}
-      pagination={
-        (users.length > 10 || !isAssigned) && {
-          size: 'small',
-          defaultPageSize: 10,
-          total: users.length,
-        }
-      }
+      pagination={{
+        size: 'small',
+        defaultPageSize: 10,
+        hideOnSinglePage: true,
+        total: users.length,
+      }}
       renderItem={(user) => (
         <User
           isSelf={selfUID === user._id}

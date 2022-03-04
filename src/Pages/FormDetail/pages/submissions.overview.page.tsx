@@ -16,16 +16,13 @@ import {
 } from '../../../Hooks/TECoreApiHooks';
 
 // SELECTORS
-import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+import { selectFormById } from '../../../Redux/Forms/forms.selectors';
 import { selectFilterValueForSubmissions } from '../../../Redux/Filters/filters.selectors';
 import { selectAuthedUserId } from '../../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 
 // ACTIONS
-import {
-  setBreadcrumbs,
-  setFormDetailTab,
-} from '../../../Redux/GlobalUI/globalUI.actions';
+import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
 
 // HELPERS
 import {
@@ -52,21 +49,24 @@ import {
 import { fetchFormSubmissions } from '../../../Redux/FormSubmissions/formSubmissions.actions';
 import { convertToSubmissionsFilterQuery } from '../../../Utils/submissions.helpers';
 
+// TYPES
+import { TFormInstance } from '../../../Types/FormInstance.type';
+import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
+
 const loadingSelector = createLoadingSelector(['FETCH_SUBMISSIONS_FOR_FORM']);
 const savingSelector = createLoadingSelector(['SET_SCHEDULING_PROGRESS']);
 
 const SubmissionsOverviewPage = () => {
-  const { formId } = useParams();
+  const { formId }: { formId: string } = useParams();
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
 
   /**
    * SELECTORS
    */
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(selectFormById(formId));
   const submissionIds = useSelector(selectFormSubmissionIds(formId));
-  const submissions = useSelector(selectFormSubmissions(formId, submissionIds));
+  const submissions: TFormInstance[] = useSelector(selectFormSubmissions(formId, submissionIds));
   const submissionsTotal = useSelector(selectFormSubmissionsTotal(formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
@@ -83,33 +83,34 @@ const SubmissionsOverviewPage = () => {
    */
   const scopedObjectIds = useMemo(
     () =>
-      form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
+      form?.objectScope ? _.uniq(submissions.map((el: any) => el.scopedObject)) : [],
     [form, submissionIds],
   );
 
-  const submissionPayload = useMemo(() => {
-    const initialPayload = {
-      objects: submissions.flatMap(({ scopedObject }) => scopedObject),
+  const submissionPayload: TGetExtIdPropsPayload = useMemo(() => {
+    const initialPayload: TGetExtIdPropsPayload = {
+      objects: submissions.flatMap(({ scopedObject }) => scopedObject) as string[],
       fields: [],
       types: [],
     };
-    const sections = form.sections;
+  
+    const sections = form?.sections || [];
     const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
           sections,
           submissionValues,
-          objectScope: form.objectScope,
+          objectScope: form?.objectScope,
           activities: [],
         });
-    const scopedObjectExtids = submissions.map((s) => s.scopedObject);
+    const scopedObjectExtids = submissions.map((s) => s.scopedObject) as string[];
 
     return {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
-  }, [form.sections, form.objectScope, submissionIds]);
+  }, [form?.sections, form?.objectScope, submissionIds]);
 
   useFetchLabelsFromExtIds(submissionPayload);
 
@@ -124,16 +125,6 @@ const SubmissionsOverviewPage = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopedObjectIds]);
-
-  useEffect(() => {
-    dispatch(
-      setBreadcrumbs([
-        { path: '/forms', label: 'Forms' },
-        { path: `/forms/${formId}`, label: form.name },
-      ]),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const _cols = useMemo(() => extractSubmissionColumns(form), [form]);
   const _elementTableData = useMemo(
@@ -170,12 +161,12 @@ const SubmissionsOverviewPage = () => {
 
   const { pagination, sorting, onChange, onSortingChange } =
     usePaginationAndSorting({
-      onChangeCallback: ({ current, pageSize, order, orderBy }) => {
+      onChangeCallback: ({ current, pageSize }) => {
         onFetchSubmissions({
           current,
           pageSize,
-          order: toOrderDirection(order),
-          orderBy,
+          order: toOrderDirection(sorting.order),
+          orderBy: sorting.orderBy,
         });
       },
     });
@@ -200,7 +191,7 @@ const SubmissionsOverviewPage = () => {
       tableColumns.formSubmission.SCOPED_OBJECT(objectRequests),
       tableColumns.formSubmission.ACCEPTANCE_STATUS,
       tableColumns.formSubmission.SCHEDULING_PROGRESS,
-      form.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
+      form?.objectScope ? tableColumns.formSubmission.SCHEDULE_LINK : null,
       ..._cols,
       tableColumns.formSubmission.ACTION_BUTTON,
     ]);
@@ -210,7 +201,7 @@ const SubmissionsOverviewPage = () => {
       sorter: col.dataIndex ? () => 0 : undefined,
     }));
     // return allCols;
-  }, [dispatch, isSaving, objectRequests, form.objectScope, _cols, sorting]);
+  }, [dispatch, isSaving, objectRequests, form?.objectScope, _cols, sorting]);
 
   return (
     <>
@@ -221,7 +212,7 @@ const SubmissionsOverviewPage = () => {
       />
       <FilterModal
         formId={formId}
-        objectScope={form.objectScope}
+        objectScope={form?.objectScope}
         isVisible={showFilterModal}
         contentFilters={_cols}
         onClose={() => setShowFilterModal(false)}
@@ -230,8 +221,8 @@ const SubmissionsOverviewPage = () => {
         columns={columns}
         dataSource={_dataSource}
         rowKey='_id'
-        onRow={(formInstance) => ({
-          onClick: (e) => {
+        onRow={(formInstance: TFormInstance) => ({
+          onClick: (e: any) => {
             const list = traversedClassList(e.target);
             const hasFormInstance =
               formInstance && formInstance.formId && formInstance._id;
@@ -249,7 +240,7 @@ const SubmissionsOverviewPage = () => {
           total: submissionsTotal,
           size: 'small'
         }}
-        onChange={(_, __, sorter) => {
+        onChange={(_: unknown, __: unknown, sorter: any) => {
           onSortingChange(sorter.order, sorter.field);
         }}
       />

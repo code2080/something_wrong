@@ -50,7 +50,7 @@ export const selectFormInstance = (formId, formInstanceId) =>
     (submissions) => submissions[formId]?.mapped.byId[formInstanceId] ?? {},
   );
 
-export const selectFormSubmissions = (formId: string, submissionIds) =>
+export const selectFormSubmissions = (formId: string, submissionIds: string[]) =>
   createSelector(submissionsState, (submissions) => {
     const formSubmissions = submissions[formId];
     if (!formSubmissions) return [];

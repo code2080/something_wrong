@@ -273,11 +273,7 @@ const DynamicTableHOC = ({
               dataSource={_dataSource}
               rowKey={rowKey}
               expandedRowRender={expandedRowRender || null}
-              pagination={{
-                ...pagination,
-                size: 'small',
-                hideOnSinglePage: true,
-              }}
+              pagination={pagination ? { ...pagination, size: 'small', hideOnSinglePage: true } : false}
               loading={isLoading}
               sortDirections={['descend', 'ascend']}
               onRow={onRowHandler}

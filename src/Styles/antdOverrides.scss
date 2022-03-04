@@ -23,3 +23,14 @@
 .ant-modal-body {
   padding: $outerComponentPadding !important;
 }
+
+.ant-list-sm {
+  .ant-list-header {
+    font-size: 12px;
+    padding: 4px 0 0 0;
+  }
+
+  .ant-list-empty-text {
+    font-size: 12px;
+  }
+}

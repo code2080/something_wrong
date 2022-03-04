@@ -96,7 +96,7 @@ export const formSubmission = {
       sortAlpha(a.teCoreProps.acceptanceStatus, b.teCoreProps.acceptanceStatus),
   },
   ASSIGNMENT: {
-    title: 'Assigned to',
+    title: 'Assignment',
     key: 'assignedTo',
     fixedWidth: 85,
     render: (formInstance) => {
