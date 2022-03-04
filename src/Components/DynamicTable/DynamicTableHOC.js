@@ -211,10 +211,10 @@ const DynamicTableHOC = ({
       _width,
       fixedWidthCols.length,
       resizable,
-      !expandedRowRender,
+      expandedRowRender,
       columnWidths,
       nowrap,
-      !rowSelection,
+      rowSelection,
     ],
   );
 
@@ -273,7 +273,11 @@ const DynamicTableHOC = ({
               dataSource={_dataSource}
               rowKey={rowKey}
               expandedRowRender={expandedRowRender || null}
-              pagination={pagination}
+              pagination={{
+                ...pagination,
+                size: 'small',
+                hideOnSinglePage: true,
+              }}
               loading={isLoading}
               sortDirections={['descend', 'ascend']}
               onRow={onRowHandler}

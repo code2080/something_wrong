@@ -1,6 +1,7 @@
 import { get } from 'lodash';
 import moment from 'moment';
 import { createSelector } from 'reselect';
+import { TForm } from 'Types/Form.type';
 
 import { formStatus } from '../../Constants/formStatuses.constants';
 
@@ -93,3 +94,7 @@ export const selectSectionById = (formId: string, sectionId: string) =>
       (section) => section._id === sectionId,
     );
   });
+
+export const selectFormById = (formId: string) => (state: any): TForm | undefined => {
+  return state.forms[formId] || undefined;
+};

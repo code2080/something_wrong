@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
@@ -7,6 +7,7 @@ import { Tabs } from 'antd';
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar/JobToolbar';
+import FormInfoModal from '../../Components/Modals/FormInfoModal';
 
 // HOOKS
 import {
@@ -54,12 +55,12 @@ import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ActivitiesPage from './pages/activities.page';
-import FormInfoPage from './pages/formInfo.page';
 import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -97,6 +98,14 @@ const FormPage = () => {
   const formHasObjReqs = !_.isEmpty(reqs);
   const isBeta = useSelector(selectIsBetaOrDev);
 
+  /**
+   * STATE
+   */
+  const [showFormInfoModal, setShowFormInfoModal] = useState(false);
+
+  /**
+   * EFFECTS
+   */
   useEffect(() => {
     dispatch(fetchMappings(form));
     dispatch(fetchActivityTagsForForm(formId));
@@ -106,7 +115,9 @@ const FormPage = () => {
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
-        { path: `/forms/${formId}`, label: form.name },
+        { 
+          path: `/forms/${formId}`, 
+          label: <FormDetailBreadcrumb formName={form.name || 'Unknown form'} onToggleModalState={() => setShowFormInfoModal(true)} />},
       ]),
     );
 
@@ -159,7 +170,7 @@ const FormPage = () => {
   /**
    * EVENT HANDLERS
    */
-  const onChangeTabKey = (key) => {
+  const onChangeTabKey = (key: string) => {
     dispatch(setFormDetailTab(key));
   };
 
@@ -167,9 +178,6 @@ const FormPage = () => {
     <div className='form--wrapper'>
       <JobToolbar />
       <TEAntdTabBar activeKey={selectedFormDetailTab} onChange={onChangeTabKey}>
-        <Tabs.TabPane tab='FORM INFO' key={TAB_CONSTANT.FORM_INFO}>
-          <FormInfoPage />
-        </Tabs.TabPane>
         <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
           <SubmissionsPage />
         </Tabs.TabPane>
@@ -181,7 +189,6 @@ const FormPage = () => {
             <ObjectRequestsPage />
           </Tabs.TabPane>
         )}
-        {/* TODO: Does the customers need to buy assisted scheduling? */}
         <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
           {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
             <JointTeachingPage />
@@ -225,6 +232,7 @@ const FormPage = () => {
           </Tabs.TabPane>
         )}
       </TEAntdTabBar>
+      <FormInfoModal isVisible={showFormInfoModal} formId={formId} onHide={() => setShowFormInfoModal(false)} />
     </div>
   );
 };

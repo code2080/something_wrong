@@ -1,0 +1,25 @@
+@import './globals.scss';
+
+/* MODALS */
+.ant-modal-header {
+  padding: $outerComponentPadding !important;
+
+  .ant-modal-title {
+    font-size: 14px !important;
+  }
+}
+
+.ant-modal-content .ant-modal-close {
+  height: 39px !important;
+  width: 39px !important;
+
+  span.ant-modal-close-x {
+    height: 39px !important;
+    width: 39px !important;
+    line-height: 39px !important;
+  }
+}
+
+.ant-modal-body {
+  padding: $outerComponentPadding !important;
+}

@@ -247,6 +247,7 @@ const SubmissionsOverviewPage = () => {
           ...pagination,
           onChange,
           total: submissionsTotal,
+          size: 'small'
         }}
         onChange={(_, __, sorter) => {
           onSortingChange(sorter.order, sorter.field);
