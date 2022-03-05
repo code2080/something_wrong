@@ -1,5 +1,5 @@
 // COMPONENTS
-import StatusLabel from '../StatusLabel/StatusLabel';
+import StatusLabel from '../StatusLabel';
 import IconFormType from '../FormType/IconFormType';
 
 // CONSTANTS

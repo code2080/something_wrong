@@ -1,8 +1,9 @@
-import { Button, Divider, Popover } from 'antd';
+import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { GroupOutlined, OrderedListOutlined } from '@ant-design/icons';
 
-// ACTIONS
+// REDUX
 import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
@@ -11,8 +12,11 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
-import ActivityTagPopover from '../ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover';
 import ActivityFiltering from '../ActivityFiltering';
+import StatusLabel from 'Components/StatusLabel';
+import TagSelectionButton from './TagSelectionButton';
+import ToolbarGroup from './ToolbarGroup';
+import GroupingRadioGroup from './ToolbarRadioGroup';
 
 // STYLES
 import './index.scss';
@@ -26,8 +30,6 @@ import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activ
 
 type Props = {
   selectedActivityIds: string[];
-  onSelectAll(): void;
-  onDeselectAll(): void;
   onScheduleActivities(activities: string[]): void;
   onScheduleAllActivities(): void;
   onDeleteActivities(activities: string[]): void;
@@ -35,16 +37,8 @@ type Props = {
   onCreateMatchCallback: () => void;
 };
 
-/*
- * OPTIONS FOR ACTIVITIES
- * x) View selection
- * x) Tag activities
- * x) Schedule activities
- */
 const ActivitiesToolbar = ({
   selectedActivityIds,
-  onSelectAll,
-  onDeselectAll,
   onScheduleActivities,
   onDeleteActivities,
   allActivities,
@@ -54,102 +48,78 @@ const ActivitiesToolbar = ({
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
 
-  const selectedFilterValues = useSelector(
-    selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }),
-  );
-  const allActivitiesAreScheduling = useSelector(
-    selectAllActivitiesAreScheduling(formId),
-  );
-
-  const hasSchedulingPermissions = useSelector(
-    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
-  );
-
-  const TagSelectedActivitiesButton = () =>
-    !selectedActivityIds?.length ? (
-      <Button size='small' type='link' disabled>
-        Tag selected activities
-      </Button>
-    ) : (
-      <Popover
-        overlayClassName='activity-tag-popover--wrapper'
-        title='Tag activity'
-        content={
-          <ActivityTagPopover selectedActivityIds={selectedActivityIds} />
-        }
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-        trigger='click'
-        placement='rightTop'
-      >
-        <Button size='small' type='link'>
-          Tag selected activities
-        </Button>
-      </Popover>
-    );
+  /**
+   * SELECTORS
+   */
+  const selectedFilterValues = useSelector(selectSelectedFilterValues({ formId, origin: ACTIVITIES_TABLE }));
+  const allActivitiesAreScheduling = useSelector(selectAllActivitiesAreScheduling(formId));
+  const hasSchedulingPermissions = useSelector(hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME));
 
   return (
     <div className='activities-toolbar--wrapper'>
-      Activities selected:&nbsp; {selectedActivityIds?.length ?? 0}
-      <Button size='small' type='link' onClick={onSelectAll}>
-        Select all
-      </Button>
-      <Button
-        size='small'
-        type='link'
-        onClick={onDeselectAll}
-        disabled={!selectedActivityIds?.length}
-      >
-        Deselect all
-      </Button>
-      <Divider type='vertical' />
-      <Button
-        size='small'
-        type='link'
-        onClick={() => onScheduleActivities(selectedActivityIds)}
-        disabled={!selectedActivityIds?.length || !hasSchedulingPermissions}
-      >
-        Schedule selected activities
-      </Button>
-      <Button
-        size='small'
-        type='link'
-        onClick={() => onScheduleAllActivities()}
-        disabled={
-          !allActivities?.length ||
-          !hasSchedulingPermissions ||
-          allActivitiesAreScheduling
-        }
-      >
-        Schedule activities
-      </Button>
-      <Button
-        size='small'
-        type='link'
-        onClick={() => onDeleteActivities(selectedActivityIds)}
-      >
-        Cancel selected reservations
-      </Button>
-      <Divider type='vertical' />
-      <TagSelectedActivitiesButton />
-      <JointTeachingGroupMerger
-        activityIds={selectedActivityIds}
-        formId={formId}
-        onCreateMatchCallback={onCreateMatchCallback}
-      />
-      <ActivityFiltering
-        selectedFilterValues={selectedFilterValues}
-        onSubmit={(values) => {
-          dispatch(
-            setFilterValues({
-              formId,
-              values,
-              origin: ACTIVITIES_TABLE,
-            }),
-          );
-        }}
-      />
+      <ToolbarGroup label='Selection'>
+        <StatusLabel color="default">{selectedActivityIds?.length || 0}</StatusLabel>  
+      </ToolbarGroup>
+      <ToolbarGroup label='Schedule'>
+        <Button
+          size='small'
+          type='link'
+          onClick={() => onScheduleAllActivities()}
+          disabled={
+            !allActivities?.length ||
+            !hasSchedulingPermissions ||
+            allActivitiesAreScheduling
+          }
+        >
+          All
+        </Button>
+        <Button
+          size='small'
+          type='link'
+          onClick={() => onScheduleActivities(selectedActivityIds)}
+          disabled={!selectedActivityIds?.length || !hasSchedulingPermissions}
+        >
+          Selection
+        </Button>
+        <Button
+          size='small'
+          type='link'
+          onClick={() => onDeleteActivities(selectedActivityIds)}
+          disabled={!selectedActivityIds?.length || !hasSchedulingPermissions}
+        >
+          Cancel selection
+        </Button>
+      </ToolbarGroup>
+      <ToolbarGroup label='Actions'>
+        <TagSelectionButton selectedActivityIds={selectedActivityIds || []} />
+        <JointTeachingGroupMerger
+          activityIds={selectedActivityIds}
+          formId={formId}
+          onCreateMatchCallback={onCreateMatchCallback}
+        />
+      </ToolbarGroup>
+      <ToolbarGroup label='Grouping & filters'>
+        <GroupingRadioGroup
+          value='FLAT'
+          options={[
+            { value: 'FLAT', label: <OrderedListOutlined />, tooltip: 'Flat list' },
+            { value: 'WEEK_PATTERN', label: <GroupOutlined />, tooltip: 'Week pattern' }
+          ]}
+          onSelect={(val) => console.log(val)}
+        />
+        <ActivityFiltering
+          selectedFilterValues={selectedFilterValues}
+          onSubmit={(values) => {
+            dispatch(
+              setFilterValues({
+                formId,
+                values,
+                origin: ACTIVITIES_TABLE,
+              }),
+            );
+          }}
+        />
+      </ToolbarGroup>
     </div>
   );
 };

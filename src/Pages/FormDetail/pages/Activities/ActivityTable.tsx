@@ -8,8 +8,8 @@ import { ConflictType } from 'Models/JointTeachingGroup.model';
 import {
   CreateActivitiesAllocatedTableColumns,
   CreateActivitiesTableColumnsFromMapping,
-} from '../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
-import DynamicTable from '../../../Components/DynamicTable/DynamicTableHOC';
+} from '../../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+import DynamicTable from '../../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
 import { useDispatch, useSelector } from 'react-redux';

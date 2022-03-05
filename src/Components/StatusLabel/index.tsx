@@ -1,9 +1,16 @@
-import PropTypes from 'prop-types';
-
-// CSS
+/* eslint-disable react/prop-types */
+// STYLES
 import './StatusLabel.scss';
 
-const StatusLabel = ({ label, color, className, children, ...rest }) => {
+// TYPES
+type Props = {
+  label?: string;
+  color: string;
+  className?: string;
+  [x: string]: any,
+}
+
+const StatusLabel: React.FC<Props> = ({ label, color, className, children, ...rest }) => {
   const statusLabel = (
     <div
       className={`status-label--wrapper ${color} ${className} ${
@@ -24,25 +31,6 @@ const StatusLabel = ({ label, color, className, children, ...rest }) => {
     );
   }
   return statusLabel;
-};
-
-StatusLabel.propTypes = {
-  label: PropTypes.string,
-  color: PropTypes.string,
-  children: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.node,
-  ]),
-  className: PropTypes.string,
-};
-
-StatusLabel.defaultProps = {
-  label: null,
-  color: null,
-  children: null,
-  className: '',
-  disabled: false,
 };
 
 export default StatusLabel;

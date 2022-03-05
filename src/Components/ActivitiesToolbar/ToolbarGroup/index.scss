@@ -1,0 +1,24 @@
+@import '../../../Styles/globals.scss';
+
+.toolbar-group--wrapper {
+  display: flex;
+  align-items: center;
+  height: 36px;
+
+  .toolbar-group--header {
+    color: rgba(#000, 0.5);
+    margin-right: $outerComponentPadding;
+  }
+
+  .toolbar-group--buttons {
+    .ant-space-item > * {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    .ant-space-item > .ant-btn-link {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
+  }
+}

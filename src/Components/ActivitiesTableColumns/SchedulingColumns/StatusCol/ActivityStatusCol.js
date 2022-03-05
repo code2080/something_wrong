@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // COMPONENTS
 import EditableText from '../../../EditableText/EditableText';
 import { CheckOutlined } from '@ant-design/icons';
-import StatusLabel from '../../../StatusLabel/StatusLabel';
+import StatusLabel from '../../../StatusLabel';
 
 // STYLES
 import './ActivityStatusCol.scss';

@@ -2,7 +2,7 @@
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import ScopedObject from '../FormToolbar/ScopedObject';
 import DateTime from '../Common/DateTime';
-import StatusLabel from '../StatusLabel/StatusLabel';
+import StatusLabel from '../StatusLabel';
 
 // SORTERS
 

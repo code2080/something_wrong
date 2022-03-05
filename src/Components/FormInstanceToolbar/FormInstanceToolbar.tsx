@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 // COMPONENTS
 import { useMemo } from 'react';
 import ScopedObject from '../FormToolbar/ScopedObject';
-import StatusLabel from '../StatusLabel/StatusLabel';
+import StatusLabel from '../StatusLabel';
 import ObjectRequestDropdown from '../Elements/DatasourceInner/ObjectRequestDropdown';
 
 // STYLES

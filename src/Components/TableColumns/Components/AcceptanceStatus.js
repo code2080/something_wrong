@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 // COMPONENTS
-import StatusLabel from '../../StatusLabel/StatusLabel';
+import StatusLabel from '../../StatusLabel';
 
 // STYLES
 import './AcceptanceStatus.scss';

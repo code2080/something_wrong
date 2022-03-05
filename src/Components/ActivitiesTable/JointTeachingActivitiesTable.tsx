@@ -10,7 +10,7 @@ import _, {
 } from 'lodash';
 
 // COMPONENTS
-import ActivityTable from '../../Pages/FormDetail/pages/ActivityTable';
+import ActivityTable from '../../Pages/FormDetail/pages/Activities/ActivityTable';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Popconfirm } from 'antd';
 

@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-// SELECTORS
-import { useSelector } from 'react-redux';
-import { selectFilterIsActivated } from 'Redux/Filters/filters.selectors';
+import { FilterOutlined } from '@ant-design/icons';
 
 // TYPES
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 
 // COMPONENTS
-import ActivityFilterButton from './Button';
+import ToolbarButton from "../ActivitiesToolbar/ToolbarButton";
 import FilterModal from './FilterModal/FilterModal';
 
 // STYLES
@@ -28,15 +25,16 @@ const ActivityFiltering = ({
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const { formId } = useParams<{ formId: string }>();
-  const isActivated = useSelector(selectFilterIsActivated(formId, tableType));
 
   return (
-    <div className='activity-filtering--wrapper filter-bar__wrapper'>
-      <ActivityFilterButton
-        onClick={() => setShowModal(!showModal)}
-        isActive={showModal}
-        hasFilters={isActivated}
-      />
+    <>
+      <ToolbarButton
+        onClick={() => setShowModal(true)}
+        className={'active'}
+      >
+        <FilterOutlined />
+        Filters
+      </ToolbarButton>
       <FilterModal
         formId={formId}
         isVisible={showModal}
@@ -45,7 +43,7 @@ const ActivityFiltering = ({
         onSubmit={onSubmit}
         tableType={tableType}
       />
-    </div>
+    </>
   );
 };
 

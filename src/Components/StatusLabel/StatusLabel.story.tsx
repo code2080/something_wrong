@@ -1,4 +1,4 @@
-import Label from './StatusLabel';
+import Label from '.';
 
 export default {
   title: 'Activity Manager/Components/StatusLabel',

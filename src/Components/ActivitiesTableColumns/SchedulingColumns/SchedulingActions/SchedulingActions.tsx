@@ -2,20 +2,24 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 import { selectActivitySchedulingById } from 'Redux/ActivityScheduling/activityScheduling.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';
 import JointTeachingIcon from './JointTeachingIcon';
+
+// STYLES
 import './SchedulingActions.scss';
+
+// TYPES
+import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 
 const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
   const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
   return (
     <div className='scheduling-actions-column--wrapper'>
-      {activity.activityStatus === EActivityStatus.COMPLETED && (
+      {activity.activityStatus === EActivityStatus.SCHEDULED && (
         <div className='scheduling-actions--strikethrough' />
       )}
       <SchedulingCheckbox activity={activity} />

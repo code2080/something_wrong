@@ -3,7 +3,7 @@ import { Popover, Form } from 'antd';
 import _ from 'lodash';
 
 // COMPONENTS
-import StatusLabel from '../../StatusLabel/StatusLabel';
+import StatusLabel from '../../StatusLabel';
 
 // STYLES
 import './ActivityStatusCol.scss';

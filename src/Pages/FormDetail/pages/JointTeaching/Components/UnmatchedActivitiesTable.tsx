@@ -27,7 +27,7 @@ import {
   setActivitySorting,
   resetActivitySorting,
 } from 'Redux/GlobalUI/globalUI.actions';
-import ActivityTable from '../../ActivityTable';
+import ActivityTable from '../../Activities/ActivityTable';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 
 interface Props {

@@ -1,19 +1,26 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import PropTypes from 'prop-types';
-import { RiShareBoxFill } from 'react-icons/ri';
-import { ShrinkOutlined } from '@ant-design/icons';
+import { ShrinkOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
+
+// REDUX
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
-import HoverAndClickPopOver from '../../ActivityValueColumns/Helpers/HoverAndClickPopOver';
-import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
 import { updateActivities } from '../../../../Redux/Activities/activities.actions';
 import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/Activities/activities.selectors';
-
 import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
+
+// COMPONENTS
+import TooltipAndPopoverWrapper from 'Components/TooltipAndPopoverWrapper';
+import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWithDeleteOption';
+
+// STYLES
+import './JointTeachingIcon.scss';
+
+// TYPES
 import { TActivity } from '../../../../Types/Activity.type';
 
 type Props = {
@@ -23,13 +30,8 @@ type Props = {
 
 const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
   if (!activity?.formId) return null;
-  const {
-    formId,
-    formInstanceId,
-  }: {
-    formId: string;
-    formInstanceId: string;
-  } = activity;
+  const { formId, formInstanceId } = activity;
+
   const dispatch = useDispatch();
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const selectForm = useMemo(() => makeSelectForm(), []);
@@ -97,7 +99,6 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
     updateJointTeachingObjects(null);
   };
 
-  const hoverContent = 'Click to indicate joint teaching';
   const clickContent = (
     <SelectWithDeleteOption
       header={'Select joint teaching object'}
@@ -107,7 +108,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
       selectValues={scopedObjectIds}
     />
   );
-  const icon = <RiShareBoxFill />;
+  const icon = <TeamOutlined />;
 
   if (activity?.originJointTeachingGroup || activity?.jointTeachingGroupId)
     return (
@@ -129,41 +130,15 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
       </>
     );
 
-  if (localTeachingObject) {
     return (
-      <>
-        <HoverAndClickPopOver
-          hoverContent={extIdLabel ?? 'N/A'}
-          clickContent={clickContent}
-          disabled={activity.isInactive()}
-          icon={icon}
-          style={{
-            border: 'none',
-            background: 'none',
-            color: '#40a9ff',
-            height: '24px',
-            margin: '0 0.4rem',
-          }}
-        />
-      </>
-    );
-  }
-
-  return (
-    <>
-      <HoverAndClickPopOver
-        hoverContent={hoverContent}
-        clickContent={clickContent}
-        icon={icon}
+      <TooltipAndPopoverWrapper
+        tooltipTitle={localTeachingObject ? `Joint teaching: ${extIdLabel}` || 'N/A' : "Click to indicate joint teaching"}
         disabled={activity.isInactive()}
-        style={{
-          border: 'none',
-          background: '#e7eff0',
-          height: '24px',
-          margin: '0 0.4rem',
-        }}
-      />
-    </>
+        buttonIcon={icon}
+        buttonClassName={`joint-teaching--btn ${localTeachingObject ? 'indicated' : ''}`}
+      >
+        {clickContent}
+      </TooltipAndPopoverWrapper>
   );
 };
 

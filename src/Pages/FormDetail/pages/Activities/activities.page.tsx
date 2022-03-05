@@ -6,20 +6,20 @@ import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.sel
 import { Modal } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
-import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
-import { SchedulingColumns } from '../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
-import { StaticColumns } from '../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
-import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
+import { createLoadingSelector } from '../../../../Redux/APIStatus/apiStatus.selectors';
+import { SchedulingColumns } from '../../../../Components/ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
+import { StaticColumns } from '../../../../Components/ActivitiesTableColumns/StaticColumns/StaticColumns';
+import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // COMPONENTS
-import ActivitiesToolbar from '../../../Components/ActivitiesToolbar';
+import ActivitiesToolbar from '../../../../Components/ActivitiesToolbar';
 // ACTIONS
 import {
   setActivitySorting,
   resetActivitySorting,
   selectActivitiesInTable,
   forceFetchingActivities,
-} from '../../../Redux/GlobalUI/globalUI.actions';
+} from '../../../../Redux/GlobalUI/globalUI.actions';
 
 // SELECTORS
 import {
@@ -27,20 +27,20 @@ import {
   selectActivitiesForForm,
   activityInWorkerProgressSelector,
   selectAllActivityIds,
-} from '../../../Redux/Activities/activities.selectors';
+} from '../../../../Redux/Activities/activities.selectors';
 
 // HELPERS
 
 // HOOKS
-import useActivityScheduling from '../../../Hooks/activityScheduling';
+import useActivityScheduling from '../../../../Hooks/activityScheduling';
 import {
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,
   makeSelectPaginationParamsForForm,
   selectSelectedActivities,
   selectActivitiesFetchingHandler,
-} from '../../../Redux/GlobalUI/globalUI.selectors';
-import { TActivity } from '../../../Types/Activity.type';
+} from '../../../../Redux/GlobalUI/globalUI.selectors';
+import { TActivity } from '../../../../Types/Activity.type';
 import ActivityTable from './ActivityTable';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
@@ -156,10 +156,6 @@ const ActivitiesPage = () => {
     reservationMode,
   });
 
-  const handleSelectAll = async () => {
-    dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, allActivityIds));
-  };
-
   const onDeselectAll = () => {
     dispatch(selectActivitiesInTable(ACTIVITIES_TABLE, []));
   };
@@ -231,8 +227,6 @@ const ActivitiesPage = () => {
     <>
       <ActivitiesToolbar
         selectedActivityIds={selectedRowKeys}
-        onSelectAll={handleSelectAll}
-        onDeselectAll={onDeselectAll}
         onScheduleActivities={onScheduleActivities}
         onScheduleAllActivities={onScheduleAllActivities}
         onDeleteActivities={onDeleteActivities}

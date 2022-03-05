@@ -1,7 +1,9 @@
-import { Button } from 'antd';
 import { useState } from 'react';
+import { TeamOutlined } from '@ant-design/icons';
 
+// COMPONENTS
 import CreateNewJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/CreateNewJointTeachingGroupModal';
+import ToolbarButton from 'Components/ActivitiesToolbar/ToolbarButton';
 
 type Props = {
   activityIds: string[];
@@ -17,15 +19,14 @@ const JointTeachingGroupMerger = ({
   const [visible, setVisible] = useState(false);
 
   return (
-    <div>
-      <Button
-        size='small'
-        type='link'
+    <>
+      <ToolbarButton
         disabled={activityIds.length < 2}
         onClick={() => setVisible(true)}
       >
-        Create joint teaching match
-      </Button>
+        <TeamOutlined />
+        Joint teaching match
+      </ToolbarButton>
       <CreateNewJointTeachingGroupModal
         visible={visible}
         onCancel={(refetchNeeded?: boolean) => {
@@ -37,7 +38,7 @@ const JointTeachingGroupMerger = ({
         formId={formId}
         activityIds={activityIds}
       />
-    </div>
+    </>
   );
 };
 

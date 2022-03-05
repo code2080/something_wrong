@@ -28,7 +28,7 @@ import DynamicTable from 'Components/DynamicTable/DynamicTableHOC';
 import JointTeachingActivitiesTable, {
   SelectedConflictValue,
 } from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
-import StatusLabel from 'Components/StatusLabel/StatusLabel';
+import StatusLabel from 'Components/StatusLabel';
 import JointTeachingGroupsTableToolbar from './JointTeachingGroupsTableToolbar';
 import JointTeachingGroupStatusCheck from './JointTeachingGroupStatusCheck';
 import ObjectLabel from 'Components/ObjectLabel/ObjectLabel';

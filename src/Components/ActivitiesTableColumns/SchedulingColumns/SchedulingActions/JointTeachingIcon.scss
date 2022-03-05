@@ -1,0 +1,22 @@
+@import '../../../../Styles/globals.scss';
+
+.joint-teaching--btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba($candlelight, 0.1) !important;
+  height: 24px !important;
+  width: 24px !important;
+  margin: 0 0.4rem;
+  border-radius: 50% !important;
+  border: none !important;
+
+  &.indicated, &:hover {
+    background: $candlelight !important;
+    color: #000 !important;
+  }
+
+  svg {
+    font-size: 14px !important;
+  }
+}
