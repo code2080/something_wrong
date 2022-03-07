@@ -15,7 +15,7 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // COMPONNETS
-import { JointTeachingColumn } from 'Components/ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
+import { JointTeachingColumn } from 'Components/DEPR_ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
 import { TActivity } from 'Types/Activity.type';
 
 // CONSTANTS
@@ -27,7 +27,7 @@ import {
   setActivitySorting,
   resetActivitySorting,
 } from 'Redux/GlobalUI/globalUI.actions';
-import ActivityTable from '../../Activities/ActivityTable';
+import ActivityTable from '../../Activities/DEPR_ActivityTable';
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 
 interface Props {

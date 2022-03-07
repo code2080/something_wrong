@@ -10,7 +10,7 @@ import { hasPermission } from 'Redux/Auth/auth.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 
 // COMPONENTS
-import ActivityFiltering from '../ActivityFiltering';
+import ActivityFiltering from '../DEPR_ActivityFiltering';
 
 // STYLES
 import './index.scss';

@@ -2,7 +2,7 @@ import React, { Key, useMemo } from 'react';
 
 import { Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import ActivityFiltering from 'Components/ActivityFiltering';
+import ActivityFiltering from 'Components/DEPR_ActivityFiltering';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { setFilterValues } from 'Redux/Filters/filters.actions';

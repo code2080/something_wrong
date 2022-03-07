@@ -8,7 +8,7 @@ import { ConflictType } from 'Models/JointTeachingGroup.model';
 import {
   CreateActivitiesAllocatedTableColumns,
   CreateActivitiesTableColumnsFromMapping,
-} from '../../../../Components/ActivitiesTableColumns/ActivitiesTableColumns';
+} from '../../../../Components/DEPR_ActivitiesTableColumns/ActivitiesTableColumns';
 import DynamicTable from '../../../../Components/DynamicTable/DynamicTableHOC';
 
 import { useActivitiesObjectWatcher } from 'Hooks/useActivities';

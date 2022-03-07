@@ -3,7 +3,7 @@ import moment from 'moment';
 import {
   deFlattenObject,
   isObject,
-} from '../Components/ActivityFiltering/FilterModal/FilterModal.helper';
+} from '../Components/DEPR_ActivityFiltering/FilterModal/FilterModal.helper';
 import { DATE_FORMAT, TIME_FORMAT } from '../Constants/common.constants';
 
 const objectToString = (values, object, prefix) => {

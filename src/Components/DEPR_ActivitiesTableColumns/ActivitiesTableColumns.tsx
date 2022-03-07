@@ -1,11 +1,11 @@
 // COMPONENTS
-import { Field, selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
+import { Field, deprSelectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
 import { TActivity } from 'Types/Activity.type';
 import type { ColumnsType } from 'antd/lib/table';
-import ActivityStatusCol from '../../Components/ActivitiesTableColumns/SchedulingColumns/StatusCol/ActivityStatusCol';
-import SortableTableCell from '../../Components/DynamicTable/SortableTableCell';
-import ActivityTag from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging';
-import ActivityTracks from '../../Components/ActivitiesTableColumns/SchedulingColumns/ActivityTracks';
+import ActivityStatusCol from './SchedulingColumns/StatusCol/ActivityStatusCol';
+import SortableTableCell from '../DynamicTable/SortableTableCell';
+import ActivityTag from './SchedulingColumns/ActivityTaging';
+import ActivityTracks from './SchedulingColumns/ActivityTracks';
 
 // COLUMNS
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
@@ -16,10 +16,10 @@ import { useSelector } from 'react-redux';
 import _, { uniq } from 'lodash';
 
 export const CreateActivitiesTableColumnsFromMapping = (
-  { design, columnPrefix, renderer },
+  { design, columnPrefix, renderer }: { design: any, columnPrefix?: any, renderer?: any },
   isBeta: boolean = false,
 ) => {
-  const _design = new ActivityDesign(design);
+  const _design = new ActivityDesign(design || {});
   const allActivityValues = [
     ...Object.keys(_design.objects).map(
       (objKey) => ['types', objKey] as [Field, string],
@@ -29,7 +29,7 @@ export const CreateActivitiesTableColumnsFromMapping = (
     ),
   ];
 
-  const titleMapping = useSelector(selectIndexedExtIdLabel)(
+  const titleMapping = useSelector(deprSelectIndexedExtIdLabel)(
     allActivityValues,
   ) as string;
 
@@ -129,7 +129,7 @@ export const CreateActivitiesAllocatedTableColumns = ({
     ),
   );
 
-  const titleMapping = useSelector(selectIndexedExtIdLabel)(
+  const titleMapping = useSelector(deprSelectIndexedExtIdLabel)(
     allocatedFields.map((field) => ['types', field as string]),
   ) as string;
 

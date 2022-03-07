@@ -4,7 +4,7 @@ import { flatten, keyBy } from 'lodash';
 
 import JointTeachingActivitiesTable, {
   SelectedConflictValue,
-} from 'Components/ActivitiesTable/JointTeachingActivitiesTable';
+} from 'Components/DEPR_ActivitiesTable/JointTeachingActivitiesTable';
 import { useDispatch, useSelector } from 'react-redux';
 
 // ACTIONS

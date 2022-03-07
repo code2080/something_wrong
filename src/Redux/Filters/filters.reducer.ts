@@ -1,4 +1,4 @@
-import { INITIAL_FILTER_VALUES } from 'Components/ActivityFiltering/FilterModal/FilterModal.constants';
+import { INITIAL_FILTER_VALUES } from 'Components/DEPR_ActivityFiltering/FilterModal/FilterModal.constants';
 import FilterLookUpMap from '../../Types/FilterLookUp.type';
 import * as types from './filters.actionTypes';
 import { initialState } from './filters.initialState';

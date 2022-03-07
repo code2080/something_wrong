@@ -4,11 +4,11 @@ const EllipsisTruncater = ({ children, width }) => (
   <div
     style={{
       // lineHeight: 1.5,
-      width: `${width - 16}px`,
+      width: `${width - 20}px`,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      maxWidth: '100%',
+      maxWidth: `${width - 20}px`,
     }}
   >
     {children}

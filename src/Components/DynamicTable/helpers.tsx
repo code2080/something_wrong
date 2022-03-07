@@ -35,29 +35,31 @@ export const isColumnVisible = (column, visibleColumns) => {
  */
 export const getFixedWidthCols = (columns, visiblecolumns) =>
   columns.filter(
-    (col) => isColumnVisible(col, visiblecolumns) && col.fixedWidth,
+    (col) => isColumnVisible(col, visiblecolumns) && (col.fixedWidth || col.width),
   );
 
 /**
  * @function getTotalAvailableWidth
  * @description get the total available width less fixed width columns + expanded row renderer
- * @param {Array} fixedWidthCols
- * @param {Bool} hasExpandedRowRenderer
- * @param {Number} defaultTotalWidth
- * @returns Number
+ * @param {ColumnType[]} fixedWidthCols
+ * @param {boolean} hasExpandedRowRenderer
+ * @param {number} defaultTotalWidth
+ * @returns {number}
  */
 export const getTotalAvailableWidth = (
-  fixedWidthCols,
-  hasExpandedRowRenderer,
-  defaultTotalWidth,
+  fixedWidthCols: any[],
+  hasExpandedRowRenderer: boolean,
+  hasRowSelection: boolean,
+  defaultTotalWidth?: number,
 ) => {
   // Get the visible columns
   const fixedWidth = fixedWidthCols.reduce(
-    (tot, col) => (col.fixedWidth ? tot + col.fixedWidth : tot),
+    (tot, col) => ((col.fixedWidth || col.width) ? tot + (col.fixedWidth || col.width) : tot),
     0,
   );
-  const constant = hasExpandedRowRenderer ? 90 : 40;
-  return defaultTotalWidth ? defaultTotalWidth - (fixedWidth + constant) : 0;
+  const constant = 100 + (hasExpandedRowRenderer ? 50 : 0) + (hasRowSelection ? 50 : 0);
+  const ret = defaultTotalWidth ? defaultTotalWidth - (fixedWidth + constant) : 0;
+  return ret;
 };
 
 /**
@@ -71,22 +73,17 @@ export const getTotalAvailableWidth = (
  * @returns Number
  */
 const calculateColumnWidth = ({
-  title = '',
-  columnIdx,
-  columnWidths,
+  title: _title,
+  columnIdx: _columnIdx,
+  columnWidths: _columnWidths,
   totalAvailableWidth,
   totalNumberOfColumns,
   numberOfFixedWidthColumns,
   fixedWidth,
 }) => {
   if (fixedWidth) return fixedWidth;
-  return Math.max(
-    50 + title.length * 5.5,
-    columnWidths[columnIdx]
-      ? columnWidths[columnIdx]
-      : totalAvailableWidth /
-          (totalNumberOfColumns - numberOfFixedWidthColumns),
-  );
+  const val = Math.max(totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns));
+  return val;
 };
 
 /**
@@ -110,41 +107,30 @@ export const getColumnObjectArrayForTable = (
   hasExpandedRowRenderer,
   onResizeColumn,
   nowrap,
-  additionalColumns = 0,
 ) =>
   columns
     // Filter out non-visible columns
     .filter((col) => isColumnVisible(col, visibleColumns))
     // Map each column definition with the right handlers
-    .map((col, _idx, arr) => {
+    .map((col: any, idx: number, arr: any[]) => {
       const fixedWidth = col.width || col.fixedWidth;
-      const idx = additionalColumns + _idx;
+      const finalWidth = fixedWidth 
+        || calculateColumnWidth({
+          title: col.title,
+          columnIdx: idx,
+          columnWidths,
+          totalAvailableWidth,
+          totalNumberOfColumns: arr.length,
+          numberOfFixedWidthColumns,
+          fixedWidth,
+        });
+      const finalResizable = (allowResizing && !fixedWidth && col.resizable !== false);
       return {
         ...col,
-        width: allowResizing
-          ? calculateColumnWidth({
-              title: col.title,
-              columnIdx: idx,
-              columnWidths,
-              totalAvailableWidth,
-              totalNumberOfColumns: arr.length,
-              numberOfFixedWidthColumns,
-              fixedWidth,
-            })
-          : fixedWidth,
+        width: finalWidth,
         onHeaderCell: () => ({
-          resizable: allowResizing && col.resizable !== false,
-          width: allowResizing
-            ? calculateColumnWidth({
-                title: col.title,
-                columnIdx: idx,
-                columnWidths,
-                totalAvailableWidth,
-                totalNumberOfColumns: arr.length,
-                numberOfFixedWidthColumns,
-                fixedWidth: fixedWidth,
-              })
-            : fixedWidth,
+          resizable: finalResizable,
+          width: finalWidth,
           title: col.title,
           index: idx,
           expandable: hasExpandedRowRenderer,
@@ -154,33 +140,9 @@ export const getColumnObjectArrayForTable = (
           ? col.render
           : (val, el, rowIdx) =>
               col.render ? (
-                <EllipsisTruncater
-                  width={calculateColumnWidth({
-                    title: col.title,
-                    columnIdx: idx,
-                    columnWidths,
-                    totalAvailableWidth,
-                    totalNumberOfColumns: arr.length,
-                    numberOfFixedWidthColumns,
-                    fixedWidth,
-                  })}
-                >
-                  {col.render(val, el, rowIdx)}
-                </EllipsisTruncater>
+                <EllipsisTruncater width={finalWidth}>{col.render(val, el, rowIdx)}</EllipsisTruncater>
               ) : (
-                <EllipsisTruncater
-                  width={calculateColumnWidth({
-                    title: col.title,
-                    columnIdx: idx,
-                    columnWidths,
-                    totalAvailableWidth,
-                    totalNumberOfColumns: arr.length,
-                    numberOfFixedWidthColumns,
-                    fixedWidth,
-                  })}
-                >
-                  {val}
-                </EllipsisTruncater>
+                <EllipsisTruncater width={finalWidth}>{val}</EllipsisTruncater>
               ),
       };
     });

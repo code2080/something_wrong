@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 // COMPONENTS
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import ActivityFiltering from 'Components/ActivityFiltering';
+import ActivityFiltering from 'Components/DEPR_ActivityFiltering';
 
 // SELECTORS
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';

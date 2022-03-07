@@ -4,8 +4,8 @@ import JointTeachingGroup, {
 } from 'Models/JointTeachingGroup.model';
 import { ActivityDesign } from 'Models/ActivityDesign.model';
 import { useMemo } from 'react';
-import { renderComponent } from 'Components/ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
-import TitleCell from 'Components/ActivitiesTableColumns/new/TitleCell';
+import { renderComponent } from 'Components/DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
+import TitleCell from 'Components/DEPR_ActivitiesTableColumns/new/TitleCell';
 import { getFieldLabel } from 'Utils/activityDesigner';
 import { ActivityValue } from 'Types/ActivityValue.type';
 import { Field } from 'Redux/TE/te.selectors';

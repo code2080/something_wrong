@@ -1,13 +1,19 @@
 import { useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import { AppstoreOutlined } from '@ant-design/icons';
 
+// COMPONENTS
+import ActivityTagPopover from './Popover';
+
+// REDUX
 import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
 
-import { TActivity } from '../../../../Types/Activity.type';
-import ActivityTagPopover from './Popover';
+// STYLES
 import './index.scss';
+
+// TYPES
+import { TActivity } from '../../../../Types/Activity.type';
+
 
 type Props = {
   activity: TActivity;
@@ -38,7 +44,7 @@ const ActivityTagSelector = ({ activity }: Props) => {
         placement='rightTop'
       >
         <div className='activity-tag--button'>
-          <Button size='small' icon={<AppstoreOutlined />}>
+          <Button size='small'>
             {selectedActivityTag ? selectedActivityTag.name : 'N/A'}
           </Button>
         </div>
@@ -46,5 +52,5 @@ const ActivityTagSelector = ({ activity }: Props) => {
     </div>
   );
 };
-// <GroupingButton activityGroup={selectedActivityGroup} />
+
 export default ActivityTagSelector;

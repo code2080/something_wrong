@@ -1,0 +1,137 @@
+@import '../../../../Styles/globals.scss';
+
+.filter-modal {
+  &__box {
+    border: 1px solid #f0f0f0;
+    flex: 1;
+    min-height: 0;
+    padding: 8px;
+    max-height: 300px;
+    overflow: auto;
+
+    b {
+      font-weight: 500;
+    }
+
+    .ant-row {
+      overflow: hidden;
+    }
+
+    .ant-menu {
+      border-right: 0;
+      li.ant-menu-item {
+        height: 24px;
+        line-height: 24px;
+        margin-bottom: 0;
+      }
+      .ant-menu-item-group-title {
+        padding-bottom: 0;
+      }
+    }
+    .ant-form-item {
+      flex-flow: column;
+
+      .ant-form-item-label {
+        text-align: left;
+      }
+    }
+
+    .ant-divider {
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+  }
+  &__column {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+  &__value-display {
+    margin-bottom: 12px;
+
+    .anticon-close-circle {
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.4s all;
+      margin-left: 8px;
+      color: $bittersweet;
+    }
+
+    & > div {
+      padding-left: 12px;
+      &:hover {
+        & > .anticon-close-circle,
+        & > div > .anticon-close-circle {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+
+    ul {
+      padding: 0;
+      li {
+        list-style: none;
+        &:hover {
+          & > .anticon-close-circle {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+
+        ul {
+          padding-left: 12px;
+        }
+      }
+    }
+  }
+
+  &__select-box {
+    b {
+      font-weight: 500;
+    }
+    .ant-select-selector {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      max-height: 0;
+      border: 0 !important;
+      padding: 0 !important;
+
+      + div {
+        position: relative !important;
+      }
+    }
+
+    .ant-select-dropdown {
+      opacity: 1 !important;
+      left: 0 !important;
+      top: 0 !important;
+      position: relative !important;
+      box-shadow: none;
+    }
+
+    .ant-select-item {
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 24px;
+      min-height: 24px;
+      margin-bottom: 2px;
+    }
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background: none;
+      &:hover {
+        color: #1890ff;
+      }
+    }
+
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      font-weight: normal;
+      color: #1890ff;
+      background: #e6f7ff;
+    }
+
+    .rc-virtual-list-holder {
+      max-height: 9999px !important;
+    }
+  }
+}

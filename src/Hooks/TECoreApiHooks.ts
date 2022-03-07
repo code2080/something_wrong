@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { Dispatch } from 'redux';
@@ -57,3 +57,13 @@ export const useFetchLabelsFromExtIds = (payload: TGetExtIdPropsPayload) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payload, teCoreAPI]);
 };
+
+export const useFetchLabelsFromExtIdsWithTransformation = 
+  (payload: any, transformationFn: (p: any) => TGetExtIdPropsPayload) => {
+    const transformedPayload = useMemo(() => {
+      return transformationFn(payload)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [payload]);
+    
+    return useFetchLabelsFromExtIds(transformedPayload);
+  }

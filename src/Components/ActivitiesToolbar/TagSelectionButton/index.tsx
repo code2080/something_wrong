@@ -3,7 +3,7 @@ import { Popover } from "antd";
 import { TagOutlined } from "@ant-design/icons";
 
 // COMPONENTS
-import ActivityTagPopover from "Components/ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover";
+import ActivityTagPopover from "Components/DEPR_ActivitiesTableColumns/SchedulingColumns/ActivityTaging/Popover";
 import ToolbarButton from "../ToolbarButton";
 
 const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({ selectedActivityIds }) => {

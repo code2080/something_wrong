@@ -1,6 +1,6 @@
 import { isEmptyDeep } from 'Utils/general.helpers';
 import { ActivityFilterPayload } from 'Models/ActivityValueFilter.model';
-import { deFlattenObject } from 'Components/ActivityFiltering/FilterModal/FilterModal.helper';
+import { deFlattenObject } from 'Components/DEPR_ActivityFiltering/FilterModal/FilterModal.helper';
 import { notification } from 'antd';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';

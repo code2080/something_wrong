@@ -61,7 +61,7 @@ export const selectExtIdLabel = createSelector(
       getLabelFromExtId(extIdProps, { field, extId, fallbackVal }),
 );
 
-export const selectIndexedExtIdLabel = createSelector(
+export const deprSelectIndexedExtIdLabel = createSelector(
   selectExtIdProps,
   (extIdProps) => (allActivityValues: Array<[Field, string]>) => {
     return allActivityValues.reduce((values, [field, extId]) => {
@@ -108,3 +108,16 @@ export const selectAllLabels = () =>
       {},
     ),
   );
+
+/**
+ * REWORKED SELECTORS
+ */
+export const selectIndexedExtIdLabel = (activityValues: [Field, string][]) => (state: any) => {
+const extIdProps = state.te.extIdProps || {};
+
+return activityValues.reduce((values, [field, extId]) => ({
+  ...values, 
+  [`${field}_${extId}`]: getLabelFromExtId(extIdProps, { field, extId, fallbackVal: extId }),
+}), {});
+};
+

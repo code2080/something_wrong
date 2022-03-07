@@ -26,6 +26,9 @@ import activityScheduling from './ActivityScheduling/activityScheduling.reducer'
 import recipients from './Recipients/recipients.reducer';
 import { LOGOUT } from './Auth/auth.actionTypes';
 
+// REWORKED
+import activitiesReducer from './ActivitiesSlice';
+
 const appReducer = combineReducers({
   apiStatus,
   globalUI,
@@ -49,6 +52,7 @@ const appReducer = combineReducers({
   jointTeaching,
   activityScheduling,
   recipients,
+  activitiesNew: activitiesReducer,
 });
 
 const rootReducer = (state, action) => {

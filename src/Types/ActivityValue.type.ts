@@ -48,3 +48,17 @@ export type ActivityValue = {
 export type IndexedActivityValueType = {
   [extId: string]: null | ActivityValue[];
 };
+
+export const createFn = (obj: any) => ({
+  type: obj.type,
+  extId: obj.extId,
+  submissionValue: obj.submissionValue || undefined,
+  submissionValueType: obj.submissionValueType || undefined,
+  valueMode: obj.valueMode || undefined,
+  value: obj.value || undefined,
+  sectionId: obj.sectionId || undefined,
+  elementId: obj.elementId || undefined,
+  eventId: obj.eventId || undefined,
+  rowIdx: obj.rowIdx,
+  isAllocated: obj.isAllocated || undefined,
+});

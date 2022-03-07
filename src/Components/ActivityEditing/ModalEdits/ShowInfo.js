@@ -7,7 +7,7 @@ import { Form, Alert } from 'antd';
 import {
   renderComponent,
   renderSubmissionValue,
-} from '../../ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
+} from '../../DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
 
 // STYLES
 import '../ModalEdit.scss';

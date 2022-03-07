@@ -81,11 +81,11 @@ const DynamicTableHOC = ({
   const [showColumnSelection, setShowColumnSelection] = useState(false);
 
   // State to hold columns width
-  // const [columnWidths, setColumnWidths] = useState([]);
   const [columnWidths, setColumnWidths] = useState([]);
 
   // State variable to hold filter query
   const [filterQuery, setFilterQuery] = useState('');
+
   /**
    * EFFECTS
    */
@@ -180,7 +180,7 @@ const DynamicTableHOC = ({
   );
 
   const _width = useMemo(
-    () => getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, width),
+    () => getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, true, width),
     [fixedWidthCols, width, expandedRowRender],
   );
 
@@ -190,6 +190,7 @@ const DynamicTableHOC = ({
       let additionalColumns = 0;
       if (rowSelection) additionalColumns += 1;
       if (expandedRowRender) additionalColumns += 1;
+
       return getColumnObjectArrayForTable(
         columns,
         visibleCols,
