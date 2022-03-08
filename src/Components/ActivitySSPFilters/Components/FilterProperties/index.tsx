@@ -2,9 +2,6 @@ import { Menu } from 'antd';
 import { capitalize, startCase } from 'lodash';
 import { useSelector } from 'react-redux';
 
-// HELPERS
-import { reparseKey } from '../../helpers';
-
 // REDUX
 import { selectLookupMapForFiltering } from 'Redux/ActivitiesSlice';
 
@@ -54,7 +51,7 @@ const FilterProperties = ({
             <Menu.ItemGroup key="objects" title="Objects">
               {Object.keys(filterLookupMap.objects || {}).map((key) => (
                 <Menu.Item key={`objects${REPLACED_KEY}${key}`}>
-                  {getOptionLabel(reparseKey(key))}
+                  {getOptionLabel('objects', key)}
                 </Menu.Item>
               ))}
             </Menu.ItemGroup>
@@ -65,7 +62,7 @@ const FilterProperties = ({
               {Object.keys(filterLookupMap.objectFilters || {}).map((type) => {
                 return Object.keys(filterLookupMap.objectFilters[type]).map((field) => (
                   <Menu.Item key={`objectFilters${REPLACED_KEY}${type}${REPLACED_KEY}${field}`}>
-                    {getOptionLabel(reparseKey(field))}
+                  {getOptionLabel('objectFilters', field)}
                   </Menu.Item>
                 ))
               })}
@@ -76,7 +73,7 @@ const FilterProperties = ({
             <Menu.ItemGroup key="fields" title="fields">
               {Object.keys(filterLookupMap.fields || {}).map((key) => (
                 <Menu.Item key={`fields${REPLACED_KEY}${key}`}>
-                  {getOptionLabel(reparseKey(key))}
+                  {getOptionLabel('fields', key)}
                 </Menu.Item>
               ))}
             </Menu.ItemGroup>

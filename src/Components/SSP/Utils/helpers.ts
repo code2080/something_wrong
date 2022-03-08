@@ -11,7 +11,6 @@ import { ISSPReducerState, ISSPQueryObject } from "Types/SSP.type";
 export const serializeSSPQuery = (partialQueryObject: Partial<ISSPQueryObject> | undefined, state: ISSPReducerState): string => {
   const sspQueryParams = pick(state, ['page', 'limit', 'sortBy', 'direction', 'matchType', 'inclusion', 'filters']);
   const finalQueryObject = Object.assign(sspQueryParams, partialQueryObject);
-  console.log(finalQueryObject);
   const urlParams = new URLSearchParams({ ssp: JSON.stringify(finalQueryObject) });
   return urlParams.toString();
 };

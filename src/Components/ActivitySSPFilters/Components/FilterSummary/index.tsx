@@ -85,7 +85,7 @@ const FilterSummary = ({
         return (
           <ValueDisplay
             key={key}
-            label={<FilterItemLabel label={key} render={getOptionLabel} />}
+            label={<FilterItemLabel selectedFilterProperty={key} getLabelForFilterOption={getOptionLabel} />}
             content={
               <ul>
                 {values[key].map((item) => (
@@ -126,7 +126,7 @@ const FilterSummary = ({
                   .map((key) => (
                     <ul key={key}>
                       <li>
-                        <FilterItemLabel label={key} render={getOptionLabel} />
+                        <FilterItemLabel selectedFilterProperty={key} getLabelForFilterOption={getOptionLabel} />
                         <ul>
                           {values[key]?.map((item) => (
                             <li key={item}>

@@ -37,7 +37,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const filterLookupMap = useSelector(activityFilterLookupMapSelector);
   const filterOptionLabels = useSelector(selectLabelsForFilterOptionsForForm(formId));
-  
+
   /**
    * CUSTOM HOOKS
    */
