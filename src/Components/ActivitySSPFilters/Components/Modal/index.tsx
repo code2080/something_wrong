@@ -10,7 +10,7 @@ import useSSP from '../../../SSP/Utils/hooks';
 import { activityFilterLookupMapSelector } from 'Redux/ActivitiesSlice';
 
 // HELPERS
-import { getTECorePayload } from '../../helpers';
+import { createPatchFromFilterPropertyAndValues, getTECorePayload, transformFilterValues } from '../../helpers';
 
 // COMPONENTS
 import MatchType from '../MatchType';
@@ -38,22 +38,56 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
   /**
    * CUSTOM HOOKS
    */
-  const { loading } = useSSP();
+  const { loading, patchFilters, filters, commitFilterChanges, discardFilterChanges } = useSSP();
   useFetchLabelsFromExtIdsWithTransformation(filterLookupMap, getTECorePayload);
 
   /**
    * STATE
    */
-  const [selectedProperty, setSelectedProperty] = useState('');
+  const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
 
-  const getOptionLabel = (_args?: any) => 'heh';
+  const selectedFilterValues = transformFilterValues(filters);
+  
+  /**
+   * EVENT HANDLERS
+   */
+  const onSelectFilterProperty = (property: string) => {
+    setSelectedFilterProperty(property);
+  };
+
+  const onSelectFilterValue = (values: any) => {
+    const patch = createPatchFromFilterPropertyAndValues(selectedFilterProperty, values);
+    patchFilters(patch);
+  };
+
+  const onDeselectFilterValue = (value: any) => {
+    console.log(value);
+  };
+
+  const onClearFilterValues = () => {
+
+  };
+
+  const onGetFilterOptionLabel = (key: string) => {
+    return key;
+  };
+
+  const onOK = () => {
+    commitFilterChanges();
+    onClose();
+  };
+
+  const onCancel = () => {
+    discardFilterChanges();
+    onClose();
+  };
 
   return (
     <Modal
       title='Activity filters'
       visible={isVisible}
-      onOk={() => onClose()}
-      onCancel={() => onClose()}
+      onOk={onOK}
+      onCancel={onCancel}
       width={1000}
       getContainer={false}
     >
@@ -72,20 +106,25 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
         <Row gutter={16} className='filter-modal__content'>
           <Col span={7}>
             <FilterProperties
-              selectedProperty={selectedProperty}
-              onSelect={setSelectedProperty}
-              getOptionLabel={getOptionLabel}
+              selectedFilterProperty={selectedFilterProperty}
+              onSelect={onSelectFilterProperty}
+              getOptionLabel={onGetFilterOptionLabel}
             />
           </Col>
           <Col span={7}>
-            <FilterItems selectedProperty={selectedProperty} getOptionLabel={getOptionLabel} />
+            <FilterItems
+              selectedFilterProperty={selectedFilterProperty}
+              selectedFilterValues={selectedFilterValues}
+              onSelectFilterValue={onSelectFilterValue}
+              getOptionLabel={onGetFilterOptionLabel}
+            />
           </Col>
           <Col span={10}>
             <FilterSummary
-              values={{}}
-              onClear={() => console.log('clear')}
-              onDeselect={() => console.log('deselect')}
-              getOptionLabel={getOptionLabel}
+              values={filters}
+              onClear={onClearFilterValues}
+              onDeselect={onDeselectFilterValue}
+              getOptionLabel={onGetFilterOptionLabel}
             />
           </Col>
         </Row>

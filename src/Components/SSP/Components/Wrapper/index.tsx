@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { EFilterInclusions, EFilterType, ESortDirection, ISSPReducerState } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
 import { TSSPWrapperProps } from '../../Types';
+import { merge } from 'lodash';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetchFn, fetchFilterLookupsFn, children }) => {
   const dispatch = useDispatch();
@@ -66,7 +67,9 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
   };
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
-    _setFilters({ ...filters, ...patch });
+    const blankObj = {};
+    merge(blankObj, _filters, patch);
+    _setFilters(blankObj);
   };
 
   const discardFilterChanges = () => {

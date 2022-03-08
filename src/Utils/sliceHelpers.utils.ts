@@ -1,4 +1,4 @@
-import { IDefaultSSPResult, ISSPReducerState, IDefaultReduxState } from '../Types/SSP.type'
+import { ISSPAPIResult, ISSPReducerState } from '../Types/SSP.type'
 
 export const finishedLoadingSuccess = (state: ISSPReducerState): void => {
   state.loading = false;
@@ -15,9 +15,9 @@ export const beginLoading = (state: ISSPReducerState): void => {
   state.hasErrors = false;
 };
 
-export const commitAPIPayloadToState = (payload: IDefaultSSPResult, state: IDefaultReduxState, createFn: Function, idProp: string = '_id'): void => {
+export const commitAPIPayloadToState = (payload: ISSPAPIResult, state: ISSPReducerState, createFn: Function, idProp: string = '_id'): void => {
   try {
-    const { results, page, limit, totalPages }: IDefaultSSPResult = payload;
+    const { results, page, limit, totalPages }: ISSPAPIResult = payload;
     const iteratedResults = results.map((el: any) => createFn(el));
 
     const map = iteratedResults.reduce((tot: any[], acc: any) => ({

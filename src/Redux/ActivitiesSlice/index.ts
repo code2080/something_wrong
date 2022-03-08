@@ -8,6 +8,10 @@ import {
   beginLoading,
   commitAPIPayloadToState,
 } from '../../Utils/sliceHelpers.utils';
+import {
+  excludeEmptyKeysFromFilterLookupMap,
+  getAllFilterOptionsFromFilterLookupMap,
+} from '../../Components/ActivitySSPFilters/helpers';
 
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
@@ -73,6 +77,24 @@ export const activitiesSelector = (state: IState): TActivity[] =>
 export const activitySelector = (id: string) => (state: IState): TActivity | undefined => state.activitiesNew.map[id] || undefined;
 export const activitiesLoading = (state: IState): boolean => state.activitiesNew.loading;
 export const activityFilterLookupMapSelector = (state: IState): TActivityFilterLookupMap => state.activitiesNew.filterLookupMap;
+
+/**
+ * ALWAYS use this selector in case you're planning on using the map for filtering
+ * It executes various convenience functions against the raw map before returning it
+ */
+export const selectLookupMapForFiltering = (state: IState): TActivityFilterLookupMap => {
+  // Get the raw map from state
+  const rawMap = state.activitiesNew.filterLookupMap;
+  // Filter out all properties with only 'null' or 'undefined' as keys, except for in excluded keys
+  return excludeEmptyKeysFromFilterLookupMap(rawMap, ['tag']);
+}
+
+export const selectAllFilterOptions = (filterProperty: string) => (state: IState): string[] => {
+  // Get the raw map from state
+  const map = selectLookupMapForFiltering(state);
+  const options = getAllFilterOptionsFromFilterLookupMap(map);
+  return options[filterProperty] || [];
+}
 
 // Actions
 export const {

@@ -1,135 +1,50 @@
-import { useEffect, useState, useMemo } from 'react';
-import { Input, Empty } from 'antd';
-import { get, isEmpty, lowerCase } from 'lodash';
-import { SearchOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
 
 // COMPONENTS
-import FilterOptions from '../FilterOptions';
-import FilterItemLabel from '../FilterItemLabel';
+import DateFilterItem from '../DateFilterItem';
+import TimeFilterItem from '../TimeFilterItem';
+import StatusFilterItem from '../StatusFilterItem';
+import DynamicFilterItem from '../DynamicFilterItem';
 
-// SELECTORS
-import { activityFilterLookupMapSelector } from 'Redux/ActivitiesSlice';
-
-// HELPERS
-import { beautifyObject, flattenObject, isObject } from '../../helpers';
-
-// CONSTANTS
-import { FILTER_ITEMS_MAPPING } from '../mapping';
-
-const filterOptionsByQuery = (query: string, options: any[]) => {
-  if (!query) return options;
-  return options.filter((opt) =>
-    lowerCase(`${opt.label} ${opt.value}`).includes(lowerCase(query)),
-  );
-};
-interface Props {
-  selectedProperty: string;
+type Props = {
+  selectedFilterProperty: string;
+  selectedFilterValues: any; // @todo type
+  onSelectFilterValue: (val: any) => void;
   getOptionLabel: (field: string, id?: string) => string;
-}
+};
+
 const FilterItems = ({
-  selectedProperty,
+  selectedFilterProperty,
+  selectedFilterValues,
+  onSelectFilterValue,
   getOptionLabel,
 }: Props) => {
-  /**
-   * SELECTORS
-   */
-  const filterLookupMap = useSelector(activityFilterLookupMapSelector);
-
-  const allProperties = useMemo(
-    () => ({
-      ...filterLookupMap,
-      ...flattenObject(beautifyObject(filterLookupMap), null, 2),
-    }),
-    [filterLookupMap],
-  );
-  const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    setQuery('');
-  }, [selectedProperty]);
-
-  const renderer = useMemo(() => {
-    const fixedProperties = FILTER_ITEMS_MAPPING[selectedProperty];
-    if (fixedProperties) return fixedProperties.render();
-
-    const dynamicProperty = get(allProperties, selectedProperty);
-    if (dynamicProperty) {
-      const options = Object.keys(dynamicProperty).filter(
-        (key) =>
-          Array.isArray(dynamicProperty[key]) ||
-          Number(dynamicProperty[key]) > 0,
-      );
-      const otherOptions = Object.keys(dynamicProperty).filter((key) =>
-        isObject(dynamicProperty[key]),
-      );
-      if (isEmpty(options) && isEmpty(otherOptions)) return <Empty />;
-
-      return (
-        <>
-          <Input
-            prefix={<SearchOutlined />}
-            size='small'
-            placeholder='Search...'
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            style={{ marginBottom: '4px' }}
+  const renderedItemComponent = useMemo(() => {
+    switch (selectedFilterProperty) {
+      case 'date':
+        return <DateFilterItem onChange={onSelectFilterValue} />;
+      case 'time':
+        return <TimeFilterItem onChange={onSelectFilterValue} />;
+      case 'status':
+        return <StatusFilterItem onChange={onSelectFilterValue} />;
+      default:
+        return (
+          <DynamicFilterItem 
+            onChange={onSelectFilterValue}
+            selectedFilterProperty={selectedFilterProperty}
+            getOptionLabel={getOptionLabel}
+            value={selectedFilterValues[selectedFilterProperty]}
           />
-          {!isEmpty(options) && (
-            <FilterOptions
-              options={filterOptionsByQuery(
-                query,
-                options.map((opt) => ({
-                  label: getOptionLabel(selectedProperty, opt),
-                  value: opt,
-                })),
-              )}
-              label={
-                <FilterItemLabel
-                  label={selectedProperty}
-                  render={getOptionLabel}
-                />
-              }
-              name={selectedProperty}
-            />
-          )}
-          {otherOptions
-            .filter((key) => {
-              return typeof dynamicProperty[key] === 'object';
-            })
-            .map((key) => (
-              <FilterOptions
-                key={key}
-                options={filterOptionsByQuery(
-                  query,
-                  Object.keys(dynamicProperty[key]).map((opt) => ({
-                    label: getOptionLabel(selectedProperty, opt),
-                    value: opt,
-                  })),
-                )}
-                label={
-                  <FilterItemLabel
-                    label={`${selectedProperty}.${key}`}
-                    render={getOptionLabel}
-                  />
-                }
-                // label={`${selectedProperty}.${key}`}
-                name={`${selectedProperty}.${key}`}
-              />
-            ))}
-        </>
-      );
+        );
     }
-
-    return <Empty />;
-  }, [selectedProperty, allProperties, query, getOptionLabel]);
+  }, [onSelectFilterValue, selectedFilterValues, selectedFilterProperty, getOptionLabel]);
 
   return (
     <div className='filter-modal__column'>
       <div>
         <b>Available filters</b>
       </div>
-      <div className='filter-modal__box'>{renderer}</div>
+      <div className='filter-modal__box'>{renderedItemComponent}</div>
     </div>
   );
 };

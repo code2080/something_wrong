@@ -6,7 +6,6 @@ import { CFilterTypeArr } from "Types/SSP.type";
 
 const MatchType = () => {
   const { matchType, setMatchType } = useFilters();
-  console.log(matchType);
   
   return (
     <Form.Item label='Match criteria'>

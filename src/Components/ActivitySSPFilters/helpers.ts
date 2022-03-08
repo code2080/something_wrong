@@ -1,4 +1,4 @@
-import { capitalize, compact, uniq } from "lodash";
+import { capitalize, compact, lowerCase, uniq } from "lodash";
 import { Field } from "Redux/TE/te.selectors";
 import { TActivityFilterLookupMap } from "Types/ActivityFilterLookupMap.type";
 import { TGetExtIdPropsPayload } from "Types/TECorePayloads.type";
@@ -76,3 +76,148 @@ export const flattenObject = (object: any, parentKey: any, level: any) => {
 
 export const toActivityStatusDisplay = (status: string): string =>
   capitalize(status).replace(/_/g, ' ');
+
+export const filterFilterOptionsByQuery = (query: string, options: any[]) => {
+  if (!query || query === "") return options;
+  const lowercasedQuery = query.toLowerCase();
+  return options.filter((opt) =>
+    lowerCase(`${opt.label} ${opt.value}`).includes(lowercasedQuery),
+  );
+};
+
+/**
+ * @function excludeEmptyKeysFromFilterLookupMap
+ * 
+ * Recurisvely remove all leaf keys with values 'null', null, 'undefined', or undefined
+ * Unless the key is present in the excludedKeys array
+ * Usage is to tidy up a TFilterLookupMap object, and let the user see only the relevant filter options
+ * 
+ * @param {TFilterLookupMap} obj 
+ * @param {string[]} excludedKeys 
+ * @returns {TFilterLookUpMap}
+ */
+ export const excludeEmptyKeysFromFilterLookupMap = (obj: Record<any, any>, excludedKeys: string[]) => {
+  const sanitizedMap = Object.keys(obj || {}).reduce((nonEmptyKeys, key) => {
+    // Get all the keys in the obj[key]
+    const keysInKey = Object.keys(obj[key]);
+    /**
+     * If we only have one key, and its value is 'undefined', 'null', undefined, or null... 
+     */
+    if (
+      keysInKey.length === 1 
+      && (
+        keysInKey[0] === 'undefined' 
+        || keysInKey[0] === undefined 
+        || keysInKey[0] === 'null' 
+        || keysInKey[0] === null
+      )
+    ) {
+      /**
+       * ... then we return the obj as is without adding the key,
+       * unless the key is in the excludedKeys array
+       */
+      if (!excludedKeys.includes(key)) {
+        return nonEmptyKeys;
+      } else {
+        return {
+          ...nonEmptyKeys,
+          [key]: obj[key],
+        };
+      }
+    }
+    
+    /**
+     * Depending on whether the value (obj[key]) is an object or integer
+     * we will recursively continue this function
+     */
+    return {
+      ...nonEmptyKeys,
+      [key]: typeof obj[key] === 'number' ? obj[key] : excludeEmptyKeysFromFilterLookupMap(obj[key], excludedKeys),
+    };
+  }, {});
+  return sanitizedMap;
+};
+
+export const getAllFilterOptionsFromFilterLookupMap = (obj: {}, prefix: string = ''): Record<string, string[]> => {
+  const flattenedMap = Object.keys(obj || {}).reduce((flatMap, key) => {
+    // Get all the keys in the obj[key]
+    const keysInKey = Object.keys(obj[key]);
+    /**
+     * Some type safety...
+     */
+    if (!keysInKey || !keysInKey[0]) return flatMap;
+    
+    /**
+     * If keysInKey[0] === number, we will assume this is a leaf
+     */
+    if (typeof obj[key][keysInKey[0]] === 'number') {
+      /**
+       * This is a leaf (assuming key and value homogeniety in the obj...)
+       * Turn it into an array and return
+       */
+      return {
+        ...flatMap,
+        [`${prefix}${key}`]: keysInKey,
+      };
+    } else {
+      /**
+       * This is NOT a leaf, keep digging...
+       */
+      return {
+        ...flatMap,
+        ...getAllFilterOptionsFromFilterLookupMap(obj[key], `${prefix}${key}${REPLACED_KEY}`),
+      }
+    }
+  }, {});
+  return flattenedMap;
+};
+
+export const createPatchFromFilterPropertyAndValues = (selectedFilterProperty: string, values: any) => {
+  const keys = selectedFilterProperty.split(REPLACED_KEY);
+  const lastKey = keys.pop() as string;
+  const reversedKeys = keys.slice().reverse();
+  const obj = reversedKeys.reduce((prev, current) => (
+      {[current]:{...prev}}
+  ), { [lastKey]: values });
+  return obj;
+};
+
+export const transformFilterValues = (obj: any, prefix = '') => {
+  const flattenedMap = Object.keys(obj || {}).reduce((flatMap, key) => {
+    if (Array.isArray(obj[key])) {
+      return {
+        ...flatMap,
+        [key]: obj[key],
+      };
+    };
+
+    // Get all the keys in the obj[key]
+    const keysInKey = Object.keys(obj[key]);
+    /**
+     * Some type safety...
+     */
+    if (!keysInKey || !keysInKey[0]) return flatMap;
+    
+    /**
+     * If keysInKey[0] === array, we will assume this is a leaf
+     */
+    if (Array.isArray(obj[key][keysInKey[0]])) {
+      /**
+       * This is a leaf (assuming key and value homogeniety in the obj...)
+       */
+      for (let i = 0; i < keysInKey.length; i += 1) {
+        flatMap[`${prefix}${key}${REPLACED_KEY}${keysInKey[i]}`] = obj[key][keysInKey[i]]
+      }
+      return flatMap;
+    } else {
+      /**
+       * This is NOT a leaf, keep digging...
+       */
+      return {
+        ...flatMap,
+        ...transformFilterValues(obj[key], `${prefix}${key}${REPLACED_KEY}`),
+      }
+    }
+  }, {});
+  return flattenedMap;
+}
