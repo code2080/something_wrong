@@ -1,4 +1,4 @@
-import { ISSPAPIResult, ISSPReducerState } from '../Types/SSP.type'
+import { ISSPAPIResult, ISSPQueryObject, ISSPReducerState } from '../Types/SSP.type'
 
 export const finishedLoadingSuccess = (state: ISSPReducerState): void => {
   state.loading = false;
@@ -34,3 +34,14 @@ export const commitAPIPayloadToState = (payload: ISSPAPIResult, state: ISSPReduc
     console.error(error);
   } 
 };
+
+export const commitSSPQueryToState = (payload: Partial<ISSPQueryObject>, state: ISSPReducerState) => {
+  const { page, limit, sortBy, direction, matchType, inclusion, filters } = payload;
+  state.page = page || state.page;
+  state.limit = limit || state.limit;
+  state.sortBy = sortBy || state.sortBy;
+  state.direction = direction || state.direction;
+  state.matchType = matchType || state.matchType;
+  state.inclusion = inclusion || state.inclusion;
+  state.filters = filters || state.filters;
+}

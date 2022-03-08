@@ -7,6 +7,7 @@ import {
   finishedLoadingSuccess,
   beginLoading,
   commitAPIPayloadToState,
+  commitSSPQueryToState,
 } from '../../Utils/sliceHelpers.utils';
 import {
   excludeEmptyKeysFromFilterLookupMap,
@@ -51,8 +52,9 @@ const slice = createSlice({
   name: 'activitiesNew',
   initialState,
   reducers: {
-    defaultRequestHandler: (state) => {
+    defaultRequestHandler: (state, { payload }) => {
       beginLoading(state);
+      if (payload) commitSSPQueryToState(payload, state);
     },
     defaultFailureHandler: (state) => {
       finishedLoadingFailure(state);
@@ -106,7 +108,7 @@ export const {
 
 export const fetchActivitiesForForm = (formId: string, queryObject?: Partial<ISSPQueryObject>) => async (dispatch: any, getState: any) => {
   try {
-    dispatch(defaultRequestHandler());
+    dispatch(defaultRequestHandler(queryObject));
     const serializedQuery = serializeSSPQuery(queryObject, getState().activitiesNew);
     const result = await api.get({
       endpoint: `forms/${formId}/activities?${serializedQuery}`,
@@ -119,7 +121,7 @@ export const fetchActivitiesForForm = (formId: string, queryObject?: Partial<ISS
 
 export const fetchActivityFilterLookupMapForForm = (formId: string) => async (dispatch: any) => {
   try {
-    dispatch(defaultRequestHandler());
+    dispatch(defaultRequestHandler(null));
     const result = await api.get({
       endpoint: `forms/${formId}/activities/filters`,
     });

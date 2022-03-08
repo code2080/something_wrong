@@ -40,19 +40,24 @@ export const useRowSelection = (): TableRowSelection<any> => {
 }
 
 export const useSorting = () => {
-  const { setSorting } = useContext(SSPResourceContext);
+  const { sortBy, direction, setSorting } = useContext(SSPResourceContext);
 
   return (_: unknown, __: unknown, sorter: SorterResult<any> | SorterResult<any>[]) => {
-    // We're not supporting multiple sorters (yet), so if our payload is an array, we're resetting sorting
-    if (Array.isArray(sorter)) {
-      setSorting('', ESortDirection.DESCENDING);
+    /**
+     * Three reasons to terminate early:
+     * x) Sorter is an array (we do not support multiple sorters)
+     * x) We don't have a sortBy param, AND...
+     * x) ... we don't have a direction
+     */
+    if (Array.isArray(sorter) || !sorter || (!sorter.columnKey && !sorter.order)) {
       return;
     }
     // If column key or direction are undefined, we'll reset the sorting
     const { columnKey, order } = sorter;
-    if (!columnKey || !order) {
-      setSorting('', ESortDirection.DESCENDING);
-    } else {
+    // Parse the order string into our enums
+    const parsedDirection = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+    // Only update if something has changed in the sorting
+    if (sortBy !== columnKey || direction !== parsedDirection) {
       const direction = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
       setSorting(columnKey as string, direction);
     }

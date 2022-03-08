@@ -39,7 +39,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
    */
   const nextPage = () => !!(page + 1 <= totalPages) && dispatch(fetchFn({ page: page + 1 }));
   const prevPage = () => !!(page - 1 >= 1) && dispatch(fetchFn({ page: page - 1 }));
-  const setPage = (_page: number) => !!(_page >= 1 && _page <= totalPages) && dispatch(fetchFn({ page: _page }));
+  const setPage = (_page: number) => {
+    if (_page >= 1 && _page <= totalPages) {
+      dispatch(fetchFn({ page: _page }));
+    } 
+  }
   const setLimit = (_limit: number) => !!(_limit > 0) && dispatch(fetchFn({ page: 1, limit: _limit }));
 
   /**
@@ -51,7 +55,9 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
   /**
    * SORTING
    */
-  const setSorting = (sortBy: string, direction: ESortDirection) => dispatch(fetchFn({ sortBy, direction }));
+  const setSorting = (sortBy: string, direction: ESortDirection) => {
+    dispatch(fetchFn({ sortBy, direction }));
+  }
 
   /**
    * FILTERS
