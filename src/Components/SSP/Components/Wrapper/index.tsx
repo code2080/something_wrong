@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { EFilterInclusions, EFilterType, ESortDirection, ISSPReducerState } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
 import { TSSPWrapperProps } from '../../Types';
-import { isArray, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetchFn, fetchFilterLookupsFn, children }) => {
   const dispatch = useDispatch();
@@ -73,9 +73,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
   };
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
-    const clonedObj = { ..._setFilters };
-    mergeWith(clonedObj, patch, (obj) => {
-      if (isArray(obj)) return obj;
+    const clonedObj = { ..._filters };
+    mergeWith(clonedObj, patch, (oldVal, newVal,) => {
+      if (!oldVal) return newVal;
+      const result = Array.isArray(newVal) ? newVal : Object.assign(oldVal, newVal);
+      return result;
     });
     _setFilters(clonedObj);
   };

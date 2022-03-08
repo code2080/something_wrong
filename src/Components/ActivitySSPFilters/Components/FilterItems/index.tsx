@@ -26,7 +26,12 @@ const FilterItems = ({
       case 'time':
         return <TimeFilterItem onChange={onSelectFilterValue} />;
       case 'status':
-        return <StatusFilterItem onChange={onSelectFilterValue} />;
+        return (
+          <StatusFilterItem 
+            onChange={onSelectFilterValue}
+            value={selectedFilterValues.status}
+          />
+        );
       default:
         return (
           <DynamicFilterItem 

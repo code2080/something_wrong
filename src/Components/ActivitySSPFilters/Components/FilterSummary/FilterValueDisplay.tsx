@@ -8,11 +8,11 @@ type Props = {
   content: string | ReactNode;
 };
 
-const ValueDisplay = ({ label, content }: Props) => (
+const FilterValueDisplay = ({ label, content }: Props) => (
   <div className='filter-modal__value-display'>
     <b>{typeof label === 'string' ? capitalize(startCase(label)) : label}:</b>
     <div>{content}</div>
   </div>
 );
 
-export default ValueDisplay;
+export default FilterValueDisplay;

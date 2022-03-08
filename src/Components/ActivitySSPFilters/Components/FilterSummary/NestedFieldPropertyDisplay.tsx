@@ -1,78 +1,48 @@
-import { capitalize } from 'lodash';
+import { capitalize, startCase } from 'lodash';
 // COMPONENTS
 import ValueDisplay from './ValueDisplay';
 import FilterItemLabel from '../FilterItemLabel';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 type Props = {
-    filterValues: string[][],
-    nestedFilterProperty: string;
-    filterProperty: string;
-    getOptionLabel: (filterProperty: string; id?: string) => string;
+  filterValues: Record<string, string[]>,
+  nestedFilterProperty: string;
+  getOptionLabel: (filterProperty: string, id?: string) => string;
+  onDeselectFilterValue: (filterProperty: string, filterValues: string[]) => void;
 };
 
-const NestedFieldPropertyDisplay = ({
-    filterValues,
-    nestedFilterProperty,
-    filterProperty,
-    getOptionLabel,
+const NestedFilterPropertyDisplay = ({
+  filterValues,
+  nestedFilterProperty,
+  getOptionLabel,
+  onDeselectFilterValue,
 }: Props) => {
     return (
-        <ValueDisplay
-            label={capitalize(nestedFilterProperty)}
-            content={
-                <div>
-                    <ul key={key}>
-                        <li>
-                        <FilterItemLabel
-                            selectedFilterProperty={nestedFilterProperty}
-                            getLabelForFilterOption={getOptionLabel}
-                        />
-                        <ul>
-                            {selectedFilterValues[key]?.map((item) => (
-                            <li key={item}>
-                                {getOptionLabel(field, item)}
-                                <CloseCircleOutlined
-
-                                // onClick={() => onDeselect(key, [item])}
-                                />
-                            </li>
-                            ))}
-                        </ul>
-                        </li>
-                    </ul>
-                </div>
-
-/* <ValueDisplay
-label={capitalize(field)}
-content={
-  <div>
-    {Object.keys(fieldValues)
-      .filter((key) => !isEmpty(fieldValues[key]))
-      .map((key) => (
-        <ul key={key}>
-          <li>
-            <FilterItemLabel selectedFilterProperty={key} getLabelForFilterOption={getOptionLabel} />
+      <ValueDisplay
+        label={capitalize(startCase(nestedFilterProperty))}
+        content={Object.keys(filterValues).map((filterProperty) => (
+          <div key={filterProperty}>
+            <div>
+              <FilterItemLabel
+                selectedFilterProperty={filterProperty}
+                getLabelForFilterOption={getOptionLabel}
+                omitFirstKey
+              />
+            </div>
             <ul>
-              {values[key]?.map((item) => (
-                <li key={item}>
-                  {getOptionLabel(field, item)}
-                  <CloseCircleOutlined
-                    onClick={() => onDeselect(key, [item])}
-                  />
-                </li>
+              {(filterValues[filterProperty] || []).map((filterValue) => (
+                <li key={filterValue}>
+                  {getOptionLabel(filterProperty, filterValue)}
+                  <CloseCircleOutlined onClick={() => onDeselectFilterValue(filterProperty, [filterValue])} />
+              </li>
               ))}
             </ul>
-          </li>
-        </ul>
-      ))}
-  </div>
-// }
-// /> */
-
-        }
-        />
+          </div>
+        ))}
+      />
     )
 };
 
-export default NestedFieldPropertyDisplay;
+export default NestedFilterPropertyDisplay;
+

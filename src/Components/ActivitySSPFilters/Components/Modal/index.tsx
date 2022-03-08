@@ -145,8 +145,8 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
           <Col span={10}>
             <FilterSummary
               selectedFilterValues={selectedFilterValues}
-              onClear={onClearFilterValues}
-              onDeselect={onDeselectFilterValue}
+              onRemoveFilterProperty={onClearFilterValues}
+              onDeselectFilterValue={onDeselectFilterValue}
               getOptionLabel={onGetFilterOptionLabel}
             />
           </Col>

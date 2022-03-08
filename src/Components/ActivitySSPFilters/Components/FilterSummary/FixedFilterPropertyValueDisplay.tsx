@@ -1,6 +1,7 @@
 import { CloseCircleOutlined } from '@ant-design/icons';
-import { TActivityFilter } from 'Types/ActivityFilterLookupMap.type';
-import FilterItemLabel from '../FilterItemLabel';
+import { capitalize, startCase } from 'lodash';
+
+// COMPONENTS
 import ValueDisplay from './FilterValueDisplay';
 
 type Props = {
@@ -21,12 +22,7 @@ const FixedFilterPropertyValueDisplay = ({
 }: Props) => {
   return (
     <ValueDisplay
-      label={
-        <FilterItemLabel
-          selectedFilterProperty={filterProperty}
-          getLabelForFilterOption={getOptionLabel}
-        />
-      }
+      label={capitalize(startCase(filterProperty))}
       content={
         <ul>
           {filterValues.map((value) => (

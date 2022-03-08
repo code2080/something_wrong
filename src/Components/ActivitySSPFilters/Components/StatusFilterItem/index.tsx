@@ -9,9 +9,10 @@ import { EActivityStatus } from "Types/ActivityStatus.enum"
 
 type Props = {
   onChange: (updValue: any) => void;
+  value?: string[];
 };
 
-const StatusFilterItem = ({ onChange }: Props) => {
+const StatusFilterItem = ({ onChange, value }: Props) => {
   return (
     <FilterOptions
       options={Object.keys(EActivityStatus).map((key) => ({
@@ -20,6 +21,7 @@ const StatusFilterItem = ({ onChange }: Props) => {
       }))}
       label='Status'
       onChange={onChange}
+      value={value as any}
     />
   );
 };

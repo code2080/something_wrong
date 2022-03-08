@@ -1,12 +1,9 @@
 import { CloseCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import _ from 'lodash';
 
 // COMPONENTS
 import ValueDisplay from './FilterValueDisplay';
 
-// CONSTANTS
-import { DATE_FORMAT } from 'Constants/common.constants';
 
 // TYPES
 type Props = {
@@ -26,13 +23,9 @@ const DateValueDisplay = ({
 
   if (!start || !end) return null;
 
-  /*   const renderedString: string = `${
+  const renderedString: string = `${
     start ? moment(start).format(displayFormat) : '---'
-  } ~ ${end ? moment(end).format(displayFormat) : '---'}`; */
-
-  const renderedString: string = `${moment(start).format(
-    displayFormat,
-  )} ~ ${moment(end).format(displayFormat)}`;
+  } ~ ${end ? moment(end).format(displayFormat) : '---'}`;
 
   return (
     <ValueDisplay
