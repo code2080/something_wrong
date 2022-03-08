@@ -45,3 +45,16 @@ export const commitSSPQueryToState = (payload: Partial<ISSPQueryObject>, state: 
   state.inclusion = inclusion || state.inclusion;
   state.filters = filters || state.filters;
 }
+
+export const commitCachedSSPState = (payload: Partial<ISSPReducerState>, state: ISSPReducerState) => {
+  const { page, limit, sortBy, direction, matchType, inclusion, filters, results, map } = payload;
+  state.page = page || state.page;
+  state.limit = limit || state.limit;
+  state.sortBy = sortBy || state.sortBy;
+  state.direction = direction || state.direction;
+  state.matchType = matchType || state.matchType;
+  state.inclusion = inclusion || state.inclusion;
+  state.filters = filters || state.filters;
+  state.results = results || state.results;
+  state.map = map || state.map;
+};

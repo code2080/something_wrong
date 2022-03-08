@@ -53,13 +53,14 @@ export interface ISSPAPIStatus {
 }
 
 export interface ISSPAPIResult {
+  queryHash: number;
   results: any[],
   page: number,
   limit: number,
   totalPages: number,
 };
 
-export interface ISSPReducerState extends ISSPAPIStatus, ISSPAPIResult, ISSPPaginationQuery, ISSPSortingQuery, ISSPFilterQuery {
+export interface ISSPReducerState extends ISSPAPIStatus, Omit<ISSPAPIResult, 'queryHash'>, ISSPPaginationQuery, ISSPSortingQuery, ISSPFilterQuery {
   // STATUS
   /**
    * From ISSAPIStatus:
