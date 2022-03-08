@@ -1,34 +1,21 @@
+import { REPLACED_KEY } from 'Components/ActivitySSPFilters/constants';
 import { capitalize, startCase } from 'lodash';
-import { reparseKey } from '../../helpers';
 
 const FilterItemLabel = ({
-  label,
-  render,
+  selectedFilterProperty,
+  getLabelForFilterOption,
 }: {
-  label: string;
-  render?: (label) => string;
+  selectedFilterProperty: string;
+  getLabelForFilterOption: (filterProperty: string, id?: string) => string;
 }) => {
-  const splitted = label.split('.');
-  const firstStr = splitted.shift();
-  const renderLabel = (label: string) => {
-    if (typeof render === 'function') {
-      return reparseKey(
-        label
-          .split('.')
-          .map((item) => {
-            const labelDisplay = render(item);
-            return typeof labelDisplay === 'string' ? labelDisplay : item;
-          })
-          .join(' > '),
-      );
-    }
-    return reparseKey(label.split('.').join(' > '));
-  };
+  const keyForLabel = selectedFilterProperty.split(REPLACED_KEY).pop() as string;
+  const label = getLabelForFilterOption(keyForLabel);
 
   return (
     <b>
-      {capitalize(startCase(renderLabel(firstStr || '')))}
-      {splitted.length ? renderLabel(['', ...splitted].join('.')) : null}
+      {/* {capitalize(startCase(renderLabel(firstStr || '')))}
+      {splitted.length ? renderLabel(['', ...splitted].join('.')) : null} */}
+      {capitalize(startCase(label))}
     </b>
   );
 };

@@ -12,6 +12,7 @@ import {
 import {
   excludeEmptyKeysFromFilterLookupMap,
   getAllFilterOptionsFromFilterLookupMap,
+  toActivityStatusDisplay,
 } from '../../Components/ActivitySSPFilters/helpers';
 
 // UTILS
@@ -22,6 +23,12 @@ import { createFn, TActivity } from 'Types/Activity.type';
 import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
 import { ISSPReducerState, ISSPQueryObject, ESortDirection, EFilterType, EFilterInclusions } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
+import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+import { selectAllLabels } from 'Redux/TE/te.selectors';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { selectTagsByFormId } from 'Redux/ActivityTag/activityTag.selectors';
+import { TActivityTag } from 'Types/ActivityTag.type';
+import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -96,6 +103,24 @@ export const selectAllFilterOptions = (filterProperty: string) => (state: IState
   const map = selectLookupMapForFiltering(state);
   const options = getAllFilterOptionsFromFilterLookupMap(map);
   return options[filterProperty] || [];
+};
+
+export const selectLabelsForFilterOptionsForForm = (formId: string) => (state: IState) => {
+  const objectLabelsMapping = selectObjectLabelsMapping()(state);
+  const fieldsLabelMapping = selectFieldLabelsMapping()(state);
+  const allLabels = selectAllLabels()(state);
+  const tags = selectTagsByFormId(formId)(state);
+  const submitter = selectAllRecipientsFromSubmissionFromForm(formId)(state);
+
+  return {
+    submitter,
+    tag: { ...tags.reduce((tot: Record<string, string>, tag: TActivityTag) => ({ ...tot, [tag._id]: tag.name }), {}), null: 'N/A' },
+    status: Object.keys(EActivityStatus).reduce((tot, tagId) => ({ ...tot, [tagId]: toActivityStatusDisplay(tagId) }), {}), 
+    // status: _mapValues(EActivityStatus, toActivityStatusDisplay(EActivityStatus)}
+    ...objectLabelsMapping,
+    ...fieldsLabelMapping,
+    ...allLabels,
+  };
 }
 
 // Actions

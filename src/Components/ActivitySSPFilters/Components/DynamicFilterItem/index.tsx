@@ -53,15 +53,15 @@ const DynamicFilterItem = ({ onChange, selectedFilterProperty, getOptionLabel, v
         onChange={onChange}
         options={filterFilterOptionsByQuery(
           query,
-          options.map((opt) => ({
-            label: getOptionLabel(opt),
-            value: opt,
+          options.map((value) => ({
+            label: getOptionLabel(selectedFilterProperty, value),
+            value,
           })),
         )}
         label={
           <FilterItemLabel
-            label={selectedFilterProperty}
-            render={getOptionLabel}
+            selectedFilterProperty={selectedFilterProperty}
+            getLabelForFilterOption={getOptionLabel}
           />
         }
         value={value}

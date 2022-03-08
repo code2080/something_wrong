@@ -1,3 +1,5 @@
+import { TActivity } from "./Activity.type";
+
 export enum EFilterType {
   ONE = 'ONE',
   ALL = 'ALL',
@@ -67,7 +69,7 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPAPIResult, ISSPPagi
   // DATA
   // From ISSPAPIResult
   // results: any[], 
-  map: { [id: string]: any },
+  map: { [id: string]: TActivity },
   // PAGINATION
   /**
    * From ISSPPaginationQuery & ISSPAPIResult
@@ -91,6 +93,8 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPAPIResult, ISSPPagi
   filterLookupMap: any;
 };
 
+export interface ISSPQueryObject extends ISSPFilterQuery, ISSPSortingQuery, ISSPGroupingQuery, ISSPPaginationQuery {};
+
 export interface ISSPResourceContext extends ISSPReducerState {
   name: string;
   // PAGINATION FUNCTIONS
@@ -113,4 +117,3 @@ export interface ISSPResourceContext extends ISSPReducerState {
   discardFilterChanges: () => void;
 };
 
-export interface ISSPQueryObject extends ISSPFilterQuery, ISSPSortingQuery, ISSPGroupingQuery, ISSPPaginationQuery {};

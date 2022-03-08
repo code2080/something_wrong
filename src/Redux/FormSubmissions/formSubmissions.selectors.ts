@@ -78,3 +78,11 @@ export const selectAllSubmissionsForForm = (formId: string) =>
     submissionsState,
     (submissions) => submissions[formId]?.mapped?.byId ?? {},
   );
+
+export const selectAllRecipientsFromSubmissionFromForm = (formId: string) => (state: any) => {
+  const allSubmissions = Object.values(state.submissions[formId]?.mapped?.byId || {});
+  const allSubmitters = allSubmissions
+    .reduce((tot: Record<string, string>, submission: any) => ({ ...tot, [submission.recipientId] : submission.submitter || 'Unknown submitter' }), {});
+  
+  return allSubmitters;
+}

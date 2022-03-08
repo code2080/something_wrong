@@ -7,7 +7,7 @@ import { useFetchLabelsFromExtIdsWithTransformation } from 'Hooks/TECoreApiHooks
 import useSSP from '../../../SSP/Utils/hooks';
 
 // SELECTORS
-import { activityFilterLookupMapSelector } from 'Redux/ActivitiesSlice';
+import { activityFilterLookupMapSelector, selectLabelsForFilterOptionsForForm } from 'Redux/ActivitiesSlice';
 
 // HELPERS
 import { createPatchFromFilterPropertyAndValues, getTECorePayload, transformFilterValues } from '../../helpers';
@@ -22,6 +22,7 @@ import FilterSummary from '../FilterSummary';
 
 // STYLES
 import './index.scss';
+import { useParams } from 'react-router-dom';
 
 
 type Props = {
@@ -30,11 +31,13 @@ type Props = {
 };
 
 const FilterModal = ({ isVisible, onClose }: Props) => {
+  const { formId }: { formId: string } = useParams();
   /**
    * SELECTORS
    */
   const filterLookupMap = useSelector(activityFilterLookupMapSelector);
-
+  const filterOptionLabels = useSelector(selectLabelsForFilterOptionsForForm(formId));
+  
   /**
    * CUSTOM HOOKS
    */
@@ -45,7 +48,6 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    * STATE
    */
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
-
   const selectedFilterValues = transformFilterValues(filters);
   
   /**
@@ -65,11 +67,15 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
   };
 
   const onClearFilterValues = () => {
-
+    console.log('Clearing');
   };
 
-  const onGetFilterOptionLabel = (key: string) => {
-    return key;
+  const onGetFilterOptionLabel = (fieldProperty: string, id?: string) => {
+    if (!id) return fieldProperty;
+    if (['status', 'submitter', 'tag'].includes(fieldProperty)) {
+      return filterOptionLabels[fieldProperty][id];
+    }
+    return filterOptionLabels[id] || id;
   };
 
   const onOK = () => {
