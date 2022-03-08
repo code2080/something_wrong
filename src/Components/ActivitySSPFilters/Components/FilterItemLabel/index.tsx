@@ -13,8 +13,6 @@ const FilterItemLabel = ({
     .pop() as string;
   const label = getLabelForFilterOption(selectedFilterProperty, keyForLabel);
 
-  console.log('this is key for label: ', keyForLabel);
-
   return (
     <b>
       {/* {capitalize(startCase(renderLabel(firstStr || '')))}

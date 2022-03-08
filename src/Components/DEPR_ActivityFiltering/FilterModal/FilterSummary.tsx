@@ -11,7 +11,7 @@ import { DATE_FORMAT } from '../../../Constants/common.constants';
 import { NESTED_FIELDS } from './FilterModal.constants';
 import FilterItemLabel from './FilterItemLabel';
 interface Props {
-  values: any;
+  selectedFilterValues: any;
   onClear: (field: string[]) => void;
   onDeselect: (field: string, itemsToDeselect: string[]) => void;
   getOptionLabel: (field: string, id?: string) => string;
@@ -33,13 +33,13 @@ const ValueDisplay = ({
 };
 
 const FilterSummary = ({
-  values,
+  selectedFilterValues,
   onClear,
   onDeselect,
   getOptionLabel,
 }: Props) => {
   const dateDisplay = useMemo(() => {
-    const [startDate, endDate] = values.date || [];
+    const [startDate, endDate] = selectedFilterValues.date || [];
     if (!startDate && !endDate) return null;
     const dateDisplay = `${
       startDate ? moment(startDate).format(DATE_FORMAT) : '---'
@@ -55,10 +55,10 @@ const FilterSummary = ({
         }
       />
     );
-  }, [onClear, values.date]);
+  }, [onClear, selectedFilterValues.date]);
 
   const timeDisplay = useMemo(() => {
-    const [startTime, endTime] = values.time || [];
+    const [startTime, endTime] = selectedFilterValues.time || [];
     if (!startTime && !endTime) return null;
     const timeDisplay = `${
       startTime ? moment(startTime).format('HH:mm') : '---'
@@ -145,7 +145,7 @@ const FilterSummary = ({
         </Fragment>
       );
     },
-    [getOptionLabel, onDeselect, values],
+    [getOptionLabel, onDeselect, selectedFilterValues],
   );
 
   return (

@@ -6,89 +6,58 @@ import { Divider } from 'antd';
 
 // COMPONENTS
 import FilterItemLabel from '../FilterItemLabel';
+import TimeOrDateValueDisplay from './TimeOrDateValueDisplay';
 
 // CONSTANTS
 import { DATE_FORMAT } from '../../../../Constants/common.constants';
-import { NESTED_FIELDS } from '../../constants';
+import {
+  FIXED_FILTER_PROPERTIES_ARR,
+  NESTED_FILTER_PROPERTIES,
+} from '../../constants';
 
-interface Props {
-  values: any;
-  onClear: (field: string[]) => void;
-  onDeselect: (field: string, itemsToDeselect: string[]) => void;
+// TYPES
+import { TActivityFilter } from 'Types/ActivityFilterLookupMap.type';
+import FixedFilterPropertyValueDisplay from './FixedFilterPropertyValueDisplay';
+
+type Props = {
+  selectedFilterValues: Record<string, string[]>;
+  onRemoveFilterProperty: (filterProperty: string[]) => void;
+  onDeselectFilterValue: (
+    filterProperty: string,
+    itemsToDeselect: string[],
+  ) => void;
   getOptionLabel: (field: string, id?: string) => string;
-}
-
-const ValueDisplay = ({
-  label,
-  content,
-}: {
-  label: string | ReactChild;
-  content: string | ReactChild;
-}) => {
-  return (
-    <div className='filter-modal__value-display'>
-      <b>{typeof label === 'string' ? capitalize(startCase(label)) : label}:</b>
-      <div>{content}</div>
-    </div>
-  );
 };
 
 const FilterSummary = ({
-  values,
-  onClear,
-  onDeselect,
+  selectedFilterValues,
+  onRemoveFilterProperty,
+  onDeselectFilterValue,
   getOptionLabel,
 }: Props) => {
-  const dateDisplay = useMemo(() => {
-    const [startDate, endDate] = values.date || [];
-    if (!startDate && !endDate) return null;
-    const dateDisplay = `${
-      startDate ? moment(startDate).format(DATE_FORMAT) : '---'
-    } ~ ${endDate ? moment(endDate).format(DATE_FORMAT) : '---'}`;
-    return (
-      <ValueDisplay
-        label='Date interval'
-        content={
-          <div>
-            {dateDisplay}
-            <CloseCircleOutlined onClick={() => onClear(['date'])} />
-          </div>
-        }
-      />
-    );
-  }, [onClear, values.date]);
+  console.log('selectedFilterValues', selectedFilerValues);
+  const activeFixedFilters = FIXED_FILTER_PROPERTIES_ARR.filter(
+    (fixedFilterProperty) =>
+      !isEmpty(selectedFilterValues[fixedFilterProperty]),
+  );
 
-  const timeDisplay = useMemo(() => {
-    const [startTime, endTime] = values.time || [];
-    if (!startTime && !endTime) return null;
-    const timeDisplay = `${
-      startTime ? moment(startTime).format('HH:mm') : '---'
-    } ~ ${endTime ? moment(endTime).format('HH:mm') : '---'}`;
-    return (
-      <ValueDisplay
-        label='Time interval'
-        content={
-          <div>
-            {timeDisplay}
-            <CloseCircleOutlined onClick={() => onClear(['time'])} />
-          </div>
-        }
-      />
-    );
-  }, [onClear, values.time]);
-
-  const otherFieldsDisplays = useMemo(() => {
-    const fields = ['submitter', 'tag', 'primaryObject', 'status'];
+  /*   const otherFieldsDisplays = useMemo(() => {
+    const fields = FIXED_FILTER_PROPERTIES_ARR;
     return fields
-      .filter((key) => !isEmpty(values[key]))
+      .filter((key) => !isEmpty(selectedFilterValues[key]))
       .map((key) => {
         return (
           <ValueDisplay
             key={key}
-            label={<FilterItemLabel selectedFilterProperty={key} getLabelForFilterOption={getOptionLabel} />}
+            label={
+              <FilterItemLabel
+                selectedFilterProperty={key}
+                getLabelForFilterOption={getOptionLabel}
+              />
+            }
             content={
               <ul>
-                {values[key].map((item) => (
+                {selectedFilterValues[key].map((item) => (
                   <li key={item}>
                     {getOptionLabel(key, item)}
                     <CloseCircleOutlined
@@ -101,52 +70,42 @@ const FilterSummary = ({
           />
         );
       });
-  }, [getOptionLabel, onDeselect, values]);
+  }, [getOptionLabel, onDeselect, selectedFilterValues]); */
 
-  const generateObjectsDisplay = useCallback(
-    (field) => {
-      const fieldValues = pick(
-        values,
-        Object.keys(values).filter((key) => key.startsWith(`${field}.`)),
-      );
-      if (
-        isEmpty(fieldValues) ||
-        !Object.values(fieldValues).some((item) => !isEmpty(item))
-      )
-        return null;
-      return (
-        <Fragment key={field}>
-          <Divider />
-          <ValueDisplay
-            label={capitalize(field)}
-            content={
-              <div>
-                {Object.keys(fieldValues)
-                  .filter((key) => !isEmpty(fieldValues[key]))
-                  .map((key) => (
-                    <ul key={key}>
-                      <li>
-                        <FilterItemLabel selectedFilterProperty={key} getLabelForFilterOption={getOptionLabel} />
-                        <ul>
-                          {values[key]?.map((item) => (
-                            <li key={item}>
-                              {getOptionLabel(field, item)}
-                              <CloseCircleOutlined
-                                onClick={() => onDeselect(key, [item])}
-                              />
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  ))}
-              </div>
-            }
-          />
-        </Fragment>
-      );
-    },
-    [getOptionLabel, onDeselect, values],
+  // const generateObjectsDisplay = useCallback(
+  //   (field) => {
+  //     const fieldValues = pick(
+  //       selectedFilterValues,
+  //       Object.keys(selectedFilterValues).filter((key) =>
+  //         key.startsWith(`${field}.`),
+  //       ),
+  //     );
+  //     if (
+  //       isEmpty(fieldValues) ||
+  //       !Object.values(fieldValues).some((item) => !isEmpty(item))
+  //     )
+  //       return null;
+  //     return (
+  //       <Fragment key={field}>
+  //         <Divider />
+  //       </Fragment>
+  //     );
+  //   },
+  //   [getOptionLabel, selectedFilterValues],
+  // );
+
+  // `objects__${objectTypeExtId}`: string[];
+  // `fields__${fieldExtId}`: string[];
+  // `objectFilters__${objectTypeExtId}___${fieldExtId}`: string[];
+
+  const objectFilters = Object.keys(selectedFilterValues).filter((el) =>
+    el.includes('objectFilters'),
+  );
+  const objects = Object.keys(selectedFilterValues).filter((el) =>
+    el.includes('objects'),
+  );
+  const fields = Object.keys(selectedFilterValues).filter((el) =>
+    el.includes('fields'),
   );
 
   return (
@@ -155,10 +114,28 @@ const FilterSummary = ({
         <b>Selected filters</b>
       </div>
       <div className='filter-modal__box'>
-        {dateDisplay}
-        {timeDisplay}
-        {otherFieldsDisplays}
-        {NESTED_FIELDS.map((field) => generateObjectsDisplay(field))}
+        <TimeOrDateValueDisplay
+          label='Date interval'
+          filterValues={selectedFilterValues.date}
+          onRemoveFilterProperty={() => onRemoveFilterProperty(['date'])}
+          displayFormat={DATE_FORMAT}
+        />
+        <TimeOrDateValueDisplay
+          label='Time interval'
+          filterValues={selectedFilterValues.time}
+          onRemoveFilterProperty={() => onRemoveFilterProperty(['time'])}
+          displayFormat='HH:mm'
+        />
+        {activeFixedFilters.map((fixedFilterProperty) => (
+          <FixedFilterPropertyValueDisplay
+            key={fixedFilterProperty}
+            filterProperty={fixedFilterProperty}
+            filterValues={selectedFilterValues[fixedFilterProperty]}
+            getOptionLabel={getOptionLabel}
+            onDeselectFilterValue={onDeselectFilterValue}
+          />
+        ))}
+        {/* {NESTED_FILTER_PROPERTIES.map((field) => generateObjectsDisplay(field))} */}
       </div>
     </div>
   );

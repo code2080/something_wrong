@@ -6,13 +6,17 @@ import { useSelector } from 'react-redux';
 import { selectLookupMapForFiltering } from 'Redux/ActivitiesSlice';
 
 // CONSTANTS
-import { FIXED_FILTER_PROPERTIES_OPTIONS, NESTED_FIELDS, REPLACED_KEY } from '../../constants';
+import {
+  CUSTOM_RENDERED_FILTER_PROPERTIES_OPTIONS,
+  NESTED_FILTER_PROPERTIES,
+  REPLACED_KEY,
+} from '../../constants';
 
 type Props = {
   selectedFilterProperty: string;
   onSelect: (property: string) => void;
   getOptionLabel: (field: string, id?: string) => string;
-}
+};
 
 const FilterProperties = ({
   selectedFilterProperty,
@@ -26,7 +30,9 @@ const FilterProperties = ({
   /**
    * COMPUTED VARS
    */
-  const nonNestedFilterProperties = Object.keys(filterLookupMap).filter((key) => !NESTED_FIELDS.includes(key));
+  const nonNestedFilterProperties = Object.keys(filterLookupMap).filter(
+    (key) => !NESTED_FILTER_PROPERTIES.includes(key),
+  );
 
   return (
     <div className='filter-modal__column filter__properties'>
@@ -39,7 +45,7 @@ const FilterProperties = ({
           selectedKeys={[selectedFilterProperty]}
         >
           {/* Render the fixed filter properties */}
-          {FIXED_FILTER_PROPERTIES_OPTIONS.map((item) => (
+          {CUSTOM_RENDERED_FILTER_PROPERTIES_OPTIONS.map((item) => (
             <Menu.Item key={item.value}>{item.label}</Menu.Item>
           ))}
           {/* Render the non-nested properties */}
@@ -48,7 +54,7 @@ const FilterProperties = ({
           ))}
           {/* Render objects properties */}
           {filterLookupMap.objects != null && (
-            <Menu.ItemGroup key="objects" title="Objects">
+            <Menu.ItemGroup key='objects' title='Objects'>
               {Object.keys(filterLookupMap.objects || {}).map((key) => (
                 <Menu.Item key={`objects${REPLACED_KEY}${key}`}>
                   {getOptionLabel('objects', key)}
@@ -58,19 +64,23 @@ const FilterProperties = ({
           )}
           {/* Render object filters properties */}
           {filterLookupMap.objectFilters != null && (
-            <Menu.ItemGroup key="objectFilters" title="Object filters">
+            <Menu.ItemGroup key='objectFilters' title='Object filters'>
               {Object.keys(filterLookupMap.objectFilters || {}).map((type) => {
-                return Object.keys(filterLookupMap.objectFilters[type]).map((field) => (
-                  <Menu.Item key={`objectFilters${REPLACED_KEY}${type}${REPLACED_KEY}${field}`}>
-                  {getOptionLabel('objectFilters', field)}
-                  </Menu.Item>
-                ))
+                return Object.keys(filterLookupMap.objectFilters[type]).map(
+                  (field) => (
+                    <Menu.Item
+                      key={`objectFilters${REPLACED_KEY}${type}${REPLACED_KEY}${field}`}
+                    >
+                      {getOptionLabel('objectFilters', field)}
+                    </Menu.Item>
+                  ),
+                );
               })}
             </Menu.ItemGroup>
           )}
           {/* Render fields properties, same logic as objects */}
           {filterLookupMap.fields != null && (
-            <Menu.ItemGroup key="fields" title="fields">
+            <Menu.ItemGroup key='fields' title='fields'>
               {Object.keys(filterLookupMap.fields || {}).map((key) => (
                 <Menu.Item key={`fields${REPLACED_KEY}${key}`}>
                   {getOptionLabel('fields', key)}

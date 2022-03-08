@@ -7,10 +7,17 @@ import { useFetchLabelsFromExtIdsWithTransformation } from 'Hooks/TECoreApiHooks
 import useSSP from '../../../SSP/Utils/hooks';
 
 // SELECTORS
-import { activityFilterLookupMapSelector, selectLabelsForFilterOptionsForForm } from 'Redux/ActivitiesSlice';
+import {
+  activityFilterLookupMapSelector,
+  selectLabelsForFilterOptionsForForm,
+} from 'Redux/ActivitiesSlice';
 
 // HELPERS
-import { createPatchFromFilterPropertyAndValues, getTECorePayload, transformFilterValues } from '../../helpers';
+import {
+  createPatchFromFilterPropertyAndValues,
+  getTECorePayload,
+  transformFilterValues,
+} from '../../helpers';
 
 // COMPONENTS
 import MatchType from '../MatchType';
@@ -24,7 +31,6 @@ import FilterSummary from '../FilterSummary';
 import './index.scss';
 import { useParams } from 'react-router-dom';
 
-
 type Props = {
   isVisible: boolean;
   onClose: () => void;
@@ -36,12 +42,20 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    * SELECTORS
    */
   const filterLookupMap = useSelector(activityFilterLookupMapSelector);
-  const filterOptionLabels = useSelector(selectLabelsForFilterOptionsForForm(formId));
+  const filterOptionLabels = useSelector(
+    selectLabelsForFilterOptionsForForm(formId),
+  );
 
   /**
    * CUSTOM HOOKS
    */
-  const { loading, patchFilters, filters, commitFilterChanges, discardFilterChanges } = useSSP();
+  const {
+    loading,
+    patchFilters,
+    filters,
+    commitFilterChanges,
+    discardFilterChanges,
+  } = useSSP();
   useFetchLabelsFromExtIdsWithTransformation(filterLookupMap, getTECorePayload);
 
   /**
@@ -49,7 +63,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
-  
+
   /**
    * EVENT HANDLERS
    */
@@ -58,7 +72,10 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
   };
 
   const onSelectFilterValue = (values: any) => {
-    const patch = createPatchFromFilterPropertyAndValues(selectedFilterProperty, values);
+    const patch = createPatchFromFilterPropertyAndValues(
+      selectedFilterProperty,
+      values,
+    );
     patchFilters(patch);
   };
 
@@ -100,13 +117,13 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
       <Spin spinning={!!loading}>
         <Row>
           <Col span={8}>
-            <MatchType />  
+            <MatchType />
           </Col>
           <Col span={8}>
-            <IncludeSubmission />  
+            <IncludeSubmission />
           </Col>
           <Col span={8}>
-            <IncludeJointTeaching />  
+            <IncludeJointTeaching />
           </Col>
         </Row>
         <Row gutter={16} className='filter-modal__content'>
@@ -127,7 +144,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
           </Col>
           <Col span={10}>
             <FilterSummary
-              values={filters}
+              selectedFilterValues={selectedFilterValues}
               onClear={onClearFilterValues}
               onDeselect={onDeselectFilterValue}
               getOptionLabel={onGetFilterOptionLabel}
