@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { EFilterInclusions, EFilterType, ESortDirection, ISSPReducerState } from 'Types/SSP.type';
+import { EFilterInclusions, EFilterType, ESortDirection, ISSPFilterQuery, ISSPReducerState } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
 import { TSSPWrapperProps } from '../../Types';
-import { mergeWith } from 'lodash';
+import { mergeWith, pick } from 'lodash';
+import { getFilterCache, setFilterCache } from 'Components/SSP/Utils/cacheService';
 
-const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetchFn, fetchFilterLookupsFn, children }) => {
+const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
+  name,
+  selectorFn,
+  fetchFn,
+  fetchFilterLookupsFn,
+  initSSPStateFn,
+  initialFilters,
+  children
+}) => {
   const dispatch = useDispatch();
 
   /**
@@ -88,13 +97,35 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
     _setFilters(filters);
   };
   const commitFilterChanges = () => {
-    dispatch(fetchFn({ matchType: _matchType, inclusion: _inclusion, filters: _filters }))
+    const filterQuery: ISSPFilterQuery = { matchType: _matchType, inclusion: _inclusion, filters: _filters };
+    setFilterCache(name, filterQuery)
+    dispatch(fetchFn(filterQuery))
   };
+  const initFiltersForDatasourceWithCacheAndDefaults = (defaultFilters: Partial<ISSPFilterQuery> = {}) => {
+    /**
+     * Initial filters are either cached filters
+     * or default filters provided as an argument to the function
+     */
+    const initFilters = getFilterCache(name) || defaultFilters;
+    /**
+     * Pick filter parameters
+     */
+    const { matchType, inclusion, filters } = pick(initFilters, ['matchType', 'inclusion', 'filters']);
+    /**
+     * Init in redux state and in local state
+     */
+    matchType && _setMatchType(matchType);
+    inclusion && _setInclusion(inclusion);
+    filters && _setFilters(filters);
+    dispatch(initSSPStateFn({ matchType, inclusion, filters }));
+  }
 
   /**
    * EFFECTS
    */
   useEffect(() => {
+    // Start by setting initial filters
+    initFiltersForDatasourceWithCacheAndDefaults(initialFilters);
     // Initial fetch on mount with default values
     dispatch(fetchFn());
     fetchFilterLookupsFn && dispatch(fetchFilterLookupsFn());
@@ -128,6 +159,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({ name, selectorFn, fetc
         setFilters,
         patchInclusion,
         patchFilters,
+        initFilters: initFiltersForDatasourceWithCacheAndDefaults,
         commitFilterChanges,
         discardFilterChanges,
         filterLookupMap,

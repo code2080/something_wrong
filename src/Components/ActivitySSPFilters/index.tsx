@@ -6,11 +6,13 @@ import ToolbarButton from "../ActivitiesToolbar/ToolbarButton";
 import FilterModal from './Components/Modal';
 
 // STYLES
-// import './index.scss';
 
 // TYPES
+type Props = {
+  datasourceId?: string;
+}
 
-const ActivityFiltering = () => {
+const ActivityFiltering = ({ datasourceId }: Props) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -25,6 +27,7 @@ const ActivityFiltering = () => {
       <FilterModal
         isVisible={showModal}
         onClose={() => setShowModal(false)}
+        datasourceId={datasourceId}
       />
     </>
   );

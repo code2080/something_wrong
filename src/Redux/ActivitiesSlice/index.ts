@@ -66,6 +66,9 @@ const slice = createSlice({
     defaultFailureHandler: (state) => {
       finishedLoadingFailure(state);
     },
+    initializeSSPStateProps: (state, { payload }) => {
+      if (payload) commitSSPQueryToState(payload, state);
+    },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
       commitAPIPayloadToState(payload, state, createFn);
       finishedLoadingSuccess(state);
@@ -127,6 +130,7 @@ export const selectLabelsForFilterOptionsForForm = (formId: string) => (state: I
 export const {
   defaultRequestHandler,
   defaultFailureHandler,
+  initializeSSPStateProps,
   fetchActivitiesForFormSuccess,
   fetchActivityFilterLookupMapSuccess,
 } = slice.actions;

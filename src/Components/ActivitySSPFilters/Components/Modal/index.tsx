@@ -1,6 +1,7 @@
 import { Col, Modal, Row, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 // HOOKS
 import { useFetchLabelsFromExtIdsWithTransformation } from 'Hooks/TECoreApiHooks';
@@ -29,7 +30,6 @@ import FilterSummary from '../FilterSummary';
 
 // STYLES
 import './index.scss';
-import { useParams } from 'react-router-dom';
 
 type Props = {
   isVisible: boolean;

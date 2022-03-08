@@ -1,10 +1,12 @@
 import { ColumnType } from "antd/lib/table";
-import { ISSPQueryObject } from "Types/SSP.type";
+import { ISSPFilterQuery, ISSPQueryObject } from "Types/SSP.type";
 
 export type TSSPWrapperProps = {
   name: string;
   selectorFn: any;
   fetchFn: (args?: Partial<ISSPQueryObject>) => void;
+  initSSPStateFn: (args?: Partial<ISSPQueryObject>) => void;
+  initialFilters?: Partial<ISSPFilterQuery>;
   fetchFilterLookupsFn?: (args?: any) => void;
 }
 

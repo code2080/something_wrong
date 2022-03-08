@@ -115,5 +115,6 @@ export interface ISSPResourceContext extends ISSPReducerState {
   patchFilters: (patch: Record<string, any>) => void;
   commitFilterChanges: () => void;
   discardFilterChanges: () => void;
+  initFilters: (defaultFilters: Partial<ISSPFilterQuery>) => void;
 };
 
