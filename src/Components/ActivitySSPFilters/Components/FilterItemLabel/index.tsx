@@ -8,8 +8,12 @@ const FilterItemLabel = ({
   selectedFilterProperty: string;
   getLabelForFilterOption: (filterProperty: string, id?: string) => string;
 }) => {
-  const keyForLabel = selectedFilterProperty.split(REPLACED_KEY).pop() as string;
-  const label = getLabelForFilterOption(keyForLabel);
+  const keyForLabel = selectedFilterProperty
+    .split(REPLACED_KEY)
+    .pop() as string;
+  const label = getLabelForFilterOption(selectedFilterProperty, keyForLabel);
+
+  console.log('this is key for label: ', keyForLabel);
 
   return (
     <b>
