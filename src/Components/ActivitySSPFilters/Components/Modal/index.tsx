@@ -2,6 +2,7 @@ import { Col, Modal, Row, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import _ from 'lodash';
 
 // HOOKS
 import { useFetchLabelsFromExtIdsWithTransformation } from 'Hooks/TECoreApiHooks';
@@ -64,7 +65,6 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
-  console.log('transformFilterValues: ', selectedFilterValues);
 
   /**
    * EVENT HANDLERS
@@ -81,8 +81,24 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     patchFilters(patch);
   };
 
-  const onDeselectFilterValue = (value: any) => {
-    console.log(value);
+  const onDeselectFilterValue = (
+    filterProperty: string,
+    itemsToDeselect: string[],
+  ) => {
+    if (_.isNil(filters[filterProperty])) {
+      return;
+    }
+
+    const updatedFilterProperty = filters[filterProperty].filter((selected) => {
+      return !itemsToDeselect.some((toDeselect) => toDeselect === selected);
+    });
+
+    const updatedFilters = {
+      ...filters,
+      [filterProperty]: updatedFilterProperty,
+    };
+
+    setFilters(updatedFilters);
   };
 
   /**
