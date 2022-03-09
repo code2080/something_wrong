@@ -19,13 +19,16 @@ import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
  * @param {TForm[]} forms
  * @returns {Record<string, string[]>}
  */
- export const getAllObjectScopesOnForms = (forms: TForm[]): TGetExtIdPropsPayload => {
+export const getAllObjectScopesOnForms = (
+  forms: TForm[],
+): TGetExtIdPropsPayload => {
   const allObjectScopes = forms.reduce(
-    (objScopes: string[], form) => form.objectScope ? [...objScopes, form.objectScope] : objScopes,
+    (objScopes: string[], form) =>
+      form.objectScope ? [...objScopes, form.objectScope] : objScopes,
     [],
   );
 
-  return {types: uniq(allObjectScopes), objects: [], fields: [] };
+  return { types: uniq(allObjectScopes), objects: [], fields: [] };
 };
 
 /**

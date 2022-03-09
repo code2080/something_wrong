@@ -18,15 +18,15 @@ const timingCols = {
     key: 'metadata.mode',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='mode'
-          propTitle={TimingNameMap.mode}
-          formatFn={(value) => activityTimeModeProps[value].label}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='mode'
+        propTitle={TimingNameMap.mode}
+        formatFn={(value) => activityTimeModeProps[value].label}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -36,17 +36,15 @@ const timingCols = {
     dataIndex: null,
     render: (activity, activityIndex) => {
       return (
-
-          <BaseActivityColWrapper
-            activity={activity}
-            activityIndex={activityIndex}
-            type='TIMING'
-            prop='startTime'
-            propTitle={TimingNameMap.startTime}
-            formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-            mapping={mapping}
-          />
-
+        <BaseActivityColWrapper
+          activity={activity}
+          activityIndex={activityIndex}
+          type='TIMING'
+          prop='startTime'
+          propTitle={TimingNameMap.startTime}
+          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
+          mapping={mapping}
+        />
       );
     },
     sorter: true,
@@ -56,15 +54,15 @@ const timingCols = {
     key: 'metadata.endTime',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='endTime'
-          propTitle={TimingNameMap.endTime}
-          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='endTime'
+        propTitle={TimingNameMap.endTime}
+        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -73,15 +71,15 @@ const timingCols = {
     key: 'metadata.startTimeInMinute',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='startTime'
-          propTitle='Start after or at'
-          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='startTime'
+        propTitle='Start after or at'
+        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -90,15 +88,15 @@ const timingCols = {
     key: 'metadata.endTimeInMinute',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='endTime'
-          propTitle='End before or at'
-          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='endTime'
+        propTitle='End before or at'
+        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -107,14 +105,14 @@ const timingCols = {
     key: 'metadata.length',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='length'
-          propTitle={TimingNameMap.length}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='length'
+        propTitle={TimingNameMap.length}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -123,14 +121,14 @@ const timingCols = {
     key: 'metadata.padding',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='padding'
-          propTitle={TimingNameMap.padding}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='padding'
+        propTitle={TimingNameMap.padding}
+        mapping={mapping}
+      />
     ),
   }),
   weekday: (mapping) => ({
@@ -138,14 +136,14 @@ const timingCols = {
     key: 'metadata.weekday',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='weekday'
-          propTitle={TimingNameMap.weekday}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='weekday'
+        propTitle={TimingNameMap.weekday}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -154,13 +152,13 @@ const timingCols = {
     key: 'metadata.dateRanges',
     dataIndex: null,
     render: (activity) => (
-        <BaseActivityColOuter
-          activity={activity}
-          type='TIMING'
-          prop='dateRanges'
-          propTitle={TimingNameMap.dateRanges}
-          mapping={mapping}
-        />
+      <BaseActivityColOuter
+        activity={activity}
+        type='TIMING'
+        prop='dateRanges'
+        propTitle={TimingNameMap.dateRanges}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -169,14 +167,14 @@ const timingCols = {
     key: 'metadata.time',
     dataIndex: null,
     render: (activity, activityIndex) => (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='time'
-          propTitle={TimingNameMap.time}
-          mapping={mapping}
-        />
+      <BaseActivityColWrapper
+        activity={activity}
+        activityIndex={activityIndex}
+        type='TIMING'
+        prop='time'
+        propTitle={TimingNameMap.time}
+        mapping={mapping}
+      />
     ),
     sorter: true,
   }),
@@ -194,7 +192,9 @@ export const GenerateTimingColumns = {
   ],
   [activityTimeModes.SEQUENCE]: (mapping) => {
     const { timing } = mapping;
-    const mappedKeys = Object.keys(timing).filter((key) => timing[key] && timing[key].length && key !== 'mode');
+    const mappedKeys = Object.keys(timing).filter(
+      (key) => timing[key] && timing[key].length && key !== 'mode',
+    );
     return mappedKeys
       .map((key) => timingCols?.[key]?.(mapping))
       .filter(Boolean);

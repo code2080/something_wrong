@@ -4,7 +4,6 @@ import moment from 'moment';
 // COMPONENTS
 import ValueDisplay from './FilterValueDisplay';
 
-
 // TYPES
 type Props = {
   label: string;

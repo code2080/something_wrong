@@ -1,6 +1,12 @@
 import { EActivityStatus } from './ActivityStatus.enum';
-import { ActivityValue, createFn as createActivityValue } from './ActivityValue.type';
-import { TSchedulingError, createFn as createSchedulingError } from './SchedulingError.type';
+import {
+  ActivityValue,
+  createFn as createActivityValue,
+} from './ActivityValue.type';
+import {
+  TSchedulingError,
+  createFn as createSchedulingError,
+} from './SchedulingError.type';
 
 export type TActivity = {
   // DESCRIPTIVES
@@ -13,7 +19,7 @@ export type TActivity = {
   // TAGS
   tagId: string | null;
 
-  // DATA 
+  // DATA
   sectionId: string;
   eventId: string | null;
   sequenceIdx: number | null;
@@ -26,13 +32,13 @@ export type TActivity = {
   reservationId?: string | null; //  If actvitiyStatus indicates the activity has been scheduled, this prop holds the reservation id
   schedulingTimestamp: string | null; // Timestamp for when the activity was scheduled
   errorDetails?: TSchedulingError; // Instance of scheduling error
-  
+
   // JOINT TEACHING
   originJointTeachingGroup?: string;
   jointTeaching?: { object: string; typeExtId: string };
   matchedJointTeachingId?: string;
   jointTeachingGroupId?: string;
-  
+
   // TRACKS
   tracks: number | null;
 

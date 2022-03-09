@@ -39,7 +39,9 @@ const ActivitiesToolbar = () => {
   /**
    * SELECTORS
    */
-  const hasSchedulingPermissions = useSelector(hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME));
+  const hasSchedulingPermissions = useSelector(
+    hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
+  );
 
   /**
    * EVENT HANDLERS
@@ -58,13 +60,12 @@ const ActivitiesToolbar = () => {
 
   const onCreateMatchCallback = () => {
     console.log('onCreateMatchCallback');
-  }
-
+  };
 
   return (
     <div className='activities-toolbar--wrapper'>
       <ToolbarGroup label='Selection'>
-        <StatusLabel color="default">{selectedKeys.length || 0}</StatusLabel>  
+        <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>
       <ToolbarGroup label='Schedule'>
         <Button
@@ -104,8 +105,16 @@ const ActivitiesToolbar = () => {
         <GroupingRadioGroup
           value='FLAT'
           options={[
-            { value: 'FLAT', label: <OrderedListOutlined />, tooltip: 'Flat list' },
-            { value: 'WEEK_PATTERN', label: <GroupOutlined />, tooltip: 'Week pattern' }
+            {
+              value: 'FLAT',
+              label: <OrderedListOutlined />,
+              tooltip: 'Flat list',
+            },
+            {
+              value: 'WEEK_PATTERN',
+              label: <GroupOutlined />,
+              tooltip: 'Week pattern',
+            },
           ]}
           onSelect={(val) => console.log(val)}
         />

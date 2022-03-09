@@ -1,20 +1,21 @@
 /* eslint-disable react/prop-types */
 // SSP
-import { Table } from "antd";
-import { ColumnsType } from "antd/lib/table";
-import { ISSPColumn } from "Components/SSP/Types";
-import useSSP, { usePagination, useRowSelection, useSorting } from "Components/SSP/Utils/hooks";
+import { Table } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
+import { ISSPColumn } from 'Components/SSP/Types';
+import useSSP, {
+  usePagination,
+  useRowSelection,
+  useSorting,
+} from 'Components/SSP/Utils/hooks';
 
 // TYPES
 type Props = {
   rowKey?: string;
   columns: ISSPColumn[];
-}
+};
 
-const SSPTable = ({
-  rowKey = '_id',
-  columns,
-}: Props) => {
+const SSPTable = ({ rowKey = '_id', columns }: Props) => {
   const { loading, results } = useSSP();
   const pagination = usePagination();
   const rowSelection = useRowSelection();

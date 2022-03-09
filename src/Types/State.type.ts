@@ -1,5 +1,5 @@
-import {TActivityTag} from "./ActivityTag.type"
-import { ISSPReducerState } from "./SSP.type";
+import { TActivityTag } from './ActivityTag.type';
+import { ISSPReducerState } from './SSP.type';
 
 export interface IState {
   activitiesNew: ISSPReducerState;

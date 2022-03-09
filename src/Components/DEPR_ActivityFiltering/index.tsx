@@ -6,7 +6,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
 
 // COMPONENTS
-import ToolbarButton from "../ActivitiesToolbar/ToolbarButton";
+import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';
 import FilterModal from './FilterModal/FilterModal';
 
 // STYLES
@@ -28,10 +28,7 @@ const ActivityFiltering = ({
 
   return (
     <>
-      <ToolbarButton
-        onClick={() => setShowModal(true)}
-        className={'active'}
-      >
+      <ToolbarButton onClick={() => setShowModal(true)} className={'active'}>
         <FilterOutlined />
         Filters
       </ToolbarButton>

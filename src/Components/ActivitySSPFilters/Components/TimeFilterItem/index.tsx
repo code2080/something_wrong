@@ -1,4 +1,4 @@
-import { TimePicker, Form } from "antd"
+import { TimePicker, Form } from 'antd';
 
 // TYPES
 type Props = {

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Tooltip } from "antd";
-import { ReactNode } from "react";
+import { Tooltip } from 'antd';
+import { ReactNode } from 'react';
 
 // STYLES
 import './index.scss';
@@ -9,14 +9,21 @@ import './index.scss';
 type Props = {
   value: string;
   onSelect: (value: string) => void;
-  options: { value: string, label: string | ReactNode, tooltip?: string }[];
-}
+  options: { value: string; label: string | ReactNode; tooltip?: string }[];
+};
 const ToolbarRadioGroup: React.FC<Props> = ({ value, onSelect, options }) => {
   return (
-    <div className="toolbar-radio-group--wrapper">
+    <div className='toolbar-radio-group--wrapper'>
       {options.map((el) => (
         <Tooltip title={el.tooltip || undefined} key={el.value}>
-          <div className={`toolbar-radio-group--item ${value === el.value && 'selected'}`} onClick={() => onSelect(el.value)}>{el.label}</div>
+          <div
+            className={`toolbar-radio-group--item ${
+              value === el.value && 'selected'
+            }`}
+            onClick={() => onSelect(el.value)}
+          >
+            {el.label}
+          </div>
         </Tooltip>
       ))}
     </div>

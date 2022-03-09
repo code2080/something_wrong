@@ -28,7 +28,6 @@ const FilterSummary = ({
   onDeselectFilterValue,
   getOptionLabel,
 }: Props) => {
-
   const activeFixedFilters = FIXED_FILTER_PROPERTIES_ARR.filter(
     (fixedFilterProperty) =>
       !isEmpty(selectedFilterValues[fixedFilterProperty]),
@@ -42,13 +41,17 @@ const FilterSummary = ({
       <div className='filter-modal__box'>
         <TimeOrDateValueDisplay
           label='Date interval'
-          filterValues={selectedFilterValues.date as [string, string] | undefined}
+          filterValues={
+            selectedFilterValues.date as [string, string] | undefined
+          }
           onRemoveFilterProperty={() => onRemoveFilterProperty(['date'])}
           displayFormat={DATE_FORMAT}
         />
         <TimeOrDateValueDisplay
           label='Time interval'
-          filterValues={selectedFilterValues.time as [string, string] | undefined}
+          filterValues={
+            selectedFilterValues.time as [string, string] | undefined
+          }
           onRemoveFilterProperty={() => onRemoveFilterProperty(['time'])}
           displayFormat='HH:mm'
         />
@@ -62,17 +65,22 @@ const FilterSummary = ({
           />
         ))}
         {NESTED_FILTER_PROPERTIES.map((nestedFilterProperty) => {
-          const filterValues = Object.keys(selectedFilterValues).filter((key) => key.includes(nestedFilterProperty)).reduce((tot, key) => ({ ...tot, [key]: selectedFilterValues[key] }), {});
+          const filterValues = Object.keys(selectedFilterValues)
+            .filter((key) => key.includes(nestedFilterProperty))
+            .reduce(
+              (tot, key) => ({ ...tot, [key]: selectedFilterValues[key] }),
+              {},
+            );
           if (Object.keys(filterValues).length === 0) return null;
           return (
             <NestedFilterPropertyDisplay
               key={nestedFilterProperty}
-              nestedFilterProperty={nestedFilterProperty} 
+              nestedFilterProperty={nestedFilterProperty}
               filterValues={filterValues}
               getOptionLabel={getOptionLabel}
               onDeselectFilterValue={onDeselectFilterValue}
             />
-          )
+          );
         })}
       </div>
     </div>

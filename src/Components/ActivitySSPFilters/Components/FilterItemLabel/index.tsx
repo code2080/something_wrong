@@ -1,7 +1,10 @@
 import { capitalize, startCase } from 'lodash';
 
 // CONSTANTS
-import { NESTED_FILTER_PROPERTIES, REPLACED_KEY } from 'Components/ActivitySSPFilters/constants';
+import {
+  NESTED_FILTER_PROPERTIES,
+  REPLACED_KEY,
+} from 'Components/ActivitySSPFilters/constants';
 
 const FilterItemLabel = ({
   selectedFilterProperty,
@@ -13,7 +16,7 @@ const FilterItemLabel = ({
   omitFirstKey?: boolean;
 }) => {
   const keys = selectedFilterProperty.split(REPLACED_KEY);
-  if (omitFirstKey) keys.splice(0,1);
+  if (omitFirstKey) keys.splice(0, 1);
 
   return (
     <b>
@@ -23,7 +26,9 @@ const FilterItemLabel = ({
         if (NESTED_FILTER_PROPERTIES.includes(key)) {
           label = capitalize(startCase(key));
         } else {
-          label = capitalize(startCase(getLabelForFilterOption(selectedFilterProperty, key)));
+          label = capitalize(
+            startCase(getLabelForFilterOption(selectedFilterProperty, key)),
+          );
         }
         return `${prefix}${label}`;
       })}

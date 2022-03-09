@@ -15,4 +15,5 @@ export const selectDesignForForm = createSelector(
     new ActivityDesign({ name: `Mapping form ${formId}`, formId }),
 );
 
-export const selectActivityDesignForForm = (formId: string) => (state: any) => state.activityDesigner[formId] || undefined;
+export const selectActivityDesignForForm = (formId: string) => (state: any) =>
+  state.activityDesigner[formId] || undefined;

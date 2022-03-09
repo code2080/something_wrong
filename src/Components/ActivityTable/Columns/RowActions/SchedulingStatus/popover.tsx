@@ -1,5 +1,5 @@
-import { Button, Form, Input } from "antd";
-import { useState } from "react";
+import { Button, Form, Input } from 'antd';
+import { useState } from 'react';
 
 // TYPES
 type Props = {
@@ -29,7 +29,11 @@ const MarkAsScheduledPopover = ({ onConfirm, onCancel }: Props) => {
         >
           Use reservation id
         </Button>
-        <Button type='default' size='small' onClick={() => onConfirm(undefined)}>
+        <Button
+          type='default'
+          size='small'
+          onClick={() => onConfirm(undefined)}
+        >
           No reservation id
         </Button>
         <Button type='default' size='small' onClick={onCancel}>

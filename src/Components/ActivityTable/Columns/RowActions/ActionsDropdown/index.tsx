@@ -28,21 +28,20 @@ import { TActivity } from 'Types/Activity.type';
 
 // TYPES
 type Props = {
-  activity: TActivity,
-  actions?: { [x: string]: Function },
-}
+  activity: TActivity;
+  actions?: { [x: string]: Function };
+};
 
-const ActivityActionsDropdown = ({
-  activity,
-  actions = {},
-}: Props) => {
+const ActivityActionsDropdown = ({ activity, actions = {} }: Props) => {
   const { formInstanceId, formId } = activity;
   const teCoreAPI = useTECoreAPI();
 
   /**
    * SELECTORS
    */
-  const jobs = useSelector(selectJobForActivities(activity.formId, [activity._id]));
+  const jobs = useSelector(
+    selectJobForActivities(activity.formId, [activity._id]),
+  );
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
@@ -54,7 +53,9 @@ const ActivityActionsDropdown = ({
   );
   const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
-  const mSStatus: any = useSelector(selectManualSchedulingStatus(activity.formInstanceId, activity.formId));
+  const mSStatus: any = useSelector(
+    selectManualSchedulingStatus(activity.formInstanceId, activity.formId),
+  );
 
   const activityActions = {
     SCHEDULE_SUBMISSION: {

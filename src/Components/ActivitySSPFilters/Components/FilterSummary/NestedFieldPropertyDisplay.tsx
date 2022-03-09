@@ -6,10 +6,13 @@ import { CloseCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 type Props = {
-  filterValues: Record<string, string[]>,
+  filterValues: Record<string, string[]>;
   nestedFilterProperty: string;
   getOptionLabel: (filterProperty: string, id?: string) => string;
-  onDeselectFilterValue: (filterProperty: string, filterValues: string[]) => void;
+  onDeselectFilterValue: (
+    filterProperty: string,
+    filterValues: string[],
+  ) => void;
 };
 
 const NestedFilterPropertyDisplay = ({
@@ -18,31 +21,34 @@ const NestedFilterPropertyDisplay = ({
   getOptionLabel,
   onDeselectFilterValue,
 }: Props) => {
-    return (
-      <ValueDisplay
-        label={capitalize(startCase(nestedFilterProperty))}
-        content={Object.keys(filterValues).map((filterProperty) => (
-          <div key={filterProperty}>
-            <div>
-              <FilterItemLabel
-                selectedFilterProperty={filterProperty}
-                getLabelForFilterOption={getOptionLabel}
-                omitFirstKey
-              />
-            </div>
-            <ul>
-              {(filterValues[filterProperty] || []).map((filterValue) => (
-                <li key={filterValue}>
-                  {getOptionLabel(filterProperty, filterValue)}
-                  <CloseCircleOutlined onClick={() => onDeselectFilterValue(filterProperty, [filterValue])} />
-              </li>
-              ))}
-            </ul>
+  return (
+    <ValueDisplay
+      label={capitalize(startCase(nestedFilterProperty))}
+      content={Object.keys(filterValues).map((filterProperty) => (
+        <div key={filterProperty}>
+          <div>
+            <FilterItemLabel
+              selectedFilterProperty={filterProperty}
+              getLabelForFilterOption={getOptionLabel}
+              omitFirstKey
+            />
           </div>
-        ))}
-      />
-    )
+          <ul>
+            {(filterValues[filterProperty] || []).map((filterValue) => (
+              <li key={filterValue}>
+                {getOptionLabel(filterProperty, filterValue)}
+                <CloseCircleOutlined
+                  onClick={() =>
+                    onDeselectFilterValue(filterProperty, [filterValue])
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    />
+  );
 };
 
 export default NestedFilterPropertyDisplay;
-

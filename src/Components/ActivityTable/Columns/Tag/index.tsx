@@ -14,7 +14,6 @@ import './index.scss';
 // TYPES
 import { TActivity } from '../../../../Types/Activity.type';
 
-
 type Props = {
   activity: TActivity;
 };

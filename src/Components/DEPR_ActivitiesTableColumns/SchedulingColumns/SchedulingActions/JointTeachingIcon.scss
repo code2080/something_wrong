@@ -11,7 +11,8 @@
   border-radius: 50% !important;
   border: none !important;
 
-  &.indicated, &:hover {
+  &.indicated,
+  &:hover {
     background: $candlelight !important;
     color: #000 !important;
   }

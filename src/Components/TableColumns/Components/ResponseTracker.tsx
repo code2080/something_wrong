@@ -9,27 +9,38 @@ import './ResponseTracker.scss';
 
 // PROPS
 type Props = {
-  responses: any[],
+  responses: any[];
 };
 
-const renderTooltip = (submissions: number, declined: number, totalCount: number): string => {
+const renderTooltip = (
+  submissions: number,
+  declined: number,
+  totalCount: number,
+): string => {
   return totalCount > 0
     ? `${submissions} submitted, ${declined} rejected, out of ${totalCount} forms sent or created`
-    : 'Form has not been assigned to any recipients'
+    : 'Form has not been assigned to any recipients';
 };
 
-const renderTitle = (submissions: number, declined: number, totalCount: number): string => `${submissions}/${declined}/${totalCount}`;
+const renderTitle = (
+  submissions: number,
+  declined: number,
+  totalCount: number,
+): string => `${submissions}/${declined}/${totalCount}`;
 
 const ResponseTracker = ({ responses }: Props) => {
   const submissions = responses[formInstanceStatusTypes.SUBMITTED] || 0;
   const declined = responses[formInstanceStatusTypes.DECLINED] || 0;
-  const totalCount = Object.values(responses).reduce((tot, value) => tot + value) - declined;
+  const totalCount =
+    Object.values(responses).reduce((tot, value) => tot + value) - declined;
 
   return (
-    <div className="response-tracker--wrapper">
+    <div className='response-tracker--wrapper'>
       <Tooltip
         title={renderTooltip(submissions, declined, totalCount)}
-        getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
       >
         <Progress
           success={{ percent: ((submissions - declined) / totalCount) * 100 }}
@@ -37,7 +48,7 @@ const ResponseTracker = ({ responses }: Props) => {
           size='small'
           strokeColor='red'
           format={() => renderTitle(submissions, declined, totalCount)}
-          style={{ width: ''}}
+          style={{ width: '' }}
         />
       </Tooltip>
     </div>
