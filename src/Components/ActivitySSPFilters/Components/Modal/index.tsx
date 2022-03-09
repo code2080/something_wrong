@@ -65,6 +65,10 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
+  console.log('filters');
+  console.log(filters);
+  console.log('selectedFilterValues');
+  console.log(selectedFilterValues);
 
   /**
    * EVENT HANDLERS
@@ -85,20 +89,31 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     filterProperty: string,
     itemsToDeselect: string[],
   ) => {
-    if (_.isNil(filters[filterProperty])) {
-      return;
-    }
+    /**
+     * Find the existing selected filter values for filterProperty
+     */
+    const selectedValues: string[] = selectedFilterValues[filterProperty] || [];
+    if (!selectedValues || !selectedValues.length) return;
 
-    const updatedFilterProperty = filters[filterProperty].filter((selected) => {
-      return !itemsToDeselect.some((toDeselect) => toDeselect === selected);
-    });
+    /**
+     * Modify a shallow copy of the selected filter values by excluding all
+     * items in itemsToDeselect
+     */
+    const updFilterValues = selectedValues.filter(
+      (el) => !itemsToDeselect.includes(el),
+    );
 
-    const updatedFilters = {
-      ...filters,
-      [filterProperty]: updatedFilterProperty,
-    };
-
-    setFilters(updatedFilters);
+    /**
+     * Use patch filters to merge all of this together
+     */
+    const patch = createPatchFromFilterPropertyAndValues(
+      // filterProperty,
+      filterProperty,
+      updFilterValues,
+    );
+    console.log('patch');
+    console.log(patch);
+    patchFilters(patch);
   };
 
   /**

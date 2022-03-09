@@ -1,4 +1,4 @@
-import { capitalize, compact, lowerCase, uniq } from 'lodash';
+import { capitalize, compact, initial, lowerCase, uniq, last } from 'lodash';
 import { Field } from 'Redux/TE/te.selectors';
 import { TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
 import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
@@ -194,13 +194,23 @@ export const createPatchFromFilterPropertyAndValues = (
   selectedFilterProperty: string,
   values: any,
 ) => {
+  // console.log('Passed in to createPatchFromFilterPropertyAndValues:');
+  // console.log(`Selected filter property: ${selectedFilterProperty}`);
+  // console.log(`Values: `, values);
+
   const keys = selectedFilterProperty.split(REPLACED_KEY);
-  const lastKey = keys.pop() as string;
-  const reversedKeys = keys.slice().reverse();
+  //_.initla later
+  const allButLastKey: string[] = initial(keys);
+  console.log('allButLastKey ', allButLastKey);
+  const lastKey = last(keys) as string;
+  console.log('lastKey ', lastKey);
+  const reversedKeys = allButLastKey.reverse();
+  console.log('reversedKeys ', reversedKeys);
   const obj = reversedKeys.reduce(
     (prev, current) => ({ [current]: { ...prev } }),
     { [lastKey]: values },
   );
+  console.log('obj ', obj);
   return obj;
 };
 
