@@ -91,8 +91,10 @@ const ActivitiesPage = () => {
     selectPaginationParamsForForm(state, formId, ACTIVITIES_TABLE),
   );
 
-  const allActivities = Object.values(activities).flat();
-  const keyedActivities = _.keyBy(allActivities, '_id');
+  const keyedActivities = useMemo(
+    () => _.keyBy(activities, '_id'),
+    [activities],
+  );
 
   const selectActivitySortingOrder = useMemo(
     () => makeSelectSortOrderForActivities(ACTIVITIES_TABLE),
@@ -106,12 +108,12 @@ const ActivitiesPage = () => {
     formId,
   );
 
-  const tableDataSource = useMemo(() => {
+  const tableDataSource: TActivity[] = useMemo(() => {
     const sortedActivities = _.compact<TActivity>(
       sortOrder?.map((activityId) => keyedActivities?.[activityId]),
-    );
-    return _.isEmpty(sortedActivities) ? allActivities : sortedActivities;
-  }, [allActivities, keyedActivities, sortOrder]);
+    ) as TActivity[];
+    return _.isEmpty(sortedActivities) ? activities : sortedActivities;
+  }, [activities, keyedActivities, sortOrder]);
 
   const [formType, reservationMode] = useSelector((state: any) => {
     const form = state.forms[formId];

@@ -20,6 +20,7 @@ import {
 import { TFormInstance } from '../../Types/FormInstance.type';
 import { ActivitySchedulingState } from 'Redux/ActivityScheduling/activityScheduling.reducer';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import { selectIndexedFormSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 
 // TYPES
 type TActivityMap = {
@@ -35,7 +36,6 @@ type TActivityMap = {
 
 const activityStateSelector = (state: any): TActivityMap =>
   state.activities || {};
-const submissionStateSelector = (state) => state.submissions;
 const elementsStateSelector = (state) => state.elements;
 const formStateSelector = (state) => state.forms;
 
@@ -72,16 +72,15 @@ export const makeSelectActivitiesForForm = () =>
 export const selectActivitiesForForm = ({ formId, tableType = '' }) =>
   createSelector(
     activityStateSelector,
-    submissionStateSelector,
-    (activity, submission) => {
-      const formSubmissions = submission[formId] || {};
+    (state) => selectIndexedFormSubmissions(formId)(state),
+    (activity, indexedSubmissions) => {
       const activitiesTableId = `${formId}${tableType || ''}`;
       return (activity.list[activitiesTableId] || []).map(
         (activity: Activity) => {
           return new Activity({
             ...activity,
             scopedObject:
-              formSubmissions?.[activity.formInstanceId]?.scopedObject,
+              indexedSubmissions[activity.formInstanceId]?.scopedObject,
           }) as TActivity;
         },
       );

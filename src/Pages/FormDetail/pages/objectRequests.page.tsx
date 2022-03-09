@@ -36,7 +36,7 @@ import '../../../Components/TableColumns/Components/ExpandedPane.scss';
 const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
   const { formId } = useParams<{ formId: string }>();
   const sectionIds: string[] = useSelector(
-    getSectionsForObjectRequest(request),
+    getSectionsForObjectRequest(request, formId),
   );
   const firstSection = useSelector((state) =>
     selectSectionDesign(state)(formId, sectionIds?.[0]),

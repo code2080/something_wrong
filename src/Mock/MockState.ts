@@ -36673,412 +36673,417 @@ const mockState = {
   },
   submissions: {
     '5fbe13cddb07580020e2bdbf': {
-      '5fbe19c4db07580020e2bfc9': {
-        _id: '5fbe19c4db07580020e2bfc9',
-        scopedObject: 'courseevt_VM0126-20107-HT2020-Reproduktion-5',
-        status: 'SUBMITTED',
-        formId: '5fbe13cddb07580020e2bdbf',
-        recipientId: '5fbe19c4db07580020e2bfc6',
-        email: 'andreas.kjellqvist+aedryrun@timeedit.com',
-        firstName: 'Andreas',
-        lastName: 'DryRunner',
-        submitter: 'Andreas DryRunner',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'ACCEPTED',
-          acceptanceComment:
-            'Borde dock ha döpt connected section till något 😏',
-          schedulingProgress: 'IN_PROGRESS',
-          selectionSettings: {
-            '5fbe19c4db07580020e2bfaf': {
-              includedFields: [
-                {
-                  fieldExtId: 'res.restext',
-                  element: '5fbe19c4db07580020e2bfb0',
+      list: ['5fbe19c4db07580020e2bfc9', '5fdb2e82596fd700208c0e68'],
+      mapped: {
+        byId: {
+          '5fbe19c4db07580020e2bfc9': {
+            _id: '5fbe19c4db07580020e2bfc9',
+            scopedObject: 'courseevt_VM0126-20107-HT2020-Reproduktion-5',
+            status: 'SUBMITTED',
+            formId: '5fbe13cddb07580020e2bdbf',
+            recipientId: '5fbe19c4db07580020e2bfc6',
+            email: 'andreas.kjellqvist+aedryrun@timeedit.com',
+            firstName: 'Andreas',
+            lastName: 'DryRunner',
+            submitter: 'Andreas DryRunner',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'ACCEPTED',
+              acceptanceComment:
+                'Borde dock ha döpt connected section till något 😏',
+              schedulingProgress: 'IN_PROGRESS',
+              selectionSettings: {
+                '5fbe19c4db07580020e2bfaf': {
+                  includedFields: [
+                    {
+                      fieldExtId: 'res.restext',
+                      element: '5fbe19c4db07580020e2bfb0',
+                    },
+                    {
+                      fieldExtId: 'res.comment',
+                      element: '5fbe19c4db07580020e2bfbc',
+                    },
+                    {
+                      fieldExtId: 'res.internalcomment',
+                      element: '5fbe19c4db07580020e2bfba',
+                    },
+                  ],
+                  extraObjects: [],
                 },
-                {
-                  fieldExtId: 'res.comment',
-                  element: '5fbe19c4db07580020e2bfbc',
-                },
-                {
-                  fieldExtId: 'res.internalcomment',
-                  element: '5fbe19c4db07580020e2bfba',
-                },
-              ],
-              extraObjects: [],
+              },
+              isStarred: false,
             },
+            values: {
+              '5fbe19c4db07580020e2bfaf': {
+                '2ce42776-9f03-4be6-9b4f-068b26c09391': {
+                  eventId: '2ce42776-9f03-4be6-9b4f-068b26c09391',
+                  startTime: '2020-11-27T13:00:00.000Z',
+                  endTime: '2020-11-27T15:00:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Stogyn 1337',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.type': ['Labbsal'],
+                          'room.buildning': ['MVM'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['course_activity_lab'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_this0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: [
+                        'equipment_C-KV Koattrapp',
+                        'equipment_AC-VC Mobil',
+                        'equipment_M-Mikroskop',
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value:
+                        'Ska göra coola experiment på en låtsasko. Vill ha den bruna låtsaskon med vita prickar',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value:
+                        'Rektaliseringsteori. Läs kapitel 125 i "Kon, människans bästa vän egentligen?"',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
+                },
+                '84ca5baf-9c29-4462-a10c-ad61bd6a2071': {
+                  eventId: '84ca5baf-9c29-4462-a10c-ad61bd6a2071',
+                  startTime: '2020-12-02T08:15:00.000Z',
+                  endTime: '2020-12-02T10:00:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Andrologi',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['VHC hus 3'],
+                          'room.type': ['KV, VHC'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['course_activity_practical_tutorial'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_evamat'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-KV Trimbord', 'equipment_C-KV hund'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'Hund: 2 st, Trimbord: 1st',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'Trimma hund. Ta med egen hund om ni vill.',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
+                },
+              },
+            },
+            createdAt: '2020-11-25T08:45:56.941Z',
+            updatedAt: '2021-06-11T12:38:42.821Z',
+            submittedAt: '2020-12-04T09:26:36.884Z',
+            index: 0,
           },
-          isStarred: false,
-        },
-        values: {
-          '5fbe19c4db07580020e2bfaf': {
-            '2ce42776-9f03-4be6-9b4f-068b26c09391': {
-              eventId: '2ce42776-9f03-4be6-9b4f-068b26c09391',
-              startTime: '2020-11-27T13:00:00.000Z',
-              endTime: '2020-11-27T15:00:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Stogyn 1337',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
+          '5fdb2e82596fd700208c0e68': {
+            _id: '5fdb2e82596fd700208c0e68',
+            scopedObject: 'courseevt_BI1301-20016-HT2020',
+            status: 'SUBMITTED',
+            formId: '5fbe13cddb07580020e2bdbf',
+            recipientId: '5fdb2e82596fd700208c0e66',
+            email: 'richard.ahlin@timeedit.com',
+            firstName: 'Richard',
+            lastName: 'Ahlin',
+            submitter: 'Richard Ahlin',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'IN_PROGRESS',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '5fbe19c4db07580020e2bfaf': {
+                'c2ad8eed-1c49-47ed-bbc4-b4a8c663847a': {
+                  eventId: 'c2ad8eed-1c49-47ed-bbc4-b4a8c663847a',
+                  startTime: '2020-11-26T09:30:00.000Z',
+                  endTime: '2020-11-26T14:15:00.000Z',
+                  values: [
                     {
-                      'room.type': ['Labbsal'],
-                      'room.buildning': ['MVM'],
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
                     },
                   ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['course_activity_lab'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_this0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: [
-                    'equipment_C-KV Koattrapp',
-                    'equipment_AC-VC Mobil',
-                    'equipment_M-Mikroskop',
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value:
-                    'Ska göra coola experiment på en låtsasko. Vill ha den bruna låtsaskon med vita prickar',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value:
-                    'Rektaliseringsteori. Läs kapitel 125 i "Kon, människans bästa vän egentligen?"',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            '84ca5baf-9c29-4462-a10c-ad61bd6a2071': {
-              eventId: '84ca5baf-9c29-4462-a10c-ad61bd6a2071',
-              startTime: '2020-12-02T08:15:00.000Z',
-              endTime: '2020-12-02T10:00:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Andrologi',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
+                '78727590-ce1e-4a01-bcf6-771c8a728d58': {
+                  eventId: '78727590-ce1e-4a01-bcf6-771c8a728d58',
+                  startTime: '2020-11-27T08:00:00.000Z',
+                  endTime: '2020-11-27T10:45:00.000Z',
+                  values: [
                     {
-                      'room.buildning': ['VHC hus 3'],
-                      'room.type': ['KV, VHC'],
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
                     },
                   ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['course_activity_practical_tutorial'],
+                'bcb49a78-6214-4541-8cb2-153412c3de7d': {
+                  eventId: 'bcb49a78-6214-4541-8cb2-153412c3de7d',
+                  startTime: '2020-11-28T08:45:00.000Z',
+                  endTime: '2020-11-28T13:00:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_evamat'],
+                'b19570df-badd-4951-a43c-ac919ed83613': {
+                  eventId: 'b19570df-badd-4951-a43c-ac919ed83613',
+                  startTime: '2020-11-27T13:00:00.000Z',
+                  endTime: '2020-11-27T15:45:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-KV Trimbord', 'equipment_C-KV hund'],
+                '171c07ba-7beb-45c5-acad-7e55b4e1416b': {
+                  eventId: '171c07ba-7beb-45c5-acad-7e55b4e1416b',
+                  startTime: '2020-11-27T10:45:00.000Z',
+                  endTime: '2020-11-27T12:45:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'Hund: 2 st, Trimbord: 1st',
+                '9d63cb8b-42b4-4215-ab5d-beaec62dd230': {
+                  eventId: '9d63cb8b-42b4-4215-ab5d-beaec62dd230',
+                  startTime: '2020-11-28T13:15:00.000Z',
+                  endTime: '2020-11-28T15:00:00.000Z',
+                  values: [
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb0',
+                      value: 'Test',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb2',
+                      value: [
+                        {
+                          'room.buildning': ['Ulls hus A-blocket'],
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb4',
+                      value: ['other_duties_course_tracks'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb6',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfb8',
+                      value: ['equipment_C-Klädhängare3'],
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfba',
+                      value: 'a',
+                    },
+                    {
+                      elementId: '5fbe19c4db07580020e2bfbc',
+                      value: 'b',
+                    },
+                  ],
+                  sectionId: '5fbe19c4db07580020e2bfaf',
                 },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'Trimma hund. Ta med egen hund om ni vill.',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
+              },
             },
+            createdAt: '2020-12-17T10:10:10.110Z',
+            updatedAt: '2021-06-11T12:38:42.821Z',
+            submittedAt: '2020-12-17T10:17:58.084Z',
+            index: 1,
           },
         },
-        createdAt: '2020-11-25T08:45:56.941Z',
-        updatedAt: '2021-06-11T12:38:42.821Z',
-        submittedAt: '2020-12-04T09:26:36.884Z',
-        index: 0,
-      },
-      '5fdb2e82596fd700208c0e68': {
-        _id: '5fdb2e82596fd700208c0e68',
-        scopedObject: 'courseevt_BI1301-20016-HT2020',
-        status: 'SUBMITTED',
-        formId: '5fbe13cddb07580020e2bdbf',
-        recipientId: '5fdb2e82596fd700208c0e66',
-        email: 'richard.ahlin@timeedit.com',
-        firstName: 'Richard',
-        lastName: 'Ahlin',
-        submitter: 'Richard Ahlin',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'IN_PROGRESS',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '5fbe19c4db07580020e2bfaf': {
-            'c2ad8eed-1c49-47ed-bbc4-b4a8c663847a': {
-              eventId: 'c2ad8eed-1c49-47ed-bbc4-b4a8c663847a',
-              startTime: '2020-11-26T09:30:00.000Z',
-              endTime: '2020-11-26T14:15:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            '78727590-ce1e-4a01-bcf6-771c8a728d58': {
-              eventId: '78727590-ce1e-4a01-bcf6-771c8a728d58',
-              startTime: '2020-11-27T08:00:00.000Z',
-              endTime: '2020-11-27T10:45:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            'bcb49a78-6214-4541-8cb2-153412c3de7d': {
-              eventId: 'bcb49a78-6214-4541-8cb2-153412c3de7d',
-              startTime: '2020-11-28T08:45:00.000Z',
-              endTime: '2020-11-28T13:00:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            'b19570df-badd-4951-a43c-ac919ed83613': {
-              eventId: 'b19570df-badd-4951-a43c-ac919ed83613',
-              startTime: '2020-11-27T13:00:00.000Z',
-              endTime: '2020-11-27T15:45:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            '171c07ba-7beb-45c5-acad-7e55b4e1416b': {
-              eventId: '171c07ba-7beb-45c5-acad-7e55b4e1416b',
-              startTime: '2020-11-27T10:45:00.000Z',
-              endTime: '2020-11-27T12:45:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-            '9d63cb8b-42b4-4215-ab5d-beaec62dd230': {
-              eventId: '9d63cb8b-42b4-4215-ab5d-beaec62dd230',
-              startTime: '2020-11-28T13:15:00.000Z',
-              endTime: '2020-11-28T15:00:00.000Z',
-              values: [
-                {
-                  elementId: '5fbe19c4db07580020e2bfb0',
-                  value: 'Test',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb2',
-                  value: [
-                    {
-                      'room.buildning': ['Ulls hus A-blocket'],
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb4',
-                  value: ['other_duties_course_tracks'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb6',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfb8',
-                  value: ['equipment_C-Klädhängare3'],
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfba',
-                  value: 'a',
-                },
-                {
-                  elementId: '5fbe19c4db07580020e2bfbc',
-                  value: 'b',
-                },
-              ],
-              sectionId: '5fbe19c4db07580020e2bfaf',
-            },
-          },
-        },
-        createdAt: '2020-12-17T10:10:10.110Z',
-        updatedAt: '2021-06-11T12:38:42.821Z',
-        submittedAt: '2020-12-17T10:17:58.084Z',
-        index: 1,
       },
     },
   },

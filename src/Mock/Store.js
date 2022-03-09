@@ -24425,626 +24425,634 @@ export const storeForTestingFilter = {
     },
   },
   submissions: {
-    '60acfd026b58240023ae588b': {
-      '60af9ac5a8fcc300235d8330': {
-        _id: '60af9ac5a8fcc300235d8330',
-        scopedObject: 'courseevt_KE0065-30257-VT2021',
-        status: 'SUBMITTED',
-        formId: '60acfd026b58240023ae588b',
-        recipientId: '6026b45f6521f75cbe481975',
-        email: 'hao+231@timeedit.com',
-        firstName: 'Ulla',
-        lastName: 'Murphy',
-        submitter: 'Ulla Murphy',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'NOT_SCHEDULED',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '60acfd786b58240023ae5915': {
-            '0181b85c-1ab6-48b9-b527-c6fd30dd506a': {
-              id: '0181b85c-1ab6-48b9-b527-c6fd30dd506a',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '0181b85c-1ab6-48b9-b527-c6fd30dd506a',
-              startTime: '2022-04-02T07:45:00Z',
-              endTime: '2022-04-02T08:30:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'haha',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'hoho',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_abgu0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
+    list: ['60acfd026b58240023ae588b'],
+    mapped: {
+      byId: {
+        '60acfd026b58240023ae588b': {
+          '60af9ac5a8fcc300235d8330': {
+            _id: '60af9ac5a8fcc300235d8330',
+            scopedObject: 'courseevt_KE0065-30257-VT2021',
+            status: 'SUBMITTED',
+            formId: '60acfd026b58240023ae588b',
+            recipientId: '6026b45f6521f75cbe481975',
+            email: 'hao+231@timeedit.com',
+            firstName: 'Ulla',
+            lastName: 'Murphy',
+            submitter: 'Ulla Murphy',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'NOT_SCHEDULED',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '60acfd786b58240023ae5915': {
+                '0181b85c-1ab6-48b9-b527-c6fd30dd506a': {
+                  id: '0181b85c-1ab6-48b9-b527-c6fd30dd506a',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '0181b85c-1ab6-48b9-b527-c6fd30dd506a',
+                  startTime: '2022-04-02T07:45:00Z',
+                  endTime: '2022-04-02T08:30:00Z',
+                  values: [
                     {
-                      'room.type': ['Datorsal'],
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'haha',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'hoho',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_abgu0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_completion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV Hyrbil'],
                     },
                   ],
                 },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_completion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV Hyrbil'],
-                },
-              ],
+              },
             },
+            createdAt: '2021-05-27T13:12:37.391Z',
+            updatedAt: '2021-06-10T12:30:10.079Z',
+            submittedAt: '2021-05-27T13:24:35.940Z',
+            index: 0,
+          },
+          '60acfd796b58240023ae5935': {
+            _id: '60acfd796b58240023ae5935',
+            scopedObject: 'courseevt_PLS0067-P0040-VT2021',
+            status: 'SUBMITTED',
+            formId: '60acfd026b58240023ae588b',
+            userId: null,
+            recipientId: '602d4658d1dac0002011ee52',
+            email: 'andreas.kjellqvist@timeedit.com',
+            firstName: 'Andreas',
+            lastName: 'Kjellqvist',
+            submitter: 'Andreas Kjellqvist',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'NOT_SCHEDULED',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '60acfd786b58240023ae5915': {
+                '158f1989-92a7-411a-b840-7eac5fe7faa5': {
+                  id: '158f1989-92a7-411a-b840-7eac5fe7faa5',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '158f1989-92a7-411a-b840-7eac5fe7faa5',
+                  startTime: '2022-04-01T08:00:00Z',
+                  endTime: '2022-04-01T12:45:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'tast',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'test',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['60acfe666b58240023ae595f'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                '7533b14f-e2ca-44d4-bacb-8aa888766e09': {
+                  id: '7533b14f-e2ca-44d4-bacb-8aa888766e09',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '7533b14f-e2ca-44d4-bacb-8aa888766e09',
+                  startTime: '2022-04-05T08:00:00Z',
+                  endTime: '2022-04-05T12:45:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'tast',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'test',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_discussion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3': {
+                  id: '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3',
+                  startTime: '2022-04-06T07:30:00Z',
+                  endTime: '2022-04-06T10:30:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'tast',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'test',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_discussion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                '6c941f4f-dd24-4dd8-8234-004cc317a75d': {
+                  id: '6c941f4f-dd24-4dd8-8234-004cc317a75d',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '6c941f4f-dd24-4dd8-8234-004cc317a75d',
+                  startTime: '2022-04-04T10:15:00Z',
+                  endTime: '2022-04-04T12:00:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'tast',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'test',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_discussion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+              },
+            },
+            createdAt: '2021-05-25T13:36:57.238Z',
+            updatedAt: '2021-05-27T12:15:24.362Z',
+            submittedAt: '2021-05-25T14:13:01.334Z',
+            index: 1,
+          },
+          '60af9dc7a8fcc300235d843a': {
+            _id: '60af9dc7a8fcc300235d843a',
+            scopedObject: 'courseevt_NA0172-30196-VT2021',
+            status: 'SUBMITTED',
+            formId: '60acfd026b58240023ae588b',
+            recipientId: '6026b45f6521f75cbe481974',
+            email: 'hao+652@timeedit.com',
+            firstName: 'Brandon',
+            lastName: 'Perez',
+            submitter: 'Brandon Perez',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'NOT_SCHEDULED',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '60acfd786b58240023ae5915': {
+                'f3d2c702-72c1-4325-8b3f-4c6398407b8e': {
+                  id: 'f3d2c702-72c1-4325-8b3f-4c6398407b8e',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: 'f3d2c702-72c1-4325-8b3f-4c6398407b8e',
+                  startTime: '2022-04-03T08:00:00Z',
+                  endTime: '2022-04-03T08:45:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'Quae earum soluta au',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'Quae molestiae tempo',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_abma'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Grupprum'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_discussion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst', 'equipment_C-konftel01'],
+                    },
+                  ],
+                },
+                'f93214af-1b45-445b-af32-2b617e729b82': {
+                  id: 'f93214af-1b45-445b-af32-2b617e729b82',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: 'f93214af-1b45-445b-af32-2b617e729b82',
+                  startTime: '2022-04-01T06:45:00Z',
+                  endTime: '2022-04-01T07:00:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'Mollit aut recusanda',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'Eos laudantium exp',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Hörsal, gradäng'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_discussion'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: [
+                        'equipment_C-KV Hästattrapp 1',
+                        'equipment_C-konftel01',
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            createdAt: '2021-05-27T13:25:27.290Z',
+            updatedAt: '2021-06-10T12:30:10.079Z',
+            submittedAt: '2021-05-27T13:26:55.238Z',
+            index: 2,
+          },
+          '60af975ba8fcc300235d82b6': {
+            _id: '60af975ba8fcc300235d82b6',
+            scopedObject: 'courseevt_KE0065-30257-VT2021',
+            status: 'SUBMITTED',
+            formId: '60acfd026b58240023ae588b',
+            recipientId: '60af975ba8fcc300235d82b4',
+            email: 'andreas.kjellqvist+dev-8675@timeedit.com',
+            firstName: 'Andreas',
+            lastName: 'DEV-8675',
+            submitter: 'Andreas DEV-8675',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'NOT_SCHEDULED',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '60acfd786b58240023ae5915': {
+                '9e4e8756-d6f4-4116-815a-2cb505d4682d': {
+                  id: '9e4e8756-d6f4-4116-815a-2cb505d4682d',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '9e4e8756-d6f4-4116-815a-2cb505d4682d',
+                  startTime: '2022-04-01T08:15:00Z',
+                  endTime: '2022-04-01T09:30:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'Will',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'this',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_adke0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Foajé/samlingsyta'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_test'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                '987d3c0b-3d45-4577-bbb5-a5becd327f4c': {
+                  id: '987d3c0b-3d45-4577-bbb5-a5becd327f4c',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '987d3c0b-3d45-4577-bbb5-a5becd327f4c',
+                  startTime: '2022-04-01T10:30:00Z',
+                  endTime: '2022-04-01T12:30:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'Will',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'this',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_adke0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Foajé/samlingsyta'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_test'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9': {
+                  id: 'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: 'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9',
+                  startTime: '2022-04-01T12:45:00Z',
+                  endTime: '2022-04-01T14:00:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'Will',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'this',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_adke0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Foajé/samlingsyta'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_test'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+              },
+            },
+            createdAt: '2021-05-27T12:58:03.950Z',
+            updatedAt: '2021-06-10T12:30:10.079Z',
+            submittedAt: '2021-06-03T13:55:49.349Z',
+            index: 3,
+          },
+          '60ad06106b58240023ae5a71': {
+            _id: '60ad06106b58240023ae5a71',
+            scopedObject: 'courseevt_KE0049-30259-VT2021',
+            status: 'SUBMITTED',
+            formId: '60acfd026b58240023ae588b',
+            recipientId: '60924c137c04ee0025094bd0',
+            email: 'testymctestface@test.com',
+            firstName: 'Test',
+            lastName: 'Mctestface',
+            submitter: 'Test Mctestface',
+            teCoreProps: {
+              assignedTo: [],
+              acceptanceStatus: 'NOT_SET',
+              acceptanceComment: '',
+              schedulingProgress: 'NOT_SCHEDULED',
+              selectionSettings: {},
+              isStarred: false,
+            },
+            values: {
+              '60acfd786b58240023ae5915': {
+                '187dc8c9-e55b-4634-a74e-61f734453fe7': {
+                  id: '187dc8c9-e55b-4634-a74e-61f734453fe7',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '187dc8c9-e55b-4634-a74e-61f734453fe7',
+                  startTime: '2022-04-01T07:30:00Z',
+                  endTime: '2022-04-01T09:00:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'asd',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'dsa',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['60ad064c6b58240023ae5a8b'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f': {
+                  id: '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f',
+                  startTime: '2022-04-01T10:15:00Z',
+                  endTime: '2022-04-01T11:45:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'asd',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'dsa',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: [
+                        'course_activity_covid',
+                        '60ad06886b58240023ae5abc',
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+                'ba161025-e3f4-4f72-93f6-905a5f701fa2': {
+                  id: 'ba161025-e3f4-4f72-93f6-905a5f701fa2',
+                  sectionId: '60acfd786b58240023ae5915',
+                  eventId: 'ba161025-e3f4-4f72-93f6-905a5f701fa2',
+                  startTime: '2022-04-01T12:15:00Z',
+                  endTime: '2022-04-01T13:30:00Z',
+                  values: [
+                    {
+                      elementId: '60acfd786b58240023ae590f',
+                      value: 'asd',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5910',
+                      value: 'dsa',
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5911',
+                      value: ['person_atsi0001'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5912',
+                      value: [
+                        {
+                          'room.type': ['Datorsal'],
+                        },
+                      ],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5913',
+                      value: ['course_activity_covid'],
+                    },
+                    {
+                      elementId: '60acfd786b58240023ae5914',
+                      value: ['equipment_C-KV häst'],
+                    },
+                  ],
+                },
+              },
+            },
+            createdAt: '2021-05-25T14:13:36.858Z',
+            updatedAt: '2021-05-27T12:15:24.362Z',
+            submittedAt: '2021-05-25T14:15:40.610Z',
+            index: 4,
           },
         },
-        createdAt: '2021-05-27T13:12:37.391Z',
-        updatedAt: '2021-06-10T12:30:10.079Z',
-        submittedAt: '2021-05-27T13:24:35.940Z',
-        index: 0,
-      },
-      '60acfd796b58240023ae5935': {
-        _id: '60acfd796b58240023ae5935',
-        scopedObject: 'courseevt_PLS0067-P0040-VT2021',
-        status: 'SUBMITTED',
-        formId: '60acfd026b58240023ae588b',
-        userId: null,
-        recipientId: '602d4658d1dac0002011ee52',
-        email: 'andreas.kjellqvist@timeedit.com',
-        firstName: 'Andreas',
-        lastName: 'Kjellqvist',
-        submitter: 'Andreas Kjellqvist',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'NOT_SCHEDULED',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '60acfd786b58240023ae5915': {
-            '158f1989-92a7-411a-b840-7eac5fe7faa5': {
-              id: '158f1989-92a7-411a-b840-7eac5fe7faa5',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '158f1989-92a7-411a-b840-7eac5fe7faa5',
-              startTime: '2022-04-01T08:00:00Z',
-              endTime: '2022-04-01T12:45:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'tast',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'test',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['60acfe666b58240023ae595f'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            '7533b14f-e2ca-44d4-bacb-8aa888766e09': {
-              id: '7533b14f-e2ca-44d4-bacb-8aa888766e09',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '7533b14f-e2ca-44d4-bacb-8aa888766e09',
-              startTime: '2022-04-05T08:00:00Z',
-              endTime: '2022-04-05T12:45:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'tast',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'test',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_discussion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3': {
-              id: '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '02b1e32f-c49a-4c7d-a20a-5b0356fe32f3',
-              startTime: '2022-04-06T07:30:00Z',
-              endTime: '2022-04-06T10:30:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'tast',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'test',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_discussion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            '6c941f4f-dd24-4dd8-8234-004cc317a75d': {
-              id: '6c941f4f-dd24-4dd8-8234-004cc317a75d',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '6c941f4f-dd24-4dd8-8234-004cc317a75d',
-              startTime: '2022-04-04T10:15:00Z',
-              endTime: '2022-04-04T12:00:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'tast',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'test',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_discussion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-          },
-        },
-        createdAt: '2021-05-25T13:36:57.238Z',
-        updatedAt: '2021-05-27T12:15:24.362Z',
-        submittedAt: '2021-05-25T14:13:01.334Z',
-        index: 1,
-      },
-      '60af9dc7a8fcc300235d843a': {
-        _id: '60af9dc7a8fcc300235d843a',
-        scopedObject: 'courseevt_NA0172-30196-VT2021',
-        status: 'SUBMITTED',
-        formId: '60acfd026b58240023ae588b',
-        recipientId: '6026b45f6521f75cbe481974',
-        email: 'hao+652@timeedit.com',
-        firstName: 'Brandon',
-        lastName: 'Perez',
-        submitter: 'Brandon Perez',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'NOT_SCHEDULED',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '60acfd786b58240023ae5915': {
-            'f3d2c702-72c1-4325-8b3f-4c6398407b8e': {
-              id: 'f3d2c702-72c1-4325-8b3f-4c6398407b8e',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: 'f3d2c702-72c1-4325-8b3f-4c6398407b8e',
-              startTime: '2022-04-03T08:00:00Z',
-              endTime: '2022-04-03T08:45:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'Quae earum soluta au',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'Quae molestiae tempo',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_abma'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Grupprum'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_discussion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst', 'equipment_C-konftel01'],
-                },
-              ],
-            },
-            'f93214af-1b45-445b-af32-2b617e729b82': {
-              id: 'f93214af-1b45-445b-af32-2b617e729b82',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: 'f93214af-1b45-445b-af32-2b617e729b82',
-              startTime: '2022-04-01T06:45:00Z',
-              endTime: '2022-04-01T07:00:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'Mollit aut recusanda',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'Eos laudantium exp',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Hörsal, gradäng'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_discussion'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: [
-                    'equipment_C-KV Hästattrapp 1',
-                    'equipment_C-konftel01',
-                  ],
-                },
-              ],
-            },
-          },
-        },
-        createdAt: '2021-05-27T13:25:27.290Z',
-        updatedAt: '2021-06-10T12:30:10.079Z',
-        submittedAt: '2021-05-27T13:26:55.238Z',
-        index: 2,
-      },
-      '60af975ba8fcc300235d82b6': {
-        _id: '60af975ba8fcc300235d82b6',
-        scopedObject: 'courseevt_KE0065-30257-VT2021',
-        status: 'SUBMITTED',
-        formId: '60acfd026b58240023ae588b',
-        recipientId: '60af975ba8fcc300235d82b4',
-        email: 'andreas.kjellqvist+dev-8675@timeedit.com',
-        firstName: 'Andreas',
-        lastName: 'DEV-8675',
-        submitter: 'Andreas DEV-8675',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'NOT_SCHEDULED',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '60acfd786b58240023ae5915': {
-            '9e4e8756-d6f4-4116-815a-2cb505d4682d': {
-              id: '9e4e8756-d6f4-4116-815a-2cb505d4682d',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '9e4e8756-d6f4-4116-815a-2cb505d4682d',
-              startTime: '2022-04-01T08:15:00Z',
-              endTime: '2022-04-01T09:30:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'Will',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'this',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_adke0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Foajé/samlingsyta'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_test'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            '987d3c0b-3d45-4577-bbb5-a5becd327f4c': {
-              id: '987d3c0b-3d45-4577-bbb5-a5becd327f4c',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '987d3c0b-3d45-4577-bbb5-a5becd327f4c',
-              startTime: '2022-04-01T10:30:00Z',
-              endTime: '2022-04-01T12:30:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'Will',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'this',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_adke0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Foajé/samlingsyta'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_test'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9': {
-              id: 'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: 'a26e899b-3f9e-40cd-8bd8-b62d6420c0e9',
-              startTime: '2022-04-01T12:45:00Z',
-              endTime: '2022-04-01T14:00:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'Will',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'this',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_adke0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Foajé/samlingsyta'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_test'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-          },
-        },
-        createdAt: '2021-05-27T12:58:03.950Z',
-        updatedAt: '2021-06-10T12:30:10.079Z',
-        submittedAt: '2021-06-03T13:55:49.349Z',
-        index: 3,
-      },
-      '60ad06106b58240023ae5a71': {
-        _id: '60ad06106b58240023ae5a71',
-        scopedObject: 'courseevt_KE0049-30259-VT2021',
-        status: 'SUBMITTED',
-        formId: '60acfd026b58240023ae588b',
-        recipientId: '60924c137c04ee0025094bd0',
-        email: 'testymctestface@test.com',
-        firstName: 'Test',
-        lastName: 'Mctestface',
-        submitter: 'Test Mctestface',
-        teCoreProps: {
-          assignedTo: [],
-          acceptanceStatus: 'NOT_SET',
-          acceptanceComment: '',
-          schedulingProgress: 'NOT_SCHEDULED',
-          selectionSettings: {},
-          isStarred: false,
-        },
-        values: {
-          '60acfd786b58240023ae5915': {
-            '187dc8c9-e55b-4634-a74e-61f734453fe7': {
-              id: '187dc8c9-e55b-4634-a74e-61f734453fe7',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '187dc8c9-e55b-4634-a74e-61f734453fe7',
-              startTime: '2022-04-01T07:30:00Z',
-              endTime: '2022-04-01T09:00:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'asd',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'dsa',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['60ad064c6b58240023ae5a8b'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f': {
-              id: '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: '28b3c42c-af2a-4d7d-b4ca-e0ecae32fc7f',
-              startTime: '2022-04-01T10:15:00Z',
-              endTime: '2022-04-01T11:45:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'asd',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'dsa',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_covid', '60ad06886b58240023ae5abc'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-            'ba161025-e3f4-4f72-93f6-905a5f701fa2': {
-              id: 'ba161025-e3f4-4f72-93f6-905a5f701fa2',
-              sectionId: '60acfd786b58240023ae5915',
-              eventId: 'ba161025-e3f4-4f72-93f6-905a5f701fa2',
-              startTime: '2022-04-01T12:15:00Z',
-              endTime: '2022-04-01T13:30:00Z',
-              values: [
-                {
-                  elementId: '60acfd786b58240023ae590f',
-                  value: 'asd',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5910',
-                  value: 'dsa',
-                },
-                {
-                  elementId: '60acfd786b58240023ae5911',
-                  value: ['person_atsi0001'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5912',
-                  value: [
-                    {
-                      'room.type': ['Datorsal'],
-                    },
-                  ],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5913',
-                  value: ['course_activity_covid'],
-                },
-                {
-                  elementId: '60acfd786b58240023ae5914',
-                  value: ['equipment_C-KV häst'],
-                },
-              ],
-            },
-          },
-        },
-        createdAt: '2021-05-25T14:13:36.858Z',
-        updatedAt: '2021-05-27T12:15:24.362Z',
-        submittedAt: '2021-05-25T14:15:40.610Z',
-        index: 4,
       },
     },
   },

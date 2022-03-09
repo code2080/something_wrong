@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Dropdown, Button } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
@@ -10,12 +11,15 @@ import { MoreOutlined } from '@ant-design/icons';
 import FormInstanceAcceptanceStatusModal from '../../Modals/FormInstanceAcceptanceStatus';
 
 // ACTIONS
+import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
 import {
-  setFormInstanceSchedulingProgress,
   fetchFormSubmissions,
   sendReviewerLink,
+  setFormInstanceSchedulingProgress,
 } from '../../../Redux/FormSubmissions/formSubmissions.actions';
-import { setFormDetailTab } from '../../../Redux/GlobalUI/globalUI.actions';
+
+// SELECTORS
+import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 
 // CONSTANTS
 import { teCoreSchedulingProgress } from '../../../Constants/teCoreProps.constants';
@@ -29,12 +33,20 @@ const SET_ACCEPTANCE_STATUS = 'SET_ACCEPTANCE_STATUS';
 const NOTIFY_USER_WITH_REVIEW_LINK = 'NOTIFY_USER_WITH_REVIEW_LINK';
 const NOTIFY_ALL_USERS_WITH_REVIEW_LINK = 'NOTIFY_ALL_USERS_WITH_REVIEW_LINK';
 
-const mapStateToProps = (state, ownProps) => ({
-  submissions: state.submissions[ownProps.formInstance.formId] || [],
-});
+const SubmissionActionButton = ({ formInstance }) => {
+  const dispatch = useDispatch();
+  const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
+  const submissions = useSelector((state) =>
+    selectSubmissions(state, formInstance.formId),
+  );
+  const haveReviewLinkSubmissions = submissions.filter(
+    (submission) => submission.reviewLink,
+  );
+  // State var to hold modal's visibility
+  const [isAcceptanceStatusModalOpen, setIsAcceptanceStatusModalOpen] =
+    useState(false);
 
-const mapActionsToProps = (dispatch) => ({
-  setFormInstanceSchedulingProgress: async ({
+  const onSetFormInstanceSchedulingProgress = async ({
     formInstanceId,
     schedulingProgress,
     formId,
@@ -44,32 +56,11 @@ const mapActionsToProps = (dispatch) => ({
     );
     // fetch submissions for getting all reviewLink
     dispatch(fetchFormSubmissions(formId));
-  },
-  remindUser(data) {
-    dispatch(sendReviewerLink(data));
-  },
-  setFormDetailTab(tab, submissionId) {
-    dispatch(setFormDetailTab(tab, submissionId));
-  },
-});
-
-const SubmissionActionButton = ({
-  formInstance,
-  setFormInstanceSchedulingProgress,
-  setFormDetailTab,
-  remindUser,
-  submissions,
-}) => {
-  const haveReviewLinkSubmissions = Object.values(submissions).filter(
-    (submission) => submission.reviewLink,
-  );
-  // State var to hold modal's visibility
-  const [isAcceptanceStatusModalOpen, setIsAcceptanceStatusModalOpen] =
-    useState(false);
+  };
 
   const setFormInstanceSchedulingProgressCallback = useCallback(
     (schedulingProgress) => {
-      setFormInstanceSchedulingProgress({
+      onSetFormInstanceSchedulingProgress({
         formInstanceId: formInstance._id,
         schedulingProgress,
         formId: formInstance.formId,
@@ -77,6 +68,14 @@ const SubmissionActionButton = ({
     },
     [formInstance._id, formInstance.formId, setFormInstanceSchedulingProgress],
   );
+
+  const remindUser = (data) => {
+    dispatch(sendReviewerLink(data));
+  };
+
+  const onSetFormDetailTab = (tab, submissionId) => {
+    dispatch(setFormDetailTab(tab, submissionId));
+  };
 
   const onClick = useCallback(
     ({ key, domEvent }) => {
@@ -87,7 +86,7 @@ const SubmissionActionButton = ({
           setIsAcceptanceStatusModalOpen(true);
           break;
         case EDIT_FORM_INSTANCE:
-          setFormDetailTab(EFormDetailTabs.SUBMISSIONS, formInstance._id);
+          onSetFormDetailTab(EFormDetailTabs.SUBMISSIONS, formInstance._id);
           break;
         case SET_PROGRESS_NOT_SCHEDULED:
           setFormInstanceSchedulingProgressCallback(
@@ -119,7 +118,7 @@ const SubmissionActionButton = ({
       }
     },
     [
-      setFormDetailTab,
+      onSetFormDetailTab,
       formInstance._id,
       setFormInstanceSchedulingProgressCallback,
       remindUser,
@@ -186,12 +185,6 @@ const SubmissionActionButton = ({
 
 SubmissionActionButton.propTypes = {
   formInstance: PropTypes.object.isRequired,
-  setFormInstanceSchedulingProgress: PropTypes.func.isRequired,
-  setFormDetailTab: PropTypes.func.isRequired,
-  remindUser: PropTypes.func.isRequired,
-  submissions: PropTypes.object.isRequired,
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapActionsToProps)(SubmissionActionButton),
-);
+export default withRouter(SubmissionActionButton);

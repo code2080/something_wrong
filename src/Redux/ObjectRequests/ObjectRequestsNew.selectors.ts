@@ -28,15 +28,16 @@ export const selectFormObjectRequest = (formId: string) =>
     submissionsState,
     (requests, submissionState) => {
       const submissions = submissionState[formId] ?? {};
-      const submissionIds = Object.keys(submissions);
+      const submissionIds = submissions.list || [];
       return requests
         .filter(({ formInstanceId }) => submissionIds.includes(formInstanceId))
-        .map((item) => ({
-          ...item,
-          submitter: `${submissions[item.formInstanceId]?.firstName || ''} ${
-            submissions[item.formInstanceId]?.lastName || ''
-          }`,
-          scopedObject: submissions[item.formInstanceId].scopedObject,
-        }));
+        .map((item) => {
+          const formInstance = submissions.mapped?.byId[item.formInstanceId];
+          return {
+            ...item,
+            submitter: formInstance?.submitter,
+            scopedObject: formInstance?.scopedObject,
+          };
+        });
     },
   );

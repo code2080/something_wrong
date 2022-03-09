@@ -35,6 +35,12 @@ export const makeSelectSubmissions = (): ((
     },
   );
 
+export const selectIndexedFormSubmissions = (formId) =>
+  createSelector(
+    submissionsState,
+    (submissions) => submissions[formId]?.mapped.byId ?? {},
+  );
+
 export const makeSelectFormInstance = () =>
   createSelector(
     submissionsState,

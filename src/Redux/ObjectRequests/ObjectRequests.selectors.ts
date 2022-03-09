@@ -1,26 +1,12 @@
 import { createSelector } from 'reselect';
 import _, { flatten } from 'lodash';
 
-import { getSubmissionValues } from '../FormSubmissions/formSubmissions.helpers';
+import { getSubmissionValues } from '../../Redux/FormSubmissions/formSubmissions.helpers';
+import { selectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 
 const selectObjectRequestsState = (state) => state.objectRequests;
 const getObjectRequestByValue = (objReqList, value) =>
   objReqList.find((req) => req._id === value || req.objectExtId === value);
-export const getFormInstanceForRequest = (request) =>
-  createSelector(
-    (state) => Object.values(state.submissions),
-    (formsubmissions) => {
-      const formSubmissions = formsubmissions.map((submission) =>
-        Object.values(submission),
-      );
-      const submissions = formSubmissions.reduce(
-        (submissions, formsubmission) => [...submissions, ...formsubmission],
-      );
-      return submissions.find(
-        (submission) => submission._id === request.formInstanceId,
-      );
-    },
-  );
 
 const getObjectRequestsByValues = (objReqList, values) =>
   values.reduce((objReqs, value) => {
@@ -55,9 +41,12 @@ export const selectObjectRequestByValue = (value) =>
     getObjectRequestByValue(objectRequests.list, value);
   });
 
-export const getSectionsForObjectRequest = (request) =>
+export const getSectionsForObjectRequest = (request, formId) =>
   createSelector(
-    (state) => getSubmissionValues(getFormInstanceForRequest(request)(state)),
+    (state) =>
+      getSubmissionValues(
+        selectFormInstance(formId, request.formInstanceId)(state),
+      ),
     (submissionValues) =>
       submissionValues.reduce(
         (sectionIds, sectionData) =>

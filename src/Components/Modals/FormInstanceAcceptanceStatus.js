@@ -9,20 +9,19 @@ import { setFormInstanceAcceptanceStatus } from '../../Redux/FormSubmissions/for
 // CONSTANTS
 import { teCoreAcceptanceStatusProps } from '../../Constants/teCoreProps.constants';
 
+// SELECTORS
+import { selectFormInstance } from 'Redux/FormSubmissions/formSubmissions.selectors';
+
 const mapStateToProps = (state, ownProps) => {
   const { formId, formInstanceId } = ownProps;
-  if (
-    !formId ||
-    !formInstanceId ||
-    !state.submissions[formId] ||
-    !state.submissions[formId][formInstanceId]
-  ) {
+  const formInstance = selectFormInstance(formId, formInstanceId)(state);
+  if (!formInstance) {
     return {};
   }
   const {
     acceptanceComment: _acceptanceComment,
     acceptanceStatus: _acceptanceStatus,
-  } = state.submissions[formId][formInstanceId].teCoreProps || {};
+  } = formInstance.teCoreProps || {};
 
   return {
     _acceptanceStatus,

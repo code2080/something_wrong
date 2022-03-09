@@ -62,7 +62,7 @@ export const selectManualSchedulingStatus = createSelector(
         0,
       );
       // Get the form instance
-      const formInstance = formInstances[formId][formInstanceId];
+      const formInstance = formInstances[formId]?.mapped.byId[formInstanceId];
       const form = forms[formInstance.formId];
       const mSRows = calculateMSRows(formInstance.values, form.sections);
 

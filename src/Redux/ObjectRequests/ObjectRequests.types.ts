@@ -19,8 +19,8 @@ export interface ObjectRequest {
   status: string;
   type: OBJET_REQUEST_TYPES;
   updatedAt: string;
-  submitter?: string;
-  sectionName?: string;
+  submitter?: string | null;
+  sectionName?: string | null;
   scopedObject?: string | null;
   _id: string;
 }
