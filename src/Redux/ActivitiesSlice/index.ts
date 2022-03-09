@@ -130,7 +130,6 @@ export const selectLabelsForFilterOptionsForForm = (formId: string) => (state: I
     submitter,
     tag: { ...tags.reduce((tot: Record<string, string>, tag: TActivityTag) => ({ ...tot, [tag._id]: tag.name }), {}), null: 'N/A' },
     status: Object.keys(EActivityStatus).reduce((tot, tagId) => ({ ...tot, [tagId]: toActivityStatusDisplay(tagId) }), {}), 
-    // status: _mapValues(EActivityStatus, toActivityStatusDisplay(EActivityStatus)}
     ...objectLabelsMapping,
     ...fieldsLabelMapping,
     ...allLabels,
