@@ -1,14 +1,14 @@
 .toolbar-button--wrapper {
   padding: 0 6px !important;
   border-radius: 12px !important;
-  
+
   .anticon + span {
     margin-left: 3px !important;
   }
 
   &:disabled {
     background: #fbfbfb !important;
-    border-color: rgb(230, 230, 230) !important; 
+    border-color: rgb(230, 230, 230) !important;
   }
 
   &.active {

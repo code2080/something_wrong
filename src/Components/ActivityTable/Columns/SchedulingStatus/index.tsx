@@ -109,7 +109,9 @@ const ActivityStatusCol = ({ activity }) => {
             onUpdate={onUpdate}
           />
         }
-        getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
       >
         <StatusLabel
           color={activityStatusProps[activityStatus]?.color ?? 'default'}

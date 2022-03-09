@@ -1,5 +1,5 @@
-import { Space, Button } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Space, Button } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 // TYPES
 type Props = {
@@ -9,9 +9,14 @@ type Props = {
 
 const FormDetailBreadcrumb = ({ formName, onToggleModalState }: Props) => {
   return (
-    <Space direction="horizontal" size="small" align="center">
+    <Space direction='horizontal' size='small' align='center'>
       {formName}
-      <Button type="link" icon={<InfoCircleOutlined />} onClick={() => onToggleModalState()} size="small" />
+      <Button
+        type='link'
+        icon={<InfoCircleOutlined />}
+        onClick={() => onToggleModalState()}
+        size='small'
+      />
     </Space>
   );
 };

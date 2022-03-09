@@ -66,7 +66,9 @@ const SubmissionsOverviewPage = () => {
    */
   const form = useSelector(selectFormById(formId));
   const submissionIds = useSelector(selectFormSubmissionIds(formId));
-  const submissions: TFormInstance[] = useSelector(selectFormSubmissions(formId, submissionIds));
+  const submissions: TFormInstance[] = useSelector(
+    selectFormSubmissions(formId, submissionIds),
+  );
   const submissionsTotal = useSelector(selectFormSubmissionsTotal(formId));
   const isLoading = useSelector(loadingSelector);
   const isSaving = useSelector(savingSelector);
@@ -83,17 +85,21 @@ const SubmissionsOverviewPage = () => {
    */
   const scopedObjectIds = useMemo(
     () =>
-      form?.objectScope ? _.uniq(submissions.map((el: any) => el.scopedObject)) : [],
+      form?.objectScope
+        ? _.uniq(submissions.map((el: any) => el.scopedObject))
+        : [],
     [form, submissionIds],
   );
 
   const submissionPayload: TGetExtIdPropsPayload = useMemo(() => {
     const initialPayload: TGetExtIdPropsPayload = {
-      objects: submissions.flatMap(({ scopedObject }) => scopedObject) as string[],
+      objects: submissions.flatMap(
+        ({ scopedObject }) => scopedObject,
+      ) as string[],
       fields: [],
       types: [],
     };
-  
+
     const sections = form?.sections || [];
     const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
@@ -104,7 +110,9 @@ const SubmissionsOverviewPage = () => {
           objectScope: form?.objectScope,
           activities: [],
         });
-    const scopedObjectExtids = submissions.map((s) => s.scopedObject) as string[];
+    const scopedObjectExtids = submissions.map(
+      (s) => s.scopedObject,
+    ) as string[];
 
     return {
       ...teValues,
@@ -238,7 +246,7 @@ const SubmissionsOverviewPage = () => {
           ...pagination,
           onChange,
           total: submissionsTotal,
-          size: 'small'
+          size: 'small',
         }}
         onChange={(_: unknown, __: unknown, sorter: any) => {
           onSortingChange(sorter.order, sorter.field);

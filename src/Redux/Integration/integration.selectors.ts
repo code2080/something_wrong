@@ -17,10 +17,11 @@ import {
 } from '../../Constants/sectionTypes.constants';
 import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
 import { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
-import {IState} from "../../Types/State.type"
+import { IState } from '../../Types/State.type';
 
 const selectIntegration = (state: IState) => state.integration;
-const selectReservationModes = (state:IState) => state.integration.reservationModes;
+const selectReservationModes = (state: IState) =>
+  state.integration.reservationModes;
 
 export const selectValidTypesOnReservationMode = createSelector(
   selectReservationModes,

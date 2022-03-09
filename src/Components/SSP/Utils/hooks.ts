@@ -1,14 +1,19 @@
-import { TablePaginationConfig } from "antd";
-import { SorterResult, TableRowSelection } from "antd/lib/table/interface";
-import { useContext } from "react";
-import { ESortDirection } from "Types/SSP.type";
-import SSPResourceContext from "./context";
+import { TablePaginationConfig } from 'antd';
+import {
+  SorterResult,
+  SortOrder,
+  TableRowSelection,
+} from 'antd/lib/table/interface';
+import { useContext } from 'react';
+import { ESortDirection } from 'Types/SSP.type';
+import SSPResourceContext from './context';
 
 const useSSP = () => useContext(SSPResourceContext);
 export default useSSP;
 
 export const usePagination = (): TablePaginationConfig => {
-  const { page, limit, totalPages, setPage, setLimit } = useContext(SSPResourceContext);
+  const { page, limit, totalPages, setPage, setLimit } =
+    useContext(SSPResourceContext);
 
   return {
     size: 'small',
@@ -27,7 +32,7 @@ export const usePagination = (): TablePaginationConfig => {
     },
     showSizeChanger: true,
   };
-}
+};
 
 export const useRowSelection = (): TableRowSelection<any> => {
   const { setSelectedKeys, selectedKeys } = useContext(SSPResourceContext);
@@ -37,32 +42,43 @@ export const useRowSelection = (): TableRowSelection<any> => {
     onChange: (_selectedKeys) => setSelectedKeys(_selectedKeys as string[]),
     preserveSelectedRowKeys: true,
   };
-}
+};
+
+const getSortingDirection = (order?: SortOrder) => {
+  if (!order) return undefined;
+  return order === 'ascend'
+    ? ESortDirection.ASCENDING
+    : ESortDirection.DESCENDING;
+};
 
 export const useSorting = () => {
   const { sortBy, direction, setSorting } = useContext(SSPResourceContext);
 
-  return (_: unknown, __: unknown, sorter: SorterResult<any> | SorterResult<any>[]) => {
+  return (
+    _: unknown,
+    __: unknown,
+    sorter: SorterResult<any> | SorterResult<any>[],
+  ) => {
     /**
      * Three reasons to terminate early:
      * x) Sorter is an array (we do not support multiple sorters)
      * x) We don't have a sortBy param, AND...
      * x) ... we don't have a direction
      */
-    if (Array.isArray(sorter) || !sorter || (!sorter.columnKey && !sorter.order)) {
+    if (Array.isArray(sorter) || (!sorter?.columnKey && !sorter?.order)) {
       return;
     }
     // If column key or direction are undefined, we'll reset the sorting
     const { columnKey, order } = sorter;
     // Parse the order string into our enums
-    const parsedDirection = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+    const parsedDirection = getSortingDirection(order);
     // Only update if something has changed in the sorting
     if (sortBy !== columnKey || direction !== parsedDirection) {
-      const direction = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+      const direction = getSortingDirection(order);
       setSorting(columnKey as string, direction);
     }
-  }
-}
+  };
+};
 
 export const useFilters = () => {
   const {
@@ -75,7 +91,7 @@ export const useFilters = () => {
     setFilters,
     patchFilters,
     commitFilterChanges,
-    discardFilterChanges
+    discardFilterChanges,
   } = useContext(SSPResourceContext);
 
   return {
@@ -88,7 +104,6 @@ export const useFilters = () => {
     setFilters,
     patchFilters,
     commitFilterChanges,
-    discardFilterChanges
+    discardFilterChanges,
   };
-}
-
+};

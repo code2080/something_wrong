@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Button } from "antd";
+import { Button } from 'antd';
 
 // STYLES
 import './index.scss';
@@ -11,7 +11,14 @@ type Props = {
 
 const ToolbarButton: React.FC<Props> = ({ children, ...rest }) => {
   return (
-    <Button {...rest} size="small" type="default" className={`toolbar-button--wrapper ${rest.className ? rest.className : ''}`}>
+    <Button
+      {...rest}
+      size='small'
+      type='default'
+      className={`toolbar-button--wrapper ${
+        rest.className ? rest.className : ''
+      }`}
+    >
       {children}
     </Button>
   );

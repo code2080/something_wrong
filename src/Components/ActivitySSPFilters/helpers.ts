@@ -192,14 +192,23 @@ export const getAllFilterOptionsFromFilterLookupMap = (
 
 export const createPatchFromFilterPropertyAndValues = (
   selectedFilterProperty: string,
-  values: any,
+  values: string[],
 ) => {
+  console.log('INPUTS -------:');
+  console.log(`Selected filter property: ${selectedFilterProperty}`);
+  console.log(`Values: `, values);
+
   const keys = selectedFilterProperty.split(REPLACED_KEY);
-  const lastKey = keys.pop() as string;
-  const reversedKeys = keys.slice().reverse();
+  const reversedKeys = keys.reverse();
   const obj = reversedKeys.reduce(
-    (prev, current) => ({ [current]: { ...prev } }),
-    { [lastKey]: values },
+    (prev: Record<string, any>, current: string, idx) => {
+      if (idx === 0) {
+        return { [current]: [ ...values] };
+      } else {
+        return { [current.toString()]: { ...prev } }
+      }
+    },
+    {},
   );
   return obj;
 };

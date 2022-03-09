@@ -19,7 +19,7 @@ type Props = {
   onHide: () => void;
 };
 
-type TFormFieldInfoRow = { key: string, field: string, value: any };
+type TFormFieldInfoRow = { key: string; field: string; value: any };
 
 const generateFormInfoData = (form: TForm | undefined) => {
   if (!form) return [];
@@ -62,7 +62,9 @@ const generateFormInfoData = (form: TForm | undefined) => {
     {
       key: 'formPeriod',
       label: 'Form period',
-      formatValueFn: (value) => <DateTime value={[value.startDate, value.endDate]} />,
+      formatValueFn: (value) => (
+        <DateTime value={[value.startDate, value.endDate]} />
+      ),
     },
     {
       key: 'objectScope',
@@ -86,7 +88,7 @@ const generateFormInfoData = (form: TForm | undefined) => {
       field: label,
       value: formatValueFn(form[key]),
     }))
-    .filter((row) => row.value && row.value != null)
+    .filter((row) => row.value && row.value != null);
 
   return mapping;
 };
@@ -105,11 +107,7 @@ const FormInfoModal = ({ formId, isVisible, onHide }: Props) => {
       okButtonProps={{ hidden: true }}
       footer={null}
     >
-      <Table
-        dataSource={datasource}
-        pagination={false}
-        showHeader={false}
-      >
+      <Table dataSource={datasource} pagination={false} showHeader={false}>
         <Table.Column
           title='Field'
           dataIndex='field'

@@ -112,12 +112,19 @@ export const selectAllLabels = () =>
 /**
  * REWORKED SELECTORS
  */
-export const selectIndexedExtIdLabel = (activityValues: [Field, string][]) => (state: any) => {
-const extIdProps = state.te.extIdProps || {};
+export const selectIndexedExtIdLabel =
+  (activityValues: [Field, string][]) => (state: any) => {
+    const extIdProps = state.te.extIdProps || {};
 
-return activityValues.reduce((values, [field, extId]) => ({
-  ...values, 
-  [`${field}_${extId}`]: getLabelFromExtId(extIdProps, { field, extId, fallbackVal: extId }),
-}), {});
-};
-
+    return activityValues.reduce(
+      (values, [field, extId]) => ({
+        ...values,
+        [`${field}_${extId}`]: getLabelFromExtId(extIdProps, {
+          field,
+          extId,
+          fallbackVal: extId,
+        }),
+      }),
+      {},
+    );
+  };

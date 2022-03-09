@@ -5,23 +5,26 @@ import Tag from './Tag';
 import SchedulingStatus from './SchedulingStatus';
 
 // TYPES
-import { TActivity } from "Types/Activity.type";
+import { TActivity } from 'Types/Activity.type';
 
 export const RowActionsColumn = {
   title: '',
   key: 'rowActions',
   dataIndex: undefined,
   width: 130,
-  render: (activity: TActivity) => (
-    <RowActions activity={activity} />
-  ),
+  render: (activity: TActivity) => <RowActions activity={activity} />,
 };
 
 export const SubmitterColumn = {
   title: 'Submission',
   key: 'metadata.submitter',
   width: 170,
-  render: (activity: TActivity) => activity.formInstanceId ? <Submitter activity={activity} /> : 'Merged activity',
+  render: (activity: TActivity) =>
+    activity.formInstanceId ? (
+      <Submitter activity={activity} />
+    ) : (
+      'Merged activity'
+    ),
 };
 
 export const TagColumn = {

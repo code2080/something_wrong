@@ -9,11 +9,12 @@ import {
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
 import { TSSPWrapperProps } from '../../Types';
-import { mergeWith, pick } from 'lodash';
+import { mergeWith, pick, cloneDeep } from 'lodash';
 import {
   getFilterCache,
   setFilterCache,
 } from 'Components/SSP/Utils/cacheService';
+import { customFilterPathMergeWith } from 'Components/SSP/Utils/helpers';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -97,14 +98,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   };
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
-    const clonedObj = { ..._filters };
-    mergeWith(clonedObj, patch, (oldVal, newVal) => {
-      if (!oldVal) return newVal;
-      const result = Array.isArray(newVal)
-        ? newVal
-        : Object.assign(oldVal, newVal);
-      return result;
-    });
+    const clonedObj = cloneDeep(_filters);
+    mergeWith(clonedObj, patch, customFilterPathMergeWith);
     _setFilters(clonedObj);
   };
 

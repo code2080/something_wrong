@@ -7,10 +7,16 @@ type Props = {
   label?: string;
   color: string;
   className?: string;
-  [x: string]: any,
-}
+  [x: string]: any;
+};
 
-const StatusLabel: React.FC<Props> = ({ label, color, className, children, ...rest }) => {
+const StatusLabel: React.FC<Props> = ({
+  label,
+  color,
+  className,
+  children,
+  ...rest
+}) => {
   const statusLabel = (
     <div
       className={`status-label--wrapper ${color} ${className} ${

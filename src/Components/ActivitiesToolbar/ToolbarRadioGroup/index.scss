@@ -29,7 +29,7 @@
       width: 1px;
       background: rgb(217, 217, 217);
       display: block;
-      content: "";
+      content: '';
     }
 
     &:last-child {
@@ -38,7 +38,8 @@
       border-bottom-right-radius: 12px;
     }
 
-    &.active, &:hover {
+    &.active,
+    &:hover {
       color: rgb(24, 144, 255);
       border-color: rgb(24, 144, 255);
 
@@ -53,7 +54,7 @@
 
     &.disabled {
       background: #fbfbfb !important;
-      border-color: rgb(230, 230, 230) !important; 
+      border-color: rgb(230, 230, 230) !important;
     }
   }
 }

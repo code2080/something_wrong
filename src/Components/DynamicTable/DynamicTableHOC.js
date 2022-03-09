@@ -180,7 +180,8 @@ const DynamicTableHOC = ({
   );
 
   const _width = useMemo(
-    () => getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, true, width),
+    () =>
+      getTotalAvailableWidth(fixedWidthCols, !!expandedRowRender, true, width),
     [fixedWidthCols, width, expandedRowRender],
   );
 
@@ -274,7 +275,11 @@ const DynamicTableHOC = ({
               dataSource={_dataSource}
               rowKey={rowKey}
               expandedRowRender={expandedRowRender || null}
-              pagination={pagination ? { ...pagination, size: 'small', hideOnSinglePage: true } : false}
+              pagination={
+                pagination
+                  ? { ...pagination, size: 'small', hideOnSinglePage: true }
+                  : false
+              }
               loading={isLoading}
               sortDirections={['descend', 'ascend']}
               onRow={onRowHandler}

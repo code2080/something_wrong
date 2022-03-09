@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // REDUX
-import { selectActivityDesignForForm, } from 'Redux/ActivityDesigner/activityDesigner.selectors';
+import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // UTILS
 import { generateColumnsFromDesign } from './Columns/Generators';
@@ -13,11 +13,14 @@ import SSPTable from 'Components/SSP/Components/Table';
 import { ISSPColumn } from 'Components/SSP/Types';
 
 type Props = {
-  preCustomColumns?: ISSPColumn[],
-  postCustomColumns?: ISSPColumn[],
-}
+  preCustomColumns?: ISSPColumn[];
+  postCustomColumns?: ISSPColumn[];
+};
 
-const ActivityTable = ({ preCustomColumns = [], postCustomColumns = [] }: Props) => {
+const ActivityTable = ({
+  preCustomColumns = [],
+  postCustomColumns = [],
+}: Props) => {
   const { formId } = useParams<{ formId: string }>();
 
   /**
@@ -29,14 +32,10 @@ const ActivityTable = ({ preCustomColumns = [], postCustomColumns = [] }: Props)
    * COLUMNS
    */
   const tableColumns = generateColumnsFromDesign({ design });
-  
+
   return (
     <SSPTable
-      columns={[
-        ...preCustomColumns,
-        ...tableColumns,
-        ...postCustomColumns,
-      ]}
+      columns={[...preCustomColumns, ...tableColumns, ...postCustomColumns]}
       rowKey='_id'
     />
   );

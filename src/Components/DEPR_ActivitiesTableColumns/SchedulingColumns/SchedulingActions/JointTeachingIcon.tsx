@@ -130,15 +130,21 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
       </>
     );
 
-    return (
-      <TooltipAndPopoverWrapper
-        tooltipTitle={localTeachingObject ? `Joint teaching: ${extIdLabel}` || 'N/A' : "Click to indicate joint teaching"}
-        disabled={activity.isInactive()}
-        buttonIcon={icon}
-        buttonClassName={`joint-teaching--btn ${localTeachingObject ? 'indicated' : ''}`}
-      >
-        {clickContent}
-      </TooltipAndPopoverWrapper>
+  return (
+    <TooltipAndPopoverWrapper
+      tooltipTitle={
+        localTeachingObject
+          ? `Joint teaching: ${extIdLabel}` || 'N/A'
+          : 'Click to indicate joint teaching'
+      }
+      disabled={activity.isInactive()}
+      buttonIcon={icon}
+      buttonClassName={`joint-teaching--btn ${
+        localTeachingObject ? 'indicated' : ''
+      }`}
+    >
+      {clickContent}
+    </TooltipAndPopoverWrapper>
   );
 };
 

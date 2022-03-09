@@ -12,7 +12,7 @@ import './index.scss';
 import { TActivity } from 'Types/Activity.type';
 
 type Props = {
-  activity: TActivity,
+  activity: TActivity;
 };
 
 const SchedulingActions = ({ activity }: Props) => {

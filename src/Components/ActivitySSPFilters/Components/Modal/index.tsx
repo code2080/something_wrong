@@ -2,7 +2,6 @@ import { Col, Modal, Row, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
 
 // HOOKS
 import { useFetchLabelsFromExtIdsWithTransformation } from 'Hooks/TECoreApiHooks';
@@ -85,20 +84,30 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     filterProperty: string,
     itemsToDeselect: string[],
   ) => {
-    if (_.isNil(filters[filterProperty])) {
-      return;
-    }
+    /**
+     * Find the existing selected filter values for filterProperty
+     */
+    const selectedValues: string[] = selectedFilterValues[filterProperty] || [];
+    if (!selectedValues || !selectedValues.length) return;
 
-    const updatedFilterProperty = filters[filterProperty].filter((selected) => {
-      return !itemsToDeselect.some((toDeselect) => toDeselect === selected);
-    });
+    /**
+     * Modify a shallow copy of the selected filter values by excluding all
+     * items in itemsToDeselect
+     */
+    const updFilterValues = selectedValues.filter(
+      (el) => !itemsToDeselect.includes(el),
+    );
 
-    const updatedFilters = {
-      ...filters,
-      [filterProperty]: updatedFilterProperty,
-    };
-
-    setFilters(updatedFilters);
+    /**
+     * Use patch filters to merge all of this together
+     */
+    const patch = createPatchFromFilterPropertyAndValues(
+      filterProperty,
+      updFilterValues,
+    );
+    console.log('patch')
+    console.log(patch)
+    patchFilters(patch);
   };
 
   /**

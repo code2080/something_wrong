@@ -1,11 +1,11 @@
 // COMPONENTS
-import FilterOptions from "../FilterOptions"
+import FilterOptions from '../FilterOptions';
 
 // HELPERS
-import { toActivityStatusDisplay } from "Components/ActivitySSPFilters/helpers"
+import { toActivityStatusDisplay } from 'Components/ActivitySSPFilters/helpers';
 
 // TYPES
-import { EActivityStatus } from "Types/ActivityStatus.enum"
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 type Props = {
   onChange: (updValue: any) => void;
