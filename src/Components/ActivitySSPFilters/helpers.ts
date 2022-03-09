@@ -204,7 +204,6 @@ export const createPatchFromFilterPropertyAndValues = (
   return obj;
 };
 
-//todo: check if the returned type holds up
 export const transformFilterValues = (
   obj: Record<string, any>,
   prefix = '',
