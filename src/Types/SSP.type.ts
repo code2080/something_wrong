@@ -107,7 +107,7 @@ export interface ISSPResourceContext extends ISSPReducerState {
   selectedKeys: string[];
   setSelectedKeys: (keys: string[]) => void;
   // SORTING
-  setSorting: (sortBy: string, direction: ESortDirection) => void;
+  setSorting: (sortBy: string, direction?: ESortDirection) => void;
   // FILTERING
   setMatchType: (matchType: EFilterType) => void;
   setInclusion: (inclusion: Record<string, EFilterInclusions | boolean>) => void;

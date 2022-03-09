@@ -1,5 +1,5 @@
 import { TablePaginationConfig } from "antd";
-import { SorterResult, TableRowSelection } from "antd/lib/table/interface";
+import { SorterResult, SortOrder, TableRowSelection } from "antd/lib/table/interface";
 import { useContext } from "react";
 import { ESortDirection } from "Types/SSP.type";
 import SSPResourceContext from "./context";
@@ -39,6 +39,11 @@ export const useRowSelection = (): TableRowSelection<any> => {
   };
 }
 
+const getSortingDirection = (order?: SortOrder) => {
+    if(!order) return undefined;
+    return order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+}
+
 export const useSorting = () => {
   const { sortBy, direction, setSorting } = useContext(SSPResourceContext);
 
@@ -49,16 +54,17 @@ export const useSorting = () => {
      * x) We don't have a sortBy param, AND...
      * x) ... we don't have a direction
      */
-    if (Array.isArray(sorter) || !sorter || (!sorter.columnKey && !sorter.order)) {
+    if (Array.isArray(sorter) || (!sorter?.columnKey && !sorter?.order)) {
       return;
     }
     // If column key or direction are undefined, we'll reset the sorting
     const { columnKey, order } = sorter;
     // Parse the order string into our enums
-    const parsedDirection = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+    const parsedDirection = getSortingDirection(order)
     // Only update if something has changed in the sorting
-    if (sortBy !== columnKey || direction !== parsedDirection) {
-      const direction = order === 'ascend' ? ESortDirection.ASCENDING : ESortDirection.DESCENDING;
+    
+    if (sortBy !== columnKey || direction !== parsedDirection ) {
+      const direction = getSortingDirection(order)
       setSorting(columnKey as string, direction);
     }
   }
