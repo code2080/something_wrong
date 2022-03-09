@@ -74,12 +74,12 @@ const FilterSummary = ({
         }
       />
     );
-  }, [onClear, values.time]);
+  }, [onClear, selectedFilterValues.time]);
 
   const otherFieldsDisplays = useMemo(() => {
     const fields = ['submitter', 'tag', 'primaryObject', 'status'];
     return fields
-      .filter((key) => !isEmpty(values[key]))
+      .filter((key) => !isEmpty(selectedFilterValues[key]))
       .map((key) => {
         return (
           <ValueDisplay
@@ -87,7 +87,7 @@ const FilterSummary = ({
             label={<FilterItemLabel label={key} render={getOptionLabel} />}
             content={
               <ul>
-                {values[key].map((item) => (
+                {selectedFilterValues[key].map((item) => (
                   <li key={item}>
                     {getOptionLabel(key, item)}
                     <CloseCircleOutlined
@@ -100,13 +100,15 @@ const FilterSummary = ({
           />
         );
       });
-  }, [getOptionLabel, onDeselect, values]);
+  }, [getOptionLabel, onDeselect, selectedFilterValues]);
 
   const generateObjectsDisplay = useCallback(
     (field) => {
       const fieldValues = pick(
-        values,
-        Object.keys(values).filter((key) => key.startsWith(`${field}.`)),
+        selectedFilterValues,
+        Object.keys(selectedFilterValues).filter((key) =>
+          key.startsWith(`${field}.`),
+        ),
       );
       if (
         isEmpty(fieldValues) ||
@@ -127,7 +129,7 @@ const FilterSummary = ({
                       <li>
                         <FilterItemLabel label={key} render={getOptionLabel} />
                         <ul>
-                          {values[key]?.map((item) => (
+                          {selectedFilterValues[key]?.map((item) => (
                             <li key={item}>
                               {getOptionLabel(field, item)}
                               <CloseCircleOutlined

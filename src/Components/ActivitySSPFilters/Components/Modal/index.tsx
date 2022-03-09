@@ -51,6 +51,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const {
     loading,
+    setFilters,
     patchFilters,
     filters,
     commitFilterChanges,
@@ -63,6 +64,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
    */
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
+  console.log('transformFilterValues: ', selectedFilterValues);
 
   /**
    * EVENT HANDLERS
@@ -83,8 +85,18 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     console.log(value);
   };
 
-  const onClearFilterValues = () => {
-    console.log('Clearing');
+  /**
+   * Removes {filterProperties} from selected filters
+   * @param filterProperties
+   */
+  const onClearFilterValues = (filterProperties: string[]) => {
+    const filtersCopy = { ...filters };
+
+    filterProperties.forEach((keyToRemove) => {
+      delete filtersCopy[keyToRemove];
+    });
+
+    setFilters(filtersCopy);
   };
 
   const onGetFilterOptionLabel = (fieldProperty: string, id?: string) => {
