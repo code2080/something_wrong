@@ -27,14 +27,14 @@ const FilterItems = ({
         return <TimeFilterItem onChange={onSelectFilterValue} />;
       case 'status':
         return (
-          <StatusFilterItem 
+          <StatusFilterItem
             onChange={onSelectFilterValue}
             value={selectedFilterValues.status}
           />
         );
       default:
         return (
-          <DynamicFilterItem 
+          <DynamicFilterItem
             onChange={onSelectFilterValue}
             selectedFilterProperty={selectedFilterProperty}
             getOptionLabel={getOptionLabel}
@@ -42,7 +42,12 @@ const FilterItems = ({
           />
         );
     }
-  }, [onSelectFilterValue, selectedFilterValues, selectedFilterProperty, getOptionLabel]);
+  }, [
+    onSelectFilterValue,
+    selectedFilterValues,
+    selectedFilterProperty,
+    getOptionLabel,
+  ]);
 
   return (
     <div className='filter-modal__column'>

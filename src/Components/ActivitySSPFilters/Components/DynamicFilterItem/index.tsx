@@ -1,17 +1,17 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Empty, Input } from "antd";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { SearchOutlined } from '@ant-design/icons';
+import { Empty, Input } from 'antd';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import FilterItemLabel from "../FilterItemLabel";
-import FilterOptions from "../FilterOptions";
+import FilterItemLabel from '../FilterItemLabel';
+import FilterOptions from '../FilterOptions';
 
 // REDUX
-import { selectAllFilterOptions } from "Redux/ActivitiesSlice";
+import { selectAllFilterOptions } from 'Redux/ActivitiesSlice';
 
 // HELPERS
-import { filterFilterOptionsByQuery } from "Components/ActivitySSPFilters/helpers";
+import { filterFilterOptionsByQuery } from 'Components/ActivitySSPFilters/helpers';
 
 // TYPES
 type Props = {
@@ -21,7 +21,12 @@ type Props = {
   value: string[];
 };
 
-const DynamicFilterItem = ({ onChange, selectedFilterProperty, getOptionLabel, value }: Props) => {
+const DynamicFilterItem = ({
+  onChange,
+  selectedFilterProperty,
+  getOptionLabel,
+  value,
+}: Props) => {
   /**
    * STATE
    */
@@ -35,7 +40,9 @@ const DynamicFilterItem = ({ onChange, selectedFilterProperty, getOptionLabel, v
   /**
    * EFFECTS
    */
-  useEffect(() => { setQuery('') }, [selectedFilterProperty]);
+  useEffect(() => {
+    setQuery('');
+  }, [selectedFilterProperty]);
 
   if (!options.length) return <Empty />;
 

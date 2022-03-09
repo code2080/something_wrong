@@ -19,6 +19,7 @@ const FilterOptions = ({ options, label, onChange, value }: Props) => {
         className='filter-modal__select-box'
         onChange={onChange}
         value={value as any}
+        style={{ width: '100%' }}
       >
         {options?.map((opt) => (
           <Select.Option value={opt.value} key={opt.value}>
