@@ -65,11 +65,12 @@ export const useSorting = () => {
      * x) We don't have a sortBy param, AND...
      * x) ... we don't have a direction
      */
-    if (Array.isArray(sorter) || (!sorter?.columnKey && !sorter?.order)) {
+    if (Array.isArray(sorter) || !sorter || (!sorter?.columnKey && !sorter?.order)) {
       return;
     }
     // If column key or direction are undefined, we'll reset the sorting
     const { columnKey, order } = sorter;
+    if(!columnKey || !order) {setSorting(undefined, undefined); return; }
     // Parse the order string into our enums
     const parsedDirection = getSortingDirection(order);
     // Only update if something has changed in the sorting
@@ -77,6 +78,7 @@ export const useSorting = () => {
       const direction = getSortingDirection(order);
       setSorting(columnKey as string, direction);
     }
+    
   };
 };
 
