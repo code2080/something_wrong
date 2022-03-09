@@ -1,5 +1,5 @@
-import { ColumnType } from "antd/lib/table";
-import { ISSPFilterQuery, ISSPQueryObject } from "Types/SSP.type";
+import { ColumnType } from 'antd/lib/table';
+import { ISSPFilterQuery, ISSPQueryObject } from 'Types/SSP.type';
 
 export type TSSPWrapperProps = {
   name: string;
@@ -8,8 +8,8 @@ export type TSSPWrapperProps = {
   initSSPStateFn: (args?: Partial<ISSPQueryObject>) => void;
   initialFilters?: Partial<ISSPFilterQuery>;
   fetchFilterLookupsFn?: (args?: any) => void;
-}
+};
 
 export interface ISSPColumn extends ColumnType<any> {
   width?: number;
-};
+}

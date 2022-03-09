@@ -4,27 +4,34 @@ import { Tooltip, Popover, Button } from 'antd';
 
 // TYPES
 type Props = {
-  tooltipTitle: string, 
-  disabled?: boolean,
-  buttonStyle?: any,
-  buttonClassName?: string,
-  buttonIcon: React.ReactNode,
+  tooltipTitle: string;
+  disabled?: boolean;
+  buttonStyle?: any;
+  buttonClassName?: string;
+  buttonIcon: React.ReactNode;
 };
 
-const TooltipAndPopoverWrapper: React.FC<Props> = ({ tooltipTitle, disabled, buttonStyle, buttonIcon, buttonClassName, children }) => {
+const TooltipAndPopoverWrapper: React.FC<Props> = ({
+  tooltipTitle,
+  disabled,
+  buttonStyle,
+  buttonIcon,
+  buttonClassName,
+  children,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
   const onHover = () => {
     if (disabled) return;
-    setIsHovered((!isHovered && !isClicked))
+    setIsHovered(!isHovered && !isClicked);
   };
 
   const onClick = () => {
     if (disabled) return;
     setIsClicked(!isClicked);
     setIsHovered(false);
-  }
+  };
 
   return (
     <Tooltip title={tooltipTitle} visible={isHovered} onVisibleChange={onHover}>

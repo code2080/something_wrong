@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FilterOutlined } from '@ant-design/icons';
 
 // COMPONENTS
-import ToolbarButton from "../ActivitiesToolbar/ToolbarButton";
+import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';
 import FilterModal from './Components/Modal';
 
 // STYLES
@@ -10,17 +10,14 @@ import FilterModal from './Components/Modal';
 // TYPES
 type Props = {
   datasourceId?: string;
-}
+};
 
 const ActivityFiltering = ({ datasourceId }: Props) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
-      <ToolbarButton
-        onClick={() => setShowModal(true)}
-        className={'active'}
-      >
+      <ToolbarButton onClick={() => setShowModal(true)} className={'active'}>
         <FilterOutlined />
         Filters
       </ToolbarButton>

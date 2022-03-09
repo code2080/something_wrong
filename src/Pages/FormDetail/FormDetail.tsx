@@ -54,7 +54,7 @@ import {
 import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
-import ActivitiesPage from './pages/Activities/activities.page'
+import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionsPage from './pages/submissions.page';
 import JointTeachingPage from './pages/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
@@ -115,9 +115,15 @@ const FormPage = () => {
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
-        { 
-          path: `/forms/${formId}`, 
-          label: <FormDetailBreadcrumb formName={form.name || 'Unknown form'} onToggleModalState={() => setShowFormInfoModal(true)} />},
+        {
+          path: `/forms/${formId}`,
+          label: (
+            <FormDetailBreadcrumb
+              formName={form.name || 'Unknown form'}
+              onToggleModalState={() => setShowFormInfoModal(true)}
+            />
+          ),
+        },
       ]),
     );
 
@@ -232,7 +238,11 @@ const FormPage = () => {
           </Tabs.TabPane>
         )}
       </TEAntdTabBar>
-      <FormInfoModal isVisible={showFormInfoModal} formId={formId} onHide={() => setShowFormInfoModal(false)} />
+      <FormInfoModal
+        isVisible={showFormInfoModal}
+        formId={formId}
+        onHide={() => setShowFormInfoModal(false)}
+      />
     </div>
   );
 };

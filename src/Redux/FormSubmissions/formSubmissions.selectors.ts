@@ -50,7 +50,10 @@ export const selectFormInstance = (formId, formInstanceId) =>
     (submissions) => submissions[formId]?.mapped.byId[formInstanceId] ?? {},
   );
 
-export const selectFormSubmissions = (formId: string, submissionIds: string[]) =>
+export const selectFormSubmissions = (
+  formId: string,
+  submissionIds: string[],
+) =>
   createSelector(submissionsState, (submissions) => {
     const formSubmissions = submissions[formId];
     if (!formSubmissions) return [];
@@ -79,10 +82,18 @@ export const selectAllSubmissionsForForm = (formId: string) =>
     (submissions) => submissions[formId]?.mapped?.byId ?? {},
   );
 
-export const selectAllRecipientsFromSubmissionFromForm = (formId: string) => (state: any) => {
-  const allSubmissions = Object.values(state.submissions[formId]?.mapped?.byId || {});
-  const allSubmitters = allSubmissions
-    .reduce((tot: Record<string, string>, submission: any) => ({ ...tot, [submission.recipientId] : submission.submitter || 'Unknown submitter' }), {});
-  
-  return allSubmitters;
-}
+export const selectAllRecipientsFromSubmissionFromForm =
+  (formId: string) => (state: any) => {
+    const allSubmissions = Object.values(
+      state.submissions[formId]?.mapped?.byId || {},
+    );
+    const allSubmitters = allSubmissions.reduce(
+      (tot: Record<string, string>, submission: any) => ({
+        ...tot,
+        [submission.recipientId]: submission.submitter || 'Unknown submitter',
+      }),
+      {},
+    );
+
+    return allSubmitters;
+  };

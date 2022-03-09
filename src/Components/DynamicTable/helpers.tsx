@@ -35,7 +35,8 @@ export const isColumnVisible = (column, visibleColumns) => {
  */
 export const getFixedWidthCols = (columns, visiblecolumns) =>
   columns.filter(
-    (col) => isColumnVisible(col, visiblecolumns) && (col.fixedWidth || col.width),
+    (col) =>
+      isColumnVisible(col, visiblecolumns) && (col.fixedWidth || col.width),
   );
 
 /**
@@ -54,11 +55,15 @@ export const getTotalAvailableWidth = (
 ) => {
   // Get the visible columns
   const fixedWidth = fixedWidthCols.reduce(
-    (tot, col) => ((col.fixedWidth || col.width) ? tot + (col.fixedWidth || col.width) : tot),
+    (tot, col) =>
+      col.fixedWidth || col.width ? tot + (col.fixedWidth || col.width) : tot,
     0,
   );
-  const constant = 100 + (hasExpandedRowRenderer ? 50 : 0) + (hasRowSelection ? 50 : 0);
-  const ret = defaultTotalWidth ? defaultTotalWidth - (fixedWidth + constant) : 0;
+  const constant =
+    100 + (hasExpandedRowRenderer ? 50 : 0) + (hasRowSelection ? 50 : 0);
+  const ret = defaultTotalWidth
+    ? defaultTotalWidth - (fixedWidth + constant)
+    : 0;
   return ret;
 };
 
@@ -82,7 +87,9 @@ const calculateColumnWidth = ({
   fixedWidth,
 }) => {
   if (fixedWidth) return fixedWidth;
-  const val = Math.max(totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns));
+  const val = Math.max(
+    totalAvailableWidth / (totalNumberOfColumns - numberOfFixedWidthColumns),
+  );
   return val;
 };
 
@@ -114,8 +121,9 @@ export const getColumnObjectArrayForTable = (
     // Map each column definition with the right handlers
     .map((col: any, idx: number, arr: any[]) => {
       const fixedWidth = col.width || col.fixedWidth;
-      const finalWidth = fixedWidth 
-        || calculateColumnWidth({
+      const finalWidth =
+        fixedWidth ||
+        calculateColumnWidth({
           title: col.title,
           columnIdx: idx,
           columnWidths,
@@ -124,7 +132,8 @@ export const getColumnObjectArrayForTable = (
           numberOfFixedWidthColumns,
           fixedWidth,
         });
-      const finalResizable = (allowResizing && !fixedWidth && col.resizable !== false);
+      const finalResizable =
+        allowResizing && !fixedWidth && col.resizable !== false;
       return {
         ...col,
         width: finalWidth,
@@ -140,7 +149,9 @@ export const getColumnObjectArrayForTable = (
           ? col.render
           : (val, el, rowIdx) =>
               col.render ? (
-                <EllipsisTruncater width={finalWidth}>{col.render(val, el, rowIdx)}</EllipsisTruncater>
+                <EllipsisTruncater width={finalWidth}>
+                  {col.render(val, el, rowIdx)}
+                </EllipsisTruncater>
               ) : (
                 <EllipsisTruncater width={finalWidth}>{val}</EllipsisTruncater>
               ),

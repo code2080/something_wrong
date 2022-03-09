@@ -17,7 +17,6 @@ import { ObjectRequest } from '../../../../../Redux/ObjectRequests/ObjectRequest
 import { TActivity } from '../../../../../Types/Activity.type';
 import { EActivityStatus } from '../../../../../Types/ActivityStatus.enum';
 
-
 type Props = {
   activity: TActivity;
 };
@@ -50,7 +49,11 @@ const ManualScheduling = ({ activity }: Props) => {
       schedulingTimestamp: moment.utc(),
     };
 
-    dispatch(updateActivities(updatedActivity.formId, updatedActivity.formInstanceId, [updatedActivity]));
+    dispatch(
+      updateActivities(updatedActivity.formId, updatedActivity.formInstanceId, [
+        updatedActivity,
+      ]),
+    );
   };
 
   const onManualScheduling = () => {
@@ -63,8 +66,13 @@ const ManualScheduling = ({ activity }: Props) => {
 
   return (
     <div
-      className={`scheduling-actions--button ${activity.activityStatus === EActivityStatus.INACTIVE && 'disabled'}`}
-      onClick={() => activity.activityStatus === EActivityStatus.INACTIVE && onManualScheduling()}
+      className={`scheduling-actions--button ${
+        activity.activityStatus === EActivityStatus.INACTIVE && 'disabled'
+      }`}
+      onClick={() =>
+        activity.activityStatus === EActivityStatus.INACTIVE &&
+        onManualScheduling()
+      }
     >
       <SelectOutlined />
     </div>

@@ -16,12 +16,12 @@ import './index.scss';
 
 // TYPES
 import { TFormInstance } from 'Types/FormInstance.type';
-import { TActivity } from "Types/Activity.type";
-import { EFormDetailTabs } from "Types/FormDetailTabs.enum";
+import { TActivity } from 'Types/Activity.type';
+import { EFormDetailTabs } from 'Types/FormDetailTabs.enum';
 
 // TYPES
 type Props = {
-  activity: TActivity,
+  activity: TActivity;
 };
 
 const Submitter = ({ activity }: Props) => {
@@ -47,7 +47,9 @@ const Submitter = ({ activity }: Props) => {
    * EVENT HANDLERS
    */
   const onClick = () => {
-    dispatch(setFormDetailTab(EFormDetailTabs.SUBMISSIONS, activity.formInstanceId));
+    dispatch(
+      setFormDetailTab(EFormDetailTabs.SUBMISSIONS, activity.formInstanceId),
+    );
   };
 
   const request = objectRequests.find((req) => req._id === primaryObject);

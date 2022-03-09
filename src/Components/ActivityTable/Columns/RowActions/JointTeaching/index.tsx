@@ -21,7 +21,7 @@ import useSSP from 'Components/SSP/Utils/hooks';
 
 // COMPONENTS
 import TooltipAndPopoverWrapper from 'Components/TooltipAndPopoverWrapper';
-import SelectWithDeleteOption from '../../../../DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/SelectWithDeleteOption'
+import SelectWithDeleteOption from '../../../../DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/SelectWithDeleteOption';
 
 // STYLES
 import './index.scss';
@@ -137,15 +137,21 @@ const JointTeachingIcon = ({ activity }: Props) => {
       </>
     );
 
-    return (
-      <TooltipAndPopoverWrapper
-        tooltipTitle={localTeachingObject ? `Joint teaching: ${extIdLabel}` || 'N/A' : "Click to indicate joint teaching"}
-        disabled={activity.activityStatus === EActivityStatus.INACTIVE}
-        buttonIcon={icon}
-        buttonClassName={`joint-teaching--btn ${localTeachingObject ? 'indicated' : ''}`}
-      >
-        {clickContent}
-      </TooltipAndPopoverWrapper>
+  return (
+    <TooltipAndPopoverWrapper
+      tooltipTitle={
+        localTeachingObject
+          ? `Joint teaching: ${extIdLabel}` || 'N/A'
+          : 'Click to indicate joint teaching'
+      }
+      disabled={activity.activityStatus === EActivityStatus.INACTIVE}
+      buttonIcon={icon}
+      buttonClassName={`joint-teaching--btn ${
+        localTeachingObject ? 'indicated' : ''
+      }`}
+    >
+      {clickContent}
+    </TooltipAndPopoverWrapper>
   );
 };
 

@@ -16,7 +16,11 @@ import { useSelector } from 'react-redux';
 import _, { uniq } from 'lodash';
 
 export const CreateActivitiesTableColumnsFromMapping = (
-  { design, columnPrefix, renderer }: { design: any, columnPrefix?: any, renderer?: any },
+  {
+    design,
+    columnPrefix,
+    renderer,
+  }: { design: any; columnPrefix?: any; renderer?: any },
   isBeta: boolean = false,
 ) => {
   const _design = new ActivityDesign(design || {});

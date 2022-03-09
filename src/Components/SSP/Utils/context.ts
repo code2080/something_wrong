@@ -1,5 +1,9 @@
-import React from "react";
-import { EFilterType, ESortDirection, ISSPResourceContext } from "Types/SSP.type";
+import React from 'react';
+import {
+  EFilterType,
+  ESortDirection,
+  ISSPResourceContext,
+} from 'Types/SSP.type';
 
 const SSPResourceContext = React.createContext<ISSPResourceContext>({
   // STATUS

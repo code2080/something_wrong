@@ -1,11 +1,10 @@
 // GENERATORS
-import { GenerateActivityValueColumns } from "./activityValues";
-import { GenerateTimingColumns } from "./timing";
+import { GenerateActivityValueColumns } from './activityValues';
+import { GenerateTimingColumns } from './timing';
 
 // TYPES
 import { ActivityDesign } from '../../../../Models/ActivityDesign.model';
-import { ISSPColumn } from "Components/SSP/Types";
-
+import { ISSPColumn } from 'Components/SSP/Types';
 
 /**
  * @function createColumnsFromDesign
@@ -13,7 +12,11 @@ import { ISSPColumn } from "Components/SSP/Types";
  * @param {ActivityDesign} design
  * @returns {ISSPColumn[]}
  */
-export const generateColumnsFromDesign = ({ design: _design }: { design: any }): ISSPColumn[] => {
+export const generateColumnsFromDesign = ({
+  design: _design,
+}: {
+  design: any;
+}): ISSPColumn[] => {
   // Ensure a valid design
   const design = new ActivityDesign(_design || {});
 
@@ -23,8 +26,5 @@ export const generateColumnsFromDesign = ({ design: _design }: { design: any }):
   // Generate the timing columns
   const timingColumns = GenerateTimingColumns[design.timing.mode](design);
 
-  return [
-    ...timingColumns,
-    ...activityValueColumns,
-  ];
+  return [...timingColumns, ...activityValueColumns];
 };

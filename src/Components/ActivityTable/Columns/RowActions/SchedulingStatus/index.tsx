@@ -31,7 +31,7 @@ const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
 
 type Props = {
   activity: TActivity;
-}
+};
 
 const SchedulingCheckbox = ({ activity }: Props) => {
   const dispatch = useDispatch();
@@ -75,9 +75,19 @@ const SchedulingCheckbox = ({ activity }: Props) => {
   );
   return (
     <div
-      onMouseEnter={activity.activityStatus !== EActivityStatus.INACTIVE ? () => setShowInvertedState(true) : undefined}
-      onMouseLeave={activity.activityStatus !== EActivityStatus.INACTIVE ? () => setShowInvertedState(false) : undefined}
-      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${activity.activityStatus === EActivityStatus.INACTIVE ? 'disabled' : ''}`}
+      onMouseEnter={
+        activity.activityStatus !== EActivityStatus.INACTIVE
+          ? () => setShowInvertedState(true)
+          : undefined
+      }
+      onMouseLeave={
+        activity.activityStatus !== EActivityStatus.INACTIVE
+          ? () => setShowInvertedState(false)
+          : undefined
+      }
+      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${
+        activity.activityStatus === EActivityStatus.INACTIVE ? 'disabled' : ''
+      }`}
     >
       {activity.activityStatus !== EActivityStatus.SCHEDULED && (
         <Button
@@ -100,7 +110,9 @@ const SchedulingCheckbox = ({ activity }: Props) => {
           onConfirm={onUnscheduleActivity}
           okText='Yes'
           cancelText='No'
-          getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLInputElement}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLInputElement
+          }
           trigger={'click'}
         >
           <Button

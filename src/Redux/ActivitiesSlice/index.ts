@@ -21,16 +21,31 @@ import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 
 // TYPES
 import { createFn, TActivity } from 'Types/Activity.type';
-import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
-import { ISSPReducerState, ISSPQueryObject, ESortDirection, EFilterType, EFilterInclusions } from 'Types/SSP.type';
+import {
+  createFn as createActivityFilterLookupMap,
+  TActivityFilterLookupMap,
+} from 'Types/ActivityFilterLookupMap.type';
+import {
+  ISSPReducerState,
+  ISSPQueryObject,
+  ESortDirection,
+  EFilterType,
+  EFilterInclusions,
+} from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
-import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+import {
+  selectFieldLabelsMapping,
+  selectObjectLabelsMapping,
+} from 'Redux/Integration/integration.selectors';
 import { selectAllLabels } from 'Redux/TE/te.selectors';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { selectTagsByFormId } from 'Redux/ActivityTag/activityTag.selectors';
 import { TActivityTag } from 'Types/ActivityTag.type';
 import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import { getStateCache, setStateCache } from 'Components/SSP/Utils/cacheService';
+import {
+  getStateCache,
+  setStateCache,
+} from 'Components/SSP/Utils/cacheService';
 import { omit } from 'lodash';
 
 export const initialState: ISSPReducerState = {
@@ -81,7 +96,11 @@ const slice = createSlice({
       finishedLoadingSuccess(state);
       if (payload.queryHash) {
         console.log('Caching with query hash ', payload.queryHash);
-        setStateCache('ACTIVITIES_TAB', payload.queryHash, omit(state, ['hasErrors', 'loading', 'filterLookupMap']));
+        setStateCache(
+          'ACTIVITIES_TAB',
+          payload.queryHash,
+          omit(state, ['hasErrors', 'loading', 'filterLookupMap']),
+        );
       }
     },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
@@ -97,44 +116,67 @@ export default slice.reducer;
 // Selectors
 export const activitiesSelector = (state: IState): TActivity[] =>
   state.activitiesNew.results;
-export const activitySelector = (id: string) => (state: IState): TActivity | undefined => state.activitiesNew.map[id] || undefined;
-export const activitiesLoading = (state: IState): boolean => state.activitiesNew.loading;
-export const activityFilterLookupMapSelector = (state: IState): TActivityFilterLookupMap => state.activitiesNew.filterLookupMap;
+export const activitySelector =
+  (id: string) =>
+  (state: IState): TActivity | undefined =>
+    state.activitiesNew.map[id] || undefined;
+export const activitiesLoading = (state: IState): boolean =>
+  state.activitiesNew.loading;
+export const activityFilterLookupMapSelector = (
+  state: IState,
+): TActivityFilterLookupMap => state.activitiesNew.filterLookupMap;
 
 /**
  * ALWAYS use this selector in case you're planning on using the map for filtering
  * It executes various convenience functions against the raw map before returning it
  */
-export const selectLookupMapForFiltering = (state: IState): TActivityFilterLookupMap => {
+export const selectLookupMapForFiltering = (
+  state: IState,
+): TActivityFilterLookupMap => {
   // Get the raw map from state
   const rawMap = state.activitiesNew.filterLookupMap;
   // Filter out all properties with only 'null' or 'undefined' as keys, except for in excluded keys
   return excludeEmptyKeysFromFilterLookupMap(rawMap, ['tag']);
-}
-
-export const selectAllFilterOptions = (filterProperty: string) => (state: IState): string[] => {
-  // Get the raw map from state
-  const map = selectLookupMapForFiltering(state);
-  const options = getAllFilterOptionsFromFilterLookupMap(map);
-  return options[filterProperty] || [];
 };
 
-export const selectLabelsForFilterOptionsForForm = (formId: string) => (state: IState) => {
-  const objectLabelsMapping = selectObjectLabelsMapping()(state);
-  const fieldsLabelMapping = selectFieldLabelsMapping()(state);
-  const allLabels = selectAllLabels()(state);
-  const tags = selectTagsByFormId(formId)(state);
-  const submitter = selectAllRecipientsFromSubmissionFromForm(formId)(state);
-
-  return {
-    submitter,
-    tag: { ...tags.reduce((tot: Record<string, string>, tag: TActivityTag) => ({ ...tot, [tag._id]: tag.name }), {}), null: 'N/A' },
-    status: Object.keys(EActivityStatus).reduce((tot, tagId) => ({ ...tot, [tagId]: toActivityStatusDisplay(tagId) }), {}), 
-    ...objectLabelsMapping,
-    ...fieldsLabelMapping,
-    ...allLabels,
+export const selectAllFilterOptions =
+  (filterProperty: string) =>
+  (state: IState): string[] => {
+    // Get the raw map from state
+    const map = selectLookupMapForFiltering(state);
+    const options = getAllFilterOptionsFromFilterLookupMap(map);
+    return options[filterProperty] || [];
   };
-}
+
+export const selectLabelsForFilterOptionsForForm =
+  (formId: string) => (state: IState) => {
+    const objectLabelsMapping = selectObjectLabelsMapping()(state);
+    const fieldsLabelMapping = selectFieldLabelsMapping()(state);
+    const allLabels = selectAllLabels()(state);
+    const tags = selectTagsByFormId(formId)(state);
+    const submitter = selectAllRecipientsFromSubmissionFromForm(formId)(state);
+
+    return {
+      submitter,
+      tag: {
+        ...tags.reduce(
+          (tot: Record<string, string>, tag: TActivityTag) => ({
+            ...tot,
+            [tag._id]: tag.name,
+          }),
+          {},
+        ),
+        null: 'N/A',
+      },
+      status: Object.keys(EActivityStatus).reduce(
+        (tot, tagId) => ({ ...tot, [tagId]: toActivityStatusDisplay(tagId) }),
+        {},
+      ),
+      ...objectLabelsMapping,
+      ...fieldsLabelMapping,
+      ...allLabels,
+    };
+  };
 
 // Actions
 export const {
@@ -146,36 +188,41 @@ export const {
   restoreCachedQueryHandler,
 } = slice.actions;
 
-export const fetchActivitiesForForm = (formId: string, queryObject?: Partial<ISSPQueryObject>) => async (dispatch: any, getState: any) => {
-  try {
-    const { serializedQuery, queryHash } = serializeSSPQuery(queryObject, getState().activitiesNew);
-    console.log('Finding cached queries with hash ', queryHash);
-    const cachedQuery = getStateCache('ACTIVITIES_TAB', queryHash);
-    if (cachedQuery) {
-      console.log('we have a matched query');
-      dispatch(restoreCachedQueryHandler(cachedQuery));
-    } else {
-      console.log('no matched query');
-      dispatch(defaultRequestHandler(queryObject));
+export const fetchActivitiesForForm =
+  (formId: string, queryObject?: Partial<ISSPQueryObject>) =>
+  async (dispatch: any, getState: any) => {
+    try {
+      const { serializedQuery, queryHash } = serializeSSPQuery(
+        queryObject,
+        getState().activitiesNew,
+      );
+      console.log('Finding cached queries with hash ', queryHash);
+      const cachedQuery = getStateCache('ACTIVITIES_TAB', queryHash);
+      if (cachedQuery) {
+        console.log('we have a matched query');
+        dispatch(restoreCachedQueryHandler(cachedQuery));
+      } else {
+        console.log('no matched query');
+        dispatch(defaultRequestHandler(queryObject));
+      }
+      const result = await api.get({
+        endpoint: `forms/${formId}/activities?${serializedQuery}`,
+      });
+      dispatch(fetchActivitiesForFormSuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler());
     }
-    const result = await api.get({
-      endpoint: `forms/${formId}/activities?${serializedQuery}`,
-    });
-    dispatch(fetchActivitiesForFormSuccess(result));
-  } catch (e) {
-    dispatch(defaultFailureHandler());
-  }
-};
+  };
 
-export const fetchActivityFilterLookupMapForForm = (formId: string) => async (dispatch: any) => {
-  try {
-    dispatch(defaultRequestHandler(null));
-    const result = await api.get({
-      endpoint: `forms/${formId}/activities/filters`,
-    });
-    dispatch(fetchActivityFilterLookupMapSuccess(result));
-  } catch (e) {
-    dispatch(defaultFailureHandler());
-  }
-};
-
+export const fetchActivityFilterLookupMapForForm =
+  (formId: string) => async (dispatch: any) => {
+    try {
+      dispatch(defaultRequestHandler(null));
+      const result = await api.get({
+        endpoint: `forms/${formId}/activities/filters`,
+      });
+      dispatch(fetchActivityFilterLookupMapSuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler());
+    }
+  };

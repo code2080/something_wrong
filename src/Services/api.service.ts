@@ -30,9 +30,9 @@ const prepareOption = async (
     method,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      ...headers
+      ...headers,
     },
-    body: {}
+    body: {},
   };
 
   if (requiresAuth) {
@@ -40,7 +40,7 @@ const prepareOption = async (
     option.headers = {
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${token}`,
-      ...headers
+      ...headers,
     };
   }
 
@@ -49,8 +49,7 @@ const prepareOption = async (
       option.params = { ...data, ...(params || {}) };
     } else {
       option.data = { ...data };
-      if (params)
-        option.params = { ...params };
+      if (params) option.params = { ...params };
     }
   }
   return option;
@@ -61,7 +60,7 @@ const getServiceUrl = (service: EExternalServices) => {
     case EExternalServices.AM_BE:
       return getEnvParams().AM_BE_URL;
   }
-}
+};
 
 /**
  * @function getAPIUrl
@@ -72,7 +71,8 @@ const getServiceUrl = (service: EExternalServices) => {
  */
 const getAPIUrl = (service: EExternalServices, endpoint: string): string => {
   const serviceUrl = getServiceUrl(service);
-  if (endpoint.search('http://') > -1 || endpoint.search('https://') > -1) return endpoint;
+  if (endpoint.search('http://') > -1 || endpoint.search('https://') > -1)
+    return endpoint;
   return `${serviceUrl}${endpoint}`;
 };
 
@@ -88,31 +88,36 @@ const apiRequest = async ({
   service = EExternalServices.AM_BE,
 }: TAPIRequest) => {
   const fullUrl = !absoluteUrl ? getAPIUrl(service, endpoint) : endpoint;
-  const option = await prepareOption(method, data, requiresAuth, headers, params);
+  const option = await prepareOption(
+    method,
+    data,
+    requiresAuth,
+    headers,
+    params,
+  );
   return axios(fullUrl, option)
-    .then(
-      (response: any) => {
-        if (successMessage) {
-          const msg: any = typeof successMessage === 'function' ? successMessage(response.data) : successMessage;
-          notification.success({
-            message: 'Success',
-            description: msg
-          });
-        }
-        return response.data;
+    .then((response: any) => {
+      if (successMessage) {
+        const msg: any =
+          typeof successMessage === 'function'
+            ? successMessage(response.data)
+            : successMessage;
+        notification.success({
+          message: 'Success',
+          description: msg,
+        });
       }
-    )
+      return response.data;
+    })
     .catch((error: any) => {
       notification.error({
         message: 'Error',
-        description: `An error happened executing your request. Please try again`
+        description: `An error happened executing your request. Please try again`,
       });
       // Trow error again so failure handler of action triggers
       throw new Error(error);
     });
 };
-
-
 
 const exports = {
   get: async ({
@@ -123,16 +128,17 @@ const exports = {
     headers,
     successMessage = null,
     service,
-  }: TAPIRequestShorthand) => apiRequest({
-    method: 'GET',
-    endpoint,
-    absoluteUrl,
-    data,
-    requiresAuth,
-    headers,
-    successMessage,
-    service,
-  }),
+  }: TAPIRequestShorthand) =>
+    apiRequest({
+      method: 'GET',
+      endpoint,
+      absoluteUrl,
+      data,
+      requiresAuth,
+      headers,
+      successMessage,
+      service,
+    }),
   post: async ({
     endpoint,
     absoluteUrl = false,
@@ -142,17 +148,18 @@ const exports = {
     params,
     successMessage = null,
     service,
-  }: TAPIRequestShorthand) => apiRequest({
-    method: 'POST',
-    endpoint,
-    absoluteUrl,
-    data,
-    requiresAuth,
-    headers,
-    params,
-    successMessage,
-    service,
-  }),
+  }: TAPIRequestShorthand) =>
+    apiRequest({
+      method: 'POST',
+      endpoint,
+      absoluteUrl,
+      data,
+      requiresAuth,
+      headers,
+      params,
+      successMessage,
+      service,
+    }),
   put: async ({
     endpoint,
     absoluteUrl = false,
@@ -162,17 +169,18 @@ const exports = {
     params,
     successMessage = null,
     service,
-  }: TAPIRequestShorthand) => apiRequest({
-    method: 'PUT',
-    endpoint,
-    absoluteUrl,
-    data,
-    requiresAuth,
-    headers,
-    params,
-    successMessage,
-    service,
-  }),
+  }: TAPIRequestShorthand) =>
+    apiRequest({
+      method: 'PUT',
+      endpoint,
+      absoluteUrl,
+      data,
+      requiresAuth,
+      headers,
+      params,
+      successMessage,
+      service,
+    }),
   patch: async ({
     endpoint,
     absoluteUrl = false,
@@ -182,17 +190,18 @@ const exports = {
     params,
     successMessage = null,
     service,
-  }: TAPIRequestShorthand) => apiRequest({
-    method: 'PATCH',
-    endpoint,
-    absoluteUrl,
-    data,
-    requiresAuth,
-    headers,
-    params,
-    successMessage,
-    service,
-  }),
+  }: TAPIRequestShorthand) =>
+    apiRequest({
+      method: 'PATCH',
+      endpoint,
+      absoluteUrl,
+      data,
+      requiresAuth,
+      headers,
+      params,
+      successMessage,
+      service,
+    }),
   delete: async ({
     endpoint,
     absoluteUrl = false,
@@ -201,17 +210,17 @@ const exports = {
     headers,
     successMessage = null,
     service,
-  }: TAPIRequestShorthand) => apiRequest({
-    method: 'DELETE',
-    endpoint,
-    absoluteUrl,
-    data,
-    requiresAuth,
-    headers,
-    successMessage,
-    service,
-  }),
+  }: TAPIRequestShorthand) =>
+    apiRequest({
+      method: 'DELETE',
+      endpoint,
+      absoluteUrl,
+      data,
+      requiresAuth,
+      headers,
+      successMessage,
+      service,
+    }),
 };
 
 export default exports;
-
