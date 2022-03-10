@@ -30,6 +30,9 @@ import FilterSummary from '../FilterSummary';
 
 // STYLES
 import './index.scss';
+import { isEmpty, unset } from 'lodash';
+import { REPLACED_KEY } from 'Components/ActivitySSPFilters/constants';
+import { removeDeepEntry } from 'Components/SSP/Utils/helpers';
 
 type Props = {
   isVisible: boolean;
@@ -94,17 +97,26 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
      * Modify a shallow copy of the selected filter values by excluding all
      * items in itemsToDeselect
      */
-    const updFilterValues = selectedValues.filter(
+    const updatedFilterValues = selectedValues.filter(
       (el) => !itemsToDeselect.includes(el),
     );
+
+    /** The update will lead to the category having no filter values left */
+    if (isEmpty(updatedFilterValues)) {
+      const updated = removeDeepEntry(filters, filterProperty);
+      setFilters(updated);
+
+      return;
+    }
 
     /**
      * Use patch filters to merge all of this together
      */
     const patch = createPatchFromFilterPropertyAndValues(
       filterProperty,
-      updFilterValues,
+      updatedFilterValues,
     );
+
     patchFilters(patch);
   };
 

@@ -1,5 +1,7 @@
-import { mergeWith, pick } from 'lodash';
+import { REPLACED_KEY } from 'Components/ActivitySSPFilters/constants';
+import { isEmpty, mergeWith, pick, cloneDeep, unset } from 'lodash';
 import { ISSPReducerState, ISSPQueryObject } from 'Types/SSP.type';
+import { FilterEntry } from '../Types';
 
 /**
  * @function serializeSSPQuery
@@ -28,13 +30,24 @@ export const serializeSSPQuery = (
   return urlParams.toString();
 };
 
-export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
+export const customFilterPathMergeWith = (oldVal: any, newVal: FilterEntry) => {
   /** Base case*/
   if (!oldVal || Array.isArray(newVal)) {
     return newVal;
+    // return isEmpty(newVal) ? undefined : newVal;
   }
 
   mergeWith(oldVal, newVal, customFilterPathMergeWith);
 
   return oldVal;
+};
+
+export const removeDeepEntry = (obj: FilterEntry, path: string) => {
+  const objCopy = cloneDeep(obj);
+  //path_to_key
+  const pathToDelete = path.split(REPLACED_KEY);
+
+  unset(objCopy, pathToDelete);
+
+  return objCopy;
 };

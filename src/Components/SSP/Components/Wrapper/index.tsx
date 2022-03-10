@@ -8,7 +8,7 @@ import {
   ISSPReducerState,
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
-import { TSSPWrapperProps } from '../../Types';
+import { FilterEntry, TSSPWrapperProps } from '../../Types';
 import { mergeWith, pick, cloneDeep } from 'lodash';
 import {
   getFilterCache,
@@ -76,7 +76,10 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   /**
    * SORTING
    */
-  const setSorting = (sortBy: string | undefined, direction: ESortDirection | undefined) => {
+  const setSorting = (
+    sortBy: string | undefined,
+    direction: ESortDirection | undefined,
+  ) => {
     dispatch(fetchFn({ sortBy, direction }));
   };
 
@@ -85,7 +88,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
    */
   const [_matchType, _setMatchType] = useState<EFilterType>(matchType);
   const [_inclusion, _setInclusion] = useState(inclusion);
-  const [_filters, _setFilters] = useState(filters);
+  const [_filters, _setFilters] = useState<FilterEntry>(filters);
 
   const setMatchType = (matchType: EFilterType) => _setMatchType(matchType);
   const setInclusion = (
@@ -96,10 +99,13 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ...inclusion, ...patch });
   };
-  const setFilters = (filters: Record<string, any>) => _setFilters(filters);
-  const patchFilters = (patch: Record<string, any>) => {
+  const setFilters = (filters: FilterEntry) => _setFilters(filters);
+  const patchFilters = (patch: FilterEntry) => {
+    // todo: if patch contains empty array we should do some cleaning isntad
+
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
+
     _setFilters(clonedObj);
   };
 

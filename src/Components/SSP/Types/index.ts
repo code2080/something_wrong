@@ -13,3 +13,7 @@ export type TSSPWrapperProps = {
 export interface ISSPColumn extends ColumnType<any> {
   width?: number;
 }
+
+// todo: add desc
+type _FilterEntry = Record<string, string[]>;
+export type FilterEntry = Record<string, _FilterEntry | string[]>;

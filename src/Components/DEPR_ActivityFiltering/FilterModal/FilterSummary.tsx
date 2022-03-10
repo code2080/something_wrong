@@ -10,6 +10,7 @@ import { Divider } from 'antd';
 import { DATE_FORMAT } from '../../../Constants/common.constants';
 import { NESTED_FIELDS } from './FilterModal.constants';
 import FilterItemLabel from './FilterItemLabel';
+
 interface Props {
   selectedFilterValues: any;
   onClear: (field: string[]) => void;
