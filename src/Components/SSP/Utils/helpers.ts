@@ -49,21 +49,39 @@ export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
   return oldVal;
 };
 
+/**
+ * Removes value at {pathToDelete} in {filters}. If the removal resolves in an
+ * empty object, that object will also be deleted. This will be done recursivly
+ * so that no paths related to {pathToDelete} leads to an empty object.
+ * @param filters
+ * @param pathToDelete
+ * @returns filters without value or resulting empty objects in pathToDelete
+ */
 export const removeDeepEntry = (
-  obj: Record<string, any>,
+  filters: Record<string, any>,
   pathToDelete: string[],
 ) => {
-  const objCopy = cloneDeep(obj);
+  //todo: maybe enough with a shallow clone
+  const filtersCopy = cloneDeep(filters);
 
-  unset(objCopy, pathToDelete);
+  console.log('filtersCopy', filtersCopy);
+
+  unset(filtersCopy, pathToDelete);
+
+  console.log('filtersCopy after mutation', filtersCopy);
 
   const remainingPath = initial(pathToDelete);
-  const item = get(objCopy, remainingPath);
+  const newLastItemInPath = get(filtersCopy, remainingPath);
+
+  console.log('remainingPath', remainingPath);
+  console.log('newLastItemInPath', newLastItemInPath);
 
   /** Base case */
-  if (!isEmpty(item)) {
-    return objCopy;
+  if (!isEmpty(newLastItemInPath) || remainingPath.length === 1) {
+    return filtersCopy;
   }
 
-  return removeDeepEntry(objCopy, remainingPath);
+  /** If the mutation lead to an empty object, we need to delete that object too
+   * */
+  return removeDeepEntry(filtersCopy, remainingPath);
 };

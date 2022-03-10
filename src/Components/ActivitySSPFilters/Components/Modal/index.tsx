@@ -103,8 +103,10 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
 
     /** The update will lead to the category having no filter values left */
     if (isEmpty(updatedFilterValues)) {
-      const updated = removeDeepEntry(filters, filterProperty);
-      setFilters(updated);
+      const pathToDelete = filterProperty.split(REPLACED_KEY);
+
+      const updatedFilters = removeDeepEntry(filters, pathToDelete);
+      setFilters(updatedFilters);
 
       return;
     }

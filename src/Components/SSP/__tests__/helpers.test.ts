@@ -67,4 +67,37 @@ describe('Merger function used for filters', () => {
 
     expect(cleaned).toEqual(expected);
   });
+
+  test('Delete deeply nested key2', () => {
+    const baseObj = {
+      entry1: ['1'],
+      entry2: ['1', '2'],
+      nestedEntry: {
+        level1: {
+          level2a: ['hello'],
+          level2b: { level3b: ['hello from b'] },
+        },
+      },
+    };
+
+    const pathToDelete = ['nestedEntry', 'level1', 'level2b', 'level3b'];
+    const pathToDelete2 = ['nestedEntry', 'level1', 'level2a'];
+
+    const cleaned = removeDeepEntry(baseObj, pathToDelete);
+    const cleaned2 = removeDeepEntry(cleaned, pathToDelete2);
+
+    const expected = {
+      entry1: ['1'],
+      entry2: ['1', '2'],
+      //empty base level
+      nestedEntry: {
+        //level1: {
+        //level2a: ['hello'],
+        //level2b and level2c should be removed
+        //},
+      },
+    };
+
+    expect(cleaned2).toEqual(expected);
+  });
 });
