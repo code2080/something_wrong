@@ -29,13 +29,12 @@ export const serializeSSPQuery = (
 };
 
 export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
-  if (!oldVal) return newVal;
-  let result: any;
-  if (Array.isArray(newVal)) {
-    result = newVal;
-  } else {
-    mergeWith(oldVal, newVal, customFilterPathMergeWith);
-    result = oldVal;
+  /** Base case*/
+  if (!oldVal || Array.isArray(newVal)) {
+    return newVal;
   }
-  return result;
+
+  mergeWith(oldVal, newVal, customFilterPathMergeWith);
+
+  return oldVal;
 };
