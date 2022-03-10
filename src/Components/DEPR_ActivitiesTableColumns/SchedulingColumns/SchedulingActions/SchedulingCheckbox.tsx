@@ -7,7 +7,7 @@ import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 
 // ACTIONS
-import { setSchedulingStatusOfActivities } from '../../../../Redux/Activities/activities.actions';
+import { setSchedulingStatusOfActivities } from '../../../../Redux/DEPR_Activities/activities.actions';
 
 // CONSTANTS
 

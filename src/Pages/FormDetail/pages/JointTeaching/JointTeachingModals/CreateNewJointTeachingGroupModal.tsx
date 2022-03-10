@@ -32,7 +32,7 @@ import {
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
 import { getActivities, getUniqueValues } from 'Utils/activities.helpers';
 import { TActivity } from 'Types/Activity.type';
-import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
+import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/DEPR_Activities/activities.actionTypes';
 
 interface Props extends Omit<ModalProps, 'onCancel'> {
   activityIds: string[];

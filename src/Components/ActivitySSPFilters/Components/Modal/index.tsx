@@ -105,8 +105,6 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
       filterProperty,
       updFilterValues,
     );
-    console.log('patch')
-    console.log(patch)
     patchFilters(patch);
   };
 

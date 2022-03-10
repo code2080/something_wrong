@@ -30,7 +30,7 @@ import {
   allocateRelatedObjectsToGroups,
   hasAllocatedActivity,
 } from './groupManagement.helpers';
-import { updateActivities } from 'Redux/Activities/activities.actions';
+import { updateActivities } from 'Redux/DEPR_Activities/activities.actions';
 import { TActivity } from 'Types/Activity.type';
 import AllocationStatus from './AllocationStatus';
 

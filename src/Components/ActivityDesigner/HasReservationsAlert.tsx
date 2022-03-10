@@ -7,10 +7,10 @@ import { useMemo, useState } from 'react';
 import {
   deleteActivities,
   updateActivity,
-} from '../../Redux/Activities/activities.actions';
+} from '../../Redux/DEPR_Activities/activities.actions';
 import { unlockActivityDesigner } from '../../Redux/ActivityDesigner/activityDesigner.actions';
 import { useTECoreAPI } from '../../Hooks/TECoreApiHooks';
-import { makeSelectActivitiesForForm } from '../../Redux/Activities/activities.selectors';
+import { makeSelectActivitiesForForm } from '../../Redux/DEPR_Activities/activities.selectors';
 import { EActivityStatus } from '../../Types/ActivityStatus.enum';
 import { resetFormFilterValues } from '../../Redux/Filters/filters.actions';
 import { resetActivitySorting } from '../../Redux/GlobalUI/globalUI.actions';

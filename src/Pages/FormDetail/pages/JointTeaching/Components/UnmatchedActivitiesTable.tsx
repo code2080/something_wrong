@@ -10,7 +10,7 @@ import {
   makeSelectSortParamsForActivities,
   selectSelectedActivities,
 } from 'Redux/GlobalUI/globalUI.selectors';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
 import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
@@ -21,7 +21,7 @@ import { TActivity } from 'Types/Activity.type';
 // CONSTANTS
 import { SorterResult } from 'antd/lib/table/interface';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/Activities/activities.actionTypes';
+import { FETCH_ACTIVITIES_FOR_FORM } from 'Redux/DEPR_Activities/activities.actionTypes';
 // ACTIONS
 import {
   setActivitySorting,

@@ -8,8 +8,8 @@ import _ from 'lodash';
 
 // REDUX
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
-import { updateActivities } from '../../../../Redux/Activities/activities.actions';
-import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/Activities/activities.selectors';
+import { updateActivities } from '../../../../Redux/DEPR_Activities/activities.actions';
+import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/DEPR_Activities/activities.selectors';
 import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 

@@ -11,6 +11,7 @@ import {
 } from '../../../../Constants/activityTimeModes.constants';
 import TimingNameMap from '../../../../Constants/activityDesignTimingMap.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
+import { EActivitySortingKey } from 'Types/ActivitySortingKey.enum';
 
 const timingCols = {
   mode: (mapping) => ({
@@ -32,7 +33,7 @@ const timingCols = {
   }),
   startTimeExact: (mapping) => ({
     title: 'Start time',
-    key: 'metadata.startTime',
+    key: EActivitySortingKey.START_TIME,
     dataIndex: null,
     render: (activity, activityIndex) => {
       return (
@@ -51,7 +52,7 @@ const timingCols = {
   }),
   endTimeExact: (mapping) => ({
     title: 'End time',
-    key: 'metadata.endTime',
+    key: EActivitySortingKey.END_TIME,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <BaseActivityColWrapper
@@ -81,7 +82,6 @@ const timingCols = {
         mapping={mapping}
       />
     ),
-    sorter: true,
   }),
   endTimeTimeslots: (mapping) => ({
     title: 'End before or at:',
@@ -98,11 +98,10 @@ const timingCols = {
         mapping={mapping}
       />
     ),
-    sorter: true,
   }),
   length: (mapping) => ({
     title: 'Length',
-    key: 'metadata.length',
+    key: EActivitySortingKey.LENGTH,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <BaseActivityColWrapper
@@ -133,7 +132,7 @@ const timingCols = {
   }),
   weekday: (mapping) => ({
     title: 'Weekday',
-    key: 'metadata.weekday',
+    key: EActivitySortingKey.WEEKDAY,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <BaseActivityColWrapper
@@ -160,11 +159,10 @@ const timingCols = {
         mapping={mapping}
       />
     ),
-    sorter: true,
   }),
   time: (mapping) => ({
     title: 'Exact time',
-    key: 'metadata.time',
+    key: EActivitySortingKey.TIME,
     dataIndex: null,
     render: (activity, activityIndex) => (
       <BaseActivityColWrapper

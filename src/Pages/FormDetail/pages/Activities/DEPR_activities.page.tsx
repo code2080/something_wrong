@@ -29,7 +29,7 @@ import {
   selectActivitiesForForm,
   activityInWorkerProgressSelector,
   selectAllActivityIds,
-} from '../../../../Redux/Activities/activities.selectors';
+} from '../../../../Redux/DEPR_Activities/activities.selectors';
 
 // HELPERS
 

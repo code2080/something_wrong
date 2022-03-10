@@ -15,7 +15,7 @@ import withTECoreAPI from '../../../TECoreAPI/withTECoreAPI';
 import {
   overrideActivityValue,
   revertToSubmissionValue,
-} from '../../../../Redux/Activities/activities.actions';
+} from '../../../../Redux/DEPR_Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../../Redux/TE/te.actions';
 import { setExternalAction } from '../../../../Redux/GlobalUI/globalUI.actions';
 

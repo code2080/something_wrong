@@ -6,6 +6,7 @@ import SchedulingStatus from './SchedulingStatus';
 
 // TYPES
 import { TActivity } from 'Types/Activity.type';
+import { EActivitySortingKey } from 'Types/ActivitySortingKey.enum';
 
 export const RowActionsColumn = {
   title: '',
@@ -17,7 +18,7 @@ export const RowActionsColumn = {
 
 export const SubmitterColumn = {
   title: 'Submission',
-  key: 'metadata.submitter',
+  key: EActivitySortingKey.SUBMITTER,
   width: 170,
   render: (activity: TActivity) =>
     activity.formInstanceId ? (
@@ -25,19 +26,21 @@ export const SubmitterColumn = {
     ) : (
       'Merged activity'
     ),
+  sorter: true,
 };
 
 export const TagColumn = {
   title: 'Tag',
-  key: 'activityTag',
+  key: EActivitySortingKey.TAG,
   dataIndex: undefined,
   width: 100,
   render: (activity: TActivity) => <Tag activity={activity} />,
+  sorter: true,
 };
 
 export const SchedulingStatusColumn = {
   title: 'Status',
-  key: 'activityStatus',
+  key: EActivitySortingKey.ACTIVITY_STATUS,
   dataIndex: undefined,
   width: 110,
   render: (activity: TActivity) => <SchedulingStatus activity={activity} />,

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   EFilterType,
-  ESortDirection,
   ISSPResourceContext,
 } from 'Types/SSP.type';
 
@@ -25,8 +24,8 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   selectedKeys: [],
   setSelectedKeys: () => {},
   // SORTING
-  sortBy: '',
-  direction: ESortDirection.DESCENDING,
+  sortBy: undefined,
+  direction: undefined,
   setSorting: () => {},
   // FILTERS
   matchType: EFilterType.ONE,

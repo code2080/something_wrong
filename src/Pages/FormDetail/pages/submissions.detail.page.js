@@ -16,7 +16,7 @@ import FormInstanceToolbar from '../../../Components/FormInstanceToolbar/FormIns
 // SELECTORS
 import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import { makeSelectFormInstance } from '../../../Redux/FormSubmissions/formSubmissions.selectors.ts';
-import { selectActivitiesForFormInstanceId } from '../../../Redux/Activities/activities.selectors';
+import { selectActivitiesForFormInstanceId } from '../../../Redux/DEPR_Activities/activities.selectors';
 import { getExtIdPropsPayload } from '../../../Redux/Integration/integration.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
 

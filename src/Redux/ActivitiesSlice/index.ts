@@ -8,7 +8,6 @@ import {
   beginLoading,
   commitAPIPayloadToState,
   commitSSPQueryToState,
-  commitCachedSSPState,
 } from '../../Utils/sliceHelpers.utils';
 import {
   excludeEmptyKeysFromFilterLookupMap,
@@ -28,7 +27,6 @@ import {
 import {
   ISSPReducerState,
   ISSPQueryObject,
-  ESortDirection,
   EFilterType,
   EFilterInclusions,
 } from 'Types/SSP.type';
@@ -42,11 +40,6 @@ import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { selectTagsByFormId } from 'Redux/ActivityTag/activityTag.selectors';
 import { TActivityTag } from 'Types/ActivityTag.type';
 import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import {
-  getStateCache,
-  setStateCache,
-} from 'Components/SSP/Utils/cacheService';
-import { omit } from 'lodash';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -56,8 +49,8 @@ export const initialState: ISSPReducerState = {
   results: [],
   map: {},
   // SORTING
-  sortBy: '',
-  direction: ESortDirection.ASCENDING,
+  sortBy: undefined,
+  direction: undefined,
   // FILTERING
   matchType: EFilterType.ALL,
   inclusion: {
@@ -84,24 +77,13 @@ const slice = createSlice({
     defaultFailureHandler: (state) => {
       finishedLoadingFailure(state);
     },
-    restoreCachedQueryHandler: (state, { payload }) => {
-      commitCachedSSPState(payload, state);
-      console.log(payload);
-    },
     initializeSSPStateProps: (state, { payload }) => {
       if (payload) commitSSPQueryToState(payload, state);
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
+      console.log(payload);
       commitAPIPayloadToState(payload, state, createFn);
       finishedLoadingSuccess(state);
-      if (payload.queryHash) {
-        console.log('Caching with query hash ', payload.queryHash);
-        setStateCache(
-          'ACTIVITIES_TAB',
-          payload.queryHash,
-          omit(state, ['hasErrors', 'loading', 'filterLookupMap']),
-        );
-      }
     },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
@@ -185,31 +167,23 @@ export const {
   initializeSSPStateProps,
   fetchActivitiesForFormSuccess,
   fetchActivityFilterLookupMapSuccess,
-  restoreCachedQueryHandler,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
   (formId: string, queryObject?: Partial<ISSPQueryObject>) =>
   async (dispatch: any, getState: any) => {
     try {
-      const { serializedQuery, queryHash } = serializeSSPQuery(
+      const serializedQuery = serializeSSPQuery(
         queryObject,
         getState().activitiesNew,
       );
-      console.log('Finding cached queries with hash ', queryHash);
-      const cachedQuery = getStateCache('ACTIVITIES_TAB', queryHash);
-      if (cachedQuery) {
-        console.log('we have a matched query');
-        dispatch(restoreCachedQueryHandler(cachedQuery));
-      } else {
-        console.log('no matched query');
-        dispatch(defaultRequestHandler(queryObject));
-      }
+      dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({
         endpoint: `forms/${formId}/activities?${serializedQuery}`,
       });
       dispatch(fetchActivitiesForFormSuccess(result));
     } catch (e) {
+      console.log(e);
       dispatch(defaultFailureHandler());
     }
   };

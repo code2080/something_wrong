@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { abortJob, updateJobFromWS } from '../Redux/Jobs/jobs.actions';
 import { forceFetchingActivities } from '../Redux/GlobalUI/globalUI.actions';
-import { updateActivityInWorkerProgress } from '../Redux/Activities/activities.actions';
+import { updateActivityInWorkerProgress } from '../Redux/DEPR_Activities/activities.actions';
 import { jobStatus } from '../Constants/jobStatuses.constants';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 import EventListener from '../Utils/socket.helper';

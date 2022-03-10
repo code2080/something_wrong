@@ -1,4 +1,4 @@
-import { FETCH_ACTIVITIES_FOR_FORM_SUCCESS } from '../Activities/activities.actionTypes';
+import { FETCH_ACTIVITIES_FOR_FORM_SUCCESS } from '../DEPR_Activities/activities.actionTypes';
 import * as types from './globalUI.actionTypes';
 
 // INITIAL STATE

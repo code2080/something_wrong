@@ -34,8 +34,8 @@ export interface ISSPFilterQuery {
 }
 
 export interface ISSPSortingQuery {
-  sortBy: string;
-  direction: ESortDirection;
+  sortBy: string | undefined;
+  direction: ESortDirection | undefined;
 }
 
 export interface ISSPGroupingQuery {
@@ -116,7 +116,7 @@ export interface ISSPResourceContext extends ISSPReducerState {
   selectedKeys: string[];
   setSelectedKeys: (keys: string[]) => void;
   // SORTING
-  setSorting: (sortBy: string, direction?: ESortDirection) => void;
+  setSorting: (sortBy: string | undefined, direction?: ESortDirection | undefined) => void;
   // FILTERING
   setMatchType: (matchType: EFilterType) => void;
   setInclusion: (

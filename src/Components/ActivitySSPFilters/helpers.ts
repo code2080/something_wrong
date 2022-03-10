@@ -194,10 +194,6 @@ export const createPatchFromFilterPropertyAndValues = (
   selectedFilterProperty: string,
   values: string[],
 ) => {
-  console.log('INPUTS -------:');
-  console.log(`Selected filter property: ${selectedFilterProperty}`);
-  console.log(`Values: `, values);
-
   const keys = selectedFilterProperty.split(REPLACED_KEY);
   const reversedKeys = keys.reverse();
   const obj = reversedKeys.reduce(

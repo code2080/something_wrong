@@ -76,7 +76,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   /**
    * SORTING
    */
-  const setSorting = (sortBy: string, direction: ESortDirection) => {
+  const setSorting = (sortBy: string | undefined, direction: ESortDirection | undefined) => {
     dispatch(fetchFn({ sortBy, direction }));
   };
 

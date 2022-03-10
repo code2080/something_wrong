@@ -25,7 +25,7 @@ import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
-import { selectActivitiesUniqueValues } from '../../Redux/Activities/activities.selectors';
+import { selectActivitiesUniqueValues } from '../../Redux/DEPR_Activities/activities.selectors';
 import { ActivityValue, ValueType } from 'Types/ActivityValue.type';
 import {
   ConflictType,

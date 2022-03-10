@@ -25,7 +25,7 @@ import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 import {
   makeSelectActivitiesForForm,
   activityInWorkerProgressSelector,
-} from '../../../Redux/Activities/activities.selectors';
+} from '../../../Redux/DEPR_Activities/activities.selectors';
 import {
   selectValidFieldsOnReservationMode,
   selectValidTypesOnReservationMode,

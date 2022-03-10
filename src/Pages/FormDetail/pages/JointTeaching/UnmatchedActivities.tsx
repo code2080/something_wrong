@@ -12,7 +12,7 @@ import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
 import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
 import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
-import { selectAllActivityIds } from 'Redux/Activities/activities.selectors';
+import { selectAllActivityIds } from 'Redux/DEPR_Activities/activities.selectors';
 
 interface Props {
   formId: string;

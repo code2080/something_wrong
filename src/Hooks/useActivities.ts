@@ -17,11 +17,11 @@ import {
 import {
   fetchActivitiesForForm,
   resetAllActivities,
-} from 'Redux/Activities/activities.actions';
+} from 'Redux/DEPR_Activities/activities.actions';
 
 // SELECTORS
 import { makeSelectForm } from 'Redux/Forms/forms.selectors';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';

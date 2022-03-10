@@ -23,7 +23,7 @@ import {
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
-import { fetchActivityInWorkerProgress } from '../../Redux/Activities/activities.actions';
+import { fetchActivityInWorkerProgress } from '../../Redux/DEPR_Activities/activities.actions';
 import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';

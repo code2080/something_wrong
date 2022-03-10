@@ -12,8 +12,8 @@ import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
 // SELECTORS
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
-import { selectTECorePayloadForActivity } from '../../../../Redux/Activities/activities.selectors';
-import { updateActivities } from '../../../../Redux/Activities/activities.actions';
+import { selectTECorePayloadForActivity } from '../../../../Redux/DEPR_Activities/activities.selectors';
+import { updateActivities } from '../../../../Redux/DEPR_Activities/activities.actions';
 import { TActivity } from '../../../../Types/Activity.type';
 import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
 import { ObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequests.types';

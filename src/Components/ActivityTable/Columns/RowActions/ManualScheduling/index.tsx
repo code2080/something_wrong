@@ -9,8 +9,8 @@ import { useTECoreAPI } from '../../../../../Hooks/TECoreApiHooks';
 // REDUX
 import { makeSelectFormInstance } from '../../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectFormInstanceObjectRequests } from '../../../../../Redux/ObjectRequests/ObjectRequests.selectors';
-import { selectTECorePayloadForActivity } from '../../../../../Redux/Activities/activities.selectors';
-import { updateActivities } from '../../../../../Redux/Activities/activities.actions';
+import { selectTECorePayloadForActivity } from '../../../../../Redux/DEPR_Activities/activities.selectors';
+import { updateActivities } from '../../../../../Redux/DEPR_Activities/activities.actions';
 import { ObjectRequest } from '../../../../../Redux/ObjectRequests/ObjectRequests.types';
 
 // TYPES

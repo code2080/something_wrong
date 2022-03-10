@@ -19,10 +19,10 @@ import { DATE_TIME_FORMAT } from 'Constants/common.constants';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 
 // ACTIONS
-import { updateActivity } from 'Redux/Activities/activities.actions';
+import { updateActivity } from 'Redux/DEPR_Activities/activities.actions';
 
 // SELECTORS
-import { selectActivityStatus } from 'Redux/Activities/activities.selectors';
+import { selectActivityStatus } from 'Redux/DEPR_Activities/activities.selectors';
 
 const PopoverContent = ({ activity, activityStatus, onUpdate }) => {
   const [reservationId, setReservationId] = useState(activity.reservationId);

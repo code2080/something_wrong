@@ -75,7 +75,11 @@ export const useSorting = () => {
     // Only update if something has changed in the sorting
     if (sortBy !== columnKey || direction !== parsedDirection) {
       const direction = getSortingDirection(order);
-      setSorting(columnKey as string, direction);
+      if (direction === undefined) {
+        setSorting(undefined, undefined);
+      } else {
+        setSorting(columnKey as string | undefined, direction);
+      }
     }
   };
 };

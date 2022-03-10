@@ -12,7 +12,7 @@ import { activityFilterFn } from 'Utils/activities.helpers';
 import {
   updateActivity,
   updateActivities,
-} from '../../../../Redux/Activities/activities.actions';
+} from '../../../../Redux/DEPR_Activities/activities.actions';
 import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
 import {
   startSchedulingActivities,

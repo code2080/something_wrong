@@ -9,7 +9,7 @@ import chunk from 'lodash/chunk';
 import {
   updateActivities,
   resetActivitiesOnCancelReservationByFormInstanceId,
-} from '../Redux/Activities/activities.actions';
+} from '../Redux/DEPR_Activities/activities.actions';
 import {
   getActivities,
   getActivitiesByFormIdWithFilter,
@@ -19,7 +19,7 @@ import {
 
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
-import { selectActivitiesForForm } from 'Redux/Activities/activities.selectors';
+import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
 import { EActivityStatus } from '../Types/ActivityStatus.enum';
 import { CRITERIA_OPTIONS } from 'Constants/filterSetting.constants';
 

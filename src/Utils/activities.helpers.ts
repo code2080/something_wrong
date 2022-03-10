@@ -35,7 +35,7 @@ import {
 } from 'Models/JointTeachingGroup.model';
 import { isEmptyDeep } from './general.helpers';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import { convertToUrlParams } from '../Redux/Activities/activities.actions';
+import { convertToUrlParams } from '../Redux/DEPR_Activities/activities.actions';
 import { getEnvParams } from 'configs';
 // CONSTANTS
 // FUNCTIONS

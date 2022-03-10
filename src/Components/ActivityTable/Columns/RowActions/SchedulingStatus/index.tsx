@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 // REDUX
-import { setSchedulingStatusOfActivities } from '../../../../../Redux/Activities/activities.actions';
+import { setSchedulingStatusOfActivities } from '../../../../../Redux/DEPR_Activities/activities.actions';
 
 // HOOKS
 import { useTECoreAPI } from '../../../../../Hooks/TECoreApiHooks';
