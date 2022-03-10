@@ -68,6 +68,8 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
 
+  console.log('latest filters: ', filters);
+
   /**
    * EVENT HANDLERS
    */

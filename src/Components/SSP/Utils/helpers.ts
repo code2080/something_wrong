@@ -62,26 +62,20 @@ export const removeDeepEntry = (
   pathToDelete: string[],
 ) => {
   //todo: maybe enough with a shallow clone
-  const filtersCopy = cloneDeep(filters);
-
-  console.log('filtersCopy', filtersCopy);
+  const filtersCopy = { ...filters };
 
   unset(filtersCopy, pathToDelete);
-
-  console.log('filtersCopy after mutation', filtersCopy);
 
   const remainingPath = initial(pathToDelete);
   const newLastItemInPath = get(filtersCopy, remainingPath);
 
-  console.log('remainingPath', remainingPath);
-  console.log('newLastItemInPath', newLastItemInPath);
-
-  /** Base case */
-  if (!isEmpty(newLastItemInPath) || remainingPath.length === 1) {
+  /** Base case: Stop when no more empty objects in path or at base level of the
+   *  object */
+  if (!isEmpty(newLastItemInPath) || isEmpty(remainingPath)) {
     return filtersCopy;
   }
 
   /** If the mutation lead to an empty object, we need to delete that object too
-   * */
+   */
   return removeDeepEntry(filtersCopy, remainingPath);
 };
