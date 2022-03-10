@@ -1,7 +1,14 @@
 import { REPLACED_KEY } from 'Components/ActivitySSPFilters/constants';
-import { isEmpty, mergeWith, pick, cloneDeep, unset } from 'lodash';
+import {
+  isEmpty,
+  mergeWith,
+  pick,
+  cloneDeep,
+  unset,
+  initial,
+  get,
+} from 'lodash';
 import { ISSPReducerState, ISSPQueryObject } from 'Types/SSP.type';
-import { FilterEntry } from '../Types';
 
 /**
  * @function serializeSSPQuery
@@ -30,7 +37,7 @@ export const serializeSSPQuery = (
   return urlParams.toString();
 };
 
-export const customFilterPathMergeWith = (oldVal: any, newVal: FilterEntry) => {
+export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
   /** Base case*/
   if (!oldVal || Array.isArray(newVal)) {
     return newVal;
@@ -42,12 +49,21 @@ export const customFilterPathMergeWith = (oldVal: any, newVal: FilterEntry) => {
   return oldVal;
 };
 
-export const removeDeepEntry = (obj: FilterEntry, path: string) => {
+export const removeDeepEntry = (
+  obj: Record<string, any>,
+  pathToDelete: string[],
+) => {
   const objCopy = cloneDeep(obj);
-  //path_to_key
-  const pathToDelete = path.split(REPLACED_KEY);
 
   unset(objCopy, pathToDelete);
 
-  return objCopy;
+  const remainingPath = initial(pathToDelete);
+  const item = get(objCopy, remainingPath);
+
+  /** Base case */
+  if (!isEmpty(item)) {
+    return objCopy;
+  }
+
+  return removeDeepEntry(objCopy, remainingPath);
 };

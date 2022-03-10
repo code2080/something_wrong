@@ -1,5 +1,4 @@
 import { cloneDeep, flatMapDeep, isEmpty, mergeWith, pickBy } from 'lodash';
-import { FilterEntry } from '../Types';
 import { customFilterPathMergeWith, removeDeepEntry } from '../Utils/helpers';
 
 describe('Merger function used for filters', () => {
@@ -46,22 +45,14 @@ describe('Merger function used for filters', () => {
       nestedEntry: {
         level1: {
           level2a: ['hello'],
-          level2b: ['hello from b'],
+          level2b: { level3b: ['hello from b'] },
         },
       },
     };
 
-    const patch = {
-      nestedEntry: {
-        level1: {
-          level2b: [],
-        },
-      },
-    };
+    const pathToDelete = ['nestedEntry', 'level1', 'level2b', 'level3b'];
 
-    const pathToDelete = 'nestedEntry____level1____level2b';
-
-    const cleaned = removeDeepEntry(baseObj as any, pathToDelete);
+    const cleaned = removeDeepEntry(baseObj, pathToDelete);
 
     const expected = {
       entry1: ['1'],
@@ -69,7 +60,7 @@ describe('Merger function used for filters', () => {
       nestedEntry: {
         level1: {
           level2a: ['hello'],
-          //level2b should be removed
+          //level2b and level2c should be removed
         },
       },
     };
@@ -77,5 +68,3 @@ describe('Merger function used for filters', () => {
     expect(cleaned).toEqual(expected);
   });
 });
-
-export {};

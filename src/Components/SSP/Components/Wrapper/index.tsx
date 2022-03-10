@@ -8,7 +8,7 @@ import {
   ISSPReducerState,
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
-import { FilterEntry, TSSPWrapperProps } from '../../Types';
+import { TSSPWrapperProps } from '../../Types';
 import { mergeWith, pick, cloneDeep } from 'lodash';
 import {
   getFilterCache,
@@ -88,7 +88,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
    */
   const [_matchType, _setMatchType] = useState<EFilterType>(matchType);
   const [_inclusion, _setInclusion] = useState(inclusion);
-  const [_filters, _setFilters] = useState<FilterEntry>(filters);
+  const [_filters, _setFilters] = useState(filters);
 
   const setMatchType = (matchType: EFilterType) => _setMatchType(matchType);
   const setInclusion = (
@@ -99,8 +99,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ...inclusion, ...patch });
   };
-  const setFilters = (filters: FilterEntry) => _setFilters(filters);
-  const patchFilters = (patch: FilterEntry) => {
+  const setFilters = (filters: Record<string, any>) => _setFilters(filters);
+  const patchFilters = (patch: Record<string, any>) => {
     // todo: if patch contains empty array we should do some cleaning isntad
 
     const clonedObj = cloneDeep(_filters);
