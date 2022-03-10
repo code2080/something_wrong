@@ -68,8 +68,6 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
   const [selectedFilterProperty, setSelectedFilterProperty] = useState('');
   const selectedFilterValues = transformFilterValues(filters);
 
-  console.log('latest filters: ', filters);
-
   /**
    * EVENT HANDLERS
    */
@@ -77,13 +75,28 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     setSelectedFilterProperty(property);
   };
 
-  const onSelectFilterValue = (values: any) => {
-    const patch = createPatchFromFilterPropertyAndValues(
-      selectedFilterProperty,
-      values,
-    );
-    patchFilters(patch);
-  };
+  const updateFilterValues =
+    (selectedFilterProperty: string) => (allSelectedItems: string[]) => {
+      /** If there is no selected items for a category, we should remove that
+       * category all together */
+      if (isEmpty(allSelectedItems)) {
+        const pathToDelete = selectedFilterProperty.split(REPLACED_KEY);
+
+        const updatedFilters = removeDeepEntry(filters, pathToDelete);
+        setFilters(updatedFilters);
+
+        return;
+      }
+
+      /** Normal scenario, remove one of the items for a category */
+      const patch = createPatchFromFilterPropertyAndValues(
+        selectedFilterProperty,
+        allSelectedItems,
+      );
+      patchFilters(patch);
+    };
+
+  const onSelectFilterValue = updateFilterValues(selectedFilterProperty);
 
   const onDeselectFilterValue = (
     filterProperty: string,
@@ -103,25 +116,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
       (el) => !itemsToDeselect.includes(el),
     );
 
-    /** The update will lead to the category having no filter values left */
-    if (isEmpty(updatedFilterValues)) {
-      const pathToDelete = filterProperty.split(REPLACED_KEY);
-
-      const updatedFilters = removeDeepEntry(filters, pathToDelete);
-      setFilters(updatedFilters);
-
-      return;
-    }
-
-    /**
-     * Use patch filters to merge all of this together
-     */
-    const patch = createPatchFromFilterPropertyAndValues(
-      filterProperty,
-      updatedFilterValues,
-    );
-
-    patchFilters(patch);
+    updateFilterValues(filterProperty)(updatedFilterValues);
   };
 
   /**

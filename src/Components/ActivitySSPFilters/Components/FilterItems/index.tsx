@@ -9,7 +9,7 @@ import DynamicFilterItem from '../DynamicFilterItem';
 type Props = {
   selectedFilterProperty: string;
   selectedFilterValues: any;
-  onSelectFilterValue: (val: any) => void;
+  onSelectFilterValue: (allSelectedItems: string[]) => void;
   getOptionLabel: (field: string, id?: string) => string;
 };
 
@@ -22,9 +22,19 @@ const FilterItems = ({
   const renderedItemComponent = useMemo(() => {
     switch (selectedFilterProperty) {
       case 'date':
-        return <DateFilterItem onChange={onSelectFilterValue} value={selectedFilterValues.date || undefined} />;
+        return (
+          <DateFilterItem
+            onChange={onSelectFilterValue}
+            value={selectedFilterValues.date || undefined}
+          />
+        );
       case 'time':
-        return <TimeFilterItem onChange={onSelectFilterValue} value={selectedFilterValues.time || undefined} />;
+        return (
+          <TimeFilterItem
+            onChange={onSelectFilterValue}
+            value={selectedFilterValues.time || undefined}
+          />
+        );
       case 'status':
         return (
           <StatusFilterItem

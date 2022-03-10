@@ -33,8 +33,6 @@ const FilterSummary = ({
       !isEmpty(selectedFilterValues[fixedFilterProperty]),
   );
 
-  console.log('__this is the activeFixedFilters: ', activeFixedFilters);
-
   return (
     <div className='filter-modal__column' id='filterSummary'>
       <div>
