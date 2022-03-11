@@ -26,7 +26,7 @@ export const commitAPIPayloadToState = (
   idProp: string = '_id',
 ): void => {
   try {
-    const { results, page, limit, totalPages }: ISSPAPIResult = payload;
+    const { results, page, limit, totalPages, allKeys }: ISSPAPIResult = payload;
     const iteratedResults = results.map((el: any) => createFn(el));
 
     const map = iteratedResults.reduce(
@@ -42,6 +42,8 @@ export const commitAPIPayloadToState = (
     state.page = page;
     state.limit = limit;
     state.totalPages = totalPages;
+    state.allKeys = allKeys;
+  
   } catch (error) {
     console.error(error);
   }

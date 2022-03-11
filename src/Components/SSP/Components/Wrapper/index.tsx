@@ -50,6 +50,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     inclusion,
     filters,
     filterLookupMap,
+    // SELECTION
+    allKeys,
   }: ISSPReducerState = useSelector(selectorFn);
 
   /**
@@ -72,7 +74,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
    */
   const [_selectedKeys, _setSelectedKeys] = useState<string[]>([]);
   const setSelectedKeys = (keys: string[]) => _setSelectedKeys(keys);
-
+  const selectAllKeys = () => _setSelectedKeys(allKeys);
+  
   /**
    * SORTING
    */
@@ -194,6 +197,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         // SELECTION
         selectedKeys: _selectedKeys,
         setSelectedKeys,
+        selectAllKeys,
         // SORTING
         setSorting,
         sortBy,

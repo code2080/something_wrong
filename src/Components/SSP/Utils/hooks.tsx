@@ -5,6 +5,11 @@ import {
   TableRowSelection,
 } from 'antd/lib/table/interface';
 import { useContext } from 'react';
+
+// COMPONENTS
+import SelectAllCheckbox from '../Components/SelectAllCheckbox';
+
+// TYPES
 import { ESortDirection } from 'Types/SSP.type';
 import SSPResourceContext from './context';
 
@@ -37,10 +42,13 @@ export const usePagination = (): TablePaginationConfig => {
 export const useRowSelection = (): TableRowSelection<any> => {
   const { setSelectedKeys, selectedKeys } = useContext(SSPResourceContext);
 
+  const columnTitle = (<SelectAllCheckbox />);
+
   return {
     selectedRowKeys: selectedKeys,
     onChange: (_selectedKeys) => setSelectedKeys(_selectedKeys as string[]),
     preserveSelectedRowKeys: true,
+    columnTitle,
   };
 };
 

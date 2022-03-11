@@ -56,6 +56,7 @@ export interface ISSPAPIResult {
   queryHash: number;
   results: any[];
   page: number;
+  allKeys: string[];
   limit: number;
   totalPages: number;
 }
@@ -105,7 +106,7 @@ export interface ISSPQueryObject
     ISSPGroupingQuery,
     ISSPPaginationQuery {}
 
-export interface ISSPResourceContext extends ISSPReducerState {
+export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys'> {
   name: string;
   // PAGINATION FUNCTIONS
   nextPage: () => void;
@@ -115,6 +116,7 @@ export interface ISSPResourceContext extends ISSPReducerState {
   // SELECTION
   selectedKeys: string[];
   setSelectedKeys: (keys: string[]) => void;
+  selectAllKeys: () => void;
   // SORTING
   setSorting: (sortBy: string | undefined, direction?: ESortDirection | undefined) => void;
   // FILTERING

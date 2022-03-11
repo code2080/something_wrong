@@ -22,4 +22,6 @@ export const selectSSPState =
     inclusion: state[sliceName].inclusion,
     filters: state[sliceName].filters,
     filterLookupMap: state[sliceName].filterLookupMap,
+    // SELECTION
+    allKeys: state[sliceName].allKeys,
   });
