@@ -1,6 +1,8 @@
-// COMPONENTS
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
+// COMPONENTS
+import SSPTable from 'Components/SSP/Components/Table';
 
 // REDUX
 import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
@@ -9,7 +11,6 @@ import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesi
 import { generateColumnsFromDesign } from './Columns/Generators';
 
 // TYPES
-import SSPTable from 'Components/SSP/Components/Table';
 import { ISSPColumn } from 'Components/SSP/Types';
 
 type Props = {

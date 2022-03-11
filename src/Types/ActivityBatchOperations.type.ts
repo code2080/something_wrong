@@ -1,12 +1,18 @@
-/* eslint-disable no-shadow */
+import { EActivityStatus } from "./ActivityStatus.enum";
+
 export enum EActivityBatchOperation {
   TAGS = 'TAGS',
-  SCHEDULING_STATUS = 'SCHEDULING_STATUS',
+  STATUS = 'STATUS',
 };
+
+export const CActivityBatchOperationURL = {
+  [EActivityBatchOperation.TAGS]: 'tags',
+  [EActivityBatchOperation.STATUS]: 'status'
+}
 
 export type TActivityBatchOperation = {
   type: EActivityBatchOperation,
-  data: TTagsBatchOperation[],
+  data: Array<TTagsBatchOperation | TStatusBatchOperation>,
 };
 
 export type TTagsBatchOperation = {
@@ -14,7 +20,9 @@ export type TTagsBatchOperation = {
   tagId: string | null;
 };
 
-export const createFn = (type: EActivityBatchOperation, data: any[]): TActivityBatchOperation => ({
-  type,
-  data
-});
+export type TStatusBatchOperation = {
+  _id: string,
+  activityStatus: EActivityStatus,
+  errorDetails?: any | undefined | null,
+  reservationId?: any | undefined | null,
+}

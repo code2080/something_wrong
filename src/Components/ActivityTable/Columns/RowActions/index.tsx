@@ -1,7 +1,7 @@
 // COMPONENTS
 import JointTeaching from './JointTeaching';
 // import ManualScheduling from './ManualScheduling';
-import SchedulingStatus from './SchedulingStatus';
+import SchedulingStatus from './Status';
 import ActionsDropdown from './ActionsDropdown';
 
 // STYLES

@@ -28,6 +28,8 @@ export const commitAPIPayloadToState = (
   idProp: string = '_id',
 ): void => {
   try {
+    console.log('Start')
+    console.log(Date.now().valueOf());
     const { results, page, limit, totalPages, allKeys }: ISSPAPIResult = payload;
     const iteratedResults = results.map((el: any) => createFn(el));
 
@@ -45,7 +47,8 @@ export const commitAPIPayloadToState = (
     state.limit = limit;
     state.totalPages = totalPages;
     state.allKeys = allKeys;
-  
+    console.log('End')
+    console.log(Date.now().valueOf());
   } catch (error) {
     console.error(error);
   }

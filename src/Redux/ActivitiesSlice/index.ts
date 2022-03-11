@@ -32,7 +32,7 @@ import { ISSPReducerState, ISSPQueryObject, EFilterType, EFilterInclusions } fro
 import { IState } from 'Types/State.type';
 import { TActivityTag } from 'Types/ActivityTag.type';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { CActivityBatchOperationURL, EActivityBatchOperation, TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
 
 
 export const initialState: ISSPReducerState = {
@@ -83,9 +83,9 @@ const slice = createSlice({
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
       state.filterLookupMap = lookupMap;
-      finishedLoadingSuccess(state);
+      // finishedLoadingSuccess(state); @todo break out into separate loading component
     },
-    assignTagsToActivitiesSuccess: (state, { payload }) => {
+    defaultBatchOperationSuccessHandler: (state, { payload }) => {
       updateStateWithResultFromBatchOperation(payload, state);
       finishedLoadingSuccess(state);
     },
@@ -166,7 +166,7 @@ export const {
   initializeSSPStateProps,
   fetchActivitiesForFormSuccess,
   fetchActivityFilterLookupMapSuccess,
-  assignTagsToActivitiesSuccess,
+  defaultBatchOperationSuccessHandler,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
@@ -200,17 +200,21 @@ export const fetchActivityFilterLookupMapForForm =
     }
   };
 
-export const batchOperationTags = (formId: string, batchOperation: TActivityBatchOperation) => 
- async (dispatch: any) => {
-  try {
-    dispatch(defaultRequestHandler(null));
-    await api.post({
-      endpoint: `forms/${formId}/activities/batch-operations/tags`,
-      data: batchOperation,
-    });
-    dispatch(assignTagsToActivitiesSuccess(batchOperation));
-  } catch (e) {
-    console.log(e);
-    dispatch(defaultFailureHandler());
+
+const generalBatchOperationFn = (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) => 
+  async (dispatch: any) => {
+    try {
+      dispatch(defaultRequestHandler(null));
+      await api.post({
+        endpoint: `forms/${formId}/activities/batch-operations/${boUrl}`,
+        data: batchOperation,
+      });
+      dispatch(defaultBatchOperationSuccessHandler(batchOperation));
+    } catch (e) {
+      console.log(e);
+      dispatch(defaultFailureHandler());
+    }
   }
- }
+
+export const batchOperationTags = (formId: string, batchOperation: TActivityBatchOperation) => generalBatchOperationFn(formId, batchOperation, CActivityBatchOperationURL[EActivityBatchOperation.TAGS]);
+export const batchOperationStatus = (formId: string, batchOperation: TActivityBatchOperation) => generalBatchOperationFn(formId, batchOperation, CActivityBatchOperationURL[EActivityBatchOperation.STATUS]);

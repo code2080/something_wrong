@@ -30,7 +30,8 @@
     font-size: 0.5rem;
 
     &:active,
-    &:hover &:focus {
+    &:hover,
+    &:focus {
       border: none !important;
       color: $black !important;
       outline: none !important;
@@ -39,6 +40,9 @@
     .anticon {
       font-size: 0.7rem;
       vertical-align: 0.2rem;
+      &:hover {
+        color: $black !important;
+      }
     }
   }
 
