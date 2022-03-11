@@ -21,21 +21,31 @@ import { selectSSPState } from 'Components/SSP/Utils/selectors';
 
 // TYPES
 import { ISSPQueryObject } from 'Types/SSP.type';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchTagsForForm } from 'Redux/Tags';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch();
+
+  /**
+   * EFFECTS
+   */
+  useEffect(() => {
+    // Need to make sure some secondary resources are loaded
+    dispatch(fetchTagsForForm(formId));
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <SSPResourceWrapper
         name={`${formId}__ACTIVITIES_TAB`}
         selectorFn={selectSSPState('activitiesNew')}
-        fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-          fetchActivitiesForForm(formId, partialQuery)
-        }
-        initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-          initializeSSPStateProps(partialQuery)
-        }
+        fetchFn={(partialQuery?: Partial<ISSPQueryObject>) => fetchActivitiesForForm(formId, partialQuery)}
+        initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) => initializeSSPStateProps(partialQuery)}
         fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
       >
         <ActivitiesToolbar />

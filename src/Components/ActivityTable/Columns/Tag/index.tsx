@@ -1,55 +1,55 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
-import ActivityTagPopover from './Popover';
+import TagSelectorComponent from '../../../TagSelector';
 
 // REDUX
-import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
-
-// STYLES
-import './index.scss';
+import { tagSelector } from 'Redux/Tags';
+import { batchOperationTags } from 'Redux/ActivitiesSlice';
 
 // TYPES
 import { TActivity } from '../../../../Types/Activity.type';
+import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+
+// STYLES
+import './index.scss';
 
 type Props = {
   activity: TActivity;
 };
 
-const ActivityTagSelector = ({ activity }: Props) => {
+const TagColumn = ({ activity }: Props) => {
+  const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-  const selectedActivityTag = useSelector(selectActivityTag)(
-    formId,
-    activity.tagId,
-  );
+  const selectedTag = useSelector(tagSelector(activity.tagId));
+  
+  /**
+   * EVENT HANDLERS
+   */
+  const onAssignTag = (tagId: string | undefined) => {
+    dispatch(batchOperationTags(formId, { type: EActivityBatchOperation.TAGS, data: [{ _id: activity._id, tagId: tagId || null }] }));
+  };
 
   return (
-    <div className='activity-tag'>
-      <Popover
-        overlayClassName='activity-tag-popover--wrapper'
-        title='Tag activity'
-        content={
-          <ActivityTagPopover
-            selectedActivityIds={[activity._id]}
-            selectedTagId={selectedActivityTag?._id}
-          />
-        }
-        getPopupContainer={() =>
-          document.getElementById('te-prefs-lib') as HTMLElement
-        }
-        trigger='hover'
-        placement='rightTop'
-      >
-        <div className='activity-tag--button'>
-          <Button size='small'>
-            {selectedActivityTag ? selectedActivityTag.name : 'N/A'}
-          </Button>
-        </div>
-      </Popover>
-    </div>
+    <Popover
+      title='Activity tag'
+      content={(
+        <TagSelectorComponent
+          value={activity.tagId || undefined}
+          onChange={onAssignTag}
+        />
+      )}
+      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+      trigger='hover'
+      placement='rightTop'
+    >
+      <Button size='small' className='tag-col--wrapper'>
+        {selectedTag ? selectedTag.name : 'N/A'}
+      </Button>
+    </Popover>
   );
 };
 
-export default ActivityTagSelector;
+export default TagColumn;

@@ -8,38 +8,32 @@ import {
   beginLoading,
   commitAPIPayloadToState,
   commitSSPQueryToState,
-} from '../../Utils/sliceHelpers.utils';
+  updateStateWithResultFromBatchOperation,
+} from '../../Components/SSP/Utils/sliceHelpers';
 import {
   excludeEmptyKeysFromFilterLookupMap,
   getAllFilterOptionsFromFilterLookupMap,
   toActivityStatusDisplay,
 } from '../../Components/ActivitySSPFilters/helpers';
 
+// SELECTS
+import { selectAllLabels } from 'Redux/TE/te.selectors';
+import { tagsSelector } from 'Redux/Tags';
+import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 
 // TYPES
 import { createFn, TActivity } from 'Types/Activity.type';
-import {
-  createFn as createActivityFilterLookupMap,
-  TActivityFilterLookupMap,
-} from 'Types/ActivityFilterLookupMap.type';
-import {
-  ISSPReducerState,
-  ISSPQueryObject,
-  EFilterType,
-  EFilterInclusions,
-} from 'Types/SSP.type';
+import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
+import { ISSPReducerState, ISSPQueryObject, EFilterType, EFilterInclusions } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
-import {
-  selectFieldLabelsMapping,
-  selectObjectLabelsMapping,
-} from 'Redux/Integration/integration.selectors';
-import { selectAllLabels } from 'Redux/TE/te.selectors';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { selectTagsByFormId } from 'Redux/ActivityTag/activityTag.selectors';
 import { TActivityTag } from 'Types/ActivityTag.type';
-import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
+import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -63,6 +57,8 @@ export const initialState: ISSPReducerState = {
   page: 1,
   limit: 10,
   totalPages: 10,
+  // SELECTION
+  allKeys: [],
 };
 
 // Slice
@@ -87,6 +83,10 @@ const slice = createSlice({
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
       state.filterLookupMap = lookupMap;
+      finishedLoadingSuccess(state);
+    },
+    assignTagsToActivitiesSuccess: (state, { payload }) => {
+      updateStateWithResultFromBatchOperation(payload, state);
       finishedLoadingSuccess(state);
     },
   },
@@ -134,7 +134,7 @@ export const selectLabelsForFilterOptionsForForm =
     const objectLabelsMapping = selectObjectLabelsMapping()(state);
     const fieldsLabelMapping = selectFieldLabelsMapping()(state);
     const allLabels = selectAllLabels()(state);
-    const tags = selectTagsByFormId(formId)(state);
+    const tags = tagsSelector(state);
     const submitter = selectAllRecipientsFromSubmissionFromForm(formId)(state);
 
     return {
@@ -166,6 +166,7 @@ export const {
   initializeSSPStateProps,
   fetchActivitiesForFormSuccess,
   fetchActivityFilterLookupMapSuccess,
+  assignTagsToActivitiesSuccess,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
@@ -198,3 +199,18 @@ export const fetchActivityFilterLookupMapForForm =
       dispatch(defaultFailureHandler());
     }
   };
+
+export const batchOperationTags = (formId: string, batchOperation: TActivityBatchOperation) => 
+ async (dispatch: any) => {
+  try {
+    dispatch(defaultRequestHandler(null));
+    await api.post({
+      endpoint: `forms/${formId}/activities/batch-operations/tags`,
+      data: batchOperation,
+    });
+    dispatch(assignTagsToActivitiesSuccess(batchOperation));
+  } catch (e) {
+    console.log(e);
+    dispatch(defaultFailureHandler());
+  }
+ }

@@ -34,7 +34,7 @@ import {
   selectObjectLabelsMapping,
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
-import { selectActivityTagsForForm } from 'Redux/ActivityTag/activityTag.selectors';
+import { selectActivityTagsForForm } from 'Redux/DEPR_ActivityTag/activityTag.selectors';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { selectRecipientsMap } from 'Redux/Recipients/recipients.selectors';
 

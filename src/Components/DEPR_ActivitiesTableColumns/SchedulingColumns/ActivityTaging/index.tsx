@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Popover, Button } from 'antd';
 import { useParams } from 'react-router-dom';
 
-import { selectActivityTag } from '../../../../Redux/ActivityTag/activityTag.selectors';
+import { selectActivityTag } from '../../../../Redux/DEPR_ActivityTag/activityTag.selectors';
 
 import { TActivity } from '../../../../Types/Activity.type';
 import ActivityTagPopover from './Popover';

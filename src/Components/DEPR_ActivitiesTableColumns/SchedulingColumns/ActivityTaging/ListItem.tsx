@@ -13,7 +13,7 @@ import {
   updateActivityTag,
   assignActivityToTag,
   deleteActivityTag,
-} from '../../../../Redux/ActivityTag/activityTag.actions';
+} from '../../../../Redux/DEPR_ActivityTag/activityTag.actions';
 
 // TYPES
 import { TActivityTag } from '../../../../Types/ActivityTag.type';

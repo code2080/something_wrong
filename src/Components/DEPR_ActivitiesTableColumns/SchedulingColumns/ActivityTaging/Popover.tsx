@@ -5,10 +5,10 @@ import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 // SELECTORS
-import { selectActivityTagsForForm } from '../../../../Redux/ActivityTag/activityTag.selectors';
+import { selectActivityTagsForForm } from '../../../../Redux/DEPR_ActivityTag/activityTag.selectors';
 
 // ACTIONS
-import { createActivityTag } from '../../../../Redux/ActivityTag/activityTag.actions';
+import { createActivityTag } from '../../../../Redux/DEPR_ActivityTag/activityTag.actions';
 
 // TYPES
 import { TActivityTag } from '../../../../Types/ActivityTag.type';

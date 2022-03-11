@@ -8,9 +8,7 @@ import filters from './Filters/filters.reducer';
 import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
-// import activities from './DEPR_Activities/activities.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
-import activityTags from './ActivityTag/activityTag.reducer';
 import constraintConfigurations from './ConstraintConfigurations/constraintConfigurations.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
 import jobs from './Jobs/jobs.reducer';
@@ -25,11 +23,16 @@ import jointTeaching from './JointTeaching/jointTeaching.reducer';
 import activityScheduling from './ActivityScheduling/activityScheduling.reducer';
 import recipients from './Recipients/recipients.reducer';
 
+// DEPRECATED
+// import activityTags from './DEPR_ActivityTag/activityTag.reducer';
+// import activities from './DEPR_Activities/activities.reducer';
+
 // ACTIONS
 import { LOGOUT } from './Auth/auth.actionTypes';
 
 // REWORKED
 import activitiesReducer from './ActivitiesSlice';
+import tagsReducer from './Tags';
 
 const appReducer = combineReducers({
   apiStatus,
@@ -38,9 +41,7 @@ const appReducer = combineReducers({
   forms,
   filters,
   submissions,
-  // activities,
   activityDesigner,
-  activityTags,
   constraintConfigurations,
   jobs,
   manualSchedulings,
@@ -55,6 +56,7 @@ const appReducer = combineReducers({
   activityScheduling,
   recipients,
   activitiesNew: activitiesReducer,
+  tags: tagsReducer,
 });
 
 const rootReducer = (state, action) => {

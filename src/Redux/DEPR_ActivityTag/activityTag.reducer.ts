@@ -1,8 +1,4 @@
-import {
-  TActivityTag,
-  TActivityTagMap,
-  ActivityTag,
-} from '../../Types/ActivityTag.type';
+import { TActivityTag, createFn } from '../../Types/ActivityTag.type';
 import * as types from './activityTag.actionTypes';
 
 // INITIAL STATE
@@ -16,9 +12,9 @@ const reducer = (state = initialState, action: any) => {
         actionMeta: { formId },
       } = action.payload;
 
-      const activityTags: TActivityTagMap = activityTagObjs.reduce(
+      const activityTags: Record<string, TActivityTag> = activityTagObjs.reduce(
         (tot: any, acc: any) => {
-          const activityTag: TActivityTag = ActivityTag.create(acc);
+          const activityTag: TActivityTag = createFn(acc);
           return [...tot, activityTag];
         },
         [],
@@ -32,7 +28,7 @@ const reducer = (state = initialState, action: any) => {
 
     case types.CREATE_ACTIVITY_TAG_SUCCESS: {
       const { activityTag: activityTagObj } = action.payload;
-      const activityTag: TActivityTag = ActivityTag.create(activityTagObj);
+      const activityTag: TActivityTag = createFn(activityTagObj);
       return {
         ...state,
         [activityTag.formId]: [...state[activityTag.formId], activityTag],
@@ -41,7 +37,7 @@ const reducer = (state = initialState, action: any) => {
 
     case types.UPDATE_ACTIVITY_TAG_SUCCESS: {
       const { activityTag: activityTagObj } = action.payload;
-      const activityTag: TActivityTag = ActivityTag.create(activityTagObj);
+      const activityTag: TActivityTag = createFn(activityTagObj);
       const aGIdx = state[activityTag.formId].findIndex(
         (aG: TActivityTag) => aG._id === activityTag._id,
       );

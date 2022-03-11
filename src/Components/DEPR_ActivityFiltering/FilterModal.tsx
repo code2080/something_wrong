@@ -15,7 +15,7 @@ import type { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
 import type { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
-import { selectActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.selectors';
+import { selectActivityTagsForForm } from '../../Redux/DEPR_ActivityTag/activityTag.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
 

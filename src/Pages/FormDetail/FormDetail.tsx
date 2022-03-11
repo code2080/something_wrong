@@ -24,7 +24,7 @@ import {
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchActivityInWorkerProgress } from '../../Redux/DEPR_Activities/activities.actions';
-import { fetchActivityTagsForForm } from '../../Redux/ActivityTag/activityTag.actions';
+import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
 
@@ -108,7 +108,7 @@ const FormPage = () => {
    */
   useEffect(() => {
     dispatch(fetchMappings(form));
-    dispatch(fetchActivityTagsForForm(formId));
+    dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
     dispatch(fetchActivityInWorkerProgress(formId));

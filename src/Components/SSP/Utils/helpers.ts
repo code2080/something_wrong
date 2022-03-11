@@ -55,8 +55,8 @@ export const recursivelyTrimKeys = (obj: any) =>
     }
     /**
      * Below is another assumption based on knowledge of our datastructure
-     * but since there's only two options; 
-     * a leaf in the form of [...vals] or Record<string, Record<string, string[]> | string[]>,
+     * but, since there's only two options for each value,
+     * 1) a leaf in the form of [...vals] or 2) Record<string, Record<string, string[]> | string[]>,
      * we can safely recursively move down the tree without validating for primitives or other non iterables
      */
     const deepTrim = recursivelyTrimKeys(val);

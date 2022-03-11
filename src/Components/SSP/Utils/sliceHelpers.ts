@@ -1,8 +1,10 @@
+import { omit } from 'lodash';
+import { TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
 import {
   ISSPAPIResult,
   ISSPQueryObject,
   ISSPReducerState,
-} from '../Types/SSP.type';
+} from '../../../Types/SSP.type';
 
 export const finishedLoadingSuccess = (state: ISSPReducerState): void => {
   state.loading = false;
@@ -63,3 +65,27 @@ export const commitSSPQueryToState = (
   state.inclusion = inclusion || state.inclusion;
   state.filters = filters || state.filters;
 };
+
+export const updateStateWithResultFromBatchOperation = (
+  batchOperationPayload: TActivityBatchOperation,
+  state: ISSPReducerState,
+  idProp = '_id'
+) => {
+  const { data } = batchOperationPayload;
+  const results = state.results.map((entity) => {
+    // Check if el exists in array
+    const batchOp = data.find((op) => op._id === entity._id);
+    if (batchOp) return { ...entity, ...omit(batchOp, '_id') };
+    return entity;
+  });
+  const map = results.reduce(
+    (tot: any[], acc: any) => ({
+      ...tot,
+      [acc[idProp]]: acc,
+    }),
+    {},
+  );
+
+  state.results = results;
+  state.map = map;
+}

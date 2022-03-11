@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { TActivity } from 'Types/Activity.type';
 import { Activity } from '../../Models/Activity.model';
-import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../ActivityTag/activityTag.actionTypes';
+import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../DEPR_ActivityTag/activityTag.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import * as activitySchedulingTypes from '../ActivityScheduling/activityScheduling.actionTypes';
 import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
