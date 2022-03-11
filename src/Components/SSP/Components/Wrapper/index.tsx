@@ -76,7 +76,10 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   /**
    * SORTING
    */
-  const setSorting = (sortBy: string | undefined, direction: ESortDirection | undefined) => {
+  const setSorting = (
+    sortBy: string | undefined,
+    direction: ESortDirection | undefined,
+  ) => {
     dispatch(fetchFn({ sortBy, direction }));
   };
 
@@ -99,12 +102,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
     const clonedObj = cloneDeep(_filters);
-
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-
     const noEmptyKeysObj = recursivelyTrimKeys(clonedObj);
-    console.log('noEmptyKeysObj');
-    console.log(noEmptyKeysObj);
     _setFilters(noEmptyKeysObj);
   };
 

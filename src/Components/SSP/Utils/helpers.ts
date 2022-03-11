@@ -32,6 +32,7 @@ export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
   /** Base case */
   if (!oldVal || Array.isArray(newVal)) {
     return newVal;
+    // return isEmpty(newVal) ? undefined : newVal;
   }
 
   mergeWith(oldVal, newVal, customFilterPathMergeWith);
