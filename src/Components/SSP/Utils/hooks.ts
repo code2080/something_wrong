@@ -82,7 +82,6 @@ export const useSorting = () => {
         setSorting(columnKey as string | undefined, direction);
       }
     }
-    
   };
 };
 

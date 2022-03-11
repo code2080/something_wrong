@@ -14,7 +14,7 @@ import {
   getFilterCache,
   setFilterCache,
 } from 'Components/SSP/Utils/cacheService';
-import { customFilterPathMergeWith } from 'Components/SSP/Utils/helpers';
+import { customFilterPathMergeWith, recursivelyTrimKeys } from 'Components/SSP/Utils/helpers';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -99,8 +99,13 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
     const clonedObj = cloneDeep(_filters);
+
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-    _setFilters(clonedObj);
+
+    const noEmptyKeysObj = recursivelyTrimKeys(clonedObj);
+    console.log('noEmptyKeysObj');
+    console.log(noEmptyKeysObj);
+    _setFilters(noEmptyKeysObj);
   };
 
   const discardFilterChanges = () => {
@@ -108,6 +113,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     _setInclusion(inclusion);
     _setFilters(filters);
   };
+
   const commitFilterChanges = () => {
     const filterQuery: ISSPFilterQuery = {
       matchType: _matchType,
@@ -117,6 +123,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     setFilterCache(name, filterQuery);
     dispatch(fetchFn(filterQuery));
   };
+
   const initFiltersForDatasourceWithCacheAndDefaults = (
     defaultFilters: Partial<ISSPFilterQuery> = {},
   ) => {
