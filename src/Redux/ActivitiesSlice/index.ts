@@ -81,7 +81,6 @@ const slice = createSlice({
       if (payload) commitSSPQueryToState(payload, state);
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
-      console.log(payload);
       commitAPIPayloadToState(payload, state, createFn);
       finishedLoadingSuccess(state);
     },
@@ -183,7 +182,6 @@ export const fetchActivitiesForForm =
       });
       dispatch(fetchActivitiesForFormSuccess(result));
     } catch (e) {
-      console.log(e);
       dispatch(defaultFailureHandler());
     }
   };

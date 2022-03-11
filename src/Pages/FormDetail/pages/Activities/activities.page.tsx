@@ -28,7 +28,7 @@ const ActivitiesPage = () => {
   return (
     <>
       <SSPResourceWrapper
-        name='ACTIVITIES_TAB'
+        name={`${formId}__ACTIVITIES_TAB`}
         selectorFn={selectSSPState('activitiesNew')}
         fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
           fetchActivitiesForForm(formId, partialQuery)

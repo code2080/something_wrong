@@ -97,7 +97,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const patchInclusion = (
     patch: Record<string, EFilterInclusions | boolean>,
   ) => {
-    _setInclusion({ ...inclusion, ...patch });
+    _setInclusion({ ..._inclusion, ...patch });
   };
   const setFilters = (filters: Record<string, any>) => _setFilters(filters);
   const patchFilters = (patch: Record<string, any>) => {
