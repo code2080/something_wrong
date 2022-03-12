@@ -1,6 +1,6 @@
 import {
   TGetExtIdPropsPayload,
-  PopulateSelectionPayload,
+  TPopulateSelectionPayload,
 } from './TECorePayloads.type';
 
 export type getFieldIdsReturn = {
@@ -12,7 +12,7 @@ export type getRelatedGroupsReturn = {
 };
 
 export type TECoreAPI = {
-  populateSelection(payload: PopulateSelectionPayload): void;
+  populateSelection(payload: TPopulateSelectionPayload): void;
   getExtIdProps(payload: TGetExtIdPropsPayload): any;
   getCurrentUser({
     callback,
@@ -33,7 +33,7 @@ export type TECoreAPI = {
     reservationData,
     callback,
   }: {
-    reservationData: PopulateSelectionPayload;
+    reservationData: TPopulateSelectionPayload;
     callback: (reservationIds: string[]) => void;
   }): void;
   getRelatedGroups({

@@ -1,7 +1,7 @@
 // COMPONENTS
 import JointTeaching from './JointTeaching';
-// import ManualScheduling from './ManualScheduling';
-import SchedulingStatus from './Status';
+import ManualScheduling from './ManualScheduling';
+import Status from './Status';
 import ActionsDropdown from './ActionsDropdown';
 
 // STYLES
@@ -21,8 +21,8 @@ const SchedulingActions = ({ activity }: Props) => {
       {/* {activity.activityStatus === EActivityStatus.SCHEDULED && (
         <div className='scheduling-actions--strikethrough' />
       )} */}
-      <SchedulingStatus activity={activity} />
-      {/* <ManualScheduling activity={activity} /> */}
+      <Status activity={activity} />
+      <ManualScheduling activity={activity} />
       <JointTeaching activity={activity} />
       <ActionsDropdown activity={activity} />
     </div>

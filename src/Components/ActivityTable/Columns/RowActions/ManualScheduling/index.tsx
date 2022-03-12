@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { SelectOutlined } from '@ant-design/icons';
@@ -7,15 +6,12 @@ import { SelectOutlined } from '@ant-design/icons';
 import { useTECoreAPI } from '../../../../../Hooks/TECoreApiHooks';
 
 // REDUX
-import { makeSelectFormInstance } from '../../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import { selectFormInstanceObjectRequests } from '../../../../../Redux/ObjectRequests/ObjectRequests.selectors';
-import { selectTECorePayloadForActivity } from '../../../../../Redux/DEPR_Activities/activities.selectors';
-import { updateActivities } from '../../../../../Redux/DEPR_Activities/activities.actions';
-import { ObjectRequest } from '../../../../../Redux/ObjectRequests/ObjectRequests.types';
+import { batchOperationStatus, selectTECPayloadForActivity } from 'Redux/ActivitiesSlice';
 
 // TYPES
 import { TActivity } from '../../../../../Types/Activity.type';
 import { EActivityStatus } from '../../../../../Types/ActivityStatus.enum';
+import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
 
 type Props = {
   activity: TActivity;
@@ -24,55 +20,32 @@ type Props = {
 const ManualScheduling = ({ activity }: Props) => {
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
-  const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
-  const formInstance = useSelector((state) =>
-    selectFormInstance(state, {
-      formId: activity.formId,
-      formInstanceId: activity.formInstanceId,
-    }),
-  );
-  const formInstanceRequests: ObjectRequest[] = useSelector(
-    selectFormInstanceObjectRequests(formInstance),
-  );
-  const teCorePayload = useSelector(selectTECorePayloadForActivity)(
-    activity.formId,
-    activity.formInstanceId,
-    activity._id,
-    formInstanceRequests,
-  );
 
-  const handleManuallyScheduledActivities = (reservationIds: string[]) => {
-    const updatedActivity = {
-      ...activity,
-      activityStatus: EActivityStatus.SCHEDULED,
-      reservationId: reservationIds[0] || undefined,
-      schedulingTimestamp: moment.utc(),
-    };
-
-    dispatch(
-      updateActivities(updatedActivity.formId, updatedActivity.formInstanceId, [
-        updatedActivity,
-      ]),
-    );
-  };
+  const teCorePayload = useSelector(selectTECPayloadForActivity(activity._id));
 
   const onManualScheduling = () => {
-    if (teCorePayload)
+    if (teCorePayload && activity.activityStatus !== EActivityStatus.INACTIVE)
       teCoreAPI.requestManuallyScheduleActivity({
         reservationData: teCorePayload,
-        callback: handleManuallyScheduledActivities,
+        callback: (reservationIds: string[]) => dispatch(
+          batchOperationStatus(
+            activity.formId, 
+            { 
+              type: EActivityBatchOperation.STATUS, 
+              data: [{ 
+                _id: activity._id, 
+                activityStatus: EActivityStatus.SCHEDULED, 
+                reservationId: reservationIds[0] || undefined, 
+                schedulingTimestamp: moment.utc(), 
+              }] 
+          })),
       });
   };
 
   return (
     <div
-      className={`scheduling-actions--button ${
-        activity.activityStatus === EActivityStatus.INACTIVE && 'disabled'
-      }`}
-      onClick={() =>
-        activity.activityStatus === EActivityStatus.INACTIVE &&
-        onManualScheduling()
-      }
+      className={`scheduling-actions--button ${activity.activityStatus === EActivityStatus.INACTIVE && 'disabled'}`}
+      onClick={() => onManualScheduling()}
     >
       <SelectOutlined />
     </div>

@@ -16,6 +16,8 @@ export interface ISimpleAPIState {
 }
 
 export interface IState {
+  submissions: any;
+  forms: any;
   activitiesNew: ISSPReducerState;
   tags: ISimpleAPIState;
   integration: {

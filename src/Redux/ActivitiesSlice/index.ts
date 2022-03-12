@@ -16,11 +16,12 @@ import {
   toActivityStatusDisplay,
 } from '../../Components/ActivitySSPFilters/helpers';
 
-// SELECTS
+// SELECTORS
 import { selectAllLabels } from 'Redux/TE/te.selectors';
 import { tagsSelector } from 'Redux/Tags';
 import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+import { selectFormInstanceObjectRequests } from 'Redux/ObjectRequests/ObjectRequests.selectors';
 
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
@@ -33,6 +34,10 @@ import { IState } from 'Types/State.type';
 import { TActivityTag } from 'Types/ActivityTag.type';
 import { EActivityStatus } from 'Types/ActivityStatus.enum';
 import { CActivityBatchOperationURL, EActivityBatchOperation, TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { extractValuesFromActivityValues, hydrateObjectRequestsFromValuePayload } from 'Utils/activities.helpers';
+import { TForm } from 'Types/Form.type';
+import { TPopulateSelectionPayload } from 'Types/TECorePayloads.type';
+import { ActivityValue } from 'Types/ActivityValue.type';
 
 
 export const initialState: ISSPReducerState = {
@@ -158,6 +163,33 @@ export const selectLabelsForFilterOptionsForForm =
       ...allLabels,
     };
   };
+
+export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
+  // Get the activity
+  const activity = state.activitiesNew.map[id];
+  if (!activity) return undefined;
+
+  // Get the form
+  const form = state.forms[activity.formId] as TForm;
+
+  // Get the form instance
+  const formInstance = state.submissions[activity.formId].mapped.byId[activity.formInstanceId];
+
+  // Get the object requests
+  const objectRequests = selectFormInstanceObjectRequests(formInstance)(state as never);
+
+  // Extract the activity values
+  const valuePayload = extractValuesFromActivityValues(activity.values || []);
+  const withObjReqs = hydrateObjectRequestsFromValuePayload(valuePayload, objectRequests);
+  
+  return {
+    ...withObjReqs,
+    reservationMode: form.reservationMode,
+    formType: form.formType,
+    startTime: activity.timing.find((act: ActivityValue) => act?.extId === 'startTime')?.value as string,
+    endTime: activity.timing.find((act: ActivityValue) => act?.extId === 'endTime')?.value as string,
+  } as TPopulateSelectionPayload;
+}
 
 // Actions
 export const {

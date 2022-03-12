@@ -4,7 +4,7 @@ import { pick } from 'lodash';
 import { TActivity } from '../../Types/Activity.type';
 import { Activity } from 'Models/Activity.model';
 import {
-  PopulateSelectionPayload,
+  TPopulateSelectionPayload,
   TEObject,
   TEObjectFilter,
 } from '../../Types/TECorePayloads.type';
@@ -139,7 +139,7 @@ export const selectActivity = createSelector(
 );
 
 const hydrateObjectRequests = (
-  valuepayload: Pick<PopulateSelectionPayload, 'objects' | 'fields'>,
+  valuepayload: Pick<TPopulateSelectionPayload, 'objects' | 'fields'>,
   objReqs: ObjectRequest[],
 ) => {
   const [objFilters, objs]: [any[], any[]] = partition(
@@ -195,7 +195,7 @@ export const selectTECorePayloadForActivity = createSelector(
         endTime: activity.timing.find(
           (act: ActivityValue) => act?.extId === 'endTime',
         )?.value as string,
-      } as PopulateSelectionPayload;
+      } as TPopulateSelectionPayload;
     },
 );
 

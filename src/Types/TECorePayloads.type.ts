@@ -25,7 +25,7 @@ export class TEObject {
   }
 }
 
-export type PopulateSelectionPayload = {
+export type TPopulateSelectionPayload = {
   objects: (TEObject | TEObjectFilter)[];
   fields: TEField[];
   formType: 'REGULAR' | 'AVAILABILITY';

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import _, { flatMap, groupBy, isEmpty, keyBy } from 'lodash';
+import _, { flatMap, groupBy, isEmpty, keyBy, partition } from 'lodash';
 import { Activity } from '../Models/Activity.model';
 import { getToken } from './tokenHelpers';
 
@@ -21,6 +21,7 @@ import {
   TEField,
   TEObject,
   TEObjectFilter,
+  TPopulateSelectionPayload,
 } from '../Types/TECorePayloads.type';
 import { TActivity } from '../Types/Activity.type';
 import { TFormInstance } from '../Types/FormInstance.type';
@@ -838,4 +839,30 @@ export const updatedMultipleActivity = async (
   );
 
   return response.data;
+};
+
+export const hydrateObjectRequestsFromValuePayload = (
+  valuepayload: Pick<TPopulateSelectionPayload, 'objects' | 'fields'>,
+  objReqs: ObjectRequest[],
+) => {
+  const [objFilters, objs]: [any[], any[]] = partition(
+    valuepayload.objects,
+    (obj) => obj instanceof TEObjectFilter,
+  );
+  const withObjReqs = {
+    ...valuepayload,
+    objects: [
+      ...(objFilters as TEObjectFilter[]),
+      ...(objs as TEObject[]).map((obj) => {
+        const objReq = objReqs.find((req: ObjectRequest) => req._id === obj.id);
+        return objReq
+          ? ({
+              ...obj,
+              id: objReq?.replacementObjectExtId ?? obj.id,
+            } as TEObject)
+          : obj;
+      }),
+    ],
+  };
+  return withObjReqs;
 };

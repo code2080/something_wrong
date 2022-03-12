@@ -25,4 +25,5 @@ export type TStatusBatchOperation = {
   activityStatus: EActivityStatus,
   errorDetails?: any | undefined | null,
   reservationId?: any | undefined | null,
+  schedulingTimestamp?: any | undefined | null,
 }
