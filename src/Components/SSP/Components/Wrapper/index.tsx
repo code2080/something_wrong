@@ -16,7 +16,6 @@ import {
 } from 'Components/SSP/Utils/cacheService';
 import {
   customFilterPathMergeWith,
-  recursivelyTrimKeys,
   trimFilterKeysRecursive,
 } from 'Components/SSP/Utils/helpers';
 

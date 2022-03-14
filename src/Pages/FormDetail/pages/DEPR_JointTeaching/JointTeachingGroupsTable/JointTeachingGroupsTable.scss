@@ -1,0 +1,32 @@
+.joint-teaching-group__wrapper {
+  .joint-teaching-group__row {
+    & > td {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+  }
+  .cell--matched-on {
+    display: flex;
+    grid-gap: 20px;
+    & * {
+      white-space: nowrap;
+    }
+  }
+  .cell__value-wrapper {
+    display: flex;
+    align-items: center;
+    grid-gap: 4px;
+
+    .two-col--wrapper {
+      .two-col--col {
+        position: relative;
+        .title--row {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: translateY(-100%);
+        }
+      }
+    }
+  }
+}
