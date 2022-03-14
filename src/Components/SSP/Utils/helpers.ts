@@ -41,38 +41,38 @@ export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
   return oldVal;
 };
 
-export const recursivelyTrimKeys2 = (obj: FilterObject) =>
-  Object.entries(obj).reduce((trimmedObj: FilterObject, [key, value]) => {
-    /**
-     * First thing we got to do is figure out if the value we're looking at is a leaf or not
-     * In our data structure, a valid leaf is an array with a length > 0, hence below
-     */
-    if (Array.isArray(value)) {
-      // We've established it's a leaf, let's check if it's a valid leaf
-      if (!isEmpty(value)) {
-        return { ...trimmedObj, [key]: value };
+//todo: Daniel version recursivelyTrimKeys2
+/**
+ * Filter without empty arrays or empty objects.
+ * @param filter
+ * @returns
+ */
+export const trimFilterKeysRecursive = (filter: FilterObject) => {
+  return Object.entries(filter).reduce(
+    (trimmedFilter: FilterObject, [key, value]) => {
+      /** Base case: We have arrived at a leaf */
+      if (Array.isArray(value)) {
+        // We've established it's a leaf, if the leaf is empty we trim it
+        if (isEmpty(value)) {
+          return trimmedFilter;
+        }
+
+        return { ...trimmedFilter, [key]: value };
       }
 
-      // Not a valid leaf, return trimmedObj as is
-      return trimmedObj;
-    }
-    /**
-     * Below is another assumption based on knowledge of our datastructure
-     * but, since there's only two options for each value,
-     * 1) a leaf in the form of [...vals] or 2) Record<string, Record<string, string[]> | string[]>,
-     * we can safely recursively move down the tree without validating for primitives or other non iterables
-     */
-    const deepTrim = recursivelyTrimKeys(value);
-    /**
-     * Last piece of logic; we should only keep this key
-     * if there's at least one key in the recursive return
-     */
-    if (Object.keys(deepTrim).length) {
-      return { ...trimmedObj, [key]: deepTrim };
-    }
+      const deepTrim = recursivelyTrimKeys(value);
 
-    return trimmedObj;
-  }, {});
+      /** If the trim results in an empty object (all keys trimmed) we trim the
+       * object */
+      if (isEmpty(deepTrim)) {
+        return trimmedFilter;
+      }
+
+      return { ...trimmedFilter, [key]: deepTrim };
+    },
+    {},
+  );
+};
 
 export const recursivelyTrimKeys = (obj: any) =>
   Object.keys(obj).reduce((trimmedObj, key) => {

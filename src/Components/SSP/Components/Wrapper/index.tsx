@@ -17,7 +17,7 @@ import {
 import {
   customFilterPathMergeWith,
   recursivelyTrimKeys,
-  recursivelyTrimKeys2,
+  trimFilterKeysRecursive,
 } from 'Components/SSP/Utils/helpers';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
@@ -110,7 +110,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const patchFilters = (patch: FilterObject) => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-    const noEmptyKeysObj = recursivelyTrimKeys2(clonedObj);
+    const noEmptyKeysObj = trimFilterKeysRecursive(clonedObj);
     _setFilters(noEmptyKeysObj);
   };
 
