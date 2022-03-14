@@ -1,5 +1,5 @@
 import { Key } from 'react';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import _ from 'lodash';
 
 import { TableProps } from 'antd';

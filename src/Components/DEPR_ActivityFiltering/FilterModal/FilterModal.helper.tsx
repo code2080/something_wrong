@@ -1,4 +1,4 @@
-import { TFilterLookUpMap } from 'Types/FilterLookUp.type';
+import { TFilterLookUpMap } from 'Types/DEPR_FilterLookUp.type';
 
 import _, { capitalize, set } from 'lodash';
 

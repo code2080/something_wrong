@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { renderComponent } from 'Components/DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/rendering';
 import TitleCell from 'Components/DEPR_ActivitiesTableColumns/new/TitleCell';
 import { getFieldLabel } from 'Utils/activityDesigner';
-import { ActivityValue } from 'Types/ActivityValue.type';
+import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { Field } from 'Redux/TE/te.selectors';
 
 const JointTeachingMatchedOn = ({

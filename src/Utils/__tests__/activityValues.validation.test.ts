@@ -1,7 +1,7 @@
 import { parameterizedTest, TestMetaData } from '../../Utils/test.utils';
 import { dummyActivityDesign } from '../../Mock/ActivityDesign';
 import { dummyActivities } from '../../Mock/Activities';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 import { validateActivityByMandatoryFieldValue } from '../activityValues.validation';
 
 describe('Activity validations test', () => {

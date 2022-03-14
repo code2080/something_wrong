@@ -1,5 +1,5 @@
 import { Form, DatePicker, TimePicker } from 'antd';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import { toActivityStatusDisplay } from './FilterModal.helper';
 import { ItemsMapping } from './FilterModal.type';
 import FilterOptions from './FilterOptionsSelectbox';

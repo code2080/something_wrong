@@ -1,6 +1,6 @@
 // COMPONENTS
 import { Field, deprSelectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import type { ColumnsType } from 'antd/lib/table';
 import ActivityStatusCol from './SchedulingColumns/StatusCol/ActivityStatusCol';
 import SortableTableCell from '../DynamicTable/SortableTableCell';

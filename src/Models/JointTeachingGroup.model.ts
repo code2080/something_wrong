@@ -1,5 +1,5 @@
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { Activity } from 'Models/Activity.model';
 import { groupBy, keyBy, uniq } from 'lodash';
 import { getConflictsResolvingStatus } from 'Utils/activities.helpers';

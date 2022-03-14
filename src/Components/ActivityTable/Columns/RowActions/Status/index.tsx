@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { MinusSquareOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 // REDUX
-import { batchOperationStatus } from 'Redux/ActivitiesSlice';
+import { batchOperationStatus } from 'Redux/Activities';
 
 // HOOKS
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
@@ -14,9 +14,9 @@ import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
 import './index.scss';
 
 // TYPES
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { TActivity } from 'Types/Activity.type';
-import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import { TActivity } from 'Types/Activity/Activity.type';
+import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {

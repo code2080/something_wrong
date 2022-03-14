@@ -1,5 +1,5 @@
 import { INITIAL_FILTER_VALUES } from 'Components/DEPR_ActivityFiltering/FilterModal/FilterModal.constants';
-import FilterLookUpMap from '../../Types/FilterLookUp.type';
+import FilterLookUpMap from '../../Types/DEPR_FilterLookUp.type';
 import * as types from './filters.actionTypes';
 import { initialState } from './filters.initialState';
 

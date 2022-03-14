@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'antd/lib/form/Form';
 
 // ACTIONS
-import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.actions';
+import { fetchActivityFilterLookupMap } from 'Redux/DEPR_FilterLookupMap/filterLookupMap.actions';
 
 // HOOKS
 import { useFetchLabelsFromExtIds } from 'Hooks/TECoreApiHooks';
@@ -15,13 +15,13 @@ import { useFetchLabelsFromExtIds } from 'Hooks/TECoreApiHooks';
 import {
   selectExactFormActivityLookupMap,
   selectFormActivityLookupMap,
-} from 'Redux/FilterLookupMap/filterLookupMap.selectors';
+} from 'Redux/DEPR_FilterLookupMap/filterLookupMap.selectors';
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // CONSTANTS
-import type { TFilterLookUpMap } from 'Types/FilterLookUp.type';
+import type { TFilterLookUpMap } from 'Types/DEPR_FilterLookUp.type';
 import type { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
-import { FETCH_ACTIVITY_FILTER_LOOKUP_MAP } from 'Redux/FilterLookupMap/filterLookupMap.actionTypes';
+import { FETCH_ACTIVITY_FILTER_LOOKUP_MAP } from 'Redux/DEPR_FilterLookupMap/filterLookupMap.actionTypes';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // COMPONENTS

@@ -5,8 +5,8 @@ import Tag from './Tag';
 import SchedulingStatus from './SchedulingStatus';
 
 // TYPES
-import { TActivity } from 'Types/Activity.type';
-import { EActivitySortingKey } from 'Types/ActivitySortingKey.enum';
+import { TActivity } from 'Types/Activity/Activity.type';
+import { EActivitySortingKey } from 'Types/Activity/ActivitySortingKey.enum';
 
 export const RowActionsColumn = {
   title: '',

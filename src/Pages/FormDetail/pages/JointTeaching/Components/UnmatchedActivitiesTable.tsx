@@ -16,7 +16,7 @@ import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 
 // COMPONNETS
 import { JointTeachingColumn } from 'Components/DEPR_ActivitiesTableColumns/JointTeachingTableColumns/JointTeachingColumns';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 
 // CONSTANTS
 import { SorterResult } from 'antd/lib/table/interface';

@@ -1,6 +1,6 @@
 import { getExtIdPropsPayload } from '../integration.selectors';
 import * as mockData from '../../../Mock/Form';
-import { TActivity } from '../../../Types/Activity.type';
+import { TActivity } from '../../../Types/Activity/Activity.type';
 
 describe('integration selectors tests', () => {
   describe('getExtIdPropsPayload', () => {

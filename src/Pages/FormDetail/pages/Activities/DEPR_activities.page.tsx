@@ -45,7 +45,7 @@ import {
 import { useActivitiesWatcher } from 'Hooks/useActivities';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesPage = () => {

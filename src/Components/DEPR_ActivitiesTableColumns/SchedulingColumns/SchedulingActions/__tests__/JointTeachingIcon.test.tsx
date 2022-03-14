@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { Activity } from 'Models/Activity.model';
 import configureStore from '../../../../../Redux/store';
 import mockStore from '../../../../../Mock/MockState';

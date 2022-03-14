@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 import {
   ISSPAPIResult,
   ISSPQueryObject,

@@ -27,7 +27,7 @@ import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
 import { selectExtIds } from 'Redux/TE/te.selectors';
 
 // TYPES
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { TGetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { useSubmissions } from './useSubmissions';

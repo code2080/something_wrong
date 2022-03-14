@@ -25,31 +25,51 @@ import { selectFormInstanceObjectRequests } from 'Redux/ObjectRequests/ObjectReq
 
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
+import { extractValuesFromActivityValues, hydrateObjectRequestsFromValuePayload } from 'Utils/activities.helpers';
 
 // TYPES
-import { createFn, TActivity } from 'Types/Activity.type';
-import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
+import { createFn, TActivity } from 'Types/Activity/Activity.type';
+import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/Activity/ActivityFilterLookupMap.type';
 import { ISSPReducerState, ISSPQueryObject, EFilterType, EFilterInclusions } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
 import { TActivityTag } from 'Types/ActivityTag.type';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
-import { CActivityBatchOperationURL, EActivityBatchOperation, TActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
-import { extractValuesFromActivityValues, hydrateObjectRequestsFromValuePayload } from 'Utils/activities.helpers';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import { CActivityBatchOperationURL, EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 import { TForm } from 'Types/Form.type';
 import { TPopulateSelectionPayload } from 'Types/TECorePayloads.type';
-import { ActivityValue } from 'Types/ActivityValue.type';
+import { ActivityValue } from 'Types/Activity/ActivityValue.type';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 
 export const initialState: ISSPReducerState = {
   // API STATE
   loading: false,
   hasErrors: false,
+  // GROUPING
+  groupBy: EActivityGroupings.FLAT,
   // DATA
-  results: [],
-  map: {},
-  // SORTING
-  sortBy: undefined,
-  direction: undefined,
+  data: {
+    [EActivityGroupings.FLAT]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    },
+    [EActivityGroupings.WEEK_PATTERN]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    }
+  },
   // FILTERING
   matchType: EFilterType.ALL,
   inclusion: {
@@ -58,17 +78,11 @@ export const initialState: ISSPReducerState = {
   },
   filters: {},
   filterLookupMap: {},
-  // PAGINATION
-  page: 1,
-  limit: 10,
-  totalPages: 10,
-  // SELECTION
-  allKeys: [],
 };
 
 // Slice
 const slice = createSlice({
-  name: 'activitiesNew',
+  name: 'activities',
   initialState,
   reducers: {
     defaultRequestHandler: (state, { payload }) => {
@@ -101,16 +115,16 @@ export default slice.reducer;
 
 // Selectors
 export const activitiesSelector = (state: IState): TActivity[] =>
-  state.activitiesNew.results;
+  state.activities.data[state.activities.groupBy].results;
 export const activitySelector =
   (id: string) =>
   (state: IState): TActivity | undefined =>
-    state.activitiesNew.map[id] || undefined;
+  state.activities.data[state.activities.groupBy][id] || undefined;
 export const activitiesLoading = (state: IState): boolean =>
-  state.activitiesNew.loading;
+  state.activities.loading;
 export const activityFilterLookupMapSelector = (
   state: IState,
-): TActivityFilterLookupMap => state.activitiesNew.filterLookupMap;
+): TActivityFilterLookupMap => state.activities.filterLookupMap;
 
 /**
  * ALWAYS use this selector in case you're planning on using the map for filtering
@@ -120,7 +134,7 @@ export const selectLookupMapForFiltering = (
   state: IState,
 ): TActivityFilterLookupMap => {
   // Get the raw map from state
-  const rawMap = state.activitiesNew.filterLookupMap;
+  const rawMap = state.activities.filterLookupMap;
   // Filter out all properties with only 'null' or 'undefined' as keys, except for in excluded keys
   return excludeEmptyKeysFromFilterLookupMap(rawMap, ['tag']);
 };
@@ -165,30 +179,38 @@ export const selectLabelsForFilterOptionsForForm =
   };
 
 export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
-  // Get the activity
-  const activity = state.activitiesNew.map[id];
-  if (!activity) return undefined;
+  /**
+   * This is an error prone function given all the selectors and data needed
+   * Wrapped in a try catch to stop the page from breaking if we're in a race conidition sitch
+   * where we've fetched activities before forms or submissions
+   */
+  try {
+    // Get the activity
+    const activity = state.activities.data[state.activities.groupBy][id];
 
-  // Get the form
-  const form = state.forms[activity.formId] as TForm;
+    // Get the form
+    const form = state.forms[activity.formId] as TForm;
 
-  // Get the form instance
-  const formInstance = state.submissions[activity.formId].mapped.byId[activity.formInstanceId];
+    // Get the form instance
+    const formInstance = state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
 
-  // Get the object requests
-  const objectRequests = selectFormInstanceObjectRequests(formInstance)(state as never);
+    // Get the object requests
+    const objectRequests = selectFormInstanceObjectRequests(formInstance)(state as never);
 
-  // Extract the activity values
-  const valuePayload = extractValuesFromActivityValues(activity.values || []);
-  const withObjReqs = hydrateObjectRequestsFromValuePayload(valuePayload, objectRequests);
-  
-  return {
-    ...withObjReqs,
-    reservationMode: form.reservationMode,
-    formType: form.formType,
-    startTime: activity.timing.find((act: ActivityValue) => act?.extId === 'startTime')?.value as string,
-    endTime: activity.timing.find((act: ActivityValue) => act?.extId === 'endTime')?.value as string,
-  } as TPopulateSelectionPayload;
+    // Extract the activity values
+    const valuePayload = extractValuesFromActivityValues(activity.values || []);
+    const withObjReqs = hydrateObjectRequestsFromValuePayload(valuePayload, objectRequests);
+    
+    return {
+      ...withObjReqs,
+      reservationMode: form.reservationMode,
+      formType: form.formType,
+      startTime: activity.timing.find((act: ActivityValue) => act?.extId === 'startTime')?.value as string,
+      endTime: activity.timing.find((act: ActivityValue) => act?.extId === 'endTime')?.value as string,
+    } as TPopulateSelectionPayload;
+  } catch (error) {
+    return undefined;
+  }
 }
 
 // Actions
@@ -207,7 +229,7 @@ export const fetchActivitiesForForm =
     try {
       const serializedQuery = serializeSSPQuery(
         queryObject,
-        getState().activitiesNew,
+        getState().activities,
       );
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({

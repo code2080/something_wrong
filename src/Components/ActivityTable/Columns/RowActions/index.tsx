@@ -9,7 +9,7 @@ import './index.scss';
 
 // TYPES
 // import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 
 type Props = {
   activity: TActivity;

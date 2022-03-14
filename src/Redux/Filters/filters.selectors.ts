@@ -7,8 +7,8 @@ import isEqual from 'lodash/isEqual';
 
 import { isEmptyDeep } from 'Utils/general.helpers';
 import { INITIAL_FILTER_VALUES } from 'Components/DEPR_ActivityFiltering/FilterModal/FilterModal.constants';
-import { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
-import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import { TFilterLookUpMap } from '../../Types/DEPR_FilterLookUp.type';
+import { TActivityFilterQuery } from '../../Types/DEPR_ActivityFilter.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const filterstate = (state) => state.filters;

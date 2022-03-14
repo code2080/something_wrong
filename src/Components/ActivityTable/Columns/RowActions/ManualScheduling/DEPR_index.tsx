@@ -14,8 +14,8 @@ import { updateActivities } from '../../../../../Redux/DEPR_Activities/activitie
 import { ObjectRequest } from '../../../../../Redux/ObjectRequests/ObjectRequests.types';
 
 // TYPES
-import { TActivity } from '../../../../../Types/Activity.type';
-import { EActivityStatus } from '../../../../../Types/ActivityStatus.enum';
+import { TActivity } from '../../../../../Types/Activity/Activity.type';
+import { EActivityStatus } from '../../../../../Types/Activity/ActivityStatus.enum';
 
 type Props = {
   activity: TActivity;

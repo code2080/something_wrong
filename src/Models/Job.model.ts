@@ -1,4 +1,4 @@
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { jobStatus } from '../Constants/jobStatuses.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 

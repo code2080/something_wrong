@@ -1,5 +1,5 @@
-import { ActivityValueMode } from '../Constants/activityValueModes.constants';
-import { ActivityValueType } from '../Constants/activityValueTypes.constants';
+import { ActivityValueMode } from '../../Constants/activityValueModes.constants';
+import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 
 export type CategoryField = {
   searchString: string | null;

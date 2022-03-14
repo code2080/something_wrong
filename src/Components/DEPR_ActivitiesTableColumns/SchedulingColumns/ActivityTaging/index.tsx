@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { selectActivityTag } from '../../../../Redux/DEPR_ActivityTag/activityTag.selectors';
 
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 import ActivityTagPopover from './Popover';
 import './index.scss';
 

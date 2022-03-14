@@ -13,10 +13,10 @@ import { setSchedulingStatusOfActivities } from '../../../../Redux/DEPR_Activiti
 
 // STYLES
 import './SchedulingCheckbox.scss';
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 
 const getClassNameForSchedulingStatus = (activityStatus, showInvertedState) => {
   if (showInvertedState) {

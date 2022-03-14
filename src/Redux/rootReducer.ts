@@ -4,7 +4,6 @@ import _ from 'lodash';
 // REDUCERS
 import { apiStatus } from './APIStatus/apiStatus.reducer';
 import globalUI from './GlobalUI/globalUI.reducer';
-import filters from './Filters/filters.reducer';
 import auth from './Auth/auth.reducer';
 import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
@@ -18,20 +17,21 @@ import users from './Users/users.reducer';
 import integration from './Integration/integration.reducer';
 import elements from './Elements/elements.reducer';
 import constraints from './Constraints/constraints.reducer';
-import filterLookupMap from './FilterLookupMap/filterLookupMap.reducer';
 import jointTeaching from './JointTeaching/jointTeaching.reducer';
 import activityScheduling from './ActivityScheduling/activityScheduling.reducer';
 import recipients from './Recipients/recipients.reducer';
+import filters from './Filters/filters.reducer';
 
 // DEPRECATED
 // import activityTags from './DEPR_ActivityTag/activityTag.reducer';
 // import activities from './DEPR_Activities/activities.reducer';
+// import filterLookupMap from './DEPR_FilterLookupMap/filterLookupMap.reducer';
 
 // ACTIONS
 import { LOGOUT } from './Auth/auth.actionTypes';
 
 // REWORKED
-import activitiesReducer from './ActivitiesSlice';
+import activitiesReducer from './Activities';
 import tagsReducer from './Tags';
 
 const appReducer = combineReducers({
@@ -39,7 +39,6 @@ const appReducer = combineReducers({
   globalUI,
   auth,
   forms,
-  filters,
   submissions,
   activityDesigner,
   constraintConfigurations,
@@ -51,11 +50,11 @@ const appReducer = combineReducers({
   objectRequests,
   elements,
   constraints,
-  filterLookupMap,
   jointTeaching,
   activityScheduling,
   recipients,
-  activitiesNew: activitiesReducer,
+  filters,
+  activities: activitiesReducer,
   tags: tagsReducer,
 });
 

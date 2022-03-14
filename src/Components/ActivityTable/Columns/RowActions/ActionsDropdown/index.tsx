@@ -24,7 +24,7 @@ import { teCoreCallnames } from '../../../../../Constants/teCoreActions.constant
 import { teCoreSchedulingProgress } from '../../../../../Constants/teCoreProps.constants';
 import { manualSchedulingFormStatuses } from '../../../../../Constants/manualSchedulingConstants';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../../Constants/permissions.constants';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 
 // TYPES
 type Props = {

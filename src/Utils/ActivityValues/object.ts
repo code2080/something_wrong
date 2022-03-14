@@ -1,5 +1,5 @@
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { ActivityValue } from '../../Types/Activity/ActivityValue.type';
 import { determineObjectValueContent, normalizeFilterValues } from './helpers';
 
 export const fvObjectFilterValue = (activityValue: ActivityValue) => {

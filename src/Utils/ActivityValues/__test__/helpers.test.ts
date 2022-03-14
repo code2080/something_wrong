@@ -1,4 +1,4 @@
-import { ActivityValue } from 'Types/ActivityValue.type';
+import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { getActivityValuesBasedOnElement } from '../helpers';
 
 const sections: any = [

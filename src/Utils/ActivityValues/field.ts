@@ -1,4 +1,4 @@
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { ActivityValue } from '../../Types/Activity/ActivityValue.type';
 
 export const getFVForFieldValue = (
   activityValue: ActivityValue,

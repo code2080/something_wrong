@@ -4,7 +4,7 @@ import { Activity } from '../Models/Activity.model';
 import { getToken } from './tokenHelpers';
 
 // CONSTANTS
-import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';
 import {
   TConstraintConfiguration,
   TConstraintInstance,
@@ -15,7 +15,7 @@ import {
   CategoryField,
   IndexedActivityValueType,
   ValueType,
-} from '../Types/ActivityValue.type';
+} from '../Types/Activity/ActivityValue.type';
 import { ActivityValueType } from '../Constants/activityValueTypes.constants';
 import {
   TEField,
@@ -23,9 +23,9 @@ import {
   TEObjectFilter,
   TPopulateSelectionPayload,
 } from '../Types/TECorePayloads.type';
-import { TActivity } from '../Types/Activity.type';
+import { TActivity } from '../Types/Activity/Activity.type';
 import { TFormInstance } from '../Types/FormInstance.type';
-import type { TFilterLookUpMap } from '../Types/FilterLookUp.type';
+import type { TFilterLookUpMap } from '../Types/DEPR_FilterLookUp.type';
 import { ObjectRequest } from '../Redux/ObjectRequests/ObjectRequests.types';
 import { derivedFormattedValueForActivityValue } from './ActivityValues';
 import {

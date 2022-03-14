@@ -16,7 +16,7 @@ import {
   fetchActivitiesForForm,
   fetchActivityFilterLookupMapForForm,
   initializeSSPStateProps,
-} from 'Redux/ActivitiesSlice';
+} from 'Redux/Activities';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
 
 // TYPES
@@ -43,18 +43,14 @@ const ActivitiesPage = () => {
     <>
       <SSPResourceWrapper
         name={`${formId}__ACTIVITIES_TAB`}
-        selectorFn={selectSSPState('activitiesNew')}
+        selectorFn={selectSSPState('activities')}
         fetchFn={(partialQuery?: Partial<ISSPQueryObject>) => fetchActivitiesForForm(formId, partialQuery)}
         initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) => initializeSSPStateProps(partialQuery)}
         fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
       >
         <ActivitiesToolbar />
         <ActivityTable
-          preCustomColumns={[
-            RowActionsColumn,
-            TagColumn,
-            SchedulingStatusColumn,
-          ]}
+          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
           postCustomColumns={[SubmitterColumn]}
         />
       </SSPResourceWrapper>

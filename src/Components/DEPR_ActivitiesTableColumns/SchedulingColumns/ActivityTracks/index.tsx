@@ -1,7 +1,7 @@
 import { Popover, Button } from 'antd';
 import { AppstoreOutlined } from '@ant-design/icons';
 
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 import './index.scss';
 
 type Props = {

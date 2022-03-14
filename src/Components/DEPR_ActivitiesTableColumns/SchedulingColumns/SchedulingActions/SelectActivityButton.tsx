@@ -14,8 +14,8 @@ import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSu
 import { selectFormInstanceObjectRequests } from '../../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectTECorePayloadForActivity } from '../../../../Redux/DEPR_Activities/activities.selectors';
 import { updateActivities } from '../../../../Redux/DEPR_Activities/activities.actions';
-import { TActivity } from '../../../../Types/Activity.type';
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
+import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 import { ObjectRequest } from '../../../../Redux/ObjectRequests/ObjectRequests.types';
 
 type SelectActivityButtonProps = {

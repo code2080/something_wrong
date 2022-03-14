@@ -3,8 +3,8 @@ import { memo, useMemo, ReactChild } from 'react';
 // COMPONENTS
 
 // TYPES
-import { TActivity } from '../../../Types/Activity.type';
-import { ActivityValue } from '../../../Types/ActivityValue.type';
+import { TActivity } from '../../../Types/Activity/Activity.type';
+import { ActivityValue } from '../../../Types/Activity/ActivityValue.type';
 import ColumnContent from './ColumnContent';
 
 type Props = {

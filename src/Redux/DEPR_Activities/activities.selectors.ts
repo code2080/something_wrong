@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import partition from 'lodash/partition';
 import { pick } from 'lodash';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 import { Activity } from 'Models/Activity.model';
 import {
   TPopulateSelectionPayload,
@@ -12,14 +12,14 @@ import {
   extractValuesFromActivityValues,
   getUniqueValues,
 } from '../../Utils/activities.helpers';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { ActivityValue } from '../../Types/Activity/ActivityValue.type';
 import {
   IndexedObject,
   ObjectRequest,
 } from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
 import { ActivitySchedulingState } from 'Redux/ActivityScheduling/activityScheduling.reducer';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 // TYPES
 type TActivityMap = {

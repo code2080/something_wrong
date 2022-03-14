@@ -20,7 +20,7 @@ import {
 import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
 import { selectCoreUserId, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
-import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';
 import { CRITERIA_OPTIONS } from 'Constants/filterSetting.constants';
 
 type Props = {

@@ -7,11 +7,11 @@ import TagSelectorComponent from '../../../TagSelector';
 
 // REDUX
 import { tagSelector } from 'Redux/Tags';
-import { batchOperationTags } from 'Redux/ActivitiesSlice';
+import { batchOperationTags } from 'Redux/Activities';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type';
-import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
+import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 // STYLES
 import './index.scss';

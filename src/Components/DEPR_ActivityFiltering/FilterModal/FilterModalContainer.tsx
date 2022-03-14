@@ -15,8 +15,8 @@ import { Form } from 'antd';
 
 // TYPES
 import { INITIAL_FILTER_VALUES } from './FilterModal.constants';
-import { TActivityFilterQuery } from '../../../Types/ActivityFilter.type';
-import { TFilterLookUpMap } from '../../../Types/FilterLookUp.type';
+import { TActivityFilterQuery } from '../../../Types/DEPR_ActivityFilter.type';
+import { TFilterLookUpMap } from '../../../Types/DEPR_FilterLookUp.type';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 // HELPERS
@@ -35,7 +35,7 @@ import {
 } from '../../../Redux/Integration/integration.selectors';
 import { selectAllLabels } from '../../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from 'Redux/DEPR_ActivityTag/activityTag.selectors';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import { selectRecipientsMap } from 'Redux/Recipients/recipients.selectors';
 
 export interface ValueProps {

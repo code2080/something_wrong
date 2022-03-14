@@ -1,10 +1,10 @@
 import moment from 'moment';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 import {
   ActivityValue,
   DateRangeValue,
   PaddingValue,
-} from '../../Types/ActivityValue.type';
+} from '../../Types/Activity/ActivityValue.type';
 import {
   DATE_FORMAT,
   TIME_FORMAT,

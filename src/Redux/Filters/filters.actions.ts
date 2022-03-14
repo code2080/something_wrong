@@ -2,11 +2,11 @@ import {
   EActivityFilterInclusion,
   EActivityFilterMode,
   EActivityFilterType,
-} from '../../Types/ActivityFilter.interface';
+} from '../../Types/DEPR_ActivityFilter.interface';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import { TProperty } from '../../Types/property.type';
-import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import { TActivityFilterQuery } from '../../Types/DEPR_ActivityFilter.type';
 import * as types from './filters.actionTypes';
 
 // TYPES

@@ -12,9 +12,9 @@ import {
   manuallyOverrideActivityValue,
   revertActivityValueToSubmission,
 } from './activities.helpers';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { flatten, isEmpty } from 'lodash';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 const fetchActivitiesForFormFlow = (formId, tableType, pagination) => ({
   request: () => ({

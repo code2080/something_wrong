@@ -7,7 +7,7 @@ import ColumnWrapper from 'Components/DEPR_ActivitiesTableColumns/new/ColumnWrap
 import { ActivityDesign } from '../../../Models/ActivityDesign.model';
 import { ISSPColumn } from 'Components/SSP/Types';
 import { Field, selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 
 const getAllActivityValuesFromActivityDesign = (
   design: any,

@@ -3,7 +3,7 @@ import { capitalize, startCase } from 'lodash';
 import { useSelector } from 'react-redux';
 
 // REDUX
-import { selectLookupMapForFiltering } from 'Redux/ActivitiesSlice';
+import { selectLookupMapForFiltering } from 'Redux/Activities';
 
 // CONSTANTS
 import {

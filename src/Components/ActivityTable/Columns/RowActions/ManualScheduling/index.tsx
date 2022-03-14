@@ -6,12 +6,12 @@ import { SelectOutlined } from '@ant-design/icons';
 import { useTECoreAPI } from '../../../../../Hooks/TECoreApiHooks';
 
 // REDUX
-import { batchOperationStatus, selectTECPayloadForActivity } from 'Redux/ActivitiesSlice';
+import { batchOperationStatus, selectTECPayloadForActivity } from 'Redux/Activities';
 
 // TYPES
-import { TActivity } from '../../../../../Types/Activity.type';
-import { EActivityStatus } from '../../../../../Types/ActivityStatus.enum';
-import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { TActivity } from '../../../../../Types/Activity/Activity.type';
+import { EActivityStatus } from '../../../../../Types/Activity/ActivityStatus.enum';
+import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 type Props = {
   activity: TActivity;

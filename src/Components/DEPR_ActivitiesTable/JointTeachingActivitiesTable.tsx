@@ -15,7 +15,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Popconfirm } from 'antd';
 
 // TYPES
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
@@ -26,7 +26,7 @@ import { calculateActivityConflicts } from 'Utils/activities.helpers';
 import './JointTeachingActivitiesTable.scss';
 import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
 import { selectActivitiesUniqueValues } from '../../Redux/DEPR_Activities/activities.selectors';
-import { ActivityValue, ValueType } from 'Types/ActivityValue.type';
+import { ActivityValue, ValueType } from 'Types/Activity/ActivityValue.type';
 import {
   ConflictType,
   JointTeachingConflictMapping,

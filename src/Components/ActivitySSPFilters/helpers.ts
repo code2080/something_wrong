@@ -1,6 +1,6 @@
 import { capitalize, compact, lowerCase, uniq } from 'lodash';
 import { Field } from 'Redux/TE/te.selectors';
-import { TActivityFilterLookupMap } from 'Types/ActivityFilterLookupMap.type';
+import { TActivityFilterLookupMap } from 'Types/Activity/ActivityFilterLookupMap.type';
 import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
 import { REPLACED_KEY } from './constants';
 

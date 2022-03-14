@@ -21,7 +21,7 @@ import SelectWithDeleteOption from '../../ActivityValueColumns/Helpers/SelectWit
 import './JointTeachingIcon.scss';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 
 type Props = {
   activity?: TActivity;

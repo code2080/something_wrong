@@ -16,7 +16,7 @@ import './index.scss';
 
 // TYPES
 import { TFormInstance } from 'Types/FormInstance.type';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { EFormDetailTabs } from 'Types/FormDetailTabs.enum';
 
 // TYPES

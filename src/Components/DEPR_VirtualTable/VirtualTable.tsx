@@ -8,7 +8,7 @@ import { Table, TableProps } from 'antd';
 
 import './VirtualTable.scss';
 import { ColumnType } from 'antd/lib/table';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 import SelectionColumn from './SelectionColumn';
 
 interface Props extends TableProps<any> {

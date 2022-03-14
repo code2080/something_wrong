@@ -1,6 +1,6 @@
 import { difference, isEmpty } from 'lodash';
 import { createSelector } from 'reselect';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { ActivitySchedulingState } from './activityScheduling.reducer';
 
 const activitySchedulingStateSelector = (state: {

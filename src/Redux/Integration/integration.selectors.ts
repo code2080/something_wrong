@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
-import { TActivity } from 'Types/Activity.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 import { ObjectRequest } from 'Redux/ObjectRequests/ObjectRequests.types';
-import { ActivityValue } from 'Types/ActivityValue.type';
+import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { Field, selectExtIdLabel } from '../TE/te.selectors';
 import {
   datasourceValueTypes,

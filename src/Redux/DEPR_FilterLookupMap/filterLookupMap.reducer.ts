@@ -1,4 +1,4 @@
-import FilterLookUpMap from 'Types/FilterLookUp.type';
+import FilterLookUpMap from 'Types/DEPR_FilterLookUp.type';
 import * as types from './filterLookupMap.actionTypes';
 import { initialValue } from './filterLookupMap.initialValue';
 

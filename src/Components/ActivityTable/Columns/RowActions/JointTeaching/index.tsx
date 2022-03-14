@@ -27,8 +27,8 @@ import SelectWithDeleteOption from '../../../../DEPR_ActivitiesTableColumns/Acti
 import './index.scss';
 
 // TYPES
-import { TActivity } from '../../../../../Types/Activity.type';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { TActivity } from '../../../../../Types/Activity/Activity.type';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 type Props = {
   activity: TActivity;

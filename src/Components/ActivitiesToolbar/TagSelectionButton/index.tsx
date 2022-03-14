@@ -9,10 +9,10 @@ import ToolbarButton from '../ToolbarButton';
 import TagSelectorComponent from 'Components/TagSelector';
 
 // REDUX
-import { batchOperationTags } from 'Redux/ActivitiesSlice';
+import { batchOperationTags } from 'Redux/Activities';
 
 // TYPES
-import { EActivityBatchOperation } from 'Types/ActivityBatchOperations.type';
+import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
   selectedActivityIds,

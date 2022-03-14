@@ -5,19 +5,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { setSelectedFilterValues } from 'Redux/Filters/filters.actions';
-import { fetchActivityFilterLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.actions';
+import { fetchActivityFilterLookupMap } from 'Redux/DEPR_FilterLookupMap/filterLookupMap.actions';
 
-import { selectFormActivityLookupMap } from 'Redux/FilterLookupMap/filterLookupMap.selectors';
+import { selectFormActivityLookupMap } from 'Redux/DEPR_FilterLookupMap/filterLookupMap.selectors';
 import { makeSelectSelectedFilterValues } from '../../Redux/Filters/filters.selectors';
 
 import PropertySelector from '../PropertySelector';
-import type { TFilterLookUpMap } from '../../Types/FilterLookUp.type';
+import type { TFilterLookUpMap } from '../../Types/DEPR_FilterLookUp.type';
 import type { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
 import { selectMultipleExtIdLabels } from '../../Redux/TE/te.selectors';
 import { selectActivityTagsForForm } from '../../Redux/DEPR_ActivityTag/activityTag.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { TActivityFilterQuery } from '../../Types/ActivityFilter.type';
+import { TActivityFilterQuery } from '../../Types/DEPR_ActivityFilter.type';
 
 const propTypes = {
   isVisible: PropTypes.bool,

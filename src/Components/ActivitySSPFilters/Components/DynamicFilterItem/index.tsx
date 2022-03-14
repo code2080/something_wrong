@@ -8,7 +8,7 @@ import FilterItemLabel from '../FilterItemLabel';
 import FilterOptions from '../FilterOptions';
 
 // REDUX
-import { selectAllFilterOptions } from 'Redux/ActivitiesSlice';
+import { selectAllFilterOptions } from 'Redux/Activities';
 
 // HELPERS
 import { filterFilterOptionsByQuery } from 'Components/ActivitySSPFilters/helpers';

@@ -11,8 +11,8 @@ import { activityTimeModes } from '../Constants/activityTimeModes.constants';
 import { schedulingAlgorithms } from '../Constants/schedulingAlgorithms.constants';
 import { submissionValueTypes } from '../Constants/submissionValueTypes.constants';
 import { activityValueStatuses } from '../Constants/activityStatuses.constants';
-import { EActivityStatus } from '../Types/ActivityStatus.enum';
-import { TActivity } from '../Types/Activity.type';
+import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';
+import { TActivity } from '../Types/Activity/Activity.type';
 import { getTimingModeForActivity } from './activities.helpers';
 import {
   validateTiming,

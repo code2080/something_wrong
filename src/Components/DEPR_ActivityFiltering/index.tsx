@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { FilterOutlined } from '@ant-design/icons';
 
 // TYPES
-import { TActivityFilterQuery } from 'Types/ActivityFilter.type';
+import { TActivityFilterQuery } from 'Types/DEPR_ActivityFilter.type';
 
 // COMPONENTS
 import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';

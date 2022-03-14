@@ -11,7 +11,7 @@ import useSSP from '../../../SSP/Utils/hooks';
 import {
   activityFilterLookupMapSelector,
   selectLabelsForFilterOptionsForForm,
-} from 'Redux/ActivitiesSlice';
+} from 'Redux/Activities';
 
 // HELPERS
 import {

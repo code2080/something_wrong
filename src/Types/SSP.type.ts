@@ -1,4 +1,5 @@
-import { TActivity } from './Activity.type';
+import { TActivity } from './Activity/Activity.type';
+import { EActivityGroupings } from './Activity/ActivityGroupings.enum';
 
 export enum EFilterType {
   ONE = 'ONE',
@@ -61,12 +62,11 @@ export interface ISSPAPIResult {
   totalPages: number;
 }
 
-export interface ISSPReducerState
-  extends ISSPAPIStatus,
-    Omit<ISSPAPIResult, 'queryHash'>,
-    ISSPPaginationQuery,
-    ISSPSortingQuery,
-    ISSPFilterQuery {
+export interface ISSAPIDataGroupState extends Omit<ISSPAPIResult, 'queryHash'>, ISSPSortingQuery {
+  map: { [id: string]: TActivity };
+}
+
+export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
   // STATUS
   /**
    * From ISSAPIStatus:
@@ -74,22 +74,8 @@ export interface ISSPReducerState
    * loading: boolean,
    */
   // DATA
-  // From ISSPAPIResult
-  // results: any[],
-  map: { [id: string]: TActivity };
-  // PAGINATION
-  /**
-   * From ISSPPaginationQuery & ISSPAPIResult
-   * page: number;
-   * limit: number;
-   * totalPages: number;
-   */
-  // SORTING
-  /**
-   * From ISSPSortingQuery
-   * sortBy: string;
-   * direction: ESortDirection
-   */
+  groupBy: EActivityGroupings,
+  data: { [group in EActivityGroupings]: ISSAPIDataGroupState },
   // FILTERS
   /**
    * From ISSPFilterQuery

@@ -1,6 +1,6 @@
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
-import { TActivity } from '../../Types/Activity.type';
-import { ActivityValue } from '../../Types/ActivityValue.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
+import { ActivityValue } from '../../Types/Activity/ActivityValue.type';
 import { getFVForTimingValue } from './timing';
 import { getFVForObjectValue } from './object';
 import { getFVForFieldValue } from './field';

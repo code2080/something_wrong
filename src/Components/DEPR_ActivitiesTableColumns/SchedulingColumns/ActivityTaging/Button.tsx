@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import { AppstoreOutlined } from '@ant-design/icons';
 
 // TYPES
-import { TActivity } from '../../../../Types/Activity.type';
+import { TActivity } from '../../../../Types/Activity/Activity.type';
 type Props = {
   activity: TActivity;
 };

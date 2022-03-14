@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { ActivityValue, CategoryField } from '../ActivityValue.type';
+import { ActivityValue, CategoryField } from '../Activity/ActivityValue.type';
 // import moment from 'moment';
 // import { ActivityValue, CategoryField } from '../ActivityValue.type';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../Activity/Activity.type';
 import { TFormInstance } from '../../Types/FormInstance.type';
 import { getFilterLookupMap } from '../../Utils/activities.helpers';
-import { TFilterLookUpMap } from '../FilterLookUp.type';
+import { TFilterLookUpMap } from '../DEPR_FilterLookUp.type';
 
 const activities = {
   '601048c0ea0edb00206dae89': [

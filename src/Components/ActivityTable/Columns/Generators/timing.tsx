@@ -11,7 +11,7 @@ import {
 } from '../../../../Constants/activityTimeModes.constants';
 import TimingNameMap from '../../../../Constants/activityDesignTimingMap.constants';
 import { DATE_TIME_FORMAT } from '../../../../Constants/common.constants';
-import { EActivitySortingKey } from 'Types/ActivitySortingKey.enum';
+import { EActivitySortingKey } from 'Types/Activity/ActivitySortingKey.enum';
 
 const timingCols = {
   mode: (mapping) => ({

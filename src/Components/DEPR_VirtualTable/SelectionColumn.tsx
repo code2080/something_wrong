@@ -1,7 +1,7 @@
 import { Checkbox } from 'antd';
 import _ from 'lodash';
 import { ColumnType, Key, TableRowSelection } from 'antd/lib/table/interface';
-import { TActivity } from '../../Types/Activity.type';
+import { TActivity } from '../../Types/Activity/Activity.type';
 
 type Props = {
   rowKey: Key | undefined;

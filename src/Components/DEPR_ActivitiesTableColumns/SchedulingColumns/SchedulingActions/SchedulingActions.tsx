@@ -12,7 +12,7 @@ import JointTeachingIcon from './JointTeachingIcon';
 import './SchedulingActions.scss';
 
 // TYPES
-import { EActivityStatus } from '../../../../Types/ActivityStatus.enum';
+import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 
 const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
   const isScheduling = useSelector(selectActivitySchedulingById(activity._id));

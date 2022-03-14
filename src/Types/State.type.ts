@@ -18,7 +18,7 @@ export interface ISimpleAPIState {
 export interface IState {
   submissions: any;
   forms: any;
-  activitiesNew: ISSPReducerState;
+  activities: ISSPReducerState;
   tags: ISimpleAPIState;
   integration: {
     mappedObjectsLabel: any;

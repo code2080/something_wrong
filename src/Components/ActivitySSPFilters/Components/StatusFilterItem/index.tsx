@@ -5,7 +5,7 @@ import FilterOptions from '../FilterOptions';
 import { toActivityStatusDisplay } from 'Components/ActivitySSPFilters/helpers';
 
 // TYPES
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 type Props = {
   onChange: (updValue: any) => void;
