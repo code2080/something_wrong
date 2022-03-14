@@ -8,13 +8,17 @@ import {
   ISSPReducerState,
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
-import { TSSPWrapperProps } from '../../Types';
+import { FilterObject, TSSPWrapperProps } from '../../Types';
 import { mergeWith, pick, cloneDeep } from 'lodash';
 import {
   getFilterCache,
   setFilterCache,
 } from 'Components/SSP/Utils/cacheService';
-import { customFilterPathMergeWith, recursivelyTrimKeys } from 'Components/SSP/Utils/helpers';
+import {
+  customFilterPathMergeWith,
+  recursivelyTrimKeys,
+  recursivelyTrimKeys2,
+} from 'Components/SSP/Utils/helpers';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -75,7 +79,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const [_selectedKeys, _setSelectedKeys] = useState<string[]>([]);
   const setSelectedKeys = (keys: string[]) => _setSelectedKeys(keys);
   const selectAllKeys = () => _setSelectedKeys(allKeys);
-  
+
   /**
    * SORTING
    */
@@ -102,11 +106,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ..._inclusion, ...patch });
   };
-  const setFilters = (filters: Record<string, any>) => _setFilters(filters);
-  const patchFilters = (patch: Record<string, any>) => {
+  const setFilters = (filters: FilterObject) => _setFilters(filters);
+  const patchFilters = (patch: FilterObject) => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-    const noEmptyKeysObj = recursivelyTrimKeys(clonedObj);
+    const noEmptyKeysObj = recursivelyTrimKeys2(clonedObj);
     _setFilters(noEmptyKeysObj);
   };
 
