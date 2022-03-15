@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import {
-  JointTeachingMatchedActivities,
-  JointTeachingUnmatchedActivities,
+  MatchedActivities,
+  UnmatchedActivities,
 } from 'Components/JointTeaching/';
 
 // ACTIONS
@@ -53,13 +53,13 @@ const JointTeachingPage = () => {
   const renderTab = (activeTab: ActiveJointTeachingTab) => {
     const outcomes: Record<ActiveJointTeachingTab, () => JSX.Element> = {
       unmatchedTab: () => (
-        <JointTeachingUnmatchedActivities
+        <UnmatchedActivities
           //todo: these props are wierd... remove if possible
           triggerFetchingActivities={triggerFetchingActivities}
           setTriggerFetchingActivities={setTriggerFetchingActivities}
         />
       ),
-      matchedTab: () => <JointTeachingMatchedActivities />,
+      matchedTab: () => <MatchedActivities />,
     };
 
     return outcomes[activeTab]();

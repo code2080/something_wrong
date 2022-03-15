@@ -15,12 +15,13 @@ import { selectAllActivityIds } from 'Redux/DEPR_Activities/activities.selectors
 import { useParams } from 'react-router-dom';
 import UnmatchedActivitiesTable from './UnmatchedActivitiesTable';
 import ActivitiesToolbar from 'Components/ActivitiesToolbar';
+import useSSP from 'Components/SSP/Utils/hooks';
 
 interface Props {
   triggerFetchingActivities: number;
   setTriggerFetchingActivities: (trigger: number) => void;
 }
-const JointTeachingUnmatchedActivities = ({
+const UnmatchedActivities = ({
   triggerFetchingActivities,
   setTriggerFetchingActivities,
 }: Props) => {
@@ -28,12 +29,13 @@ const JointTeachingUnmatchedActivities = ({
   const [selectJointTeachingGroupVisible, setSelectJointTeachingGroupVisible] =
     useState(false);
   const dispatch = useDispatch();
+  const { selectedKeys, selectAllKeys, setSelectedKeys } = useSSP();
 
-  const allActivityIds = useSelector(selectAllActivityIds());
+  /*   const allActivityIds = useSelector(selectAllActivityIds());
 
   const selectedRowKeys = useSelector(
     selectSelectedActivities(UNMATCHED_ACTIVITIES_TABLE),
-  );
+  ); */
 
   const createJointTeachingMatch = () => {
     setCreateNewGroupVisible(true);
@@ -44,13 +46,15 @@ const JointTeachingUnmatchedActivities = ({
   };
 
   const handleSelectAll = async () => {
-    dispatch(
+    /*     dispatch(
       selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, allActivityIds),
-    );
+    ); */
+    selectAllKeys();
   };
 
   const handleDeselectAll = () => {
-    dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
+    // dispatch(selectActivitiesInTable(UNMATCHED_ACTIVITIES_TABLE, []));
+    setSelectedKeys([]);
   };
 
   return (
@@ -75,7 +79,8 @@ const JointTeachingUnmatchedActivities = ({
             setTriggerFetchingActivities(triggerFetchingActivities + 1);
           }
         }}
-        activityIds={selectedRowKeys}
+        // activityIds={selectedRowKeys}
+        activityIds={selectedKeys}
       />
       <SelectJointTeachingGroupToAddActivitiesModal
         visible={selectJointTeachingGroupVisible}
@@ -86,10 +91,11 @@ const JointTeachingUnmatchedActivities = ({
           handleDeselectAll();
           setSelectJointTeachingGroupVisible(false);
         }}
-        selectedActivityIds={selectedRowKeys}
+        // selectedActivityIds={selectedRowKeys}
+        selectedActivityIds={selectedKeys}
       />
     </div>
   );
 };
 
-export default JointTeachingUnmatchedActivities;
+export default UnmatchedActivities;

@@ -27,7 +27,7 @@ import {
   setActivitySorting,
   resetActivitySorting,
 } from 'Redux/GlobalUI/globalUI.actions';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
+// import { useActivitiesWatcher } from 'Hooks/useActivities';
 import { useParams } from 'react-router-dom';
 import ActivityTable from 'Components/ActivityTable';
 import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
