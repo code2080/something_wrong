@@ -1,13 +1,10 @@
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Modal, Table } from 'antd';
-import _ from 'lodash';
+import _, { capitalize } from 'lodash';
 
 // SELECTORS
 import { selectExtIdLabel } from '../../Redux/TE/te.selectors';
-
-// HELPERS
-import { capitalizeString } from '../../Utils/string.helpers';
 
 // COMPONENTS
 import {
@@ -54,7 +51,7 @@ const ObjectRequestModal = ({ onClose, visible, request }) => {
       {objectRequestTypeToPlainText[request.type]}
       <br />
       <b>Status:</b> <ObjectRequestStatusIcon status={request.status} />
-      {capitalizeString(request.status || RequestStatus.PENDING)}
+      {capitalize(request.status || RequestStatus.PENDING)}
       <br />
       <b>Object type:</b> {objectTypeLabel}
       {!_.isEmpty(objectLabel) && (

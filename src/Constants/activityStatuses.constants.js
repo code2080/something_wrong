@@ -1,4 +1,4 @@
-import { EActivityStatus } from '../Types/ActivityStatus.enum';
+import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';
 
 export const activityStatusProps = {
   [EActivityStatus.NOT_SCHEDULED]: {

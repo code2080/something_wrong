@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { mergeWith, pick, cloneDeep } from 'lodash';
+
+// UTILS
+import {
+  customFilterPathMergeWith,
+  recursivelyTrimFilterKeys,
+} from 'Components/SSP/Utils/helpers';
+import {
+  getFilterCache,
+  setFilterCache,
+} from 'Components/SSP/Utils/cacheService';
+
+// TYPES
 import {
   EFilterInclusions,
   EFilterType,
@@ -8,16 +21,9 @@ import {
   ISSPReducerState,
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
-import { FilterObject, TSSPWrapperProps } from '../../Types';
-import { mergeWith, pick, cloneDeep } from 'lodash';
-import {
-  getFilterCache,
-  setFilterCache,
-} from 'Components/SSP/Utils/cacheService';
-import {
-  customFilterPathMergeWith,
-  trimFilterKeysRecursive,
-} from 'Components/SSP/Utils/helpers';
+import { TSSPWrapperProps } from '../../Types';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { TActivityFilterMapObject } from 'Types/Activity/ActivityFilterLookupMap.type';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -39,23 +45,28 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     loading,
     hasErrors,
     // DATA
-    results,
-    map,
-    // PAGINATION
-    page,
-    limit,
-    totalPages,
-    // SORTING
-    sortBy,
-    direction,
+    data,
+    // GROUP BY
+    groupBy,
     // FILTERS
     matchType,
     inclusion,
     filters,
     filterLookupMap,
-    // SELECTION
-    allKeys,
   }: ISSPReducerState = useSelector(selectorFn);
+
+  const {
+    [groupBy]: {
+      page,
+      limit,
+      totalPages,
+      allKeys,
+      results,
+      map,
+      sortBy,
+      direction,
+    },
+  } = data;
 
   /**
    * PAGINATION
@@ -105,11 +116,12 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ..._inclusion, ...patch });
   };
-  const setFilters = (filters: FilterObject) => _setFilters(filters);
-  const patchFilters = (patch: FilterObject) => {
+  const setFilters = (filters: TActivityFilterMapObject) =>
+    _setFilters(filters);
+  const patchFilters = (patch: TActivityFilterMapObject) => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-    const noEmptyKeysObj = trimFilterKeysRecursive(clonedObj);
+    const noEmptyKeysObj = recursivelyTrimFilterKeys(clonedObj);
     _setFilters(noEmptyKeysObj);
   };
 
@@ -155,6 +167,12 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   };
 
   /**
+   * GROUPING
+   */
+  const setGroup = (groupBy: EActivityGroupings) =>
+    dispatch(fetchFn({ groupBy }));
+
+  /**
    * EFFECTS
    */
   useEffect(() => {
@@ -174,8 +192,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         loading,
         hasErrors,
         // DATA
-        results,
         map,
+        results,
+        // GROUPING
+        groupBy,
+        setGroup,
         // PAGINATION
         page,
         limit,

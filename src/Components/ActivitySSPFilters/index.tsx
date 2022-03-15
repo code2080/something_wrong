@@ -5,14 +5,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';
 import FilterModal from './Components/Modal';
 
-// STYLES
-
-// TYPES
-type Props = {
-  datasourceId?: string;
-};
-
-const ActivityFiltering = ({ datasourceId }: Props) => {
+const ActivityFiltering = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -24,7 +17,6 @@ const ActivityFiltering = ({ datasourceId }: Props) => {
       <FilterModal
         isVisible={showModal}
         onClose={() => setShowModal(false)}
-        datasourceId={datasourceId}
       />
     </>
   );

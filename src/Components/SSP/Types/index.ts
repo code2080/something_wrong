@@ -13,9 +13,3 @@ export type TSSPWrapperProps = {
 export interface ISSPColumn extends ColumnType<any> {
   width?: number;
 }
-
-/** Describes filters */
-export interface FilterObject {
-  /** An entry will either be a leaf (string array) or a nested object */
-  [key: string]: string[] | FilterObject;
-}

@@ -1,4 +1,4 @@
-import { FilterObject } from 'Components/SSP/Types';
+import { TActivityFilterMapObject } from './Activity/ActivityFilterLookupMap.type';
 import { TActivity } from './Activity/Activity.type';
 import { EActivityGroupings } from './Activity/ActivityGroupings.enum';
 
@@ -17,9 +17,9 @@ export enum ESortDirection {
   DESCENDING = 'desc',
 }
 
-enum EQueryObject {
-  NONE = 'NONE',
-}
+// enum EQueryObject {
+//   NONE = 'NONE',
+// }
 
 export enum EFilterInclusions {
   INCLUDE = 'INCLUDE',
@@ -32,7 +32,7 @@ export const DEFAULT_PAGE_SIZE = 100;
 export interface ISSPFilterQuery {
   matchType: EFilterType;
   inclusion: Record<string, EFilterInclusions | boolean>;
-  filters: FilterObject;
+  filters: TActivityFilterMapObject;
 }
 
 export interface ISSPSortingQuery {
@@ -41,7 +41,7 @@ export interface ISSPSortingQuery {
 }
 
 export interface ISSPGroupingQuery {
-  groupBy: EQueryObject.NONE | 'WEEK_PATTERN';
+  groupBy: EActivityGroupings;
 }
 
 export interface ISSPPaginationQuery {
@@ -58,14 +58,13 @@ export interface ISSPAPIResult {
   queryHash: number;
   results: any[];
   page: number;
+  groupBy: EActivityGroupings,
   allKeys: string[];
   limit: number;
   totalPages: number;
 }
 
-export interface ISSAPIDataGroupState
-  extends Omit<ISSPAPIResult, 'queryHash'>,
-    ISSPSortingQuery {
+export interface ISSAPIDataGroupState extends Omit<ISSPAPIResult, 'queryHash' | 'groupBy'>, ISSPSortingQuery {
   map: { [id: string]: TActivity };
 }
 
@@ -95,7 +94,7 @@ export interface ISSPQueryObject
     ISSPGroupingQuery,
     ISSPPaginationQuery {}
 
-export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys'> {
+export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys' | 'data'> {
   name: string;
   // PAGINATION FUNCTIONS
   nextPage: () => void;
@@ -117,9 +116,18 @@ export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys'> {
     inclusion: Record<string, EFilterInclusions | boolean>,
   ) => void;
   patchInclusion: (patch: Record<string, EFilterInclusions | boolean>) => void;
-  setFilters: (filters: FilterObject) => void;
-  patchFilters: (patch: FilterObject) => void;
+  setFilters: (filters: TActivityFilterMapObject) => void;
+  patchFilters: (patch: TActivityFilterMapObject) => void;
   commitFilterChanges: () => void;
   discardFilterChanges: () => void;
   initFilters: (defaultFilters: Partial<ISSPFilterQuery>) => void;
+  // GROUPING COVENIENCE FNs
+  setGroup: (groupBy: EActivityGroupings) => void,
+  results: any[],
+  map: { [id: string]: any },
+  page: number,
+  totalPages: number,
+  limit: number,
+  sortBy: string | undefined,
+  direction: ESortDirection | undefined,
 }

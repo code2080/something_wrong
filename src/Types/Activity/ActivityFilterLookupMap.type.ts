@@ -32,6 +32,11 @@ export type TActivityFilter = {
   endDate?: string[];
 };
 
+export interface TActivityFilterMapObject {
+  /** An entry will either be a leaf (string array) or a nested object */
+  [key: string]: string[] | TActivityFilterMapObject;
+}
+
 export const createFn = (obj: any) => ({
   submitter: obj.submitter || {},
   tag: obj.tag || {},

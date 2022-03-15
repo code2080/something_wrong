@@ -1,4 +1,5 @@
 import React from 'react';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import {
   EFilterType,
   ISSPResourceContext,
@@ -12,6 +13,9 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   // DATA
   results: [],
   map: {},
+  // GROUPING
+  setGroup: () => {},
+  groupBy: EActivityGroupings.FLAT,
   // PAGINATION
   page: 1,
   limit: 100,

@@ -56,7 +56,7 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionsPage from './pages/submissions.page';
-import JointTeachingPage from './pages/jointTeaching.page';
+import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
