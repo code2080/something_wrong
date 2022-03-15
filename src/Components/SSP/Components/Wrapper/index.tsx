@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { mergeWith, pick, cloneDeep } from 'lodash';
+
+// UTILS
+import { customFilterPathMergeWith, recursivelyTrimFilterKeys } from 'Components/SSP/Utils/helpers';
+import {
+  getFilterCache,
+  setFilterCache,
+} from 'Components/SSP/Utils/cacheService';
+
+// TYPES
 import {
   EFilterInclusions,
   EFilterType,
@@ -9,13 +19,8 @@ import {
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
 import { TSSPWrapperProps } from '../../Types';
-import { mergeWith, pick, cloneDeep } from 'lodash';
-import {
-  getFilterCache,
-  setFilterCache,
-} from 'Components/SSP/Utils/cacheService';
-import { customFilterPathMergeWith, recursivelyTrimKeys } from 'Components/SSP/Utils/helpers';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { TActivityFilterMapObject } from 'Types/Activity/ActivityFilterLookupMap.type';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -70,7 +75,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const [_selectedKeys, _setSelectedKeys] = useState<string[]>([]);
   const setSelectedKeys = (keys: string[]) => _setSelectedKeys(keys);
   const selectAllKeys = () => _setSelectedKeys(allKeys);
-  
+
   /**
    * SORTING
    */
@@ -97,11 +102,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ..._inclusion, ...patch });
   };
-  const setFilters = (filters: Record<string, any>) => _setFilters(filters);
-  const patchFilters = (patch: Record<string, any>) => {
+  const setFilters = (filters: TActivityFilterMapObject) => _setFilters(filters);
+  const patchFilters = (patch: TActivityFilterMapObject) => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
-    const noEmptyKeysObj = recursivelyTrimKeys(clonedObj);
+    const noEmptyKeysObj = recursivelyTrimFilterKeys(clonedObj);
     _setFilters(noEmptyKeysObj);
   };
 

@@ -1,5 +1,5 @@
 import { cloneDeep, flatMapDeep, isEmpty, mergeWith, pickBy } from 'lodash';
-import { customFilterPathMergeWith, removeDeepEntry } from '../Utils/helpers';
+import { customFilterPathMergeWith } from '../Utils/helpers';
 
 describe('Merger function used for filters', () => {
   test('Test basic merge on nested properties', () => {

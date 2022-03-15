@@ -1,3 +1,4 @@
+import { FilterObject } from 'Components/SSP/Types';
 import { capitalize, compact, lowerCase, uniq } from 'lodash';
 import { Field } from 'Redux/TE/te.selectors';
 import { TActivityFilterLookupMap } from 'Types/Activity/ActivityFilterLookupMap.type';
@@ -197,11 +198,11 @@ export const createPatchFromFilterPropertyAndValues = (
   const keys = selectedFilterProperty.split(REPLACED_KEY);
   const reversedKeys = keys.reverse();
   const obj = reversedKeys.reduce(
-    (prev: Record<string, any>, current: string, idx) => {
+    (prev: FilterObject, current: string, idx) => {
       if (idx === 0) {
-        return { [current]: [ ...values] };
+        return { [current]: [...values] };
       } else {
-        return { [current.toString()]: { ...prev } }
+        return { [current.toString()]: { ...prev } };
       }
     },
     {},

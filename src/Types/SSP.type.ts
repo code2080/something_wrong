@@ -1,3 +1,4 @@
+import { TActivityFilterMapObject } from './Activity/ActivityFilterLookupMap.type';
 import { TActivity } from './Activity/Activity.type';
 import { EActivityGroupings } from './Activity/ActivityGroupings.enum';
 
@@ -31,7 +32,7 @@ export const DEFAULT_PAGE_SIZE = 100;
 export interface ISSPFilterQuery {
   matchType: EFilterType;
   inclusion: Record<string, EFilterInclusions | boolean>;
-  filters: Record<string, any>;
+  filters: TActivityFilterMapObject;
 }
 
 export interface ISSPSortingQuery {
@@ -75,8 +76,8 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
    * loading: boolean,
    */
   // DATA
-  groupBy: EActivityGroupings,
-  data: { [group in EActivityGroupings]: ISSAPIDataGroupState },
+  groupBy: EActivityGroupings;
+  data: { [group in EActivityGroupings]: ISSAPIDataGroupState };
   // FILTERS
   /**
    * From ISSPFilterQuery
@@ -105,15 +106,18 @@ export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys' | 
   setSelectedKeys: (keys: string[]) => void;
   selectAllKeys: () => void;
   // SORTING
-  setSorting: (sortBy: string | undefined, direction?: ESortDirection | undefined) => void;
+  setSorting: (
+    sortBy: string | undefined,
+    direction?: ESortDirection | undefined,
+  ) => void;
   // FILTERING
   setMatchType: (matchType: EFilterType) => void;
   setInclusion: (
     inclusion: Record<string, EFilterInclusions | boolean>,
   ) => void;
   patchInclusion: (patch: Record<string, EFilterInclusions | boolean>) => void;
-  setFilters: (filters: Record<string, any>) => void;
-  patchFilters: (patch: Record<string, any>) => void;
+  setFilters: (filters: TActivityFilterMapObject) => void;
+  patchFilters: (patch: TActivityFilterMapObject) => void;
   commitFilterChanges: () => void;
   discardFilterChanges: () => void;
   initFilters: (defaultFilters: Partial<ISSPFilterQuery>) => void;

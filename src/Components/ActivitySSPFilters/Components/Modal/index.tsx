@@ -72,7 +72,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     setSelectedFilterProperty(property);
   };
 
-  const onSelectFilterValue = (values: any) => {
+  const onSelectFilterValue = (values: string[]) => {
     const patch = createPatchFromFilterPropertyAndValues(
       selectedFilterProperty,
       values,
