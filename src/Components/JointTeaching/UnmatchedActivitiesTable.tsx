@@ -43,35 +43,28 @@ import {
   TagColumn,
   SchedulingStatusColumn,
   SubmitterColumn,
+  jointTeachingObjectColumn,
+  primaryObjectColumn,
 } from 'Components/ActivityTable/Columns';
 
 interface Props {
   triggerFetching: number;
 }
+//todo: maybe remove this component and put everything in its parrent
 const UnmatchedActivitiesTable = ({ triggerFetching }: Props) => {
   const { formId } = useParams<{ formId: string }>();
 
   const dispatch = useDispatch();
 
-  //todo: fill the arrays and move context up :)
   return (
-    <SSPResourceWrapper
-      name={`${formId}__JOINTTEACHING_TAB`}
-      selectorFn={selectSSPState('activities')}
-      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        fetchActivitiesForForm(formId, partialQuery)
-      }
-      initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        initializeSSPStateProps(partialQuery)
-      }
-      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
-    >
-      {/* TODO: CHANGE TO THE CORRECT COLUMNS */}
-      <ActivityTable
-        preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
-        postCustomColumns={[SubmitterColumn]}
-      />
-    </SSPResourceWrapper>
+    <ActivityTable
+      preCustomColumns={[
+        jointTeachingObjectColumn,
+        primaryObjectColumn,
+        TagColumn,
+        SchedulingStatusColumn,
+      ]}
+    />
   );
 };
 

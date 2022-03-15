@@ -36,7 +36,7 @@ const ActivitiesPage = () => {
     // Need to make sure some secondary resources are loaded
     dispatch(fetchTagsForForm(formId));
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -44,13 +44,23 @@ const ActivitiesPage = () => {
       <SSPResourceWrapper
         name={`${formId}__ACTIVITIES_TAB`}
         selectorFn={selectSSPState('activities')}
-        fetchFn={(partialQuery?: Partial<ISSPQueryObject>) => fetchActivitiesForForm(formId, partialQuery)}
-        initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) => initializeSSPStateProps(partialQuery)}
+        //todo: Should it always be this function?
+        //todo: switch fn depending on tab?
+        fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
+          fetchActivitiesForForm(formId, partialQuery)
+        }
+        initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
+          initializeSSPStateProps(partialQuery)
+        }
         fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
       >
         <ActivitiesToolbar />
         <ActivityTable
-          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
+          preCustomColumns={[
+            RowActionsColumn,
+            TagColumn,
+            SchedulingStatusColumn,
+          ]}
           postCustomColumns={[SubmitterColumn]}
         />
       </SSPResourceWrapper>
