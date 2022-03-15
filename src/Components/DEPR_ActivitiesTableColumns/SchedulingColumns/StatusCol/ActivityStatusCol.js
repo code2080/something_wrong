@@ -16,7 +16,7 @@ import './ActivityStatusCol.scss';
 // CONSTANTS
 import { activityStatusProps } from 'Constants/activityStatuses.constants';
 import { DATE_TIME_FORMAT } from 'Constants/common.constants';
-import { EActivityStatus } from 'Types/ActivityStatus.enum';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 // ACTIONS
 import { updateActivity } from 'Redux/DEPR_Activities/activities.actions';

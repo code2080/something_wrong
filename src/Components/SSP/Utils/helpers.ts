@@ -13,16 +13,17 @@ export const serializeSSPQuery = (
   state: ISSPReducerState,
 ): any => {
   const sspQueryParams = pick(state, [
-    'page',
-    'limit',
-    'sortBy',
-    'direction',
+    'groupBy',
     'matchType',
     'inclusion',
     'filters',
   ]);
+  const finalGroupBy = partialQueryObject?.groupBy || sspQueryParams.groupBy;
+
+  const groupedParams = pick(state.data[finalGroupBy], ['page', 'limit', 'sortBy', 'direction']);
+
   const finalQueryObject = JSON.stringify(
-    Object.assign(sspQueryParams, partialQueryObject),
+    Object.assign(sspQueryParams, groupedParams, partialQueryObject),
   );
   const urlParams = new URLSearchParams({ ssp: finalQueryObject });
   return urlParams.toString();
@@ -30,11 +31,7 @@ export const serializeSSPQuery = (
 
 export const customFilterPathMergeWith = (oldVal: any, newVal: any) => {
   /** Base case */
-  if (!oldVal || Array.isArray(newVal)) {
-    return newVal;
-    // return isEmpty(newVal) ? undefined : newVal;
-  }
-
+  if (!oldVal || Array.isArray(newVal)) return newVal;
   mergeWith(oldVal, newVal, customFilterPathMergeWith);
 
   return oldVal;

@@ -15,6 +15,7 @@ import {
   setFilterCache,
 } from 'Components/SSP/Utils/cacheService';
 import { customFilterPathMergeWith, recursivelyTrimKeys } from 'Components/SSP/Utils/helpers';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   name,
@@ -36,23 +37,17 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     loading,
     hasErrors,
     // DATA
-    results,
-    map,
-    // PAGINATION
-    page,
-    limit,
-    totalPages,
-    // SORTING
-    sortBy,
-    direction,
+    data,
+    // GROUP BY
+    groupBy,
     // FILTERS
     matchType,
     inclusion,
     filters,
     filterLookupMap,
-    // SELECTION
-    allKeys,
   }: ISSPReducerState = useSelector(selectorFn);
+
+  const { [groupBy]: { page, limit, totalPages, allKeys, results, map, sortBy, direction } } = data;
 
   /**
    * PAGINATION
@@ -152,6 +147,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   };
 
   /**
+   * GROUPING
+   */
+  const setGroup = (groupBy: EActivityGroupings) => dispatch(fetchFn({ groupBy }));
+
+  /**
    * EFFECTS
    */
   useEffect(() => {
@@ -171,8 +171,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         loading,
         hasErrors,
         // DATA
-        results,
         map,
+        results,
+        // GROUPING
+        groupBy,
+        setGroup,
         // PAGINATION
         page,
         limit,

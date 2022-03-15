@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { GroupOutlined, OrderedListOutlined } from '@ant-design/icons';
-
-// REDUX
-import { setFilterValues } from 'Redux/Filters/filters.actions';
 
 // SELECTORS
 import { hasPermission } from 'Redux/Auth/auth.selectors';
@@ -26,15 +23,13 @@ import './index.scss';
 
 // CONSTANTS
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
-// TYPES
-import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 const ActivitiesToolbar = () => {
-  const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
 
-  const { selectedKeys } = useSSP();
+  const { selectedKeys, groupBy, setGroup } = useSSP();
 
   /**
    * SELECTORS
@@ -103,20 +98,20 @@ const ActivitiesToolbar = () => {
       </ToolbarGroup>
       <ToolbarGroup label='Grouping & filters'>
         <GroupingRadioGroup
-          value='FLAT'
+          value={groupBy}
           options={[
             {
-              value: 'FLAT',
+              value: EActivityGroupings.FLAT,
               label: <OrderedListOutlined />,
               tooltip: 'Flat list',
             },
             {
-              value: 'WEEK_PATTERN',
+              value: EActivityGroupings.WEEK_PATTERN,
               label: <GroupOutlined />,
               tooltip: 'Week pattern',
             },
           ]}
-          onSelect={(val) => console.log(val)}
+          onSelect={(val) => setGroup(val as EActivityGroupings)}
         />
         <ActivityFiltering />
       </ToolbarGroup>
