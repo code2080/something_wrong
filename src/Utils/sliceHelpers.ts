@@ -155,3 +155,13 @@ export const upsertEntity = (
     state.results = [...state.results, result];
   }
 };
+
+
+export const transformSimpleAPIResultToFilterLookupPatch = (result: Partial<ISimpleAPIResult>) => {
+  const { results = [] } = result;
+  const filterLookupMapPatch = results.reduce((tot, acc) => ({
+    ...tot,
+    [acc._id]: 1,
+  }), {});
+  return filterLookupMapPatch;
+};

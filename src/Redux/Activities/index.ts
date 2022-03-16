@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../../Services/api.service';
 
+
 // ACTIONS
 import {
   finishedLoadingFailure,
@@ -57,6 +58,7 @@ import { TForm } from 'Types/Form.type';
 import { TPopulateSelectionPayload } from 'Types/TECorePayloads.type';
 import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { merge } from 'lodash';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -118,8 +120,17 @@ const slice = createSlice({
     },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
-      state.filterLookupMap = lookupMap;
+      state.filterLookupMap = merge(state.filterLookupMap || {}, lookupMap);
       // finishedLoadingSuccess(state); @todo break out into separate loading component
+    },
+    patchFilterLookupMapWithLocalState: (state, { payload }) => {
+      const keysToMerge = Object.keys(payload);
+      for (let i = 0; i < keysToMerge.length; i += 1) {
+        const currFilterLookupMapPropValues: any[] = state.filterLookupMap[keysToMerge[i]];
+        const newLocalStateVals = payload[keysToMerge[i]];
+        const newValues = { ...currFilterLookupMapPropValues, ...newLocalStateVals };
+        state.filterLookupMap[keysToMerge[i]] = newValues;
+      }
     },
     defaultBatchOperationSuccessHandler: (state, { payload }) => {
       updateStateWithResultFromBatchOperation(payload, state);
@@ -248,6 +259,7 @@ export const {
   fetchActivitiesForFormSuccess,
   fetchActivityFilterLookupMapSuccess,
   defaultBatchOperationSuccessHandler,
+  patchFilterLookupMapWithLocalState,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
