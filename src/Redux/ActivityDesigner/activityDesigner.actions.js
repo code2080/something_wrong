@@ -25,7 +25,7 @@ const fetchMappingsFlow = (form) => ({
 export const fetchMappings = (form) =>
   asyncAction.GET({
     flow: fetchMappingsFlow(form),
-    endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${form._id}/activity-designs`,
     params: { formId: form._id },
   });
 
@@ -44,7 +44,7 @@ const updateDesignFlow = {
 export const updateDesign = (mapping) =>
   asyncAction.POST({
     flow: updateDesignFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}activity-designs`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${mapping.formId}/activity-designs`,
     params: { mapping },
   });
 
