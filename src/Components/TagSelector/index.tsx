@@ -30,6 +30,10 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
   /**
    * EVENT HANDLERS
    */
+  const onSearch = (val: string) => {
+    setTagName(val);
+  }
+
   const onCreateTag = () => {
     dispatch(createTagForForm(formId, { name: tagName }))
     setTagName('');
@@ -44,7 +48,7 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
       size="small"
       value={value}
       onChange={(val) => onChange(val)}
-      onSearch={(val) => setTagName(val)}
+      onSearch={onSearch}
       allowClear
       notFoundContent={(
         <div>
@@ -54,6 +58,7 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
       )}
       loading={isLoading}
       searchValue={tagName}
+      optionFilterProp="label"
     />
   );
 };

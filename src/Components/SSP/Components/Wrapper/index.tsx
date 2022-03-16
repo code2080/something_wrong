@@ -138,7 +138,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
       filters: _filters,
     };
     setFilterCache(name, filterQuery);
-    dispatch(fetchFn(filterQuery));
+    dispatch(fetchFn({ ...filterQuery, page: 1 }));
   };
 
   const initFiltersForDatasourceWithCacheAndDefaults = (

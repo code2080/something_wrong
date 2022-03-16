@@ -10,11 +10,13 @@ import {
   commitAPIPayloadToState,
   upsertEntity,
   deleteEntityFromState,
+  transformSimpleAPIResultToFilterLookupPatch,
 } from '../../Utils/sliceHelpers';
 
 // TYPES
 import { createFn, TActivityTag } from 'Types/ActivityTag.type';
 import { ISimpleAPIState, IState } from 'Types/State.type';
+import { patchFilterLookupMapWithLocalState } from 'Redux/Activities';
 
 export const initialState: ISimpleAPIState = {
   // API STATE
@@ -78,6 +80,11 @@ export const fetchTagsForForm = (formId: string) =>
       dispatch(defaultRequestHandler());
       const result = await api.get({ endpoint: `forms/${formId}/tags` });
       dispatch(fetchTagsForFormSuccess(result));
+      /**
+       * Side effect; update activity filter lookup map with any non-used values
+       */
+      const filterLookupMapPatch = transformSimpleAPIResultToFilterLookupPatch(result);
+      dispatch(patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
@@ -89,6 +96,11 @@ export const createTagForForm =
       dispatch(defaultRequestHandler());
       const result = await api.post({ endpoint: `forms/${formId}/tags`, data: tagBody });
       dispatch(createTagForFormSuccess(result));
+      /**
+       * Side effect; update activity filter lookup map with new values
+       */
+      const filterLookupMapPatch = transformSimpleAPIResultToFilterLookupPatch({ results: [result] });
+      dispatch(patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
