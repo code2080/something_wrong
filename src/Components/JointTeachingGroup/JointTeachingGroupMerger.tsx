@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 
 // COMPONENTS
-import CreateNewJointTeachingGroupModal from 'Pages/FormDetail/pages/JointTeaching/JointTeachingModals/CreateNewJointTeachingGroupModal';
+import CreateNewJointTeachingGroupModal from 'Components/JointTeaching/CreateNewJointTeachingGroupModal';
 import ToolbarButton from 'Components/ActivitiesToolbar/ToolbarButton';
 
 type Props = {
@@ -35,7 +35,6 @@ const JointTeachingGroupMerger = ({
             onCreateMatchCallback();
           }
         }}
-        formId={formId}
         activityIds={activityIds}
       />
     </>

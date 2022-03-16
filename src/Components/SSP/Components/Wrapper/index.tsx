@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mergeWith, pick, cloneDeep } from 'lodash';
 
 // UTILS
-import { customFilterPathMergeWith, recursivelyTrimFilterKeys } from 'Components/SSP/Utils/helpers';
+import {
+  customFilterPathMergeWith,
+  recursivelyTrimFilterKeys,
+} from 'Components/SSP/Utils/helpers';
 import {
   getFilterCache,
   setFilterCache,
@@ -52,7 +55,18 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     filterLookupMap,
   }: ISSPReducerState = useSelector(selectorFn);
 
-  const { [groupBy]: { page, limit, totalPages, allKeys, results, map, sortBy, direction } } = data;
+  const {
+    [groupBy]: {
+      page,
+      limit,
+      totalPages,
+      allKeys,
+      results,
+      map,
+      sortBy,
+      direction,
+    },
+  } = data;
 
   /**
    * PAGINATION
@@ -102,7 +116,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   ) => {
     _setInclusion({ ..._inclusion, ...patch });
   };
-  const setFilters = (filters: TActivityFilterMapObject) => _setFilters(filters);
+  const setFilters = (filters: TActivityFilterMapObject) =>
+    _setFilters(filters);
   const patchFilters = (patch: TActivityFilterMapObject) => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
@@ -154,7 +169,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   /**
    * GROUPING
    */
-  const setGroup = (groupBy: EActivityGroupings) => dispatch(fetchFn({ groupBy }));
+  const setGroup = (groupBy: EActivityGroupings) =>
+    dispatch(fetchFn({ groupBy }));
 
   /**
    * EFFECTS

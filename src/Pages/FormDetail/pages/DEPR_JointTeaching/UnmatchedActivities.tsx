@@ -9,9 +9,9 @@ import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 // ACTIONS
 import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
-import CreateNewJointTeachingGroupModal from './JointTeachingModals/CreateNewJointTeachingGroupModal';
-import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/SelectJointTeachingGroupToAddActivitiesModal';
-import UnmatchedActivitiesTable from './Components/UnmatchedActivitiesTable';
+import CreateNewJointTeachingGroupModal from './JointTeachingModals/DEPR_CreateNewJointTeachingGroupModal';
+import SelectJointTeachingGroupToAddActivitiesModal from './JointTeachingModals/DEPR_SelectJointTeachingGroupToAddActivitiesModal';
+import UnmatchedActivitiesTable from './Components/DEPR_UnmatchedActivitiesTable';
 import { selectAllActivityIds } from 'Redux/DEPR_Activities/activities.selectors';
 
 interface Props {

@@ -10,7 +10,7 @@ import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';
 
 import { useJointTeachingCalculating } from 'Hooks/jointTeaching';
-import UnmatchedActivitiesTable from '../Components/UnmatchedActivitiesTable';
+import UnmatchedActivitiesTable from '../Components/DEPR_UnmatchedActivitiesTable';
 import { UNMATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 
 interface Props extends ModalProps {

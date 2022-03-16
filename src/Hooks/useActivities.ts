@@ -72,6 +72,7 @@ export const useAllActivities = ({ formId, filters }) => {
   };
 };
 
+//todo: maybe remove this??
 export const useActivitiesWatcher = ({
   formId,
   filters,

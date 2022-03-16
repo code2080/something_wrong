@@ -49,7 +49,7 @@ import JointTeachingGroup, {
   JointTeachingConflictResolution,
 } from 'Models/JointTeachingGroup.model';
 
-import './JointTeachingGroupsTable.scss';
+// import './JointTeachingGroupsTable.scss';
 import { MATCHED_ACTIVITIES_TABLE } from 'Constants/tables.constants';
 interface Props {
   readonly?: boolean;

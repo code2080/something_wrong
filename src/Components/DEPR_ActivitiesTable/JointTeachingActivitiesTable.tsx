@@ -24,7 +24,7 @@ import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.sel
 import { calculateActivityConflicts } from 'Utils/activities.helpers';
 
 import './JointTeachingActivitiesTable.scss';
-import AddActivitiesToJointTeachingGroupModal from '../../Pages/FormDetail/pages/JointTeaching/JointTeachingModals/AddActivitiesToJointTeachingGroupModal';
+import AddActivitiesToJointTeachingGroupModal from 'Pages/FormDetail/pages/DEPR_JointTeaching/JointTeachingModals/DEPR_AddActivitiesToJointTeachingGroupModal';
 import { selectActivitiesUniqueValues } from '../../Redux/DEPR_Activities/activities.selectors';
 import { ActivityValue, ValueType } from 'Types/Activity/ActivityValue.type';
 import {

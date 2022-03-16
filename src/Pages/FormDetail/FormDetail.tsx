@@ -23,7 +23,10 @@ import {
   setBreadcrumbs,
   setFormDetailTab,
 } from '../../Redux/GlobalUI/globalUI.actions';
-import { fetchActivityInWorkerProgress } from '../../Redux/DEPR_Activities/activities.actions';
+import {
+  fetchActivitiesForForm,
+  fetchActivityInWorkerProgress,
+} from '../../Redux/DEPR_Activities/activities.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
@@ -56,11 +59,18 @@ import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionsPage from './pages/submissions.page';
-import JointTeachingPage from './pages/jointTeaching.page';
+import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
+import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
+import { selectSSPState } from 'Components/SSP/Utils/selectors';
+import {
+  initializeSSPStateProps,
+  fetchActivityFilterLookupMapForForm,
+} from 'Redux/Activities';
+import { ISSPQueryObject } from 'Types/SSP.type';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',

@@ -20,26 +20,43 @@ import {
 import { selectAllLabels } from 'Redux/TE/te.selectors';
 import { tagsSelector } from 'Redux/Tags';
 import { selectAllRecipientsFromSubmissionFromForm } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import { selectFieldLabelsMapping, selectObjectLabelsMapping } from 'Redux/Integration/integration.selectors';
+import {
+  selectFieldLabelsMapping,
+  selectObjectLabelsMapping,
+} from 'Redux/Integration/integration.selectors';
 import { selectFormInstanceObjectRequests } from 'Redux/ObjectRequests/ObjectRequests.selectors';
 
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
-import { extractValuesFromActivityValues, hydrateObjectRequestsFromValuePayload } from 'Utils/activities.helpers';
+import {
+  extractValuesFromActivityValues,
+  hydrateObjectRequestsFromValuePayload,
+} from 'Utils/activities.helpers';
 
 // TYPES
 import { createFn, TActivity } from 'Types/Activity/Activity.type';
-import { createFn as createActivityFilterLookupMap, TActivityFilterLookupMap } from 'Types/Activity/ActivityFilterLookupMap.type';
-import { ISSPReducerState, ISSPQueryObject, EFilterType, EFilterInclusions } from 'Types/SSP.type';
+import {
+  createFn as createActivityFilterLookupMap,
+  TActivityFilterLookupMap,
+} from 'Types/Activity/ActivityFilterLookupMap.type';
+import {
+  ISSPReducerState,
+  ISSPQueryObject,
+  EFilterType,
+  EFilterInclusions,
+} from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
 import { TActivityTag } from 'Types/ActivityTag.type';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
-import { CActivityBatchOperationURL, EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import {
+  CActivityBatchOperationURL,
+  EActivityBatchOperation,
+  TActivityBatchOperation,
+} from 'Types/Activity/ActivityBatchOperations.type';
 import { TForm } from 'Types/Form.type';
 import { TPopulateSelectionPayload } from 'Types/TECorePayloads.type';
 import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -68,7 +85,7 @@ export const initialState: ISSPReducerState = {
       limit: 10,
       totalPages: 10,
       allKeys: [],
-    }
+    },
   },
   // FILTERING
   matchType: EFilterType.ALL,
@@ -119,7 +136,7 @@ export const activitiesSelector = (state: IState): TActivity[] =>
 export const activitySelector =
   (id: string) =>
   (state: IState): TActivity | undefined =>
-  state.activities.data[state.activities.groupBy][id] || undefined;
+    state.activities.data[state.activities.groupBy][id] || undefined;
 export const activitiesLoading = (state: IState): boolean =>
   state.activities.loading;
 export const activityFilterLookupMapSelector = (
@@ -192,26 +209,36 @@ export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
     const form = state.forms[activity.formId] as TForm;
 
     // Get the form instance
-    const formInstance = state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
+    const formInstance =
+      state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
 
     // Get the object requests
-    const objectRequests = selectFormInstanceObjectRequests(formInstance)(state as never);
+    const objectRequests = selectFormInstanceObjectRequests(formInstance)(
+      state as never,
+    );
 
     // Extract the activity values
     const valuePayload = extractValuesFromActivityValues(activity.values || []);
-    const withObjReqs = hydrateObjectRequestsFromValuePayload(valuePayload, objectRequests);
-    
+    const withObjReqs = hydrateObjectRequestsFromValuePayload(
+      valuePayload,
+      objectRequests,
+    );
+
     return {
       ...withObjReqs,
       reservationMode: form.reservationMode,
       formType: form.formType,
-      startTime: activity.timing.find((act: ActivityValue) => act?.extId === 'startTime')?.value as string,
-      endTime: activity.timing.find((act: ActivityValue) => act?.extId === 'endTime')?.value as string,
+      startTime: activity.timing.find(
+        (act: ActivityValue) => act?.extId === 'startTime',
+      )?.value as string,
+      endTime: activity.timing.find(
+        (act: ActivityValue) => act?.extId === 'endTime',
+      )?.value as string,
     } as TPopulateSelectionPayload;
   } catch (error) {
     return undefined;
   }
-}
+};
 
 // Actions
 export const {
@@ -225,7 +252,7 @@ export const {
 
 export const fetchActivitiesForForm =
   (formId: string, queryObject?: Partial<ISSPQueryObject>) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: any, getState: () => IState) => {
     try {
       const serializedQuery = serializeSSPQuery(
         queryObject,
@@ -254,8 +281,8 @@ export const fetchActivityFilterLookupMapForForm =
     }
   };
 
-
-const generalBatchOperationFn = (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) => 
+const generalBatchOperationFn =
+  (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) =>
   async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler(null));
@@ -268,7 +295,23 @@ const generalBatchOperationFn = (formId: string, batchOperation: TActivityBatchO
       console.log(e);
       dispatch(defaultFailureHandler());
     }
-  }
+  };
 
-export const batchOperationTags = (formId: string, batchOperation: TActivityBatchOperation) => generalBatchOperationFn(formId, batchOperation, CActivityBatchOperationURL[EActivityBatchOperation.TAGS]);
-export const batchOperationStatus = (formId: string, batchOperation: TActivityBatchOperation) => generalBatchOperationFn(formId, batchOperation, CActivityBatchOperationURL[EActivityBatchOperation.STATUS]);
+export const batchOperationTags = (
+  formId: string,
+  batchOperation: TActivityBatchOperation,
+) =>
+  generalBatchOperationFn(
+    formId,
+    batchOperation,
+    CActivityBatchOperationURL[EActivityBatchOperation.TAGS],
+  );
+export const batchOperationStatus = (
+  formId: string,
+  batchOperation: TActivityBatchOperation,
+) =>
+  generalBatchOperationFn(
+    formId,
+    batchOperation,
+    CActivityBatchOperationURL[EActivityBatchOperation.STATUS],
+  );

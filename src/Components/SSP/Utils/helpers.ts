@@ -21,7 +21,12 @@ export const serializeSSPQuery = (
   ]);
   const finalGroupBy = partialQueryObject?.groupBy || sspQueryParams.groupBy;
 
-  const groupedParams = pick(state.data[finalGroupBy], ['page', 'limit', 'sortBy', 'direction']);
+  const groupedParams = pick(state.data[finalGroupBy], [
+    'page',
+    'limit',
+    'sortBy',
+    'direction',
+  ]);
 
   const finalQueryObject = JSON.stringify(
     Object.assign(sspQueryParams, groupedParams, partialQueryObject),

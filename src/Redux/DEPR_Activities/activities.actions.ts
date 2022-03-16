@@ -15,6 +15,7 @@ import {
 import { TActivity } from 'Types/Activity/Activity.type';
 import { flatten, isEmpty } from 'lodash';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import { ISSPQueryObject } from 'Types/SSP.type';
 
 const fetchActivitiesForFormFlow = (formId, tableType, pagination) => ({
   request: () => ({
@@ -84,8 +85,8 @@ export const convertToUrlParams = (filters: any = {}) => {
 };
 
 export const fetchActivitiesForForm = (
-  formId,
-  options,
+  formId: string,
+  options: any,
   tableType = ACTIVITIES_TABLE,
 ) => {
   const {
