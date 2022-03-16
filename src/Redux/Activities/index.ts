@@ -215,6 +215,10 @@ export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
    * Wrapped in a try catch to stop the page from breaking if we're in a race conidition sitch
    * where we've fetched activities before forms or submissions
    */
+
+  /**
+   * @todo update to work with object requests - see APP 734
+   */
   try {
     // Get the activity
     const activity = state.activities.data[state.activities.groupBy].map[id];
@@ -222,24 +226,24 @@ export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
     // Get the form
     const form = state.forms[activity.formId] as TForm;
 
-    // Get the form instance
-    const formInstance =
-      state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
+    // // Get the form instance
+    // const formInstance =
+    //   state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
 
-    // Get the object requests
-    const objectRequests = selectFormInstanceObjectRequests(formInstance)(
-      state as never,
-    );
+    // // Get the object requests
+    // const objectRequests = selectFormInstanceObjectRequests(formInstance)(
+    //   state as never,
+    // );
 
     // Extract the activity values
-    const valuePayload = extractValuesFromActivityValues(activity.values || []);
-    const withObjReqs = hydrateObjectRequestsFromValuePayload(
-      valuePayload,
-      objectRequests,
-    );
+    // const valuePayload = extractValuesFromActivityValues(activity.values || []);
+    // const withObjReqs = hydrateObjectRequestsFromValuePayload(
+    //   valuePayload,
+    //   objectRequests,
+    // );
 
     return {
-      ...withObjReqs,
+      // ...withObjReqs,
       reservationMode: form.reservationMode,
       formType: form.formType,
       startTime: activity.timing.find(
