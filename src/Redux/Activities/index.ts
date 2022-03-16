@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../../Services/api.service';
 
-
 // ACTIONS
 import {
   finishedLoadingFailure,
@@ -126,9 +125,13 @@ const slice = createSlice({
     patchFilterLookupMapWithLocalState: (state, { payload }) => {
       const keysToMerge = Object.keys(payload);
       for (let i = 0; i < keysToMerge.length; i += 1) {
-        const currFilterLookupMapPropValues: any[] = state.filterLookupMap[keysToMerge[i]];
+        const currFilterLookupMapPropValues: any[] =
+          state.filterLookupMap[keysToMerge[i]];
         const newLocalStateVals = payload[keysToMerge[i]];
-        const newValues = { ...currFilterLookupMapPropValues, ...newLocalStateVals };
+        const newValues = {
+          ...currFilterLookupMapPropValues,
+          ...newLocalStateVals,
+        };
         state.filterLookupMap[keysToMerge[i]] = newValues;
       }
     },
@@ -214,7 +217,7 @@ export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
    */
   try {
     // Get the activity
-    const activity = state.activities.data[state.activities.groupBy][id];
+    const activity = state.activities.data[state.activities.groupBy].map[id];
 
     // Get the form
     const form = state.forms[activity.formId] as TForm;
