@@ -1,4 +1,4 @@
-import { Button, Radio } from 'antd';
+import { Button, Radio, Row } from 'antd';
 
 import JointTeachingTabs, {
   ActiveJointTeachingTab,
@@ -15,18 +15,16 @@ import {
   MatchedActivities,
   UnmatchedActivities,
 } from 'Components/JointTeaching/';
+// import './jointTeaching.page.scss';
 
 // ACTIONS
 
-// import './jointTeaching.page.scss';
 import { generateJointTeachingGroup } from 'Redux/JointTeaching/jointTeaching.actions';
 import { GENERATE_JOINT_TEACHING_GROUP } from 'Redux/JointTeaching/jointTeaching.actionTypes';
 
 import { generateJointTeachingMatchNotifications } from 'Utils/notifications.helper';
 
 const JointTeachingPage = () => {
-  const dispatch = useDispatch();
-  const { formId } = useParams<{ formId: string }>();
   const [activeTab, setActiveTab] =
     useState<ActiveJointTeachingTab>('unmatchedTab');
   const generating = useSelector(
@@ -35,30 +33,9 @@ const JointTeachingPage = () => {
 
   const [triggerFetchingActivities, setTriggerFetchingActivities] = useState(0);
 
-  const onGenerate = async () => {
-    const generateResponse = await dispatch(
-      generateJointTeachingGroup({ formId }),
-    );
-    setTriggerFetchingActivities(triggerFetchingActivities + 1);
-    if (!(generateResponse instanceof Error) && generateResponse) {
-      generateJointTeachingMatchNotifications(
-        generateResponse?.data.length > 0 ? 'success' : 'warning',
-        generateResponse?.data.length,
-      );
-    } else {
-      generateJointTeachingMatchNotifications('error');
-    }
-  };
-
   const renderTab = (activeTab: ActiveJointTeachingTab) => {
     const outcomes: Record<ActiveJointTeachingTab, () => JSX.Element> = {
-      unmatchedTab: () => (
-        <UnmatchedActivities
-          //todo: these props are wierd... remove if possible
-          triggerFetchingActivities={triggerFetchingActivities}
-          setTriggerFetchingActivities={setTriggerFetchingActivities}
-        />
-      ),
+      unmatchedTab: () => <UnmatchedActivities />,
       matchedTab: () => <MatchedActivities />,
     };
 
@@ -67,23 +44,10 @@ const JointTeachingPage = () => {
 
   return (
     <>
-      <div className='jointTeaching-buttons--wrapper'>
-        <div className='jointTeaching-tabs'>
-          <JointTeachingTabs
-            activeTab={activeTab}
-            setActiveTab={(tab) => setActiveTab(tab)}
-          />
-        </div>
-        {activeTab === 'unmatchedTab' && (
-          <Button
-            onClick={onGenerate}
-            style={{ color: 'black' }}
-            loading={!!generating}
-          >
-            Generate joint teaching matches
-          </Button>
-        )}
-      </div>
+      <JointTeachingTabs
+        activeTab={activeTab}
+        setActiveTab={(tab) => setActiveTab(tab)}
+      />
       {renderTab(activeTab)}
     </>
   );

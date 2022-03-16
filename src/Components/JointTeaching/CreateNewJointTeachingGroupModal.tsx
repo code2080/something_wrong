@@ -135,9 +135,7 @@ const CreateNewJointTeachingGroupModal = ({
         conflicts: selectedValues,
       }),
     );
-    if (typeof onCancel === 'function') {
-      onCancel(true);
-    }
+    onCancel(true);
   };
 
   const onCreate = () => {

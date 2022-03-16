@@ -48,7 +48,6 @@ export const SchedulingStatusColumn: ISSPColumn = {
   sorter: true,
 };
 
-//todo: create columns for joint teaching (with type)
 export const jointTeachingObjectColumn: ISSPColumn = {
   title: 'Joint teaching object',
   key: EActivitySortingKey.JOINT_TEACHING_OBJECT,
@@ -65,4 +64,16 @@ export const primaryObjectColumn: ISSPColumn = {
   dataIndex: undefined,
   width: 100,
   render: (activity: TActivity) => activity.metadata?.primaryObject ?? '',
+  sorter: true,
+};
+
+//todo: what is this..
+export const primaryObjectsColumn: ISSPColumn = {
+  title: 'Primary objects',
+  key: EActivitySortingKey.PRIMARY_OBJECT + 'S',
+  // dataIndex: EActivitySortingKey.PRIMARY_OBJECT,
+  dataIndex: undefined,
+  width: 100,
+  render: (activity: TActivity) => 'todo: what to put here??',
+  sorter: true,
 };
