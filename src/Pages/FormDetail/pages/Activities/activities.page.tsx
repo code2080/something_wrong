@@ -41,29 +41,11 @@ const ActivitiesPage = () => {
 
   return (
     <>
-      <SSPResourceWrapper
-        name={`${formId}__ACTIVITIES_TAB`}
-        selectorFn={selectSSPState('activities')}
-        //todo: Should it always be this function?
-        //todo: switch fn depending on tab?
-        fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-          fetchActivitiesForForm(formId, partialQuery)
-        }
-        initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-          initializeSSPStateProps(partialQuery)
-        }
-        fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
-      >
-        <ActivitiesToolbar />
-        <ActivityTable
-          preCustomColumns={[
-            RowActionsColumn,
-            TagColumn,
-            SchedulingStatusColumn,
-          ]}
-          postCustomColumns={[SubmitterColumn]}
-        />
-      </SSPResourceWrapper>
+      <ActivitiesToolbar />
+      <ActivityTable
+        preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
+        postCustomColumns={[SubmitterColumn]}
+      />
     </>
   );
 };

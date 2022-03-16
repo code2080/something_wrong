@@ -28,7 +28,7 @@ const JointTeachingFiltering = () => {
         suffix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
         size='small'
       />
-      <ActivityFiltering
+      {/*       <ActivityFiltering
         tableType={UNMATCHED_ACTIVITIES_TABLE}
         selectedFilterValues={selectedFilterValues}
         onSubmit={(values) => {
@@ -40,7 +40,7 @@ const JointTeachingFiltering = () => {
             }),
           );
         }}
-      />
+      /> */}
     </>
   );
 };

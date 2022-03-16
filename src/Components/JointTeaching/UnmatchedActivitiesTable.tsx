@@ -47,25 +47,17 @@ import {
   primaryObjectColumn,
 } from 'Components/ActivityTable/Columns';
 
-interface Props {
-  triggerFetching: number;
-}
+interface Props {}
 //todo: maybe remove this component and put everything in its parrent
-const UnmatchedActivitiesTable = ({ triggerFetching }: Props) => {
-  const { formId } = useParams<{ formId: string }>();
+const UnmatchedActivitiesTable = ({}: Props) => {
+  const columns = [
+    jointTeachingObjectColumn,
+    primaryObjectColumn,
+    TagColumn,
+    SchedulingStatusColumn,
+  ];
 
-  const dispatch = useDispatch();
-
-  return (
-    <ActivityTable
-      preCustomColumns={[
-        jointTeachingObjectColumn,
-        primaryObjectColumn,
-        TagColumn,
-        SchedulingStatusColumn,
-      ]}
-    />
-  );
+  return <ActivityTable preCustomColumns={columns} />;
 };
 
 export default UnmatchedActivitiesTable;

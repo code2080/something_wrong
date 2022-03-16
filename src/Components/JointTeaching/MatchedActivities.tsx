@@ -1,26 +1,15 @@
+import SSPTable from 'Components/SSP/Components/Table';
 import {
-  RowActionsColumn,
-  TagColumn,
   SchedulingStatusColumn,
-  SubmitterColumn,
+  //activities
+  primaryObjectsColumn,
 } from 'Components/ActivityTable/Columns';
-import ActivityTable from '../ActivityTable';
-import JointTeachingGroupsTable from './JointTeachingGroupsTable';
 
 const MatchedActivities = () => {
-  return (
-    <ActivityTable
-      preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
-      postCustomColumns={[SubmitterColumn]}
-    />
-  );
+  //todo: build this
+  const columns = [];
 
-  //todo: remove
-  return (
-    <div>
-      <JointTeachingGroupsTable />
-    </div>
-  );
+  return <SSPTable columns={columns} />;
 };
 
 export default MatchedActivities;
