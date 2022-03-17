@@ -28,7 +28,10 @@ const WeekPatternTable = () => {
 
   return (
     <SSPTable
-      columns={[{ title: "Number of activities", dataIndex: 'activityIds', render: (val) => val.length }]}
+      columns={[
+        { title: "Number of activities", dataIndex: 'activityIds', render: (val) => val.length },
+        { title: "Submitter", dataIndex: 'recipientName' },
+      ]}
       rowKey='_id'
     />
   );
