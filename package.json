@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.133",
+  "version": "0.10.134",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -13,9 +13,6 @@
     "npm": ">=5"
   },
   "scripts": {
-    "test": "cross-env CI=1 TZ=Europe/Stockholm react-scripts test --env=jsdom --passWithNoTests --colors",
-    "test:silent": "yarn test --silent",
-    "test:watch": "react-scripts test --env=jsdom",
     "build": "rm -rf dist && rollup -c",
     "start": "rollup -c -w --environment BUILD:development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
@@ -28,7 +25,6 @@
     "prettier:fix:diff": "f(){ prettier $(git diff --name-only --diff-filter=ACMRTUXB origin/${1:-development} | grep  -E \"(.js$|.ts$|.tsx$)\") --write;};f",
     "prettier:fix": "prettier ./src --write",
     "prettier:silent": "yarn prettier --loglevel=silent",
-    "checkcode": "run-p lint ts:lint prettier:silent test:silent",
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
     "ts:lint": "tsc --noemit -p tsconfig.json",
