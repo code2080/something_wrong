@@ -80,6 +80,9 @@ export const updateStateWithResultFromBatchOperation = (
   /**
    * @todo updates to one of the groups should update all groups
    */
+  /**
+   * @todo we should run createFn here!
+   */
   const { data } = batchOperationPayload;
   const results = state.data[state.groupBy].results.map((entity) => {
     // Check if el exists in array

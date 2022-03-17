@@ -1,0 +1,53 @@
+@import '../../../../../Styles/globals.scss';
+
+.scheduling-checkbox--wrapper {
+  transition: all 0.2s;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  padding: 0.2rem 0.4rem;
+  height: 24px !important;
+  width: 24px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.NOT_SCHEDULED {
+    background: mix($bittersweet, #fff, 20%);
+  }
+
+  &.SCHEDULED {
+    background: mix($jungleGreen, #fff, 20%);
+  }
+
+  .ant-btn {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 0.5rem;
+
+    &:active,
+    &:hover,
+    &:focus {
+      border: none !important;
+      color: $black !important;
+      outline: none !important;
+    }
+
+    .anticon {
+      font-size: 0.7rem;
+      vertical-align: 0.2rem;
+      &:hover {
+        color: $black !important;
+      }
+    }
+  }
+
+  &.disabled {
+    background-color: #bfbfbf;
+    cursor: not-allowed;
+  }
+}

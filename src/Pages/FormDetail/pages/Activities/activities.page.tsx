@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 // COMPONENTS
-import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
 import ActivitiesToolbar from 'Components/ActivitiesToolbar';
 import ActivityTable from 'Components/ActivityTable';
 import {
@@ -10,24 +11,22 @@ import {
   SubmitterColumn,
   TagColumn,
 } from 'Components/ActivityTable/Columns';
+import WeekPatternTable from 'Components/WeekPatternTable';
 
 // REDUX
-import {
-  fetchActivitiesForForm,
-  fetchActivityFilterLookupMapForForm,
-  initializeSSPStateProps,
-} from 'Redux/Activities';
-import { selectSSPState } from 'Components/SSP/Utils/selectors';
+import { fetchTagsForForm } from 'Redux/Tags';
+
+// HOOKS
+import useSSP from 'Components/SSP/Utils/hooks';
 
 // TYPES
-import { ISSPQueryObject } from 'Types/SSP.type';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchTagsForForm } from 'Redux/Tags';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
+
+  const { groupBy } = useSSP();
 
   /**
    * EFFECTS
@@ -42,10 +41,15 @@ const ActivitiesPage = () => {
   return (
     <>
       <ActivitiesToolbar />
-      <ActivityTable
-        preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
-        postCustomColumns={[SubmitterColumn]}
-      />
+      {groupBy === EActivityGroupings.FLAT && (
+        <ActivityTable
+          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
+          postCustomColumns={[SubmitterColumn]}
+        />
+      )}
+      {groupBy === EActivityGroupings.WEEK_PATTERN && (
+        <WeekPatternTable />
+      )}
     </>
   );
 };
