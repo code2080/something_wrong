@@ -1,6 +1,6 @@
 {
   "name": "@timeedit/te-prefs-lib",
-  "version": "0.10.125",
+  "version": "0.10.126",
   "description": "TE Prefs Library",
   "author": "TimeEdit",
   "license": "ISC",
@@ -32,8 +32,8 @@
     "tscompile": "tsc",
     "tscompile:watch": "tsc -w",
     "ts:lint": "tsc --noemit -p tsconfig.json",
-    "prepare": "husky install && yarn run build",
-    "predeploy": "cd example && yarn install && yarn run build",
+    "prepare": "husky install && yarn run build --no-verify",
+    "predeploy": "cd example && yarn install && yarn run build --no-verify",
     "deploy": "gh-pages -d example/build",
     "preversion": "yarn prettier",
     "postversion": "yarn publish . --new-version $npm_package_version && git push && git push --tags && echo \"Successfully released version $npm_package_version!\"",
