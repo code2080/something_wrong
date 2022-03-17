@@ -1,0 +1,14 @@
+@import '../../../../Styles/globals.scss';
+
+.tag-col--wrapper {
+  padding: 0px 4px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px !important;
+  & > span {
+    font-size: 10px;
+    line-height: normal;
+  }
+}

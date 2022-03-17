@@ -30,7 +30,11 @@ import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 import { extractValuesFromActivityValues } from 'Utils/activities.helpers';
 
 // TYPES
-import { createFn, TActivity } from 'Types/Activity/Activity.type';
+import {
+  createFn as createActivityFn,
+  TActivity,
+} from 'Types/Activity/Activity.type';
+import { createFn as createWeekPatternGroupFn } from 'Types/Activity/WeekPatternGroup.type';
 import {
   createFn as createActivityFilterLookupMap,
   TActivityFilterLookupMap,
@@ -110,7 +114,13 @@ const slice = createSlice({
       if (payload) commitSSPQueryToState(payload, state);
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
-      commitAPIPayloadToState(payload, state, createFn);
+      commitAPIPayloadToState(
+        payload,
+        state,
+        state.groupBy === EActivityGroupings.FLAT
+          ? createActivityFn
+          : createWeekPatternGroupFn,
+      );
       finishedLoadingSuccess(state);
     },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
@@ -132,6 +142,9 @@ const slice = createSlice({
       }
     },
     defaultBatchOperationSuccessHandler: (state, { payload }) => {
+      /**
+       * @todo differentiate based on groupBy
+       */
       updateStateWithResultFromBatchOperation(payload, state);
       finishedLoadingSuccess(state);
     },

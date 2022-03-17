@@ -1,4 +1,4 @@
-import { cloneDeep, flatMapDeep, isEmpty, mergeWith, pickBy } from 'lodash';
+import { cloneDeep, mergeWith } from 'lodash';
 import { customFilterPathMergeWith } from '../Utils/helpers';
 
 describe('Merger function used for filters', () => {
@@ -36,98 +36,5 @@ describe('Merger function used for filters', () => {
     };
 
     expect(clonedObj).toEqual(expected);
-  });
-
-  test('Delete deeply nested key', () => {
-    const baseObj = {
-      entry1: ['1'],
-      entry2: ['1', '2'],
-      nestedEntry: {
-        level1: {
-          level2a: ['hello'],
-          level2b: { level3b: ['hello from b'] },
-        },
-      },
-    };
-
-    const pathToDelete = ['nestedEntry', 'level1', 'level2b', 'level3b'];
-
-    const cleaned = removeDeepEntry(baseObj, pathToDelete);
-
-    const expected = {
-      entry1: ['1'],
-      entry2: ['1', '2'],
-      nestedEntry: {
-        level1: {
-          level2a: ['hello'],
-          //level2b and level2c should be removed
-        },
-      },
-    };
-
-    expect(cleaned).toEqual(expected);
-  });
-
-  test('Delete deeply nested key2', () => {
-    const baseObj = {
-      entry1: ['1'],
-      entry2: ['1', '2'],
-      nestedEntry: {
-        level1: {
-          level2a: ['hello'],
-          level2b: { level3b: ['hello from b'] },
-        },
-      },
-    };
-
-    const pathToDelete = ['nestedEntry', 'level1', 'level2b', 'level3b'];
-    const pathToDelete2 = ['nestedEntry', 'level1', 'level2a'];
-
-    const cleaned = removeDeepEntry(baseObj, pathToDelete);
-    const cleaned2 = removeDeepEntry(cleaned, pathToDelete2);
-
-    const expected = {
-      entry1: ['1'],
-      entry2: ['1', '2'],
-      //r Remove the key all together
-      //   nestedEntry: {
-      //level1: {
-      //level2a: ['hello'],
-      //level2b and level2c should be removed
-      //},
-      //   },
-    };
-
-    expect(cleaned2).toEqual(expected);
-  });
-
-  test('Delete entry level key', () => {
-    const baseObj = {
-      entry1: ['1'],
-      entry2: ['1', '2'],
-      nestedEntry: {
-        level1: {
-          level2a: ['hello'],
-          level2b: { level3b: ['hello from b'] },
-        },
-      },
-    };
-
-    const pathToDelete = ['entry1'];
-
-    const cleaned = removeDeepEntry(baseObj, pathToDelete);
-
-    const expected = {
-      //   entry1: [],
-      entry2: ['1', '2'],
-      nestedEntry: {
-        level1: {
-          level2a: ['hello'],
-          level2b: { level3b: ['hello from b'] },
-        },
-      },
-    };
-
-    expect(cleaned).toEqual(expected);
   });
 });
