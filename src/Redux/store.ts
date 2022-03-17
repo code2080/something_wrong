@@ -2,26 +2,30 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './rootReducer';
 
-const configureStore = (initialState: any = {}) => {
-  const enhancers = <any[]>[];
-  const middleware = [thunk];
+const enhancers = <any[]>[];
+const middleware = [thunk];
 
-  if (process.env.NODE_ENV === 'development') {
-    const devToolsExtension = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+if (process.env.NODE_ENV === 'development') {
+  const devToolsExtension = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
-    if (typeof devToolsExtension === 'function') {
-      enhancers.push(devToolsExtension({ name: 'Activity Manager Store' }));
-    }
+  if (typeof devToolsExtension === 'function') {
+    enhancers.push(devToolsExtension({ name: 'Activity Manager Store' }));
   }
+}
 
-  const composedEnhancers = compose(
-    applyMiddleware(...middleware),
-    ...enhancers,
-  );
+const composedEnhancers = compose(
+  applyMiddleware(...middleware),
+  ...enhancers,
+);
 
-  const store = createStore(rootReducer, initialState, composedEnhancers);
-  (window as any).store = store;
-  return store;
-};
+const store = createStore(rootReducer, {}, composedEnhancers);
+(window as any).store = store;
 
-export default configureStore;
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch
+
+export default store;
+
+

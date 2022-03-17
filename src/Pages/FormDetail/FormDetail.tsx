@@ -66,6 +66,7 @@ import {
   initializeSSPStateProps,
   fetchActivityFilterLookupMapForForm,
   fetchActivitiesForForm,
+  clearActivityFilters,
 } from 'Redux/Activities';
 import { ISSPQueryObject } from 'Types/SSP.type';
 import { fetchActivityInWorkerProgress } from 'Redux/DEPR_Activities/activities.actions';
@@ -154,9 +155,12 @@ const FormPage = () => {
   // Reset all form related state
   useEffect(() => {
     return () => {
+      console.log('im running');
       dispatch(resetActivitiesFetchingHandler());
+      dispatch(clearActivityFilters());
     };
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const submissionPayload = useMemo(() => {
     const initialPayload = { objects: [], types: [], fields: [] };

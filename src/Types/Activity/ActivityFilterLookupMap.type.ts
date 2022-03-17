@@ -38,7 +38,7 @@ export interface TActivityFilterMapObject {
 }
 
 export const createFn = (obj: any) => ({
-  submitter: obj.submitter || {},
+  submitter: obj.submitterName || {}, // hacky
   tag: obj.tag || {},
   primaryObject: obj.primaryObject || {},
   objects: obj.objects || {},

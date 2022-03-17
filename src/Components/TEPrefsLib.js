@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
-import configureStore from '../Redux/store';
+import store from '../Redux/store';
 
 // REDUX
 import { validateLogin } from '../Redux/Auth/auth.actions';
@@ -22,7 +22,6 @@ const antdConfig = {
 };
 
 // Configure store and attach to window object
-const store = configureStore();
 window.tePrefsLibStore = store;
 window.tePrefsScroll = [0, 0];
 window.tePrefsOffset = [0, 0];

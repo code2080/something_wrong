@@ -22,7 +22,6 @@ import {
 
 // COMPONENTS
 import MatchType from '../MatchType';
-import IncludeSubmission from '../IncludeSubmission';
 import IncludeJointTeaching from '../IncludeJointTeaching';
 import FilterProperties from '../FilterProperties';
 import FilterItems from '../FilterItems';
@@ -124,7 +123,8 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
 
   const onGetFilterOptionLabel = (fieldProperty: string, id?: string) => {
     if (!id) return fieldProperty;
-    if (['status', 'submitter', 'tag'].includes(fieldProperty)) {
+    if (fieldProperty === 'submitter') return id; // Submitter is the actual string representation of the submitter's name
+    if (['status', 'tag'].includes(fieldProperty)) {
       return filterOptionLabels[fieldProperty][id];
     }
     return filterOptionLabels[id] || id;
@@ -151,13 +151,10 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     >
       <Spin spinning={!!loading}>
         <Row>
-          <Col span={8}>
+          <Col span={12}>
             <MatchType />
           </Col>
-          <Col span={8}>
-            <IncludeSubmission />
-          </Col>
-          <Col span={8}>
+          <Col span={12}>
             <IncludeJointTeaching />
           </Col>
         </Row>

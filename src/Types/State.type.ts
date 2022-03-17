@@ -1,4 +1,3 @@
-import { TActivityTag } from './ActivityTag.type';
 import { ISSPReducerState } from './SSP.type';
 
 export interface ISimpleAPIResult {
@@ -16,8 +15,8 @@ export interface ISimpleAPIState {
 }
 
 export interface IState {
-  submissions: any;
-  forms: any;
+  submissions: any; // @todo improve
+  forms: any; // @todo improve
   activities: ISSPReducerState;
   tags: ISimpleAPIState;
   integration: {
@@ -26,6 +25,5 @@ export interface IState {
     mappedFieldsLabel: any;
     reservationModes: any;
   };
-  reservationModes: any;
-  activityTags: Record<string, TActivityTag[]>;
+  reservationModes: any; // @todo improve
 }

@@ -91,7 +91,6 @@ export const initialState: ISSPReducerState = {
   // FILTERING
   matchType: EFilterType.ALL,
   inclusion: {
-    fullSubmission: false,
     jointTeaching: EFilterInclusions.INCLUDE,
   },
   filters: {},
@@ -140,6 +139,12 @@ const slice = createSlice({
         };
         state.filterLookupMap[keysToMerge[i]] = newValues;
       }
+    },
+    clearActivityFilters: (state) => {
+      state.matchType = EFilterType.ALL;
+      state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
+      state.filters = {};
+      state.filterLookupMap = {};
     },
     defaultBatchOperationSuccessHandler: (state, { payload }) => {
       /**
@@ -242,25 +247,6 @@ export const selectTECPayloadForActivity =
         activity.values || [],
       );
 
-      // Include the following 3 vars for 734 (or alter them to work)
-
-      // Get the form instance
-      /*       const formInstance =
-        state.submissions[activity.formId]?.mapped?.byId[
-          activity.formInstanceId
-        ]; */
-
-      // Get the object requests
-      /*       const objectRequests = selectFormInstanceObjectRequests(formInstance)(
-        // todo: fix this type
-        state as never,
-      ); */
-
-      /*       const withObjReqs = hydrateObjectRequestsFromValuePayload(
-        valuePayload,
-        objectRequests,
-      );  */
-
       return {
         ...valuePayload,
         reservationMode: form.reservationMode,
@@ -286,6 +272,7 @@ export const {
   fetchActivityFilterLookupMapSuccess,
   defaultBatchOperationSuccessHandler,
   patchFilterLookupMapWithLocalState,
+  clearActivityFilters,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
