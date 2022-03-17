@@ -2,7 +2,7 @@ export enum EActivitySortingKey {
   ACTIVITY_STATUS = 'activityStatus',
   TAG = 'tagName',
   LENGTH = 'metadata.length',
-  SUBMITTER = 'metadata.submitter',
+  SUBMITTER = 'metadata.submitterName',
   START_TIME = 'metadata.startTime',
   END_TIME = 'metadata.endTime',
   WEEKDAY = 'metadata.weekday',
