@@ -1,3 +1,5 @@
+import { ValueType } from './Activity/ActivityValue.type';
+
 export class TEField {
   fieldExtId: string;
   values: string[];
@@ -30,8 +32,8 @@ export type TPopulateSelectionPayload = {
   fields: TEField[];
   formType: 'REGULAR' | 'AVAILABILITY';
   reservationMode: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: ValueType;
+  endTime?: ValueType;
 };
 
 export type TGetExtIdPropsPayload = {

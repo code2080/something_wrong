@@ -27,9 +27,13 @@ import {
 
 // UTILS
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
+import { extractValuesFromActivityValues } from 'Utils/activities.helpers';
 
 // TYPES
-import { createFn as createActivityFn, TActivity } from 'Types/Activity/Activity.type';
+import {
+  createFn as createActivityFn,
+  TActivity,
+} from 'Types/Activity/Activity.type';
 import { createFn as createWeekPatternGroupFn } from 'Types/Activity/WeekPatternGroup.type';
 import {
   createFn as createActivityFilterLookupMap,
@@ -111,9 +115,11 @@ const slice = createSlice({
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
       commitAPIPayloadToState(
-        payload, 
-        state, 
-        state.groupBy === EActivityGroupings.FLAT ? createActivityFn : createWeekPatternGroupFn
+        payload,
+        state,
+        state.groupBy === EActivityGroupings.FLAT
+          ? createActivityFn
+          : createWeekPatternGroupFn,
       );
       finishedLoadingSuccess(state);
     },
@@ -212,54 +218,64 @@ export const selectLabelsForFilterOptionsForForm =
     };
   };
 
-export const selectTECPayloadForActivity = (id: string) => (state: IState) => {
-  /**
-   * This is an error prone function given all the selectors and data needed
-   * Wrapped in a try catch to stop the page from breaking if we're in a race conidition sitch
-   * where we've fetched activities before forms or submissions
-   */
+export const selectTECPayloadForActivity =
+  (id: string) =>
+  (state: IState): TPopulateSelectionPayload | undefined => {
+    /**
+     * This is an error prone function given all the selectors and data needed
+     * Wrapped in a try catch to stop the page from breaking if we're in a race conidition sitch
+     * where we've fetched activities before forms or submissions
+     */
 
-  /**
-   * @todo update to work with object requests - see APP 734
-   */
-  try {
-    // Get the activity
-    const activity = state.activities.data[state.activities.groupBy].map[id];
+    /**
+     * @todo update to work with object requests - see APP 734
+     */
+    try {
+      // Get the activity
+      const activity = state.activities.data[state.activities.groupBy].map[id];
 
-    // Get the form
-    const form = state.forms[activity.formId] as TForm;
+      // Get the form
+      const form = state.forms[activity.formId] as TForm;
 
-    // // Get the form instance
-    // const formInstance =
-    //   state.submissions[activity.formId]?.mapped?.byId[activity.formInstanceId];
+      // Extract the activity values
+      const valuePayload = extractValuesFromActivityValues(
+        activity.values || [],
+      );
 
-    // // Get the object requests
-    // const objectRequests = selectFormInstanceObjectRequests(formInstance)(
-    //   state as never,
-    // );
+      // Include the following 3 vars for 734 (or alter them to work)
 
-    // Extract the activity values
-    // const valuePayload = extractValuesFromActivityValues(activity.values || []);
-    // const withObjReqs = hydrateObjectRequestsFromValuePayload(
-    //   valuePayload,
-    //   objectRequests,
-    // );
+      // Get the form instance
+      /*       const formInstance =
+        state.submissions[activity.formId]?.mapped?.byId[
+          activity.formInstanceId
+        ]; */
 
-    return {
-      // ...withObjReqs,
-      reservationMode: form.reservationMode,
-      formType: form.formType,
-      startTime: activity.timing.find(
-        (act: ActivityValue) => act?.extId === 'startTime',
-      )?.value as string,
-      endTime: activity.timing.find(
-        (act: ActivityValue) => act?.extId === 'endTime',
-      )?.value as string,
-    } as TPopulateSelectionPayload;
-  } catch (error) {
-    return undefined;
-  }
-};
+      // Get the object requests
+      /*       const objectRequests = selectFormInstanceObjectRequests(formInstance)(
+        // todo: fix this type
+        state as never,
+      ); */
+
+      /*       const withObjReqs = hydrateObjectRequestsFromValuePayload(
+        valuePayload,
+        objectRequests,
+      );  */
+
+      return {
+        ...valuePayload,
+        reservationMode: form.reservationMode,
+        formType: form.formType as 'REGULAR' | 'AVAILABILITY',
+        startTime: activity.timing.find(
+          (act: ActivityValue) => act?.extId === 'startTime',
+        )?.value,
+        endTime: activity.timing.find(
+          (act: ActivityValue) => act?.extId === 'endTime',
+        )?.value,
+      };
+    } catch (error) {
+      return undefined;
+    }
+  };
 
 // Actions
 export const {
