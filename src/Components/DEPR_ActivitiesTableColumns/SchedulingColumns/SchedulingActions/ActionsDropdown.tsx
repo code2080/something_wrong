@@ -33,8 +33,8 @@ import {
 } from '../../../../Redux/Auth/auth.selectors';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../../Constants/permissions.constants';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
-import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
+import { formSelector } from 'Redux/Forms';
 
 const mapStateToProps = (state, { activity }) => {
   const jobs = selectJobForActivities(activity.formId, [activity._id])(state);
@@ -73,10 +73,8 @@ const ActivityActionsDropdown = ({
     selectFormInstance(state, { formId, formInstanceId }),
   );
 
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const { formType = '', reservationMode = '' } = useSelector((state) =>
-    selectForm(state, formId),
-  );
+  const form = useSelector(formSelector(formId));
+  const { formType = '', reservationMode = '' } = form || {};
 
   const activityActions = {
     SCHEDULE_SUBMISSION: {

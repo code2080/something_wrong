@@ -4,30 +4,27 @@ import { useHistory } from 'react-router-dom';
 
 // COMPONENTS
 import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
+import { tableColumns } from '../../Components/TableColumns';
 
-// ACTIONS
-import {
-  fetchIntegrationSettings,
-  fetchOrg,
-} from '../../Redux/Auth/auth.actions';
-import { fetchForms } from '../../Redux/Forms/forms.actions';
+// REDUX
+import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
+import { fetchForms, formsLoading, formsSelector } from '../../Redux/Forms';
 import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchUsers } from '../../Redux/Users/users.actions';
 import { fetchMapping } from '../../Redux/Integration/integration.actions';
-
-// SELECTORS
-import { createLoadingSelector } from '../../Redux/APIStatus/apiStatus.selectors';
 import { selectAuthedUser } from '../../Redux/Auth/auth.selectors';
-import { selectAllForms } from '../../Redux/Forms/forms.selectors';
+import { fetchElements } from '../../Redux/Elements/elements.actions';
 
 // CONSTANTS
-import { tableColumns } from '../../Components/TableColumns';
 import { tableViews } from '../../Constants/tableViews.constants';
 import { useFetchLabelsFromExtIds } from '../../Hooks/TECoreApiHooks';
-import { fetchElements } from '../../Redux/Elements/elements.actions';
 import { getAllObjectScopesOnForms } from 'Utils/forms.helpers';
+
+// TYPES
 import { TForm } from 'Types/Form.type';
+import { EFormStatus } from 'Types/Form/FormStatus.enum';
+import moment from 'moment';
 
 const FormList = () => {
   const history = useHistory();
@@ -36,15 +33,20 @@ const FormList = () => {
   /**
    * SELECTORS
    */
-  const forms = useSelector(selectAllForms);
-  const isLoadingForms = useSelector(createLoadingSelector(['FETCH_FORMS']));
+  const forms = useSelector(formsSelector);
+  const isLoadingForms = useSelector(formsLoading);
   const user = useSelector(selectAuthedUser);
 
   /**
    * MEMOIZED PROPS
    */
-  const objectScopes = useMemo(() => getAllObjectScopesOnForms(forms), [forms]);
-
+  const filteredForms = useMemo(
+    () => (forms as any[])
+      .filter((e) => ![EFormStatus.DRAFT, EFormStatus.ARCHIVED].includes(e.status))
+      .sort((a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
+    , [forms]
+  );
+  const objectScopes = useMemo(() => getAllObjectScopesOnForms(filteredForms), [filteredForms]);
   useFetchLabelsFromExtIds(objectScopes);
 
   /**
@@ -82,7 +84,7 @@ const FormList = () => {
           tableColumns.form.FORM_STATUS,
           tableColumns.form.RESPONSE_TRACKER,
         ]}
-        dataSource={forms}
+        dataSource={filteredForms}
         rowKey='_id'
         isLoading={isLoadingForms}
         onRow={(form: TForm) => ({

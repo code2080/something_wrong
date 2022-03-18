@@ -8,6 +8,8 @@ import { Tabs } from 'antd';
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar/JobToolbar';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
+import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
+import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
 
 // HOOKS
 import {
@@ -15,61 +17,40 @@ import {
   useTECoreAPI,
 } from '../../Hooks/TECoreApiHooks';
 
-// ACTIONS
+// REDUX
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import {
-  resetActivitiesFetchingHandler,
-  selectActivitiesInTable,
-  setBreadcrumbs,
-  setFormDetailTab,
-} from '../../Redux/GlobalUI/globalUI.actions';
+import { resetActivitiesFetchingHandler, selectActivitiesInTable, setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
-
-// SELECTORS
-import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
-import { selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selectors';
+import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
+import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
+import { selectSSPState } from 'Components/SSP/Utils/selectors';
+import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, clearActivityFilters } from 'Redux/Activities';
+import { formSelector } from 'Redux/Forms';
+import { fetchActivityInWorkerProgress } from 'Redux/DEPR_Activities/activities.actions';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import {
-  ACTIVITIES_TABLE,
-  UNMATCHED_ACTIVITIES_TABLE,
-  MATCHED_ACTIVITIES_TABLE,
-} from '../../Constants/tables.constants';
+import { ACTIVITIES_TABLE, UNMATCHED_ACTIVITIES_TABLE, MATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
 
-import {
-  ASSISTED_SCHEDULING_PERMISSION_NAME,
-  AE_ACTIVITY_PERMISSION,
-} from '../../Constants/permissions.constants';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME, AE_ACTIVITY_PERMISSION } from '../../Constants/permissions.constants';
 
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
 import ActivityDesignPage from './pages/activityDesigner.page';
 import ActivitiesPage from './pages/Activities/activities.page';
-import SubmissionsPage from './pages/submissions.page';
+import SubmissionOverviewPage from './pages/SubmissionOverview';
+import SubmissionsDetailPage from './pages/SubmissionDetail';
 import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
-import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
-import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
-import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
-import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import {
-  initializeSSPStateProps,
-  fetchActivityFilterLookupMapForForm,
-  fetchActivitiesForForm,
-  clearActivityFilters,
-} from 'Redux/Activities';
+
+// TYPES
 import { ISSPQueryObject } from 'Types/SSP.type';
-import { fetchActivityInWorkerProgress } from 'Redux/DEPR_Activities/activities.actions';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -90,8 +71,7 @@ const FormPage = () => {
   /**
    * SELECTORS
    */
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(formSelector(formId));
   const selectFormSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) =>
     selectFormSubmissions(state, formId),
@@ -106,6 +86,7 @@ const FormPage = () => {
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
   const isBeta = useSelector(selectIsBetaOrDev);
+  const selectedSubmissionId = useSelector(selectFormDetailSubmission);
 
   /**
    * STATE
@@ -128,7 +109,7 @@ const FormPage = () => {
           path: `/forms/${formId}`,
           label: (
             <FormDetailBreadcrumb
-              formName={form.name || 'Unknown form'}
+              formName={form?.name || 'Unknown form'}
               onToggleModalState={() => setShowFormInfoModal(true)}
             />
           ),
@@ -136,10 +117,10 @@ const FormPage = () => {
       ]),
     );
 
-    teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form.formType });
-    form.reservationmode &&
+    teCoreAPI[teCoreCallnames.SET_FORM_TYPE]({ formType: form?.formType });
+    form?.reservationMode &&
       teCoreAPI[teCoreCallnames.SET_RESERVATION_MODE]({
-        mode: form.reservationmode,
+        mode: form?.reservationMode,
         callback: ({ _res }) => {},
       });
     [
@@ -155,7 +136,6 @@ const FormPage = () => {
   // Reset all form related state
   useEffect(() => {
     return () => {
-      console.log('im running');
       dispatch(resetActivitiesFetchingHandler());
       dispatch(clearActivityFilters());
     };
@@ -164,14 +144,14 @@ const FormPage = () => {
 
   const submissionPayload = useMemo(() => {
     const initialPayload = { objects: [], types: [], fields: [] };
-    const sections = form.sections;
+    const sections = form?.sections || [];
     const submissionValues = submissions.map((submission) => submission.values);
     const teValues = _.isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
           sections,
           submissionValues,
-          objectScope: form.objectScope,
+          objectScope: form?.objectScope,
           activities: [],
         });
     const scopedObjectExtids = submissions.map((s) => s.scopedObject);
@@ -180,7 +160,7 @@ const FormPage = () => {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
-  }, [form.sections, form.objectScope, submissions]);
+  }, [form, submissions]);
 
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(submissionPayload);
@@ -211,7 +191,7 @@ const FormPage = () => {
           onChange={onChangeTabKey}
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
-            <SubmissionsPage />
+            {!selectedSubmissionId ? <SubmissionOverviewPage /> : <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />}
           </Tabs.TabPane>
           {formHasObjReqs && (
             <Tabs.TabPane

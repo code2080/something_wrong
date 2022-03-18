@@ -1,9 +1,9 @@
 import SSPTable from 'Components/SSP/Components/Table';
 import {
-  SchedulingStatusColumn,
+  SchedulingStatusSingleColumn,
   //activities
   primaryObjectsColumn,
-} from 'Components/ActivityTable/Columns';
+} from 'Components/TableColumnsShared';
 
 const MatchedActivities = () => {
   //todo: build this

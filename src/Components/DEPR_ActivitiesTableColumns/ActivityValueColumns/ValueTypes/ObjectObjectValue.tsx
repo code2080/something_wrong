@@ -12,7 +12,7 @@ import DatasourceReadonly from '../../../Elements/DatasourceReadonly';
 import {
   selectElementById,
   selectElementType,
-} from '../../../../Redux/Forms/forms.selectors';
+} from '../../../../Redux/DEPR_Forms/forms.selectors';
 
 // CONSTANTS
 import { elementTypes } from '../../../../Constants/elementTypes.constants';

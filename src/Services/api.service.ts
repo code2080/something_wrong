@@ -59,6 +59,8 @@ const getServiceUrl = (service: EExternalServices) => {
   switch (service) {
     case EExternalServices.AM_BE:
       return getEnvParams().AM_BE_URL;
+    case EExternalServices.PREFERENCES_BE:
+      return getEnvParams().API_URL;
   }
 };
 
@@ -88,6 +90,7 @@ const apiRequest = async ({
   service = EExternalServices.AM_BE,
 }: TAPIRequest) => {
   const fullUrl = !absoluteUrl ? getAPIUrl(service, endpoint) : endpoint;
+  
   const option = await prepareOption(
     method,
     data,

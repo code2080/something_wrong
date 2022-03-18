@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Select } from 'antd';
 
 // SELECTORS
-import { selectTimeslotsForSection } from '../../../Redux/Forms/forms.selectors';
+import { selectTimeslotsForSectionInForm } from '../../../Redux/Forms';
 
 // HELPERS
 import { findTimeSlot } from '../../../Utils/sections.helpers';
@@ -12,7 +12,7 @@ import { findTimeSlot } from '../../../Utils/sections.helpers';
 const mapStateToProps = (state, ownProps) => {
   const { formId, sectionId } = ownProps.activity;
   return {
-    timeslots: selectTimeslotsForSection(state)(formId, sectionId),
+    timeslots: selectTimeslotsForSectionInForm(state)(formId, sectionId),
   };
 };
 

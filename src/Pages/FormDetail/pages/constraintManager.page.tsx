@@ -27,7 +27,6 @@ import {
   TConstraintConfiguration,
   TConstraintInstance,
 } from '../../../Types/ConstraintConfiguration.type';
-import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
 
 import { TConstraint } from '../../../Types/Constraint.type';
 import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
@@ -37,6 +36,7 @@ import constraintManagerTableColumns from '../../../Components/ConstraintManager
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
+import { formSelector } from 'Redux/Forms';
 
 const getConstrOfType = (
   type: string,
@@ -72,8 +72,7 @@ const ConstraintManagerPage = () => {
       selectConstraintConfigurationsForForm(state, formId),
     ),
   );
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(formSelector(formId));
 
   const activityDesign = useSelector(selectDesignForForm)(formId);
   const tecoreAPI = useTECoreAPI();
@@ -85,10 +84,10 @@ const ConstraintManagerPage = () => {
   const [fields, setFields] = useState<getFieldIdsReturn>({});
 
   const elements = getElementsForMapping({
-    formSections: form.sections,
+    formSections: form?.sections || [],
     mapping: activityDesign,
     settings: {
-      primaryObject: form.objectScope,
+      primaryObject: form?.objectScope,
     },
   });
 
@@ -102,7 +101,7 @@ const ConstraintManagerPage = () => {
         setFields(result);
       },
     });
-  }, [activityDesign, activityDesign.objects, form.sections, tecoreAPI]);
+  }, [activityDesign, activityDesign.objects, form, tecoreAPI]);
 
   const [isUnsaved, setIsUnsaved] = useState(false);
 

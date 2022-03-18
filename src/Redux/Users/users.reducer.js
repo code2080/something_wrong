@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { FETCH_FORMS_SUCCESS } from '../Forms/forms.actionTypes';
+import { FETCH_FORMS_SUCCESS } from '../DEPR_Forms/forms.actionTypes';
 import { FETCH_PROFILE_SUCCESS } from '../Auth/auth.actionTypes';
 import { User } from '../../Models/User.model';
 import * as types from './users.actionTypes';

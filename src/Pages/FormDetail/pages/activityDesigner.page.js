@@ -21,7 +21,15 @@ import AdditionalFields from 'Components/ActivityDesigner/AdditionalFields';
 import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // SELECTORS
-import { makeSelectForm } from '../../../Redux/Forms/forms.selectors';
+
+
+// HOOKS
+import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
+import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
+
+// REDUX
+import { updateDesign, unlockActivityDesigner } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
+import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../../Redux/Integration/integration.actions';
 import {
   makeSelectActivitiesForForm,
   activityInWorkerProgressSelector,
@@ -32,20 +40,7 @@ import {
 } from '../../../Redux/Integration/integration.selectors';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
-
-// HOOKS
-import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
-import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
-
-// ACTIONS
-import {
-  updateDesign,
-  unlockActivityDesigner,
-} from '../../../Redux/ActivityDesigner/activityDesigner.actions';
-import {
-  findTypesOnReservationMode,
-  findFieldsOnReservationMode,
-} from '../../../Redux/Integration/integration.actions';
+import { formSelector } from '../../../Redux/Forms';
 
 // HELPERS
 import {
@@ -82,8 +77,7 @@ const ActivityDesignPage = () => {
   /**
    * SELECTORS
    */
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(formSelector(formId));
   const selectActivitiesForForm = useMemo(
     () => makeSelectActivitiesForForm(),
     [],

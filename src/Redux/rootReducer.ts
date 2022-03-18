@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { apiStatus } from './APIStatus/apiStatus.reducer';
 import globalUI from './GlobalUI/globalUI.reducer';
 import auth from './Auth/auth.reducer';
-import forms from './Forms/forms.reducer';
 import submissions from './FormSubmissions/formSubmissions.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import constraintConfigurations from './ConstraintConfigurations/constraintConfigurations.reducer';
@@ -26,6 +25,7 @@ import filters from './Filters/filters.reducer';
 // import activityTags from './DEPR_ActivityTag/activityTag.reducer';
 // import activities from './DEPR_Activities/activities.reducer';
 // import filterLookupMap from './DEPR_FilterLookupMap/filterLookupMap.reducer';
+// import forms from './DEPR_Forms/forms.reducer';
 
 // ACTIONS
 import { LOGOUT } from './Auth/auth.actionTypes';
@@ -33,12 +33,12 @@ import { LOGOUT } from './Auth/auth.actionTypes';
 // REWORKED
 import activitiesReducer from './Activities';
 import tagsReducer from './Tags';
+import formsReducer from './Forms';
 
 const appReducer = combineReducers({
   apiStatus,
   globalUI,
   auth,
-  forms,
   submissions,
   activityDesigner,
   constraintConfigurations,
@@ -56,6 +56,7 @@ const appReducer = combineReducers({
   filters,
   activities: activitiesReducer,
   tags: tagsReducer,
+  forms: formsReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -16,7 +16,7 @@ export interface ISimpleAPIState {
 
 export interface IState {
   submissions: any; // @todo improve
-  forms: any; // @todo improve
+  forms: ISimpleAPIState;
   activities: ISSPReducerState;
   tags: ISimpleAPIState;
   integration: {

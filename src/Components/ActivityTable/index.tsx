@@ -8,7 +8,7 @@ import SSPTable from 'Components/SSP/Components/Table';
 import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // UTILS
-import { generateColumnsFromDesign } from './Columns/Generators';
+import { generateColumnsFromDesign } from '../TableColumnsShared/Generators';
 
 // TYPES
 import { ISSPColumn } from 'Components/SSP/Types';

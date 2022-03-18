@@ -18,17 +18,18 @@ import {
 import useFormInstanceSchedulingProcessModal from '../Modals/useFormInstanceSchedulingProcessModal';
 import useFormInstanceAcceptanceStatusModal from '../Modals/useFormInstanceAcceptanceStatusModal';
 import { makeSelectFormInstance } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { makeSelectForm } from '../../Redux/Forms/forms.selectors';
 import FormInstanceActionsDropdown from './FormInstanceActionsDropdown';
+import { formSelector } from 'Redux/Forms';
 
 const FormInstanceToolbar = ({ formId, formInstanceId, objectRequests }) => {
   const selectFormInstance = useMemo(() => makeSelectFormInstance(), []);
-  const selectForm = useMemo(() => makeSelectForm(), []);
 
   const formInstance = useSelector((state) =>
     selectFormInstance(state, { formId, formInstanceId }),
   );
-  const { formType } = useSelector((state) => selectForm(state, formId));
+
+  const form = useSelector(formSelector(formId));
+  const { formType = '' } = form || {};
 
   const [SchedulingStatusProcessModal, openSchedulingStatusProcessModal] =
     useFormInstanceSchedulingProcessModal();

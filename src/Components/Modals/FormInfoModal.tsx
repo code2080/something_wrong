@@ -7,7 +7,7 @@ import OwnerCol from '../TableColumns/Components/OwnerCol';
 import ObjectScopeCol from '../TableColumns/Components/ObjectScopeCol';
 
 // REDUX
-import { selectFormById } from 'Redux/Forms/forms.selectors';
+import { formSelector } from 'Redux/Forms';
 
 // TYPES
 import { TForm } from 'Types/Form.type';
@@ -94,7 +94,7 @@ const generateFormInfoData = (form: TForm | undefined) => {
 };
 
 const FormInfoModal = ({ formId, isVisible, onHide }: Props) => {
-  const form = useSelector(selectFormById(formId));
+  const form = useSelector(formSelector(formId));
 
   const datasource = useMemo(() => generateFormInfoData(form), [form]);
 

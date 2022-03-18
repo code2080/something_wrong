@@ -20,7 +20,6 @@ import {
 } from 'Redux/DEPR_Activities/activities.actions';
 
 // SELECTORS
-import { makeSelectForm } from 'Redux/Forms/forms.selectors';
 import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 import { getExtIdPropsPayload } from 'Redux/Integration/integration.selectors';
@@ -31,6 +30,7 @@ import { TActivity } from 'Types/Activity/Activity.type';
 import { TGetExtIdPropsPayload, TEObject } from 'Types/TECorePayloads.type';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { useSubmissions } from './useSubmissions';
+import { formSelector } from 'Redux/Forms';
 
 interface Props {
   formId: string;
@@ -72,7 +72,7 @@ export const useAllActivities = ({ formId, filters }) => {
   };
 };
 
-//todo: maybe remove this??
+// todo: maybe remove this??
 export const useActivitiesWatcher = ({
   formId,
   filters,
@@ -82,8 +82,7 @@ export const useActivitiesWatcher = ({
   pagination,
 }: Props) => {
   const teCoreAPI = useTECoreAPI();
-  const selectForm = useMemo(() => makeSelectForm(), []);
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(formSelector(formId));
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const { fetchSubmissions } = useSubmissions({ formId });
@@ -95,7 +94,7 @@ export const useActivitiesWatcher = ({
   const [limit, setLimit] = useState(pagination?.limit || 10);
 
   const activities = useSelector(
-    selectActivitiesForForm({ formId: form._id, tableType: origin }),
+    selectActivitiesForForm({ formId: form?._id, tableType: origin }),
   );
   const dispatch = useDispatch();
   const prevFilters = usePrevious(filters);
@@ -160,14 +159,14 @@ export const useActivitiesWatcher = ({
   }, [page, limit]);
 
   const submissionPayload = useMemo(() => {
-    const sections = form.sections;
+    const sections = form?.sections;
     const submissionValues = submissions.map((submission) => submission.values);
     const teValues = isEmpty(submissionValues)
       ? initialPayload
       : getExtIdPropsPayload({
           sections,
           submissionValues,
-          objectScope: form.objectScope,
+          objectScope: form?.objectScope,
           activities: Object.values(activities).flat(),
         });
     const scopedObjectExtids = submissions.map((s) => s.scopedObject);
@@ -177,7 +176,7 @@ export const useActivitiesWatcher = ({
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.sections, form.objectScope, submissions, activities.length]);
+  }, [form?.sections, form?.objectScope, submissions, activities.length]);
   useFetchLabelsFromExtIds(submissionPayload);
 
   useEffect(() => {

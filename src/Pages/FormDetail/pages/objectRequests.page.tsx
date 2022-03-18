@@ -11,7 +11,7 @@ import ExpandedPane from '../../../Components/TableColumns/Components/ExpandedPa
 
 import { getSectionsForObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequests.selectors';
 import { selectFormObjectRequest } from '../../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { selectSectionDesign } from '../../../Redux/Forms/forms.selectors';
+import { selectSectionInForm } from '../../../Redux/Forms';
 import ObjectRequestValue, {
   ObjectRequestStatusIcon,
   ObjectRequestType,
@@ -38,9 +38,8 @@ const ObjectRequestSection = ({ request }: { request: ObjectRequest }) => {
   const sectionIds: string[] = useSelector(
     getSectionsForObjectRequest(request, formId),
   );
-  const firstSection = useSelector((state) =>
-    selectSectionDesign(state)(formId, sectionIds?.[0]),
-  );
+  const firstSection = useSelector(selectSectionInForm(formId, sectionIds[0]))
+  
   const sectionName = firstSection ? firstSection.name : 'No section';
   return sectionName;
 };

@@ -24,6 +24,7 @@ import './index.scss';
 // CONSTANTS
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 
 
 const ActivitiesToolbar = () => {
@@ -37,6 +38,8 @@ const ActivitiesToolbar = () => {
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
+
+  const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
 
   /**
    * EVENT HANDLERS
@@ -97,22 +100,24 @@ const ActivitiesToolbar = () => {
         />
       </ToolbarGroup>
       <ToolbarGroup label='Grouping & filters'>
-        <GroupingRadioGroup
-          value={groupBy}
-          options={[
-            {
-              value: EActivityGroupings.FLAT,
-              label: <OrderedListOutlined />,
-              tooltip: 'Flat list',
-            },
-            {
-              value: EActivityGroupings.WEEK_PATTERN,
-              label: <GroupOutlined />,
-              tooltip: 'Week pattern',
-            },
-          ]}
-          onSelect={(val) => setGroup(val as EActivityGroupings)}
-        />
+        {hasWeekPattern && (
+          <GroupingRadioGroup
+            value={groupBy}
+            options={[
+              {
+                value: EActivityGroupings.FLAT,
+                label: <OrderedListOutlined />,
+                tooltip: 'Flat list',
+              },
+              {
+                value: EActivityGroupings.WEEK_PATTERN,
+                label: <GroupOutlined />,
+                tooltip: 'Week pattern',
+              },
+            ]}
+            onSelect={(val) => setGroup(val as EActivityGroupings)}
+          />
+        )}
         <ActivityFiltering />
       </ToolbarGroup>
     </div>

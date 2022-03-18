@@ -41,11 +41,11 @@ import { ISSPQueryObject } from 'Types/SSP.type';
 import {
   RowActionsColumn,
   TagColumn,
-  SchedulingStatusColumn,
+  SchedulingStatusSingleColumn,
   SubmitterColumn,
   jointTeachingObjectColumn,
   primaryObjectColumn,
-} from 'Components/ActivityTable/Columns';
+} from 'Components/TableColumnsShared';
 
 interface Props {}
 //todo: maybe remove this component and put everything in its parrent
@@ -54,7 +54,7 @@ const UnmatchedActivitiesTable = ({}: Props) => {
     jointTeachingObjectColumn,
     primaryObjectColumn,
     TagColumn,
-    SchedulingStatusColumn,
+    SchedulingStatusSingleColumn,
   ];
 
   return <ActivityTable preCustomColumns={columns} />;

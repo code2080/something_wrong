@@ -7,10 +7,10 @@ import ActivitiesToolbar from 'Components/ActivitiesToolbar';
 import ActivityTable from 'Components/ActivityTable';
 import {
   RowActionsColumn,
-  SchedulingStatusColumn,
+  SchedulingStatusSingleColumn,
   SubmitterColumn,
   TagColumn,
-} from 'Components/ActivityTable/Columns';
+} from 'Components/TableColumnsShared';
 import WeekPatternTable from 'Components/WeekPatternTable';
 
 // REDUX
@@ -43,7 +43,7 @@ const ActivitiesPage = () => {
       <ActivitiesToolbar />
       {groupBy === EActivityGroupings.FLAT && (
         <ActivityTable
-          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusColumn]}
+          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusSingleColumn]}
           postCustomColumns={[SubmitterColumn]}
         />
       )}

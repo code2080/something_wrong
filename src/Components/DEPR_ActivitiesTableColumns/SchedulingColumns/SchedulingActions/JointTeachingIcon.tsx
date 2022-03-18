@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { selectExtIdLabel } from 'Redux/TE/te.selectors';
 import { updateActivities } from '../../../../Redux/DEPR_Activities/activities.actions';
 import { makeSelectActivitiesForFormAndIds } from '../../../../Redux/DEPR_Activities/activities.selectors';
-import { makeSelectForm } from '../../../../Redux/Forms/forms.selectors';
 import { makeSelectSubmissions } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 
 // COMPONENTS
@@ -22,6 +21,8 @@ import './JointTeachingIcon.scss';
 
 // TYPES
 import { TActivity } from '../../../../Types/Activity/Activity.type';
+import { formSelector } from 'Redux/Forms';
+import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 type Props = {
   activity?: TActivity;
@@ -34,7 +35,6 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
 
   const dispatch = useDispatch();
   const selectSubmissions = useMemo(() => makeSelectSubmissions(), []);
-  const selectForm = useMemo(() => makeSelectForm(), []);
 
   const selectActivitiesForFormAndIds = useMemo(
     () => makeSelectActivitiesForFormAndIds(),
@@ -48,11 +48,11 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
     }),
   );
 
-  const form = useSelector((state) => selectForm(state, formId));
+  const form = useSelector(formSelector(formId));
   const submissions = useSelector((state) => selectSubmissions(state, formId));
   const scopedObjectIds = useMemo(
     (): string[] =>
-      form.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
+      form?.objectScope ? _.uniq(submissions.map((el) => el.scopedObject)) : [],
     [form, submissions],
   );
 
@@ -137,7 +137,7 @@ const JointTeachingIcon = ({ activity, selectedRowKeys = [] }: Props) => {
           ? `Joint teaching: ${extIdLabel}` || 'N/A'
           : 'Click to indicate joint teaching'
       }
-      disabled={activity.isInactive()}
+      disabled={activity.activityStatus === EActivityStatus.INACTIVE}
       buttonIcon={icon}
       buttonClassName={`joint-teaching--btn ${
         localTeachingObject ? 'indicated' : ''
