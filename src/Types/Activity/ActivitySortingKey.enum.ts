@@ -9,4 +9,5 @@ export enum EActivitySortingKey {
   TIME = 'metadata.time',
   JOINT_TEACHING_OBJECT = 'jointTeachingObject',
   PRIMARY_OBJECT = 'primaryObject',
+  DATE_RANGES = 'metadata.startDate',
 }

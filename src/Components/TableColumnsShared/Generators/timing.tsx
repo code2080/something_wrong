@@ -148,7 +148,7 @@ const timingCols = {
   }),
   dateRanges: (mapping) => ({
     title: 'Date ranges',
-    key: 'metadata.dateRanges',
+    key: EActivitySortingKey.DATE_RANGES,
     dataIndex: null,
     render: (activity) => (
       <BaseActivityColOuter
@@ -159,6 +159,7 @@ const timingCols = {
         mapping={mapping}
       />
     ),
+    sorter: true,
   }),
   time: (mapping) => ({
     title: 'Exact time',
