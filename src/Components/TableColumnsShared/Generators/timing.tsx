@@ -100,7 +100,7 @@ const timingCols = {
     ),
   }),
   length: (mapping) => ({
-    title: 'Length',
+    title: 'Duration',
     key: EActivitySortingKey.LENGTH,
     dataIndex: null,
     render: (activity, activityIndex) => (

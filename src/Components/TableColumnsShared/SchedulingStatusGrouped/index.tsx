@@ -9,7 +9,7 @@ import './index.scss';
 import { EActivityStatus, CActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 type Props = {
-  activityStatus: EActivityStatus[],
+  activityStatuses: EActivityStatus[],
 };
 
 const StatusText = ({ activityStatus }: { activityStatus: EActivityStatus }) => {
@@ -26,14 +26,14 @@ const StatusText = ({ activityStatus }: { activityStatus: EActivityStatus }) => 
   }
 };
 
-const calcFinalActivityStatus = (activityStatus: EActivityStatus[]) => {
-  if (!activityStatus || !activityStatus.length) return EActivityStatus.VALIDATION_ERROR;
-  if (activityStatus.length === 1) return activityStatus[0];
+const calcFinalActivityStatus = (activityStatuses: EActivityStatus[]) => {
+  if (!activityStatuses || !activityStatuses.length) return EActivityStatus.VALIDATION_ERROR;
+  if (activityStatuses.length === 1) return activityStatuses[0];
   return EActivityStatus.GROUPED_MULTIPLE;
 }
 
-const SchedulingStatusGrouped = ({ activityStatus }: Props) => {
-  const finalActivityStatus = calcFinalActivityStatus(activityStatus);
+const SchedulingStatusGrouped = ({ activityStatuses }: Props) => {
+  const finalActivityStatus = calcFinalActivityStatus(activityStatuses);
   return (
     <div className='activity-status-column'>
       <StatusLabel color={CActivityStatus[finalActivityStatus]?.color ?? 'default'}>

@@ -8,6 +8,7 @@ import useSSP, {
   useRowSelection,
   useSorting,
 } from 'Components/SSP/Utils/hooks';
+import WorkerInProgress from '../WorkerInProgress';
 
 // TYPES
 type Props = {
@@ -16,10 +17,13 @@ type Props = {
 };
 
 const SSPTable = ({ rowKey = '_id', columns }: Props) => {
-  const { loading, results } = useSSP();
+  const { loading, results, workerStatus } = useSSP();
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const sorting = useSorting();
+
+  if (workerStatus === 'IN_PROGRESS')
+    return <WorkerInProgress />
 
   return (
     <Table

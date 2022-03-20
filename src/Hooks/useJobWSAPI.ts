@@ -6,7 +6,7 @@ import { forceFetchingActivities } from '../Redux/GlobalUI/globalUI.actions';
 import { updateActivityInWorkerProgress } from '../Redux/DEPR_Activities/activities.actions';
 import { jobStatus } from '../Constants/jobStatuses.constants';
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import EventListener from '../Utils/socket.helper';
+import EventListener from '../Utils/DEPR_socket.helper';
 
 export const useJobWSAPI = () => {
   const dispatch = useDispatch();

@@ -1,3 +1,4 @@
+/* eslint-disable no-unneeded-ternary */
 import { useEffect, useRef, useState } from 'react';
 import { Resizable } from 'react-resizable';
 import PropTypes from 'prop-types';
@@ -86,7 +87,7 @@ const ResizableCell = (props) => {
         Math.max(50 + getHeaderCellWidth(ref.current), restProps.width || 0),
       );
     }
-  }, [!ref]);
+  }, [ref]);
 
   // Incase table is empty, there is no <colgroup>
   useEffect(() => {
@@ -95,7 +96,7 @@ const ResizableCell = (props) => {
     if (isEmpty(colgroup)) {
       ref.current.style.width = `${minCellWidth}px`;
     }
-  }, [minCellWidth, !ref]);
+  }, [minCellWidth, ref]);
 
   return (
     <Resizable
@@ -136,7 +137,7 @@ const ResizableHeaderCell = ({
     <ResizableCell
       {...restProps}
       onResized={onResized}
-      expandable={expandable}
+      expandable={expandable ? expandable : undefined}
     />
   );
 };

@@ -16,10 +16,11 @@ import {
   useFetchLabelsFromExtIds,
   useTECoreAPI,
 } from '../../Hooks/TECoreApiHooks';
+import { useSubscribeToFormEvents } from 'Services/websocket.service';
 
 // REDUX
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import { resetActivitiesFetchingHandler, selectActivitiesInTable, setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
+import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
@@ -28,21 +29,18 @@ import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selector
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, clearActivityFilters } from 'Redux/Activities';
+import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, resetState, selectActivitiesWorkerStatus, updateWorkerStatus } from 'Redux/Activities';
 import { formSelector } from 'Redux/Forms';
-import { fetchActivityInWorkerProgress } from 'Redux/DEPR_Activities/activities.actions';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { ACTIVITIES_TABLE, UNMATCHED_ACTIVITIES_TABLE, MATCHED_ACTIVITIES_TABLE } from '../../Constants/tables.constants';
-
 import { ASSISTED_SCHEDULING_PERMISSION_NAME, AE_ACTIVITY_PERMISSION } from '../../Constants/permissions.constants';
 
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
 import ConstraintManagerPage from './pages/constraintManager.page';
-import ActivityDesignPage from './pages/activityDesigner.page';
+import ActivityDesignPage from './pages/Designer';
 import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionOverviewPage from './pages/SubmissionOverview';
 import SubmissionsDetailPage from './pages/SubmissionDetail';
@@ -51,6 +49,7 @@ import GroupManagementPage from './pages/groupManagement.page';
 
 // TYPES
 import { ISSPQueryObject } from 'Types/SSP.type';
+import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -67,6 +66,34 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const teCoreAPI = useTECoreAPI();
   const { formId } = useParams<{ formId: string }>();
+
+  const activitiesWorkerStatus = useSelector(selectActivitiesWorkerStatus);
+
+  /**
+   * Establish web sockets connection
+   */
+  useSubscribeToFormEvents({ 
+    formId,
+    eventMap: { 
+      [ESocketEvents.ACTIVITIES_UPDATE]: (payload: IDefaultSocketPayload) => {
+        if (payload.status !== 'OK') return;
+        if (payload.workerStatus === 'IN_PROGRESS') {
+          // Set the redux state to in progress
+          dispatch(updateWorkerStatus('IN_PROGRESS'));
+        }
+        // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
+        if (payload.workerStatus === 'DONE' && activitiesWorkerStatus === 'IN_PROGRESS') {
+          dispatch(fetchActivitiesForForm(formId, {}));
+        }
+      },
+      [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (payload: IDefaultSocketPayload) => {
+        if (payload.status !== 'OK') return;
+        if (payload.workerStatus === 'DONE') {
+          dispatch(fetchActivityFilterLookupMapForForm(formId));
+        }
+      }
+    },
+  });
 
   /**
    * SELECTORS
@@ -101,7 +128,7 @@ const FormPage = () => {
     dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
-    dispatch(fetchActivityInWorkerProgress(formId));
+    // dispatch(fetchActivityInWorkerProgress(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
@@ -123,21 +150,22 @@ const FormPage = () => {
         mode: form?.reservationMode,
         callback: ({ _res }) => {},
       });
-    [
-      ACTIVITIES_TABLE,
-      UNMATCHED_ACTIVITIES_TABLE,
-      MATCHED_ACTIVITIES_TABLE,
-    ].forEach((tableType) => {
-      dispatch(selectActivitiesInTable(tableType));
-    });
+
+    // [
+    //   ACTIVITIES_TABLE,
+    //   UNMATCHED_ACTIVITIES_TABLE,
+    //   MATCHED_ACTIVITIES_TABLE,
+    // ].forEach((tableType) => {
+    //   dispatch(selectActivitiesInTable(tableType));
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
   // Reset all form related state
   useEffect(() => {
     return () => {
-      dispatch(resetActivitiesFetchingHandler());
-      dispatch(clearActivityFilters());
+      // dispatch(resetActivitiesFetchingHandler());
+      dispatch(resetState());
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -165,13 +193,6 @@ const FormPage = () => {
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(submissionPayload);
 
-  /**
-   * EVENT HANDLERS
-   */
-  const onChangeTabKey = (key: string) => {
-    dispatch(setFormDetailTab(key));
-  };
-
   return (
     <SSPResourceWrapper
       name={`${formId}__FORM_DETAIL`}
@@ -188,7 +209,7 @@ const FormPage = () => {
         <JobToolbar />
         <TEAntdTabBar
           activeKey={selectedFormDetailTab}
-          onChange={onChangeTabKey}
+          onChange={(key: string) => dispatch(setFormDetailTab(key))}
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
             {!selectedSubmissionId ? <SubmissionOverviewPage /> : <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />}

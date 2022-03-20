@@ -142,7 +142,8 @@ export const getColumnObjectArrayForTable = (
           width: finalWidth,
           title: col.title,
           index: idx,
-          expandable: hasExpandedRowRenderer,
+          // eslint-disable-next-line no-unneeded-ternary
+          expandable: hasExpandedRowRenderer ? hasExpandedRowRenderer : undefined,
           onResized: (newWidth) => onResizeColumn(newWidth, idx),
         }),
         render: nowrap

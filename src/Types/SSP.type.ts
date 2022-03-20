@@ -62,6 +62,7 @@ export interface ISSPAPIResult {
   allKeys: string[];
   limit: number;
   totalPages: number;
+  workerStatus?: 'IN_PROGRESS' | 'DONE';
 }
 
 export interface ISSAPIDataGroupState extends Omit<ISSPAPIResult, 'queryHash' | 'groupBy'>, ISSPSortingQuery {
@@ -86,6 +87,8 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
    * filters: Record<string, any>
    */
   filterLookupMap: any;
+  // WORKERS
+  workerStatus?: 'IN_PROGRESS' | 'DONE';
 }
 
 export interface ISSPQueryObject

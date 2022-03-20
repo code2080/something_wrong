@@ -12,41 +12,36 @@ import { Menu, Dropdown, Button } from 'antd';
 import _ from 'lodash';
 
 // COMPONENTS
-import ObjectMapping from '../../../Components/ActivityDesigner/ObjectMapping';
-import FieldMapping from '../../../Components/ActivityDesigner/FieldMapping';
-import TimingMapping from '../../../Components/ActivityDesigner/TimingMapping';
-import MappingStatus from '../../../Components/ActivityDesigner/MappingStatus';
-import HasReservationsAlert from '../../../Components/ActivityDesigner/HasReservationsAlert';
+import ObjectMapping from '../../../../Components/ActivityDesigner/ObjectMapping';
+import FieldMapping from '../../../../Components/ActivityDesigner/FieldMapping';
+import TimingMapping from '../../../../Components/ActivityDesigner/TimingMapping';
+import MappingStatus from '../../../../Components/ActivityDesigner/MappingStatus';
+import HasReservationsAlert from '../../../../Components/ActivityDesigner/HasReservationsAlert';
 import AdditionalFields from 'Components/ActivityDesigner/AdditionalFields';
-import HasActivityInWorkerProgress from '../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
-
-// SELECTORS
-
-
-// HOOKS
-import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
-import { ConfirmLeavingPageContext } from '../../../Hooks/ConfirmLeavingPageContext';
+import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // REDUX
-import { updateDesign, unlockActivityDesigner } from '../../../Redux/ActivityDesigner/activityDesigner.actions';
-import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../../Redux/Integration/integration.actions';
-import {
-  makeSelectActivitiesForForm,
-  activityInWorkerProgressSelector,
-} from '../../../Redux/DEPR_Activities/activities.selectors';
-import {
-  selectValidFieldsOnReservationMode,
-  selectValidTypesOnReservationMode,
-} from '../../../Redux/Integration/integration.selectors';
-import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
-import { createLoadingSelector } from '../../../Redux/APIStatus/apiStatus.selectors';
-import { formSelector } from '../../../Redux/Forms';
+import { selectElementTypesMap } from '../../../../Redux/Elements/element.selectors';
+import { updateDesign, unlockActivityDesigner } from '../../../../Redux/ActivityDesigner/activityDesigner.actions';
+import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../../../Redux/Integration/integration.actions';
+import { makeSelectActivitiesForForm, activityInWorkerProgressSelector } from '../../../../Redux/DEPR_Activities/activities.selectors';
+import { selectValidFieldsOnReservationMode, selectValidTypesOnReservationMode } from '../../../../Redux/Integration/integration.selectors';
+import { selectDesignForForm } from '../../../../Redux/ActivityDesigner/activityDesigner.selectors';
+import { createLoadingSelector } from '../../../../Redux/APIStatus/apiStatus.selectors';
+import { formSelector } from '../../../../Redux/Forms';
+
+// MODELS
+import { ActivityDesign } from '../../../../Models/ActivityDesign.model';
+
+// HOOKS
+import { useTECoreAPI } from '../../../../Hooks/TECoreApiHooks';
+import { ConfirmLeavingPageContext } from '../../../../Hooks/ConfirmLeavingPageContext';
 
 // HELPERS
 import {
   getElementsForMapping,
   getMandatoryPropsForTimingMode,
-} from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
+} from '../../../../Redux/ActivityDesigner/activityDesigner.helpers';
 import {
   extractReservationFields,
   extractReservationTypes,
@@ -61,18 +56,17 @@ import {
   updateTimingPropOnActivityDesign,
   updateFieldPropOnActivityDesign,
   updateObjectPropOnActivityDesign,
-} from '../../../Utils/activityDesigner';
+} from '../../../../Utils/activityDesigner';
 
 // STYLES
-import './activityDesigner.page.scss';
-import { ActivityDesign } from '../../../Models/ActivityDesign.model';
-import { selectElementTypesMap } from '../../../Redux/Elements/element.selectors';
+import './index.scss';
+import { resetState } from 'Redux/Activities';
 
 const ActivityDesignPage = () => {
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
-  const leavingPageContext = useContext(ConfirmLeavingPageContext);
+  const leavingPageContext: any = useContext(ConfirmLeavingPageContext);
 
   /**
    * SELECTORS
@@ -87,10 +81,10 @@ const ActivityDesignPage = () => {
   );
 
   const validTypes = useSelector(selectValidTypesOnReservationMode)(
-    form.reservationMode,
+    form?.reservationMode,
   );
   const validFields = useSelector(selectValidFieldsOnReservationMode)(
-    form.reservationMode,
+    form?.reservationMode,
   );
   const storeDesign = useSelector(selectDesignForForm)(formId);
   const isSaving = useSelector(
@@ -153,10 +147,10 @@ const ActivityDesignPage = () => {
   const mappingOptions = useMemo(
     () =>
       getElementsForMapping({
-        formSections: form.sections,
+        formSections: form?.sections || [],
         mapping: design,
         settings: {
-          primaryObject: form.objectScope,
+          primaryObject: form?.objectScope,
           elementsMapping,
         },
       }),
@@ -204,6 +198,7 @@ const ActivityDesignPage = () => {
     if (designIsValid) {
       dispatch(updateDesign(designRef.current));
       leavingPageContext.setIsModified(false);
+      dispatch(resetState());
     }
   };
 
@@ -273,17 +268,17 @@ const ActivityDesignPage = () => {
   const resetMenu = (
     <Menu onClick={onResetMenuClick}>
       <Menu.Item key={resetMenuOptions.RESET_EMPTY}>Reset to empty</Menu.Item>
-      {form.reservationMode && (
+      {form?.reservationMode && (
         <Menu.Item key={resetMenuOptions.RESET_ALL}>
           Reset to reservation mode
         </Menu.Item>
       )}
-      {form.reservationMode && (
+      {form?.reservationMode && (
         <Menu.Item key={resetMenuOptions.RESET_TYPES}>
           Reset types to reservation mode
         </Menu.Item>
       )}
-      {form.reservationMode && (
+      {form?.reservationMode && (
         <Menu.Item key={resetMenuOptions.RESET_FIELDS}>
           Reset fields to reservation mode
         </Menu.Item>
@@ -299,12 +294,12 @@ const ActivityDesignPage = () => {
             Reservation mode:
           </div>
           <div className='activity-designer__toolbar--value'>
-            {form.reservationMode || 'Not selected'}
+            {form?.reservationMode || 'Not selected'}
           </div>
           <Dropdown
             overlay={resetMenu}
             trigger={['click']}
-            getPopupContainer={() => document.getElementById('te-prefs-lib')}
+            getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
             disabled={hasActivities || !isEditable}
           >
             <Button type='link' size='small'>
@@ -346,7 +341,7 @@ const ActivityDesignPage = () => {
           <TimingMapping
             mapping={design}
             onChange={updateTimingDesignCallback}
-            formSections={form.sections}
+            formSections={form?.sections || []}
             disabled={hasActivities || !isEditable}
           />
         </div>

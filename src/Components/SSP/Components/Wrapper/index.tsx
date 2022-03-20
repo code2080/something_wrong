@@ -44,6 +44,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     // STATUS
     loading,
     hasErrors,
+    workerStatus,
     // DATA
     data,
     // GROUP BY
@@ -191,6 +192,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         name,
         loading,
         hasErrors,
+        workerStatus,
         // DATA
         map,
         results,

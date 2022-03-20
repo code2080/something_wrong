@@ -1,6 +1,9 @@
 import { omit } from 'lodash';
 import { TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import {
+  EFilterInclusions,
+  EFilterType,
   ISSPAPIResult,
   ISSPQueryObject,
   ISSPReducerState,
@@ -72,6 +75,36 @@ export const commitSSPQueryToState = (
   state.filters = filters || state.filters;
 };
 
+export const resetSSPState = (state: ISSPReducerState) => {
+  state.groupBy = EActivityGroupings.FLAT;
+  state.data = {
+    [EActivityGroupings.FLAT]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    },
+    [EActivityGroupings.WEEK_PATTERN]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    },
+  };
+  state.matchType = EFilterType.ALL;
+  state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
+  state.filters = {};
+  state.filterLookupMap = {};
+}
+
 export const updateStateWithResultFromBatchOperation = (
   batchOperationPayload: TActivityBatchOperation,
   state: ISSPReducerState,
@@ -100,4 +133,11 @@ export const updateStateWithResultFromBatchOperation = (
 
   state.data[state.groupBy].results = results;
   state.data[state.groupBy].map = map;
+}
+
+export const updateResourceWorkerStatus = (payload: Partial<ISSPAPIResult>, state: ISSPReducerState) => {
+  const { workerStatus } = payload;
+  if (workerStatus === 'DONE' || workerStatus === 'IN_PROGRESS') {
+    state.workerStatus = workerStatus;
+  }
 }

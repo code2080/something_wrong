@@ -9,7 +9,7 @@ import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesi
 
 // UTILS
 import { generateColumnsFromDesign } from '../TableColumnsShared/Generators';
-import { SchedulingStatusGroupedColumn, WeekPatternActivityTypeColumn, WeekPatternWeeksColumn } from 'Components/TableColumnsShared';
+import { GroupedTagsColumn, SchedulingStatusGroupedColumn, WeekPatternActivityTypeColumn, WeekPatternWeeksColumn } from 'Components/TableColumnsShared';
 
 // TYPES
 // import { ISSPColumn } from 'Components/SSP/Types';
@@ -32,6 +32,7 @@ const WeekPatternTable = () => {
       columns={[
         { title: "Submitter", dataIndex: 'recipientName' },
         SchedulingStatusGroupedColumn,
+        GroupedTagsColumn,
         WeekPatternActivityTypeColumn,
         WeekPatternWeeksColumn,
         { title: 'Number of weeks', key: 'weeks', dataIndex: 'weeks', render: (weeks: any[]) => weeks.length },

@@ -10,6 +10,7 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   name: 'Unknown resource',
   loading: false,
   hasErrors: false,
+  workerStatus: 'DONE',
   // DATA
   results: [],
   map: {},
@@ -45,6 +46,7 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   commitFilterChanges: () => {},
   discardFilterChanges: () => {},
   initFilters: () => {},
+
 });
 
 export default SSPResourceContext;

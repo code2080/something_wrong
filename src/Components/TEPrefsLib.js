@@ -2,16 +2,17 @@ import { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
-import store from '../Redux/store';
 
 // REDUX
 import { validateLogin } from '../Redux/Auth/auth.actions';
 import { SET_ENVIRONMENT, SET_CORE_USER } from '../Redux/Auth/auth.actionTypes';
+import store from '../Redux/store';
 
 // COMPONENTS
 import { ConfirmLeavingPageProvider } from '../Hooks/ConfirmLeavingPageContext';
 import TEPrefsLibRouter from './TEPrefsLibRouter';
 import { TECoreAPIProvider, configureTECoreAPI } from './TECoreAPI';
+import { WebsocketProvider } from '../Services/websocket.service';
 
 // STYLES
 import './TEPrefsLib.scss';
@@ -63,23 +64,25 @@ const TEPrefsLib = ({ mixpanel, coreAPI: _teCoreAPI, env }) => {
   return (
     <Provider store={store}>
       <TECoreAPIProvider api={teCoreAPI} mixpanel={mixpanel}>
-        <ConfigProvider {...antdConfig}>
-          <div
-            className='te-prefs-lib'
-            id='te-prefs-lib'
-            ref={prefsRef}
-            onScroll={() => {
-              window.tePrefsScroll = prefsRef.current && [
-                prefsRef.current.scrollLeft,
-                prefsRef.current.scrollTop,
-              ];
-            }}
-          >
-            <ConfirmLeavingPageProvider>
-              <TEPrefsLibRouter />
-            </ConfirmLeavingPageProvider>
-          </div>
-        </ConfigProvider>
+        <WebsocketProvider>
+          <ConfigProvider {...antdConfig}>
+            <div
+              className='te-prefs-lib'
+              id='te-prefs-lib'
+              ref={prefsRef}
+              onScroll={() => {
+                window.tePrefsScroll = prefsRef.current && [
+                  prefsRef.current.scrollLeft,
+                  prefsRef.current.scrollTop,
+                ];
+              }}
+            >
+              <ConfirmLeavingPageProvider>
+                <TEPrefsLibRouter />
+              </ConfirmLeavingPageProvider>
+            </div>
+          </ConfigProvider>
+        </WebsocketProvider>
       </TECoreAPIProvider>
     </Provider>
   );

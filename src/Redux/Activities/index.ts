@@ -9,6 +9,8 @@ import {
   commitAPIPayloadToState,
   commitSSPQueryToState,
   updateStateWithResultFromBatchOperation,
+  resetSSPState,
+  updateResourceWorkerStatus,
 } from '../../Components/SSP/Utils/sliceHelpers';
 import {
   excludeEmptyKeysFromFilterLookupMap,
@@ -95,6 +97,7 @@ export const initialState: ISSPReducerState = {
   },
   filters: {},
   filterLookupMap: {},
+  workerStatus: 'DONE',
 };
 
 // Slice
@@ -120,6 +123,7 @@ const slice = createSlice({
           ? createActivityFn
           : createWeekPatternGroupFn,
       );
+      updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);
     },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
@@ -140,11 +144,11 @@ const slice = createSlice({
         state.filterLookupMap[keysToMerge[i]] = newValues;
       }
     },
-    clearActivityFilters: (state) => {
-      state.matchType = EFilterType.ALL;
-      state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
-      state.filters = {};
-      state.filterLookupMap = {};
+    resetState: (state) => {
+      resetSSPState(state);
+    },
+    updateWorkerStatus: (state, { payload }) => {
+      updateResourceWorkerStatus({ workerStatus: payload }, state);
     },
     defaultBatchOperationSuccessHandler: (state, { payload }) => {
       /**
@@ -170,6 +174,7 @@ export const activitiesLoading = (state: IState): boolean =>
 export const activityFilterLookupMapSelector = (
   state: IState,
 ): TActivityFilterLookupMap => state.activities.filterLookupMap;
+export const selectActivitiesWorkerStatus = (state: IState) => state.activities.workerStatus;
 
 /**
  * ALWAYS use this selector in case you're planning on using the map for filtering
@@ -272,7 +277,8 @@ export const {
   fetchActivityFilterLookupMapSuccess,
   defaultBatchOperationSuccessHandler,
   patchFilterLookupMapWithLocalState,
-  clearActivityFilters,
+  resetState,
+  updateWorkerStatus,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
@@ -296,7 +302,7 @@ export const fetchActivitiesForForm =
 export const fetchActivityFilterLookupMapForForm =
   (formId: string) => async (dispatch: any) => {
     try {
-      dispatch(defaultRequestHandler(null));
+      // dispatch(defaultRequestHandler(null));
       const result = await api.get({
         endpoint: `forms/${formId}/activities/filters`,
       });

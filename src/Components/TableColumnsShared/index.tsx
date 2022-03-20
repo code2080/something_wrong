@@ -12,6 +12,8 @@ import { TActivity } from 'Types/Activity/Activity.type';
 import { EActivitySortingKey } from 'Types/Activity/ActivitySortingKey.enum';
 import { ISSPColumn } from 'Components/SSP/Types';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import GroupedTags from './GroupedTags';
+import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
 
 
 export const RowActionsColumn: ISSPColumn = {
@@ -56,9 +58,9 @@ export const SchedulingStatusSingleColumn: ISSPColumn = {
 export const SchedulingStatusGroupedColumn: ISSPColumn = {
   title: 'Status',
   key: EActivitySortingKey.ACTIVITY_STATUS,
-  dataIndex: 'activityStatus',
+  dataIndex: 'activityStatuses',
   width: 110,
-  render: (activityStatus: EActivityStatus[]) => <SchedulingStatusGrouped activityStatus={activityStatus} />,
+  render: (activityStatuses: EActivityStatus[]) => <SchedulingStatusGrouped activityStatuses={activityStatuses} />,
   sorter: true,
 };
 
@@ -75,6 +77,13 @@ export const WeekPatternWeeksColumn: ISSPColumn = {
   dataIndex: undefined,
   render: (wpg) => <WeekPatternWeeks wpgId={wpg._id} />
 }
+
+export const GroupedTagsColumn: ISSPColumn = {
+  title: 'Tags',
+  key: 'tags',
+  dataIndex: undefined,
+  render: (wpg: TWeekPatternGroup) => <GroupedTags tagIds={wpg.tagIds} activityIds={wpg.activityIds} />,
+};
 
 export const jointTeachingObjectColumn: ISSPColumn = {
   title: 'Joint teaching object',
