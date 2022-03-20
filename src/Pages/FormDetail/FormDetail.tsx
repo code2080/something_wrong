@@ -29,7 +29,7 @@ import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selector
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, resetState, selectActivitiesWorkerStatus, updateWorkerStatus } from 'Redux/Activities';
+import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, resetState, selectActivitiesWorkerStatus, updateWorkerStatus, filterLookupMapLoading } from 'Redux/Activities';
 import { formSelector } from 'Redux/Forms';
 
 // CONSTANTS
@@ -68,6 +68,7 @@ const FormPage = () => {
   const { formId } = useParams<{ formId: string }>();
 
   const activitiesWorkerStatus = useSelector(selectActivitiesWorkerStatus);
+  const isFilterLookupMapLoading = useSelector(filterLookupMapLoading);
 
   /**
    * Establish web sockets connection
@@ -88,7 +89,8 @@ const FormPage = () => {
       },
       [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
-        if (payload.workerStatus === 'DONE') {
+        if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
+          console.log('fetching filter stuff')
           dispatch(fetchActivityFilterLookupMapForForm(formId));
         }
       }

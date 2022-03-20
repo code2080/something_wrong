@@ -57,7 +57,7 @@ export const availableEnvs = [
 ] as const;
 
 export const getEnvParams = () => {
-  const storeState = (window as any).tePrefsLibStore.getState();
+  const storeState = (window as any).store.getState();
   const env = storeState.auth.env || 'production';
   if (!env || !availableEnvs.includes(env)) return envVarMap.production;
   return envVarMap[env];

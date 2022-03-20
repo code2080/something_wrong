@@ -65,6 +65,7 @@ export const initialState: ISSPReducerState = {
   // API STATE
   loading: false,
   hasErrors: false,
+  filterLookupMapLoading: false,
   // GROUPING
   groupBy: EActivityGroupings.FLAT,
   // DATA
@@ -106,11 +107,11 @@ const slice = createSlice({
   initialState,
   reducers: {
     defaultRequestHandler: (state, { payload }) => {
-      beginLoading(state);
+      beginLoading(state, payload?.loadingProp || 'loading');
       if (payload) commitSSPQueryToState(payload, state);
     },
-    defaultFailureHandler: (state) => {
-      finishedLoadingFailure(state);
+    defaultFailureHandler: (state, { payload }: { payload: any | null | undefined }) => {
+      finishedLoadingFailure(state, payload?.loadingProp || 'loading');
     },
     initializeSSPStateProps: (state, { payload }) => {
       if (payload) commitSSPQueryToState(payload, state);
@@ -129,7 +130,7 @@ const slice = createSlice({
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
       state.filterLookupMap = merge(state.filterLookupMap || {}, lookupMap);
-      // finishedLoadingSuccess(state); @todo break out into separate loading component
+      finishedLoadingSuccess(state, 'filterLookupMapLoading');
     },
     patchFilterLookupMapWithLocalState: (state, { payload }) => {
       const keysToMerge = Object.keys(payload);
@@ -175,6 +176,7 @@ export const activityFilterLookupMapSelector = (
   state: IState,
 ): TActivityFilterLookupMap => state.activities.filterLookupMap;
 export const selectActivitiesWorkerStatus = (state: IState) => state.activities.workerStatus;
+export const filterLookupMapLoading = (state: IState) => state.activities.filterLookupMapLoading;
 
 /**
  * ALWAYS use this selector in case you're planning on using the map for filtering
@@ -295,20 +297,20 @@ export const fetchActivitiesForForm =
       });
       dispatch(fetchActivitiesForFormSuccess(result));
     } catch (e) {
-      dispatch(defaultFailureHandler());
+      dispatch(defaultFailureHandler(null));
     }
   };
 
 export const fetchActivityFilterLookupMapForForm =
   (formId: string) => async (dispatch: any) => {
     try {
-      // dispatch(defaultRequestHandler(null));
+      dispatch(defaultRequestHandler({ loadingProp: 'filterLookupMapLoading' }));
       const result = await api.get({
         endpoint: `forms/${formId}/activities/filters`,
       });
       dispatch(fetchActivityFilterLookupMapSuccess(result));
     } catch (e) {
-      dispatch(defaultFailureHandler());
+      dispatch(defaultFailureHandler({ loadingProp: 'filterLookupMapLoading' }));
     }
   };
 
@@ -324,7 +326,7 @@ const generalBatchOperationFn =
       dispatch(defaultBatchOperationSuccessHandler(batchOperation));
     } catch (e) {
       console.log(e);
-      dispatch(defaultFailureHandler());
+      dispatch(defaultFailureHandler(null));
     }
   };
 

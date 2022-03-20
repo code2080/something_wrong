@@ -9,18 +9,27 @@ import {
   ISSPReducerState,
 } from '../../../Types/SSP.type';
 
-export const finishedLoadingSuccess = (state: ISSPReducerState): void => {
-  state.loading = false;
+export const finishedLoadingSuccess = (
+  state: ISSPReducerState,
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+): void => {
+  state[loadingProp] = false;
   state.hasErrors = false;
 };
 
-export const finishedLoadingFailure = (state: ISSPReducerState): void => {
-  state.loading = false;
+export const finishedLoadingFailure = (
+  state: ISSPReducerState,
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+): void => {
+  state[loadingProp] = false;
   state.hasErrors = true;
 };
 
-export const beginLoading = (state: ISSPReducerState): void => {
-  state.loading = true;
+export const beginLoading = (
+  state: ISSPReducerState,
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+): void => {
+  state[loadingProp] = true;
   state.hasErrors = false;
 };
 

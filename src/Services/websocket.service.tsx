@@ -5,13 +5,13 @@ import socketIOClient, { Socket } from "socket.io-client";
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 
 export const initializeSocketConnection = () => {
+  console.log(socketIOClient);
   // Get the URL
   const url = `${getEnvParams().AM_BE_URL}`;
   const socketUrl = url.slice(0, url.length - 3);
 
   // Initialize connection
-  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(socketUrl, { transports: ['websocket'] });
-
+  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(socketUrl, { transports: ['websocket'], forceNew: false });
   // Set up default event handlers
   socket.on('connect', () => {
     console.log(`Websocket connection established to Activity Manager BE`);
@@ -30,6 +30,7 @@ const SocketContext = React.createContext<{ socket: Socket<DefaultEventsMap, Def
 
 export const WebsocketProvider: React.FC = ({ children }) => {
   const socket = initializeSocketConnection();
+
   useEffect(() => {
     return () => {
       socket?.disconnect();
@@ -63,8 +64,8 @@ export const useSubscribeToFormEvents = ({ formId, eventMap }: Props) => {
           // Subscribe
           socket.emit(socketEvent, { formId }, (resp: any) => defaultSubscriptionNotifier(ESocketEvents.ACTIVITIES_UPDATE, resp.formId));
           // Set up handler
-          socket.on(socketEvent, (payload: IDefaultSocketPayload) => {
-            console.info(`Received ${ESocketEvents.ACTIVITIES_UPDATE} event, executing associated handler`);
+          socket.off(socketEvent).on(socketEvent, (payload: IDefaultSocketPayload) => {
+            console.info(`Received ${socketEvent} event, executing associated handler`);
             eventMap[socketEvent](payload);
           });
         }

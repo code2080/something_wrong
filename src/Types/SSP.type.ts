@@ -52,6 +52,7 @@ export interface ISSPPaginationQuery {
 export interface ISSPAPIStatus {
   hasErrors: boolean;
   loading: boolean;
+  filterLookupMapLoading: boolean;
 }
 
 export interface ISSPAPIResult {
