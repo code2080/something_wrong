@@ -111,7 +111,10 @@ const slice = createSlice({
       beginLoading(state, payload?.loadingProp || 'loading');
       if (payload) commitSSPQueryToState(payload, state);
     },
-    defaultFailureHandler: (state, { payload }: { payload: any | null | undefined }) => {
+    defaultFailureHandler: (
+      state,
+      { payload }: { payload: any | null | undefined },
+    ) => {
       finishedLoadingFailure(state, payload?.loadingProp || 'loading');
     },
     initializeSSPStateProps: (state, { payload }) => {
@@ -128,10 +131,10 @@ const slice = createSlice({
       updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);
     },
-    updateActivitySuccess: (state, { payload} ) => {
+    updateActivitySuccess: (state, { payload }) => {
       updateEntity(state, payload, createActivityFn, '_id');
       finishedLoadingSuccess(state);
-    }, 
+    },
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
       state.filterLookupMap = merge(state.filterLookupMap || {}, lookupMap);
@@ -180,8 +183,10 @@ export const activitiesLoading = (state: IState): boolean =>
 export const activityFilterLookupMapSelector = (
   state: IState,
 ): TActivityFilterLookupMap => state.activities.filterLookupMap;
-export const selectActivitiesWorkerStatus = (state: IState) => state.activities.workerStatus;
-export const filterLookupMapLoading = (state: IState) => state.activities.filterLookupMapLoading;
+export const selectActivitiesWorkerStatus = (state: IState) =>
+  state.activities.workerStatus;
+export const filterLookupMapLoading = (state: IState) =>
+  state.activities.filterLookupMapLoading;
 
 /**
  * ALWAYS use this selector in case you're planning on using the map for filtering
@@ -310,36 +315,69 @@ export const fetchActivitiesForForm =
 export const fetchActivityFilterLookupMapForForm =
   (formId: string) => async (dispatch: any) => {
     try {
-      dispatch(defaultRequestHandler({ loadingProp: 'filterLookupMapLoading' }));
+      dispatch(
+        defaultRequestHandler({ loadingProp: 'filterLookupMapLoading' }),
+      );
       const result = await api.get({
         endpoint: `forms/${formId}/activities/filters`,
       });
       dispatch(fetchActivityFilterLookupMapSuccess(result));
     } catch (e) {
-      dispatch(defaultFailureHandler({ loadingProp: 'filterLookupMapLoading' }));
+      dispatch(
+        defaultFailureHandler({ loadingProp: 'filterLookupMapLoading' }),
+      );
     }
   };
 
-export const updateActivityValue = (args: {
-  formId: string; 
-  activityId: string;
-  activityValueType: 'timing' | 'values'; 
-  activityValueExtId: string; 
-  updatedValue: any;
-}) => async (dispatch: any) => {
-  const {formId,activityId,activityValueType, activityValueExtId, updatedValue} = args;
-  try {
-    dispatch(defaultRequestHandler(null));
-    const result = await api.patch({
-      // endpoint: `forms/${formId}/activities/${updatedActivity._id}`,
-      endpoint: `forms/${formId}/activities/${activityId}/${activityValueType}/${activityValueExtId}/update`,
-      data: { value: updatedValue },
-    });
-    dispatch(updateActivitySuccess(result));
-  } catch (e) {
-    dispatch(defaultFailureHandler(null));
-  }
-};
+export const updateActivityValue =
+  (args: {
+    formId: string;
+    activityId: string;
+    activityValueType: 'timing' | 'values';
+    activityValueExtId: string;
+    updatedValue: any;
+  }) =>
+  async (dispatch: any) => {
+    const {
+      formId,
+      activityId,
+      activityValueType,
+      activityValueExtId,
+      updatedValue,
+    } = args;
+    try {
+      dispatch(defaultRequestHandler(null));
+      const result = await api.patch({
+        // endpoint: `forms/${formId}/activities/${updatedActivity._id}`,
+        endpoint: `forms/${formId}/activities/${activityId}/${activityValueType}/${activityValueExtId}/update`,
+        data: { value: updatedValue },
+      });
+      dispatch(updateActivitySuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler(null));
+    }
+  };
+
+export const revertActivityValue =
+  (args: {
+    formId: string;
+    activityId: string;
+    activityValueType: 'timing' | 'values';
+    activityValueExtId: string;
+  }) =>
+  async (dispatch: any) => {
+    const { formId, activityId, activityValueType, activityValueExtId } = args;
+
+    try {
+      dispatch(defaultRequestHandler(null));
+      const result = await api.patch({
+        endpoint: `forms/${formId}/activities/${activityId}/${activityValueType}/${activityValueExtId}/revert`,
+      });
+      dispatch(updateActivitySuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler(null));
+    }
+  };
 
 const generalBatchOperationFn =
   (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) =>

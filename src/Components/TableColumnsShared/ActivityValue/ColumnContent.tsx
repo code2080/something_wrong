@@ -11,10 +11,9 @@ import InlineEdit from '../../ActivityEditing/InlineEdit';
 import ModalEdit from '../../ActivityEditing/ModalEdit';
 
 // REDUX
-import { revertToSubmissionValue } from '../../../Redux/DEPR_Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
-import { updateActivityValue } from 'Redux/Activities';
+import { updateActivityValue, revertActivityValue } from 'Redux/Activities';
 
 // HELPERS
 import {
@@ -37,22 +36,24 @@ import {
   activityActionLabels,
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
-import { activityIsReadOnly, findObjectPathForActivityValue } from '../../../Utils/activities.helpers';
+import {
+  activityIsReadOnly,
+  findObjectPathForActivityValue,
+} from '../../../Utils/activities.helpers';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
 import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { TActivity } from 'Types/Activity/Activity.type';
 
-
 type Props = {
-  activityValue: ActivityValue,
-  activity: TActivity,
-  prop,
-  type,
-  propTitle,
-  formatFn,
-  mapping,
-  readonly,
-}
+  activityValue: ActivityValue;
+  activity: TActivity;
+  prop;
+  type;
+  propTitle;
+  formatFn;
+  mapping;
+  readonly;
+};
 
 const ColumnContent = ({
   activityValue,
@@ -68,8 +69,7 @@ const ColumnContent = ({
   const spotlightedElRef = useRef(null);
 
   const teCoreAPI = useTECoreAPI();
-  
-  
+
   // Activity value
   const _activityValue = getNormalizedActivityValue(
     activityValue,
@@ -115,17 +115,52 @@ const ColumnContent = ({
   /**
    * EVENT HANDLERS
    */
-  const overrideActivityValue = useCallback((value: any) => {
-    const activityValueType = findObjectPathForActivityValue(_activityValue.extId, activity);
-    if (!activityValueType || !['timing', 'values'].includes(activityValueType)) return;
-    dispatch(updateActivityValue({
-      formId: activity.formId,
-      activityId: activity._id,
-      activityValueType: activityValueType,
-      activityValueExtId: _activityValue.extId,
-      updatedValue: value,
-    }));
-  }, [_activityValue, activity, dispatch]);
+  const overrideActivityValue = useCallback(
+    (value: any) => {
+      const activityValueType = findObjectPathForActivityValue(
+        _activityValue.extId,
+        activity,
+      );
+      if (
+        !activityValueType ||
+        !['timing', 'values'].includes(activityValueType)
+      )
+        return;
+      dispatch(
+        updateActivityValue({
+          formId: activity.formId,
+          activityId: activity._id,
+          activityValueType: activityValueType,
+          activityValueExtId: _activityValue.extId,
+          updatedValue: value,
+        }),
+      );
+    },
+    [_activityValue, activity, dispatch],
+  );
+
+  const revertToSubmissionValue = () => {
+    const activityValueType = findObjectPathForActivityValue(
+      _activityValue.extId,
+      activity,
+    );
+
+    if (
+      !activityValueType ||
+      !['timing', 'values'].includes(activityValueType)
+    ) {
+      return;
+    }
+
+    dispatch(
+      revertActivityValue({
+        formId: activity.formId,
+        activityId: activity._id,
+        activityValueType: activityValueType,
+        activityValueExtId: _activityValue.extId,
+      }),
+    );
+  };
 
   // On update dropdown visibility state
   const onUpdateDropdownVisibility = (vis) => {
@@ -135,15 +170,19 @@ const ColumnContent = ({
   };
 
   // On callback from manual editing
-  const onFinishManualEditing = useCallback((value: any) => {
-    overrideActivityValue(value);
-    setViewProps(resetView());
-  }, [overrideActivityValue, setViewProps]);
+  const onFinishManualEditing = useCallback(
+    (value: any) => {
+      overrideActivityValue(value);
+      setViewProps(resetView());
+    },
+    [overrideActivityValue, setViewProps],
+  );
 
   // On failed callback from external edit action
   const onFailedExternalEditCallback = () =>
     notification.error({
-      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       message: 'Operation failed',
       description: 'Something went wrong...',
     });
@@ -170,16 +209,14 @@ const ColumnContent = ({
     // Map res to AM format
     try {
       // Override the activity
-      overrideActivityValue(
-        {
-          extId: res.type,
-          searchString: res.searchString || null,
-          searchFields: res.searchFields || null,
-          categories: mapCoreCategoryObjectToCategories(
-            res.selectedCategories || [],
-          ),
-        },
-      );
+      overrideActivityValue({
+        extId: res.type,
+        searchString: res.searchString || null,
+        searchFields: res.searchFields || null,
+        categories: mapCoreCategoryObjectToCategories(
+          res.selectedCategories || [],
+        ),
+      });
     } catch (error) {
       onFailedExternalEditCallback();
     }
@@ -214,8 +251,10 @@ const ColumnContent = ({
      * but revert to submission value has no view impact
      * so we test for it first
      */
-    if (action === activityActions.REVERT_TO_SUBMISSION_VALUE)
-      return revertToSubmissionValue(_activityValue, activity);
+    if (action === activityActions.REVERT_TO_SUBMISSION_VALUE) {
+      revertToSubmissionValue();
+      return;
+    }
 
     // Construct the new view props
     const updView = activityActionViews[action];
@@ -306,7 +345,9 @@ const ColumnContent = ({
           ))}
         </Menu>
       }
-      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       visible={isDropdownVisible}
       onVisibleChange={onUpdateDropdownVisibility}
       trigger={['hover']}
