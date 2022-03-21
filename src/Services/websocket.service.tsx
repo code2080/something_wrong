@@ -5,7 +5,6 @@ import socketIOClient, { Socket } from "socket.io-client";
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 
 export const initializeSocketConnection = () => {
-  console.log(socketIOClient);
   // Get the URL
   const url = `${getEnvParams().AM_BE_URL}`;
   const socketUrl = url.slice(0, url.length - 3);

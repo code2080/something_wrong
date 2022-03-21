@@ -13,7 +13,7 @@ const DateTime = ({ value, format }) => {
 };
 
 DateTime.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   format: PropTypes.string,
 };
 DateTime.defaultProps = {

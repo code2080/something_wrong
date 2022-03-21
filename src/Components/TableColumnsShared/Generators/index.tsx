@@ -20,10 +20,16 @@ export const generateColumnsFromDesign = ({
   // Ensure a valid design
   const design = new ActivityDesign(_design || {});
 
-  // Generate activity value columns
+  /**
+   * Generate activity value columns,
+   * ie. activity.values
+   */
   const activityValueColumns = GenerateActivityValueColumns(design);
 
-  // Generate the timing columns
+  /**
+   * Generate activity value columns,
+   * ie. activity.timing
+   */
   const timingColumns = GenerateTimingColumns[design.timing.mode](design);
 
   return [...timingColumns, ...activityValueColumns];

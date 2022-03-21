@@ -57,17 +57,15 @@ const ColumnWrapper = ({
         {activityValues
           .filter((activityValue) => activityValue.value != null)
           .map((activityValue, idx) => (
-            <>
-              <ColumnContent
-                key={`av-${idx}`}
-                activityValue={activityValue}
-                activity={activity}
-                type={type}
-                prop={prop}
-                mapping={mapping}
-                readonly={readonly}
-              />
-            </>
+            <ColumnContent
+              key={`av-${idx}`}
+              activityValue={activityValue as ActivityValue}
+              activity={activity}
+              type={type}
+              prop={prop}
+              mapping={mapping}
+              readonly={readonly}
+            />
           ))}
       </>
     );

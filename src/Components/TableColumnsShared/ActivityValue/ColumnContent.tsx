@@ -1,24 +1,20 @@
 import { useRef, useMemo, useState, useCallback } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { notification, Menu, Dropdown } from 'antd';
 
 // STYLES
 import './ColumnContent.scss';
 
 // COMPONENTS
-import BaseActivityColValue from '../ActivityValueColumns/Base/BaseActivityColValue';
+import BaseActivityColValue from '../../DEPR_ActivitiesTableColumns/ActivityValueColumns/Base/BaseActivityColValue';
 import InlineEdit from '../../ActivityEditing/InlineEdit';
 import ModalEdit from '../../ActivityEditing/ModalEdit';
-import withTECoreAPI from '../../TECoreAPI/withTECoreAPI';
 
-// ACTIONS
-import {
-  overrideActivityValue,
-  revertToSubmissionValue,
-} from '../../../Redux/DEPR_Activities/activities.actions';
+// REDUX
+import { revertToSubmissionValue } from '../../../Redux/DEPR_Activities/activities.actions';
 import { setExtIdPropsForObject } from '../../../Redux/TE/te.actions';
 import { setExternalAction } from '../../../Redux/GlobalUI/globalUI.actions';
+import { updateActivityValue } from 'Redux/Activities';
 
 // HELPERS
 import {
@@ -30,7 +26,7 @@ import {
   getNormalizedActivityValue,
   resetView,
   mapCoreCategoryObjectToCategories,
-} from '../ActivityValueColumns/Helpers/helpers';
+} from '../../DEPR_ActivitiesTableColumns/ActivityValueColumns/Helpers/helpers';
 
 // CONSTANTS
 import {
@@ -41,13 +37,22 @@ import {
   activityActionLabels,
 } from '../../../Constants/activityActions.constants';
 import { activityViews } from '../../../Constants/activityViews.constants';
-import { activityIsReadOnly } from '../../../Utils/activities.helpers';
+import { activityIsReadOnly, findObjectPathForActivityValue } from '../../../Utils/activities.helpers';
+import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
+import { ActivityValue } from 'Types/Activity/ActivityValue.type';
+import { TActivity } from 'Types/Activity/Activity.type';
 
-const mapActionsToProps = {
-  overrideActivityValue,
-  revertToSubmissionValue,
-  setExtIdPropsForObject,
-};
+
+type Props = {
+  activityValue: ActivityValue,
+  activity: TActivity,
+  prop,
+  type,
+  propTitle,
+  formatFn,
+  mapping,
+  readonly,
+}
 
 const ColumnContent = ({
   activityValue,
@@ -57,15 +62,14 @@ const ColumnContent = ({
   propTitle,
   formatFn,
   mapping: design,
-  overrideActivityValue,
-  revertToSubmissionValue,
-  setExtIdPropsForObject,
-  teCoreAPI,
   readonly,
-}) => {
+}: Props) => {
   const dispatch = useDispatch();
   const spotlightedElRef = useRef(null);
 
+  const teCoreAPI = useTECoreAPI();
+  
+  
   // Activity value
   const _activityValue = getNormalizedActivityValue(
     activityValue,
@@ -111,6 +115,18 @@ const ColumnContent = ({
   /**
    * EVENT HANDLERS
    */
+  const overrideActivityValue = useCallback((value: any) => {
+    const activityValueType = findObjectPathForActivityValue(_activityValue.extId, activity);
+    if (!activityValueType || !['timing', 'values'].includes(activityValueType)) return;
+    dispatch(updateActivityValue({
+      formId: activity.formId,
+      activityId: activity._id,
+      activityValueType: activityValueType,
+      activityValueExtId: _activityValue.extId,
+      updatedValue: value,
+    }));
+  }, [_activityValue, activity, dispatch]);
+
   // On update dropdown visibility state
   const onUpdateDropdownVisibility = (vis) => {
     if (viewProps.view === activityViews.MODAL_EDIT)
@@ -119,18 +135,15 @@ const ColumnContent = ({
   };
 
   // On callback from manual editing
-  const onFinishManualEditing = useCallback(
-    (value) => {
-      overrideActivityValue(value, _activityValue, activity);
-      setViewProps(resetView());
-    },
-    [_activityValue, activity, overrideActivityValue],
-  );
+  const onFinishManualEditing = useCallback((value: any) => {
+    overrideActivityValue(value);
+    setViewProps(resetView());
+  }, [overrideActivityValue, setViewProps]);
 
   // On failed callback from external edit action
   const onFailedExternalEditCallback = () =>
     notification.error({
-      getContainer: () => document.getElementById('te-prefs-lib'),
+      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
       message: 'Operation failed',
       description: 'Something went wrong...',
     });
@@ -142,7 +155,7 @@ const ColumnContent = ({
       // Grab the extid and the fields
       const { extid, fields } = res;
       // Override the activity
-      overrideActivityValue([extid], _activityValue, activity);
+      overrideActivityValue([extid]);
       // Grab the label
       const labelField = fields[0].values[0];
       setExtIdPropsForObject(extid, { label: labelField });
@@ -166,8 +179,6 @@ const ColumnContent = ({
             res.selectedCategories || [],
           ),
         },
-        _activityValue,
-        activity,
       );
     } catch (error) {
       onFailedExternalEditCallback();
@@ -240,7 +251,7 @@ const ColumnContent = ({
             onCancel={() => setViewProps(resetView())}
             activityValue={_activityValue}
             activity={activity}
-            action={viewProps.action}
+            action={viewProps.action as unknown as string}
           />
         );
       case activityViews.VALUE_VIEW:
@@ -295,7 +306,7 @@ const ColumnContent = ({
           ))}
         </Menu>
       }
-      getPopupContainer={() => document.getElementById('te-prefs-lib')}
+      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
       visible={isDropdownVisible}
       onVisibleChange={onUpdateDropdownVisibility}
       trigger={['hover']}
@@ -307,28 +318,4 @@ const ColumnContent = ({
   );
 };
 
-ColumnContent.propTypes = {
-  activityValue: PropTypes.object,
-  activity: PropTypes.object.isRequired,
-  prop: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  propTitle: PropTypes.string,
-  formatFn: PropTypes.func,
-  mapping: PropTypes.object,
-  overrideActivityValue: PropTypes.func.isRequired,
-  revertToSubmissionValue: PropTypes.func.isRequired,
-  setExtIdPropsForObject: PropTypes.func.isRequired,
-  teCoreAPI: PropTypes.object.isRequired,
-  readonly: PropTypes.bool,
-};
-
-ColumnContent.defaultProps = {
-  activityValue: null,
-  propTitle: null,
-  type: 'VALUE',
-  formatFn: (value) => value,
-  mapping: null,
-  readonly: false,
-};
-
-export default connect(null, mapActionsToProps)(withTECoreAPI(ColumnContent));
+export default ColumnContent;

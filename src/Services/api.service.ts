@@ -116,6 +116,7 @@ const apiRequest = async ({
       notification.error({
         message: 'Error',
         description: `An error happened executing your request. Please try again`,
+        getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
       });
       // Trow error again so failure handler of action triggers
       throw new Error(error);

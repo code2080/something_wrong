@@ -150,3 +150,38 @@ export const updateResourceWorkerStatus = (payload: Partial<ISSPAPIResult>, stat
     state.workerStatus = workerStatus;
   }
 }
+
+/**
+ * @function updateEntity
+ * @description standardized way of upserting one entity from a PATCH or POST API call into the redux sate
+ * @param {ISimpleAPIState} state
+ * @param {Object} payload
+ * @param {Function} createFn 
+ * @param {String | undefined} idKey
+ * @returns {void}
+ */
+ export const updateEntity = (
+  state: ISSPReducerState,
+  payload: any, // one entity to upsert into the state
+  createFn: Function,
+  idKey = '_id',
+): void => {
+  // Create the objects
+  const result = createFn(payload);
+  // Find the idx in the SSP:ed pagination list
+  const idx = state.data[state.groupBy].results.findIndex((el: any) => el[idKey] === result[idKey]);
+
+  // If we can't find the object in the result list, there's nothing to upsert
+  if (idx === -1) return;
+
+  state.data[state.groupBy].map = {
+    ...state.data[state.groupBy].map,
+    [result[idKey]]: result,
+  };
+
+  state.data[state.groupBy].results = [
+    ...state.data[state.groupBy].results.slice(0, idx),
+    result,
+    ...state.data[state.groupBy].results.slice(idx + 1),
+  ];
+};

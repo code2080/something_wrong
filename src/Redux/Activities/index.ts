@@ -11,6 +11,7 @@ import {
   updateStateWithResultFromBatchOperation,
   resetSSPState,
   updateResourceWorkerStatus,
+  updateEntity,
 } from '../../Components/SSP/Utils/sliceHelpers';
 import {
   excludeEmptyKeysFromFilterLookupMap,
@@ -127,6 +128,10 @@ const slice = createSlice({
       updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);
     },
+    updateActivitySuccess: (state, { payload} ) => {
+      updateEntity(state, payload, createActivityFn, '_id');
+      finishedLoadingSuccess(state);
+    }, 
     fetchActivityFilterLookupMapSuccess: (state, { payload }) => {
       const lookupMap = createActivityFilterLookupMap(payload);
       state.filterLookupMap = merge(state.filterLookupMap || {}, lookupMap);
@@ -281,6 +286,7 @@ export const {
   patchFilterLookupMapWithLocalState,
   resetState,
   updateWorkerStatus,
+  updateActivitySuccess,
 } = slice.actions;
 
 export const fetchActivitiesForForm =
@@ -313,6 +319,27 @@ export const fetchActivityFilterLookupMapForForm =
       dispatch(defaultFailureHandler({ loadingProp: 'filterLookupMapLoading' }));
     }
   };
+
+export const updateActivityValue = (args: {
+  formId: string; 
+  activityId: string;
+  activityValueType: 'timing' | 'values'; 
+  activityValueExtId: string; 
+  updatedValue: any;
+}) => async (dispatch: any) => {
+  const {formId,activityId,activityValueType, activityValueExtId, updatedValue} = args;
+  try {
+    dispatch(defaultRequestHandler(null));
+    const result = await api.patch({
+      // endpoint: `forms/${formId}/activities/${updatedActivity._id}`,
+      endpoint: `forms/${formId}/activities/${activityId}/${activityValueType}/${activityValueExtId}/update`,
+      data: { value: updatedValue },
+    });
+    dispatch(updateActivitySuccess(result));
+  } catch (e) {
+    dispatch(defaultFailureHandler(null));
+  }
+};
 
 const generalBatchOperationFn =
   (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) =>

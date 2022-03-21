@@ -28,7 +28,7 @@ const InlineEdit = ({
   const [value, setValue] = useState(activityValue.value || undefined);
 
   const onFinishCallback = useCallback(
-    (finishVal) => {
+    (finishVal: string | number) => {
       const valToUse = finishVal ?? value;
       onFinish(valToUse);
     },
