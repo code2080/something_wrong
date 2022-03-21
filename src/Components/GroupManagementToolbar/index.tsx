@@ -20,7 +20,7 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 
 // TYPES
 import { ACTIVITIES_TABLE } from 'Constants/tables.constants';
-import { selectAllActivitiesAreScheduling } from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import { selectAllActivitiesAreScheduling } from 'Redux/DEPR_ActivityScheduling/activityScheduling.selectors';
 
 type Props = {
   selectedActivityIds: string[];

@@ -6,7 +6,7 @@ import { notification, Menu, Dropdown } from 'antd';
 import './ColumnContent.scss';
 
 // COMPONENTS
-import BaseActivityColValue from './ColumnValue';
+import BaseActivityColValue from '../ActivityValueColumns/Base/BaseActivityColValue';
 import InlineEdit from '../../ActivityEditing/InlineEdit';
 import ModalEdit from '../../ActivityEditing/ModalEdit';
 
@@ -45,14 +45,14 @@ import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { TActivity } from 'Types/Activity/Activity.type';
 
 type Props = {
-  activityValue: ActivityValue;
+  activityValue?: ActivityValue;
   activity: TActivity;
-  prop?;
-  type?;
-  propTitle?;
-  formatFn?;
-  mapping?;
-  readonly?;
+  prop?: any;
+  type?: any;
+  propTitle?: any;
+  formatFn?: any;
+  mapping?: any;
+  readonly?: any;
 };
 
 const ColumnContent = ({
@@ -264,8 +264,8 @@ const ColumnContent = ({
       const callName = externalActivityActionMapping[action];
       teCoreAPI[callName]({
         activityValue: _activityValue,
-        objectExtId: activityValue.value,
-        typeExtId: activityValue.extId,
+        objectExtId: activityValue?.value,
+        typeExtId: activityValue?.extId,
         callback: (res) => onFinshExternalEdit(res, action),
       });
     } else {

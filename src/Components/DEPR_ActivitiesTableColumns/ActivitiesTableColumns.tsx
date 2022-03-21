@@ -9,7 +9,7 @@ import ActivityTracks from './SchedulingColumns/ActivityTracks';
 
 // COLUMNS
 import { ActivityDesign } from '../../Models/ActivityDesign.model';
-import ColumnWrapper from '../TableColumnsShared/ActivityValue/ColumnWrapper';
+import ColumnWrapper from './new/ColumnWrapper';
 import { TimingColumns } from './ActivityValueColumns/ValueTypes/TimingColumns';
 import { ConflictType } from 'Models/JointTeachingGroup.model';
 import { useSelector } from 'react-redux';

@@ -17,7 +17,6 @@ import integration from './Integration/integration.reducer';
 import elements from './Elements/elements.reducer';
 import constraints from './Constraints/constraints.reducer';
 import jointTeaching from './JointTeaching/jointTeaching.reducer';
-import activityScheduling from './ActivityScheduling/activityScheduling.reducer';
 import recipients from './Recipients/recipients.reducer';
 import filters from './Filters/filters.reducer';
 
@@ -26,6 +25,7 @@ import filters from './Filters/filters.reducer';
 // import activities from './DEPR_Activities/activities.reducer';
 // import filterLookupMap from './DEPR_FilterLookupMap/filterLookupMap.reducer';
 // import forms from './DEPR_Forms/forms.reducer';
+// import activityScheduling from './DEPR_ActivityScheduling/activityScheduling.reducer';
 
 // ACTIONS
 import { LOGOUT } from './Auth/auth.actionTypes';
@@ -51,7 +51,6 @@ const appReducer = combineReducers({
   elements,
   constraints,
   jointTeaching,
-  activityScheduling,
   recipients,
   filters,
   activities: activitiesReducer,

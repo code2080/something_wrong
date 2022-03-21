@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import { selectActivitySchedulingById } from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import { selectActivitySchedulingById } from 'Redux/DEPR_ActivityScheduling/activityScheduling.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
 import ActionsDropdown from './ActionsDropdown';

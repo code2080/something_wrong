@@ -1,0 +1,36 @@
+@import '../../../Styles/globals.scss';
+
+.column-content--wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .base-activity-col--icon {
+    color: $rustyGrey;
+  }
+
+  &:hover {
+    background: $swedishSkies;
+  }
+
+  &:not(:first-child) {
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 2px;
+      left: -5px;
+      height: 100%;
+      background: $rustyGrey;
+    }
+  }
+}

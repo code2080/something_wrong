@@ -18,7 +18,7 @@ import {
   ObjectRequest,
 } from '../ObjectRequests/ObjectRequests.types';
 import { TFormInstance } from '../../Types/FormInstance.type';
-import { ActivitySchedulingState } from 'Redux/ActivityScheduling/activityScheduling.reducer';
+import { ActivitySchedulingState } from 'Redux/DEPR_ActivityScheduling/activityScheduling.reducer';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import { selectIndexedFormSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
 

@@ -32,7 +32,7 @@ const generateActivityValueColumns = (
         render: (activity: TActivity) => (
           <ColumnWrapper
             activity={activity}
-            type='VALUE'
+            type='values'
             prop={extId}
             mapping={design}
           />

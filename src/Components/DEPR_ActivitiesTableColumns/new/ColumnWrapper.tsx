@@ -9,7 +9,7 @@ import { ActivityValue } from '../../../Types/Activity/ActivityValue.type';
 
 type Props = {
   activity: TActivity;
-  type: 'values' | 'timing';
+  type: 'VALUE' | 'TIMING';
   prop: string;
   mapping: any;
   columnPrefix?: (b: ActivityValue[]) => void;
@@ -22,9 +22,12 @@ type Props = {
 
 const getAllActivityValuesForDesignProperty = (
   activity: TActivity,
-  type: 'values' | 'timing',
+  type: 'VALUE' | 'TIMING',
   prop: string,
-): ActivityValue[] => activity[type].filter((el) => el.extId === prop);
+): ActivityValue[] => {
+  const payload = type === 'VALUE' ? activity.values : activity.timing;
+  return payload.filter((el) => el.extId === prop);
+};
 
 const ColumnWrapper = ({
   activity,

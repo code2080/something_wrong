@@ -22,7 +22,7 @@ import {
 import {
   schedulingActivity,
   schedulingActivityByFormInstanceId,
-} from '../Redux/ActivityScheduling/activityScheduling.actions';
+} from '../Redux/DEPR_ActivityScheduling/activityScheduling.actions';
 
 /**
  * @function createSchedulingReturns

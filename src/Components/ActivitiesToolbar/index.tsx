@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { GroupOutlined, OrderedListOutlined } from '@ant-design/icons';
 
 // SELECTORS
-import { hasPermission } from 'Redux/Auth/auth.selectors';
+import { hasPermission, selectCoreUserId } from 'Redux/Auth/auth.selectors';
 
 // COMPONENTS
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
@@ -25,6 +25,8 @@ import './index.scss';
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
+import { batchOperationSchedule } from 'Redux/Activities';
+import { EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 
 const ActivitiesToolbar = () => {
@@ -38,22 +40,48 @@ const ActivitiesToolbar = () => {
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-
+  const scheduleAsUserId = useSelector(selectCoreUserId);
   const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
 
   /**
    * EVENT HANDLERS
    */
-  const onScheduleActivities = (args?: any) => {
-    console.log('onScheduleActivities');
+  const onScheduleActivities = (activityIds: string[]) => {
+    /**
+     * @todo Need separate case for if week pattern
+     */
+    const batchOperation: TActivityBatchOperation = {
+      type: EActivityBatchOperation.SCHEDULE,
+      data: activityIds.map((id) => ({ _id: id })),
+      metadata: { scheduleAsUserId }
+    }
+    batchOperationSchedule(formId, batchOperation);
   };
 
   const onScheduleAllActivities = (args?: any) => {
+    /**
+     * @todo Needs to select all keys from the state
+     */
     console.log('onScheduleAllActivities');
   };
 
   const onDeleteActivities = (args?: any) => {
-    console.log('onDeleteActivities');
+    /**
+     * @todo
+     * x) add teCoreAPI hook
+     * x) callback should be update batch call to update activity status
+     */
+    // return teCoreAPI.deleteReservations({
+    //   activities,
+    //   callback: () =>
+    //     dispatch(
+    //       updateActivities(
+    //         formId,
+    //         formInstanceId,
+    //         activities.map(activityConvertFn.toDeleted),
+    //       ),
+    //     ),
+    // });
   };
 
   const onCreateMatchCallback = () => {

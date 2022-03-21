@@ -3,16 +3,23 @@ import { EActivityStatus } from "./ActivityStatus.enum";
 export enum EActivityBatchOperation {
   TAGS = 'TAGS',
   STATUS = 'STATUS',
+  SCHEDULE = 'SCHEDULE',
 };
 
 export const CActivityBatchOperationURL = {
   [EActivityBatchOperation.TAGS]: 'tags',
-  [EActivityBatchOperation.STATUS]: 'status'
+  [EActivityBatchOperation.STATUS]: 'status',
+  [EActivityBatchOperation.SCHEDULE]: 'schedule'
 }
 
 export type TActivityBatchOperation = {
   type: EActivityBatchOperation,
-  data: Array<TTagsBatchOperation | TStatusBatchOperation>,
+  data: Array<TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation>,
+  metadata?: any;
+};
+
+export type TScheduleBatchOperation = {
+  _id: string;
 };
 
 export type TTagsBatchOperation = {

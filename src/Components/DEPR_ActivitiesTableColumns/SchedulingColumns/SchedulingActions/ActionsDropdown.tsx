@@ -17,7 +17,7 @@ import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
 import {
   startSchedulingActivities,
   finishSchedulingActivities,
-} from 'Redux/ActivityScheduling/activityScheduling.actions';
+} from 'Redux/DEPR_ActivityScheduling/activityScheduling.actions';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../../../Constants/teCoreActions.constants';

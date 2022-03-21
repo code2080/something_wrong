@@ -412,3 +412,15 @@ export const batchOperationStatus = (
     batchOperation,
     CActivityBatchOperationURL[EActivityBatchOperation.STATUS],
   );
+
+export const batchOperationSchedule = (
+  formId: string,
+  batchOperation: TActivityBatchOperation,
+) =>
+  generalBatchOperationFn(
+    formId,
+    batchOperation,
+    CActivityBatchOperationURL[EActivityBatchOperation.STATUS],
+    
+  );
+  

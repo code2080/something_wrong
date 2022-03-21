@@ -6,7 +6,7 @@ import { Modal, Dropdown, Menu, Button } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 // REDUX
-import { selectActivitySchedulingById } from 'Redux/ActivityScheduling/activityScheduling.selectors';
+import { selectActivitySchedulingById } from 'Redux/DEPR_ActivityScheduling/activityScheduling.selectors';
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
 import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
 import { abortJob } from 'Redux/Jobs/jobs.actions';
