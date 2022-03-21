@@ -148,9 +148,7 @@ const ColumnContent = ({
     if (
       !activityValueType ||
       !['timing', 'values'].includes(activityValueType)
-    ) {
-      return;
-    }
+    ) return;
 
     dispatch(
       revertActivityValue({

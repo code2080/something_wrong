@@ -367,7 +367,6 @@ export const revertActivityValue =
   }) =>
   async (dispatch: any) => {
     const { formId, activityId, activityValueType, activityValueExtId } = args;
-
     try {
       dispatch(defaultRequestHandler(null));
       const result = await api.patch({
