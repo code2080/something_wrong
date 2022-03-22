@@ -5,10 +5,12 @@ $statusColumnLength: 0.8rem;
 .scheduling-actions-column--wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+
+  & > *:not(:last-child) {
+    margin-right: 0.4rem;
+  }
 
   .scheduling-actions--button {
-    margin-left: 0.4rem;
     cursor: pointer;
     transition: all 0.2s;
     border-radius: 0.8rem;

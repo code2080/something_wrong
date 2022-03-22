@@ -44,7 +44,7 @@ import {
   SchedulingStatusSingleColumn,
   SubmitterColumn,
   jointTeachingObjectColumn,
-  primaryObjectColumn,
+  PrimaryObjectColumn,
 } from 'Components/TableColumnsShared';
 
 interface Props {}
@@ -52,7 +52,7 @@ interface Props {}
 const UnmatchedActivitiesTable = ({}: Props) => {
   const columns = [
     jointTeachingObjectColumn,
-    primaryObjectColumn,
+    PrimaryObjectColumn,
     TagColumn,
     SchedulingStatusSingleColumn,
   ];

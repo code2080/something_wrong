@@ -14,13 +14,13 @@ import { ISSPColumn } from 'Components/SSP/Types';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import GroupedTags from './GroupedTags';
 import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
+import WeekPatternFilter from './WeekPatternFilter';
 
 
 export const RowActionsColumn: ISSPColumn = {
   title: '',
   key: 'rowActions',
   dataIndex: undefined,
-  width: 130,
   render: (activity: TActivity) => <RowActions activity={activity} />,
 };
 
@@ -90,26 +90,54 @@ export const jointTeachingObjectColumn: ISSPColumn = {
   key: EActivitySortingKey.JOINT_TEACHING_OBJECT, // @DT these are not sortable?
   // dataIndex: EActivitySortingKey.JOINT_TEACHING_OBJECT,
   dataIndex: undefined,
-  width: 100,
   render: (activity: TActivity) => activity.jointTeaching?.object ?? '',
 };
 
-export const primaryObjectColumn: ISSPColumn = {
+export const PrimaryObjectColumn: ISSPColumn = {
   title: 'Primary object',
-  key: EActivitySortingKey.PRIMARY_OBJECT, // @DT these are not sortable?
-  // dataIndex: EActivitySortingKey.PRIMARY_OBJECT,
+  key: EActivitySortingKey.PRIMARY_OBJECT,
   dataIndex: undefined,
-  width: 100,
-  render: (activity: TActivity) => activity.metadata?.primaryObject ?? '',
+  render: (activity: TActivity) => activity.metadata?.primaryObject || 'N/A',
   sorter: true,
 };
+
+export const WeekPatternPrimaryObjectColumn: ISSPColumn = {
+  title: 'Primary object',
+  key: 'wpgPrimaryObject',
+  dataIndex: undefined,
+  render: (wpg: TWeekPatternGroup) => wpg.primaryObject || 'N/A',
+  sorter: true,
+};
+
+export const WeekPatternFilterColumn: ISSPColumn = {
+  title: '',
+  key: 'weekPatternUIDFilter',
+  dataIndex: '_id',
+  render: (wpgId: string) => <WeekPatternFilter wpgId={wpgId} />,
+  sorter: true,
+}
+
+export const WeekPatternUIDColumn: ISSPColumn = {
+  title: 'Week pattern',
+  key: 'weekPatternUID',
+  dataIndex: undefined,
+  render: (activity: TActivity) => activity.metadata?.weekPatternUID || 'N/A',
+  sorter: true,
+}
+
+export const WeekPatternIdColumn: ISSPColumn = {
+  title: 'UID',
+  key: 'weekPatternUid',
+  dataIndex: '_id',
+  render: (weekPatternUID: string) => weekPatternUID || 'N/A',
+  sorter: true,
+}
 
 export const primaryObjectsColumn: ISSPColumn = {
   title: 'Primary objects',
   key: EActivitySortingKey.PRIMARY_OBJECT + 'S', // @DT these are not sortable?
   // dataIndex: EActivitySortingKey.PRIMARY_OBJECT,
   dataIndex: undefined,
-  width: 100,
   render: (_activity: TActivity) => 'todo: what to put here??',
   sorter: true,
 };

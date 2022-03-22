@@ -15,4 +15,5 @@ export const FIXED_FILTER_PROPERTIES_ARR = [
   'tag',
   'primaryObject',
   'status',
+  'weekPatternUID',
 ];

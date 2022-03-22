@@ -122,7 +122,7 @@ export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys' | 
   patchInclusion: (patch: Record<string, EFilterInclusions | boolean>) => void;
   setFilters: (filters: TActivityFilterMapObject) => void;
   patchFilters: (patch: TActivityFilterMapObject) => void;
-  commitFilterChanges: () => void;
+  commitFilterChanges: (patch?: TActivityFilterMapObject) => void;
   discardFilterChanges: () => void;
   initFilters: (defaultFilters: Partial<ISSPFilterQuery>) => void;
   // GROUPING COVENIENCE FNs

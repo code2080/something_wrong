@@ -90,7 +90,6 @@ const FormPage = () => {
       [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
         if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
-          console.log('fetching filter stuff')
           dispatch(fetchActivityFilterLookupMapForForm(formId));
         }
       }

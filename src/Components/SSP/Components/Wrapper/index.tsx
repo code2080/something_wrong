@@ -44,6 +44,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     // STATUS
     loading,
     hasErrors,
+    filterLookupMapLoading,
     workerStatus,
     // DATA
     data,
@@ -119,11 +120,16 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   };
   const setFilters = (filters: TActivityFilterMapObject) =>
     _setFilters(filters);
-  const patchFilters = (patch: TActivityFilterMapObject) => {
+  
+  const applyFilterPatch = (patch: TActivityFilterMapObject): TActivityFilterMapObject => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
     const noEmptyKeysObj = recursivelyTrimFilterKeys(clonedObj);
-    _setFilters(noEmptyKeysObj);
+    return noEmptyKeysObj
+  }
+  const patchFilters = (patch: TActivityFilterMapObject) => {
+    const appliedPatch = applyFilterPatch(patch);
+    _setFilters(appliedPatch);
   };
 
   const discardFilterChanges = () => {
@@ -132,11 +138,20 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     _setFilters(filters);
   };
 
-  const commitFilterChanges = () => {
+  const commitFilterChanges = (patch?: TActivityFilterMapObject) => {
+    let filters: TActivityFilterMapObject;
+    if (patch) {
+      filters = applyFilterPatch(patch);
+    } else {
+      filters = _filters;
+    }
+    /**
+     * @todo
+     */
     const filterQuery: ISSPFilterQuery = {
       matchType: _matchType,
       inclusion: _inclusion,
-      filters: _filters,
+      filters,
     };
     setFilterCache(name, filterQuery);
     dispatch(fetchFn({ ...filterQuery, page: 1 }));
@@ -185,12 +200,20 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * Reset selected keys when changing grouping
+   */
+  useEffect(() => {
+    setSelectedKeys([]);
+  }, [groupBy]);
+
   return (
     <SSPResourceContext.Provider
       value={{
         // STATUS
         name,
         loading,
+        filterLookupMapLoading,
         hasErrors,
         workerStatus,
         // DATA

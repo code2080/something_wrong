@@ -54,7 +54,7 @@ const GroupedTags = ({ tagIds, activityIds }: Props) => {
       placement='rightTop'
     >
       <Button size='small' className='tag-col--wrapper'>
-        {selectedTag ? selectedTag.name : tagIds.length > 1 ? 'Multiple tags' : 'N/A'}
+        {selectedTag ? selectedTag.name : tagIds.length > 1 ? 'Multiple' : 'N/A'}
       </Button>
     </Popover>
   );

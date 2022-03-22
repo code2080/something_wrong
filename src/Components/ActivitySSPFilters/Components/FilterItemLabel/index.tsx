@@ -6,30 +6,33 @@ import {
   REPLACED_KEY,
 } from 'Components/ActivitySSPFilters/constants';
 
+// TYPES
+type Props = {
+  selectedFilterProperty: string;
+  getLabelForFilterOption: (filterProperty: string, id?: string) => string;
+  omitFirstKey?: boolean;
+};
+
+const getLabelForFilterItem = (prop: string, key: string, labelFn: any, ) => {
+  if (key && NESTED_FILTER_PROPERTIES.includes(key))
+    return capitalize(startCase(key));
+  if (prop === 'weekPatternUID') return 'Week Pattern';
+  return capitalize(startCase(labelFn(prop, key)));
+}
+
 const FilterItemLabel = ({
   selectedFilterProperty,
   getLabelForFilterOption,
   omitFirstKey = false,
-}: {
-  selectedFilterProperty: string;
-  getLabelForFilterOption: (filterProperty: string, id?: string) => string;
-  omitFirstKey?: boolean;
-}) => {
+}: Props) => {
   const keys = selectedFilterProperty.split(REPLACED_KEY);
   if (omitFirstKey) keys.splice(0, 1);
 
   return (
     <b>
       {keys.map((key, idx) => {
-        let label: string;
         const prefix = idx === 0 ? '' : ' > ';
-        if (NESTED_FILTER_PROPERTIES.includes(key)) {
-          label = capitalize(startCase(key));
-        } else {
-          label = capitalize(
-            startCase(getLabelForFilterOption(selectedFilterProperty, key)),
-          );
-        }
+        const label = getLabelForFilterItem(selectedFilterProperty, key, getLabelForFilterOption);
         return `${prefix}${label}`;
       })}
     </b>

@@ -56,11 +56,11 @@ const ActivityActionsDropdown = ({ activity, actions = {} }: Props) => {
   );
 
   const activityActions = {
-    SCHEDULE_SUBMISSION: {
-      label: 'Schedule submission',
-      filterFn: activityFilterFn.canBeScheduled,
-      callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
-    },
+    // SCHEDULE_SUBMISSION: {
+    //   label: 'Schedule submission',
+    //   filterFn: activityFilterFn.canBeScheduled,
+    //   callname: teCoreCallnames.REQUEST_SCHEDULE_ACTIVITIES,
+    // },
     SCHEDULE: {
       label: 'Schedule activity',
       filterFn: activityFilterFn.canBeScheduled,
@@ -76,16 +76,16 @@ const ActivityActionsDropdown = ({ activity, actions = {} }: Props) => {
       filterFn: activityFilterFn.canBeSelected,
       callname: teCoreCallnames.DELETE_RESERVATIONS,
     },
-    STOP_SCHEDULING: {
-      label: 'Stop scheduling',
-      filterFn: activityFilterFn.canBeStopped,
-      callname: teCoreCallnames.STOP_SCHEDULING,
-    },
-    CANCEL_ON_SUBMISSION: {
-      label: 'Cancel all reservations from the submission',
-      filterFn: activityFilterFn.canBeSelected,
-      callname: teCoreCallnames.DELETE_RESERVATIONS,
-    },
+    // STOP_SCHEDULING: {
+    //   label: 'Stop scheduling',
+    //   filterFn: activityFilterFn.canBeStopped,
+    //   callname: teCoreCallnames.STOP_SCHEDULING,
+    // },
+    // CANCEL_ON_SUBMISSION: {
+    //   label: 'Cancel all reservations from the submission',
+    //   filterFn: activityFilterFn.canBeSelected,
+    //   callname: teCoreCallnames.DELETE_RESERVATIONS,
+    // },
   };
 
   const handleScheduleActivities = (activityIds: string[]) => {

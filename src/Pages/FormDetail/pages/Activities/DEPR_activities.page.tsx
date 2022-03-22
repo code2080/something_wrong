@@ -34,7 +34,7 @@ import {
 // HELPERS
 
 // HOOKS
-import useActivityScheduling from '../../../../Hooks/activityScheduling';
+import useActivityScheduling from '../../../../Hooks/DEPR_activityScheduling';
 import {
   makeSelectSortOrderForActivities,
   makeSelectSortParamsForActivities,

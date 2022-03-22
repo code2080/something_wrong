@@ -18,9 +18,7 @@ export type TActivityBatchOperation = {
   metadata?: any;
 };
 
-export type TScheduleBatchOperation = {
-  _id: string;
-};
+export type TScheduleBatchOperation = string;
 
 export type TTagsBatchOperation = {
   _id: string;

@@ -420,7 +420,7 @@ export const batchOperationSchedule = (
   generalBatchOperationFn(
     formId,
     batchOperation,
-    CActivityBatchOperationURL[EActivityBatchOperation.STATUS],
+    CActivityBatchOperationURL[EActivityBatchOperation.SCHEDULE],
     
   );
   

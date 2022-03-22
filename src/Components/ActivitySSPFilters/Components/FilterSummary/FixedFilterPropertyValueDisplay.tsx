@@ -14,6 +14,11 @@ type Props = {
   ) => void;
 };
 
+const getLabelForFilterItem = (filterProperty: string) => {
+  if (filterProperty === 'weekPatternUID') return 'Week Pattern';
+  return capitalize(startCase(filterProperty));
+}
+
 const FixedFilterPropertyValueDisplay = ({
   filterProperty,
   filterValues,
@@ -22,7 +27,7 @@ const FixedFilterPropertyValueDisplay = ({
 }: Props) => {
   return (
     <ValueDisplay
-      label={capitalize(startCase(filterProperty))}
+      label={getLabelForFilterItem(filterProperty)}
       content={
         <ul>
           {filterValues.map((value) => (

@@ -7,6 +7,7 @@ export const selectSSPState =
     // STATUS
     hasErrors: state[sliceName].hasErrors,
     loading: state[sliceName].loading,
+    filterLookupMapLoading: state[sliceName].loading,
     workerStatus: state[sliceName].workerStatus || undefined,
     // DATA
     data: state[sliceName].data,

@@ -17,7 +17,7 @@ import {
   updatedMultipleActivity,
 } from '../Utils/activities.helpers';
 
-import { useTECoreAPI } from '../Hooks/TECoreApiHooks';
+import { useTECoreAPI } from './TECoreApiHooks';
 import { selectCoreUserId, selectIsBetaOrDev } from 'Redux/Auth/auth.selectors';
 import { selectActivitiesForForm } from 'Redux/DEPR_Activities/activities.selectors';
 import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';

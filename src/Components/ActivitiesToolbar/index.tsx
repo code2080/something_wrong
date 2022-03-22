@@ -27,61 +27,34 @@ import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 import { batchOperationSchedule } from 'Redux/Activities';
 import { EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import { useScheduling } from 'Hooks/useScheduling';
 
 
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
-
   const { selectedKeys, groupBy, setGroup } = useSSP();
-
+  const { scheduleAllActivities, scheduleSelectedActivities, unscheduleSelectedActivities } = useScheduling();
   /**
    * SELECTORS
    */
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const scheduleAsUserId = useSelector(selectCoreUserId);
   const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
 
   /**
    * EVENT HANDLERS
    */
-  const onScheduleActivities = (activityIds: string[]) => {
-    /**
-     * @todo Need separate case for if week pattern
-     */
-    const batchOperation: TActivityBatchOperation = {
-      type: EActivityBatchOperation.SCHEDULE,
-      data: activityIds.map((id) => ({ _id: id })),
-      metadata: { scheduleAsUserId }
-    }
-    batchOperationSchedule(formId, batchOperation);
+  const onScheduleActivities = (activityOrWPGIds: string[]) => {
+    scheduleSelectedActivities(activityOrWPGIds);
   };
 
-  const onScheduleAllActivities = (args?: any) => {
-    /**
-     * @todo Needs to select all keys from the state
-     */
-    console.log('onScheduleAllActivities');
+  const onScheduleAllActivities = () => {
+    scheduleAllActivities();
   };
 
-  const onDeleteActivities = (args?: any) => {
-    /**
-     * @todo
-     * x) add teCoreAPI hook
-     * x) callback should be update batch call to update activity status
-     */
-    // return teCoreAPI.deleteReservations({
-    //   activities,
-    //   callback: () =>
-    //     dispatch(
-    //       updateActivities(
-    //         formId,
-    //         formInstanceId,
-    //         activities.map(activityConvertFn.toDeleted),
-    //       ),
-    //     ),
-    // });
+  const onDeleteActivities = (activityOrWPGIds: string[]) => {
+    unscheduleSelectedActivities(activityOrWPGIds);
   };
 
   const onCreateMatchCallback = () => {
@@ -135,7 +108,7 @@ const ActivitiesToolbar = () => {
               {
                 value: EActivityGroupings.FLAT,
                 label: <OrderedListOutlined />,
-                tooltip: 'Flat list',
+                tooltip: 'List',
               },
               {
                 value: EActivityGroupings.WEEK_PATTERN,

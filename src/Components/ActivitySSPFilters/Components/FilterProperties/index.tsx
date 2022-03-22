@@ -18,6 +18,11 @@ type Props = {
   getOptionLabel: (field: string, id?: string) => string;
 };
 
+const getFilterPropertyLabelForNonNestedProps = (prop: string) => {
+  if (prop === 'weekPatternUID') return 'Week Pattern';
+  return capitalize(startCase(prop));
+};
+
 const FilterProperties = ({
   selectedFilterProperty,
   onSelect,
@@ -50,7 +55,7 @@ const FilterProperties = ({
           ))}
           {/* Render the non-nested properties */}
           {nonNestedFilterProperties.map((key) => (
-            <Menu.Item key={key}>{capitalize(startCase(key))}</Menu.Item>
+            <Menu.Item key={key}>{getFilterPropertyLabelForNonNestedProps(key)}</Menu.Item>
           ))}
           {/* Render objects properties */}
           {filterLookupMap.objects != null && (

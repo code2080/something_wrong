@@ -4,6 +4,7 @@ export type TActivityFilterLookupMap = {
   submitter: Record<string, number>;
   tag: Record<string, number>;
   primaryObject: Record<string, number>;
+  weekPatternUID: Record<string, number>;
   objects: Record<string, Record<string, number>>;
   fields: Record<string, Record<string | number, number>>;
   objectFilters: Record<
@@ -37,10 +38,11 @@ export interface TActivityFilterMapObject {
   [key: string]: string[] | TActivityFilterMapObject;
 }
 
-export const createFn = (obj: any) => ({
+export const createFn = (obj: any): TActivityFilterLookupMap => ({
   submitter: obj.submitterName || {}, // hacky
   tag: obj.tag || {},
   primaryObject: obj.primaryObject || {},
+  weekPatternUID: obj.weekPatternUID || {},
   objects: obj.objects || {},
   fields: obj.fields || {},
   objectFilters: obj.objectFilters || {},

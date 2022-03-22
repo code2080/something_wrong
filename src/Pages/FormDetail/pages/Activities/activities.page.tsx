@@ -1,15 +1,16 @@
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // COMPONENTS
 import ActivitiesToolbar from 'Components/ActivitiesToolbar';
 import ActivityTable from 'Components/ActivityTable';
 import {
+  PrimaryObjectColumn,
   RowActionsColumn,
   SchedulingStatusSingleColumn,
-  SubmitterColumn,
   TagColumn,
+  WeekPatternUIDColumn,
 } from 'Components/TableColumnsShared';
 import WeekPatternTable from 'Components/WeekPatternTable';
 
@@ -21,12 +22,18 @@ import useSSP from 'Components/SSP/Utils/hooks';
 
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
 
   const { groupBy } = useSSP();
+
+  /**
+   * SELECTORS
+   */
+  const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
 
   /**
    * EFFECTS
@@ -43,8 +50,13 @@ const ActivitiesPage = () => {
       <ActivitiesToolbar />
       {groupBy === EActivityGroupings.FLAT && (
         <ActivityTable
-          preCustomColumns={[RowActionsColumn, TagColumn, SchedulingStatusSingleColumn]}
-          postCustomColumns={[SubmitterColumn]}
+          preCustomColumns={[
+            RowActionsColumn, 
+            PrimaryObjectColumn,
+            ...(hasWeekPattern ? [WeekPatternUIDColumn]: []),
+            TagColumn, 
+            SchedulingStatusSingleColumn
+          ]}
         />
       )}
       {groupBy === EActivityGroupings.WEEK_PATTERN && (
