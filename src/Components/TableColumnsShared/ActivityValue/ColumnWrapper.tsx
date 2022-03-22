@@ -41,22 +41,23 @@ const ColumnWrapper = ({
     [activity, type, prop],
   );
   const renderedPayload = useMemo(() => {
-    if (typeof renderer === 'function') {
-      const renderResult = renderer(activity, activityValues);
-      if (renderResult !== undefined) return renderResult;
+    const renderResult = renderer?.(activity, activityValues);
+
+    if (renderResult) {
+      return renderResult;
     }
+
     if (!activityValues || !activityValues.length) return 'No values';
+
     return (
       <>
-        {typeof columnPrefix === 'function'
-          ? columnPrefix(activityValues)
-          : null}
+        {columnPrefix?.(activityValues) ?? null}
         {activityValues
           .filter((activityValue) => activityValue.value != null)
           .map((activityValue, idx) => (
             <ColumnContent
               key={`av-${idx}`}
-              activityValue={activityValue as ActivityValue}
+              activityValue={activityValue}
               activity={activity}
               type={type}
               prop={prop}
