@@ -57,6 +57,7 @@ const appReducer = combineReducers({
   activities: activitiesReducer,
   tags: tagsReducer,
   forms: formsReducer,
+  activityScheduling,
 });
 
 const rootReducer = (state, action) => {

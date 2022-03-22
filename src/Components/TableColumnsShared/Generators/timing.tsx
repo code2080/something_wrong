@@ -1,33 +1,30 @@
-import moment from 'moment';
-
 // COMPONENTS
-import BaseActivityColWrapper from 'Components/DEPR_ActivitiesTableColumns/ActivityValueColumns/Base/BaseActivityColWrapper';
-import BaseActivityColOuter from 'Components/DEPR_ActivitiesTableColumns/ActivityValueColumns/Base/BaseActivityColOuter';
+import ColumnWrapper from '../ActivityValue/ColumnWrapper';
 
 // CONSTANTS
-import {
-  activityTimeModes,
-  activityTimeModeProps,
-} from '../../../Constants/activityTimeModes.constants';
-import TimingNameMap from '../../../Constants/activityDesignTimingMap.constants';
-import { DATE_TIME_FORMAT } from '../../../Constants/common.constants';
+import { activityTimeModes } from '../../../Constants/activityTimeModes.constants';
 import { EActivitySortingKey } from 'Types/Activity/ActivitySortingKey.enum';
 import { TActivity } from 'Types/Activity/Activity.type';
 
-const timingCols = {
+type TimingValue = (mapping: any) => {
+  title: string;
+  key: string;
+  dataIndex: string | null;
+  render: (activity: TActivity, actvityIndex: number) => JSX.Element;
+};
+
+const timingCols: Record<string, TimingValue> = {
   mode: (mapping: any) => ({
     title: 'Timing mode',
     key: 'metadata.mode',
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='mode'
-        propTitle={TimingNameMap.mode}
-        formatFn={(value) => activityTimeModeProps[value].label}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
@@ -36,34 +33,28 @@ const timingCols = {
     title: 'Start time',
     key: EActivitySortingKey.START_TIME,
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => {
-      return (
-        <BaseActivityColWrapper
-          activity={activity}
-          activityIndex={activityIndex}
-          type='TIMING'
-          prop='startTime'
-          propTitle={TimingNameMap.startTime}
-          formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
-          mapping={mapping}
-        />
-      );
-    },
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
+        activity={activity}
+        type='timing'
+        prop='startTime'
+        mapping={mapping}
+        key={activityIndex}
+      />
+    ),
     sorter: true,
   }),
   endTimeExact: (mapping) => ({
     title: 'End time',
     key: EActivitySortingKey.END_TIME,
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='endTime'
-        propTitle={TimingNameMap.endTime}
-        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
@@ -72,15 +63,13 @@ const timingCols = {
     title: 'Start after or at:',
     key: 'metadata.startTimeInMinute',
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='startTime'
-        propTitle='Start after or at'
-        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
   }),
@@ -88,15 +77,13 @@ const timingCols = {
     title: 'End before or at:',
     key: 'metadata.endTimeInMinute',
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='endTime'
-        propTitle='End before or at'
-        formatFn={(value) => moment(value).format(DATE_TIME_FORMAT)}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
   }),
@@ -104,14 +91,13 @@ const timingCols = {
     title: 'Duration',
     key: EActivitySortingKey.LENGTH,
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='length'
-        propTitle={TimingNameMap.length}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
@@ -120,14 +106,13 @@ const timingCols = {
     title: 'Padding',
     key: 'metadata.padding',
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='padding'
-        propTitle={TimingNameMap.padding}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
   }),
@@ -135,14 +120,13 @@ const timingCols = {
     title: 'Weekday',
     key: EActivitySortingKey.WEEKDAY,
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='weekday'
-        propTitle={TimingNameMap.weekday}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
@@ -151,13 +135,13 @@ const timingCols = {
     title: 'Date ranges',
     key: EActivitySortingKey.DATE_RANGES,
     dataIndex: null,
-    render: (activity: TActivity) => (
-      <BaseActivityColOuter
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        type='TIMING'
+        type='timing'
         prop='dateRanges'
-        propTitle={TimingNameMap.dateRanges}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
@@ -166,14 +150,13 @@ const timingCols = {
     title: 'Exact time',
     key: EActivitySortingKey.TIME,
     dataIndex: null,
-    render: (activity: TActivity, activityIndex: number) => (
-      <BaseActivityColWrapper
+    render: (activity, activityIndex) => (
+      <ColumnWrapper
         activity={activity}
-        activityIndex={activityIndex}
-        type='TIMING'
+        type='timing'
         prop='time'
-        propTitle={TimingNameMap.time}
         mapping={mapping}
+        key={activityIndex}
       />
     ),
     sorter: true,
