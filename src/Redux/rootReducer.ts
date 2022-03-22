@@ -25,7 +25,7 @@ import filters from './Filters/filters.reducer';
 // import activities from './DEPR_Activities/activities.reducer';
 // import filterLookupMap from './DEPR_FilterLookupMap/filterLookupMap.reducer';
 // import forms from './DEPR_Forms/forms.reducer';
-// import activityScheduling from './DEPR_ActivityScheduling/activityScheduling.reducer';
+import activityScheduling from './DEPR_ActivityScheduling/activityScheduling.reducer';
 
 // ACTIONS
 import { LOGOUT } from './Auth/auth.actionTypes';
@@ -56,6 +56,7 @@ const appReducer = combineReducers({
   activities: activitiesReducer,
   tags: tagsReducer,
   forms: formsReducer,
+  activityScheduling,
 });
 
 const rootReducer = (state, action) => {
