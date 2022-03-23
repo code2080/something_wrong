@@ -18,6 +18,7 @@ import {
   EFilterType,
   ESortDirection,
   ISSPFilterQuery,
+  ISSPQueryObject,
   ISSPReducerState,
 } from 'Types/SSP.type';
 import SSPResourceContext from '../../Utils/context';
@@ -138,24 +139,45 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     _setFilters(filters);
   };
 
-  const commitFilterChanges = (patch?: TActivityFilterMapObject) => {
-    let filters: TActivityFilterMapObject;
-    if (patch) {
-      filters = applyFilterPatch(patch);
-    } else {
-      filters = _filters;
-    }
-    /**
-     * @todo
-     */
+  const commitFilterChanges = () => {
     const filterQuery: ISSPFilterQuery = {
       matchType: _matchType,
       inclusion: _inclusion,
-      filters,
+      filters: _filters,
     };
     setFilterCache(name, filterQuery);
     dispatch(fetchFn({ ...filterQuery, page: 1 }));
   };
+
+  const applyMultipleSSPChanges = (args: Partial<ISSPQueryObject>) => {
+    /**
+     * IF we have filter changes as part of the args,
+     * we need to patch our local filter state to make sure
+     * the filter modal reflects the new filters
+     */
+    const { inclusion, matchType, filters } = args;
+    if (inclusion) patchInclusion(inclusion);
+    if (matchType) setMatchType(matchType);
+    if (filters) patchFilters(filters);
+
+
+    /**
+     * We also potentially need to update our filter local storage cache
+     * We can not rely on our patchFilters functions to have updated our state date,
+     * hence we prefer to use - if available - the filter data being passed into the function
+     */
+    const filterQuery: ISSPFilterQuery = {
+      matchType: matchType || _matchType ,
+      inclusion: inclusion || _inclusion,
+      filters: filters || _filters,
+    };
+    setFilterCache(name, filterQuery);
+
+    /**
+     * Dispatch the fetch function with all the possible SSP query parameters
+     */
+    dispatch(fetchFn({ ...args, page: 1 }));
+  }
 
   const initFiltersForDatasourceWithCacheAndDefaults = (
     defaultFilters: Partial<ISSPFilterQuery> = {},
@@ -251,6 +273,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         setSorting,
         sortBy,
         direction,
+        // EVERYTHING
+        applyMultipleSSPChanges
       }}
     >
       {children}

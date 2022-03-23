@@ -47,6 +47,7 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   commitFilterChanges: () => {},
   discardFilterChanges: () => {},
   initFilters: () => {},
+  applyMultipleSSPChanges: () => {},
 });
 
 export default SSPResourceContext;

@@ -14,11 +14,10 @@ type Props = {
 };
 
 const WeekPatternFilter = ({ wpgId }: Props) => {
-  const { setGroup, commitFilterChanges } = useSSP();
+  const { applyMultipleSSPChanges } = useSSP();
 
   const onClickHandler = () => {
-    setGroup(EActivityGroupings.FLAT);
-    commitFilterChanges({ weekPatternUID: [wpgId] });
+    applyMultipleSSPChanges({ groupBy: EActivityGroupings.FLAT, filters: { weekPatternUID: [wpgId] }});
   };
 
   return <Button className="wp-filter--btn" size="small" icon={<FilterOutlined />} onClick={onClickHandler} />

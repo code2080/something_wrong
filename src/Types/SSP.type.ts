@@ -134,4 +134,6 @@ export interface ISSPResourceContext extends Omit<ISSPReducerState, 'allKeys' | 
   limit: number,
   sortBy: string | undefined,
   direction: ESortDirection | undefined,
+  // EVERYTHING
+  applyMultipleSSPChanges: (args: Partial<ISSPQueryObject>) => void;
 }
