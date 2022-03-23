@@ -257,7 +257,7 @@ export const selectTECPayloadForActivity =
       const activity = state.activities.data[state.activities.groupBy].map[id];
 
       // Get the form
-      const form = state.forms[activity.formId] as TForm;
+      const form = state.forms.map[activity.formId] as TForm;
 
       // Extract the activity values
       const valuePayload = extractValuesFromActivityValues(
@@ -275,7 +275,8 @@ export const selectTECPayloadForActivity =
           (act: ActivityValue) => act?.extId === 'endTime',
         )?.value,
       };
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error?.message);
       return undefined;
     }
   };
@@ -421,6 +422,4 @@ export const batchOperationSchedule = (
     formId,
     batchOperation,
     CActivityBatchOperationURL[EActivityBatchOperation.SCHEDULE],
-    
   );
-  
