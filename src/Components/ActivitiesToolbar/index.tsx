@@ -71,7 +71,7 @@ const ActivitiesToolbar = () => {
           size='small'
           type='link'
           onClick={() => onScheduleAllActivities()}
-          disabled={!hasSchedulingPermissions} // @todo add check for if we are scheduling already?
+          disabled={!hasSchedulingPermissions || groupBy === EActivityGroupings.WEEK_PATTERN} // @todo add check for if we are scheduling already?
         >
           All
         </Button>

@@ -1,4 +1,3 @@
-import { notification } from "antd";
 import { selectSSPState } from "Components/SSP/Utils/selectors";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { useParams } from "react-router-dom"
@@ -8,6 +7,7 @@ import { TActivity } from "Types/Activity/Activity.type";
 import { EActivityBatchOperation, TActivityBatchOperation } from "Types/Activity/ActivityBatchOperations.type";
 import { EActivityGroupings } from "Types/Activity/ActivityGroupings.enum";
 import { EActivityStatus } from "Types/Activity/ActivityStatus.enum";
+import { IState } from "Types/State.type";
 import { useTECoreAPI } from "./TECoreApiHooks";
 
 export const useScheduling = () => {
@@ -23,10 +23,12 @@ export const useScheduling = () => {
   const { groupBy, data } = useSelector(selectSSPState('activities'));
 
   const getActivityIdsFromWPGIds = (wpgIds: string[]) => {
-    const state = store.getState().activities;
-    return wpgIds
-      .filter((wpgId) => !state.data[EActivityGroupings.WEEK_PATTERN].map(wpgId))
-      .flatMap((wpgId) => state.data[EActivityGroupings.WEEK_PATTERN].map(wpgId).activityIds)
+    const state = (store.getState() as IState).activities;
+    const aIds = wpgIds
+      .filter((wpgId) => state.data[EActivityGroupings.WEEK_PATTERN].map[wpgId])
+      .flatMap((wpgId) => state.data[EActivityGroupings.WEEK_PATTERN].map[wpgId].activityIds)
+    console.log(aIds);
+    return aIds;
   };
 
   const getActivityIdsFromActivityIdsOrWPGIds = (activityOrWPGIds: string[]) => {
@@ -55,14 +57,8 @@ export const useScheduling = () => {
     /**
      * NOTE: only possible if groupBy is FLAG
      */
-    if (groupBy !== EActivityGroupings.FLAT) {
-      notification.error({
-        getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
-        message: 'Operation failed',
-        description: 'This operation is only possible in flat list mode',
-      });
-      return;
-    }
+    if (groupBy !== EActivityGroupings.FLAT) return;
+    
     // Get all keys
     const { allKeys = [] } = data[EActivityGroupings.FLAT];
     const batchOperation: TActivityBatchOperation = {

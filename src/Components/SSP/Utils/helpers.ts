@@ -13,8 +13,6 @@ export const serializeSSPQuery = (
   partialQueryObject: Partial<ISSPQueryObject> | undefined,
   state: ISSPReducerState,
 ): any => {
-  console.log('partialQueryObject');
-  console.log(partialQueryObject);
   const sspQueryParams = pick(state, [
     'groupBy',
     'matchType',
@@ -31,7 +29,6 @@ export const serializeSSPQuery = (
   ]);
 
   const finalQueryObjectJSON = Object.assign(sspQueryParams, groupedParams, partialQueryObject);
-  console.log({finalQueryObjectJSON});
   const finalQueryObject = JSON.stringify(finalQueryObjectJSON);
   const urlParams = new URLSearchParams({ ssp: finalQueryObject });
   return urlParams.toString();

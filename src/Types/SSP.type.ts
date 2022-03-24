@@ -1,5 +1,4 @@
 import { TActivityFilterMapObject } from './Activity/ActivityFilterLookupMap.type';
-import { TActivity } from './Activity/Activity.type';
 import { EActivityGroupings } from './Activity/ActivityGroupings.enum';
 
 export enum EFilterType {
@@ -67,7 +66,7 @@ export interface ISSPAPIResult {
 }
 
 export interface ISSAPIDataGroupState extends Omit<ISSPAPIResult, 'queryHash' | 'groupBy'>, ISSPSortingQuery {
-  map: { [id: string]: TActivity };
+  map: { [id: string]: any };
 }
 
 export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
