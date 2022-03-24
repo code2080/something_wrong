@@ -20,7 +20,7 @@ export const useScheduling = () => {
    * SELECTORS
    */
   const scheduleAsUserId = useSelector(selectCoreUserId);
-  const { groupBy, data } = useSelector(selectSSPState('activities'));
+  const { groupBy } = useSelector(selectSSPState('activities'));
 
   const getActivityIdsFromWPGIds = (wpgIds: string[]) => {
     const state = (store.getState() as IState).activities;
@@ -53,22 +53,6 @@ export const useScheduling = () => {
     dispatch(batchOperationSchedule(formId, batchOperation));
   }
 
-  const scheduleAllActivities = () => {
-    /**
-     * NOTE: only possible if groupBy is FLAG
-     */
-    if (groupBy !== EActivityGroupings.FLAT) return;
-    
-    // Get all keys
-    const { allKeys = [] } = data[EActivityGroupings.FLAT];
-    const batchOperation: TActivityBatchOperation = {
-      type: EActivityBatchOperation.SCHEDULE,
-      data: allKeys,
-      metadata: { scheduleAsUserId }
-    }
-    dispatch(batchOperationSchedule(formId, batchOperation));
-  }
-
   const unscheduleSelectedActivities = (activityOrWPGIds: string[]) => {
     const activityIds = getActivityIdsFromActivityIdsOrWPGIds(activityOrWPGIds);
 
@@ -91,7 +75,6 @@ export const useScheduling = () => {
   return {
     scheduleSelectedActivities,
     unscheduleSelectedActivities,
-    scheduleAllActivities,
   };
 
 }

@@ -33,7 +33,7 @@ import { useScheduling } from 'Hooks/useScheduling';
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, groupBy, setGroup } = useSSP();
-  const { scheduleAllActivities, scheduleSelectedActivities, unscheduleSelectedActivities } = useScheduling();
+  const { scheduleSelectedActivities, unscheduleSelectedActivities } = useScheduling();
   /**
    * SELECTORS
    */
@@ -47,10 +47,6 @@ const ActivitiesToolbar = () => {
    */
   const onScheduleActivities = (activityOrWPGIds: string[]) => {
     scheduleSelectedActivities(activityOrWPGIds);
-  };
-
-  const onScheduleAllActivities = () => {
-    scheduleAllActivities();
   };
 
   const onDeleteActivities = (activityOrWPGIds: string[]) => {
@@ -67,14 +63,6 @@ const ActivitiesToolbar = () => {
         <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>
       <ToolbarGroup label='Schedule'>
-        <Button
-          size='small'
-          type='link'
-          onClick={() => onScheduleAllActivities()}
-          disabled={!hasSchedulingPermissions || groupBy === EActivityGroupings.WEEK_PATTERN} // @todo add check for if we are scheduling already?
-        >
-          All
-        </Button>
         <Button
           size='small'
           type='link'
