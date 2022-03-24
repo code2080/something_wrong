@@ -423,3 +423,13 @@ export const batchOperationSchedule = (
     batchOperation,
     CActivityBatchOperationURL[EActivityBatchOperation.SCHEDULE],
   );
+
+/* export const batchOperationReservationId = (
+  formId: string,
+  batchOperation: TActivityBatchOperation,
+) =>
+  generalBatchOperationFn(
+    formId,
+    batchOperation,
+    CActivityBatchOperationURL[EActivityBatchOperation.RESERVATION_ID],
+  ); */

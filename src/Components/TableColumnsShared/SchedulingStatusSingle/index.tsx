@@ -19,20 +19,29 @@ import { DATE_TIME_FORMAT } from 'Constants/common.constants';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 
 // ACTIONS
-import { updateActivity } from 'Redux/DEPR_Activities/activities.actions';
 
 // SELECTORS
 import { selectActivityStatus } from 'Redux/DEPR_Activities/activities.selectors';
+import { TActivity } from 'Types/Activity/Activity.type';
+import { batchOperationStatus } from 'Redux/Activities';
+import { useParams } from 'react-router-dom';
+import {
+  EActivityBatchOperation,
+  TActivityBatchOperation,
+} from 'Types/Activity/ActivityBatchOperations.type';
 
-const PopoverContent = ({ activity, activityStatus, onUpdate }) => {
+type Props = {
+  activity: TActivity;
+  activityStatus: any;
+  onUpdate: (reservationId: string) => void;
+};
+
+const PopoverContent = ({ activity, activityStatus, onUpdate }: Props) => {
   const [reservationId, setReservationId] = useState(activity.reservationId);
 
-  const onUpdateReservationId = (value) => {
-    setReservationId(value);
-    onUpdate({
-      ...activity,
-      reservationId: value,
-    });
+  const onUpdateReservationId = (reservationId: string) => {
+    setReservationId(reservationId);
+    onUpdate(reservationId);
   };
 
   return (
@@ -92,11 +101,24 @@ const StatusText = ({ activity, activityStatus }) => {
 };
 
 const ActivityStatusCol = ({ activity }) => {
-  const dispatch = useDispatch();
-  const onUpdate = (updatedActivity) => {
-    dispatch(updateActivity(updatedActivity));
-  };
+  const { formId } = useParams<{ formId: string }>();
   const activityStatus = useSelector(selectActivityStatus(activity));
+  const dispatch = useDispatch();
+
+  const onUpdate = (reservationId: string) => {
+    const batchOperation: TActivityBatchOperation = {
+      type: EActivityBatchOperation.STATUS,
+      data: [
+        {
+          _id: activity._id,
+          activityStatus: EActivityStatus.SCHEDULED,
+          reservationId,
+        },
+      ],
+    };
+
+    dispatch(batchOperationStatus(formId, batchOperation));
+  };
 
   return (
     <div className='activity-status-column'>
