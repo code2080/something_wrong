@@ -194,8 +194,8 @@ const ColumnContent = ({
       // Override the activity
       overrideActivityValue([extid]);
       // Grab the label
-      const labelField = fields[0].values[0];
-      setExtIdPropsForObject(extid, { label: labelField });
+      const labelField = fields?.[0]?.values?.[0] || '';
+      dispatch(setExtIdPropsForObject(extid, { label: labelField }));
     } catch (error) {
       onFailedExternalEditCallback();
     }
