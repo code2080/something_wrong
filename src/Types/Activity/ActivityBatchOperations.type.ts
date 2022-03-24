@@ -34,6 +34,3 @@ export type TStatusBatchOperation = {
   reservationId?: any | undefined | null;
   schedulingTimestamp?: any | undefined | null;
 };
-
-// use this or... above??
-export type TReservationIdBatchOperation = {};
