@@ -159,22 +159,17 @@ const extractPayloadFromActivities = (activities: TActivity[]) => {
     ...getExtIdPairsForActivity(a.values),
     ['objects', '', a.jointTeaching?.object],
   ]);
-
-  return allExtIdPairs.reduce<TGetExtIdPropsPayload>(
-    (payload, [type, _, extId]) => {
-      const newPayloadWithExtId = {
+  // Fixed reduce and filter in same
+  // TODO: activities values objects is all undefined here
+  return allExtIdPairs
+    .filter(([type]) => type === 'objects')
+    .reduce<TGetExtIdPropsPayload>(
+      (payload, [type, _, extId]) => ({
         ...payload,
         [type as string]: [...payload[type as string], extId],
-      };
-      return type === 'objects'
-        ? {
-            ...newPayloadWithExtId,
-            objects: [...newPayloadWithExtId.objects],
-          }
-        : newPayloadWithExtId;
-    },
-    emptyExtIdPropsPayload,
-  );
+      }),
+      emptyExtIdPropsPayload,
+    );
 };
 
 const extractPayloadFromObjectRequests = (requests) =>

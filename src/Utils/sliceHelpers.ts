@@ -34,7 +34,6 @@ export const commitAPIPayloadToState = (
     );
     state.results = iteratedResults;
     state.map = map;
-  
   } catch (error) {
     console.error(error);
   }
@@ -48,14 +47,16 @@ export const commitAPIPayloadToState = (
  * @param {String | undefined} idKey
  * @returns {void}
  */
- export const deleteEntityFromState = (
+export const deleteEntityFromState = (
   id: string,
   state: ISimpleAPIState,
   idKey = '_id',
 ): void => {
   const { [id]: _, ...updState } = state.map;
   state.map = updState;
-  const idx = state.results.findIndex((el) => el && el[idKey].toString() === id.toString());
+  const idx = state.results.findIndex(
+    (el) => el && el[idKey].toString() === id.toString(),
+  );
   if (idx > -1)
     state.results = [
       ...state.results.slice(0, idx),
@@ -68,7 +69,7 @@ export const commitAPIPayloadToState = (
  * @description standardized way of adding an entity to the redux state
  * @param {ISimpleAPIState} state
  * @param {Object} payload
- * @param {Function} createFn 
+ * @param {Function} createFn
  * @param {String | undefined} idKey
  * @returns {void}
  */
@@ -80,10 +81,11 @@ export const addEntityToState = (
 ): void => {
   const item = createFn(payload);
   const map = { ...state.map, [item[idKey]]: item };
-  const idx = state.results.findIndex(el => el[idKey] === item[idKey]);
-  const results = idx > -1 
-    ? [...state.results.slice(0, idx), item, ...state.results.slice(idx + 1)]
-    : [...state.results, item];
+  const idx = state.results.findIndex((el) => el[idKey] === item[idKey]);
+  const results =
+    idx > -1
+      ? [...state.results.slice(0, idx), item, ...state.results.slice(idx + 1)]
+      : [...state.results, item];
   state.map = map;
   state.results = results;
 };
@@ -93,7 +95,7 @@ export const addEntityToState = (
  * @description standardized way of upserting one or many entities from an API call into the redux sate
  * @param {IDefaultAPIState} state
  * @param {Object} payload
- * @param {Function} createFn 
+ * @param {Function} createFn
  * @param {String | undefined} idKey
  * @returns {void}
  */
@@ -127,7 +129,7 @@ export const updateOrCreateEntities = (
  * @description standardized way of upserting one entity from a PATCH or POST API call into the redux sate
  * @param {ISimpleAPIState} state
  * @param {Object} payload
- * @param {Function} createFn 
+ * @param {Function} createFn
  * @param {String | undefined} idKey
  * @returns {void}
  */
@@ -156,12 +158,16 @@ export const upsertEntity = (
   }
 };
 
-
-export const transformSimpleAPIResultToFilterLookupPatch = (result: Partial<ISimpleAPIResult>) => {
+export const transformSimpleAPIResultToFilterLookupPatch = (
+  result: Partial<ISimpleAPIResult>,
+) => {
   const { results = [] } = result;
-  const filterLookupMapPatch = results.reduce((tot, acc) => ({
-    ...tot,
-    [acc._id]: 1,
-  }), {});
+  const filterLookupMapPatch = results.reduce(
+    (tot, acc) => ({
+      ...tot,
+      [acc._id]: 1,
+    }),
+    {},
+  );
   return filterLookupMapPatch;
 };

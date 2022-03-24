@@ -51,17 +51,15 @@ const ActivitiesPage = () => {
       {groupBy === EActivityGroupings.FLAT && (
         <ActivityTable
           preCustomColumns={[
-            RowActionsColumn, 
+            RowActionsColumn,
             PrimaryObjectColumn,
-            ...(hasWeekPattern ? [WeekPatternUIDColumn]: []),
-            TagColumn, 
-            SchedulingStatusSingleColumn
+            ...(hasWeekPattern ? [WeekPatternUIDColumn] : []),
+            TagColumn,
+            SchedulingStatusSingleColumn,
           ]}
         />
       )}
-      {groupBy === EActivityGroupings.WEEK_PATTERN && (
-        <WeekPatternTable />
-      )}
+      {groupBy === EActivityGroupings.WEEK_PATTERN && <WeekPatternTable />}
     </>
   );
 };

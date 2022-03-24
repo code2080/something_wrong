@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { selectActivityTypeForWeekPatternGroup } from "Redux/Activities/weekPatternGroups";
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { selectActivityTypeForWeekPatternGroup } from 'Redux/Activities/weekPatternGroups';
 
 type Props = {
   wpgId: string;
@@ -9,7 +9,9 @@ type Props = {
 const WeekPatternActivityType = ({ wpgId }: Props) => {
   const { formId } = useParams<{ formId: string }>();
 
-  const activityType = useSelector(selectActivityTypeForWeekPatternGroup(wpgId, formId));
+  const activityType = useSelector(
+    selectActivityTypeForWeekPatternGroup(wpgId, formId),
+  );
   /**
    * @todo need to get label here
    */

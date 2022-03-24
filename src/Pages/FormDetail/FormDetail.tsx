@@ -20,22 +20,43 @@ import { useSubscribeToFormEvents } from 'Services/websocket.service';
 
 // REDUX
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
+import {
+  setBreadcrumbs,
+  setFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
 import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
-import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selectors';
+import {
+  selectFormDetailSubmission,
+  selectFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { initializeSSPStateProps, fetchActivityFilterLookupMapForForm, fetchActivitiesForForm, resetState, selectActivitiesWorkerStatus, updateWorkerStatus, filterLookupMapLoading } from 'Redux/Activities';
+import {
+  initializeSSPStateProps,
+  fetchActivityFilterLookupMapForForm,
+  fetchActivitiesForForm,
+  resetState,
+  selectActivitiesWorkerStatus,
+  updateWorkerStatus,
+  filterLookupMapLoading,
+} from 'Redux/Activities';
 import { formSelector } from 'Redux/Forms';
+import { activitiesSelector } from '../../Redux/Activities';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { ASSISTED_SCHEDULING_PERMISSION_NAME, AE_ACTIVITY_PERMISSION } from '../../Constants/permissions.constants';
+import {
+  ASSISTED_SCHEDULING_PERMISSION_NAME,
+  AE_ACTIVITY_PERMISSION,
+} from '../../Constants/permissions.constants';
 
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
@@ -73,9 +94,9 @@ const FormPage = () => {
   /**
    * Establish web sockets connection
    */
-  useSubscribeToFormEvents({ 
+  useSubscribeToFormEvents({
     formId,
-    eventMap: { 
+    eventMap: {
       [ESocketEvents.ACTIVITIES_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
         if (payload.workerStatus === 'IN_PROGRESS') {
@@ -83,16 +104,21 @@ const FormPage = () => {
           dispatch(updateWorkerStatus('IN_PROGRESS'));
         }
         // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
-        if (payload.workerStatus === 'DONE' && activitiesWorkerStatus === 'IN_PROGRESS') {
+        if (
+          payload.workerStatus === 'DONE' &&
+          activitiesWorkerStatus === 'IN_PROGRESS'
+        ) {
           dispatch(fetchActivitiesForForm(formId, {}));
         }
       },
-      [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (payload: IDefaultSocketPayload) => {
+      [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (
+        payload: IDefaultSocketPayload,
+      ) => {
         if (payload.status !== 'OK') return;
         if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
           dispatch(fetchActivityFilterLookupMapForForm(formId));
         }
-      }
+      },
     },
   });
 
@@ -120,6 +146,7 @@ const FormPage = () => {
    * STATE
    */
   const [showFormInfoModal, setShowFormInfoModal] = useState(false);
+  const paginatedActivites = useSelector(activitiesSelector);
 
   /**
    * EFFECTS
@@ -168,7 +195,7 @@ const FormPage = () => {
       // dispatch(resetActivitiesFetchingHandler());
       dispatch(resetState());
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submissionPayload = useMemo(() => {
@@ -181,7 +208,7 @@ const FormPage = () => {
           sections,
           submissionValues,
           objectScope: form?.objectScope,
-          activities: [],
+          activities: paginatedActivites,
         });
     const scopedObjectExtids = submissions.map((s) => s.scopedObject);
 
@@ -189,7 +216,7 @@ const FormPage = () => {
       ...teValues,
       objects: [...teValues.objects, ...scopedObjectExtids],
     };
-  }, [form, submissions]);
+  }, [form?.objectScope, form?.sections, paginatedActivites, submissions]);
 
   // Effect to get all TE values into redux state
   useFetchLabelsFromExtIds(submissionPayload);
@@ -213,7 +240,11 @@ const FormPage = () => {
           onChange={(key: string) => dispatch(setFormDetailTab(key))}
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
-            {!selectedSubmissionId ? <SubmissionOverviewPage /> : <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />}
+            {!selectedSubmissionId ? (
+              <SubmissionOverviewPage />
+            ) : (
+              <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
+            )}
           </Tabs.TabPane>
           {formHasObjReqs && (
             <Tabs.TabPane

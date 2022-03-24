@@ -60,8 +60,12 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Selectors
-export const tagsSelector = (state: IState): TActivityTag[] => state.tags.results;
-export const tagSelector = (id: string | null | undefined) => (state: IState): TActivityTag | undefined => id ? state.tags.map[id] || undefined : undefined;
+export const tagsSelector = (state: IState): TActivityTag[] =>
+  state.tags.results;
+export const tagSelector =
+  (id: string | null | undefined) =>
+  (state: IState): TActivityTag | undefined =>
+    id ? state.tags.map[id] || undefined : undefined;
 export const tagsLoading = (state: IState): boolean => state.tags.loading;
 
 // Actions
@@ -74,33 +78,41 @@ export const {
   deleteTagForFormSuccess,
 } = slice.actions;
 
-export const fetchTagsForForm = (formId: string) =>
+export const fetchTagsForForm = (formId: string) => async (dispatch: any) => {
+  try {
+    dispatch(defaultRequestHandler());
+    const result = await api.get({ endpoint: `forms/${formId}/tags` });
+    dispatch(fetchTagsForFormSuccess(result));
+    /**
+     * Side effect; update activity filter lookup map with any non-used values
+     */
+    const filterLookupMapPatch =
+      transformSimpleAPIResultToFilterLookupPatch(result);
+    dispatch(patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }));
+  } catch (e) {
+    dispatch(defaultFailureHandler());
+  }
+};
+
+export const createTagForForm =
+  (formId: string, tagBody: Omit<TActivityTag, '_id' | 'formId'>) =>
   async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler());
-      const result = await api.get({ endpoint: `forms/${formId}/tags` });
-      dispatch(fetchTagsForFormSuccess(result));
-      /**
-       * Side effect; update activity filter lookup map with any non-used values
-       */
-      const filterLookupMapPatch = transformSimpleAPIResultToFilterLookupPatch(result);
-      dispatch(patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }));
-    } catch (e) {
-      dispatch(defaultFailureHandler());
-    }
-  };
-
-export const createTagForForm =
-  (formId: string, tagBody: Omit<TActivityTag, '_id' | 'formId'>) => async (dispatch: any) => {
-    try {
-      dispatch(defaultRequestHandler());
-      const result = await api.post({ endpoint: `forms/${formId}/tags`, data: tagBody });
+      const result = await api.post({
+        endpoint: `forms/${formId}/tags`,
+        data: tagBody,
+      });
       dispatch(createTagForFormSuccess(result));
       /**
        * Side effect; update activity filter lookup map with new values
        */
-      const filterLookupMapPatch = transformSimpleAPIResultToFilterLookupPatch({ results: [result] });
-      dispatch(patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }));
+      const filterLookupMapPatch = transformSimpleAPIResultToFilterLookupPatch({
+        results: [result],
+      });
+      dispatch(
+        patchFilterLookupMapWithLocalState({ tag: filterLookupMapPatch }),
+      );
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
@@ -111,7 +123,10 @@ export const updateTagForForm =
     try {
       dispatch(defaultRequestHandler());
       const safePayload = omit(tagBody, ['_id', 'formId']);
-      const result = await api.patch({ endpoint: `forms/${formId}/tags/${tagBody._id}`, data: safePayload });
+      const result = await api.patch({
+        endpoint: `forms/${formId}/tags/${tagBody._id}`,
+        data: safePayload,
+      });
       dispatch(updateTagForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());
@@ -122,7 +137,9 @@ export const deleteTagForForm =
   (formId: string, tagId: string) => async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler());
-      const result = await api.delete({ endpoint: `forms/${formId}/tags/${tagId}` });
+      const result = await api.delete({
+        endpoint: `forms/${formId}/tags/${tagId}`,
+      });
       dispatch(deleteTagForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());

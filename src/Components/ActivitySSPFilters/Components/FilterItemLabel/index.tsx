@@ -13,12 +13,12 @@ type Props = {
   omitFirstKey?: boolean;
 };
 
-const getLabelForFilterItem = (prop: string, key: string, labelFn: any, ) => {
+const getLabelForFilterItem = (prop: string, key: string, labelFn: any) => {
   if (key && NESTED_FILTER_PROPERTIES.includes(key))
     return capitalize(startCase(key));
   if (prop === 'weekPatternUID') return 'Week Pattern';
   return capitalize(startCase(labelFn(prop, key)));
-}
+};
 
 const FilterItemLabel = ({
   selectedFilterProperty,
@@ -32,7 +32,11 @@ const FilterItemLabel = ({
     <b>
       {keys.map((key, idx) => {
         const prefix = idx === 0 ? '' : ' > ';
-        const label = getLabelForFilterItem(selectedFilterProperty, key, getLabelForFilterOption);
+        const label = getLabelForFilterItem(
+          selectedFilterProperty,
+          key,
+          getLabelForFilterOption,
+        );
         return `${prefix}${label}`;
       })}
     </b>

@@ -121,13 +121,15 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   };
   const setFilters = (filters: TActivityFilterMapObject) =>
     _setFilters(filters);
-  
-  const applyFilterPatch = (patch: TActivityFilterMapObject): TActivityFilterMapObject => {
+
+  const applyFilterPatch = (
+    patch: TActivityFilterMapObject,
+  ): TActivityFilterMapObject => {
     const clonedObj = cloneDeep(_filters);
     mergeWith(clonedObj, patch, customFilterPathMergeWith);
     const noEmptyKeysObj = recursivelyTrimFilterKeys(clonedObj);
-    return noEmptyKeysObj
-  }
+    return noEmptyKeysObj;
+  };
   const patchFilters = (patch: TActivityFilterMapObject) => {
     const appliedPatch = applyFilterPatch(patch);
     _setFilters(appliedPatch);
@@ -160,14 +162,13 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     if (matchType) setMatchType(matchType);
     if (filters) patchFilters(filters);
 
-
     /**
      * We also potentially need to update our filter local storage cache
      * We can not rely on our patchFilters functions to have updated our state date,
      * hence we prefer to use - if available - the filter data being passed into the function
      */
     const filterQuery: ISSPFilterQuery = {
-      matchType: matchType || _matchType ,
+      matchType: matchType || _matchType,
       inclusion: inclusion || _inclusion,
       filters: filters || _filters,
     };
@@ -177,7 +178,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
      * Dispatch the fetch function with all the possible SSP query parameters
      */
     dispatch(fetchFn({ ...args, page: 1 }));
-  }
+  };
 
   const initFiltersForDatasourceWithCacheAndDefaults = (
     defaultFilters: Partial<ISSPFilterQuery> = {},
@@ -274,7 +275,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         sortBy,
         direction,
         // EVERYTHING
-        applyMultipleSSPChanges
+        applyMultipleSSPChanges,
       }}
     >
       {children}

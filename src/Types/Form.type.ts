@@ -54,7 +54,7 @@ export const createFn = (obj: any): TForm => ({
   rollOverFormConfig: obj.rollOverFormConfig || {},
   holidayConfigs: obj.holidayConfigs || {},
   allowToCreateNewPrimaryObject: obj.allowToCreateNewPrimaryObject || false,
-})
+});
 
 export type TJointTeachingFormConfigProps = {
   isEnabled: boolean;

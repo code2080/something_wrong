@@ -414,24 +414,23 @@ export const batchOperationStatus = (
     CActivityBatchOperationURL[EActivityBatchOperation.STATUS],
   );
 
-export const batchOperationSchedule = (
-  formId: string,
-  batchOperation: TActivityBatchOperation,
-) => async (dispatch: any) => {
-  /**
-   * This guy needs special treatment since it
-   * needs to invoke the fetchActivitesFn when
-   * the call returns
-   */
-  try {
-    dispatch(defaultRequestHandler(null));
-    await api.post({
-      endpoint: `forms/${formId}/activities/batch-operations/schedule`,
-      data: batchOperation,
-    });
-    dispatch(fetchActivitiesForForm(formId));
-  } catch (e) {
-    console.log(e);
-    dispatch(defaultFailureHandler(null));
-  }
-}
+export const batchOperationSchedule =
+  (formId: string, batchOperation: TActivityBatchOperation) =>
+  async (dispatch: any) => {
+    /**
+     * This guy needs special treatment since it
+     * needs to invoke the fetchActivitesFn when
+     * the call returns
+     */
+    try {
+      dispatch(defaultRequestHandler(null));
+      await api.post({
+        endpoint: `forms/${formId}/activities/batch-operations/schedule`,
+        data: batchOperation,
+      });
+      dispatch(fetchActivitiesForForm(formId));
+    } catch (e) {
+      console.log(e);
+      dispatch(defaultFailureHandler(null));
+    }
+  };

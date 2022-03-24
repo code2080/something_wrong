@@ -48,26 +48,40 @@ const SchedulingCheckbox = ({ activity }: Props) => {
    * EVENT HANDLERS
    */
   const onMouseEnter = () => {
-    if (activity.activityStatus !== EActivityStatus.INACTIVE) setShowInvertedState(true);
+    if (activity.activityStatus !== EActivityStatus.INACTIVE)
+      setShowInvertedState(true);
   };
 
   const onMouseLeave = () => {
-    if (activity.activityStatus !== EActivityStatus.INACTIVE) setShowInvertedState(false);
+    if (activity.activityStatus !== EActivityStatus.INACTIVE)
+      setShowInvertedState(false);
   };
 
   const onUpdateSchedulingStatus = () => {
-    dispatch(batchOperationStatus(formId, { type: EActivityBatchOperation.STATUS, data: [{ _id: activity._id, activityStatus: EActivityStatus.SCHEDULED }] }));
+    dispatch(
+      batchOperationStatus(formId, {
+        type: EActivityBatchOperation.STATUS,
+        data: [
+          { _id: activity._id, activityStatus: EActivityStatus.SCHEDULED },
+        ],
+      }),
+    );
   };
 
   const onUnscheduleActivity = () => {
-    const batchOp = { type: EActivityBatchOperation.STATUS, data: [{ _id: activity._id, activityStatus: EActivityStatus.NOT_SCHEDULED }]};
+    const batchOp = {
+      type: EActivityBatchOperation.STATUS,
+      data: [
+        { _id: activity._id, activityStatus: EActivityStatus.NOT_SCHEDULED },
+      ],
+    };
     if (activity.reservationId) {
       teCoreAPI.deleteReservations({
         activities: [activity],
         callback: () => dispatch(batchOperationStatus(formId, batchOp)),
       });
     } else {
-      dispatch(batchOperationStatus(formId, batchOp))
+      dispatch(batchOperationStatus(formId, batchOp));
     }
   };
 
@@ -76,13 +90,20 @@ const SchedulingCheckbox = ({ activity }: Props) => {
     showInvertedState,
   );
 
-  const icon = derivedSchedulingStatus !== EActivityStatus.SCHEDULED ? <MinusSquareOutlined /> : <CheckSquareOutlined />
+  const icon =
+    derivedSchedulingStatus !== EActivityStatus.SCHEDULED ? (
+      <MinusSquareOutlined />
+    ) : (
+      <CheckSquareOutlined />
+    );
 
   return (
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${activity.activityStatus === EActivityStatus.INACTIVE ? 'disabled' : ''}`}
+      className={`scheduling-checkbox--wrapper ${derivedSchedulingStatus} ${
+        activity.activityStatus === EActivityStatus.INACTIVE ? 'disabled' : ''
+      }`}
     >
       {activity.activityStatus !== EActivityStatus.SCHEDULED && (
         <Button
@@ -99,7 +120,9 @@ const SchedulingCheckbox = ({ activity }: Props) => {
           onConfirm={onUnscheduleActivity}
           okText='Yes'
           cancelText='No'
-          getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLInputElement}
+          getPopupContainer={() =>
+            document.getElementById('te-prefs-lib') as HTMLInputElement
+          }
           trigger={'click'}
         >
           <Button

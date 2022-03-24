@@ -90,7 +90,7 @@ const apiRequest = async ({
   service = EExternalServices.AM_BE,
 }: TAPIRequest) => {
   const fullUrl = !absoluteUrl ? getAPIUrl(service, endpoint) : endpoint;
-  
+
   const option = await prepareOption(
     method,
     data,
@@ -116,7 +116,8 @@ const apiRequest = async ({
       notification.error({
         message: 'Error',
         description: `An error happened executing your request. Please try again`,
-        getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+        getContainer: () =>
+          document.getElementById('te-prefs-lib') as HTMLElement,
       });
       // Trow error again so failure handler of action triggers
       throw new Error(error);

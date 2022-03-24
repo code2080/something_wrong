@@ -11,7 +11,7 @@ import JointTeachingIcon from './JointTeachingIcon';
 // STYLES
 import './SchedulingActions.scss';
 
-// TYPES 
+// TYPES
 import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 
 const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {

@@ -18,16 +18,21 @@ const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
   selectedActivityIds,
 }) => {
   const dispatch = useDispatch();
-  
+
   const { formId } = useParams<{ formId: string }>();
 
   /**
    * EVENT HANDLERS
    */
   const onBatchAssign = (tagId: string | undefined) => {
-    const data = selectedActivityIds.map((id) => ({ _id: id, tagId: tagId || null }));
-    dispatch(batchOperationTags(formId, { type: EActivityBatchOperation.TAGS, data }))
-  }
+    const data = selectedActivityIds.map((id) => ({
+      _id: id,
+      tagId: tagId || null,
+    }));
+    dispatch(
+      batchOperationTags(formId, { type: EActivityBatchOperation.TAGS, data }),
+    );
+  };
 
   const button = (
     <ToolbarButton disabled={!selectedActivityIds.length}>
@@ -41,8 +46,12 @@ const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
   return (
     <Popover
       title='Tag activity'
-      content={<TagSelectorComponent value={undefined} onChange={onBatchAssign} />}
-      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+      content={
+        <TagSelectorComponent value={undefined} onChange={onBatchAssign} />
+      }
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       trigger='click'
       placement='rightTop'
     >

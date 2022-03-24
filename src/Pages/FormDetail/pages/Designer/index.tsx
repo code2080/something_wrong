@@ -22,10 +22,22 @@ import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner
 
 // REDUX
 import { selectElementTypesMap } from '../../../../Redux/Elements/element.selectors';
-import { updateDesign, unlockActivityDesigner } from '../../../../Redux/ActivityDesigner/activityDesigner.actions';
-import { findTypesOnReservationMode, findFieldsOnReservationMode } from '../../../../Redux/Integration/integration.actions';
-import { makeSelectActivitiesForForm, activityInWorkerProgressSelector } from '../../../../Redux/DEPR_Activities/activities.selectors';
-import { selectValidFieldsOnReservationMode, selectValidTypesOnReservationMode } from '../../../../Redux/Integration/integration.selectors';
+import {
+  updateDesign,
+  unlockActivityDesigner,
+} from '../../../../Redux/ActivityDesigner/activityDesigner.actions';
+import {
+  findTypesOnReservationMode,
+  findFieldsOnReservationMode,
+} from '../../../../Redux/Integration/integration.actions';
+import {
+  makeSelectActivitiesForForm,
+  activityInWorkerProgressSelector,
+} from '../../../../Redux/DEPR_Activities/activities.selectors';
+import {
+  selectValidFieldsOnReservationMode,
+  selectValidTypesOnReservationMode,
+} from '../../../../Redux/Integration/integration.selectors';
 import { selectDesignForForm } from '../../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { createLoadingSelector } from '../../../../Redux/APIStatus/apiStatus.selectors';
 import { formSelector } from '../../../../Redux/Forms';
@@ -299,7 +311,9 @@ const ActivityDesignPage = () => {
           <Dropdown
             overlay={resetMenu}
             trigger={['click']}
-            getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             disabled={hasActivities || !isEditable}
           >
             <Button type='link' size='small'>

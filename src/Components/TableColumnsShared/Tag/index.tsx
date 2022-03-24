@@ -24,24 +24,31 @@ const TagColumn = ({ activity }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
   const selectedTag = useSelector(tagSelector(activity.tagId));
-  
+
   /**
    * EVENT HANDLERS
    */
   const onAssignTag = (tagId: string | undefined) => {
-    dispatch(batchOperationTags(formId, { type: EActivityBatchOperation.TAGS, data: [{ _id: activity._id, tagId: tagId || null }] }));
+    dispatch(
+      batchOperationTags(formId, {
+        type: EActivityBatchOperation.TAGS,
+        data: [{ _id: activity._id, tagId: tagId || null }],
+      }),
+    );
   };
 
   return (
     <Popover
       title='Activity tag'
-      content={(
+      content={
         <TagSelectorComponent
           value={activity.tagId || undefined}
           onChange={onAssignTag}
         />
-      )}
-      getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+      }
+      getPopupContainer={() =>
+        document.getElementById('te-prefs-lib') as HTMLElement
+      }
       trigger='hover'
       placement='rightTop'
     >

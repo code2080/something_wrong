@@ -6,13 +6,20 @@ import StatusLabel from '../../StatusLabel';
 import './index.scss';
 
 // TYPES
-import { EActivityStatus, CActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import {
+  EActivityStatus,
+  CActivityStatus,
+} from 'Types/Activity/ActivityStatus.enum';
 
 type Props = {
-  activityStatuses: EActivityStatus[],
+  activityStatuses: EActivityStatus[];
 };
 
-const StatusText = ({ activityStatus }: { activityStatus: EActivityStatus }) => {
+const StatusText = ({
+  activityStatus,
+}: {
+  activityStatus: EActivityStatus;
+}) => {
   switch (activityStatus) {
     case EActivityStatus.SCHEDULED:
       return (
@@ -27,16 +34,19 @@ const StatusText = ({ activityStatus }: { activityStatus: EActivityStatus }) => 
 };
 
 const calcFinalActivityStatus = (activityStatuses: EActivityStatus[]) => {
-  if (!activityStatuses || !activityStatuses.length) return EActivityStatus.VALIDATION_ERROR;
+  if (!activityStatuses || !activityStatuses.length)
+    return EActivityStatus.VALIDATION_ERROR;
   if (activityStatuses.length === 1) return activityStatuses[0];
   return EActivityStatus.GROUPED_MULTIPLE;
-}
+};
 
 const SchedulingStatusGrouped = ({ activityStatuses }: Props) => {
   const finalActivityStatus = calcFinalActivityStatus(activityStatuses);
   return (
     <div className='activity-status-column'>
-      <StatusLabel color={CActivityStatus[finalActivityStatus]?.color ?? 'default'}>
+      <StatusLabel
+        color={CActivityStatus[finalActivityStatus]?.color ?? 'default'}
+      >
         <StatusText activityStatus={finalActivityStatus} />
       </StatusLabel>
     </div>

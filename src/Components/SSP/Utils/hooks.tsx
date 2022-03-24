@@ -42,7 +42,7 @@ export const usePagination = (): TablePaginationConfig => {
 export const useRowSelection = (): TableRowSelection<any> => {
   const { setSelectedKeys, selectedKeys } = useContext(SSPResourceContext);
 
-  const columnTitle = (<SelectAllCheckbox />);
+  const columnTitle = <SelectAllCheckbox />;
 
   return {
     selectedRowKeys: selectedKeys,
@@ -73,12 +73,19 @@ export const useSorting = () => {
      * x) We don't have a sortBy param, AND...
      * x) ... we don't have a direction
      */
-    if (Array.isArray(sorter) || !sorter || (!sorter?.columnKey && !sorter?.order)) {
+    if (
+      Array.isArray(sorter) ||
+      !sorter ||
+      (!sorter?.columnKey && !sorter?.order)
+    ) {
       return;
     }
     // If column key or direction are undefined, we'll reset the sorting
     const { columnKey, order } = sorter;
-    if(!columnKey || !order) {setSorting(undefined, undefined); return; }
+    if (!columnKey || !order) {
+      setSorting(undefined, undefined);
+      return;
+    }
     // Parse the order string into our enums
     const parsedDirection = getSortingDirection(order);
     // Only update if something has changed in the sorting

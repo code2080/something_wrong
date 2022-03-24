@@ -26,14 +26,20 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 import { batchOperationSchedule } from 'Redux/Activities';
-import { EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import {
+  EActivityBatchOperation,
+  TActivityBatchOperation,
+} from 'Types/Activity/ActivityBatchOperations.type';
 import { useScheduling } from 'Hooks/useScheduling';
-
 
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, groupBy, setGroup } = useSSP();
-  const { scheduleAllActivities, scheduleSelectedActivities, unscheduleSelectedActivities } = useScheduling();
+  const {
+    scheduleAllActivities,
+    scheduleSelectedActivities,
+    unscheduleSelectedActivities,
+  } = useScheduling();
   /**
    * SELECTORS
    */
@@ -71,7 +77,10 @@ const ActivitiesToolbar = () => {
           size='small'
           type='link'
           onClick={() => onScheduleAllActivities()}
-          disabled={!hasSchedulingPermissions || groupBy === EActivityGroupings.WEEK_PATTERN} // @todo add check for if we are scheduling already?
+          disabled={
+            !hasSchedulingPermissions ||
+            groupBy === EActivityGroupings.WEEK_PATTERN
+          } // @todo add check for if we are scheduling already?
         >
           All
         </Button>

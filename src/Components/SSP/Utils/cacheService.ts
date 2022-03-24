@@ -33,4 +33,3 @@ export const setFilterCache = (
     console.error('Failed stringifying filter cache');
   }
 };
-

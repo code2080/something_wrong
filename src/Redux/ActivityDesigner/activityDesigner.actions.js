@@ -44,7 +44,9 @@ const updateDesignFlow = {
 export const updateDesign = (mapping) =>
   asyncAction.POST({
     flow: updateDesignFlow,
-    endpoint: `${getEnvParams().AM_BE_URL}forms/${mapping.formId}/activity-designs`,
+    endpoint: `${getEnvParams().AM_BE_URL}forms/${
+      mapping.formId
+    }/activity-designs`,
     params: { mapping },
   });
 

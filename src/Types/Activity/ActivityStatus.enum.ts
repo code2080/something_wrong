@@ -8,8 +8,8 @@ export enum EActivityStatus {
   FAILED = 'FAILED', // When a scheduling attempt has been made but failed
   QUEUED = 'QUEUED', // Activity is waiting to be scheduled
   INACTIVE = 'INACTIVE', // Activity has been inactivated by a merge
-  GROUPED_MULTIPLE = 'GROUPED_MULTIPLE', // For grouped activities (like week pattern) with multiple statuses 
-};
+  GROUPED_MULTIPLE = 'GROUPED_MULTIPLE', // For grouped activities (like week pattern) with multiple statuses
+}
 
 export const CActivityStatus = {
   [EActivityStatus.NOT_SCHEDULED]: {
@@ -70,5 +70,5 @@ export const CActivityStatus = {
     label: 'Multiple statuses',
     icon: 'warning',
     tooltip: () => 'This group contains activities with multiple statuses',
-  }
+  },
 };
