@@ -1,20 +1,22 @@
-import { EActivityStatus } from "./ActivityStatus.enum";
+import { EActivityStatus } from './ActivityStatus.enum';
 
 export enum EActivityBatchOperation {
   TAGS = 'TAGS',
   STATUS = 'STATUS',
   SCHEDULE = 'SCHEDULE',
-};
+}
 
 export const CActivityBatchOperationURL = {
   [EActivityBatchOperation.TAGS]: 'tags',
   [EActivityBatchOperation.STATUS]: 'status',
-  [EActivityBatchOperation.SCHEDULE]: 'schedule'
-}
+  [EActivityBatchOperation.SCHEDULE]: 'schedule',
+};
 
 export type TActivityBatchOperation = {
-  type: EActivityBatchOperation,
-  data: Array<TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation>,
+  type: EActivityBatchOperation;
+  data: Array<
+    TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation
+  >;
   metadata?: any;
 };
 
@@ -26,9 +28,9 @@ export type TTagsBatchOperation = {
 };
 
 export type TStatusBatchOperation = {
-  _id: string,
-  activityStatus: EActivityStatus,
-  errorDetails?: any | undefined | null,
-  reservationId?: any | undefined | null,
-  schedulingTimestamp?: any | undefined | null,
-}
+  _id: string;
+  activityStatus: EActivityStatus;
+  errorDetails?: any | undefined | null;
+  reservationId?: any | undefined | null;
+  schedulingTimestamp?: any | undefined | null;
+};
