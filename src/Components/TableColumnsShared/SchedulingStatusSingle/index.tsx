@@ -100,7 +100,9 @@ const StatusText = ({ activity, activityStatus }) => {
   }
 };
 
-const ActivityStatusCol = ({ activity }) => {
+type ActivityStatusColProps = { activity: TActivity };
+
+const ActivityStatusCol = ({ activity }: ActivityStatusColProps) => {
   const { formId } = useParams<{ formId: string }>();
   const activityStatus = useSelector(selectActivityStatus(activity));
   const dispatch = useDispatch();
