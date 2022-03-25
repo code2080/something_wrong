@@ -1,6 +1,7 @@
 import { getExtIdPropsPayload } from '../integration.selectors';
 import * as mockData from '../../../Mock/Form';
 import { TActivity } from '../../../Types/Activity/Activity.type';
+import { TEObject } from 'Types/TECorePayloads.type';
 
 describe('integration selectors tests', () => {
   describe('getExtIdPropsPayload', () => {
@@ -371,20 +372,26 @@ describe('integration selectors tests', () => {
           objectScope: mockData.form.objectScope,
         },
         expected: {
-          fields: ['room.type', 'res.restext', 'res.comment'],
+          fields: ['res.restext', 'res.comment', 'room.type'],
           objects: [
+            new TEObject('person_atsi0001', 'person_staff'),
+            new TEObject('course_activity_discussion', 'activity_teach'),
+            new TEObject('courseevt_BI1143-40049-VT2021', 'courseevt'),
+            new TEObject(null as any, 'joint_teaching'),
+            new TEObject('person_auba0002', 'person_staff'),
+            new TEObject('course_activity_lecture', 'activity_teach'),
             'person_atsi0001',
             'person_auba0002',
             'course_activity_discussion',
             'course_activity_lecture',
-            null,
           ],
           types: [
-            'person_staff',
             'room',
+            'person_staff',
             'activity_teach',
-            'equipment',
             'courseevt',
+            'joint_teaching',
+            'equipment',
             null,
           ],
         },
@@ -406,20 +413,26 @@ describe('integration selectors tests', () => {
           ),
         },
         expected: {
-          fields: ['room.type', 'res.restext', 'res.comment'],
+          fields: ['res.restext', 'res.comment', 'room.type'],
           objects: [
+            new TEObject('person_atsi0001', 'person_staff'),
+            new TEObject('course_activity_discussion', 'activity_teach'),
+            new TEObject('courseevt_BI1143-40049-VT2021', 'courseevt'),
+            new TEObject('jointTeachingObj', 'joint_teaching'),
+            new TEObject('person_auba0002', 'person_staff'),
+            new TEObject('course_activity_lecture', 'activity_teach'),
             'person_atsi0001',
             'person_auba0002',
             'course_activity_discussion',
             'course_activity_lecture',
-            'jointTeachingObj',
           ],
           types: [
-            'person_staff',
             'room',
+            'person_staff',
             'activity_teach',
-            'equipment',
             'courseevt',
+            'joint_teaching',
+            'equipment',
             null,
           ],
         },
