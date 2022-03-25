@@ -15,6 +15,10 @@
   "scripts": {
     "build": "rm -rf dist && rollup -c",
     "start": "rollup -c -w --environment BUILD:development",
+    "test": "cross-env CI=1 TZ=Europe/Stockholm react-scripts test --env=jsdom --passWithNoTests --colors",
+    "test:silent": "yarn test --silent",
+    "test:watch": "react-scripts test --env=jsdom",
+    "checkcode": "run-p lint ts:lint prettier:silent test:silent",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "ts:lint": "tsc --noemit -p tsconfig.json",
     "lint:fix": "eslint ./src --ext .js,.jsx,.ts,.tsx --fix",
