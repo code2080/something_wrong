@@ -16,7 +16,10 @@ import {
   SECTION_CONNECTED,
 } from '../../Constants/sectionTypes.constants';
 import { initialState as emptyExtIdPropsPayload } from '../TE/te.helpers';
-import { TGetExtIdPropsPayload } from '../../Types/TECorePayloads.type';
+import {
+  TEObject,
+  TGetExtIdPropsPayload,
+} from '../../Types/TECorePayloads.type';
 import { IState } from '../../Types/State.type';
 
 const selectIntegration = (state: IState) => state.integration;
@@ -146,7 +149,7 @@ const getExtIdPairsForActivity = (values: ActivityValue[]) => {
       : [
           [
             value.type === 'object' ? 'types' : `${value.type}s`,
-            value.value as string,
+            value.value as string | string[],
             value.extId,
           ],
         ],
@@ -158,29 +161,37 @@ const extractPayloadFromActivities = (activities: TActivity[]) => {
   const allExtIdPairs = activities.flatMap((a) => [
     ...getExtIdPairsForActivity(a.values),
     // TODO: Should add type if we keep joint teaching
-    ['objects', 'joint_teaching', a.jointTeaching?.object],
+    ['types', [a.jointTeaching?.object], 'joint_teaching'],
   ]);
-  return allExtIdPairs.reduce<TGetExtIdPropsPayload>(
-    (payload, [type, values, extId]) => {
-      const newPayloadWithExtId = {
-        ...payload,
-        [type as string]: [...payload[type as string], extId],
-      };
-      const testPayload = {
-        ...newPayloadWithExtId,
-        objects: [
-          ...newPayloadWithExtId.objects,
-          ...(Array.isArray(values) ? values : []),
-        ],
-      };
-      return type === 'objects'
+  return allExtIdPairs.reduce<{
+    objects: string[];
+    types: string[];
+    fields: string[];
+  }>(
+    (acc, [type, values, extId]) =>
+      type === 'fields'
         ? {
-            ...testPayload,
-            objects: [...testPayload.objects],
+            ...acc,
+            // values are the actual field values and not extIds so we don't want them
+            fields: [...acc.fields, extId] as string[],
           }
-        : testPayload;
-    },
-    emptyExtIdPropsPayload,
+        : {
+            ...acc,
+            types: [...acc.types, extId] as string[],
+            // values are extid string array, or object filter. TODO: Get field extids from object filters as well
+            objects: _.uniqWith(
+              [
+                ...acc.objects,
+                ...(Array.isArray(values)
+                  ? values.map(
+                      (id) => new TEObject(id as string, extId as string),
+                    )
+                  : []),
+              ],
+              _.isEqual,
+            ) as string[],
+          },
+    { fields: [], objects: [], types: [] },
   );
 };
 
@@ -359,8 +370,8 @@ export const getExtIdPropsPayload = ({
     submissionValues,
   );
   return mergePayloads([
-    submissionPayload,
     activitiesPayload,
+    submissionPayload,
     objectScopePayload,
     objectRequestsPayload,
     templateAndGroupPayload,
