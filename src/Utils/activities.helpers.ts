@@ -67,7 +67,10 @@ export const getTimingModeForActivity = (activity: TActivity) => {
  * @param {Object} activity the activity with all its values
  * @returns {String} values || timing
  */
-export const findObjectPathForActivityValue = (valueExtId, activity): 'values' | 'timing' | null => {
+export const findObjectPathForActivityValue = (
+  valueExtId,
+  activity,
+): 'values' | 'timing' | null => {
   const timingIdx = activity.timing.findIndex((el) => el.extId === valueExtId);
   if (timingIdx > -1) return 'timing';
   const valueIdx = activity.values.findIndex((el) => el.extId === valueExtId);

@@ -11,7 +11,7 @@ import {
 
 export const finishedLoadingSuccess = (
   state: ISSPReducerState,
-  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading',
 ): void => {
   state[loadingProp] = false;
   state.hasErrors = false;
@@ -19,7 +19,7 @@ export const finishedLoadingSuccess = (
 
 export const finishedLoadingFailure = (
   state: ISSPReducerState,
-  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading',
 ): void => {
   state[loadingProp] = false;
   state.hasErrors = true;
@@ -27,7 +27,7 @@ export const finishedLoadingFailure = (
 
 export const beginLoading = (
   state: ISSPReducerState,
-  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading'
+  loadingProp: 'loading' | 'filterLookupMapLoading' = 'loading',
 ): void => {
   state[loadingProp] = true;
   state.hasErrors = false;
@@ -40,7 +40,14 @@ export const commitAPIPayloadToState = (
   idProp: string = '_id',
 ): void => {
   try {
-    const { results, page, limit, totalPages, groupBy, allKeys }: ISSPAPIResult = payload;
+    const {
+      results,
+      page,
+      limit,
+      totalPages,
+      groupBy,
+      allKeys,
+    }: ISSPAPIResult = payload;
 
     const finalGroupBy = groupBy || state.groupBy;
 
@@ -60,7 +67,6 @@ export const commitAPIPayloadToState = (
     state.data[finalGroupBy].limit = limit;
     state.data[finalGroupBy].totalPages = totalPages;
     state.data[finalGroupBy].allKeys = allKeys;
-
   } catch (error) {
     console.error(error);
   }
@@ -70,10 +76,18 @@ export const commitSSPQueryToState = (
   payload: Partial<ISSPQueryObject>,
   state: ISSPReducerState,
 ) => {
-  const { page, limit, sortBy, groupBy, direction, matchType, inclusion, filters } =
-    payload;
+  const {
+    page,
+    limit,
+    sortBy,
+    groupBy,
+    direction,
+    matchType,
+    inclusion,
+    filters,
+  } = payload;
   const finalGroupBy = groupBy || state.groupBy;
-  
+
   state.groupBy = finalGroupBy;
   state.data[finalGroupBy].page = page || state.data[finalGroupBy].page;
   state.data[finalGroupBy].limit = limit || state.data[finalGroupBy].limit;
@@ -112,12 +126,12 @@ export const resetSSPState = (state: ISSPReducerState) => {
   state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
   state.filters = {};
   state.filterLookupMap = {};
-}
+};
 
 export const updateStateWithResultFromBatchOperation = (
   batchOperationPayload: TActivityBatchOperation,
   state: ISSPReducerState,
-  idProp = '_id'
+  idProp = '_id',
 ) => {
   /**
    * @todo updates to one of the groups should update all groups
@@ -142,25 +156,28 @@ export const updateStateWithResultFromBatchOperation = (
 
   state.data[state.groupBy].results = results;
   state.data[state.groupBy].map = map;
-}
+};
 
-export const updateResourceWorkerStatus = (payload: Partial<ISSPAPIResult>, state: ISSPReducerState) => {
+export const updateResourceWorkerStatus = (
+  payload: Partial<ISSPAPIResult>,
+  state: ISSPReducerState,
+) => {
   const { workerStatus } = payload;
   if (workerStatus === 'DONE' || workerStatus === 'IN_PROGRESS') {
     state.workerStatus = workerStatus;
   }
-}
+};
 
 /**
  * @function updateEntity
  * @description standardized way of upserting one entity from a PATCH or POST API call into the redux sate
  * @param {ISimpleAPIState} state
  * @param {Object} payload
- * @param {Function} createFn 
+ * @param {Function} createFn
  * @param {String | undefined} idKey
  * @returns {void}
  */
- export const updateEntity = (
+export const updateEntity = (
   state: ISSPReducerState,
   payload: any, // one entity to upsert into the state
   createFn: Function,
@@ -169,7 +186,9 @@ export const updateResourceWorkerStatus = (payload: Partial<ISSPAPIResult>, stat
   // Create the objects
   const result = createFn(payload);
   // Find the idx in the SSP:ed pagination list
-  const idx = state.data[state.groupBy].results.findIndex((el: any) => el[idKey] === result[idKey]);
+  const idx = state.data[state.groupBy].results.findIndex(
+    (el: any) => el[idKey] === result[idKey],
+  );
 
   // If we can't find the object in the result list, there's nothing to upsert
   if (idx === -1) return;

@@ -1,7 +1,10 @@
 import _, { isEmpty } from 'lodash';
 import { ActivityValueType } from '../../Constants/activityValueTypes.constants';
 import { TActivity } from '../../Types/Activity/Activity.type';
-import { ActivityValue, ValueType } from '../../Types/Activity/ActivityValue.type';
+import {
+  ActivityValue,
+  ValueType,
+} from '../../Types/Activity/ActivityValue.type';
 import { submissionValueTypes } from '../../Constants/submissionValueTypes.constants';
 import {
   elementTypeMappingById,

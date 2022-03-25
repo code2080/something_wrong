@@ -1,9 +1,6 @@
 import React from 'react';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import {
-  EFilterType,
-  ISSPResourceContext,
-} from 'Types/SSP.type';
+import { EFilterType, ISSPResourceContext } from 'Types/SSP.type';
 
 const SSPResourceContext = React.createContext<ISSPResourceContext>({
   // STATUS

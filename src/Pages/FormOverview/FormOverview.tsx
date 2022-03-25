@@ -7,7 +7,10 @@ import DynamicTable from '../../Components/DynamicTable/DynamicTableHOC';
 import { tableColumns } from '../../Components/TableColumns';
 
 // REDUX
-import { fetchIntegrationSettings, fetchOrg } from '../../Redux/Auth/auth.actions';
+import {
+  fetchIntegrationSettings,
+  fetchOrg,
+} from '../../Redux/Auth/auth.actions';
 import { fetchForms, formsLoading, formsSelector } from '../../Redux/Forms';
 import { fetchObjectRequests } from '../../Redux/ObjectRequests/ObjectRequests.actions';
 import { setBreadcrumbs } from '../../Redux/GlobalUI/globalUI.actions';
@@ -41,12 +44,21 @@ const FormList = () => {
    * MEMOIZED PROPS
    */
   const filteredForms = useMemo(
-    () => (forms as any[])
-      .filter((e) => ![EFormStatus.DRAFT, EFormStatus.ARCHIVED].includes(e.status))
-      .sort((a, b) => moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf())
-    , [forms]
+    () =>
+      (forms as any[])
+        .filter(
+          (e) => ![EFormStatus.DRAFT, EFormStatus.ARCHIVED].includes(e.status),
+        )
+        .sort(
+          (a, b) =>
+            moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf(),
+        ),
+    [forms],
   );
-  const objectScopes = useMemo(() => getAllObjectScopesOnForms(filteredForms), [filteredForms]);
+  const objectScopes = useMemo(
+    () => getAllObjectScopesOnForms(filteredForms),
+    [filteredForms],
+  );
   useFetchLabelsFromExtIds(objectScopes);
 
   /**

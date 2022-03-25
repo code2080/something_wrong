@@ -1,18 +1,21 @@
-import { EActivityStatus } from "./ActivityStatus.enum";
-import { ActivityValue, createFn as createActivityValue } from "./ActivityValue.type"
+import { EActivityStatus } from './ActivityStatus.enum';
+import {
+  ActivityValue,
+  createFn as createActivityValue,
+} from './ActivityValue.type';
 
 export type TWeekPatternGroup = {
   _id: string;
-  activityIds: string[],
-  recipientId: string,
-  recipientName: string,
-  primaryObject: string,
-  activityStatuses: EActivityStatus[],
-  tagIds: string[],
-  weeks: [string, string][],
-  timing: ActivityValue[],
-  values: ActivityValue[]
-}
+  activityIds: string[];
+  recipientId: string;
+  recipientName: string;
+  primaryObject: string;
+  activityStatuses: EActivityStatus[];
+  tagIds: string[];
+  weeks: [string, string][];
+  timing: ActivityValue[];
+  values: ActivityValue[];
+};
 
 export const createFn = (obj: any): TWeekPatternGroup => ({
   _id: obj._id,

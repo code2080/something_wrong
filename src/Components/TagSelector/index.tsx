@@ -1,16 +1,16 @@
-import { Button, Select } from "antd"
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom";
+import { Button, Select } from 'antd';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 // REDUX
-import { createTagForForm, tagsLoading, tagsSelector } from "Redux/Tags"
+import { createTagForForm, tagsLoading, tagsSelector } from 'Redux/Tags';
 
 // TYPES
 type Props = {
   value: string | undefined;
   onChange: (tagId: string | undefined) => void;
-}
+};
 
 const TagSelectorComponent = ({ value, onChange }: Props) => {
   const dispatch = useDispatch();
@@ -32,33 +32,37 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
    */
   const onSearch = (val: string) => {
     setTagName(val);
-  }
+  };
 
   const onCreateTag = () => {
-    dispatch(createTagForForm(formId, { name: tagName }))
+    dispatch(createTagForForm(formId, { name: tagName }));
     setTagName('');
-  }
+  };
 
   return (
     <Select
       options={tags.map((el) => ({ value: el._id, label: el.name }))}
       showSearch
-      placeholder="Select or create a tag"
+      placeholder='Select or create a tag'
       style={{ width: 200 }}
-      size="small"
+      size='small'
       value={value}
       onChange={(val) => onChange(val)}
       onSearch={onSearch}
       allowClear
-      notFoundContent={(
+      notFoundContent={
         <div>
           <span>Tag not found</span>
-          <Button type="link" size="small" onClick={onCreateTag}>{`Create '${tagName}'?`}</Button>
+          <Button
+            type='link'
+            size='small'
+            onClick={onCreateTag}
+          >{`Create '${tagName}'?`}</Button>
         </div>
-      )}
+      }
       loading={isLoading}
       searchValue={tagName}
-      optionFilterProp="label"
+      optionFilterProp='label'
     />
   );
 };

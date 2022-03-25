@@ -16,7 +16,6 @@ import GroupedTags from './GroupedTags';
 import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
 import WeekPatternFilter from './WeekPatternFilter';
 
-
 export const RowActionsColumn: ISSPColumn = {
   title: '',
   key: 'rowActions',
@@ -51,7 +50,9 @@ export const SchedulingStatusSingleColumn: ISSPColumn = {
   key: EActivitySortingKey.ACTIVITY_STATUS,
   dataIndex: undefined,
   width: 110,
-  render: (activity: TActivity) => <SchedulingStatusSingle activity={activity} />,
+  render: (activity: TActivity) => (
+    <SchedulingStatusSingle activity={activity} />
+  ),
   sorter: true,
 };
 
@@ -60,7 +61,9 @@ export const SchedulingStatusGroupedColumn: ISSPColumn = {
   key: EActivitySortingKey.ACTIVITY_STATUS,
   dataIndex: 'activityStatuses',
   width: 110,
-  render: (activityStatuses: EActivityStatus[]) => <SchedulingStatusGrouped activityStatuses={activityStatuses} />,
+  render: (activityStatuses: EActivityStatus[]) => (
+    <SchedulingStatusGrouped activityStatuses={activityStatuses} />
+  ),
   sorter: true,
 };
 
@@ -68,21 +71,23 @@ export const WeekPatternActivityTypeColumn: ISSPColumn = {
   title: 'Activity type',
   key: 'activityType',
   dataIndex: undefined,
-  render: (wpg) => <WeekPatternActivityType wpgId={wpg._id} />
+  render: (wpg) => <WeekPatternActivityType wpgId={wpg._id} />,
 };
 
 export const WeekPatternWeeksColumn: ISSPColumn = {
   title: 'Weeks',
   key: 'minMaxWeeks',
   dataIndex: undefined,
-  render: (wpg) => <WeekPatternWeeks wpgId={wpg._id} />
-}
+  render: (wpg) => <WeekPatternWeeks wpgId={wpg._id} />,
+};
 
 export const GroupedTagsColumn: ISSPColumn = {
   title: 'Tags',
   key: 'tags',
   dataIndex: undefined,
-  render: (wpg: TWeekPatternGroup) => <GroupedTags tagIds={wpg.tagIds} activityIds={wpg.activityIds} />,
+  render: (wpg: TWeekPatternGroup) => (
+    <GroupedTags tagIds={wpg.tagIds} activityIds={wpg.activityIds} />
+  ),
 };
 
 export const jointTeachingObjectColumn: ISSPColumn = {
@@ -115,7 +120,7 @@ export const WeekPatternFilterColumn: ISSPColumn = {
   dataIndex: '_id',
   render: (wpgId: string) => <WeekPatternFilter wpgId={wpgId} />,
   sorter: true,
-}
+};
 
 export const WeekPatternUIDColumn: ISSPColumn = {
   title: 'Week pattern',
@@ -123,7 +128,7 @@ export const WeekPatternUIDColumn: ISSPColumn = {
   dataIndex: undefined,
   render: (activity: TActivity) => activity.metadata?.weekPatternUID || 'N/A',
   sorter: true,
-}
+};
 
 export const WeekPatternIdColumn: ISSPColumn = {
   title: 'UID',
@@ -131,7 +136,7 @@ export const WeekPatternIdColumn: ISSPColumn = {
   dataIndex: '_id',
   render: (weekPatternUID: string) => weekPatternUID || 'N/A',
   sorter: true,
-}
+};
 
 export const primaryObjectsColumn: ISSPColumn = {
   title: 'Primary objects',

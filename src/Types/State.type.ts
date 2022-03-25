@@ -1,7 +1,7 @@
 import { ISSPReducerState } from './SSP.type';
 
 export interface ISimpleAPIResult {
-  results: any[],
+  results: any[];
   page: number;
   limit: number;
   totalPages: number;

@@ -1,8 +1,8 @@
-import { Empty } from "antd";
+import { Empty } from 'antd';
 
 const WorkerInProgress = () => {
   return (
-    <Empty description="The activities are being generated. This view will automatically update once the process has finished." />
+    <Empty description='The activities are being generated. This view will automatically update once the process has finished.' />
   );
 };
 

@@ -22,8 +22,7 @@ const SSPTable = ({ rowKey = '_id', columns }: Props) => {
   const rowSelection = useRowSelection();
   const sorting = useSorting();
 
-  if (workerStatus === 'IN_PROGRESS')
-    return <WorkerInProgress />
+  if (workerStatus === 'IN_PROGRESS') return <WorkerInProgress />;
 
   return (
     <Table

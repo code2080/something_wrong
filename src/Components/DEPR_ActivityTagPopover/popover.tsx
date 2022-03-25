@@ -1,5 +1,5 @@
-import { Select } from "antd"
-import { useSelector } from "react-redux"
+import { Select } from 'antd';
+import { useSelector } from 'react-redux';
 
 // REDUX
 import { tagsSelector } from '../../Redux/Tags';
@@ -10,8 +10,8 @@ const ActivityTagPopover = () => {
     options={tags.map((el) => ({ value: el._id, label: el.name }))}
     showSearch
     style={{ width: 200 }}
-    size="small"
-  />
+    size='small'
+  />;
 };
 
 export default ActivityTagPopover;

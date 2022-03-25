@@ -1,5 +1,5 @@
-import { Checkbox } from "antd";
-import useSSP from "Components/SSP/Utils/hooks"
+import { Checkbox } from 'antd';
+import useSSP from 'Components/SSP/Utils/hooks';
 
 const SelectAllCheckbox = () => {
   const { selectedKeys, setSelectedKeys, selectAllKeys, results } = useSSP();

@@ -55,7 +55,9 @@ const FilterProperties = ({
           ))}
           {/* Render the non-nested properties */}
           {nonNestedFilterProperties.map((key) => (
-            <Menu.Item key={key}>{getFilterPropertyLabelForNonNestedProps(key)}</Menu.Item>
+            <Menu.Item key={key}>
+              {getFilterPropertyLabelForNonNestedProps(key)}
+            </Menu.Item>
           ))}
           {/* Render objects properties */}
           {filterLookupMap.objects != null && (

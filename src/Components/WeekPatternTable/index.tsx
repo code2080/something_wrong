@@ -9,7 +9,15 @@ import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesi
 
 // UTILS
 import { generateColumnsFromDesign } from '../TableColumnsShared/Generators';
-import { GroupedTagsColumn, SchedulingStatusGroupedColumn, WeekPatternActivityTypeColumn, WeekPatternFilterColumn, WeekPatternIdColumn, WeekPatternPrimaryObjectColumn, WeekPatternWeeksColumn } from 'Components/TableColumnsShared';
+import {
+  GroupedTagsColumn,
+  SchedulingStatusGroupedColumn,
+  WeekPatternActivityTypeColumn,
+  WeekPatternFilterColumn,
+  WeekPatternIdColumn,
+  WeekPatternPrimaryObjectColumn,
+  WeekPatternWeeksColumn,
+} from 'Components/TableColumnsShared';
 
 // TYPES
 // import { ISSPColumn } from 'Components/SSP/Types';
@@ -37,8 +45,18 @@ const WeekPatternTable = () => {
         WeekPatternWeeksColumn,
         SchedulingStatusGroupedColumn,
         GroupedTagsColumn,
-        { title: '# weeks', key: 'weeks', dataIndex: 'weeks', render: (weeks: any[]) => weeks.length },
-        { title: "# activities", key: 'activityIds', dataIndex: 'activityIds', render: (val) => val.length },
+        {
+          title: '# weeks',
+          key: 'weeks',
+          dataIndex: 'weeks',
+          render: (weeks: any[]) => weeks.length,
+        },
+        {
+          title: '# activities',
+          key: 'activityIds',
+          dataIndex: 'activityIds',
+          render: (val) => val.length,
+        },
         ...tableColumns,
       ]}
       rowKey='_id'

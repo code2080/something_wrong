@@ -26,9 +26,11 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 import { batchOperationSchedule } from 'Redux/Activities';
-import { EActivityBatchOperation, TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import {
+  EActivityBatchOperation,
+  TActivityBatchOperation,
+} from 'Types/Activity/ActivityBatchOperations.type';
 import { useScheduling } from 'Hooks/useScheduling';
-
 
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();

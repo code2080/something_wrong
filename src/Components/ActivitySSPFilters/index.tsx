@@ -14,10 +14,7 @@ const ActivityFiltering = () => {
         <FilterOutlined />
         Filters
       </ToolbarButton>
-      <FilterModal
-        isVisible={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <FilterModal isVisible={showModal} onClose={() => setShowModal(false)} />
     </>
   );
 };

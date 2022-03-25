@@ -28,7 +28,11 @@ export const serializeSSPQuery = (
     'direction',
   ]);
 
-  const finalQueryObjectJSON = Object.assign(sspQueryParams, groupedParams, partialQueryObject);
+  const finalQueryObjectJSON = Object.assign(
+    sspQueryParams,
+    groupedParams,
+    partialQueryObject,
+  );
   const finalQueryObject = JSON.stringify(finalQueryObjectJSON);
   const urlParams = new URLSearchParams({ ssp: finalQueryObject });
   return urlParams.toString();
