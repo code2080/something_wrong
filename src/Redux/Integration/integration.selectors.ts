@@ -157,19 +157,31 @@ const getExtIdPairsForActivity = (values: ActivityValue[]) => {
 const extractPayloadFromActivities = (activities: TActivity[]) => {
   const allExtIdPairs = activities.flatMap((a) => [
     ...getExtIdPairsForActivity(a.values),
-    ['objects', '', a.jointTeaching?.object],
+    // TODO: Should add type if we keep joint teaching
+    ['objects', 'joint_teaching', a.jointTeaching?.object],
   ]);
-  // Fixed reduce and filter in same
-  // TODO: activities values objects is all undefined here
-  return allExtIdPairs
-    .filter(([type]) => type === 'objects')
-    .reduce<TGetExtIdPropsPayload>(
-      (payload, [type, _, extId]) => ({
+  return allExtIdPairs.reduce<TGetExtIdPropsPayload>(
+    (payload, [type, values, extId]) => {
+      const newPayloadWithExtId = {
         ...payload,
         [type as string]: [...payload[type as string], extId],
-      }),
-      emptyExtIdPropsPayload,
-    );
+      };
+      const testPayload = {
+        ...newPayloadWithExtId,
+        objects: [
+          ...newPayloadWithExtId.objects,
+          ...(Array.isArray(values) ? values : []),
+        ],
+      };
+      return type === 'objects'
+        ? {
+            ...testPayload,
+            objects: [...testPayload.objects],
+          }
+        : testPayload;
+    },
+    emptyExtIdPropsPayload,
+  );
 };
 
 const extractPayloadFromObjectRequests = (requests) =>
