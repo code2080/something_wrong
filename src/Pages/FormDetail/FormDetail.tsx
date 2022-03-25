@@ -263,6 +263,7 @@ const FormPage = () => {
             <Tabs.TabPane
               tab='GROUP MANAGEMENT'
               key={TAB_CONSTANT.GROUP_MANAGEMENT}
+              disabled
             >
               {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
                 <GroupManagementPage />
