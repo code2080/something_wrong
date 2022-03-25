@@ -35,7 +35,8 @@ import { useScheduling } from 'Hooks/useScheduling';
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, groupBy, setGroup } = useSSP();
-  const { scheduleSelectedActivities, unscheduleSelectedActivities } = useScheduling();
+  const { scheduleSelectedActivities, unscheduleSelectedActivities } =
+    useScheduling();
   /**
    * SELECTORS
    */
@@ -64,14 +65,14 @@ const ActivitiesToolbar = () => {
       <ToolbarGroup label='Selection'>
         <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>
-      <ToolbarGroup label='Schedule'>
+      <ToolbarGroup label='Actions'>
         <Button
           size='small'
           type='link'
           onClick={() => onScheduleActivities(selectedKeys)}
           disabled={!selectedKeys?.length || !hasSchedulingPermissions}
         >
-          Selection
+          Schedule selection
         </Button>
         <Button
           size='small'
@@ -81,8 +82,6 @@ const ActivitiesToolbar = () => {
         >
           Cancel selection
         </Button>
-      </ToolbarGroup>
-      <ToolbarGroup label='Actions'>
         <TagSelectionButton selectedActivityIds={selectedKeys || []} />
         <JointTeachingGroupMerger
           activityIds={selectedKeys}
@@ -90,7 +89,7 @@ const ActivitiesToolbar = () => {
           onCreateMatchCallback={onCreateMatchCallback}
         />
       </ToolbarGroup>
-      <ToolbarGroup label='Grouping & filters'>
+      <ToolbarGroup label='Grouping &amp; filters'>
         {hasWeekPattern && (
           <GroupingRadioGroup
             value={groupBy}
