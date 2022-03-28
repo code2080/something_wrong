@@ -9,6 +9,7 @@ import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
+import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
 
 // HOOKS
 import {
@@ -43,9 +44,11 @@ import {
   selectActivitiesWorkerStatus,
   updateWorkerStatus,
   filterLookupMapLoading,
+  initializeSSPStateProps,
 } from 'Redux/Activities';
 import { formSelector } from 'Redux/Forms';
 import { activitiesSelector } from '../../Redux/Activities';
+import { selectSSPState } from 'Components/SSP/Utils/selectors';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
@@ -68,6 +71,7 @@ import JobsPage from './pages/Jobs/jobs.page';
 
 // TYPES
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
+import { ISSPQueryObject } from 'Types/SSP.type';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -215,79 +219,91 @@ const FormPage = () => {
   useFetchLabelsFromExtIds(submissionPayload);
 
   return (
-    <div className='form--wrapper'>
-      <TEAntdTabBar
-        activeKey={selectedFormDetailTab}
-        onChange={(key: string) => dispatch(setFormDetailTab(key))}
-        extra={<JobToolbar />}
-      >
-        <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
-          {!selectedSubmissionId ? (
-            <SubmissionOverviewPage />
-          ) : (
-            <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
-          )}
-        </Tabs.TabPane>
-        {formHasObjReqs && (
-          <Tabs.TabPane
-            tab='OBJECT REQUESTS'
-            key={TAB_CONSTANT.OBJECT_REQUESTS}
-          >
-            <ObjectRequestsPage />
-          </Tabs.TabPane>
-        )}
-        <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
-          {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
-            <JointTeachingPage />
-          )}
-        </Tabs.TabPane>
-        {isBeta && (
-          <Tabs.TabPane
-            tab='GROUP MANAGEMENT'
-            key={TAB_CONSTANT.GROUP_MANAGEMENT}
-            disabled
-          >
-            <GroupManagementPage />
-          </Tabs.TabPane>
-        )}
-        <Tabs.TabPane
-          tab='ACTIVITIES'
-          key={TAB_CONSTANT.ACTIVITIES}
-          forceRender
+    <SSPResourceWrapper
+      name={`${formId}__FORM_DETAIL_ACTIVITIES`}
+      selectorFn={selectSSPState('activities')}
+      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
+        fetchActivitiesForForm(formId, partialQuery)
+      }
+      initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
+        initializeSSPStateProps(partialQuery)
+      }
+      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
+    >
+      <div className='form--wrapper'>
+        <TEAntdTabBar
+          activeKey={selectedFormDetailTab}
+          onChange={(key: string) => dispatch(setFormDetailTab(key))}
+          extra={<JobToolbar />}
         >
-          <ActivitiesPage />
-        </Tabs.TabPane>
-        {hasActivityDesignPermission && (
-          <Tabs.TabPane
-            tab='ACTIVITY DESIGNER'
-            key={TAB_CONSTANT.ACTIVITY_DESIGNER}
-          >
-            <ActivityDesignPage />
+          <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
+            {!selectedSubmissionId ? (
+              <SubmissionOverviewPage />
+            ) : (
+              <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
+            )}
           </Tabs.TabPane>
-        )}
-        {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
-          <Tabs.TabPane
-            tab='CONSTRAINT MANAGER'
-            key={TAB_CONSTANT.CONSTRAINT_MANAGER}
-          >
-            <ConstraintManagerPage />
+          {formHasObjReqs && (
+            <Tabs.TabPane
+              tab='OBJECT REQUESTS'
+              key={TAB_CONSTANT.OBJECT_REQUESTS}
+            >
+              <ObjectRequestsPage />
+            </Tabs.TabPane>
+          )}
+          <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
+            {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+              <JointTeachingPage />
+            )}
           </Tabs.TabPane>
-        )}
-        {hasAssistedSchedulingPermission && (
+          {isBeta && (
+            <Tabs.TabPane
+              tab='GROUP MANAGEMENT'
+              key={TAB_CONSTANT.GROUP_MANAGEMENT}
+              disabled
+            >
+              <GroupManagementPage />
+            </Tabs.TabPane>
+          )}
           <Tabs.TabPane
-            tab="JOBS"
-            key={TAB_CONSTANT.JOBS}
+            tab='ACTIVITIES'
+            key={TAB_CONSTANT.ACTIVITIES}
+            forceRender
           >
-            <JobsPage />
+            <ActivitiesPage />
           </Tabs.TabPane>
-        )}
-      </TEAntdTabBar>
-      <FormInfoModal
-        isVisible={showFormInfoModal}
-        formId={formId}
-        onHide={() => setShowFormInfoModal(false)}
-      />
-    </div>
+          {hasActivityDesignPermission && (
+            <Tabs.TabPane
+              tab='ACTIVITY DESIGNER'
+              key={TAB_CONSTANT.ACTIVITY_DESIGNER}
+            >
+              <ActivityDesignPage />
+            </Tabs.TabPane>
+          )}
+          {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
+            <Tabs.TabPane
+              tab='CONSTRAINT MANAGER'
+              key={TAB_CONSTANT.CONSTRAINT_MANAGER}
+            >
+              <ConstraintManagerPage />
+            </Tabs.TabPane>
+          )}
+          {hasAssistedSchedulingPermission && (
+            <Tabs.TabPane
+              tab="JOBS"
+              key={TAB_CONSTANT.JOBS}
+            >
+              <JobsPage />
+            </Tabs.TabPane>
+          )}
+        </TEAntdTabBar>
+        <FormInfoModal
+          isVisible={showFormInfoModal}
+          formId={formId}
+          onHide={() => setShowFormInfoModal(false)}
+        />
+      </div>
+    </SSPResourceWrapper>
   );
 };
 

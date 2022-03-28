@@ -13,12 +13,9 @@ import {
   WeekPatternUIDColumn,
 } from 'Components/TableColumnsShared';
 import WeekPatternTable from 'Components/WeekPatternTable';
-import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
 
 // REDUX
 import { fetchTagsForForm } from 'Redux/Tags';
-import { fetchActivitiesForForm, fetchActivityFilterLookupMapForForm, initializeSSPStateProps } from 'Redux/Activities';
-import { selectSSPState } from 'Components/SSP/Utils/selectors';
 import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
 
 // HOOKS
@@ -26,7 +23,6 @@ import useSSP from 'Components/SSP/Utils/hooks';
 
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import { ISSPQueryObject } from 'Types/SSP.type';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -50,17 +46,7 @@ const ActivitiesPage = () => {
   }, []);
 
   return (
-    <SSPResourceWrapper
-      name={`${formId}__FORM_DETAIL_ACTIVITIES`}
-      selectorFn={selectSSPState('activities')}
-      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        fetchActivitiesForForm(formId, partialQuery)
-      }
-      initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        initializeSSPStateProps(partialQuery)
-      }
-      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
-    >
+    <>
       <ActivitiesToolbar />
       {groupBy === EActivityGroupings.FLAT && (
         <ActivityTable
@@ -74,7 +60,7 @@ const ActivitiesPage = () => {
         />
       )}
       {groupBy === EActivityGroupings.WEEK_PATTERN && <WeekPatternTable />}
-    </SSPResourceWrapper>
+    </>
   );
 };
 
