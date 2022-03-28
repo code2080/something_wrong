@@ -4,7 +4,7 @@ import { Activity } from '../../Models/Activity.model';
 import { ASSIGN_ACTIVITIES_TO_TAG_SUCCESS } from '../DEPR_ActivityTag/activityTag.actionTypes';
 import * as activityDesignerTypes from '../ActivityDesigner/activityDesigner.actionTypes';
 import * as activitySchedulingTypes from '../DEPR_ActivityScheduling/activityScheduling.actionTypes';
-import { ABORT_JOB_SUCCESS } from '../Jobs/jobs.actionTypes';
+import { ABORT_JOB_SUCCESS } from '../DEPR_Jobs/jobs.actionTypes';
 import * as types from './activities.actionTypes';
 import { EActivityStatus } from '../../Types/Activity/ActivityStatus.enum';
 

@@ -13,7 +13,7 @@ import {
   updateActivity,
   updateActivities,
 } from '../../../../Redux/DEPR_Activities/activities.actions';
-import { abortJob } from '../../../../Redux/Jobs/jobs.actions';
+import { abortJob } from '../../../../Redux/DEPR_Jobs/jobs.actions';
 import {
   startSchedulingActivities,
   finishSchedulingActivities,
@@ -26,7 +26,7 @@ import { manualSchedulingFormStatuses } from '../../../../Constants/manualSchedu
 
 // SELECTORS
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
-import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
+import { selectJobForActivities } from '../../../../Redux/DEPR_Jobs/jobs.selectors';
 import {
   hasPermission,
   selectIsBetaOrDev,

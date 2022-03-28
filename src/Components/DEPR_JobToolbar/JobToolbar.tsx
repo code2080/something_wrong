@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import { useSelector } from 'react-redux';
 
 // SELECTORS
-import { selectJobFromForm } from '../../Redux/Jobs/jobs.selectors';
+import { selectJobFromForm } from '../../Redux/DEPR_Jobs/jobs.selectors';
 
 // HOOKS
 import { useJobWSAPI } from '../../Hooks/DEPR_useJobWSAPI';

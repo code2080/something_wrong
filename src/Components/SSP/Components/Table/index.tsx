@@ -14,22 +14,19 @@ import WorkerInProgress from '../WorkerInProgress';
 type Props = {
   rowKey?: string;
   columns: ISSPColumn[];
+  allowRowSelection?: boolean;
 };
 
-const SSPTable = ({ rowKey = '_id', columns }: Props) => {
+const SSPTable = ({ rowKey = '_id', columns, allowRowSelection = true }: Props) => {
   const { loading, results, workerStatus } = useSSP();
   const pagination = usePagination();
-  const rowSelection = useRowSelection();
+  const rowSelection = useRowSelection(allowRowSelection);
   const sorting = useSorting();
 
   if (workerStatus === 'IN_PROGRESS') return <WorkerInProgress />;
 
   return (
     <Table
-      // columns={[
-      //   ..._cols,
-      //   columnModifierColumn(() => setShowColumnSelection(true)),
-      // ]}
       columns={columns as ColumnsType<any>}
       dataSource={results}
       rowKey={rowKey}

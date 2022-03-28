@@ -15,6 +15,9 @@ import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import GroupedTags from './GroupedTags';
 import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
 import WeekPatternFilter from './WeekPatternFilter';
+import { EJobStatus, TJob } from 'Types/Job.type';
+import JobStatus from './JobStatus';
+import StopJob from './StopJob';
 
 export const RowActionsColumn: ISSPColumn = {
   title: '',
@@ -136,6 +139,20 @@ export const WeekPatternIdColumn: ISSPColumn = {
   dataIndex: '_id',
   render: (weekPatternUID: string) => weekPatternUID || 'N/A',
   sorter: true,
+};
+
+export const JobStatusColumn: ISSPColumn = {
+  title: 'Status',
+  key: 'status',
+  dataIndex: 'status',
+  render: (status: EJobStatus) => <JobStatus jobStatus={status} />,
+};
+
+export const StopJobColumn: ISSPColumn = {
+  title: '',
+  key: 'stopJob',
+  dataIndex: undefined,
+  render: (job: TJob) => <StopJob job={job} />,
 };
 
 export const primaryObjectsColumn: ISSPColumn = {

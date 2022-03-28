@@ -39,8 +39,10 @@ export const usePagination = (): TablePaginationConfig => {
   };
 };
 
-export const useRowSelection = (): TableRowSelection<any> => {
+export const useRowSelection = (allowRowSelection?: boolean): TableRowSelection<any> | undefined => {
   const { setSelectedKeys, selectedKeys } = useContext(SSPResourceContext);
+
+  if (!allowRowSelection) return undefined;
 
   const columnTitle = <SelectAllCheckbox />;
 

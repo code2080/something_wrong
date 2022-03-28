@@ -8,8 +8,8 @@ import { EllipsisOutlined } from '@ant-design/icons';
 // REDUX
 import { selectActivitySchedulingById } from 'Redux/DEPR_ActivityScheduling/activityScheduling.selectors';
 import { selectManualSchedulingStatus } from '../../../../Redux/ManualSchedulings/manualSchedulings.selectors';
-import { selectJobForActivities } from '../../../../Redux/Jobs/jobs.selectors';
-import { abortJob } from 'Redux/Jobs/jobs.actions';
+import { selectJobForActivities } from '../../../../Redux/DEPR_Jobs/jobs.selectors';
+import { abortJob } from 'Redux/DEPR_Jobs/jobs.actions';
 import { hasPermission } from '../../../../Redux/Auth/auth.selectors';
 import { makeSelectFormInstance } from '../../../../Redux/FormSubmissions/formSubmissions.selectors';
 import { setFormInstanceSchedulingProgress } from '../../../../Redux/FormSubmissions/formSubmissions.actions';

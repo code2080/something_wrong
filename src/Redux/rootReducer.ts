@@ -9,7 +9,6 @@ import submissions from './FormSubmissions/formSubmissions.reducer';
 import activityDesigner from './ActivityDesigner/activityDesigner.reducer';
 import constraintConfigurations from './ConstraintConfigurations/constraintConfigurations.reducer';
 import objectRequests from './ObjectRequests/ObjectRequests.reducer';
-import jobs from './Jobs/jobs.reducer';
 import manualSchedulings from './ManualSchedulings/manualSchedulings.reducer';
 import te from './TE/te.reducer';
 import users from './Users/users.reducer';
@@ -25,6 +24,7 @@ import filters from './Filters/filters.reducer';
 // import activities from './DEPR_Activities/activities.reducer';
 // import filterLookupMap from './DEPR_FilterLookupMap/filterLookupMap.reducer';
 // import forms from './DEPR_Forms/forms.reducer';
+// import jobs from './DEPR_Jobs/jobs.reducer';
 import activityScheduling from './DEPR_ActivityScheduling/activityScheduling.reducer';
 
 // ACTIONS
@@ -34,6 +34,7 @@ import { LOGOUT } from './Auth/auth.actionTypes';
 import activitiesReducer from './Activities';
 import tagsReducer from './Tags';
 import formsReducer from './Forms';
+import jobsReducer from './Jobs';
 
 const appReducer = combineReducers({
   apiStatus,
@@ -42,7 +43,6 @@ const appReducer = combineReducers({
   submissions,
   activityDesigner,
   constraintConfigurations,
-  jobs,
   manualSchedulings,
   users,
   te,
@@ -57,6 +57,7 @@ const appReducer = combineReducers({
   activities: activitiesReducer,
   tags: tagsReducer,
   forms: formsReducer,
+  jobs: jobsReducer,
 });
 
 const rootReducer = (state, action) => {

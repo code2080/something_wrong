@@ -9,7 +9,6 @@ import TEAntdTabBar from '../../Components/TEAntdTabBar';
 import JobToolbar from '../../Components/JobToolbar';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
-import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
 
 // HOOKS
 import {
@@ -37,9 +36,7 @@ import {
 } from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
-import { selectSSPState } from 'Components/SSP/Utils/selectors';
 import {
-  initializeSSPStateProps,
   fetchActivityFilterLookupMapForForm,
   fetchActivitiesForForm,
   resetState,
@@ -67,9 +64,9 @@ import SubmissionOverviewPage from './pages/SubmissionOverview';
 import SubmissionsDetailPage from './pages/SubmissionDetail';
 import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
 import GroupManagementPage from './pages/groupManagement.page';
+import JobsPage from './pages/Jobs/jobs.page';
 
 // TYPES
-import { ISSPQueryObject } from 'Types/SSP.type';
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 
 export const TAB_CONSTANT = {
@@ -81,6 +78,7 @@ export const TAB_CONSTANT = {
   CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER',
   JOINT_TEACHING: 'JOINT_TEACHING',
   GROUP_MANAGEMENT: 'GROUP_MANAGEMENT',
+  JOBS: 'JOBS',
 };
 
 const FormPage = () => {
@@ -217,89 +215,79 @@ const FormPage = () => {
   useFetchLabelsFromExtIds(submissionPayload);
 
   return (
-    <SSPResourceWrapper
-      name={`${formId}__FORM_DETAIL`}
-      selectorFn={selectSSPState('activities')}
-      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        fetchActivitiesForForm(formId, partialQuery)
-      }
-      initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        initializeSSPStateProps(partialQuery)
-      }
-      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
-    >
-      <div className='form--wrapper'>
-        <TEAntdTabBar
-          activeKey={selectedFormDetailTab}
-          onChange={(key: string) => dispatch(setFormDetailTab(key))}
-          extra={<JobToolbar />}
-        >
-          <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
-            {!selectedSubmissionId ? (
-              <SubmissionOverviewPage />
-            ) : (
-              <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
-            )}
-          </Tabs.TabPane>
-          {formHasObjReqs && (
-            <Tabs.TabPane
-              tab='OBJECT REQUESTS'
-              key={TAB_CONSTANT.OBJECT_REQUESTS}
-            >
-              <ObjectRequestsPage />
-            </Tabs.TabPane>
+    <div className='form--wrapper'>
+      <TEAntdTabBar
+        activeKey={selectedFormDetailTab}
+        onChange={(key: string) => dispatch(setFormDetailTab(key))}
+        extra={<JobToolbar />}
+      >
+        <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
+          {!selectedSubmissionId ? (
+            <SubmissionOverviewPage />
+          ) : (
+            <SubmissionsDetailPage formInstanceId={selectedSubmissionId} />
           )}
-          <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
-            {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
-              <JointTeachingPage />
-            )}
-          </Tabs.TabPane>
-          {isBeta && (
-            <Tabs.TabPane
-              tab='GROUP MANAGEMENT'
-              key={TAB_CONSTANT.GROUP_MANAGEMENT}
-              disabled
-            >
-              {selectedFormDetailTab === TAB_CONSTANT.GROUP_MANAGEMENT && (
-                <GroupManagementPage />
-              )}
-            </Tabs.TabPane>
-          )}
+        </Tabs.TabPane>
+        {formHasObjReqs && (
           <Tabs.TabPane
-            tab='ACTIVITIES'
-            key={TAB_CONSTANT.ACTIVITIES}
-            forceRender
+            tab='OBJECT REQUESTS'
+            key={TAB_CONSTANT.OBJECT_REQUESTS}
           >
-            {selectedFormDetailTab === TAB_CONSTANT.ACTIVITIES && (
-              <ActivitiesPage />
-            )}
+            <ObjectRequestsPage />
           </Tabs.TabPane>
-          {hasActivityDesignPermission && (
-            <Tabs.TabPane
-              tab='ACTIVITY DESIGNER'
-              key={TAB_CONSTANT.ACTIVITY_DESIGNER}
-            >
-              {selectedFormDetailTab === TAB_CONSTANT.ACTIVITY_DESIGNER && (
-                <ActivityDesignPage />
-              )}
-            </Tabs.TabPane>
+        )}
+        <Tabs.TabPane tab='JOINT TEACHING' key={TAB_CONSTANT.JOINT_TEACHING}>
+          {selectedFormDetailTab === TAB_CONSTANT.JOINT_TEACHING && (
+            <JointTeachingPage />
           )}
-          {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
-            <Tabs.TabPane
-              tab='CONSTRAINT MANAGER'
-              key={TAB_CONSTANT.CONSTRAINT_MANAGER}
-            >
-              <ConstraintManagerPage />
-            </Tabs.TabPane>
-          )}
-        </TEAntdTabBar>
-        <FormInfoModal
-          isVisible={showFormInfoModal}
-          formId={formId}
-          onHide={() => setShowFormInfoModal(false)}
-        />
-      </div>
-    </SSPResourceWrapper>
+        </Tabs.TabPane>
+        {isBeta && (
+          <Tabs.TabPane
+            tab='GROUP MANAGEMENT'
+            key={TAB_CONSTANT.GROUP_MANAGEMENT}
+            disabled
+          >
+            <GroupManagementPage />
+          </Tabs.TabPane>
+        )}
+        <Tabs.TabPane
+          tab='ACTIVITIES'
+          key={TAB_CONSTANT.ACTIVITIES}
+          forceRender
+        >
+          <ActivitiesPage />
+        </Tabs.TabPane>
+        {hasActivityDesignPermission && (
+          <Tabs.TabPane
+            tab='ACTIVITY DESIGNER'
+            key={TAB_CONSTANT.ACTIVITY_DESIGNER}
+          >
+            <ActivityDesignPage />
+          </Tabs.TabPane>
+        )}
+        {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
+          <Tabs.TabPane
+            tab='CONSTRAINT MANAGER'
+            key={TAB_CONSTANT.CONSTRAINT_MANAGER}
+          >
+            <ConstraintManagerPage />
+          </Tabs.TabPane>
+        )}
+        {hasAssistedSchedulingPermission && (
+          <Tabs.TabPane
+            tab="JOBS"
+            key={TAB_CONSTANT.JOBS}
+          >
+            <JobsPage />
+          </Tabs.TabPane>
+        )}
+      </TEAntdTabBar>
+      <FormInfoModal
+        isVisible={showFormInfoModal}
+        formId={formId}
+        onHide={() => setShowFormInfoModal(false)}
+      />
+    </div>
   );
 };
 
