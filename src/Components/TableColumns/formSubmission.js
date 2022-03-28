@@ -127,7 +127,7 @@ export const formSubmission = {
       ),
   },
   IS_STARRED: (dispatch, disabled) => ({
-    title: 'Is starred',
+    title: 'Starred',
     key: 'isStarred',
     dataIndex: 'teCoreProps.isStarred',
     sorter: (a, b) =>

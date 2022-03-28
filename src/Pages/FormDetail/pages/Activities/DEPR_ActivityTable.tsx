@@ -11,7 +11,7 @@ import {
 } from '../../../../Components/DEPR_ActivitiesTableColumns/ActivitiesTableColumns';
 import DynamicTable from '../../../../Components/DynamicTable/DynamicTableHOC';
 
-import { useActivitiesObjectWatcher } from 'Hooks/useActivities';
+import { useActivitiesObjectWatcher } from 'Hooks/DEPR_useActivities';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSelectedActivities } from 'Redux/GlobalUI/globalUI.selectors';
 import { selectActivitiesInTable } from 'Redux/GlobalUI/globalUI.actions';

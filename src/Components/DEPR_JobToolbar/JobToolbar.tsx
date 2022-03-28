@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectJobFromForm } from '../../Redux/Jobs/jobs.selectors';
 
 // HOOKS
-import { useJobWSAPI } from '../../Hooks/useJobWSAPI';
+import { useJobWSAPI } from '../../Hooks/DEPR_useJobWSAPI';
 
 // STYLES
 import './JobToolbar.scss';

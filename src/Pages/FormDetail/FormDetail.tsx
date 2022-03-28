@@ -6,7 +6,7 @@ import { Tabs } from 'antd';
 
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
-import JobToolbar from '../../Components/JobToolbar/JobToolbar';
+import JobToolbar from '../../Components/JobToolbar';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
 import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
@@ -119,6 +119,10 @@ const FormPage = () => {
           dispatch(fetchActivityFilterLookupMapForForm(formId));
         }
       },
+      [ESocketEvents.JOBS_UPDATE]: (payload: IDefaultSocketPayload) => {
+        console.log('Received JOBS_UPDATE');
+        console.log({ payload })
+      }
     },
   });
 
@@ -156,7 +160,6 @@ const FormPage = () => {
     dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
     dispatch(fetchConstraintConfigurations(formId));
-    // dispatch(fetchActivityInWorkerProgress(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
@@ -178,14 +181,6 @@ const FormPage = () => {
         mode: form?.reservationMode,
         callback: ({ _res }) => {},
       });
-
-    // [
-    //   ACTIVITIES_TABLE,
-    //   UNMATCHED_ACTIVITIES_TABLE,
-    //   MATCHED_ACTIVITIES_TABLE,
-    // ].forEach((tableType) => {
-    //   dispatch(selectActivitiesInTable(tableType));
-    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
 
@@ -234,10 +229,10 @@ const FormPage = () => {
       fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
     >
       <div className='form--wrapper'>
-        <JobToolbar />
         <TEAntdTabBar
           activeKey={selectedFormDetailTab}
           onChange={(key: string) => dispatch(setFormDetailTab(key))}
+          extra={<JobToolbar />}
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
             {!selectedSubmissionId ? (

@@ -15,7 +15,6 @@ import TimeSlotColumn from '../Components/Elements/TimeSlotColumn';
 import FreeTextFilter from '../Components/Elements/FreeTextFilter';
 import NumberFilter from '../Components/Elements/NumberFilter';
 import Padding from '../Components/Elements/Padding';
-// import SelectAllElementValuesColumn from '../Components/TableColumns/Components/SelectAllElementValuesColumn/SelectAllElementValuesColumn';
 import SortableTableCell from '../Components/DynamicTable/SortableTableCell';
 import DateTime from '../Components/Common/DateTime';
 

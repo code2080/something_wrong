@@ -28,7 +28,7 @@ import {
   resetActivitySorting,
 } from 'Redux/GlobalUI/globalUI.actions';
 import ActivityTable from '../../Activities/DEPR_ActivityTable';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { useActivitiesWatcher } from 'Hooks/DEPR_useActivities';
 
 interface Props {
   formId: string;

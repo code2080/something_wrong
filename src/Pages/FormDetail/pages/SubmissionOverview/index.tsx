@@ -33,7 +33,7 @@ import { createLoadingSelector } from '../../../../Redux/APIStatus/apiStatus.sel
 import {
   toOrderDirection,
   usePaginationAndSorting,
-} from 'Hooks/usePaginationAndSorting';
+} from 'Hooks/DEPR_usePaginationAndSorting';
 
 // CONSTANTS
 import { tableColumns } from '../../../../Components/TableColumns';

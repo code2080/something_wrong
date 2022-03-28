@@ -42,7 +42,7 @@ import {
   selectSelectedActivities,
   selectActivitiesFetchingHandler,
 } from '../../../../Redux/GlobalUI/globalUI.selectors';
-import { useActivitiesWatcher } from 'Hooks/useActivities';
+import { useActivitiesWatcher } from 'Hooks/DEPR_useActivities';
 
 // TYPES
 import { TActivity } from '../../../../Types/Activity/Activity.type';

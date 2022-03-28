@@ -1,0 +1,22 @@
+@import '../../Styles/globals.scss';
+
+.job-toolbar--wrapper {
+  padding: 0 8px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+
+  & > *:first-child {
+    margin-right: 8px;
+  }
+
+  .schedule-btn--wrapper {
+    background: $jungleGreen;
+    border-color: $jungleGreen;
+    &:hover, &:focus {
+      background: darken($jungleGreen, 5%);
+      border-color: darken($jungleGreen, 5%);
+    }
+  }
+}
