@@ -48,10 +48,6 @@ const ActivitiesToolbar = () => {
   /**
    * EVENT HANDLERS
    */
-  const onScheduleActivities = (activityOrWPGIds: string[]) => {
-    scheduleSelectedActivities(activityOrWPGIds);
-  };
-
   const onDeleteActivities = (activityOrWPGIds: string[]) => {
     unscheduleSelectedActivities(activityOrWPGIds);
   };
@@ -66,14 +62,7 @@ const ActivitiesToolbar = () => {
         <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>
       <ToolbarGroup label='Actions'>
-        <Button
-          size='small'
-          type='link'
-          onClick={() => onScheduleActivities(selectedKeys)}
-          disabled={!selectedKeys?.length || !hasSchedulingPermissions}
-        >
-          Schedule selection
-        </Button>
+
         <Button
           size='small'
           type='link'
