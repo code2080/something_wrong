@@ -1,4 +1,4 @@
-import { capitalize, compact, lowerCase, uniq } from 'lodash';
+import { capitalize, compact, lowerCase, sortBy, uniq } from 'lodash';
 import { Field } from 'Redux/TE/te.selectors';
 import { TActivityFilterLookupMap } from 'Types/Activity/ActivityFilterLookupMap.type';
 import { TGetExtIdPropsPayload } from 'Types/TECorePayloads.type';
@@ -86,11 +86,16 @@ export const toActivityStatusDisplay = (status: string): string =>
   capitalize(status).replace(/_/g, ' ');
 
 export const filterFilterOptionsByQuery = (query: string, options: any[]) => {
-  if (!query || query === '') return options;
-  const lowercasedQuery = query.toLowerCase();
-  return options.filter((opt) =>
-    lowerCase(`${opt.label} ${opt.value}`).includes(lowercasedQuery),
-  );
+  let retVal: any[] = [];
+  if (!query || query === '') {
+    retVal = [...options];
+  } else {
+    const lowercasedQuery = query.toLowerCase();
+    retVal = options
+      .filter((opt) => lowerCase(`${opt.label} ${opt.value}`).includes(lowercasedQuery))
+  }
+  const sortedArr = sortBy(retVal, [(o: any) => o.label]);
+  return sortedArr;
 };
 
 /**
@@ -172,7 +177,7 @@ export const getAllFilterOptionsFromFilterLookupMap = (
        */
       return {
         ...flatMap,
-        [`${prefix}${key}`]: keysInKey,
+        [`${prefix}${key}`]: keysInKey.slice().sort((a: any, b: any) => a - b),
       };
     } else {
       /**
