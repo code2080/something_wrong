@@ -25,6 +25,7 @@ import {
   EFilterInclusions,
 } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
+import { AppDispatch } from 'Redux/store';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -53,7 +54,7 @@ export const initialState: ISSPReducerState = {
   },
   filters: {},
   filterLookupMap: {},
-  workerStatus: 'DONE',
+  workerStatus: undefined,
 };
 
 // Slice
@@ -94,12 +95,13 @@ export default slice.reducer;
 // Selectors
 export const jobsSelector = (state: IState): TJob[] =>
   state.jobs.data[state.jobs.groupBy].results;
-export const activitySelector =
+export const jobSelector =
   (id: string) =>
   (state: IState): TJob | undefined =>
     state.jobs.data[state.jobs.groupBy][id] || undefined;
 export const jobsLoading = (state: IState): boolean =>
   state.jobs.loading;
+export const selectRunningJobId = (state: IState) => state.jobs.workerStatus;
 
 // Actions
 export const {
@@ -129,3 +131,13 @@ export const fetchJobsForForm =
       dispatch(defaultFailureHandler(null));
     }
   };
+
+export const stopJob = (formId: string, jobId: string) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(defaultRequestHandler(null));
+    const result = await api.post({ endpoint: `forms/${formId}/jobs/${jobId}/stop` });
+    dispatch(updateJobSuccess(result));
+  } catch (e) {
+    dispatch(defaultFailureHandler(null));
+  }
+};

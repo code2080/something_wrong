@@ -164,9 +164,7 @@ export const updateResourceWorkerStatus = (
   state: ISSPReducerState,
 ) => {
   const { workerStatus } = payload;
-  if (workerStatus === 'DONE' || workerStatus === 'IN_PROGRESS') {
-    state.workerStatus = workerStatus;
-  }
+  state.workerStatus = workerStatus || undefined;
 };
 
 /**

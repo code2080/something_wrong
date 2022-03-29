@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Col,
   Modal,
-  ModalProps,
   Row,
   Select,
   Slider,
@@ -23,12 +22,12 @@ import { useAppDispatch } from 'Hooks/useAppHooks';
 import { selectConstraintConfiguration } from 'Redux/ConstraintConfigurations/constraintConfigurations.actions';
 import { useScheduling } from 'Hooks/useScheduling';
 
-interface WantedAntdModalProps
-  extends Pick<ModalProps, 'title' | 'visible' | 'onCancel'> {}
+type Props = {
+  visible: boolean;
+  onClose: () => void;
+}
 
-interface Props extends WantedAntdModalProps {}
-
-const StartJobModal = ({ title, visible, onCancel }: Props) => {
+const StartJobModal = ({ visible, onClose }: Props) => {
   const { formId } = useParams<{ formId: string }>();
 
   const { selectedKeys } = useSSP();
@@ -63,13 +62,14 @@ const StartJobModal = ({ title, visible, onCancel }: Props) => {
 
   const onScheduleActivities = () => {
     scheduleSelectedActivities(selectedKeys);
+    onClose();
   };
 
   return (
     <Modal
-      title={title}
+      title="Schedule"
       visible={visible}
-      onCancel={onCancel}
+      onCancel={onClose}
       closable={false}
       okText='Schedule'
       onOk={onScheduleActivities}

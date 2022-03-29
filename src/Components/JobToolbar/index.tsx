@@ -17,13 +17,14 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from 'Constants/permissions.const
 
 // STYLES
 import './index.scss';
+import { selectRunningJobId } from 'Redux/Jobs';
 
 const JobToolbar = () => {
   const { selectedKeys } = useSSP();
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-
+  const runningJobId = useSelector(selectRunningJobId);
   const [startJobModalVisible, setStartJobModalVisible] = useState(false);
 
   const toggleStartJobModal = () => {
@@ -42,13 +43,11 @@ const JobToolbar = () => {
         >
           Schedule
         </Button>
-        <SchedulingProgressMeter />
+        {!!runningJobId && <SchedulingProgressMeter />}
       </div>
-
       <StartJobModal
-        title='Schedule'
         visible={startJobModalVisible}
-        onCancel={() => setStartJobModalVisible(false)}
+        onClose={() => setStartJobModalVisible(false)}
       />
     </>
   );

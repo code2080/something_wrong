@@ -1,5 +1,8 @@
 import { StopOutlined } from "@ant-design/icons"
 
+// HOOKS
+import { useScheduling } from "Hooks/useScheduling";
+
 // STYLES
 import './index.scss';
 
@@ -12,9 +15,12 @@ type Props = {
 };
 
 const StopJob = ({ job }: Props) => {
+  const { stopJob } = useScheduling();
+
   const onClick = () => {
-    console.log(`should stop job for ${job._id} `);
+    stopJob(job._id);
   };
+
   const isDisabled = ![EJobStatus.NOT_STARTED, EJobStatus.STARTED].includes(job.status);
   return (
     <Tooltip

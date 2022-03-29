@@ -121,8 +121,8 @@ const FormPage = () => {
           dispatch(fetchActivityFilterLookupMapForForm(formId));
         }
       },
-      [ESocketEvents.JOBS_UPDATE]: (payload: IDefaultSocketPayload) => {
-        console.log('Received JOBS_UPDATE');
+      [ESocketEvents.JOB_UPDATE]: (payload: IDefaultSocketPayload) => {
+        console.log('Received JOB_UPDATE');
         console.log({ payload })
       }
     },

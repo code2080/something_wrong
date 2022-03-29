@@ -1,8 +1,15 @@
-import { selectSSPState } from 'Components/SSP/Utils/selectors';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
+// REDUX
+import { selectSSPState } from 'Components/SSP/Utils/selectors';
 import { batchOperationSchedule, batchOperationStatus } from 'Redux/Activities';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
+import { stopJob as reduxStopJob } from 'Redux/Jobs';
+// HOOKS
+import { useTECoreAPI } from './TECoreApiHooks';
+
+// TYPES
 import { TActivity } from 'Types/Activity/Activity.type';
 import {
   EActivityBatchOperation,
@@ -11,7 +18,6 @@ import {
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import { IState } from 'Types/State.type';
-import { useTECoreAPI } from './TECoreApiHooks';
 
 export const useScheduling = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -84,8 +90,13 @@ export const useScheduling = () => {
     });
   };
 
+  const stopJob = (jobId: string) => {
+    dispatch(reduxStopJob(formId, jobId));
+  }
+
   return {
     scheduleSelectedActivities,
     unscheduleSelectedActivities,
+    stopJob,
   };
 };

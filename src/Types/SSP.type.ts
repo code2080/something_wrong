@@ -62,7 +62,7 @@ export interface ISSPAPIResult {
   allKeys: string[];
   limit: number;
   totalPages: number;
-  workerStatus?: 'IN_PROGRESS' | 'DONE';
+  workerStatus?: 'IN_PROGRESS' | 'DONE' | string;
 }
 
 export interface ISSAPIDataGroupState
@@ -90,7 +90,7 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
    */
   filterLookupMap: any;
   // WORKERS
-  workerStatus?: 'IN_PROGRESS' | 'DONE';
+  workerStatus?: 'IN_PROGRESS' | 'DONE' | string;
 }
 
 export interface ISSPQueryObject
