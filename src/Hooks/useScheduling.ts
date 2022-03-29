@@ -58,7 +58,7 @@ export const useScheduling = () => {
     const batchOperation: TActivityBatchOperation = {
       type: EActivityBatchOperation.SCHEDULE,
       data: activityIds,
-      metadata: { scheduleAsUserId },
+      metadata: { scheduleAsUserId }, // @todo add constraintConfigurationId and scheduleQuality in metadata
     };
     dispatch(batchOperationSchedule(formId, batchOperation));
   };

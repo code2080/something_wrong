@@ -21,6 +21,8 @@ import {
   TGetExtIdPropsPayload,
 } from '../../Types/TECorePayloads.type';
 import { IState } from '../../Types/State.type';
+import { TTagGroup } from 'Types/Activity/TagGroup.type';
+import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
 
 const selectIntegration = (state: IState) => state.integration;
 const selectReservationModes = (state: IState) =>
@@ -157,9 +159,9 @@ const getExtIdPairsForActivity = (values: ActivityValue[]) => {
   return typeExtidPairs;
 };
 
-const extractPayloadFromActivities = (activities: TActivity[]) => {
-  const allExtIdPairs = activities.flatMap((a) => [
-    ...getExtIdPairsForActivity(a.values),
+const extractPayloadFromActivities = (activities: TActivity[] | TTagGroup[] | TWeekPatternGroup[]) => {
+  const allExtIdPairs = activities.flatMap((a: any) => [
+    ...getExtIdPairsForActivity(a?.values || []),
     // TODO: Should add type if we keep joint teaching
     ['types', [a.jointTeaching?.object], 'joint_teaching'],
   ]);

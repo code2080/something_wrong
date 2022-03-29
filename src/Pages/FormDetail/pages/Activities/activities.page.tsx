@@ -23,6 +23,7 @@ import useSSP from 'Components/SSP/Utils/hooks';
 
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import TagGroupTable from 'Components/TagGroupTable';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -60,6 +61,7 @@ const ActivitiesPage = () => {
         />
       )}
       {groupBy === EActivityGroupings.WEEK_PATTERN && <WeekPatternTable />}
+      {groupBy === EActivityGroupings.TAG && <TagGroupTable />}
     </>
   );
 };

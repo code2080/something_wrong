@@ -38,6 +38,7 @@ import {
   TActivity,
 } from 'Types/Activity/Activity.type';
 import { createFn as createWeekPatternGroupFn } from 'Types/Activity/WeekPatternGroup.type';
+import { createFn as createTagGroupFn } from 'Types/Activity/TagGroup.type';
 import {
   createFn as createActivityFilterLookupMap,
   TActivityFilterLookupMap,
@@ -91,6 +92,16 @@ export const initialState: ISSPReducerState = {
       totalPages: 10,
       allKeys: [],
     },
+    [EActivityGroupings.TAG]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    },
   },
   // FILTERING
   matchType: EFilterType.ALL,
@@ -121,12 +132,22 @@ const slice = createSlice({
       if (payload) commitSSPQueryToState(payload, state);
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
+      let createFnToUse: any;
+      switch (state.groupBy) {
+        case EActivityGroupings.FLAT:
+          createFnToUse = createActivityFn;
+          break;
+        case EActivityGroupings.WEEK_PATTERN:
+          createFnToUse = createWeekPatternGroupFn;
+          break;
+        case EActivityGroupings.TAG:
+          createFnToUse = createTagGroupFn;
+          break;
+      };
       commitAPIPayloadToState(
         payload,
         state,
-        state.groupBy === EActivityGroupings.FLAT
-          ? createActivityFn
-          : createWeekPatternGroupFn,
+        createFnToUse
       );
       updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);

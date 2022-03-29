@@ -2,7 +2,7 @@
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { GroupOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { GroupOutlined, OrderedListOutlined, TagOutlined } from '@ant-design/icons';
 
 // SELECTORS
 import { hasPermission, selectCoreUserId } from 'Redux/Auth/auth.selectors';
@@ -35,7 +35,7 @@ import { useScheduling } from 'Hooks/useScheduling';
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, groupBy, setGroup } = useSSP();
-  const { scheduleSelectedActivities, unscheduleSelectedActivities } =
+  const { unscheduleSelectedActivities } =
     useScheduling();
   /**
    * SELECTORS
@@ -92,6 +92,11 @@ const ActivitiesToolbar = () => {
                 value: EActivityGroupings.WEEK_PATTERN,
                 label: <GroupOutlined />,
                 tooltip: 'Week pattern',
+              },
+              {
+                value: EActivityGroupings.TAG,
+                label: <TagOutlined />,
+                tooltip: 'Tag',
               },
             ]}
             onSelect={(val) => setGroup(val as EActivityGroupings)}
