@@ -1,13 +1,5 @@
-import React from 'react';
-import {
-  Col,
-  Modal,
-  Row,
-  Select,
-  Slider,
-  Space,
-  Typography,
-} from 'antd';
+import React, { useState } from 'react';
+import { Col, Modal, Row, Select, Slider, Space, Typography } from 'antd';
 import useSSP from 'Components/SSP/Utils/hooks';
 import { useSelector } from 'react-redux';
 import { InfoCircleTwoTone } from '@ant-design/icons';
@@ -25,7 +17,7 @@ import { useScheduling } from 'Hooks/useScheduling';
 type Props = {
   visible: boolean;
   onClose: () => void;
-}
+};
 
 const StartJobModal = ({ visible, onClose }: Props) => {
   const { formId } = useParams<{ formId: string }>();
@@ -43,6 +35,8 @@ const StartJobModal = ({ visible, onClose }: Props) => {
     makeSelectConstraintConfigurationsForForm()(state, formId),
   );
 
+  const [scheduleQuality, setScheduleQuality] = useState(4);
+
   const numberOfSelectedKeys = selectedKeys.length;
   const hasActivities = numberOfSelectedKeys > 0;
 
@@ -52,7 +46,7 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   const selectConstraintConfigurationOptions = constrConfsValues.map(
     (constraint) => ({
       label: constraint.name,
-      value: constraint._id!,
+      value: constraint._id,
     }),
   );
 
@@ -61,19 +55,27 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   };
 
   const onScheduleActivities = () => {
-    scheduleSelectedActivities(selectedKeys);
+    scheduleSelectedActivities(selectedKeys, {
+      // This is garuanteed to not be null since the button triggering this
+      // function will be disabled if selectedConstraitConfiguration is null
+      constraintConfigurationId: selectedConstraitConfiguration!._id,
+      scheduleQuality: scheduleQuality,
+    });
+
     onClose();
   };
 
   return (
     <Modal
-      title="Schedule"
+      title='Schedule'
       visible={visible}
       onCancel={onClose}
       closable={false}
       okText='Schedule'
       onOk={onScheduleActivities}
-      okButtonProps={{ disabled: !hasActivities }}
+      okButtonProps={{
+        disabled: !hasActivities || !selectedConstraitConfiguration,
+      }}
     >
       <Space direction='vertical' size='large' style={{ width: '100%' }}>
         <Typography.Paragraph strong>{'Scheduling info'}</Typography.Paragraph>
@@ -104,7 +106,13 @@ const StartJobModal = ({ visible, onClose }: Props) => {
             <Typography.Text>{'Fast'}</Typography.Text>
           </Col>
           <Col flex='auto'>
-            <Slider min={1} max={10} step={1} defaultValue={4} />
+            <Slider
+              min={1}
+              max={10}
+              step={1}
+              value={scheduleQuality}
+              onChange={(newValue) => setScheduleQuality(newValue)}
+            />
           </Col>
           <Col>
             <Typography.Text>{'Optimized'}</Typography.Text>
