@@ -60,7 +60,7 @@ export const CActivityStatus = {
       'An attempt to schedule this activity was made, but it failed',
   },
   [EActivityStatus.QUEUED]: {
-    color: 'default',
+    color: 'warning',
     label: 'Queued',
     icon: 'warning',
     tooltip: () => 'The activity is waiting to be scheduled',

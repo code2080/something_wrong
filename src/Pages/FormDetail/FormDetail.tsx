@@ -49,6 +49,7 @@ import {
 import { formSelector } from 'Redux/Forms';
 import { activitiesSelector } from '../../Redux/Activities';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
+import { fetchJobsForForm, updateWorkerStatus as updateJobWorkerStatus } from 'Redux/Jobs';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
@@ -99,7 +100,7 @@ const FormPage = () => {
   useSubscribeToFormEvents({
     formId,
     eventMap: {
-      [ESocketEvents.ACTIVITIES_UPDATE]: (payload: IDefaultSocketPayload) => {
+      [ESocketEvents.ACTIVITY_GENERATION_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
         if (payload.workerStatus === 'IN_PROGRESS') {
           // Set the redux state to in progress
@@ -113,6 +114,10 @@ const FormPage = () => {
           dispatch(fetchActivitiesForForm(formId, {}));
         }
       },
+      [ESocketEvents.ACTIVITY_BATCH_OPERATION_UPDATE]: (payload: IDefaultSocketPayload) => {
+        if (payload.status !== 'OK') return;
+        dispatch(fetchActivitiesForForm(formId, {}));
+      },
       [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (
         payload: IDefaultSocketPayload,
       ) => {
@@ -122,8 +127,10 @@ const FormPage = () => {
         }
       },
       [ESocketEvents.JOB_UPDATE]: (payload: IDefaultSocketPayload) => {
-        console.log('Received JOB_UPDATE');
-        console.log({ payload })
+        if (payload.status !== 'OK') return;
+        console.log({payload});
+        dispatch(updateJobWorkerStatus(payload.workerStatus));
+        dispatch(fetchJobsForForm(formId));
       }
     },
   });

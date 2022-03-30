@@ -76,7 +76,6 @@ export const useSubscribeToFormEvents = ({ formId, eventMap }: Props) => {
           Object.values(ESocketEvents).includes(socketEvent as ESocketEvents)
         ) {
           // Subscribe
-          console.log(`subscribing for ${socketEvent}`);
           socket.emit(socketEvent, { formId }, (resp: any) =>
             defaultSubscriptionNotifier(
               socketEvent as ESocketEvents,

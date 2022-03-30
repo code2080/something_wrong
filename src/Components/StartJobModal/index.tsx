@@ -30,7 +30,7 @@ type Props = {
 const StartJobModal = ({ visible, onClose }: Props) => {
   const { formId } = useParams<{ formId: string }>();
 
-  const { selectedKeys } = useSSP();
+  const { selectedKeys, setSelectedKeys } = useSSP();
   const { scheduleSelectedActivities } = useScheduling();
 
   const dispatch = useAppDispatch();
@@ -62,6 +62,7 @@ const StartJobModal = ({ visible, onClose }: Props) => {
 
   const onScheduleActivities = () => {
     scheduleSelectedActivities(selectedKeys);
+    setSelectedKeys([]);
     onClose();
   };
 

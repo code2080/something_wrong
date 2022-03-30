@@ -4,27 +4,26 @@ import { Popover, Form } from 'antd';
 import moment from 'moment';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import EditableText from '../../EditableText/EditableText';
 import { CheckOutlined } from '@ant-design/icons';
 import StatusLabel from '../../StatusLabel';
 
-// STYLES
-import './index.scss';
-
-// CONSTANTS
-import { activityStatusProps } from 'Constants/activityStatuses.constants';
-import { DATE_TIME_FORMAT } from 'Constants/common.constants';
-import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
-
-// ACTIONS
-
-// SELECTORS
+// REDUX
 import { selectActivityStatus } from 'Redux/DEPR_Activities/activities.selectors';
 import { TActivity } from 'Types/Activity/Activity.type';
 import { batchOperationStatus } from 'Redux/Activities';
-import { useParams } from 'react-router-dom';
+
+// CONSTANTS
+import { DATE_TIME_FORMAT } from 'Constants/common.constants';
+
+// STYLES
+import './index.scss';
+
+// TYPES
+import { CActivityStatus, EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import {
   EActivityBatchOperation,
   TActivityBatchOperation,
@@ -49,9 +48,9 @@ const PopoverContent = ({ activity, activityStatus, onUpdate }: Props) => {
       <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <Form.Item label='Status'>
           <StatusLabel
-            color={activityStatusProps[activityStatus]?.color ?? 'default'}
+            color={CActivityStatus[activityStatus]?.color ?? 'default'}
           >
-            {activityStatusProps[activityStatus]?.label ?? activityStatus}
+            {CActivityStatus[activityStatus]?.label ?? activityStatus}
           </StatusLabel>
         </Form.Item>
         {activityStatus === EActivityStatus.FAILED && (
@@ -96,7 +95,7 @@ const StatusText = ({ activity, activityStatus }) => {
         </span>
       );
     default:
-      return activityStatusProps[activityStatus]?.label ?? activityStatus;
+      return CActivityStatus[activityStatus]?.label ?? activityStatus;
   }
 };
 
@@ -138,7 +137,7 @@ const ActivityStatusCol = ({ activity }: ActivityStatusColProps) => {
         }
       >
         <StatusLabel
-          color={activityStatusProps[activityStatus]?.color ?? 'default'}
+          color={CActivityStatus[activityStatus]?.color ?? 'default'}
         >
           <StatusText activity={activity} activityStatus={activityStatus} />
         </StatusLabel>
