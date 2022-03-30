@@ -51,8 +51,8 @@ const ActivitiesToolbar = () => {
   /**
    * EVENT HANDLERS
    */
-  const onDeleteActivities = (activityOrWPGIds: string[]) => {
-    unscheduleSelectedActivities(activityOrWPGIds);
+  const onDeleteActivities = (idsToDelete: string[]) => {
+    unscheduleSelectedActivities(idsToDelete);
   };
 
   const onCreateMatchCallback = () => {
