@@ -68,7 +68,11 @@ export const useScheduling = () => {
     const batchOperation: TActivityBatchOperation = {
       type: EActivityBatchOperation.SCHEDULE,
       data: activityIds,
-      metadata: { scheduleAsUserId, constraintConfigurationId, scheduleQuality },
+      metadata: {
+        scheduleAsUserId,
+        constraintConfigurationId,
+        scheduleQuality,
+      },
     };
 
     dispatch(batchOperationSchedule(formId, batchOperation));
@@ -97,7 +101,7 @@ export const useScheduling = () => {
 
   const stopJob = (jobId: string) => {
     dispatch(reduxStopJob(formId, jobId));
-  }
+  };
 
   return {
     scheduleSelectedActivities,

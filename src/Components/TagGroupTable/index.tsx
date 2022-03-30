@@ -1,7 +1,6 @@
 // COMPONENTS
 import SSPTable from 'Components/SSP/Components/Table';
 
-
 const TagGroupTable = () => {
   return (
     <SSPTable
@@ -36,7 +35,6 @@ const TagGroupTable = () => {
           key: 'noOfActivitiesUnscheduled',
           dataIndex: 'noOfActivitiesUnscheduled',
         },
-
       ]}
       rowKey='_id'
     />

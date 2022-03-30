@@ -159,7 +159,9 @@ const getExtIdPairsForActivity = (values: ActivityValue[]) => {
   return typeExtidPairs;
 };
 
-const extractPayloadFromActivities = (activities: TActivity[] | TTagGroup[] | TWeekPatternGroup[]) => {
+const extractPayloadFromActivities = (
+  activities: TActivity[] | TTagGroup[] | TWeekPatternGroup[],
+) => {
   const allExtIdPairs = activities.flatMap((a: any) => [
     ...getExtIdPairsForActivity(a?.values || []),
     // TODO: Should add type if we keep joint teaching

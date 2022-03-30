@@ -1,6 +1,6 @@
 export enum EJobGroupings {
   FLAT = 'FLAT',
-};
+}
 
 export enum EJobStatus {
   NOT_STARTED = 'NOT_STARTED',
@@ -9,7 +9,7 @@ export enum EJobStatus {
   FINISHED = 'FINISHED',
   SCHEDULED = 'SCHEDULED',
   ABORTED = 'ABORTED',
-};
+}
 
 export const CJobStatus = {
   [EJobStatus.NOT_STARTED]: {
@@ -39,15 +39,15 @@ export const CJobStatus = {
 };
 
 export type TJob = {
-  _id: string,
-  status: EJobStatus,
-  noOfActivities: number,
-  createdAt: string,
-  formId: string,
-  formPeriod: [string, string],
-  reservationMode: string,
-  constraintConfigurationId: string,
-  constraintConfigurationName: string,
+  _id: string;
+  status: EJobStatus;
+  noOfActivities: number;
+  createdAt: string;
+  formId: string;
+  formPeriod: [string, string];
+  reservationMode: string;
+  constraintConfigurationId: string;
+  constraintConfigurationName: string;
 };
 
 export const createFn = (obj: any): TJob => ({
@@ -60,4 +60,4 @@ export const createFn = (obj: any): TJob => ({
   reservationMode: obj.reservationMode,
   constraintConfigurationId: obj.constraintConfigurationId,
   constraintConfigurationName: obj.constraintConfigurationName,
-})
+});

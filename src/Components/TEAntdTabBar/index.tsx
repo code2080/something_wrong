@@ -12,8 +12,8 @@ type Props = {
   defaultActiveKey?: string;
   activeKey: string;
   onChange: (key: string) => void;
-  children: ReactNode,
-  extra?: ReactNode
+  children: ReactNode;
+  extra?: ReactNode;
 };
 
 const renderTabBar = (props: any, DefaultTabBar: any, extra?: ReactNode) => (
@@ -23,7 +23,13 @@ const renderTabBar = (props: any, DefaultTabBar: any, extra?: ReactNode) => (
   </>
 );
 
-const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children, extra }: Props) => {
+const TEAntdTabBar = ({
+  defaultActiveKey,
+  activeKey,
+  onChange,
+  children,
+  extra,
+}: Props) => {
   const { isModified, triggerConfirm } = useContext(ConfirmLeavingPageContext);
 
   const handleOnChange = (key: string) => {
@@ -39,7 +45,9 @@ const TEAntdTabBar = ({ defaultActiveKey, activeKey, onChange, children, extra }
       defaultActiveKey={defaultActiveKey}
       activeKey={activeKey}
       onChange={handleOnChange}
-      renderTabBar={(props: any, DefaultTabBar: any) => renderTabBar(props, DefaultTabBar, extra)}
+      renderTabBar={(props: any, DefaultTabBar: any) =>
+        renderTabBar(props, DefaultTabBar, extra)
+      }
       animated={false}
     >
       {children}

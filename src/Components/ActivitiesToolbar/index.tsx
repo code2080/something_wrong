@@ -2,7 +2,11 @@
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { GroupOutlined, OrderedListOutlined, TagOutlined } from '@ant-design/icons';
+import {
+  GroupOutlined,
+  OrderedListOutlined,
+  TagOutlined,
+} from '@ant-design/icons';
 
 // SELECTORS
 import { hasPermission, selectCoreUserId } from 'Redux/Auth/auth.selectors';
@@ -35,8 +39,7 @@ import { useScheduling } from 'Hooks/useScheduling';
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, groupBy, setGroup } = useSSP();
-  const { unscheduleSelectedActivities } =
-    useScheduling();
+  const { unscheduleSelectedActivities } = useScheduling();
   /**
    * SELECTORS
    */
@@ -62,7 +65,6 @@ const ActivitiesToolbar = () => {
         <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>
       <ToolbarGroup label='Actions'>
-
         <Button
           size='small'
           type='link'

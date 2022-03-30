@@ -17,7 +17,11 @@ type Props = {
   allowRowSelection?: boolean;
 };
 
-const SSPTable = ({ rowKey = '_id', columns, allowRowSelection = true }: Props) => {
+const SSPTable = ({
+  rowKey = '_id',
+  columns,
+  allowRowSelection = true,
+}: Props) => {
   const { loading, results, workerStatus } = useSSP();
   const pagination = usePagination();
   const rowSelection = useRowSelection(allowRowSelection);

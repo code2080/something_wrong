@@ -50,7 +50,7 @@ export const commitAPIPayloadToState = (
     }: ISSPAPIResult = payload;
 
     const finalGroupBy = groupBy || state.groupBy;
-    
+
     const iteratedResults = results
       .filter((el: any) => el[idProp])
       .map((el: any) => createFn(el));

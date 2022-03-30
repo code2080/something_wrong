@@ -91,8 +91,9 @@ export const filterFilterOptionsByQuery = (query: string, options: any[]) => {
     retVal = [...options];
   } else {
     const lowercasedQuery = query.toLowerCase();
-    retVal = options
-      .filter((opt) => lowerCase(`${opt.label} ${opt.value}`).includes(lowercasedQuery))
+    retVal = options.filter((opt) =>
+      lowerCase(`${opt.label} ${opt.value}`).includes(lowercasedQuery),
+    );
   }
   const sortedArr = sortBy(retVal, [(o: any) => o.label]);
   return sortedArr;

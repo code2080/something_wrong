@@ -23,7 +23,10 @@ import { DATE_TIME_FORMAT } from 'Constants/common.constants';
 import './index.scss';
 
 // TYPES
-import { CActivityStatus, EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
+import {
+  CActivityStatus,
+  EActivityStatus,
+} from 'Types/Activity/ActivityStatus.enum';
 import {
   EActivityBatchOperation,
   TActivityBatchOperation,
