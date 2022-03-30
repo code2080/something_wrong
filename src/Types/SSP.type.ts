@@ -79,7 +79,7 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
    * loading: boolean,
    */
   // DATA
-  groupBy: any;
+  groupBy: EActivityGroupings;
   data: { [group in any]: ISSAPIDataGroupState };
   // FILTERS
   /**

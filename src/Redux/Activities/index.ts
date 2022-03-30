@@ -37,8 +37,14 @@ import {
   createFn as createActivityFn,
   TActivity,
 } from 'Types/Activity/Activity.type';
-import { createFn as createWeekPatternGroupFn } from 'Types/Activity/WeekPatternGroup.type';
-import { createFn as createTagGroupFn } from 'Types/Activity/TagGroup.type';
+import {
+  createFn as createWeekPatternGroupFn,
+  TWeekPatternGroup,
+} from 'Types/Activity/WeekPatternGroup.type';
+import {
+  createFn as createTagGroupFn,
+  TTagGroup,
+} from 'Types/Activity/TagGroup.type';
 import {
   createFn as createActivityFilterLookupMap,
   TActivityFilterLookupMap,
@@ -132,23 +138,18 @@ const slice = createSlice({
       if (payload) commitSSPQueryToState(payload, state);
     },
     fetchActivitiesForFormSuccess: (state, { payload }) => {
-      let createFnToUse: any;
-      switch (state.groupBy) {
-        case EActivityGroupings.FLAT:
-          createFnToUse = createActivityFn;
-          break;
-        case EActivityGroupings.WEEK_PATTERN:
-          createFnToUse = createWeekPatternGroupFn;
-          break;
-        case EActivityGroupings.TAG:
-          createFnToUse = createTagGroupFn;
-          break;
+      const lookupCreateFunction: Record<
+        EActivityGroupings,
+        (obj: any) => TActivity | TWeekPatternGroup | TTagGroup
+      > = {
+        [EActivityGroupings.FLAT]: createActivityFn,
+        [EActivityGroupings.WEEK_PATTERN]: createWeekPatternGroupFn,
+        [EActivityGroupings.TAG]: createTagGroupFn,
       };
-      commitAPIPayloadToState(
-        payload,
-        state,
-        createFnToUse
-      );
+
+      const createFunction = lookupCreateFunction[state.groupBy];
+
+      commitAPIPayloadToState(payload, state, createFunction);
       updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);
     },
