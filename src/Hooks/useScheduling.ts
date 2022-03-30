@@ -61,18 +61,16 @@ export const useScheduling = () => {
 
   const scheduleSelectedActivities = (
     activityOrWPGIds: string[],
-    constraintConfigurationId: string,
-    scheduleQuality: number,
+    configurableMetaData: {
+      scheduleQuality: number;
+      constraintConfigurationId: string;
+    },
   ) => {
     const activityIds = getActivityIdsFromActivityIdsOrWPGIds(activityOrWPGIds);
     const batchOperation: TActivityBatchOperation = {
       type: EActivityBatchOperation.SCHEDULE,
       data: activityIds,
-      metadata: {
-        scheduleAsUserId,
-        constraintConfigurationId,
-        scheduleQuality,
-      },
+      metadata: { ...configurableMetaData, scheduleAsUserId },
     };
 
     dispatch(batchOperationSchedule(formId, batchOperation));

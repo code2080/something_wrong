@@ -28,7 +28,7 @@ import './index.scss';
 // CONSTANTS
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
+import { selectFormAllowedGroupings } from 'Redux/Forms';
 import { batchOperationSchedule } from 'Redux/Activities';
 import {
   EActivityBatchOperation,
@@ -46,7 +46,7 @@ const ActivitiesToolbar = () => {
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
+  const allowedGroupings = useSelector(selectFormAllowedGroupings(formId));
 
   /**
    * EVENT HANDLERS
@@ -81,29 +81,30 @@ const ActivitiesToolbar = () => {
         />
       </ToolbarGroup>
       <ToolbarGroup label='Grouping &amp; filters'>
-        {hasWeekPattern && (
-          <GroupingRadioGroup
-            value={groupBy}
-            options={[
-              {
-                value: EActivityGroupings.FLAT,
-                label: <OrderedListOutlined />,
-                tooltip: 'List',
-              },
-              {
-                value: EActivityGroupings.WEEK_PATTERN,
-                label: <GroupOutlined />,
-                tooltip: 'Week pattern',
-              },
-              {
-                value: EActivityGroupings.TAG,
-                label: <TagOutlined />,
-                tooltip: 'Tag',
-              },
-            ]}
-            onSelect={(val) => setGroup(val as EActivityGroupings)}
-          />
-        )}
+        <GroupingRadioGroup
+          value={groupBy}
+          options={[
+            {
+              value: EActivityGroupings.FLAT,
+              label: <OrderedListOutlined />,
+              tooltip: 'List',
+              disabled: !allowedGroupings.FLAT,
+            },
+            {
+              value: EActivityGroupings.WEEK_PATTERN,
+              label: <GroupOutlined />,
+              tooltip: 'Week pattern',
+              disabled: !allowedGroupings.WEEK_PATTERN,
+            },
+            {
+              value: EActivityGroupings.TAG,
+              label: <TagOutlined />,
+              tooltip: 'Tag',
+              disabled: !allowedGroupings.TAG,
+            },
+          ]}
+          onSelect={(val) => setGroup(val as EActivityGroupings)}
+        />
         <ActivityFiltering />
       </ToolbarGroup>
     </div>
