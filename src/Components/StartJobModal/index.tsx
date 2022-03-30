@@ -28,11 +28,11 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   const dispatch = useAppDispatch();
 
   const selectedConstraitConfiguration = useSelector((state) =>
-    selectSelectedConstraintConfiguration(state, formId),
+    selectSelectedConstraintConfiguration(state, formId as string),
   );
 
   const constrConfs = useSelector((state: IState) =>
-    makeSelectConstraintConfigurationsForForm()(state, formId),
+    makeSelectConstraintConfigurationsForForm()(state, formId as string),
   );
 
   const [scheduleQuality, setScheduleQuality] = useState(4);
@@ -55,12 +55,13 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   };
 
   const onScheduleActivities = () => {
-    scheduleSelectedActivities(selectedKeys, {
+    scheduleSelectedActivities(
+      selectedKeys,
       // This is garuanteed to not be null since the button triggering this
       // function will be disabled if selectedConstraitConfiguration is null
-      constraintConfigurationId: selectedConstraitConfiguration!._id,
-      scheduleQuality: scheduleQuality,
-    });
+      selectedConstraitConfiguration!._id,
+      scheduleQuality,
+    );
 
     setSelectedKeys([]);
     onClose();
