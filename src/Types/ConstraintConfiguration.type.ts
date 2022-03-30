@@ -24,7 +24,7 @@ export class ConstraintInstance {
 }
 
 export type TConstraintConfiguration = {
-  _id?: string;
+  _id: string;
   formId: string;
   name: string;
   description?: string;

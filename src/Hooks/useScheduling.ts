@@ -59,13 +59,18 @@ export const useScheduling = () => {
       .map((activityId) => state.data[EActivityGroupings.FLAT].map[activityId]);
   };
 
-  const scheduleSelectedActivities = (activityOrWPGIds: string[]) => {
+  const scheduleSelectedActivities = (
+    activityOrWPGIds: string[],
+    constraintConfigurationId: string,
+    scheduleQuality: number,
+  ) => {
     const activityIds = getActivityIdsFromActivityIdsOrWPGIds(activityOrWPGIds);
     const batchOperation: TActivityBatchOperation = {
       type: EActivityBatchOperation.SCHEDULE,
       data: activityIds,
-      metadata: { scheduleAsUserId }, // @todo add constraintConfigurationId and scheduleQuality in metadata
+      metadata: { scheduleAsUserId, constraintConfigurationId, scheduleQuality },
     };
+
     dispatch(batchOperationSchedule(formId, batchOperation));
   };
 
