@@ -37,7 +37,7 @@ export const useScheduling = () => {
   ): string[] => {
     const activities = (store.getState() as IState).activities;
     return ids
-      .flatMap((id) => activities.data[grouping].map[id].activityIds)
+      .flatMap((id) => activities.data[grouping].map[id]?.activityIds)
       .filter((id) => id);
   };
 

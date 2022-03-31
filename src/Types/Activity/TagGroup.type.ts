@@ -3,6 +3,7 @@ import { EActivityStatus } from './ActivityStatus.enum';
 export type TTagGroup = {
   _id: string;
   tagName: string;
+  activityIds: string[];
   activityStatuses: EActivityStatus[];
   noOfActivities: number;
   noOfActivitiesScheduled: number;
@@ -13,6 +14,7 @@ export type TTagGroup = {
 export const createFn = (obj: any): TTagGroup => ({
   _id: obj._id,
   tagName: obj.tagName,
+  activityIds: obj.activityIds || [],
   activityStatuses: obj.activityStatuses || [],
   noOfActivities: obj.noOfActivities,
   noOfActivitiesScheduled: obj.noOfActivitiesScheduled,
