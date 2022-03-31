@@ -55,13 +55,7 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   };
 
   const onScheduleActivities = () => {
-    scheduleSelectedActivities(selectedKeys, {
-      // This is garuanteed to not be null since the button triggering this
-      // function will be disabled if selectedConstraitConfiguration is null
-      constraintConfigurationId: selectedConstraitConfiguration!._id,
-      scheduleQuality: scheduleQuality,
-    });
-
+    scheduleSelectedActivities(selectedKeys, selectedConstraitConfiguration!._id, scheduleQuality);
     setSelectedKeys([]);
     onClose();
   };

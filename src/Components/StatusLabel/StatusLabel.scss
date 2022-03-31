@@ -48,6 +48,11 @@
     color: #fff;
   }
 
+  &.info {
+    background: rgba($pelorous, 0.2);
+    color: $pelorous;
+  }
+
   &.no-margin {
     margin: 0 !important;
   }
