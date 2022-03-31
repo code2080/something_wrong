@@ -31,23 +31,27 @@ export const useScheduling = () => {
   const scheduleAsUserId = useSelector(selectCoreUserId);
   const { groupBy } = useSelector(selectSSPState('activities'));
 
-  const getActivityIdsFromWPGIds = (wpgIds: string[]) => {
-    const state = (store.getState() as IState).activities;
-    const aIds = wpgIds
-      .filter((wpgId) => state.data[EActivityGroupings.WEEK_PATTERN].map[wpgId])
-      .flatMap(
-        (wpgId) =>
-          state.data[EActivityGroupings.WEEK_PATTERN].map[wpgId].activityIds,
-      );
-    console.log(aIds);
-    return aIds;
+  const getActivityIdsFromGrouping = (
+    ids: string[],
+    grouping: Exclude<EActivityGroupings, EActivityGroupings.FLAT>,
+  ): string[] => {
+    const activities = (store.getState() as IState).activities;
+    return ids
+      .flatMap((id) => activities.data[grouping].map[id].activityIds)
+      .filter((id) => id);
   };
 
-  const getActivityIdsFromActivityIdsOrWPGIds = (
-    activityOrWPGIds: string[],
-  ) => {
-    if (groupBy === EActivityGroupings.FLAT) return activityOrWPGIds;
-    return getActivityIdsFromWPGIds(activityOrWPGIds);
+  const getActivityIds = (
+    ids: string[],
+    grouping: EActivityGroupings,
+  ): string[] => {
+    switch (grouping) {
+      case EActivityGroupings.FLAT:
+        return ids;
+      case EActivityGroupings.WEEK_PATTERN:
+      case EActivityGroupings.TAG:
+        return getActivityIdsFromGrouping(ids, grouping);
+    }
   };
 
   const getLoadedActivitiesFromActivityIds = (activityIds: string[]) => {
@@ -60,22 +64,23 @@ export const useScheduling = () => {
   };
 
   const scheduleSelectedActivities = (
-    activityOrWPGIds: string[],
+    selectedIds: string[],
     constraintConfigurationId: string,
     scheduleQuality: number,
   ) => {
-    const activityIds = getActivityIdsFromActivityIdsOrWPGIds(activityOrWPGIds);
+    const activityIds = getActivityIds(selectedIds, groupBy);
+
     const batchOperation: TActivityBatchOperation = {
       type: EActivityBatchOperation.SCHEDULE,
       data: activityIds,
-      metadata: { scheduleAsUserId, constraintConfigurationId, scheduleQuality },
+      metadata: { constraintConfigurationId, scheduleQuality, scheduleAsUserId },
     };
 
     dispatch(batchOperationSchedule(formId, batchOperation));
   };
 
-  const unscheduleSelectedActivities = (activityOrWPGIds: string[]) => {
-    const activityIds = getActivityIdsFromActivityIdsOrWPGIds(activityOrWPGIds);
+  const unscheduleSelectedActivities = (selectedIds: string[]) => {
+    const activityIds = getActivityIds(selectedIds, groupBy);
 
     /**
      * NOTE: due to SSP limitations / TE Core API limitations
@@ -97,7 +102,7 @@ export const useScheduling = () => {
 
   const stopJob = (jobId: string) => {
     dispatch(reduxStopJob(formId, jobId));
-  }
+  };
 
   return {
     scheduleSelectedActivities,

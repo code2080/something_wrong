@@ -210,8 +210,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
    */
   const setGroup = (groupBy: EActivityGroupings) => {
     dispatch(fetchFn({ groupBy }));
-  }
-    
+  };
 
   /**
    * EFFECTS

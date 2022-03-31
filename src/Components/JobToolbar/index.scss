@@ -14,7 +14,8 @@
   .schedule-btn--wrapper {
     background: $jungleGreen;
     border-color: $jungleGreen;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: darken($jungleGreen, 5%);
       border-color: darken($jungleGreen, 5%);
     }

@@ -8,7 +8,6 @@ import { JobStatusColumn, StopJobColumn } from 'Components/TableColumnsShared';
 import { DATE_TIME_FORMAT } from 'Constants/common.constants';
 
 const JobsTable = () => {
-
   return (
     <SSPTable
       columns={[
@@ -29,13 +28,13 @@ const JobsTable = () => {
           title: 'Date',
           key: 'createdAt',
           dataIndex: 'createdAt',
-          render: (val: string) => moment.utc(val).format(DATE_TIME_FORMAT)
+          render: (val: string) => moment.utc(val).format(DATE_TIME_FORMAT),
         },
         {
           title: 'Constraint profile',
           key: 'constraintConfigurationName',
           dataIndex: 'constraintConfigurationName',
-        }
+        },
       ]}
       allowRowSelection={false}
       rowKey='_id'

@@ -51,23 +51,8 @@ describe('MappingRow tests', () => {
       },
     ],
     onChangeMapping: _.noop,
-    onChangeProps: _.noop,
     onRemoveTEProp: _.noop,
   };
-  it('is not mandatory by default', () => {
-    render(<MappingRow {...props} />);
-
-    expect(screen.getByText('Room')).toBeInTheDocument();
-
-    const mandatoryButton = screen.getByLabelText('Is mandatory');
-    expect(mandatoryButton.getAttribute('aria-checked')).toBe('false');
-  });
-
-  it('should be mandatory if set to mandatory', () => {
-    render(<MappingRow {...props} tePropSettings={{ mandatory: true }} />);
-    const mandatoryButton = screen.getByLabelText('Is mandatory');
-    expect(mandatoryButton.getAttribute('aria-checked')).toBe('true');
-  });
 
   it('renders tooltip', async () => {
     render(

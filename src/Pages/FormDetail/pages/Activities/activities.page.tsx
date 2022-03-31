@@ -16,7 +16,7 @@ import WeekPatternTable from 'Components/WeekPatternTable';
 
 // REDUX
 import { fetchTagsForForm } from 'Redux/Tags';
-import { selectFormHasWeekPatternEnabled } from 'Redux/Forms';
+import { selectFormAllowedGroupings } from 'Redux/Forms';
 
 // HOOKS
 import useSSP from 'Components/SSP/Utils/hooks';
@@ -34,7 +34,9 @@ const ActivitiesPage = () => {
   /**
    * SELECTORS
    */
-  const hasWeekPattern = useSelector(selectFormHasWeekPatternEnabled(formId));
+  const { WEEK_PATTERN: hasWeekPattern } = useSelector(
+    selectFormAllowedGroupings(formId),
+  );
 
   /**
    * EFFECTS

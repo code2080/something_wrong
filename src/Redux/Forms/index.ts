@@ -13,6 +13,7 @@ import {
 import { /* createFn, */ TForm } from 'Types/Form.type';
 import { ISimpleAPIState, IState } from 'Types/State.type';
 import { EExternalServices } from 'Types/externalServices.enum';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 export const initialState: ISimpleAPIState = {
   // API STATE
@@ -70,23 +71,39 @@ export const selectTimeslotsForSectionInForm =
     return section?.calendarSettings?.timeslots || [];
   };
 
-export const selectFormHasWeekPatternEnabled =
-  (formId: string) => (state: IState) => {
+export const selectFormAllowedGroupings =
+  (formId: string) =>
+  (state: IState): Record<EActivityGroupings, boolean> => {
+    const form: TForm | undefined = state.forms.map[formId];
+
+    if (!form) {
+      return {
+        FLAT: false,
+        WEEK_PATTERN: false,
+        TAG: false,
+      };
+    }
+
     /**
      * This is a little bit hacky but 99% correct
      * In theory, what could happen is that one section has week pattern but was never mapped to anything
      * This is highly unlikely, but would in this case give a false positive
      * False negatives should be impossible using this approach
+     *
+     * - JH
      */
-    const form: TForm | undefined = state.forms.map[formId];
-    if (!form) return false;
-    return !!form.sections.find((section) => {
-      return !!(
+    const hasWeekPattern = form.sections.some(
+      (section) =>
         section.activityTemplatesSettings?.duration &&
         section.activityTemplatesSettings?.datasource &&
-        section.activityTemplatesSettings?.weekPicker
-      );
-    });
+        section.activityTemplatesSettings?.weekPicker,
+    );
+
+    return {
+      FLAT: true,
+      WEEK_PATTERN: hasWeekPattern,
+      TAG: true,
+    };
   };
 
 // Actions

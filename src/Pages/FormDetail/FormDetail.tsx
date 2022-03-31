@@ -49,7 +49,10 @@ import {
 import { formSelector } from 'Redux/Forms';
 import { activitiesSelector } from '../../Redux/Activities';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { fetchJobsForForm, updateWorkerStatus as updateJobWorkerStatus } from 'Redux/Jobs';
+import {
+  fetchJobsForForm,
+  updateWorkerStatus as updateJobWorkerStatus,
+} from 'Redux/Jobs';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
@@ -100,7 +103,9 @@ const FormPage = () => {
   useSubscribeToFormEvents({
     formId,
     eventMap: {
-      [ESocketEvents.ACTIVITY_GENERATION_UPDATE]: (payload: IDefaultSocketPayload) => {
+      [ESocketEvents.ACTIVITY_GENERATION_UPDATE]: (
+        payload: IDefaultSocketPayload,
+      ) => {
         if (payload.status !== 'OK') return;
         if (payload.workerStatus === 'IN_PROGRESS') {
           // Set the redux state to in progress
@@ -114,7 +119,9 @@ const FormPage = () => {
           dispatch(fetchActivitiesForForm(formId, {}));
         }
       },
-      [ESocketEvents.ACTIVITY_BATCH_OPERATION_UPDATE]: (payload: IDefaultSocketPayload) => {
+      [ESocketEvents.ACTIVITY_BATCH_OPERATION_UPDATE]: (
+        payload: IDefaultSocketPayload,
+      ) => {
         if (payload.status !== 'OK') return;
         dispatch(fetchActivitiesForForm(formId, {}));
       },
@@ -128,10 +135,10 @@ const FormPage = () => {
       },
       [ESocketEvents.JOB_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
-        console.log({payload});
+        console.log({ payload });
         dispatch(updateJobWorkerStatus(payload.workerStatus));
         dispatch(fetchJobsForForm(formId));
-      }
+      },
     },
   });
 
@@ -296,10 +303,7 @@ const FormPage = () => {
             </Tabs.TabPane>
           )}
           {hasAssistedSchedulingPermission && (
-            <Tabs.TabPane
-              tab="JOBS"
-              key={TAB_CONSTANT.JOBS}
-            >
+            <Tabs.TabPane tab='JOBS' key={TAB_CONSTANT.JOBS}>
               <JobsPage />
             </Tabs.TabPane>
           )}

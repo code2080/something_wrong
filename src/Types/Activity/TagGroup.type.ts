@@ -1,4 +1,4 @@
-import { EActivityStatus } from "./ActivityStatus.enum";
+import { EActivityStatus } from './ActivityStatus.enum';
 
 export type TTagGroup = {
   _id: string;
@@ -17,5 +17,6 @@ export const createFn = (obj: any): TTagGroup => ({
   noOfActivities: obj.noOfActivities,
   noOfActivitiesScheduled: obj.noOfActivitiesScheduled,
   noOfActivitiesFailed: obj.noOfActivitiesFailed,
-  noOfActivitiesUnscheduled: obj.noOfActivities - obj.noOfActivitiesScheduled - obj.noOfActivitiesFailed,
+  noOfActivitiesUnscheduled:
+    obj.noOfActivities - obj.noOfActivitiesScheduled - obj.noOfActivitiesFailed,
 });

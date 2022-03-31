@@ -39,7 +39,9 @@ export const usePagination = (): TablePaginationConfig => {
   };
 };
 
-export const useRowSelection = (allowRowSelection?: boolean): TableRowSelection<any> | undefined => {
+export const useRowSelection = (
+  allowRowSelection?: boolean,
+): TableRowSelection<any> | undefined => {
   const { setSelectedKeys, selectedKeys } = useContext(SSPResourceContext);
 
   if (!allowRowSelection) return undefined;

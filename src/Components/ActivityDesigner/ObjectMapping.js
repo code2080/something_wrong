@@ -41,20 +41,6 @@ const ObjectMapping = ({
     [mapping, onChange],
   );
 
-  const onChangeProps = useCallback(
-    (newPropSettings, objectType) => {
-      const updatedMapping = {
-        ...mapping,
-        propSettings: {
-          ...mapping.propSettings,
-          [objectType]: newPropSettings,
-        },
-      };
-      onChange(updatedMapping);
-    },
-    [mapping, onChange],
-  );
-
   const onAddObject = useCallback(
     (objectType) => {
       const updatedMapping = {
@@ -97,10 +83,6 @@ const ObjectMapping = ({
 
   // Memoized values
   const objects = useMemo(() => _.get(mapping, 'objects', {}), [mapping]);
-  const propSettings = useMemo(
-    () => _.get(mapping, 'propSettings', {}),
-    [mapping],
-  );
   return (
     <div className='object-mapping--wrapper'>
       {(Object.keys(objects) || []).map((key) => (
@@ -109,14 +91,10 @@ const ObjectMapping = ({
           key={key}
           teProp={key}
           formMapping={objects[key]}
-          tePropSettings={propSettings[key]}
           tePropOptions={typeOptions}
           mappingOptions={mappingOptions}
           onChangeMapping={(newTypeMapping) =>
             onChangeObject(newTypeMapping, key)
-          }
-          onChangeProps={(newPropSettings) =>
-            onChangeProps(newPropSettings, key)
           }
           onRemoveTEProp={() => onRemoveObject(key)}
         />

@@ -28,11 +28,11 @@ const StartJobModal = ({ visible, onClose }: Props) => {
   const dispatch = useAppDispatch();
 
   const selectedConstraitConfiguration = useSelector((state) =>
-    selectSelectedConstraintConfiguration(state, formId),
+    selectSelectedConstraintConfiguration(state, formId as string),
   );
 
   const constrConfs = useSelector((state: IState) =>
-    makeSelectConstraintConfigurationsForForm()(state, formId),
+    makeSelectConstraintConfigurationsForForm()(state, formId as string),
   );
 
   const [scheduleQuality, setScheduleQuality] = useState(4);

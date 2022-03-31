@@ -99,8 +99,7 @@ export const jobSelector =
   (id: string) =>
   (state: IState): TJob | undefined =>
     state.jobs.data[state.jobs.groupBy][id] || undefined;
-export const jobsLoading = (state: IState): boolean =>
-  state.jobs.loading;
+export const jobsLoading = (state: IState): boolean => state.jobs.loading;
 export const selectRunningJobId = (state: IState) => state.jobs.workerStatus;
 
 // Actions
@@ -132,12 +131,15 @@ export const fetchJobsForForm =
     }
   };
 
-export const stopJob = (formId: string, jobId: string) => async (dispatch: AppDispatch) => {
-  try {
-    dispatch(defaultRequestHandler(null));
-    const result = await api.post({ endpoint: `forms/${formId}/jobs/${jobId}/stop` });
-    dispatch(updateJobSuccess(result));
-  } catch (e) {
-    dispatch(defaultFailureHandler(null));
-  }
-};
+export const stopJob =
+  (formId: string, jobId: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(defaultRequestHandler(null));
+      const result = await api.post({
+        endpoint: `forms/${formId}/jobs/${jobId}/stop`,
+      });
+      dispatch(updateJobSuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler(null));
+    }
+  };

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Switch, Button } from 'antd';
+import { Select, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 // HELPERS
 import CascaderWithTooltip from 'Components/CascaderWithTooltip/CascaderWithTooltip';
@@ -9,11 +9,9 @@ import { ensureBackwardsCompatibleValueRow } from '../../Utils/activities.helper
 const MappingRow = ({
   teProp,
   formMapping,
-  tePropSettings,
   tePropOptions,
   mappingOptions,
   onChangeMapping,
-  onChangeProps,
   onRemoveTEProp,
   disabled,
 }) => {
@@ -48,10 +46,6 @@ const MappingRow = ({
     [teProp, onChangeMapping, _mappedValues],
   );
 
-  const onChangePropsCallback = useCallback(
-    (checked) => onChangeProps({ mandatory: checked }),
-    [onChangeProps],
-  );
   const addElementProp = useCallback(() => {
     return onChangeMapping({ [teProp]: [..._mappedValues, []] });
   }, [_mappedValues, onChangeMapping, teProp]);
@@ -101,16 +95,6 @@ const MappingRow = ({
           + Add element
         </Button>
       </div>
-      <div className='object-mapping-row--props'>
-        <span>Is mandatory:&nbsp;</span>
-        <Switch
-          checked={tePropSettings.mandatory}
-          onChange={onChangePropsCallback}
-          size='small'
-          disabled={disabled}
-          aria-label='Is mandatory'
-        />
-      </div>
       <Button
         disabled={disabled}
         size='small'
@@ -126,18 +110,15 @@ const MappingRow = ({
 MappingRow.propTypes = {
   teProp: PropTypes.string.isRequired,
   formMapping: PropTypes.array,
-  tePropSettings: PropTypes.object,
   tePropOptions: PropTypes.array,
   mappingOptions: PropTypes.array,
   onChangeMapping: PropTypes.func.isRequired,
-  onChangeProps: PropTypes.func.isRequired,
   onRemoveTEProp: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
 
 MappingRow.defaultProps = {
   formMapping: null,
-  tePropSettings: { mandatory: false },
   tePropOptions: [],
   mappingOptions: [],
   disabled: false,

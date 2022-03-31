@@ -12,9 +12,7 @@ type Props = { jobStatus: EJobStatus };
 const JobStatus = ({ jobStatus }: Props) => {
   return (
     <div className='activity-status-column'>
-      <StatusLabel
-        color={CJobStatus[jobStatus]?.color ?? 'default'}
-      >
+      <StatusLabel color={CJobStatus[jobStatus]?.color ?? 'default'}>
         {CJobStatus[jobStatus]?.label ?? jobStatus}
       </StatusLabel>
     </div>
