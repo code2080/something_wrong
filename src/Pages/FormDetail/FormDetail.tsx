@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { Tabs } from 'antd';
@@ -135,9 +135,10 @@ const FormPage = () => {
       },
       [ESocketEvents.JOB_UPDATE]: (payload: IDefaultSocketPayload) => {
         if (payload.status !== 'OK') return;
-        console.log({ payload });
-        dispatch(updateJobWorkerStatus(payload.workerStatus));
-        dispatch(fetchJobsForForm(formId));
+        batch(() => {
+          dispatch(updateJobWorkerStatus(payload.workerStatus));
+          dispatch(fetchJobsForForm(formId));
+        });
       },
     },
   });
