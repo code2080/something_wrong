@@ -34,6 +34,9 @@ export const commitAPIPayloadToState = (
     );
     state.results = iteratedResults;
     state.map = map;
+
+    console.log('this is expected results', iteratedResults);
+    console.log('this is expected map', map);
   } catch (error) {
     console.error(error);
   }

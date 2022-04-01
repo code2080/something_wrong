@@ -17,6 +17,11 @@ const fetchConstraintsConfigurationsFlow = {
   }),
 };
 
+/**
+ * @deprecated
+ * @param formId
+ * @returns
+ */
 export const fetchConstraintConfigurations = (formId) =>
   asyncAction.GET({
     flow: fetchConstraintsConfigurationsFlow,

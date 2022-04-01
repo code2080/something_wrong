@@ -76,6 +76,7 @@ import JobsPage from './pages/Jobs/jobs.page';
 // TYPES
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 import { ISSPQueryObject } from 'Types/SSP.type';
+import { fetchConstraintConfigurationsForForm } from 'Redux/ConstraintConfigurations';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -176,7 +177,8 @@ const FormPage = () => {
     dispatch(fetchMappings(form));
     dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
-    dispatch(fetchConstraintConfigurations(formId));
+    // dispatch(fetchConstraintConfigurations(formId));
+    dispatch(fetchConstraintConfigurationsForForm(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },

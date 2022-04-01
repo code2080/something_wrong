@@ -19,7 +19,9 @@ export interface IState {
   forms: ISimpleAPIState;
   activities: ISSPReducerState;
   tags: ISimpleAPIState;
+  constraintConfigurations: ISimpleAPIState;
   jobs: ISSPReducerState;
+
   integration: {
     mappedObjectsLabel: any;
     mappedObjectTypes: any;

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../../Services/api.service';
-import { omit } from 'lodash';
 
 // ACTIONS
 import {
@@ -14,7 +13,9 @@ import {
 
 // TYPES
 import { createFn, TConstraintProfile } from 'Types/ConstraintProfile.type';
-import { ISimpleAPIState, IState } from 'Types/State.type';
+import { ISimpleAPIResult, ISimpleAPIState, IState } from 'Types/State.type';
+import { AppDispatch } from 'Redux/store';
+import { error } from 'console';
 
 export const initialState: ISimpleAPIState = {
   // API STATE
@@ -27,7 +28,7 @@ export const initialState: ISimpleAPIState = {
 
 // Slice
 const slice = createSlice({
-  name: 'tags',
+  name: 'constraintConfigurations',
   initialState,
   reducers: {
     defaultRequestHandler: (state) => {
@@ -36,19 +37,19 @@ const slice = createSlice({
     defaultFailureHandler: (state) => {
       finishedLoadingFailure(state);
     },
-    fetchTagsForFormSuccess: (state, { payload }) => {
+    fetchConstraintConfigurationsForFormSuccess: (state, { payload }) => {
       commitAPIPayloadToState(payload, state, createFn);
       finishedLoadingSuccess(state);
     },
-    createTagForFormSuccess: (state, { payload }) => {
+    createConstraintConfigurationsForFormSuccess: (state, { payload }) => {
       upsertEntity(state, payload, createFn);
       finishedLoadingSuccess(state);
     },
-    updateTagForFormSuccess: (state, { payload }) => {
+    updateConstraintConfigurationsForFormSuccess: (state, { payload }) => {
       upsertEntity(state, payload, createFn);
       finishedLoadingSuccess(state);
     },
-    deleteTagForFormSuccess: (state, { payload }) => {
+    deleteConstraintConfigurationsForFormSuccess: (state, { payload }) => {
       deleteEntityFromState(payload, state);
       finishedLoadingSuccess(state);
     },
@@ -58,50 +59,55 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Selectors
-export const tagsSelector = (state: IState): TActivityTag[] =>
-  state.tags.results;
-export const tagSelector =
-  (id: string | null | undefined) =>
-  (state: IState): TActivityTag | undefined =>
-    id ? state.tags.map[id] || undefined : undefined;
-export const tagsLoading = (state: IState): boolean => state.tags.loading;
+export const selectConstraintConfigurations = (state: IState) =>
+  state.constraintConfigurations.results;
+
+export const selectConstraintConfigurationsLoading = (state: IState) =>
+  state.constraintConfigurations.loading;
+
+// todo: select single config
+// export const selectActiveConstraintConfigurationForForm=(id:string)=>(state:IState)=>state.constraintConfigurations.
 
 // Actions
+
 export const {
   defaultRequestHandler,
   defaultFailureHandler,
-  fetchTagsForFormSuccess,
-  createTagForFormSuccess,
-  updateTagForFormSuccess,
-  deleteTagForFormSuccess,
+  fetchConstraintConfigurationsForFormSuccess,
+  createConstraintConfigurationsForFormSuccess,
+  updateConstraintConfigurationsForFormSuccess,
+  deleteConstraintConfigurationsForFormSuccess,
 } = slice.actions;
 
-export const fetchTagsForForm = (formId: string) => async (dispatch: any) => {
-  try {
-    dispatch(defaultRequestHandler());
-    const result = await api.get({ endpoint: `forms/${formId}/tags` });
-    dispatch(fetchTagsForFormSuccess(result));
-  } catch (e) {
-    dispatch(defaultFailureHandler());
-  }
-};
-
-export const createTagForForm =
-  (formId: string, tagBody: Omit<TActivityTag, '_id' | 'formId'>) =>
-  async (dispatch: any) => {
+export const fetchConstraintConfigurationsForForm =
+  (formId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(defaultRequestHandler());
-      const result = await api.post({
-        endpoint: `forms/${formId}/tags`,
-        data: tagBody,
+      const result: ISimpleAPIResult = await api.get({
+        endpoint: `forms/${formId}/constraint-configurations`,
       });
-      dispatch(createTagForFormSuccess(result));
+      dispatch(fetchConstraintConfigurationsForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
   };
 
-export const updateTagForForm =
+export const createConstraintConfigurationForForm =
+  (formId: string, tagBody: Omit<TConstraintProfile, '_id' | 'formId'>) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(defaultRequestHandler());
+      const result = await api.post({
+        endpoint: `forms/${formId}/constraint-configurations`,
+        data: tagBody,
+      });
+      dispatch(createConstraintConfigurationsForFormSuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler());
+    }
+  };
+
+/* export const updateTagForForm =
   (formId: string, tagBody: TActivityTag) => async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler());
@@ -128,3 +134,4 @@ export const deleteTagForForm =
       dispatch(defaultFailureHandler());
     }
   };
+ */
