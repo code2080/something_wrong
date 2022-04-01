@@ -8,24 +8,25 @@ import './index.scss';
 
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
+import { TActivityFilterMapObject } from 'Types/Activity/ActivityFilterLookupMap.type';
 
 type Props = {
-  wpgId: string;
+  filters: TActivityFilterMapObject;
 };
 
-const WeekPatternFilter = ({ wpgId }: Props) => {
+const SspColumnFilter = ({ filters }: Props) => {
   const { applyMultipleSSPChanges } = useSSP();
 
   const onClickHandler = () => {
     applyMultipleSSPChanges({
       groupBy: EActivityGroupings.FLAT,
-      filters: { weekPatternUID: [wpgId] },
+      filters: filters,
     });
   };
 
   return (
     <Button
-      className='wp-filter--btn'
+      className='ssp-filter--btn'
       size='small'
       icon={<FilterOutlined />}
       onClick={onClickHandler}
@@ -33,4 +34,4 @@ const WeekPatternFilter = ({ wpgId }: Props) => {
   );
 };
 
-export default WeekPatternFilter;
+export default SspColumnFilter;

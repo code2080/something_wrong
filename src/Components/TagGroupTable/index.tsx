@@ -1,44 +1,27 @@
 // COMPONENTS
 import SSPTable from 'Components/SSP/Components/Table';
+import {
+  groupByTagActivitiesFailedColumn,
+  groupByTagActivitiesScheduledColumn,
+  groupByTagActivitiesUnscheduledColumn,
+  groupByTagFilterColumn,
+  groupByTagNumberOfActivitiesColumn,
+  groupByTagTagNameColumn,
+  SchedulingStatusGroupedColumn,
+} from 'Components/TableColumnsShared';
 
 const TagGroupTable = () => {
-  return (
-    <SSPTable
-      columns={[
-        {
-          title: 'Id',
-          key: '_id',
-          dataIndex: '_id',
-        },
-        {
-          title: 'Name',
-          key: 'tagName',
-          dataIndex: 'tagName',
-        },
-        {
-          title: '# activities',
-          key: 'noOfActivities',
-          dataIndex: 'noOfActivities',
-        },
-        {
-          title: '# activities scheduled',
-          key: 'noOfActivitiesScheduled',
-          dataIndex: 'noOfActivitiesScheduled',
-        },
-        {
-          title: '# activities failed',
-          key: 'noOfActivitiesFailed',
-          dataIndex: 'noOfActivitiesFailed',
-        },
-        {
-          title: '# activities unscheduled',
-          key: 'noOfActivitiesUnscheduled',
-          dataIndex: 'noOfActivitiesUnscheduled',
-        },
-      ]}
-      rowKey='_id'
-    />
-  );
+  const columns = [
+    groupByTagFilterColumn,
+    groupByTagTagNameColumn,
+    SchedulingStatusGroupedColumn,
+    groupByTagNumberOfActivitiesColumn,
+    groupByTagActivitiesScheduledColumn,
+    groupByTagActivitiesFailedColumn,
+    groupByTagActivitiesUnscheduledColumn,
+  ];
+
+  return <SSPTable columns={columns} rowKey='_id' />;
 };
 
 export default TagGroupTable;

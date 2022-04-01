@@ -14,10 +14,12 @@ import { ISSPColumn } from 'Components/SSP/Types';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import GroupedTags from './GroupedTags';
 import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
-import WeekPatternFilter from './WeekPatternFilter';
+import SspColumnFilter from './SspColumnFilter';
 import { EJobStatus, TJob } from 'Types/Job.type';
 import JobStatus from './JobStatus';
 import StopJob from './StopJob';
+import ActivityProgress from './ActivityProgress';
+import { TTagGroup } from 'Types/Activity/TagGroup.type';
 
 export const RowActionsColumn: ISSPColumn = {
   title: '',
@@ -121,7 +123,9 @@ export const WeekPatternFilterColumn: ISSPColumn = {
   title: '',
   key: 'weekPatternUIDFilter',
   dataIndex: '_id',
-  render: (wpgId: string) => <WeekPatternFilter wpgId={wpgId} />,
+  render: (wpgId: string) => (
+    <SspColumnFilter filters={{ weekPatternUID: [wpgId] }} />
+  ),
   sorter: true,
 };
 
@@ -161,5 +165,65 @@ export const primaryObjectsColumn: ISSPColumn = {
   // dataIndex: EActivitySortingKey.PRIMARY_OBJECT,
   dataIndex: undefined,
   render: (_activity: TActivity) => 'todo: what to put here??',
+  sorter: true,
+};
+
+export const groupByTagFilterColumn: ISSPColumn = {
+  title: '',
+  key: 'groupByTagIDFilter',
+  dataIndex: '_id',
+  render: (id: string) => <SspColumnFilter filters={{ tag: [id] }} />,
+};
+
+export const groupByTagTagNameColumn: ISSPColumn = {
+  title: 'Tag',
+  key: 'tagName',
+  dataIndex: 'tagName',
+  sorter: true,
+};
+
+export const groupByTagNumberOfActivitiesColumn: ISSPColumn = {
+  title: '# Activities',
+  key: 'noOfActivities',
+  dataIndex: 'noOfActivities',
+  sorter: true,
+};
+
+export const groupByTagActivitiesScheduledColumn: ISSPColumn = {
+  title: 'Activities scheduled',
+  key: 'noOfActivitiesScheduled',
+  render: (tagGroup: TTagGroup) => (
+    <ActivityProgress
+      totalActivities={tagGroup.noOfActivities}
+      progressedActivities={tagGroup.noOfActivitiesScheduled}
+      progressColor={'green'}
+    />
+  ),
+  sorter: true,
+};
+
+export const groupByTagActivitiesFailedColumn: ISSPColumn = {
+  title: 'Activities failed',
+  key: 'noOfActivitiesFailed',
+  render: (tagGroup: TTagGroup) => (
+    <ActivityProgress
+      totalActivities={tagGroup.noOfActivities}
+      progressedActivities={tagGroup.noOfActivitiesFailed}
+      progressColor={'red'}
+    />
+  ),
+  sorter: true,
+};
+
+export const groupByTagActivitiesUnscheduledColumn: ISSPColumn = {
+  title: 'Activities unscheduled',
+  key: 'noOfActivitiesUnscheduled',
+  render: (tagGroup: TTagGroup) => (
+    <ActivityProgress
+      totalActivities={tagGroup.noOfActivities}
+      progressedActivities={tagGroup.noOfActivitiesUnscheduled}
+      progressColor={'gray'}
+    />
+  ),
   sorter: true,
 };
