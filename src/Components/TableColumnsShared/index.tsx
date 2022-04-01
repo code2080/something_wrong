@@ -173,19 +173,21 @@ export const groupByTagFilterColumn: ISSPColumn = {
   key: 'groupByTagIDFilter',
   dataIndex: '_id',
   render: (id: string) => <SspColumnFilter filters={{ tag: [id] }} />,
+  width: 32,
 };
 
 export const groupByTagTagNameColumn: ISSPColumn = {
-  title: 'Tag',
+  title: 'Name',
   key: 'tagName',
   dataIndex: 'tagName',
   sorter: true,
 };
 
 export const groupByTagNumberOfActivitiesColumn: ISSPColumn = {
-  title: '# Activities',
+  title: '# activities',
   key: 'noOfActivities',
   dataIndex: 'noOfActivities',
+  width: 100,
   sorter: true,
 };
 
@@ -194,11 +196,12 @@ export const groupByTagActivitiesScheduledColumn: ISSPColumn = {
   key: 'noOfActivitiesScheduled',
   render: (tagGroup: TTagGroup) => (
     <ActivityProgress
-      totalActivities={tagGroup.noOfActivities}
-      progressedActivities={tagGroup.noOfActivitiesScheduled}
+      totalActivities={tagGroup?.noOfActivities || 0}
+      progressedActivities={tagGroup?.noOfActivitiesScheduled || 0}
       progressColor={'green'}
     />
   ),
+  width: 180,
   sorter: true,
 };
 
@@ -212,6 +215,7 @@ export const groupByTagActivitiesFailedColumn: ISSPColumn = {
       progressColor={'red'}
     />
   ),
+  width: 180,
   sorter: true,
 };
 
@@ -225,5 +229,6 @@ export const groupByTagActivitiesUnscheduledColumn: ISSPColumn = {
       progressColor={'gray'}
     />
   ),
+  width: 180,
   sorter: true,
 };

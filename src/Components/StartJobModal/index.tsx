@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { Col, Modal, Row, Select, Slider, Space, Typography } from 'antd';
 import useSSP from 'Components/SSP/Utils/hooks';
 import { useSelector } from 'react-redux';
-import { InfoCircleTwoTone } from '@ant-design/icons';
 import {
   makeSelectConstraintConfigurationsForForm,
   selectSelectedConstraintConfiguration,
 } from 'Redux/ConstraintConfigurations/constraintConfigurations.selectors';
 import { useParams } from 'react-router-dom';
 import { IState } from 'Types/State.type';
-import { TConstraintConfiguration } from 'Types/ConstraintConfiguration.type';
+import { TConstraintConfiguration } from 'Types/DEPR_ConstraintConfiguration.type';
 import { useAppDispatch } from 'Hooks/useAppHooks';
 import { selectConstraintConfiguration } from 'Redux/ConstraintConfigurations/constraintConfigurations.actions';
 import { useScheduling } from 'Hooks/useScheduling';
@@ -19,26 +18,25 @@ type Props = {
   onClose: () => void;
 };
 
+
 const StartJobModal = ({ visible, onClose }: Props) => {
   const { formId } = useParams<{ formId: string }>();
-
-  const { selectedKeys, setSelectedKeys } = useSSP();
-  const { scheduleSelectedActivities } = useScheduling();
-
   const dispatch = useAppDispatch();
 
+  const { getSelectedActivityIds, selectedKeys, setSelectedKeys } = useSSP();
+  const { scheduleSelectedActivities } = useScheduling();
+
+  /**
+   * SELECTORS
+   */
   const selectedConstraitConfiguration = useSelector((state) =>
     selectSelectedConstraintConfiguration(state, formId as string),
   );
-
   const constrConfs = useSelector((state: IState) =>
     makeSelectConstraintConfigurationsForForm()(state, formId as string),
   );
 
   const [scheduleQuality, setScheduleQuality] = useState(4);
-
-  const numberOfSelectedKeys = selectedKeys.length;
-  const hasActivities = numberOfSelectedKeys > 0;
 
   const constrConfsValues: TConstraintConfiguration[] =
     Object.values(constrConfs);
@@ -69,36 +67,34 @@ const StartJobModal = ({ visible, onClose }: Props) => {
       okText='Schedule'
       onOk={onScheduleActivities}
       okButtonProps={{
-        disabled: !hasActivities || !selectedConstraitConfiguration,
+        disabled: !selectedKeys.length || !selectedConstraitConfiguration,
       }}
     >
       <Space direction='vertical' size='large' style={{ width: '100%' }}>
-        <Typography.Paragraph strong>{'Scheduling info'}</Typography.Paragraph>
-        <Typography.Paragraph>
-          {`Number of activities in selection: ${numberOfSelectedKeys}`}
-        </Typography.Paragraph>
+        <Space direction='vertical'>
+          <Typography.Text strong>Scheduling info</Typography.Text>
+          <Typography.Text>
+            {`Number of activities in selection: ${getSelectedActivityIds().length}`}
+          </Typography.Text>
+        </Space>
 
-        <div />
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Typography.Text strong>Constraint profile</Typography.Text>
+          <Select
+            options={selectConstraintConfigurationOptions}
+            value={selectedConstraitConfiguration?._id}
+            onSelect={onSelectConstraintConfiguration}
+            style={{ width: '100%' }}
+          />
+        </Space>
 
-        <Typography.Paragraph strong copyable={{ icon: <InfoCircleTwoTone /> }}>
-          {'Constraint profile'}
-        </Typography.Paragraph>
-        <Select
-          options={selectConstraintConfigurationOptions}
-          value={selectedConstraitConfiguration?._id}
-          onSelect={onSelectConstraintConfiguration}
-          style={{ width: '100%' }}
-        />
-
-        <div />
-
-        <Typography.Paragraph strong copyable={{ icon: <InfoCircleTwoTone /> }}>
-          {'Performance vs quality'}
-        </Typography.Paragraph>
-
-        <Row style={{ width: '100%' }} wrap={false} align='middle'>
+        <Space direction="vertical" style={{ width: '100%' }}>
+        <Typography.Text strong>
+          Performance vs quality
+        </Typography.Text>
+        <Row gutter={16} align="middle">
           <Col>
-            <Typography.Text>{'Fast'}</Typography.Text>
+            <Typography.Text>Fast</Typography.Text>
           </Col>
           <Col flex='auto'>
             <Slider
@@ -110,9 +106,10 @@ const StartJobModal = ({ visible, onClose }: Props) => {
             />
           </Col>
           <Col>
-            <Typography.Text>{'Optimized'}</Typography.Text>
+            <Typography.Text>Optimized</Typography.Text>
           </Col>
         </Row>
+        </Space>
       </Space>
     </Modal>
   );

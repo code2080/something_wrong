@@ -16,9 +16,10 @@ const ActivityProgress = ({
   return (
     <Progress
       percent={progressPercent}
-      format={() => progressedActivities.toString()}
+      format={() => `${progressedActivities.toString()} / ${totalActivities}`}
       strokeColor={progressColor}
       status={'normal'}
+      style={{ fontSize: '0.7rem' }}
     />
   );
 };

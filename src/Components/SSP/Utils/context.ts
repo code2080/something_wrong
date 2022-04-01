@@ -27,6 +27,7 @@ const SSPResourceContext = React.createContext<ISSPResourceContext>({
   selectedKeys: [],
   setSelectedKeys: () => {},
   selectAllKeys: () => {},
+  getSelectedActivityIds: () => [],
   // SORTING
   sortBy: undefined,
   direction: undefined,

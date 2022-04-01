@@ -8,7 +8,7 @@ import { EActivityStatus } from '../Types/Activity/ActivityStatus.enum';
 import {
   TConstraintConfiguration,
   TConstraintInstance,
-} from '../Types/ConstraintConfiguration.type';
+} from '../Types/DEPR_ConstraintConfiguration.type';
 import { teCoreCallnames } from '../Constants/teCoreActions.constants';
 import {
   ActivityValue,

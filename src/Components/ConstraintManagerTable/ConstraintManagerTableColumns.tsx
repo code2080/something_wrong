@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import { Switch, InputNumber } from 'antd';
 import type { TConstraint } from '../../Types/Constraint.type';
-import type { TConstraintInstance } from '../../Types/ConstraintConfiguration.type';
+import type { TConstraintInstance } from '../../Types/DEPR_ConstraintConfiguration.type';
 import ParameterCascader from './Components/ParameterCascader';
 
 const getPropFromConstraint = (constraintId, prop, allConstraints) => {

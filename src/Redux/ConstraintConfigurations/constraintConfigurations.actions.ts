@@ -1,4 +1,4 @@
-import { TConstraintConfiguration } from 'Types/ConstraintConfiguration.type';
+import { TConstraintConfiguration } from 'Types/DEPR_ConstraintConfiguration.type';
 import { asyncAction } from '../../Utils/actionHelpers';
 import { getEnvParams } from '../../configs';
 import * as types from './constraintConfigurations.actionTypes';

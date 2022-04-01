@@ -92,7 +92,17 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   const [_selectedKeys, _setSelectedKeys] = useState<string[]>([]);
   const setSelectedKeys = (keys: string[]) => _setSelectedKeys(keys);
   const selectAllKeys = () => _setSelectedKeys(allKeys);
-
+  const getSelectedActivityIds = (): string[] => {
+    switch (groupBy) {
+      case EActivityGroupings.FLAT:
+        return _selectedKeys;
+      case EActivityGroupings.WEEK_PATTERN:
+      case EActivityGroupings.TAG:
+        return _selectedKeys
+          .flatMap((id) => data[groupBy].map[id]?.activityIds)
+          .filter((id) => id);
+    }
+  }
   /**
    * SORTING
    */
@@ -271,6 +281,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         selectedKeys: _selectedKeys,
         setSelectedKeys,
         selectAllKeys,
+        getSelectedActivityIds,
         // SORTING
         setSorting,
         sortBy,

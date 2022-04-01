@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  GroupOutlined,
+  CalendarOutlined,
   OrderedListOutlined,
   TagOutlined,
 } from '@ant-design/icons';
 
-// SELECTORS
-import { hasPermission, selectCoreUserId } from 'Redux/Auth/auth.selectors';
+// REDUX
+import { hasPermission } from 'Redux/Auth/auth.selectors';
+import { selectFormAllowedGroupings } from 'Redux/Forms';
 
 // COMPONENTS
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
@@ -21,20 +21,16 @@ import GroupingRadioGroup from './ToolbarRadioGroup';
 
 // HOOKS
 import useSSP from 'Components/SSP/Utils/hooks';
+import { useScheduling } from 'Hooks/useScheduling';
 
 // STYLES
 import './index.scss';
 
 // CONSTANTS
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
+
+// TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import { selectFormAllowedGroupings } from 'Redux/Forms';
-import { batchOperationSchedule } from 'Redux/Activities';
-import {
-  EActivityBatchOperation,
-  TActivityBatchOperation,
-} from 'Types/Activity/ActivityBatchOperations.type';
-import { useScheduling } from 'Hooks/useScheduling';
 
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -92,7 +88,7 @@ const ActivitiesToolbar = () => {
             },
             {
               value: EActivityGroupings.WEEK_PATTERN,
-              label: <GroupOutlined />,
+              label: <CalendarOutlined />,
               tooltip: 'Week pattern',
               disabled: !allowedGroupings.WEEK_PATTERN,
             },

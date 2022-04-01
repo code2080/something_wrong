@@ -6,7 +6,7 @@ import { gold } from '@ant-design/colors';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 // TYPES
-import { TConstraintConfiguration } from '../../Types/ConstraintConfiguration.type';
+import { TConstraintConfiguration } from '../../Types/DEPR_ConstraintConfiguration.type';
 
 type Props = {
   constraintConfigurations: TConstraintConfiguration[];

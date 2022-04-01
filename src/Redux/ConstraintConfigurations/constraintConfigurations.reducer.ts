@@ -1,7 +1,7 @@
 import {
   ConstraintConfiguration,
   TConstraintConfiguration,
-} from '../../Types/ConstraintConfiguration.type';
+} from '../../Types/DEPR_ConstraintConfiguration.type';
 import {
   FETCH_CONSTRAINT_CONFIGURATIONS_FOR_FORM_SUCCESS,
   CREATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,

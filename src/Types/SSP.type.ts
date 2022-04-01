@@ -111,6 +111,7 @@ export interface ISSPResourceContext
   selectedKeys: string[];
   setSelectedKeys: (keys: string[]) => void;
   selectAllKeys: () => void;
+  getSelectedActivityIds: () => string[];
   // SORTING
   setSorting: (
     sortBy: string | undefined,

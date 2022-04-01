@@ -26,7 +26,7 @@ import {
 import {
   TConstraintConfiguration,
   TConstraintInstance,
-} from '../../../Types/ConstraintConfiguration.type';
+} from '../../../Types/DEPR_ConstraintConfiguration.type';
 
 import { TConstraint } from '../../../Types/Constraint.type';
 import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
