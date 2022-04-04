@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { TConstraintConfiguration } from '../../Types/DEPR_ConstraintConfiguration.type';
-import { ConstraintConfigurationState } from './constraintConfigurations.reducer';
+import { ConstraintConfigurationState } from './DEPR_constraintConfigurations.reducer';
 
 const constraintConfigurationState = (
   state: any,

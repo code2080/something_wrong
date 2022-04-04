@@ -8,7 +8,7 @@ import {
   UPDATE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   DELETE_CONSTRAINT_CONFIGURATION_FOR_FORM_SUCCESS,
   SELECT_CONSTRAINT_CONFIGURATION,
-} from './constraintConfigurations.actionTypes';
+} from './DEPR_constraintConfigurations.actionTypes';
 
 // MODELS
 

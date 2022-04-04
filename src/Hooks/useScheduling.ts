@@ -65,18 +65,18 @@ export const useScheduling = () => {
 
   const scheduleSelectedActivities = (
     selectedIds: string[],
-    constraintConfigurationId: string,
+    constraintProfileId: string,
     scheduleQuality: number,
   ) => {
     const activityIds = getActivityIds(selectedIds, groupBy);
-
-    const batchOperation: TActivityBatchOperation = {
-      type: EActivityBatchOperation.SCHEDULE,
-      data: activityIds,
-      metadata: { constraintConfigurationId, scheduleQuality, scheduleAsUserId },
-    };
-
-    dispatch(batchOperationSchedule(formId, batchOperation));
+    if (activityIds && activityIds.length && constraintProfileId && scheduleQuality) {
+      const batchOperation: TActivityBatchOperation = {
+        type: EActivityBatchOperation.SCHEDULE,
+        data: activityIds,
+        metadata: { constraintProfileId, scheduleQuality, scheduleAsUserId },
+      };
+      dispatch(batchOperationSchedule(formId, batchOperation));
+    }
   };
 
   const unscheduleSelectedActivities = (selectedIds: string[]) => {

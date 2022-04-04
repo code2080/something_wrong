@@ -1,0 +1,11 @@
+@import '../../Styles/globals.scss';
+
+.constraint-profile-selector--wrapper {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: 0 8px;
+  height: 36px;
+  color: rgba(0,0,0,0.5);
+  border-bottom: 1px solid #f0f0f0;
+}

@@ -15,7 +15,7 @@ import {
 import { createFn, TConstraintProfile } from 'Types/ConstraintProfile.type';
 import { ISimpleAPIResult, ISimpleAPIState, IState } from 'Types/State.type';
 import { AppDispatch } from 'Redux/store';
-import { error } from 'console';
+import { omit } from 'lodash';
 
 export const initialState: ISimpleAPIState = {
   // API STATE
@@ -28,7 +28,7 @@ export const initialState: ISimpleAPIState = {
 
 // Slice
 const slice = createSlice({
-  name: 'constraintConfigurations',
+  name: 'constraintProfiles',
   initialState,
   reducers: {
     defaultRequestHandler: (state) => {
@@ -37,19 +37,19 @@ const slice = createSlice({
     defaultFailureHandler: (state) => {
       finishedLoadingFailure(state);
     },
-    fetchConstraintConfigurationsForFormSuccess: (state, { payload }) => {
+    fetchConstraintProfilesForFormSuccess: (state, { payload }) => {
       commitAPIPayloadToState(payload, state, createFn);
       finishedLoadingSuccess(state);
     },
-    createConstraintConfigurationsForFormSuccess: (state, { payload }) => {
+    createConstraintProfileForFormSuccess: (state, { payload }) => {
       upsertEntity(state, payload, createFn);
       finishedLoadingSuccess(state);
     },
-    updateConstraintConfigurationsForFormSuccess: (state, { payload }) => {
+    updateConstraintProfileForFormSuccess: (state, { payload }) => {
       upsertEntity(state, payload, createFn);
       finishedLoadingSuccess(state);
     },
-    deleteConstraintConfigurationsForFormSuccess: (state, { payload }) => {
+    deleteConstraintProfileForFormSuccess: (state, { payload }) => {
       deleteEntityFromState(payload, state);
       finishedLoadingSuccess(state);
     },
@@ -59,79 +59,77 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Selectors
-export const selectConstraintConfigurations = (state: IState) =>
-  state.constraintConfigurations.results;
-
-export const selectConstraintConfigurationsLoading = (state: IState) =>
-  state.constraintConfigurations.loading;
-
-// todo: select single config
-// export const selectActiveConstraintConfigurationForForm=(id:string)=>(state:IState)=>state.constraintConfigurations.
+export const constraintProfilesSelector = (state: IState): TConstraintProfile[] =>
+  state.constraintProfiles.results;
+export const constraintProfileSelector = (id: string | null | undefined) => (state: IState): TConstraintProfile | undefined =>
+    id ? state.constraintProfiles.map[id] || undefined : undefined;
+export const constraintProfilesLoading = (state: IState): boolean => state.constraintProfiles.loading;
 
 // Actions
 
 export const {
   defaultRequestHandler,
   defaultFailureHandler,
-  fetchConstraintConfigurationsForFormSuccess,
-  createConstraintConfigurationsForFormSuccess,
-  updateConstraintConfigurationsForFormSuccess,
-  deleteConstraintConfigurationsForFormSuccess,
+  fetchConstraintProfilesForFormSuccess,
+  createConstraintProfileForFormSuccess,
+  updateConstraintProfileForFormSuccess,
+  deleteConstraintProfileForFormSuccess,
 } = slice.actions;
 
-export const fetchConstraintConfigurationsForForm =
+export const fetchConstraintProfilesForForm =
   (formId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(defaultRequestHandler());
       const result: ISimpleAPIResult = await api.get({
-        endpoint: `forms/${formId}/constraint-configurations`,
+        endpoint: `forms/${formId}/constraint-profiles`,
       });
-      dispatch(fetchConstraintConfigurationsForFormSuccess(result));
+      dispatch(fetchConstraintProfilesForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
   };
 
-export const createConstraintConfigurationForForm =
-  (formId: string, tagBody: Omit<TConstraintProfile, '_id' | 'formId'>) =>
+export const createConstraintProfile =
+  (formId: string, body: Partial<TConstraintProfile>) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(defaultRequestHandler());
       const result = await api.post({
-        endpoint: `forms/${formId}/constraint-configurations`,
-        data: tagBody,
+        endpoint: `forms/${formId}/constraint-profiles`,
+        data: body,
       });
-      dispatch(createConstraintConfigurationsForFormSuccess(result));
+      dispatch(createConstraintProfileForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
   };
 
-/* export const updateTagForForm =
-  (formId: string, tagBody: TActivityTag) => async (dispatch: any) => {
+export const updateConstraintProfile =
+  (formId: string, body: TConstraintProfile) => async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler());
-      const safePayload = omit(tagBody, ['_id', 'formId']);
+      const safePayload = omit(body, ['_id', 'formId']);
+      console.log(safePayload);
       const result = await api.patch({
-        endpoint: `forms/${formId}/tags/${tagBody._id}`,
+        endpoint: `forms/${formId}/constraint-profiles/${body._id}`,
         data: safePayload,
       });
-      dispatch(updateTagForFormSuccess(result));
+      dispatch(updateConstraintProfileForFormSuccess(result));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
   };
 
-export const deleteTagForForm =
-  (formId: string, tagId: string) => async (dispatch: any) => {
+export const deleteConstraintProfileForForm =
+  (formId: string, id: string) => async (dispatch: any) => {
     try {
       dispatch(defaultRequestHandler());
-      const result = await api.delete({
-        endpoint: `forms/${formId}/tags/${tagId}`,
+      await api.delete({
+        endpoint: `forms/${formId}/constraint-profiles/${id}`,
       });
-      dispatch(deleteTagForFormSuccess(result));
+      dispatch(deleteConstraintProfileForFormSuccess(id));
     } catch (e) {
       dispatch(defaultFailureHandler());
     }
   };
- */
+

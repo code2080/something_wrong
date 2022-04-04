@@ -6,20 +6,20 @@ import SchedulingStatusSingle from './SchedulingStatusSingle';
 import SchedulingStatusGrouped from './SchedulingStatusGrouped';
 import WeekPatternActivityType from './WeekPatternActivityType';
 import WeekPatternWeeks from './WeekPatternWeeks';
+import ActivityProgress from './ActivityProgress';
+import SspColumnFilter from './SspColumnFilter';
+import JobStatus from './JobStatus';
+import GroupedTags from './GroupedTags';
 
 // TYPES
 import { TActivity } from 'Types/Activity/Activity.type';
 import { EActivitySortingKey } from 'Types/Activity/ActivitySortingKey.enum';
 import { ISSPColumn } from 'Components/SSP/Types';
 import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
-import GroupedTags from './GroupedTags';
 import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
-import SspColumnFilter from './SspColumnFilter';
-import { EJobStatus, TJob } from 'Types/Job.type';
-import JobStatus from './JobStatus';
-import StopJob from './StopJob';
-import ActivityProgress from './ActivityProgress';
+import { TJob } from 'Types/Job.type';
 import { TTagGroup } from 'Types/Activity/TagGroup.type';
+import JobTags from './JobTags';
 
 export const RowActionsColumn: ISSPColumn = {
   title: '',
@@ -148,15 +148,15 @@ export const WeekPatternIdColumn: ISSPColumn = {
 export const JobStatusColumn: ISSPColumn = {
   title: 'Status',
   key: 'status',
-  dataIndex: 'status',
-  render: (status: EJobStatus) => <JobStatus jobStatus={status} />,
+  dataIndex: undefined,
+  render: (job: TJob) => <JobStatus job={job} />,
 };
 
-export const StopJobColumn: ISSPColumn = {
-  title: '',
-  key: 'stopJob',
-  dataIndex: undefined,
-  render: (job: TJob) => <StopJob job={job} />,
+export const JobTagColumn: ISSPColumn = {
+  title: 'Tags',
+  key: 'tagNames',
+  dataIndex: 'tagNames',
+  render: (tagNames: string[]) => <JobTags tagNames={tagNames}/>,
 };
 
 export const primaryObjectsColumn: ISSPColumn = {
@@ -192,7 +192,7 @@ export const groupByTagNumberOfActivitiesColumn: ISSPColumn = {
 };
 
 export const groupByTagActivitiesScheduledColumn: ISSPColumn = {
-  title: 'Activities scheduled',
+  title: '# scheduled',
   key: 'noOfActivitiesScheduled',
   render: (tagGroup: TTagGroup) => (
     <ActivityProgress
@@ -206,7 +206,7 @@ export const groupByTagActivitiesScheduledColumn: ISSPColumn = {
 };
 
 export const groupByTagActivitiesFailedColumn: ISSPColumn = {
-  title: 'Activities failed',
+  title: '# failed',
   key: 'noOfActivitiesFailed',
   render: (tagGroup: TTagGroup) => (
     <ActivityProgress
@@ -220,7 +220,7 @@ export const groupByTagActivitiesFailedColumn: ISSPColumn = {
 };
 
 export const groupByTagActivitiesUnscheduledColumn: ISSPColumn = {
-  title: 'Activities unscheduled',
+  title: '# not scheduled',
   key: 'noOfActivitiesUnscheduled',
   render: (tagGroup: TTagGroup) => (
     <ActivityProgress

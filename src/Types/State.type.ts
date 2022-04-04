@@ -19,7 +19,8 @@ export interface IState {
   forms: ISimpleAPIState;
   activities: ISSPReducerState;
   tags: ISimpleAPIState;
-  constraintConfigurations: ISimpleAPIState;
+  constraintProfiles: ISimpleAPIState;
+  constraints: ISimpleAPIState;
   jobs: ISSPReducerState;
 
   integration: {

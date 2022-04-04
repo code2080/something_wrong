@@ -1,0 +1,41 @@
+@import '../../Styles/globals.scss';
+
+.constraint-profile-toolbar--wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: 0 8px;
+  height: 36px;
+
+  .ant-tag {
+    background-color: rgba($candlelight, 0.2);
+    color: rgba(0,0,0,0.65);
+    border-color: rgba($candlelight, 0.5);
+  }
+
+  span.ant-typography {
+    display: flex;
+    align-items: center;
+  }
+
+  div.ant-typography-edit-content {
+    width: auto;
+    min-width: 300px;
+    height: 24px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    textarea {
+      height: 24px !important;
+      min-height: 24px !important;
+      max-height: 24px !important;
+      font-size: 0.75rem !important;
+      line-height: 14px !important;
+    }
+
+    .ant-typography-edit-content-confirm {
+      bottom: 6px !important;
+    }
+  }
+}

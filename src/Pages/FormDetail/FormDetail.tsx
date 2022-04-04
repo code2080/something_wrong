@@ -20,21 +20,11 @@ import { useSubscribeToFormEvents } from 'Services/websocket.service';
 
 // REDUX
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import {
-  setBreadcrumbs,
-  setFormDetailTab,
-} from '../../Redux/GlobalUI/globalUI.actions';
+import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
-import { fetchConstraints } from '../../Redux/Constraints/constraints.actions';
-import { fetchConstraintConfigurations } from '../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
-import {
-  selectFormDetailSubmission,
-  selectFormDetailTab,
-} from '../../Redux/GlobalUI/globalUI.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { fetchConstraints } from 'Redux/Constraints';
+import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
@@ -49,22 +39,17 @@ import {
 import { formSelector } from 'Redux/Forms';
 import { activitiesSelector } from '../../Redux/Activities';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import {
-  fetchJobsForForm,
-  updateWorkerStatus as updateJobWorkerStatus,
-} from 'Redux/Jobs';
+import { fetchJobsForForm, updateWorkerStatus as updateJobWorkerStatus } from 'Redux/Jobs';
+import { fetchConstraintProfilesForForm } from 'Redux/ConstraintProfiles';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import {
-  ASSISTED_SCHEDULING_PERMISSION_NAME,
-  AE_ACTIVITY_PERMISSION,
-} from '../../Constants/permissions.constants';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME, AE_ACTIVITY_PERMISSION } from '../../Constants/permissions.constants';
 
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
-import ConstraintManagerPage from './pages/constraintManager.page';
+import ConstraintProfilesPage from './pages/ConstraintProfiles';
 import ActivityDesignPage from './pages/Designer';
 import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionOverviewPage from './pages/SubmissionOverview';
@@ -76,7 +61,6 @@ import JobsPage from './pages/Jobs/jobs.page';
 // TYPES
 import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 import { ISSPQueryObject } from 'Types/SSP.type';
-import { fetchConstraintConfigurationsForForm } from 'Redux/ConstraintConfigurations';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -84,7 +68,7 @@ export const TAB_CONSTANT = {
   OBJECT_REQUESTS: 'OBJECT_REQUESTS',
   ACTIVITIES: 'ACTIVITIES',
   ACTIVITY_DESIGNER: 'ACTIVITY_DESIGNER',
-  CONSTRAINT_MANAGER: 'CONSTRAINT_MANAGER',
+  CONSTRAINT_PROFILES: 'CONSTRAINT_PROFILES',
   JOINT_TEACHING: 'JOINT_TEACHING',
   GROUP_MANAGEMENT: 'GROUP_MANAGEMENT',
   JOBS: 'JOBS',
@@ -178,7 +162,7 @@ const FormPage = () => {
     dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
     // dispatch(fetchConstraintConfigurations(formId));
-    dispatch(fetchConstraintConfigurationsForForm(formId));
+    dispatch(fetchConstraintProfilesForForm(formId));
     dispatch(
       setBreadcrumbs([
         { path: '/forms', label: 'Forms' },
@@ -251,7 +235,7 @@ const FormPage = () => {
         <TEAntdTabBar
           activeKey={selectedFormDetailTab}
           onChange={(key: string) => dispatch(setFormDetailTab(key))}
-          extra={<JobToolbar />}
+          extra={selectedFormDetailTab === TAB_CONSTANT.ACTIVITIES ? <JobToolbar /> : null}
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
             {!selectedSubmissionId ? (
@@ -299,10 +283,10 @@ const FormPage = () => {
           )}
           {hasAssistedSchedulingPermission && hasActivityDesignPermission && (
             <Tabs.TabPane
-              tab='CONSTRAINT MANAGER'
-              key={TAB_CONSTANT.CONSTRAINT_MANAGER}
+              tab='CONSTRAINT PROFILES'
+              key={TAB_CONSTANT.CONSTRAINT_PROFILES}
             >
-              <ConstraintManagerPage />
+              <ConstraintProfilesPage />
             </Tabs.TabPane>
           )}
           {hasAssistedSchedulingPermission && (

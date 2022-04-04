@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import ParameterCascader from '../../Components/ParameterCascader';
+import ParameterCascader from '..';
 import '@testing-library/jest-dom';
-import { renderWithState } from '../../../../Utils/test.utils';
+import { renderWithState } from '../../../Utils/test.utils';
 
 const mockParamFields = {
   room: {

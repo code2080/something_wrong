@@ -17,7 +17,7 @@ export const CJobStatus = {
     label: 'Queued',
   },
   [EJobStatus.STARTED]: {
-    color: 'warning',
+    color: 'info',
     label: 'In progress',
   },
   [EJobStatus.FAILED]: {
@@ -47,7 +47,8 @@ export type TJob = {
   formPeriod: [string, string];
   reservationMode: string;
   constraintConfigurationId: string;
-  constraintConfigurationName: string;
+  constraintProfileName: string;
+  tagNames: string[];
 };
 
 export const createFn = (obj: any): TJob => ({
@@ -59,5 +60,6 @@ export const createFn = (obj: any): TJob => ({
   formPeriod: obj.formId,
   reservationMode: obj.reservationMode,
   constraintConfigurationId: obj.constraintConfigurationId,
-  constraintConfigurationName: obj.constraintConfigurationName,
+  constraintProfileName: obj.constraintProfileName,
+  tagNames: obj.tagNames,
 });

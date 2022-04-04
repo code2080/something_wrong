@@ -36,15 +36,13 @@ export type TConstraint = {
   isHardConstraint: boolean;
 };
 
-export class Constraint {
-  static create = (obj: any): TConstraint => ({
-    name: obj.name,
-    description: obj.description || null,
-    constraintId: obj.constraintId,
-    parameters: obj.parameters,
-    allowedOperators: obj.allowedOperators,
-    type: obj.type,
-    weight: obj.weight,
-    isHardConstraint: obj.isHardConstraint,
-  });
-}
+export const createFn = (obj: any): TConstraint => ({
+  name: obj.name,
+  description: obj.description || undefined,
+  constraintId: obj.constraintId,
+  parameters: obj.parameters || [],
+  allowedOperators: obj.allowedOperators || [],
+  type: obj.type || EConstraintType.OTHER,
+  weight: obj.weight,
+  isHardConstraint: obj.isHardConstraint,
+});

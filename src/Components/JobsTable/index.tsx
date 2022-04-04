@@ -2,7 +2,7 @@ import moment from 'moment';
 
 // COMPONENTS
 import SSPTable from 'Components/SSP/Components/Table';
-import { JobStatusColumn, StopJobColumn } from 'Components/TableColumnsShared';
+import { JobStatusColumn, JobTagColumn } from 'Components/TableColumnsShared';
 
 // CONSTANTS
 import { DATE_TIME_FORMAT } from 'Constants/common.constants';
@@ -18,12 +18,12 @@ const JobsTable = () => {
           width: 200,
         },
         JobStatusColumn,
-        StopJobColumn,
         {
           title: '# activities',
           key: 'noOfActivities',
           dataIndex: 'noOfActivities',
         },
+        JobTagColumn,
         {
           title: 'Date',
           key: 'createdAt',
@@ -32,8 +32,8 @@ const JobsTable = () => {
         },
         {
           title: 'Constraint profile',
-          key: 'constraintConfigurationName',
-          dataIndex: 'constraintConfigurationName',
+          key: 'constraintProfileName',
+          dataIndex: 'constraintProfileName',
         },
       ]}
       allowRowSelection={false}

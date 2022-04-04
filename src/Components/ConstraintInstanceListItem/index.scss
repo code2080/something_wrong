@@ -1,0 +1,29 @@
+.constraint-instance-item--wrapper {
+  padding: 4px 0 !important;
+  font-size: 0.75rem !important;
+
+  .ant-list-item-meta-title { 
+    margin-bottom: 0;
+  }
+
+  .ant-list-item-meta-title,
+  .ant-list-item-meta-description,
+  .ant-slider-mark {
+    font-size: 0.75rem !important;
+  }
+
+  .constraint-instance-item--content {
+    width: 350px;
+    display: flex;
+    justify-content: flex-end;
+
+    &.has-parameters {
+      display: flex;
+      width: 800px;
+
+      .constraint-instance-parameter-cascader--wrapper {
+        margin-right: 50px;
+      }
+    }
+  }
+}

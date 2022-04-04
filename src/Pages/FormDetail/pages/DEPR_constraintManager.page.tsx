@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
-import ConstraintManagerTopBar from '../../../Components/ConstraintManagerTopBar/ConstraintManagerTopBar';
+import ConstraintManagerTopBar from '../../../Components/ConstraintProfileSelectorToolbar';
 
 // ACTIONS
 import {
@@ -15,14 +15,14 @@ import {
   createConstraintConfigurations,
   deleteConstraintConfiguration,
   selectConstraintConfiguration,
-} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.actions';
+} from '../../../Redux/ConstraintProfiles/DEPR_constraintConfigurations.actions';
 
 // SELECTORS
-import { selectConstraints } from '../../../Redux/Constraints/constraints.selectors';
+import { selectConstraints } from '../../../Redux/DEPR_Constraints/constraints.selectors';
 import {
   makeSelectConstraintConfigurationsForForm,
   selectSelectedConstraintConfiguration,
-} from '../../../Redux/ConstraintConfigurations/constraintConfigurations.selectors';
+} from '../../../Redux/ConstraintProfiles/DEPR_constraintConfigurations.selectors';
 import {
   TConstraintConfiguration,
   TConstraintInstance,
@@ -32,7 +32,7 @@ import { TConstraint } from '../../../Types/Constraint.type';
 import { getElementsForMapping } from '../../../Redux/ActivityDesigner/activityDesigner.helpers';
 
 // CONSTANTS
-import constraintManagerTableColumns from '../../../Components/ConstraintManagerTable/ConstraintManagerTableColumns';
+import constraintManagerTableColumns from '../../../Components/DEPR_ConstraintManagerTable/ConstraintManagerTableColumns';
 import { useTECoreAPI } from '../../../Hooks/TECoreApiHooks';
 import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { getFieldIdsReturn } from '../../../Types/TECoreAPI';
