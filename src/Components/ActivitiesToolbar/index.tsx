@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -29,7 +29,7 @@ import './index.scss';
 // CONSTANTS
 import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
 
-// TYPES
+// TY
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 const ActivitiesToolbar = () => {
@@ -48,7 +48,13 @@ const ActivitiesToolbar = () => {
    * EVENT HANDLERS
    */
   const onDeleteActivities = (idsToDelete: string[]) => {
-    unscheduleSelectedActivities(idsToDelete);
+    Modal.confirm({
+      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      title: 'Unschedule activities',
+      content: 'This will cancel all existing reservations and change the activities\' status, are you sure you want to proceed?',
+      onOk: () => unscheduleSelectedActivities(idsToDelete),
+    });
+    
   };
 
   const onCreateMatchCallback = () => {
@@ -67,7 +73,7 @@ const ActivitiesToolbar = () => {
           onClick={() => onDeleteActivities(selectedKeys)}
           disabled={!selectedKeys?.length || !hasSchedulingPermissions}
         >
-          Cancel selection
+          Unschedule selection
         </Button>
         <TagSelectionButton selectedActivityIds={selectedKeys || []} />
         <JointTeachingGroupMerger

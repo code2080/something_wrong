@@ -3,25 +3,20 @@ import { useParams } from 'react-router-dom';
 
 // REDUX
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { batchOperationSchedule, batchOperationStatus } from 'Redux/Activities';
+import { batchOperationSchedule, batchOperationUnschedule } from 'Redux/Activities';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
 import { stopJob as reduxStopJob } from 'Redux/Jobs';
-// HOOKS
-import { useTECoreAPI } from './TECoreApiHooks';
 
 // TYPES
-import { TActivity } from 'Types/Activity/Activity.type';
 import {
   EActivityBatchOperation,
   TActivityBatchOperation,
 } from 'Types/Activity/ActivityBatchOperations.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import { EActivityStatus } from 'Types/Activity/ActivityStatus.enum';
 import { IState } from 'Types/State.type';
 
 export const useScheduling = () => {
   const { formId } = useParams<{ formId: string }>();
-  const teCoreAPI = useTECoreAPI();
   const dispatch = useDispatch();
   const store = useStore(); // Hacky...
 
@@ -54,15 +49,6 @@ export const useScheduling = () => {
     }
   };
 
-  const getLoadedActivitiesFromActivityIds = (activityIds: string[]) => {
-    const state = store.getState().activities;
-    return activityIds
-      .filter(
-        (activityId) => state.data[EActivityGroupings.FLAT].map[activityId],
-      )
-      .map((activityId) => state.data[EActivityGroupings.FLAT].map[activityId]);
-  };
-
   const scheduleSelectedActivities = (
     selectedIds: string[],
     constraintProfileId: string,
@@ -81,23 +67,12 @@ export const useScheduling = () => {
 
   const unscheduleSelectedActivities = (selectedIds: string[]) => {
     const activityIds = getActivityIds(selectedIds, groupBy);
-
-    /**
-     * NOTE: due to SSP limitations / TE Core API limitations
-     * this only works with activities loaded into the SSP state
-     */
-    const loadedActivities = getLoadedActivitiesFromActivityIds(activityIds);
+    if (!activityIds || !activityIds.length) return;
     const batchOperation: TActivityBatchOperation = {
-      type: EActivityBatchOperation.STATUS,
-      data: loadedActivities.map((a: TActivity) => ({
-        _id: a._id,
-        activityStatus: EActivityStatus.NOT_SCHEDULED,
-      })),
+      type: EActivityBatchOperation.UNSCHEDULE,
+      data: activityIds,
     };
-    return teCoreAPI.deleteReservations({
-      activities: loadedActivities,
-      callback: () => dispatch(batchOperationStatus(formId, batchOperation)),
-    });
+    dispatch(batchOperationUnschedule(formId, batchOperation));
   };
 
   const stopJob = (jobId: string) => {
