@@ -46,7 +46,7 @@ export type TJob = {
   formId: string;
   formPeriod: [string, string];
   reservationMode: string;
-  constraintConfigurationId: string;
+  constraintProfileId: string;
   constraintProfileName: string;
   tagNames: string[];
 };
@@ -59,7 +59,7 @@ export const createFn = (obj: any): TJob => ({
   formId: obj.formId,
   formPeriod: obj.formId,
   reservationMode: obj.reservationMode,
-  constraintConfigurationId: obj.constraintConfigurationId,
+  constraintProfileId: obj.constraintProfileId,
   constraintProfileName: obj.constraintProfileName,
   tagNames: obj.tagNames,
 });

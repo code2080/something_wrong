@@ -1,0 +1,83 @@
+@import '../../Styles/globals.scss';
+
+$progressBarHeight: 10px;
+
+.scheduling-progress-overlay--wrapper {
+  position: relative;
+}
+
+.scheduling-progress--overlay {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.75rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background: rgba(#fff, 0.7);
+}
+
+.scheduling-progress-overlay--meter {
+  width: 150px;
+  height: $progressBarHeight;
+  position: relative;
+  border-radius: 8px;
+}
+
+.scheduling-progress-overlay--meter > span {
+  width: 100%;
+  display: block;
+  height: $progressBarHeight;
+  border-radius: 8px;
+  background-color: $grey;
+  background-image: linear-gradient($grey, darken($grey, 5%));
+  box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+.scheduling-progress-overlay--meter > span:after,
+.animate > span > span {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -webkit-gradient(
+    linear,
+    0 0,
+    100% 100%,
+    color-stop(0.25, rgba(255, 255, 255, 0.2)),
+    color-stop(0.25, transparent),
+    color-stop(0.5, transparent),
+    color-stop(0.5, rgba(255, 255, 255, 0.2)),
+    color-stop(0.75, rgba(255, 255, 255, 0.2)),
+    color-stop(0.75, transparent),
+    to(transparent)
+  );
+  z-index: 1;
+  background-size: 50px 50px;
+  animation: move 2s linear infinite;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  overflow: hidden;
+}
+
+.animate > span:after {
+  display: none;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}

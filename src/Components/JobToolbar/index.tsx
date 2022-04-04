@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 // REDUX
 import { hasPermission } from 'Redux/Auth/auth.selectors';
+import { selectRunningJobId } from 'Redux/Jobs';
 
 // HOOKS
 import useSSP from 'Components/SSP/Utils/hooks';
@@ -17,7 +18,6 @@ import { ASSISTED_SCHEDULING_PERMISSION_NAME } from 'Constants/permissions.const
 
 // STYLES
 import './index.scss';
-import { selectRunningJobId } from 'Redux/Jobs';
 
 const JobToolbar = () => {
   const { selectedKeys } = useSSP();

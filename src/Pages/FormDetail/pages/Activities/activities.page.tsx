@@ -24,6 +24,8 @@ import useSSP from 'Components/SSP/Utils/hooks';
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import TagGroupTable from 'Components/TagGroupTable';
+import { selectRunningJobId } from 'Redux/Jobs';
+import SchedulingProgressOverlay from 'Components/SchedulingProgressOverlay';
 
 const ActivitiesPage = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -37,6 +39,7 @@ const ActivitiesPage = () => {
   const { WEEK_PATTERN: hasWeekPattern } = useSelector(
     selectFormAllowedGroupings(formId),
   );
+  const runningJobId = useSelector(selectRunningJobId);
 
   /**
    * EFFECTS
@@ -51,19 +54,21 @@ const ActivitiesPage = () => {
   return (
     <>
       <ActivitiesToolbar />
-      {groupBy === EActivityGroupings.FLAT && (
-        <ActivityTable
-          preCustomColumns={[
-            RowActionsColumn,
-            PrimaryObjectColumn,
-            ...(hasWeekPattern ? [WeekPatternUIDColumn] : []),
-            TagColumn,
-            SchedulingStatusSingleColumn,
-          ]}
-        />
-      )}
-      {groupBy === EActivityGroupings.WEEK_PATTERN && <WeekPatternTable />}
-      {groupBy === EActivityGroupings.TAG && <TagGroupTable />}
+      <SchedulingProgressOverlay isScheduling={!!runningJobId}>
+        {groupBy === EActivityGroupings.FLAT && (
+          <ActivityTable
+            preCustomColumns={[
+              RowActionsColumn,
+              PrimaryObjectColumn,
+              ...(hasWeekPattern ? [WeekPatternUIDColumn] : []),
+              TagColumn,
+              SchedulingStatusSingleColumn,
+            ]}
+          />
+        )}
+        {groupBy === EActivityGroupings.WEEK_PATTERN && <WeekPatternTable />}
+        {groupBy === EActivityGroupings.TAG && <TagGroupTable />}
+      </SchedulingProgressOverlay>
     </>
   );
 };
