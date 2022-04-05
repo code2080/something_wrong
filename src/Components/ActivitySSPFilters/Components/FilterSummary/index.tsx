@@ -23,7 +23,7 @@ type Props = {
     filterProperty: string,
     itemsToDeselect: string[],
   ) => void;
-  onClearAllFilterValues: () => void
+  onClearAllFilterValues: () => void;
   getOptionLabel: (field: string, id?: string) => string;
 };
 
@@ -43,7 +43,9 @@ const FilterSummary = ({
     <div className='filter-modal__column' id='filterSummary'>
       <div className='filter-modal__column-filterText'>
         <b>Selected filters</b>
-        <Button type="link" onClick={() => onClearAllFilterValues()}>Clear Filters</Button>
+        <Button type='link' onClick={() => onClearAllFilterValues()}>
+          Clear Filters
+        </Button>
       </div>
       <div className='filter-modal__box'>
         <TimeOrDateValueDisplay

@@ -107,7 +107,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     patchFilters(patch);
   };
 
-  const onClearAllFilterValues = () => setFilters({})
+  const onClearAllFilterValues = () => setFilters({});
 
   /**
    * Removes {filterProperties} from selected filters
