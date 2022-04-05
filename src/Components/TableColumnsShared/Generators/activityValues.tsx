@@ -26,7 +26,7 @@ const generateActivityValueColumns = (
 ): ISSPColumn[] => {
   return activityValues.reduce<ISSPColumn[]>(
     (allColumns: ISSPColumn[], [field, extId]) => {
-      const newCol = {
+      const newCol: ISSPColumn = {
         title: columnTitles[`${field}_${extId}`],
         key: extId,
         render: (activity: TActivity) => (
@@ -37,10 +37,10 @@ const generateActivityValueColumns = (
             mapping={design}
           />
         ),
-      } as ISSPColumn;
+      };
       return [...allColumns, newCol];
     },
-    [] as ISSPColumn[],
+    [],
   );
 };
 

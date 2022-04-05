@@ -68,8 +68,12 @@ const ObjectObjectValue = ({
   );
 
   // Will try to replace the values with labels
-  const replaceWithLabels = (values: string[], labels: Dictionary<string>) =>
-    values.map((val) => labels[val]);
+  const replaceWithLabels = (
+    values: string[],
+    labels: Dictionary<string>,
+  ): string => {
+    return values.map((val) => labels[val]).join(', ');
+  };
 
   const valueDisplay = element
     ? values.map((val, valIndex) => (
