@@ -11,6 +11,8 @@ import {
   FIXED_FILTER_PROPERTIES_ARR,
   NESTED_FILTER_PROPERTIES,
 } from '../../constants';
+import { Button } from 'antd';
+
 
 type Props = {
   selectedFilterValues: Record<string, string[]>;
@@ -19,6 +21,7 @@ type Props = {
     filterProperty: string,
     itemsToDeselect: string[],
   ) => void;
+  onClearAllFilterValues: () => void
   getOptionLabel: (field: string, id?: string) => string;
 };
 
@@ -27,6 +30,7 @@ const FilterSummary = ({
   onRemoveFilterProperty,
   onDeselectFilterValue,
   getOptionLabel,
+  onClearAllFilterValues,
 }: Props) => {
   const activeFixedFilters = FIXED_FILTER_PROPERTIES_ARR.filter(
     (fixedFilterProperty) =>
@@ -37,6 +41,7 @@ const FilterSummary = ({
     <div className='filter-modal__column' id='filterSummary'>
       <div>
         <b>Selected filters</b>
+        <Button type="link" onClick={() => onClearAllFilterValues()}>Clear Filters</Button>
       </div>
       <div className='filter-modal__box'>
         <TimeOrDateValueDisplay

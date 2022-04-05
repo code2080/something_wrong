@@ -107,6 +107,8 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
     patchFilters(patch);
   };
 
+  const onClearAllFilterValues = () => setFilters({})
+
   /**
    * Removes {filterProperties} from selected filters
    * @param filterProperties
@@ -180,6 +182,7 @@ const FilterModal = ({ isVisible, onClose }: Props) => {
               onRemoveFilterProperty={onClearFilterValues}
               onDeselectFilterValue={onDeselectFilterValue}
               getOptionLabel={onGetFilterOptionLabel}
+              onClearAllFilterValues={onClearAllFilterValues}
             />
           </Col>
         </Row>
