@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { TActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import { EActivityBatchOperation, TActivityBatchOperation, TStatusBatchOperation, TTagsBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import {
   EFilterInclusions,
@@ -39,38 +39,34 @@ export const commitAPIPayloadToState = (
   createFn: Function,
   idProp: string = '_id',
 ): void => {
-  try {
-    const {
-      results,
-      page,
-      limit,
-      totalPages,
-      groupBy,
-      allKeys,
-    }: ISSPAPIResult = payload;
+  const {
+    results,
+    page,
+    limit,
+    totalPages,
+    groupBy,
+    allKeys,
+  }: ISSPAPIResult = payload;
 
-    const finalGroupBy = groupBy || state.groupBy;
-    
-    const iteratedResults = results
-      .filter((el: any) => el[idProp])
-      .map((el: any) => createFn(el));
+  const finalGroupBy = groupBy || state.groupBy;
+  
+  const iteratedResults = results
+    .filter((el: any) => el[idProp])
+    .map((el: any) => createFn(el));
 
-    const map = iteratedResults.reduce(
-      (tot: any[], acc: any) => ({
-        ...tot,
-        [acc[idProp]]: acc,
-      }),
-      {},
-    );
-    state.data[finalGroupBy].results = iteratedResults;
-    state.data[finalGroupBy].map = map;
-    state.data[finalGroupBy].page = page;
-    state.data[finalGroupBy].limit = limit;
-    state.data[finalGroupBy].totalPages = totalPages;
-    state.data[finalGroupBy].allKeys = allKeys;
-  } catch (error) {
-    console.error(error);
-  }
+  const map = iteratedResults.reduce(
+    (tot: any[], acc: any) => ({
+      ...tot,
+      [acc[idProp]]: acc,
+    }),
+    {},
+  );
+  state.data[finalGroupBy].results = iteratedResults;
+  state.data[finalGroupBy].map = map;
+  state.data[finalGroupBy].page = page;
+  state.data[finalGroupBy].limit = limit;
+  state.data[finalGroupBy].totalPages = totalPages;
+  state.data[finalGroupBy].allKeys = allKeys;
 };
 
 export const commitSSPQueryToState = (
@@ -122,6 +118,16 @@ export const resetSSPState = (state: ISSPReducerState) => {
       totalPages: 10,
       allKeys: [],
     },
+    [EActivityGroupings.TAG]: {
+      results: [],
+      map: {},
+      sortBy: undefined,
+      direction: undefined,
+      page: 1,
+      limit: 10,
+      totalPages: 10,
+      allKeys: [],
+    },
   };
   state.matchType = EFilterType.ALL;
   state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
@@ -140,23 +146,25 @@ export const updateStateWithResultFromBatchOperation = (
   /**
    * @todo we should run createFn here!
    */
-  const { data } = batchOperationPayload;
-  const results = state.data[state.groupBy].results.map((entity) => {
-    // Check if el exists in array
-    const batchOp = data.find((op) => op._id === entity._id);
-    if (batchOp) return { ...entity, ...omit(batchOp, '_id') };
-    return entity;
-  });
-  const map = results.reduce(
-    (tot: any[], acc: any) => ({
-      ...tot,
-      [acc[idProp]]: acc,
-    }),
-    {},
-  );
+  if (![EActivityBatchOperation.SCHEDULE, EActivityBatchOperation.UNSCHEDULE].includes(batchOperationPayload.type)) {
+    const data = batchOperationPayload.data as (TStatusBatchOperation | TTagsBatchOperation)[];
+    const results = state.data[state.groupBy].results.map((entity) => {
+      // Check if el exists in array
+      const batchOp = data.find((op) => op._id === entity._id);
+      if (batchOp) return { ...entity, ...omit(batchOp, '_id') };
+      return entity;
+    });
+    const map = results.reduce(
+      (tot: any[], acc: any) => ({
+        ...tot,
+        [acc[idProp]]: acc,
+      }),
+      {},
+    );
 
-  state.data[state.groupBy].results = results;
-  state.data[state.groupBy].map = map;
+    state.data[state.groupBy].results = results;
+    state.data[state.groupBy].map = map;
+  }
 };
 
 export const updateResourceWorkerStatus = (

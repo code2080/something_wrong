@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Menu, Dropdown, Button } from 'antd';
+import { Menu, Dropdown, Button, Modal } from 'antd';
 import _ from 'lodash';
 
 // COMPONENTS
@@ -238,8 +238,15 @@ const ActivityDesignPage = () => {
   };
 
   const onUnlockClick = () => {
-    dispatch(unlockActivityDesigner({ formId }));
-    leavingPageContext.setIsModified(true);
+    Modal.confirm({
+      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      title: 'Unlock activity design',
+      content: 'After saving your new design, all existing activities and any corresponding reservations will be deleted. Are you sure you want to proceed?',
+      onOk: () => {
+        dispatch(unlockActivityDesigner({ formId }));
+        leavingPageContext.setIsModified(true);
+      },
+    });
   };
 
   // Callback for reset meun clicks

@@ -331,6 +331,8 @@ export const fetchActivitiesForForm =
       });
       dispatch(fetchActivitiesForFormSuccess(result));
     } catch (e) {
+      console.log('e');
+      console.log(e);
       dispatch(defaultFailureHandler(null));
     }
   };
