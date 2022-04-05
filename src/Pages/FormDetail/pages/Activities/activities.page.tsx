@@ -10,6 +10,7 @@ import {
   RowActionsColumn,
   SchedulingStatusSingleColumn,
   TagColumn,
+  TrackColumn,
   WeekPatternUIDColumn,
 } from 'Components/TableColumnsShared';
 import WeekPatternTable from 'Components/WeekPatternTable';
@@ -63,6 +64,7 @@ const ActivitiesPage = () => {
               ...(hasWeekPattern ? [WeekPatternUIDColumn] : []),
               TagColumn,
               SchedulingStatusSingleColumn,
+              TrackColumn,
             ]}
           />
         )}

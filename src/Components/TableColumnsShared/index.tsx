@@ -10,6 +10,8 @@ import ActivityProgress from './ActivityProgress';
 import SspColumnFilter from './SspColumnFilter';
 import JobStatus from './JobStatus';
 import GroupedTags from './GroupedTags';
+import { ShareAltOutlined } from '@ant-design/icons';
+import { Space } from 'antd';
 
 // TYPES
 import { TActivity } from 'Types/Activity/Activity.type';
@@ -156,7 +158,7 @@ export const JobTagColumn: ISSPColumn = {
   title: 'Tags',
   key: 'tagNames',
   dataIndex: 'tagNames',
-  render: (tagNames: string[]) => <JobTags tagNames={tagNames}/>,
+  render: (tagNames: string[]) => <JobTags tagNames={tagNames} />,
 };
 
 export const primaryObjectsColumn: ISSPColumn = {
@@ -231,4 +233,18 @@ export const groupByTagActivitiesUnscheduledColumn: ISSPColumn = {
   ),
   width: 180,
   sorter: true,
+};
+
+export const TrackColumn: ISSPColumn = {
+  title: 'Track',
+  key: 'track',
+  width: 30,
+  render: (activity: TActivity) =>
+    activity.rowIdx?.includes('-') ? (
+      <Space>
+        <ShareAltOutlined />
+        {Number(activity.rowIdx?.split('-').pop()) + 1}
+      </Space>
+    ) : null,
+  sorter: false,
 };
