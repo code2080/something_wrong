@@ -35,7 +35,7 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
   };
 
   const onCreateTag = () => {
-    dispatch(createTagForForm(formId, { name: tagName }));
+    dispatch(createTagForForm(formId as string, { name: tagName }));
     setTagName('');
   };
 
@@ -49,7 +49,6 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
       value={value}
       onChange={(val) => onChange(val)}
       onSearch={onSearch}
-      allowClear
       notFoundContent={
         <div>
           <span>Tag not found</span>
