@@ -34,7 +34,7 @@ import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 const ActivitiesToolbar = () => {
   const { formId } = useParams<{ formId: string }>();
-  const { selectedKeys, groupBy, setGroup } = useSSP();
+  const { selectedKeys, setSelectedKeys, groupBy, setGroup } = useSSP();
   const { unscheduleSelectedActivities } = useScheduling();
   /**
    * SELECTORS
@@ -52,7 +52,10 @@ const ActivitiesToolbar = () => {
       getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
       title: 'Unschedule activities',
       content: 'This will cancel all existing reservations and change the activities\' status, are you sure you want to proceed?',
-      onOk: () => unscheduleSelectedActivities(idsToDelete),
+      onOk: () => {
+        unscheduleSelectedActivities(idsToDelete);
+        setSelectedKeys([]);
+      },
     });
     
   };

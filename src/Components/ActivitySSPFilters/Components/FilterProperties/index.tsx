@@ -8,6 +8,7 @@ import { selectLookupMapForFiltering } from 'Redux/Activities';
 // CONSTANTS
 import {
   CUSTOM_RENDERED_FILTER_PROPERTIES_OPTIONS,
+  FIXED_FILTER_PROPERTIES_ARR,
   NESTED_FILTER_PROPERTIES,
   REPLACED_KEY,
 } from '../../constants';
@@ -36,9 +37,10 @@ const FilterProperties = ({
    * COMPUTED VARS
    */
   const nonNestedFilterProperties = Object.keys(filterLookupMap).filter(
-    (key) => !NESTED_FILTER_PROPERTIES.includes(key),
+    (key) => !NESTED_FILTER_PROPERTIES.includes(key) && FIXED_FILTER_PROPERTIES_ARR.includes(key),
   );
 
+  console.log(nonNestedFilterProperties);
   return (
     <div className='filter-modal__column filter__properties'>
       <div>

@@ -9,7 +9,6 @@ export const CUSTOM_RENDERED_FILTER_PROPERTIES_OPTIONS: Record<
 ];
 export const NESTED_FILTER_PROPERTIES = ['objects', 'objectFilters', 'fields'];
 
-// TODO: Rename?
 export const FIXED_FILTER_PROPERTIES_ARR = [
   'submitter',
   'tag',
