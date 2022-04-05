@@ -13,6 +13,8 @@ import {
 } from '../../constants';
 import { Button } from 'antd';
 
+// Styles
+import './index.scss';
 
 type Props = {
   selectedFilterValues: Record<string, string[]>;
@@ -39,7 +41,7 @@ const FilterSummary = ({
 
   return (
     <div className='filter-modal__column' id='filterSummary'>
-      <div>
+      <div className='filter-modal__column-filterText'>
         <b>Selected filters</b>
         <Button type="link" onClick={() => onClearAllFilterValues()}>Clear Filters</Button>
       </div>
