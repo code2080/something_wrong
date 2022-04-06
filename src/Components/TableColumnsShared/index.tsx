@@ -7,11 +7,10 @@ import SchedulingStatusGrouped from './SchedulingStatusGrouped';
 import WeekPatternActivityType from './WeekPatternActivityType';
 import WeekPatternWeeks from './WeekPatternWeeks';
 import ActivityProgress from './ActivityProgress';
+import ActivityTrack from './ActivityTrack';
 import SspColumnFilter from './SspColumnFilter';
 import JobStatus from './JobStatus';
 import GroupedTags from './GroupedTags';
-import { ShareAltOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
 
 // TYPES
 import { TActivity } from 'Types/Activity/Activity.type';
@@ -239,12 +238,8 @@ export const TrackColumn: ISSPColumn = {
   title: 'Track',
   key: 'track',
   width: 30,
-  render: (activity: TActivity) =>
-    activity.rowIdx?.includes('-') ? (
-      <Space>
-        <ShareAltOutlined />
-        {Number(activity.rowIdx?.split('-').pop()) + 1}
-      </Space>
-    ) : null,
+  render: (activity: TActivity) => (
+    <ActivityTrack trackNumber={Number(activity.rowIdx?.split('-')[2]) + 1} />
+  ),
   sorter: false,
 };
