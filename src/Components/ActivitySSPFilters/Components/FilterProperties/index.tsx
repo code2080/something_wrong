@@ -37,7 +37,9 @@ const FilterProperties = ({
    * COMPUTED VARS
    */
   const nonNestedFilterProperties = Object.keys(filterLookupMap).filter(
-    (key) => !NESTED_FILTER_PROPERTIES.includes(key) && FIXED_FILTER_PROPERTIES_ARR.includes(key),
+    (key) =>
+      !NESTED_FILTER_PROPERTIES.includes(key) &&
+      FIXED_FILTER_PROPERTIES_ARR.includes(key),
   );
 
   console.log(nonNestedFilterProperties);
@@ -51,6 +53,12 @@ const FilterProperties = ({
           onSelect={({ key }) => onSelect(key)}
           selectedKeys={[selectedFilterProperty]}
         >
+          {/* Render date interval filter property */}
+          {Object.keys(filterLookupMap.startDate || {}).length > 0 &&
+            Object.keys(filterLookupMap.endDate || {}).length > 0 && (
+              <Menu.Item key='date'>Date interval</Menu.Item>
+            )}
+
           {/* Render the fixed filter properties */}
           {CUSTOM_RENDERED_FILTER_PROPERTIES_OPTIONS.map((item) => (
             <Menu.Item key={item.value}>{item.label}</Menu.Item>
