@@ -10,7 +10,7 @@ const envVarMap = {
     VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`,
     AM_BE_URL: `https://activity-manager.timeedit.com/${apiVersion}/`,
   },
-  preProduction: {
+  preprod: {
     API_URL: `https://preferences-pre-production.timeedit.io/${apiVersion}/`,
     AUTH_URL: `https://app-auth-pre-production.timeedit.io/${apiVersion}/`,
     ADMIN_URL: `https://app-admin-pre-production.timeedit.io/${apiVersion}/`,
