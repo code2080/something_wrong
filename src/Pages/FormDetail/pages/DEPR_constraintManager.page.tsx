@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
-import ConstraintManagerTopBar from '../../../Components/ConstraintProfileSelectorToolbar';
+import ConstraintManagerTopBar from '../../../Components/Toolbars/ConstraintProfileSelector';
 
 // ACTIONS
 import {

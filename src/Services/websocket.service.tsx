@@ -90,7 +90,7 @@ const isKnownSocketEvent = (event: any): event is ESocketEvents => {
 };
 
 type Props = {
-  formId: string;
+  formId: string | undefined;
   eventMap: Record<ESocketEvents, (payload: IDefaultSocketPayload) => void>;
 };
 
@@ -98,14 +98,10 @@ export const useSubscribeToFormEvents = ({ formId, eventMap }: Props) => {
   const { socket } = useContext(SocketContext);
 
   useEffect(() => {
-    if (!socket) {
-      return;
-    }
+    if (!socket || !formId) return;
 
     Object.entries(eventMap).forEach(([socketEvent, callback]) => {
-      if (!isKnownSocketEvent(socketEvent)) {
-        return;
-      }
+      if (!isKnownSocketEvent(socketEvent)) return;
 
       // Subscribe
       socket.emit(socketEvent, { formId }, (resp: any) =>

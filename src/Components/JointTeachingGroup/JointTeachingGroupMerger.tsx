@@ -3,7 +3,7 @@ import { TeamOutlined } from '@ant-design/icons';
 
 // COMPONENTS
 import CreateNewJointTeachingGroupModal from 'Components/JointTeaching/CreateNewJointTeachingGroupModal';
-import ToolbarButton from 'Components/ActivitiesToolbar/ToolbarButton';
+import ToolbarButton from 'Components/Toolbars/Components/ToolbarButton';
 
 type Props = {
   activityIds: string[];

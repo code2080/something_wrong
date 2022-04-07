@@ -1,10 +1,11 @@
 @import '../../Styles/globals.scss';
 
-.activities-toolbar--wrapper {
+.detail-toolbar--wrapper {
   display: flex;
   align-items: center;
   font-size: 0.75rem;
   padding: 2px $outerComponentPadding;
+  border-bottom: 1px solid #f0f0f0;
 
   .ant-btn {
     font-size: 0.75rem;

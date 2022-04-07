@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 // REDUX
 import { Field, selectIndexedExtIdLabel } from 'Redux/TE/te.selectors';
 
+// COMPONENTS
+import ColumnWrapper from 'Components/TableColumnsShared/ActivityValue/ColumnWrapper';
+
 // TYPES
 import { ISSPColumn } from 'Components/SSP/Types';
 import { TActivity } from 'Types/Activity/Activity.type';
-import ColumnWrapper from 'Components/TableColumnsShared/ActivityValue/ColumnWrapper';
 
 const getAllActivityValuesFromActivityDesign = (
   design: any,

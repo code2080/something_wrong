@@ -13,21 +13,21 @@ import { selectFormAllowedGroupings } from 'Redux/Forms';
 
 // COMPONENTS
 import JointTeachingGroupMerger from 'Components/JointTeachingGroup/JointTeachingGroupMerger';
-import ActivityFiltering from '../ActivitySSPFilters';
+import ActivityFiltering from '../../ActivitySSPFilters';
 import StatusLabel from 'Components/StatusLabel';
-import TagSelectionButton from './TagSelectionButton';
-import ToolbarGroup from './ToolbarGroup';
-import GroupingRadioGroup from './ToolbarRadioGroup';
+import TagSelectionButton from '../Components/TagSelectionButton';
+import ToolbarGroup from '../Components/ToolbarGroup';
+import GroupingRadioGroup from '../Components/ToolbarRadioGroup';
 
 // HOOKS
 import useSSP from 'Components/SSP/Utils/hooks';
 import { useScheduling } from 'Hooks/useScheduling';
 
 // STYLES
-import './index.scss';
+import '../index.scss';
 
 // CONSTANTS
-import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../Constants/permissions.constants';
+import { ASSISTED_SCHEDULING_PERMISSION_NAME } from '../../../Constants/permissions.constants';
 
 // TY
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
@@ -65,7 +65,7 @@ const ActivitiesToolbar = () => {
   };
 
   return (
-    <div className='activities-toolbar--wrapper'>
+    <div className='detail-toolbar--wrapper'>
       <ToolbarGroup label='Selection'>
         <StatusLabel color='default'>{selectedKeys.length || 0}</StatusLabel>
       </ToolbarGroup>

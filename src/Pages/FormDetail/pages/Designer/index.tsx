@@ -16,9 +16,7 @@ import ObjectMapping from '../../../../Components/ActivityDesigner/ObjectMapping
 import FieldMapping from '../../../../Components/ActivityDesigner/FieldMapping';
 import TimingMapping from '../../../../Components/ActivityDesigner/TimingMapping';
 import MappingStatus from '../../../../Components/ActivityDesigner/MappingStatus';
-import HasReservationsAlert from '../../../../Components/ActivityDesigner/HasReservationsAlert';
 import AdditionalFields from 'Components/ActivityDesigner/AdditionalFields';
-import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
 
 // REDUX
 import { selectElementTypesMap } from '../../../../Redux/Elements/element.selectors';
@@ -352,8 +350,6 @@ const ActivityDesignPage = () => {
             )}
           </div>
         </div>
-        {hasActivities && <HasReservationsAlert formId={formId} />}
-        {hasActivitiesInProgress && <HasActivityInWorkerProgress />}
         <div className='activity-designer--type-header'>
           <div>Timing</div>
           <div>Mapping</div>

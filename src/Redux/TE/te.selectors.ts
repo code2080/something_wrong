@@ -1,6 +1,29 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
+export const selectLabelForType = (
+  typeExtId?: string, 
+  missingExtIdReturnVal: string | undefined = 'N/A', 
+) => (state: any) => {
+  if (!typeExtId) return missingExtIdReturnVal;
+  const extIdProps = state.te.extIdProps?.types?.typeExtId || null;
+  if (!extIdProps || !extIdProps.label) return typeExtId;
+  return extIdProps.label;
+};
+
+export const selectLabelsForTypes = (
+  typeExtIds?: string[], 
+  missingExtIdReturnVal: string | undefined = 'N/A', 
+) => (state: any) => {
+  if (!typeExtIds) return missingExtIdReturnVal;
+  const extIdProps = state.te.extIdProps?.types || {};
+  return typeExtIds.map((typeExtId: string) => extIdProps[typeExtId]?.label || typeExtId);
+};
+
+/**
+ * @deprecated
+ * ALL BELOW SHOULD BE CONSIDERED DEPRECATED
+ */
 const selectExtIdProps = (state) => state.te.extIdProps || {};
 
 export const selectExtIds = createSelector(selectExtIdProps, (extIdProps) =>

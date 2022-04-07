@@ -6,7 +6,7 @@ import { Tabs } from 'antd';
 
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
-import JobToolbar from '../../Components/JobToolbar';
+import JobToolbar from '../../Components/Toolbars/Job';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
 import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
@@ -26,14 +26,8 @@ import {
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from 'Redux/Constraints';
-import {
-  selectFormDetailSubmission,
-  selectFormDetailTab,
-} from '../../Redux/GlobalUI/globalUI.selectors';
-import {
-  hasPermission,
-  selectIsBetaOrDev,
-} from '../../Redux/Auth/auth.selectors';
+import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
@@ -70,7 +64,7 @@ import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionOverviewPage from './pages/SubmissionOverview';
 import SubmissionsDetailPage from './pages/SubmissionDetail';
 import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
-import GroupManagementPage from './pages/groupManagement.page';
+import GroupManagementPage from './pages/GroupManagement';
 import JobsPage from './pages/Jobs/jobs.page';
 
 // TYPES
@@ -97,12 +91,9 @@ const FormPage = () => {
   const activitiesWorkerStatus = useSelector(selectActivitiesWorkerStatus);
   const isFilterLookupMapLoading = useSelector(filterLookupMapLoading);
 
-  const socketEventMap: Record<
-    ESocketEvents,
-    (payload: IDefaultSocketPayload) => void
-  > = {
+  const socketEventMap = {
     ACTIVITY_GENERATION_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK') return;
+      if (payload.status !== 'OK' || !formId) return;
       if (payload.workerStatus === 'IN_PROGRESS') {
         // Set the redux state to in progress
         dispatch(updateWorkerStatus('IN_PROGRESS'));
@@ -116,17 +107,17 @@ const FormPage = () => {
       }
     },
     ACTIVITY_BATCH_OPERATION_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK') return;
+      if (payload.status !== 'OK' || !formId) return;
       dispatch(fetchActivitiesForForm(formId, {}));
     },
     FILTER_LOOKUP_MAP_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK') return;
+      if (payload.status !== 'OK' || !formId) return;
       if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
         dispatch(fetchActivityFilterLookupMapForForm(formId));
       }
     },
     JOB_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK') return;
+      if (payload.status !== 'OK' || !formId) return;
       batch(() => {
         dispatch(updateJobWorkerStatus(payload.workerStatus));
         dispatch(fetchJobsForForm(formId));
@@ -148,7 +139,7 @@ const FormPage = () => {
   const form = useSelector(formSelector(formId));
   const selectFormSubmissions = useMemo(() => makeSelectSubmissions(), []);
   const submissions = useSelector((state) =>
-    selectFormSubmissions(state, formId),
+    selectFormSubmissions(state, formId as string),
   );
   const selectedFormDetailTab = useSelector(selectFormDetailTab);
   const hasActivityDesignPermission = useSelector(
@@ -157,9 +148,8 @@ const FormPage = () => {
   const hasAssistedSchedulingPermission = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const reqs = useSelector(selectFormObjectRequest(formId));
+  const reqs = useSelector(selectFormObjectRequest(formId as string));
   const formHasObjReqs = !_.isEmpty(reqs);
-  const isBeta = useSelector(selectIsBetaOrDev);
   const selectedSubmissionId = useSelector(selectFormDetailSubmission);
 
   /**
@@ -172,10 +162,10 @@ const FormPage = () => {
    * EFFECTS
    */
   useEffect(() => {
+    if (!form || !formId) return;
     dispatch(fetchMappings(form));
     dispatch(fetchTagsForForm(formId));
     dispatch(fetchConstraints());
-    // dispatch(fetchConstraintConfigurations(formId));
     dispatch(fetchConstraintProfilesForForm(formId));
     dispatch(
       setBreadcrumbs([
@@ -237,13 +227,11 @@ const FormPage = () => {
     <SSPResourceWrapper
       name={`${formId}__FORM_DETAIL_ACTIVITIES`}
       selectorFn={selectSSPState('activities')}
-      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        fetchActivitiesForForm(formId, partialQuery)
-      }
+      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) => fetchActivitiesForForm(formId as string, partialQuery)}
       initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
         initializeSSPStateProps(partialQuery)
       }
-      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId)}
+      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId as string)}
     >
       <div className='form--wrapper'>
         <TEAntdTabBar
@@ -275,15 +263,12 @@ const FormPage = () => {
               <JointTeachingPage />
             )}
           </Tabs.TabPane>
-          {isBeta && (
-            <Tabs.TabPane
-              tab='GROUP MANAGEMENT'
-              key={TAB_CONSTANT.GROUP_MANAGEMENT}
-              disabled
-            >
-              <GroupManagementPage />
-            </Tabs.TabPane>
-          )}
+          <Tabs.TabPane
+            tab='GROUP MANAGEMENT'
+            key={TAB_CONSTANT.GROUP_MANAGEMENT}
+          >
+            <GroupManagementPage />
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab='ACTIVITIES'
             key={TAB_CONSTANT.ACTIVITIES}
@@ -315,7 +300,7 @@ const FormPage = () => {
         </TEAntdTabBar>
         <FormInfoModal
           isVisible={showFormInfoModal}
-          formId={formId}
+          formId={formId as string}
           onHide={() => setShowFormInfoModal(false)}
         />
       </div>

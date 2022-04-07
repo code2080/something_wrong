@@ -12,7 +12,7 @@ import { determineSectionType } from 'Utils/determineSectionType.helpers';
 import { SECTION_CONNECTED } from 'Constants/sectionTypes.constants';
 
 import './GroupManagementTable.scss';
-import GroupManagementToolbar from 'Components/GroupManagementToolbar';
+import GroupManagementToolbar from 'Components/DEPR_GroupManagementToolbar';
 import GroupAllocationDesigner from 'Components/GroupAllocationDesigner';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
