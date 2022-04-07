@@ -42,7 +42,6 @@ const FilterProperties = ({
       FIXED_FILTER_PROPERTIES_ARR.includes(key),
   );
 
-  console.log(nonNestedFilterProperties);
   return (
     <div className='filter-modal__column filter__properties'>
       <div>

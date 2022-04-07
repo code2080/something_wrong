@@ -44,7 +44,7 @@ const FilterSummary = ({
       <div className='filter-modal__column-filterText'>
         <b>Selected filters</b>
         <Button type='link' onClick={() => onClearAllFilterValues()}>
-          Clear Filters
+          Clear filters
         </Button>
       </div>
       <div className='filter-modal__box'>

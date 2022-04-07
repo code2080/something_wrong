@@ -4,4 +4,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  button {
+    height: auto;
+    font-size: inherit !important;
+  }
 }
