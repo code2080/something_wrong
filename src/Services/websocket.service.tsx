@@ -91,7 +91,7 @@ const isKnownSocketEvent = (event: any): event is ESocketEvents => {
 
 type Props = {
   formId: string;
-  eventMap: Record<string, (payload: IDefaultSocketPayload) => void>;
+  eventMap: Record<ESocketEvents, (payload: IDefaultSocketPayload) => void>;
 };
 
 export const useSubscribeToFormEvents = ({ formId, eventMap }: Props) => {
