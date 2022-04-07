@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 import { getEnvParams } from 'configs';
 import socketIOClient, { Socket } from 'socket.io-client';
@@ -60,7 +60,7 @@ const SocketContext = React.createContext<{
 }>({ socket: undefined });
 
 export const WebsocketProvider: React.FC = ({ children }) => {
-  const socket = useMemo(() => initializeSocketConnection(), []);
+  const socket = initializeSocketConnection();
 
   useEffect(() => {
     return () => {
