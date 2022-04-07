@@ -57,14 +57,7 @@ const envVarMap = {
   },
 } as const;
 
-export const availableEnvs = [
-  'production',
-  'preProduction',
-  'staging',
-  'beta',
-  'localhost',
-  'amLocalhost',
-] as const;
+export const availableEnvs = Object.keys(envVarMap);
 
 export const getEnvParams = () => {
   const storeState = (window as any).store.getState();
