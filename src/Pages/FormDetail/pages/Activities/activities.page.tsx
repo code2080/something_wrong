@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // COMPONENTS
-import ActivitiesToolbar from 'Components/ActivitiesToolbar';
+import ActivitiesToolbar from 'Components/Toolbars/Activities';
 import ActivityTable from 'Components/ActivityTable';
 import {
   PrimaryObjectColumn,

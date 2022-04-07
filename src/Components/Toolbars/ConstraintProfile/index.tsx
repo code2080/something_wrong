@@ -41,7 +41,7 @@ const ConstraintProfileToolbar = ({ constraintProfileName, onUpdateName, onDelet
   }
 
   return (
-    <div className="constraint-profile-toolbar--wrapper">
+    <div className="constraint-profile-toolbar--wrapper detail-toolbar--wrapper">
       <Typography.Text
         strong
         editable={{ onChange: onUpdateName, icon: <>Edit name</>, autoSize: true }}

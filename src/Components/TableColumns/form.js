@@ -25,7 +25,7 @@ export const form = {
     title: '',
     key: 'formType',
     dataIndex: 'formType',
-    fixedWidth: 35,
+    fixedWidth: 38,
     render: (type) => <IconFormType type={type} />,
   },
   NAME: {

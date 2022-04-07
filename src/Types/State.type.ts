@@ -22,7 +22,7 @@ export interface IState {
   constraintProfiles: ISimpleAPIState;
   constraints: ISimpleAPIState;
   jobs: ISSPReducerState;
-
+  groups: ISSPReducerState;
   integration: {
     mappedObjectsLabel: any;
     mappedObjectTypes: any;

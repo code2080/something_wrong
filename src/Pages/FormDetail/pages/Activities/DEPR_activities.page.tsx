@@ -9,10 +9,10 @@ import { selectSelectedFilterValues } from 'Redux/Filters/filters.selectors';
 import { createLoadingSelector } from '../../../../Redux/APIStatus/apiStatus.selectors';
 import { SchedulingColumns } from '../../../../Components/DEPR_ActivitiesTableColumns/SchedulingColumns/SchedulingColumns';
 import { StaticColumns } from '../../../../Components/DEPR_ActivitiesTableColumns/StaticColumns/StaticColumns';
-import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner/HasActivityInWorkerProgress';
+import HasActivityInWorkerProgress from '../../../../Components/ActivityDesigner/DEPR_HasActivityInWorkerProgress';
 
 // COMPONENTS
-import ActivitiesToolbar from '../../../../Components/ActivitiesToolbar';
+import ActivitiesToolbar from '../../../../Components/Toolbars/Activities';
 import ActivityTable from './DEPR_ActivityTable';
 
 // ACTIONS

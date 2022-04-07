@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FilterOutlined } from '@ant-design/icons';
 
 // COMPONENTS
-import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';
+import ToolbarButton from '../Toolbars/Components/ToolbarButton';
 import FilterModal from './Components/Modal';
 
 const ActivityFiltering = () => {

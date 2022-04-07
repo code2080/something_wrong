@@ -37,6 +37,7 @@ import formsReducer from './Forms';
 import jobsReducer from './Jobs';
 import constraintProfilesReducer from './ConstraintProfiles';
 import constraintsReducer from './Constraints';
+import groupsReducer from './Groups';
 
 const appReducer = combineReducers({
   apiStatus,
@@ -60,6 +61,7 @@ const appReducer = combineReducers({
   jobs: jobsReducer,
   constraintProfiles: constraintProfilesReducer,
   constraints: constraintsReducer,
+  groups: groupsReducer,
 });
 
 const rootReducer = (state, action) => {

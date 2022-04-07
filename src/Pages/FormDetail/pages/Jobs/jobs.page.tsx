@@ -16,7 +16,7 @@ const JobsPage = () => {
 
   return (
     <SSPResourceWrapper
-      name={`${formId}__FORM_DETAIL_ACTIVITIES`}
+      name={`${formId}__FORM_DETAIL_JOBS`}
       selectorFn={selectSSPState('jobs')}
       fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
         fetchJobsForForm(formId, partialQuery)

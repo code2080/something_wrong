@@ -6,8 +6,8 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 // COMPONENTS
-import ConstraintProfileSelectorToolbar from '../../../../Components/ConstraintProfileSelectorToolbar';
-import ConstraintProfileToolbar from 'Components/ConstraintProfileToolbar';
+import ConstraintProfileSelectorToolbar from '../../../../Components/Toolbars/ConstraintProfileSelector';
+import ConstraintProfileToolbar from '../../../../Components/Toolbars/ConstraintProfile';
 import ConstraintInstanceListItem from 'Components/ConstraintInstanceListItem';
 
 // HOOKS

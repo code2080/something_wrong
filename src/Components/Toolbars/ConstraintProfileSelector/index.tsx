@@ -86,7 +86,7 @@ const ConstraintManagerTopBar = ({
     });
 
   return (
-    <div className="constraint-profile-selector--wrapper">
+    <div className="constraint-profile-selector--wrapper detail-toolbar--wrapper">
       Select constraint profile:&nbsp;
       <Select
         onChange={onChange}

@@ -1,3 +1,4 @@
+import { TCreateObjectsRequestPayload } from './GroupManagement.type';
 import {
   TGetExtIdPropsPayload,
   TPopulateSelectionPayload,
@@ -43,6 +44,9 @@ export type TECoreAPI = {
     objectIds: string[];
     typeId: string;
   }): string[];
-  // To be extended
+  requestCreateObjects: (args: TCreateObjectsRequestPayload[], callback: (args: any) => void) => void;
+  /**
+   * CATCH ALL
+   */
   [apiCall: string]: any;
 };

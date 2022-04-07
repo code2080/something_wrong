@@ -6,7 +6,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import { TActivityFilterQuery } from 'Types/DEPR_ActivityFilter.type';
 
 // COMPONENTS
-import ToolbarButton from '../ActivitiesToolbar/ToolbarButton';
+import ToolbarButton from '../Toolbars/Components/ToolbarButton';
 import FilterModal from './FilterModal/FilterModal';
 
 // STYLES

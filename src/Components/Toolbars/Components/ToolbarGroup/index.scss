@@ -1,4 +1,4 @@
-@import '../../../Styles/globals.scss';
+@import '../../../../Styles/globals.scss';
 
 .toolbar-group--wrapper {
   display: flex;
@@ -8,6 +8,9 @@
   .toolbar-group--header {
     color: rgba(#000, 0.5);
     margin-right: $outerComponentPadding;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .toolbar-group--buttons {

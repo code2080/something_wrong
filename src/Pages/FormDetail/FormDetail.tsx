@@ -6,7 +6,7 @@ import { Tabs } from 'antd';
 
 // COMPONENTS
 import TEAntdTabBar from '../../Components/TEAntdTabBar';
-import JobToolbar from '../../Components/JobToolbar';
+import JobToolbar from '../../Components/Toolbars/Job';
 import FormInfoModal from '../../Components/Modals/FormInfoModal';
 import FormDetailBreadcrumb from 'Components/FormDetailBreadcrumb';
 import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
@@ -24,7 +24,7 @@ import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from 'Redux/Constraints';
 import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selectors';
+import { hasPermission } from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
@@ -55,7 +55,7 @@ import ActivitiesPage from './pages/Activities/activities.page';
 import SubmissionOverviewPage from './pages/SubmissionOverview';
 import SubmissionsDetailPage from './pages/SubmissionDetail';
 import JointTeachingPage from './pages/JointTeaching/jointTeaching.page';
-import GroupManagementPage from './pages/groupManagement.page';
+import GroupManagementPage from './pages/GroupManagement';
 import JobsPage from './pages/Jobs/jobs.page';
 
 // TYPES
@@ -145,7 +145,6 @@ const FormPage = () => {
   );
   const reqs = useSelector(selectFormObjectRequest(formId));
   const formHasObjReqs = !_.isEmpty(reqs);
-  const isBeta = useSelector(selectIsBetaOrDev);
   const selectedSubmissionId = useSelector(selectFormDetailSubmission);
 
   /**
@@ -257,15 +256,12 @@ const FormPage = () => {
               <JointTeachingPage />
             )}
           </Tabs.TabPane>
-          {isBeta && (
-            <Tabs.TabPane
-              tab='GROUP MANAGEMENT'
-              key={TAB_CONSTANT.GROUP_MANAGEMENT}
-              disabled
-            >
-              <GroupManagementPage />
-            </Tabs.TabPane>
-          )}
+          <Tabs.TabPane
+            tab='GROUP MANAGEMENT'
+            key={TAB_CONSTANT.GROUP_MANAGEMENT}
+          >
+            <GroupManagementPage />
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab='ACTIVITIES'
             key={TAB_CONSTANT.ACTIVITIES}
