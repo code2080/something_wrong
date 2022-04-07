@@ -20,11 +20,20 @@ import { useSubscribeToFormEvents } from 'Services/websocket.service';
 
 // REDUX
 import { fetchMappings } from '../../Redux/ActivityDesigner/activityDesigner.actions';
-import { setBreadcrumbs, setFormDetailTab } from '../../Redux/GlobalUI/globalUI.actions';
+import {
+  setBreadcrumbs,
+  setFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from 'Redux/Constraints';
-import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
-import { hasPermission, selectIsBetaOrDev } from '../../Redux/Auth/auth.selectors';
+import {
+  selectFormDetailSubmission,
+  selectFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.selectors';
+import {
+  hasPermission,
+  selectIsBetaOrDev,
+} from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
 import {
@@ -39,13 +48,19 @@ import {
 import { formSelector } from 'Redux/Forms';
 import { activitiesSelector } from '../../Redux/Activities';
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { fetchJobsForForm, updateWorkerStatus as updateJobWorkerStatus } from 'Redux/Jobs';
+import {
+  fetchJobsForForm,
+  updateWorkerStatus as updateJobWorkerStatus,
+} from 'Redux/Jobs';
 import { fetchConstraintProfilesForForm } from 'Redux/ConstraintProfiles';
 
 // CONSTANTS
 import { teCoreCallnames } from '../../Constants/teCoreActions.constants';
 import { selectFormObjectRequest } from '../../Redux/ObjectRequests/ObjectRequestsNew.selectors';
-import { ASSISTED_SCHEDULING_PERMISSION_NAME, AE_ACTIVITY_PERMISSION } from '../../Constants/permissions.constants';
+import {
+  ASSISTED_SCHEDULING_PERMISSION_NAME,
+  AE_ACTIVITY_PERMISSION,
+} from '../../Constants/permissions.constants';
 
 // PAGES
 import ObjectRequestsPage from './pages/objectRequests.page';
@@ -82,50 +97,49 @@ const FormPage = () => {
   const activitiesWorkerStatus = useSelector(selectActivitiesWorkerStatus);
   const isFilterLookupMapLoading = useSelector(filterLookupMapLoading);
 
+  const socketEventMap: Record<
+    ESocketEvents,
+    (payload: IDefaultSocketPayload) => void
+  > = {
+    ACTIVITY_GENERATION_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK') return;
+      if (payload.workerStatus === 'IN_PROGRESS') {
+        // Set the redux state to in progress
+        dispatch(updateWorkerStatus('IN_PROGRESS'));
+      }
+      // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
+      if (
+        payload.workerStatus === 'DONE' &&
+        activitiesWorkerStatus === 'IN_PROGRESS'
+      ) {
+        dispatch(fetchActivitiesForForm(formId, {}));
+      }
+    },
+    ACTIVITY_BATCH_OPERATION_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK') return;
+      dispatch(fetchActivitiesForForm(formId, {}));
+    },
+    FILTER_LOOKUP_MAP_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK') return;
+      if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
+        dispatch(fetchActivityFilterLookupMapForForm(formId));
+      }
+    },
+    JOB_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK') return;
+      batch(() => {
+        dispatch(updateJobWorkerStatus(payload.workerStatus));
+        dispatch(fetchJobsForForm(formId));
+      });
+    },
+  };
+
   /**
    * Establish web sockets connection
    */
   useSubscribeToFormEvents({
     formId,
-    eventMap: {
-      [ESocketEvents.ACTIVITY_GENERATION_UPDATE]: (
-        payload: IDefaultSocketPayload,
-      ) => {
-        if (payload.status !== 'OK') return;
-        if (payload.workerStatus === 'IN_PROGRESS') {
-          // Set the redux state to in progress
-          dispatch(updateWorkerStatus('IN_PROGRESS'));
-        }
-        // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
-        if (
-          payload.workerStatus === 'DONE' &&
-          activitiesWorkerStatus === 'IN_PROGRESS'
-        ) {
-          dispatch(fetchActivitiesForForm(formId, {}));
-        }
-      },
-      [ESocketEvents.ACTIVITY_BATCH_OPERATION_UPDATE]: (
-        payload: IDefaultSocketPayload,
-      ) => {
-        if (payload.status !== 'OK') return;
-        dispatch(fetchActivitiesForForm(formId, {}));
-      },
-      [ESocketEvents.FILTER_LOOKUP_MAP_UPDATE]: (
-        payload: IDefaultSocketPayload,
-      ) => {
-        if (payload.status !== 'OK') return;
-        if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
-          dispatch(fetchActivityFilterLookupMapForForm(formId));
-        }
-      },
-      [ESocketEvents.JOB_UPDATE]: (payload: IDefaultSocketPayload) => {
-        if (payload.status !== 'OK') return;
-        batch(() => {
-          dispatch(updateJobWorkerStatus(payload.workerStatus));
-          dispatch(fetchJobsForForm(formId));
-        });
-      },
-    },
+    eventMap: socketEventMap,
   });
 
   /**
@@ -235,7 +249,11 @@ const FormPage = () => {
         <TEAntdTabBar
           activeKey={selectedFormDetailTab}
           onChange={(key: string) => dispatch(setFormDetailTab(key))}
-          extra={selectedFormDetailTab === TAB_CONSTANT.ACTIVITIES ? <JobToolbar /> : null}
+          extra={
+            selectedFormDetailTab === TAB_CONSTANT.ACTIVITIES ? (
+              <JobToolbar />
+            ) : null
+          }
         >
           <Tabs.TabPane tab='SUBMISSIONS' key={TAB_CONSTANT.SUBMISSIONS}>
             {!selectedSubmissionId ? (
