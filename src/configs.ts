@@ -16,7 +16,7 @@ const envVarMap = {
     ADMIN_URL: `https://app-admin-pre-production.timeedit.io/${apiVersion}/`,
     APP_ID: '5d08ae441dcbc63d30dd3e44',
     APP_NAME: 'tePIC',
-    VIEWS_URL: `https://views.timeedit.com/${apiVersion}/`,
+    VIEWS_URL: `https://views-pre-production.timeedit.io/${apiVersion}/`,
     AM_BE_URL: `https://activity-manager-pre-production.timeedit.io/${apiVersion}/`,
   },
   staging: {
