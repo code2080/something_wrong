@@ -40,22 +40,23 @@ const TagColumn = ({ activity }: Props) => {
   return (
     <Popover
       title='Tag activity'
-      content={<>
-        <TagSelectorComponent
-          value={activity.tagId || undefined}
-          onChange={onAssignTag}
-        />
-        <Button type='link' danger onClick={() => onAssignTag(undefined)}>
+      content={
+        <>
+          <TagSelectorComponent
+            value={activity.tagId || undefined}
+            onChange={onAssignTag}
+          />
+          <Button type='link' danger onClick={() => onAssignTag(undefined)}>
             Clear
-        </Button>
-          </>
+          </Button>
+        </>
       }
       getPopupContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
       }
       trigger='hover'
       placement='rightTop'
-    > 
+    >
       <Button size='small' className='tag-col--wrapper'>
         {selectedTag ? selectedTag.name : 'N/A'}
       </Button>
