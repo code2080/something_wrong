@@ -28,9 +28,9 @@ const TagColumn = ({ activity }: Props) => {
   /**
    * EVENT HANDLERS
    */
-  const onAssignTag = (tagId: string | undefined) => {
+  const onAssignTag = (tagId?: string) => {
     dispatch(
-      batchOperationTags(formId, {
+      batchOperationTags(formId as string, {
         type: EActivityBatchOperation.TAGS,
         data: [{ _id: activity._id, tagId: tagId || null }],
       }),
@@ -39,19 +39,23 @@ const TagColumn = ({ activity }: Props) => {
 
   return (
     <Popover
-      title='Activity tag'
-      content={
+      title='Tag activity'
+      content={<>
         <TagSelectorComponent
           value={activity.tagId || undefined}
           onChange={onAssignTag}
         />
+        <Button type='link' danger onClick={() => onAssignTag(undefined)}>
+            Clear
+        </Button>
+          </>
       }
       getPopupContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
       }
       trigger='hover'
       placement='rightTop'
-    >
+    > 
       <Button size='small' className='tag-col--wrapper'>
         {selectedTag ? selectedTag.name : 'N/A'}
       </Button>
