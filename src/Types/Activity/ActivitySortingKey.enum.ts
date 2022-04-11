@@ -8,6 +8,6 @@ export enum EActivitySortingKey {
   WEEKDAY = 'metadata.weekday',
   TIME = 'metadata.time',
   JOINT_TEACHING_OBJECT = 'jointTeachingObject',
-  PRIMARY_OBJECT = 'primaryObject',
+  PRIMARY_OBJECT = 'metadata.primaryObject',
   DATE_RANGES = 'metadata.startDate',
 }
