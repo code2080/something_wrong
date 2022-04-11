@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 
 // COMPONENTS
 import SSPResourceWrapper from 'Components/SSP/Components/Wrapper';
-import JobsTable from 'Components/JobsTable';
+import JobsTable from 'Components/Tables/Jobs';
 
 // REDUX
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
@@ -19,7 +19,7 @@ const JobsPage = () => {
       name={`${formId}__FORM_DETAIL_JOBS`}
       selectorFn={selectSSPState('jobs')}
       fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
-        fetchJobsForForm(formId, partialQuery)
+        fetchJobsForForm(formId as string, partialQuery)
       }
       initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
         initializeSSPStateProps(partialQuery)

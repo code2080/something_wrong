@@ -42,7 +42,7 @@ const ActivitiesToolbar = () => {
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const allowedGroupings = useSelector(selectFormAllowedGroupings(formId));
+  const allowedGroupings = useSelector(selectFormAllowedGroupings(formId as string));
 
   /**
    * EVENT HANDLERS
@@ -81,7 +81,7 @@ const ActivitiesToolbar = () => {
         <TagSelectionButton selectedActivityIds={selectedKeys || []} />
         <JointTeachingGroupMerger
           activityIds={selectedKeys}
-          formId={formId}
+          formId={formId as string}
           onCreateMatchCallback={onCreateMatchCallback}
         />
       </ToolbarGroup>

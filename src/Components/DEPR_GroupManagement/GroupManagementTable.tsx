@@ -13,7 +13,7 @@ import { SECTION_CONNECTED } from 'Constants/sectionTypes.constants';
 
 import './GroupManagementTable.scss';
 import GroupManagementToolbar from 'Components/DEPR_GroupManagementToolbar';
-import GroupAllocationDesigner from 'Components/GroupAllocationDesigner';
+import GroupAllocationDesigner from 'Components/DEPR_GroupAllocationDesigner';
 import { useTECoreAPI } from 'Hooks/TECoreApiHooks';
 import { IndexedObject } from 'Redux/ObjectRequests/ObjectRequests.types';
 import { useDispatch, useSelector } from 'react-redux';

@@ -13,7 +13,7 @@ import {
   TrackColumn,
   WeekPatternUIDColumn,
 } from 'Components/TableColumnsShared';
-import WeekPatternTable from 'Components/WeekPatternTable';
+import WeekPatternTable from 'Components/Tables/WeekPattern';
 
 // REDUX
 import { fetchTagsForForm } from 'Redux/Tags';
@@ -24,7 +24,7 @@ import useSSP from 'Components/SSP/Utils/hooks';
 
 // TYPES
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
-import TagGroupTable from 'Components/TagGroupTable';
+import TagGroupTable from 'Components/Tables/TagGroup';
 import { selectRunningJobId } from 'Redux/Jobs';
 import SchedulingProgressOverlay from 'Components/SchedulingProgressOverlay';
 
@@ -38,7 +38,7 @@ const ActivitiesPage = () => {
    * SELECTORS
    */
   const { WEEK_PATTERN: hasWeekPattern } = useSelector(
-    selectFormAllowedGroupings(formId),
+    selectFormAllowedGroupings(formId as string),
   );
   const runningJobId = useSelector(selectRunningJobId);
 
@@ -47,7 +47,7 @@ const ActivitiesPage = () => {
    */
   useEffect(() => {
     // Need to make sure some secondary resources are loaded
-    dispatch(fetchTagsForForm(formId));
+    dispatch(fetchTagsForForm(formId as string));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

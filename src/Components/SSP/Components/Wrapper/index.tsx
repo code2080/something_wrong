@@ -161,35 +161,6 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     dispatch(fetchFn({ ...filterQuery, page: 1 }));
   };
 
-  const applyMultipleSSPChanges = (args: Partial<ISSPQueryObject>) => {
-    /**
-     * IF we have filter changes as part of the args,
-     * we need to patch our local filter state to make sure
-     * the filter modal reflects the new filters
-     */
-    const { inclusion, matchType, filters } = args;
-    if (inclusion) patchInclusion(inclusion);
-    if (matchType) setMatchType(matchType);
-    if (filters) patchFilters(filters);
-
-    /**
-     * We also potentially need to update our filter local storage cache
-     * We can not rely on our patchFilters functions to have updated our state date,
-     * hence we prefer to use - if available - the filter data being passed into the function
-     */
-    const filterQuery: ISSPFilterQuery = {
-      matchType: matchType || _matchType,
-      inclusion: inclusion || _inclusion,
-      filters: filters || _filters,
-    };
-    setFilterCache(name, filterQuery);
-
-    /**
-     * Dispatch the fetch function with all the possible SSP query parameters
-     */
-    dispatch(fetchFn({ ...args, page: 1 }));
-  };
-
   const initFiltersForDatasourceWithCacheAndDefaults = (
     defaultFilters: Partial<ISSPFilterQuery> = {},
   ) => {
@@ -222,6 +193,48 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     dispatch(fetchFn({ groupBy }));
   };
 
+  /**
+   * MISC
+   */
+   const applyMultipleSSPChanges = (args: Partial<ISSPQueryObject>) => {
+    /**
+     * IF we have filter changes as part of the args,
+     * we need to patch our local filter state to make sure
+     * the filter modal reflects the new filters
+     */
+    const { inclusion, matchType, filters } = args;
+    if (inclusion) patchInclusion(inclusion);
+    if (matchType) setMatchType(matchType);
+    if (filters) patchFilters(filters);
+
+    /**
+     * We also potentially need to update our filter local storage cache
+     * We can not rely on our patchFilters functions to have updated our state date,
+     * hence we prefer to use - if available - the filter data being passed into the function
+     */
+    const filterQuery: ISSPFilterQuery = {
+      matchType: matchType || _matchType,
+      inclusion: inclusion || _inclusion,
+      filters: filters || _filters,
+    };
+    setFilterCache(name, filterQuery);
+
+    /**
+     * Dispatch the fetch function with all the possible SSP query parameters
+     */
+    dispatch(fetchFn({ ...args, page: 1 }));
+  };
+
+  const [metadata, setMetadata] = useState<Record<string, any>>({});
+  const _setMetadata = (updMetadata: Record<string, any>) => {
+    setMetadata(updMetadata);
+    dispatch(fetchFn({ metadata: updMetadata }));
+  };
+  const patchMetadata = (prop: string, value: any) => {
+    const updMetadata = { ...metadata, [prop]: value };
+    _setMetadata(updMetadata);
+  };
+  
   /**
    * EFFECTS
    */
@@ -286,8 +299,11 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         setSorting,
         sortBy,
         direction,
-        // EVERYTHING
+        // MISC
         applyMultipleSSPChanges,
+        metadata,
+        setMetadata: _setMetadata,
+        patchMetadata,
       }}
     >
       {children}

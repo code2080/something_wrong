@@ -37,6 +37,7 @@ export const teCoreCallnames = {
   REQUEST_MANUALLY_SCHEDULE_ACTIVITY: 'requestManuallyScheduleActivity',
   GET_RELATED_GROUPS: 'getRelatedGroups',
   GET_ALLOCATION_TYPES: 'getAllocationTypes',
+  REQUEST_CREATE_OBJECTS: 'requestCreateObjects',
 };
 
 export const teCoreActions = {
@@ -269,4 +270,8 @@ export const teCoreActions = {
     callname: teCoreCallnames.GET_ALLOCATION_TYPES,
     mockFunction: () => reservationTypes,
   },
+  REQUEST_CREATE_OBJECTS: {
+    callname: teCoreCallnames.REQUEST_CREATE_OBJECTS,
+    mockFunction: () => console.log('MOCKED: Create object request'),
+  }
 };

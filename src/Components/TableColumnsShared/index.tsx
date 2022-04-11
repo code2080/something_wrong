@@ -21,6 +21,8 @@ import { TWeekPatternGroup } from 'Types/Activity/WeekPatternGroup.type';
 import { TJob } from 'Types/Job.type';
 import { TTagGroup } from 'Types/Activity/TagGroup.type';
 import JobTags from './JobTags';
+import { TActivityTypeTrackGroup } from 'Types/GroupManagement.type';
+import ObjectAllocation from './ObjectAllocation';
 
 export const RowActionsColumn: ISSPColumn = {
   title: '',
@@ -243,3 +245,16 @@ export const TrackColumn: ISSPColumn = {
   ),
   sorter: false,
 };
+
+export const ObjectAllocationColumn = (typeLabel: string): ISSPColumn => ({
+  title: typeLabel,
+  key: 'groupType',
+  dataIndex: undefined,
+  render: (activityTypeGroup: TActivityTypeTrackGroup) => (
+    <ObjectAllocation
+      activityIdsPerTrack={activityTypeGroup.activityIds}
+      connectedObjects={activityTypeGroup.connectedObjects}
+      typeExtId={'courseevt'}
+    />
+  ),
+})

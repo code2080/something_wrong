@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // COMPONENTS
 
 import { makeSelectSubmissions } from 'Redux/FormSubmissions/formSubmissions.selectors';
-import GroupManagementTable from 'Components/GroupManagement/GroupManagementTable';
+import GroupManagementTable from 'Components/DEPR_GroupManagement/GroupManagementTable';
 import { selectDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 import { formSelector } from 'Redux/Forms';
 

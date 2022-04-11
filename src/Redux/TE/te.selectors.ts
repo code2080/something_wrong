@@ -20,6 +20,16 @@ export const selectLabelsForTypes = (
   return typeExtIds.map((typeExtId: string) => extIdProps[typeExtId]?.label || typeExtId);
 };
 
+export const selectLabelForObject = (
+  extId?: string,
+  missingExtIdReturnVal: string | undefined = 'N/A', 
+) => (state: any) => {
+  if (!extId) return missingExtIdReturnVal;
+  const extIdProps = state.te.extIdProps?.objects?.extId || null;
+  if (!extIdProps || !extIdProps.label) return extId;
+  return extIdProps.label;
+};
+
 /**
  * @deprecated
  * ALL BELOW SHOULD BE CONSIDERED DEPRECATED

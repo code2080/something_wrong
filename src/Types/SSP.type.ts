@@ -97,7 +97,9 @@ export interface ISSPQueryObject
   extends ISSPFilterQuery,
     ISSPSortingQuery,
     ISSPGroupingQuery,
-    ISSPPaginationQuery {}
+    ISSPPaginationQuery {
+      metadata?: Record<string, any>;
+    }
 
 export interface ISSPResourceContext
   extends Omit<ISSPReducerState, 'allKeys' | 'data'> {
@@ -137,6 +139,9 @@ export interface ISSPResourceContext
   limit: number;
   sortBy: string | undefined;
   direction: ESortDirection | undefined;
-  // EVERYTHING
+  // MISC
   applyMultipleSSPChanges: (args: Partial<ISSPQueryObject>) => void;
+  metadata: Record<string, any>;
+  setMetadata: (newMetadata: Record<string, any>) => void;
+  patchMetadata: (prop: string, value: any) => void;
 }

@@ -448,6 +448,16 @@ export const batchOperationUnschedule = (
     CActivityBatchOperationURL[EActivityBatchOperation.UNSCHEDULE],
   );
 
+export const batchOperationValues = (
+  formId: string,
+  batchOperation: TActivityBatchOperation,
+) =>
+  generalBatchOperationFn(
+    formId,
+    batchOperation,
+    CActivityBatchOperationURL[EActivityBatchOperation.VALUES],
+  );
+
 export const batchOperationSchedule =
   (formId: string, batchOperation: TActivityBatchOperation) =>
   async (dispatch: any) => {

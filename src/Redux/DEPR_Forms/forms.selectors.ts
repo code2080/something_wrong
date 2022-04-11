@@ -98,5 +98,5 @@ export const selectSectionById = (formId: string, sectionId: string) =>
 export const selectFormById =
   (formId: string) =>
   (state: any): TForm | undefined => {
-    return state.forms[formId] || undefined;
+    return state.forms.map[formId] || undefined;
   };

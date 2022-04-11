@@ -8,7 +8,7 @@ import SSPTable from 'Components/SSP/Components/Table';
 import { selectActivityDesignForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
 
 // UTILS
-import { generateColumnsFromDesign } from '../TableColumnsShared/Generators';
+import { generateColumnsFromDesign } from '../../TableColumnsShared/Generators';
 import {
   GroupedTagsColumn,
   SchedulingStatusGroupedColumn,
@@ -28,7 +28,7 @@ const WeekPatternTable = () => {
   /**
    * SELECTORS
    */
-  const design = useSelector(selectActivityDesignForForm(formId));
+  const design = useSelector(selectActivityDesignForForm(formId as string));
 
   /**
    * COLUMNS

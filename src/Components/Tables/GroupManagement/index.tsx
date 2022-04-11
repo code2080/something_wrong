@@ -1,7 +1,11 @@
-import { useParams } from 'react-router-dom';
-
 // COMPONENTS
 import SSPTable from 'Components/SSP/Components/Table';
+import { ObjectAllocationColumn } from 'Components/TableColumnsShared';
+
+// HOOKS
+import useSSP from 'Components/SSP/Utils/hooks';
+import { useSelector } from 'react-redux';
+import { selectLabelForType } from 'Redux/TE/te.selectors';
 
 // REDUX
 
@@ -10,11 +14,11 @@ import SSPTable from 'Components/SSP/Components/Table';
 // TYPES
 
 const GroupManagementTable = () => {
-  const { formId } = useParams<{ formId: string }>();
-
+  const { metadata } = useSSP();
   /**
    * SELECTORS
    */
+  const groupTypeLabel = useSelector(selectLabelForType(metadata.groupTypeExtId));
 
   /**
    * COLUMNS
@@ -40,6 +44,7 @@ const GroupManagementTable = () => {
           key: 'totalTracksForActivityType',
           dataIndex: 'totalTracksForActivityType',
         },
+        ...(metadata.groupTypeExtId ? [ObjectAllocationColumn(groupTypeLabel)] : []),
       ]}
       rowKey='_id'
     />

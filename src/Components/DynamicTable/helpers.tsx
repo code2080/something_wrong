@@ -1,7 +1,6 @@
 // COMPONENTS
 import EllipsisTruncater from '../TableColumns/Components/EllipsisTruncater';
 import ResizableHeaderCell from './ResizableHeaderCell';
-import { DraggableBodyRow } from './dnd/BodyRow';
 
 /**
  * @function getVisibilityIndexor
@@ -209,12 +208,10 @@ export const filterDataSource = (
 /**
  * @function getTableComponents
  * @description function to get the non-standard table components used
- * @param {Bool} isTableDraggable
  * @returns Object
  */
-export const getTableComponents = (isTableDraggable) => ({
+export const getTableComponents = () => ({
   header: {
     cell: ResizableHeaderCell,
   },
-  ...(isTableDraggable ? { body: { row: DraggableBodyRow } } : {}),
 });

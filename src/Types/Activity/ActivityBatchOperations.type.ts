@@ -1,10 +1,12 @@
 import { EActivityStatus } from './ActivityStatus.enum';
+import { ActivityValue } from './ActivityValue.type';
 
 export enum EActivityBatchOperation {
   TAGS = 'TAGS',
   STATUS = 'STATUS',
   SCHEDULE = 'SCHEDULE',
   UNSCHEDULE = 'UNSCHEDULE',
+  VALUES = 'VALUES',
 }
 
 export const CActivityBatchOperationURL = {
@@ -12,12 +14,13 @@ export const CActivityBatchOperationURL = {
   [EActivityBatchOperation.STATUS]: 'status',
   [EActivityBatchOperation.SCHEDULE]: 'schedule',
   [EActivityBatchOperation.UNSCHEDULE]: 'unschedule',
+  [EActivityBatchOperation.VALUES]: 'values',
 };
 
 export type TActivityBatchOperation = {
   type: EActivityBatchOperation;
   data: Array<
-    TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation | TUnscheduleBatchOperation
+    TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation | TUnscheduleBatchOperation | TValuesBatchOperation
   >;
   metadata?: any;
 };
@@ -36,4 +39,11 @@ export type TStatusBatchOperation = {
   errorDetails?: any | undefined | null;
   reservationId?: any | undefined | null;
   schedulingTimestamp?: any | undefined | null;
+};
+
+export type TValuesBatchOperation = {
+  _id: string;
+  extId: string;
+  opsType: 'ADD' | 'REMOVE';
+  payload?: Partial<ActivityValue>;
 };

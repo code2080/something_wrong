@@ -17,7 +17,7 @@ import {
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 
 // TYPES
-import { createFn as createJobFn, EJobGroupings, TJob } from 'Types/Job.type';
+import { createFn as createJobFn, TJob } from 'Types/Job.type';
 import {
   ISSPReducerState,
   ISSPQueryObject,
@@ -26,6 +26,7 @@ import {
 } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
 import { AppDispatch } from 'Redux/store';
+import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -33,10 +34,10 @@ export const initialState: ISSPReducerState = {
   hasErrors: false,
   filterLookupMapLoading: false,
   // GROUPING
-  groupBy: EJobGroupings.FLAT,
+  groupBy: EActivityGroupings.FLAT,
   // DATA
   data: {
-    [EJobGroupings.FLAT]: {
+    [EActivityGroupings.FLAT]: {
       results: [],
       map: {},
       sortBy: undefined,
@@ -119,7 +120,7 @@ export const fetchJobsForForm =
     try {
       const serializedQuery = serializeSSPQuery(
         queryObject,
-        getState().activities,
+        getState().jobs,
       );
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({

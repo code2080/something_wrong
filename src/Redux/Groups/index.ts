@@ -17,7 +17,7 @@ import {
 import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 
 // TYPES
-import { createFn, TActivityTypeGroup } from 'Types/GroupManagement.type';
+import { createFn, TActivityTypeTrackGroup } from 'Types/GroupManagement.type';
 import {
   ISSPReducerState,
   ISSPQueryObject,
@@ -91,11 +91,11 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Selectors
-export const groupsSelector = (state: IState): TActivityTypeGroup[] =>
+export const groupsSelector = (state: IState): TActivityTypeTrackGroup[] =>
   state.groups.data[state.groups.groupBy].results;
 export const jobSelector =
   (id: string) =>
-  (state: IState): TActivityTypeGroup | undefined =>
+  (state: IState): TActivityTypeTrackGroup | undefined =>
     state.groups.data[state.groups.groupBy][id] || undefined;
 export const groupsLoading = (state: IState): boolean => state.groups.loading;
 
@@ -116,7 +116,7 @@ export const fetchGroupsForForm =
     try {
       const serializedQuery = serializeSSPQuery(
         queryObject,
-        getState().activities,
+        getState().groups,
       );
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({
