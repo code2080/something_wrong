@@ -19,6 +19,7 @@ import CreateObjectsModal from 'Components/CreateObjectsModal';
 
 // STYLES
 import '../index.scss';
+import { useGroupManagement } from 'Hooks/useGroupManagement';
 
 const GroupManagementToolbar = () => {
   /**
@@ -26,11 +27,13 @@ const GroupManagementToolbar = () => {
    */
   const { formId } = useParams<{ formId: string }>();
   const { selectedKeys, patchMetadata, metadata } = useSSP();
+  const { requestAllocateObjectsByIds: requestAllocateObjects } =
+    useGroupManagement();
 
   /**
    * SELECTORS
    */
-  const mappedObjects = useSelector(selectMappedTypesForForm(formId as string));
+  const mappedObjects = useSelector(selectMappedTypesForForm(formId));
   const objectLabels = useSelector(selectLabelsForTypes(mappedObjects));
 
   /**
@@ -39,6 +42,10 @@ const GroupManagementToolbar = () => {
   const [showCreateObjectsModal, setShowCreateObjectsModal] = useState(false);
 
   const canAllocateObjects = !isEmpty(selectedKeys);
+
+  const onAllocateObjects = () => {
+    requestAllocateObjects(selectedKeys);
+  };
 
   return (
     <>
@@ -60,13 +67,16 @@ const GroupManagementToolbar = () => {
         </ToolbarGroup>
         <ToolbarGroup label='Actions'>
           <ToolbarButton
-            onClick={() => setShowCreateObjectsModal(true)}
             disabled={!selectedKeys.length || !metadata.groupTypeExtId}
+            onClick={() => setShowCreateObjectsModal(true)}
           >
             <PlusCircleOutlined />
             Create objects
           </ToolbarButton>
-          <ToolbarButton disabled={!canAllocateObjects}>
+          <ToolbarButton
+            disabled={!canAllocateObjects}
+            onClick={onAllocateObjects}
+          >
             <AppstoreAddOutlined />
             Allocate objects
           </ToolbarButton>
