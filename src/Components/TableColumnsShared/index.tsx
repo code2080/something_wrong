@@ -246,7 +246,10 @@ export const TrackColumn: ISSPColumn = {
   sorter: false,
 };
 
-export const ObjectAllocationColumn = (typeLabel: string): ISSPColumn => ({
+export const ObjectAllocationColumn = (
+  typeLabel: string,
+  typeExtId: string,
+): ISSPColumn => ({
   title: typeLabel,
   key: 'groupType',
   dataIndex: undefined,
@@ -254,7 +257,7 @@ export const ObjectAllocationColumn = (typeLabel: string): ISSPColumn => ({
     <ObjectAllocation
       activityIdsPerTrack={activityTypeGroup.activityIds}
       connectedObjects={activityTypeGroup.connectedObjects}
-      typeExtId={'courseevt'}
+      typeExtId={typeExtId}
     />
   ),
-})
+});

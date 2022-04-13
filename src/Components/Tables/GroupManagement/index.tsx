@@ -47,7 +47,7 @@ const GroupManagementTable = () => {
           dataIndex: 'totalTracksForActivityType',
         },
         ...(metadata.groupTypeExtId
-          ? [ObjectAllocationColumn(groupTypeLabel)]
+          ? [ObjectAllocationColumn(groupTypeLabel, metadata.groupTypeExtId)]
           : []),
       ]}
       rowKey='_id'
