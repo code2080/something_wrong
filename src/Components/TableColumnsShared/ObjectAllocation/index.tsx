@@ -37,12 +37,12 @@ const ObjectAllocation = ({
 
   const createRemovalData = (fromTrack: number, typeExtId: string) => {
     const activityIds = activityIdsPerTrack[fromTrack - 1];
-    const removalData: TValuesBatchOperation[] = activityIds.map((_id) => ({
+    const unsetData: TValuesBatchOperation[] = activityIds.map((_id) => ({
       _id,
       extId: typeExtId,
-      opsType: 'REMOVE',
+      opsType: 'UNSET',
     }));
-    return removalData;
+    return unsetData;
   };
 
   const createAllocationData = (
@@ -51,10 +51,10 @@ const ObjectAllocation = ({
     objectExtId: string,
   ) => {
     const activityIds = activityIdsPerTrack[toTrack - 1];
-    const removalData: TValuesBatchOperation[] = activityIds.map((_id) => ({
+    const setData: TValuesBatchOperation[] = activityIds.map((_id) => ({
       _id,
       extId: typeExtId,
-      opsType: 'ADD',
+      opsType: 'SET',
       payload: {
         type: ActivityValueType.OBJECT,
         extId: typeExtId,
@@ -64,7 +64,7 @@ const ObjectAllocation = ({
         value: [objectExtId], // @todo need to support maybe not patch but multiple objects...
       },
     }));
-    return removalData;
+    return setData;
   };
 
   const onMoveObject = (
