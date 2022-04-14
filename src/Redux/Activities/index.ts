@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../Services/api.service';
 
 // ACTIONS
@@ -68,6 +68,7 @@ import { TPopulateSelectionPayload } from 'Types/TECorePayloads.type';
 import { ActivityValue } from 'Types/Activity/ActivityValue.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import { merge } from 'lodash';
+import { AppDispatch } from 'Redux/store';
 
 export const initialState: ISSPReducerState = {
   // API STATE
@@ -181,7 +182,10 @@ const slice = createSlice({
     updateWorkerStatus: (state, { payload }) => {
       updateResourceWorkerStatus({ workerStatus: payload }, state);
     },
-    defaultBatchOperationSuccessHandler: (state, { payload }) => {
+    defaultBatchOperationSuccessHandler: (
+      state,
+      { payload }: PayloadAction<TActivityBatchOperation>,
+    ) => {
       /**
        * @todo differentiate based on groupBy
        */
@@ -405,7 +409,7 @@ export const revertActivityValue =
 
 const generalBatchOperationFn =
   (formId: string, batchOperation: TActivityBatchOperation, boUrl: string) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     try {
       dispatch(defaultRequestHandler(null));
       await api.post({

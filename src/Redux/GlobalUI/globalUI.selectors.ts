@@ -1,10 +1,11 @@
 import { createSelector } from 'reselect';
+import { EFormDetailTabs } from 'Types/FormDetailTabs.enum';
 
 const globalUIState = (state) => state.globalUI;
 
 export const selectFormDetailTab = createSelector(
   globalUIState,
-  (uiState) => uiState.selectedFormDetailTab,
+  (uiState): EFormDetailTabs => uiState.selectedFormDetailTab,
 );
 
 export const selectFormDetailSubmission = createSelector(

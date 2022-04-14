@@ -85,7 +85,7 @@ const ObjectAllocation = ({
       data: [...removalData, ...allocationData],
     };
     console.log(batchOp);
-    dispatch(batchOperationValues(formId as string, batchOp));
+    dispatch(batchOperationValues(formId, batchOp));
   };
 
   return (

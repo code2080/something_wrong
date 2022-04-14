@@ -49,6 +49,7 @@ export const initialState: ISSPReducerState = {
   filters: {},
   filterLookupMap: {},
   workerStatus: undefined,
+  metadata: undefined,
 };
 
 // Slice

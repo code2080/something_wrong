@@ -102,7 +102,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
           .flatMap((id) => data[groupBy].map[id]?.activityIds)
           .filter((id) => id);
     }
-  }
+  };
   /**
    * SORTING
    */
@@ -196,7 +196,7 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
   /**
    * MISC
    */
-   const applyMultipleSSPChanges = (args: Partial<ISSPQueryObject>) => {
+  const applyMultipleSSPChanges = (args: Partial<ISSPQueryObject>) => {
     /**
      * IF we have filter changes as part of the args,
      * we need to patch our local filter state to make sure
@@ -225,16 +225,17 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
     dispatch(fetchFn({ ...args, page: 1 }));
   };
 
-  const [metadata, setMetadata] = useState<Record<string, any>>({});
-  const _setMetadata = (updMetadata: Record<string, any>) => {
-    setMetadata(updMetadata);
+  const [_metaData, _setMetadata] = useState<Record<string, any>>({});
+  const setMetadata = (updMetadata: Record<string, any>) => {
+    _setMetadata(updMetadata);
+
     dispatch(fetchFn({ metadata: updMetadata }));
   };
   const patchMetadata = (prop: string, value: any) => {
-    const updMetadata = { ...metadata, [prop]: value };
-    _setMetadata(updMetadata);
+    const updMetadata = { ..._metaData, [prop]: value };
+    setMetadata(updMetadata);
   };
-  
+
   /**
    * EFFECTS
    */
@@ -301,8 +302,8 @@ const SSPResourceWrapper: React.FC<TSSPWrapperProps> = ({
         direction,
         // MISC
         applyMultipleSSPChanges,
-        metadata,
-        setMetadata: _setMetadata,
+        metadata: _metaData,
+        setMetadata,
         patchMetadata,
       }}
     >

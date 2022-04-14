@@ -26,7 +26,10 @@ import {
 } from '../../Redux/GlobalUI/globalUI.actions';
 import { fetchTagsForForm } from '../../Redux/Tags';
 import { fetchConstraints } from 'Redux/Constraints';
-import { selectFormDetailSubmission, selectFormDetailTab } from '../../Redux/GlobalUI/globalUI.selectors';
+import {
+  selectFormDetailSubmission,
+  selectFormDetailTab,
+} from '../../Redux/GlobalUI/globalUI.selectors';
 import { hasPermission } from '../../Redux/Auth/auth.selectors';
 import { getExtIdPropsPayload } from '../../Redux/Integration/integration.selectors';
 import { makeSelectSubmissions } from '../../Redux/FormSubmissions/formSubmissions.selectors';
@@ -68,8 +71,10 @@ import GroupManagementPage from './pages/GroupManagement';
 import JobsPage from './pages/Jobs/jobs.page';
 
 // TYPES
-import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
+import { IDefaultSocketPayload } from 'Types/WebSocket.type';
 import { ISSPQueryObject } from 'Types/SSP.type';
+import { fetchGroupsForForm } from 'Redux/Groups';
+import { EFormDetailTabs } from 'Types/FormDetailTabs.enum';
 
 export const TAB_CONSTANT = {
   FORM_INFO: 'FORM_INFO',
@@ -90,48 +95,6 @@ const FormPage = () => {
 
   const activitiesWorkerStatus = useSelector(selectActivitiesWorkerStatus);
   const isFilterLookupMapLoading = useSelector(filterLookupMapLoading);
-
-  const socketEventMap = {
-    ACTIVITY_GENERATION_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK' || !formId) return;
-      if (payload.workerStatus === 'IN_PROGRESS') {
-        // Set the redux state to in progress
-        dispatch(updateWorkerStatus('IN_PROGRESS'));
-      }
-      // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
-      if (
-        payload.workerStatus === 'DONE' &&
-        activitiesWorkerStatus === 'IN_PROGRESS'
-      ) {
-        dispatch(fetchActivitiesForForm(formId, {}));
-      }
-    },
-    ACTIVITY_BATCH_OPERATION_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK' || !formId) return;
-      dispatch(fetchActivitiesForForm(formId, {}));
-    },
-    FILTER_LOOKUP_MAP_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK' || !formId) return;
-      if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
-        dispatch(fetchActivityFilterLookupMapForForm(formId));
-      }
-    },
-    JOB_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.status !== 'OK' || !formId) return;
-      batch(() => {
-        dispatch(updateJobWorkerStatus(payload.workerStatus));
-        dispatch(fetchJobsForForm(formId));
-      });
-    },
-  };
-
-  /**
-   * Establish web sockets connection
-   */
-  useSubscribeToFormEvents({
-    formId,
-    eventMap: socketEventMap,
-  });
 
   /**
    * SELECTORS
@@ -161,6 +124,59 @@ const FormPage = () => {
   /**
    * EFFECTS
    */
+
+  const socketEventMap = {
+    ACTIVITY_GENERATION_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK' || !formId) return;
+      if (payload.workerStatus === 'IN_PROGRESS') {
+        // Set the redux state to in progress
+        dispatch(updateWorkerStatus('IN_PROGRESS'));
+      }
+      // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
+      if (
+        payload.workerStatus === 'DONE' &&
+        activitiesWorkerStatus === 'IN_PROGRESS'
+      ) {
+        dispatch(fetchActivitiesForForm(formId, {}));
+      }
+    },
+    ACTIVITY_BATCH_OPERATION_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK' || !formId) return;
+
+      switch (selectedFormDetailTab) {
+        case EFormDetailTabs.ACTIVITIES:
+          dispatch(fetchActivitiesForForm(formId, {}));
+          break;
+        case EFormDetailTabs.GROUP_MANAGEMENT:
+          dispatch(fetchGroupsForForm(formId, {}));
+          break;
+        default:
+          break;
+      }
+    },
+    FILTER_LOOKUP_MAP_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK' || !formId) return;
+      if (payload.workerStatus === 'DONE' && !isFilterLookupMapLoading) {
+        dispatch(fetchActivityFilterLookupMapForForm(formId));
+      }
+    },
+    JOB_UPDATE: (payload: IDefaultSocketPayload) => {
+      if (payload.status !== 'OK' || !formId) return;
+      batch(() => {
+        dispatch(updateJobWorkerStatus(payload.workerStatus));
+        dispatch(fetchJobsForForm(formId));
+      });
+    },
+  };
+
+  /**
+   * Establish web sockets connection
+   */
+  useSubscribeToFormEvents({
+    formId,
+    eventMap: socketEventMap,
+  });
+
   useEffect(() => {
     if (!form || !formId) return;
     dispatch(fetchMappings(form));
@@ -227,11 +243,15 @@ const FormPage = () => {
     <SSPResourceWrapper
       name={`${formId}__FORM_DETAIL_ACTIVITIES`}
       selectorFn={selectSSPState('activities')}
-      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) => fetchActivitiesForForm(formId as string, partialQuery)}
+      fetchFn={(partialQuery?: Partial<ISSPQueryObject>) =>
+        fetchActivitiesForForm(formId as string, partialQuery)
+      }
       initSSPStateFn={(partialQuery?: Partial<ISSPQueryObject>) =>
         initializeSSPStateProps(partialQuery)
       }
-      fetchFilterLookupsFn={() => fetchActivityFilterLookupMapForForm(formId as string)}
+      fetchFilterLookupsFn={() =>
+        fetchActivityFilterLookupMapForForm(formId as string)
+      }
     >
       <div className='form--wrapper'>
         <TEAntdTabBar

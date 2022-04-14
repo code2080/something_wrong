@@ -18,7 +18,9 @@ export const serializeSSPQuery = (
     'matchType',
     'inclusion',
     'filters',
+    'metadata',
   ]);
+
   const finalGroupBy = partialQueryObject?.groupBy || sspQueryParams.groupBy;
 
   const groupedParams = pick(state.data[finalGroupBy], [
