@@ -18,11 +18,7 @@ import { serializeSSPQuery } from 'Components/SSP/Utils/helpers';
 
 // TYPES
 import { createFn, TActivityTypeTrackGroup } from 'Types/GroupManagement.type';
-import {
-  ISSPReducerState,
-  ISSPQueryObject,
-  EFilterType,
-} from 'Types/SSP.type';
+import { ISSPReducerState, ISSPQueryObject, EFilterType } from 'Types/SSP.type';
 import { IState } from 'Types/State.type';
 import { AppDispatch } from 'Redux/store';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
@@ -53,6 +49,7 @@ export const initialState: ISSPReducerState = {
   filters: {},
   filterLookupMap: {},
   workerStatus: undefined,
+  metadata: undefined,
 };
 
 // Slice
@@ -75,7 +72,7 @@ const slice = createSlice({
       updateResourceWorkerStatus(payload, state);
       finishedLoadingSuccess(state);
     },
-    updateJobSuccess: (state, { payload }) => {
+    updateGroupsForFormSuccess: (state, { payload }) => {
       updateEntity(state, payload, createFn, '_id');
       finishedLoadingSuccess(state);
     },
@@ -107,17 +104,14 @@ export const {
   fetchGroupsForFormSuccess,
   resetState,
   updateWorkerStatus,
-  updateJobSuccess,
+  updateGroupsForFormSuccess,
 } = slice.actions;
 
 export const fetchGroupsForForm =
   (formId: string, queryObject?: Partial<ISSPQueryObject>) =>
   async (dispatch: AppDispatch, getState: () => IState) => {
     try {
-      const serializedQuery = serializeSSPQuery(
-        queryObject,
-        getState().groups,
-      );
+      const serializedQuery = serializeSSPQuery(queryObject, getState().groups);
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({
         endpoint: `forms/${formId}/groups?${serializedQuery}`,
@@ -128,3 +122,22 @@ export const fetchGroupsForForm =
     }
   };
 
+/** Create base backend path for everything group / group management */
+const createBaseApiPath = (formId: string) => `forms/${formId}/groups`;
+
+// todo: a good name
+export const allocateGroups =
+  (formId: string, groupIds: string[]) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(defaultRequestHandler(null));
+
+      const result = await api.post({
+        endpoint: `${createBaseApiPath(formId)}/allocate`,
+        data: { groupIds },
+      });
+
+      dispatch(updateGroupsForFormSuccess(result));
+    } catch (e) {
+      dispatch(defaultFailureHandler(null));
+    }
+  };

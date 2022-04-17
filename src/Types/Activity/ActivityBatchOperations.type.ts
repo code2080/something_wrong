@@ -20,7 +20,11 @@ export const CActivityBatchOperationURL = {
 export type TActivityBatchOperation = {
   type: EActivityBatchOperation;
   data: Array<
-    TTagsBatchOperation | TStatusBatchOperation | TScheduleBatchOperation | TUnscheduleBatchOperation | TValuesBatchOperation
+    | TTagsBatchOperation
+    | TStatusBatchOperation
+    | TScheduleBatchOperation
+    | TUnscheduleBatchOperation
+    | TValuesBatchOperation
   >;
   metadata?: any;
 };
@@ -44,6 +48,6 @@ export type TStatusBatchOperation = {
 export type TValuesBatchOperation = {
   _id: string;
   extId: string;
-  opsType: 'ADD' | 'REMOVE';
+  opsType: 'SET' | 'UNSET';
   payload?: Partial<ActivityValue>;
 };

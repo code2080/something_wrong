@@ -91,6 +91,7 @@ export interface ISSPReducerState extends ISSPAPIStatus, ISSPFilterQuery {
   filterLookupMap: any;
   // WORKERS
   workerStatus?: 'IN_PROGRESS' | 'DONE' | string;
+  metadata?: Record<string, any>;
 }
 
 export interface ISSPQueryObject
@@ -98,8 +99,8 @@ export interface ISSPQueryObject
     ISSPSortingQuery,
     ISSPGroupingQuery,
     ISSPPaginationQuery {
-      metadata?: Record<string, any>;
-    }
+  metadata?: Record<string, any>;
+}
 
 export interface ISSPResourceContext
   extends Omit<ISSPReducerState, 'allKeys' | 'data'> {

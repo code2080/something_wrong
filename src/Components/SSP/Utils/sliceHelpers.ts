@@ -1,5 +1,10 @@
 import { omit } from 'lodash';
-import { EActivityBatchOperation, TActivityBatchOperation, TStatusBatchOperation, TTagsBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import {
+  EActivityBatchOperation,
+  TActivityBatchOperation,
+  TStatusBatchOperation,
+  TTagsBatchOperation,
+} from 'Types/Activity/ActivityBatchOperations.type';
 import { EActivityGroupings } from 'Types/Activity/ActivityGroupings.enum';
 import {
   EFilterInclusions,
@@ -39,17 +44,11 @@ export const commitAPIPayloadToState = (
   createFn: Function,
   idProp: string = '_id',
 ): void => {
-  const {
-    results,
-    page,
-    limit,
-    totalPages,
-    groupBy,
-    allKeys,
-  }: ISSPAPIResult = payload;
+  const { results, page, limit, totalPages, groupBy, allKeys }: ISSPAPIResult =
+    payload;
 
   const finalGroupBy = groupBy || state.groupBy;
-  
+
   const iteratedResults = results
     .filter((el: any) => el[idProp])
     .map((el: any) => createFn(el));
@@ -82,6 +81,7 @@ export const commitSSPQueryToState = (
     matchType,
     inclusion,
     filters,
+    metadata,
   } = payload;
   const finalGroupBy = groupBy || state.groupBy;
 
@@ -93,6 +93,7 @@ export const commitSSPQueryToState = (
   state.matchType = matchType || state.matchType;
   state.inclusion = inclusion || state.inclusion;
   state.filters = filters || state.filters;
+  state.metadata = metadata ?? state.metadata;
 };
 
 export const resetSSPState = (state: ISSPReducerState) => {
@@ -146,8 +147,16 @@ export const updateStateWithResultFromBatchOperation = (
   /**
    * @todo we should run createFn here!
    */
-  if (![EActivityBatchOperation.SCHEDULE, EActivityBatchOperation.UNSCHEDULE].includes(batchOperationPayload.type)) {
-    const data = batchOperationPayload.data as (TStatusBatchOperation | TTagsBatchOperation)[];
+  if (
+    ![
+      EActivityBatchOperation.SCHEDULE,
+      EActivityBatchOperation.UNSCHEDULE,
+    ].includes(batchOperationPayload.type)
+  ) {
+    const data = batchOperationPayload.data as (
+      | TStatusBatchOperation
+      | TTagsBatchOperation
+    )[];
     const results = state.data[state.groupBy].results.map((entity) => {
       // Check if el exists in array
       const batchOp = data.find((op) => op._id === entity._id);
