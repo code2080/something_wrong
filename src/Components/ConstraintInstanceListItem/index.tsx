@@ -16,6 +16,7 @@ import './index.scss';
 import { TActivityDesign } from "Types/ActivityDesign";
 import { TConstraint } from "Types/Constraint.type";
 import { TConstraintInstance } from "Types/ConstraintProfile.type";
+import ConstraintInstanceMode from "Components/ConstraintInstanceMode";
 
 type Props = {
   instance: TConstraintInstance;
@@ -56,6 +57,7 @@ const ConstraintInstanceListItem = ({ instance, fields, elements, activityDesign
         description={constraint.description}
       />
       <div className={`constraint-instance-item--content ${hasParameters ? 'has-parameters' : ''} ${hasWeight ? 'has-weight' : ''}`}>
+        <ConstraintInstanceMode instance={instance} onChange={onUpdateMultipleProps} />
         {hasParameters && (
           <ParameterCascader
             paramFields={fields}

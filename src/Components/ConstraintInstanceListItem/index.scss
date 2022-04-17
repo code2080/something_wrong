@@ -13,16 +13,21 @@
   }
 
   .constraint-instance-item--content {
-    width: 350px;
+    width: 500px;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    
+    .constraint-instance-mode--wrapper {
+      margin-right: 35px;
+    }
 
     &.has-parameters {
       display: flex;
-      width: 800px;
+      width: 1000px;
 
       .constraint-instance-parameter-cascader--wrapper {
-        margin-right: 50px;
+        margin-right: 35px;
       }
     }
   }
