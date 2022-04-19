@@ -1,34 +1,33 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
-export const selectLabelForType = (
-  typeExtId?: string, 
-  missingExtIdReturnVal: string | undefined = 'N/A', 
-) => (state: any) => {
-  if (!typeExtId) return missingExtIdReturnVal;
-  const extIdProps = state.te.extIdProps?.types?.typeExtId || null;
-  if (!extIdProps || !extIdProps.label) return typeExtId;
-  return extIdProps.label;
-};
+export const selectLabelForType =
+  (typeExtId?: string, missingExtIdReturnVal: string | undefined = 'N/A') =>
+  (state: any) => {
+    if (!typeExtId) return missingExtIdReturnVal;
+    const extIdProps = state.te.extIdProps?.types?.typeExtId || null;
+    if (!extIdProps || !extIdProps.label) return typeExtId;
+    return extIdProps.label;
+  };
 
-export const selectLabelsForTypes = (
-  typeExtIds?: string[], 
-  missingExtIdReturnVal: string | undefined = 'N/A', 
-) => (state: any) => {
-  if (!typeExtIds) return missingExtIdReturnVal;
-  const extIdProps = state.te.extIdProps?.types || {};
-  return typeExtIds.map((typeExtId: string) => extIdProps[typeExtId]?.label || typeExtId);
-};
+export const selectLabelsForTypes =
+  (typeExtIds?: string[], missingExtIdReturnVal: string | undefined = 'N/A') =>
+  (state: any) => {
+    if (!typeExtIds) return missingExtIdReturnVal;
+    const extIdProps = state.te.extIdProps?.types || {};
+    return typeExtIds.map(
+      (typeExtId: string) => extIdProps[typeExtId]?.label || typeExtId,
+    );
+  };
 
-export const selectLabelForObject = (
-  extId?: string,
-  missingExtIdReturnVal: string | undefined = 'N/A', 
-) => (state: any) => {
-  if (!extId) return missingExtIdReturnVal;
-  const extIdProps = state.te.extIdProps?.objects?.extId || null;
-  if (!extIdProps || !extIdProps.label) return extId;
-  return extIdProps.label;
-};
+export const selectLabelForObject =
+  (extId?: string, missingExtIdReturnVal: string | undefined = 'N/A') =>
+  (state: any) => {
+    if (!extId) return missingExtIdReturnVal;
+    const extIdProps = state.te.extIdProps?.objects?.extId || null;
+    if (!extIdProps || !extIdProps.label) return extId;
+    return extIdProps.label;
+  };
 
 /**
  * @deprecated

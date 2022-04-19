@@ -1,10 +1,10 @@
-import { List } from "antd";
-import { isEmpty } from "lodash";
-import { useSelector } from "react-redux";
+import { List } from 'antd';
+import { isEmpty } from 'lodash';
+import { useSelector } from 'react-redux';
 
 // COMPONENTS
-import ParameterCascader from "Components/ConstraintInstanceParameterCascader";
-import ConstraintInstanceWeightSlider from "Components/ConstraintInstanceWeightSlider";
+import ParameterCascader from 'Components/ConstraintInstanceParameterCascader';
+import ConstraintInstanceWeightSlider from 'Components/ConstraintInstanceWeightSlider';
 
 // REDUX
 import { constraintSelector } from 'Redux/Constraints';
@@ -13,10 +13,10 @@ import { constraintSelector } from 'Redux/Constraints';
 import './index.scss';
 
 // TYPES
-import { TActivityDesign } from "Types/ActivityDesign";
-import { TConstraint } from "Types/Constraint.type";
-import { TConstraintInstance } from "Types/ConstraintProfile.type";
-import ConstraintInstanceMode from "Components/ConstraintInstanceMode";
+import { TActivityDesign } from 'Types/ActivityDesign';
+import { TConstraint } from 'Types/Constraint.type';
+import { TConstraintInstance } from 'Types/ConstraintProfile.type';
+import ConstraintInstanceMode from 'Components/ConstraintInstanceMode';
 
 type Props = {
   instance: TConstraintInstance;
@@ -26,22 +26,30 @@ type Props = {
   onChange: (updateBody: TConstraintInstance) => void;
 };
 
-const ConstraintInstanceListItem = ({ instance, fields, elements, activityDesign, onChange }: Props) => {
+const ConstraintInstanceListItem = ({
+  instance,
+  fields,
+  elements,
+  activityDesign,
+  onChange,
+}: Props) => {
   /**
    * SELECTORS
    */
-  const constraint: TConstraint | undefined = useSelector(constraintSelector(instance.constraintId));
+  const constraint: TConstraint | undefined = useSelector(
+    constraintSelector(instance.constraintId),
+  );
 
   /**
    * EVENT HANDLERS
    */
   const onUpdateSingleProp = (prop: keyof TConstraintInstance, val: any) => {
     onChange({ ...instance, [prop]: val });
-  }
+  };
 
   const onUpdateMultipleProps = (patch: Partial<TConstraintInstance>) => {
     onChange({ ...instance, ...patch });
-  }
+  };
 
   if (!constraint) return null;
 
@@ -49,15 +57,20 @@ const ConstraintInstanceListItem = ({ instance, fields, elements, activityDesign
   const hasWeight = instance.weight != null;
 
   return (
-    <List.Item
-      className="constraint-instance-item--wrapper"
-    >
+    <List.Item className='constraint-instance-item--wrapper'>
       <List.Item.Meta
         title={constraint.name}
         description={constraint.description}
       />
-      <div className={`constraint-instance-item--content ${hasParameters ? 'has-parameters' : ''} ${hasWeight ? 'has-weight' : ''}`}>
-        <ConstraintInstanceMode instance={instance} onChange={onUpdateMultipleProps} />
+      <div
+        className={`constraint-instance-item--content ${
+          hasParameters ? 'has-parameters' : ''
+        } ${hasWeight ? 'has-weight' : ''}`}
+      >
+        <ConstraintInstanceMode
+          instance={instance}
+          onChange={onUpdateMultipleProps}
+        />
         {hasParameters && (
           <ParameterCascader
             paramFields={fields}

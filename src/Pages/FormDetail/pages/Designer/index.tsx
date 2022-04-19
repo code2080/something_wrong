@@ -237,9 +237,11 @@ const ActivityDesignPage = () => {
 
   const onUnlockClick = () => {
     Modal.confirm({
-      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       title: 'Unlock activity design',
-      content: 'After saving your new design, all existing activities and any corresponding reservations will be deleted. Are you sure you want to proceed?',
+      content:
+        'After saving your new design, all existing activities and any corresponding reservations will be deleted. Are you sure you want to proceed?',
       onOk: () => {
         dispatch(unlockActivityDesigner({ formId }));
         leavingPageContext.setIsModified(true);

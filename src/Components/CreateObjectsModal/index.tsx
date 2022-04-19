@@ -24,15 +24,17 @@ const CreateObjectsModal = ({ visible, onClose }: Props) => {
   /**
    * STATE
    */
-  const [mode, setMode] = useState<ECreateObjectsMode>(ECreateObjectsMode.USE_TRACKS);
+  const [mode, setMode] = useState<ECreateObjectsMode>(
+    ECreateObjectsMode.USE_TRACKS,
+  );
   /**
    * MEMOIZED PROPS
    */
-  const requestSummary = useMemo(() =>
-    createRequestSummary(metadata.groupTypeExtId, mode, selectedKeys),
-    [metadata.groupTypeExtId, selectedKeys, mode, createRequestSummary]
+  const requestSummary = useMemo(
+    () => createRequestSummary(metadata.groupTypeExtId, mode, selectedKeys),
+    [metadata.groupTypeExtId, selectedKeys, mode, createRequestSummary],
   );
-  
+
   /**
    * EVENT HANDLERS
    */
@@ -53,16 +55,34 @@ const CreateObjectsModal = ({ visible, onClose }: Props) => {
       okButtonProps={{ size: 'small' }}
       cancelButtonProps={{ size: 'small' }}
     >
-      <Space direction='vertical' size="middle" style={{ width: '100%' }}>
-        <Space direction='vertical' size="small" style={{ width: '100%' }}>
-          <Typography.Text style={{ fontSize: '0.75rem' }}>How many objects are needed:</Typography.Text>
-          <Radio.Group onChange={(e) => setMode(e.target.value)} value={mode} style={{ fontSize: '0.75rem' }}>
-            <Radio value={ECreateObjectsMode.SINGLE_GROUP} style={{ fontSize: '0.75rem' }}>One group</Radio>
-            <Radio value={ECreateObjectsMode.USE_TRACKS} style={{ fontSize: '0.75rem' }}>Maximum number of needed tracks</Radio>
+      <Space direction='vertical' size='middle' style={{ width: '100%' }}>
+        <Space direction='vertical' size='small' style={{ width: '100%' }}>
+          <Typography.Text style={{ fontSize: '0.75rem' }}>
+            How many objects are needed:
+          </Typography.Text>
+          <Radio.Group
+            onChange={(e) => setMode(e.target.value)}
+            value={mode}
+            style={{ fontSize: '0.75rem' }}
+          >
+            <Radio
+              value={ECreateObjectsMode.SINGLE_GROUP}
+              style={{ fontSize: '0.75rem' }}
+            >
+              One group
+            </Radio>
+            <Radio
+              value={ECreateObjectsMode.USE_TRACKS}
+              style={{ fontSize: '0.75rem' }}
+            >
+              Maximum number of needed tracks
+            </Radio>
           </Radio.Group>
         </Space>
-        <Space direction='vertical' size="small" style={{ width: '100%' }}>
-          <Typography.Text style={{ fontSize: '0.75rem' }}>Summary:</Typography.Text>
+        <Space direction='vertical' size='small' style={{ width: '100%' }}>
+          <Typography.Text style={{ fontSize: '0.75rem' }}>
+            Summary:
+          </Typography.Text>
           <SummaryTable requestSummary={requestSummary} mode={mode} />
         </Space>
       </Space>

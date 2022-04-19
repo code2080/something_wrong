@@ -42,22 +42,25 @@ const ActivitiesToolbar = () => {
   const hasSchedulingPermissions = useSelector(
     hasPermission(ASSISTED_SCHEDULING_PERMISSION_NAME),
   );
-  const allowedGroupings = useSelector(selectFormAllowedGroupings(formId as string));
+  const allowedGroupings = useSelector(
+    selectFormAllowedGroupings(formId as string),
+  );
 
   /**
    * EVENT HANDLERS
    */
   const onDeleteActivities = (idsToDelete: string[]) => {
     Modal.confirm({
-      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       title: 'Unschedule activities',
-      content: 'This will cancel all existing reservations and change the activities\' status, are you sure you want to proceed?',
+      content:
+        "This will cancel all existing reservations and change the activities' status, are you sure you want to proceed?",
       onOk: () => {
         unscheduleSelectedActivities(idsToDelete);
         setSelectedKeys([]);
       },
     });
-    
   };
 
   const onCreateMatchCallback = () => {

@@ -108,25 +108,25 @@ const ParameterCascader = ({
   return (
     <div className='constraint-instance-parameter-cascader--wrapper'>
       <Row gutter={8}>
-        <Col span={9}>
-          Element
-        </Col>
-        <Col span={6}>
-          Operator
-        </Col>
-        <Col span={9}>
-          Field
-        </Col>
+        <Col span={9}>Element</Col>
+        <Col span={6}>Operator</Col>
+        <Col span={9}>Field</Col>
       </Row>
       <Row gutter={8}>
         <Col span={9}>
           <CascaderWithTooltip
             notFoundContent={MissingOptionsMessage}
-            placeholder="Element"
-            value={parameters?.firstParam && parameters?.firstParam[0] ? parameters.firstParam : undefined}
+            placeholder='Element'
+            value={
+              parameters?.firstParam && parameters?.firstParam[0]
+                ? parameters.firstParam
+                : undefined
+            }
             options={options.filter(({ value }) => value === 'Form')}
             size='small'
-            getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             onChange={(selected) => {
               setParameters({
                 firstParam: selected,
@@ -145,20 +145,31 @@ const ParameterCascader = ({
           <Select
             value={OperatorRenderer(operator)}
             size='small'
-            getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             onChange={(selected) => onUpdate('operator', selected)}
             style={{ width: '100%' }}
-            options={availableOperators.map((o) => ({ value: o, label: OperatorRenderer(o) }))}
-          /> 
+            options={availableOperators.map((o) => ({
+              value: o,
+              label: OperatorRenderer(o),
+            }))}
+          />
         </Col>
         <Col span={9}>
           <CascaderWithTooltip
             placeholder='Field'
             notFoundContent={MissingOptionsMessage}
-            value={parameters?.lastParam && parameters?.lastParam[0] ? parameters.lastParam : undefined}
+            value={
+              parameters?.lastParam && parameters?.lastParam[0]
+                ? parameters.lastParam
+                : undefined
+            }
             options={options.filter(({ value }) => value === 'Objects')}
             size='small'
-            getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+            getPopupContainer={() =>
+              document.getElementById('te-prefs-lib') as HTMLElement
+            }
             onChange={(selected) => {
               setParameters({
                 firstParam: parameters.firstParam,

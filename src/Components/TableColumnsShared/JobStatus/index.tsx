@@ -14,7 +14,7 @@ import { CJobStatus, EJobStatus, TJob } from 'Types/Job.type';
 import { Tooltip } from 'antd';
 
 type Props = {
-  job: TJob
+  job: TJob;
 };
 
 const JobStatus = ({ job }: Props) => {
@@ -32,12 +32,16 @@ const JobStatus = ({ job }: Props) => {
   };
 
   return (
-    <StatusLabel color={CJobStatus[job.status]?.color ?? 'default'} onClick={onClick} style={{ cursor: 'pointer' }}>
+    <StatusLabel
+      color={CJobStatus[job.status]?.color ?? 'default'}
+      onClick={onClick}
+      style={{ cursor: 'pointer' }}
+    >
       {CJobStatus[job.status]?.label ?? job.status}
       {canBeStopped && (
-        <Tooltip title="Click to stop this job">
-          <div className="job-status--btn">
-            <StopTwoTone twoToneColor="#ff6357"/>
+        <Tooltip title='Click to stop this job'>
+          <div className='job-status--btn'>
+            <StopTwoTone twoToneColor='#ff6357' />
           </div>
         </Tooltip>
       )}

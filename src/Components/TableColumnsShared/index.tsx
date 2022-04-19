@@ -253,12 +253,13 @@ export const ObjectAllocationColumn = (
   title: typeLabel,
   key: 'groupType',
   dataIndex: undefined,
-  render: (activityTypeGroup: TActivityTypeTrackGroup) => (
+  render: (activityTypeGroup: TActivityTypeTrackGroup, _, index) => (
     <ObjectAllocation
       rowId={activityTypeGroup._id}
       activityIdsPerTrack={activityTypeGroup.activityIds}
       connectedObjects={activityTypeGroup.connectedObjects}
       typeExtId={typeExtId}
+      rowIndex={index}
     />
   ),
 });

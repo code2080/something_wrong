@@ -1,12 +1,12 @@
-import { Slider } from "antd";
+import { Slider } from 'antd';
 
 // TYPES
-import { TConstraintInstance } from "Types/ConstraintProfile.type"
+import { TConstraintInstance } from 'Types/ConstraintProfile.type';
 
 // TYPES
 type Props = {
   instance: TConstraintInstance;
-  onChange: (patch: Partial<TConstraintInstance>) => void; 
+  onChange: (patch: Partial<TConstraintInstance>) => void;
 };
 
 const ConstraintInstanceWeightSlider = ({ instance, onChange }: Props) => {
@@ -17,7 +17,9 @@ const ConstraintInstanceWeightSlider = ({ instance, onChange }: Props) => {
   return (
     <div style={{ width: '300px' }}>
       <Slider
-        getTooltipPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+        getTooltipPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
         marks={{
           1: '1',
           5: '5',

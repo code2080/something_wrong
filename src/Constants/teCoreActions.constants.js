@@ -273,5 +273,5 @@ export const teCoreActions = {
   REQUEST_CREATE_OBJECTS: {
     callname: teCoreCallnames.REQUEST_CREATE_OBJECTS,
     mockFunction: () => console.log('MOCKED: Create object request'),
-  }
+  },
 };

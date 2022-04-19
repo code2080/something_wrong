@@ -3,7 +3,7 @@ import { difference, uniq } from "lodash";
 export enum ECreateObjectsMode {
   SINGLE_GROUP = 'SINGLE_GROUP',
   USE_TRACKS = 'USE_TRACKS',
-};
+}
 
 export type TCreateObjectsRequestPayload = {
   numberOfObjects: number;
@@ -11,10 +11,13 @@ export type TCreateObjectsRequestPayload = {
   connectTo: {
     typeExtId: string;
     extId: string;
-  }
+  };
 };
 
-export type TRequestSummary = TCreateObjectsRequestPayload & { primaryObject: string, maxTracksForPrimaryObject: number };
+export type TRequestSummary = TCreateObjectsRequestPayload & {
+  primaryObject: string;
+  maxTracksForPrimaryObject: number;
+};
 
 export type TActivityTypeTrackGroup = {
   _id: string;
@@ -23,7 +26,7 @@ export type TActivityTypeTrackGroup = {
   totalTracksForActivityType: number;
   maxTracksForPrimaryObject: number;
   activityIds: string[][];
-  connectedObjects: Record<string, string[]>,
+  connectedObjects: Record<string, string[]>;
 };
 
 type TActivityTypeTrackAPIPayload = {
@@ -32,12 +35,14 @@ type TActivityTypeTrackAPIPayload = {
   activityType: string;
   totalTracksForActivityType: number;
   maxTracksForPrimaryObject: number;
-  activityIdsAndTracks: { activityId: string, track: number }[];
-  existingGroupObjects: { track: number, objects: string[] }[];
+  activityIdsAndTracks: { activityId: string; track: number }[];
+  existingGroupObjects: { track: number; objects: string[] }[];
   relatedGroupObjects: string[];
-}
+};
 
-export const createFn = (obj: TActivityTypeTrackAPIPayload): TActivityTypeTrackGroup => {
+export const createFn = (
+  obj: TActivityTypeTrackAPIPayload,
+): TActivityTypeTrackGroup => {
   const activityIds = obj.activityIdsAndTracks.reduce(
     (tot: string[][], acc: any) => {
       // Zero base the track
@@ -45,7 +50,7 @@ export const createFn = (obj: TActivityTypeTrackAPIPayload): TActivityTypeTrackG
       // Push the activity id into the right element
       tot[zeroBasedTrack].push(acc.activityId);
       return tot;
-    }, 
+    },
     Array.from({ length: obj.totalTracksForActivityType }, () => []),
   );
 
@@ -55,9 +60,7 @@ export const createFn = (obj: TActivityTypeTrackAPIPayload): TActivityTypeTrackG
    * x) add to each track the objects in objects
    */
   const allExistingObjects = uniq((obj.existingGroupObjects || []).flatMap((val) => val.objects || []));
-  console.log({allExistingObjects});
   const unallocatedObjects = difference(obj.relatedGroupObjects || [], allExistingObjects);
-  console.log({unallocatedObjects});
   const connectedObjects = (obj.existingGroupObjects || []).reduce((tot, acc) => ({
     ...tot,
     [acc.track]: [ ...(tot[acc.track] || []), ...(acc.objects || []) ],
