@@ -54,17 +54,26 @@ export const createFn = (
     Array.from({ length: obj.totalTracksForActivityType }, () => []),
   );
 
+
   /**
-   * Logic here is:
-   * x) iterate over each element in existingGroupObjects
-   * x) add to each track the objects in objects
+   * Create the initial object for the reduction below
    */
+  const initialVal: Record<string | number, string[]> = {};
+  // Create the unallocated objects
   const allExistingObjects = uniq((obj.existingGroupObjects || []).flatMap((val) => val.objects || []));
   const unallocatedObjects = difference(obj.relatedGroupObjects || [], allExistingObjects);
+  initialVal.unallocated = unallocatedObjects || [];
+
+  // Create empty arrays for all tracks
+  for (let i = 0; i < obj.totalTracksForActivityType; i += 1) {
+    initialVal[i+1] = [];
+  }
+
+  // Create connected objects by iterating over all existing objects and add to the right track of initial value
   const connectedObjects = (obj.existingGroupObjects || []).reduce((tot, acc) => ({
     ...tot,
     [acc.track]: [ ...(tot[acc.track] || []), ...(acc.objects || []) ],
-  }), { 'unallocated': unallocatedObjects || [] });
+  }), initialVal);
 
   return {
     _id: obj._id,
