@@ -45,6 +45,7 @@ export type TECoreAPI = {
     typeId: string;
   }): string[];
   requestCreateObjects: (args: TCreateObjectsRequestPayload[], callback: (args: any) => void) => void;
+  selectReservation: ({reservationId: string}) => void;
   /**
    * CATCH ALL
    */

@@ -15,6 +15,7 @@ import {
 import { TActivity } from '../../../../Types/Activity/Activity.type';
 import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
+import classNames from 'classnames';
 
 type Props = {
   activity: TActivity;
@@ -26,8 +27,13 @@ const ManualScheduling = ({ activity }: Props) => {
 
   const teCorePayload = useSelector(selectTECPayloadForActivity(activity._id));
 
-  const onManualScheduling = () => {
-    if (teCorePayload && activity.activityStatus !== EActivityStatus.INACTIVE) {
+  const handleManualScheduling = () => {
+    const { activityStatus, reservationId } = activity;
+    if (activityStatus === EActivityStatus.INACTIVE) return;
+
+    if (activityStatus === EActivityStatus.SCHEDULED && reservationId) {
+      teCoreAPI.selectReservation({ reservationId });
+    } else if (teCorePayload) {
       teCoreAPI.requestManuallyScheduleActivity({
         reservationData: teCorePayload,
         callback: (reservationIds: string[]) => {
@@ -38,7 +44,7 @@ const ManualScheduling = ({ activity }: Props) => {
                 {
                   _id: activity._id,
                   activityStatus: EActivityStatus.SCHEDULED,
-                  reservationId: reservationIds[0] || undefined,
+                  reservationId: reservationIds?.[0] || undefined,
                   schedulingTimestamp: moment.utc(),
                 },
               ],
@@ -51,10 +57,10 @@ const ManualScheduling = ({ activity }: Props) => {
 
   return (
     <div
-      className={`scheduling-actions--button ${
-        activity.activityStatus === EActivityStatus.INACTIVE && 'disabled'
-      }`}
-      onClick={() => onManualScheduling()}
+      className={classNames('scheduling-actions--button', {
+        disabled: activity.activityStatus === EActivityStatus.INACTIVE,
+      })}
+      onClick={() => handleManualScheduling()}
     >
       <SelectOutlined />
     </div>
