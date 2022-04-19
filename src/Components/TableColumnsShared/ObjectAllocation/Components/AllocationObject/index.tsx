@@ -15,10 +15,9 @@ type Props = {
 };
 
 const AllocationObject = ({ extId, track, rowId }: Props) => {
-  
   const [dragProps, dragRef] = useDrag({
-    type: EDraggableTypes.OBJECT,
-    item: { extId, fromTrack: track, rowId },
+    // type: EDraggableTypes.OBJECT,
+    item: { extId, fromTrack: track, type: rowId },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -27,7 +26,9 @@ const AllocationObject = ({ extId, track, rowId }: Props) => {
   return (
     <div
       ref={dragRef}
-      className={`object-allocation--item--object ${track === 'unallocated' ? 'unallocated' : 'allocated'}`}
+      className={`object-allocation--item--object ${
+        track === 'unallocated' ? 'unallocated' : 'allocated'
+      }`}
       style={{
         opacity: dragProps.isDragging ? 0.5 : 1,
       }}
