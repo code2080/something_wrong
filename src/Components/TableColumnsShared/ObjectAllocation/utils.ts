@@ -1,22 +1,10 @@
 import { TValuesBatchOperation } from "Types/Activity/ActivityBatchOperations.type";
 
-export const createUnsetOperation = (activityIds: string[], typeExtId: string): TValuesBatchOperation[] =>
+export const createValuesOperationData =
+  (type: 'SET' | 'UNSET', activityIds: string[], typeExtId: string, objectExtId: string): TValuesBatchOperation[] => 
   activityIds.map((_id) => ({
     _id,
     extId: typeExtId,
-    opsType: 'UNSET',
-  }));
-
-export const createSetOperation = (
-  activityIds: string[],
-  typeExtId: string,
-  objectExtId: string,
-) => {
-  const setData: TValuesBatchOperation[] = activityIds.map((_id) => ({
-    _id,
-    extId: typeExtId,
-    opsType: 'SET',
+    opsType: type,
     payload: [objectExtId],
   }));
-  return setData;
-};

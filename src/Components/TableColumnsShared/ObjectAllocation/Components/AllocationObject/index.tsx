@@ -16,8 +16,8 @@ type Props = {
 
 const AllocationObject = ({ extId, track, rowId }: Props) => {
   const [dragProps, dragRef] = useDrag({
-    // type: EDraggableTypes.OBJECT,
-    item: { extId, fromTrack: track, type: rowId },
+    type: EDraggableTypes.OBJECT,
+    item: { extId, fromTrack: track, rowId },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

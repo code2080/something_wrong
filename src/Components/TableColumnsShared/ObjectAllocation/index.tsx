@@ -10,7 +10,7 @@ import { batchOperationValues } from 'Redux/Activities';
 import TrackItem from './Components/TrackItem';
 
 // UTILS
-import { createSetOperation, createUnsetOperation } from './utils';
+import { createValuesOperationData } from './utils';
 
 // STYLES
 import './index.scss';
@@ -53,11 +53,11 @@ const ObjectAllocation = ({
     const removalData =
       fromTrack === 'unallocated'
         ? []
-        : createUnsetOperation(activityIdsPerTrack[(fromTrack as number) - 1], typeExtId);
+        : createValuesOperationData('UNSET', activityIdsPerTrack[(fromTrack as number) - 1], typeExtId, extId);
     const allocationData =
       toTrack === 'unallocated'
         ? []
-        : createSetOperation(activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
+        : createValuesOperationData('SET', activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
     const batchOp: TActivityBatchOperation = {
       type: EActivityBatchOperation.VALUES,
       data: [...removalData, ...allocationData],

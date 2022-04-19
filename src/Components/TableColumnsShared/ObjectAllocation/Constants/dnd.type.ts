@@ -5,6 +5,5 @@ export enum EDraggableTypes {
 export interface TDraggedItemProps {
   extId: string;
   fromTrack: string | number;
-  type: EDraggableTypes.OBJECT;
   rowId: string;
 }
