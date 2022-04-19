@@ -2,6 +2,7 @@ import { Button, Select } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { isEmpty, trim } from 'lodash';
 
 // REDUX
 import { createTagForForm, tagsLoading, tagsSelector } from 'Redux/Tags';
@@ -55,6 +56,7 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
           <Button
             type='link'
             size='small'
+            hidden={isEmpty(trim(tagName))}
             onClick={onCreateTag}
           >{`Create '${tagName}'?`}</Button>
         </div>
