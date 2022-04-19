@@ -62,6 +62,8 @@ export const createFn = (
   // Create the unallocated objects
   const allExistingObjects = uniq((obj.existingGroupObjects || []).flatMap((val) => val.objects || []));
   const unallocatedObjects = difference(obj.relatedGroupObjects || [], allExistingObjects);
+  console.log({allExistingObjects});
+  console.log({unallocatedObjects});
   initialVal.unallocated = unallocatedObjects || [];
 
   // Create empty arrays for all tracks

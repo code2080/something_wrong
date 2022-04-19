@@ -62,7 +62,7 @@ const ObjectAllocation = ({
       type: EActivityBatchOperation.VALUES,
       data: [...removalData, ...allocationData],
     };
-    
+    console.log({batchOp});
     dispatch(batchOperationValues(formId as string, batchOp));
   };
 
