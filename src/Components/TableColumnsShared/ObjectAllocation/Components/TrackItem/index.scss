@@ -1,11 +1,11 @@
 .object-allocation--item {
   display: flex;
   padding: 2px 0;
-  
+
   &:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
   }
-  
+
   .object-allocation--item--label {
     width: 80px;
     overflow-x: hidden;

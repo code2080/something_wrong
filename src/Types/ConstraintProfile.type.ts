@@ -26,13 +26,10 @@ export const createConstraintInstanceFn = (obj: any): TConstraintInstance => ({
   operator: obj.operator || EConstraintOperators['<'],
 });
 
-
-
-export const createFn = (obj:any): TConstraintProfile => ({
-    _id: obj._id || null,
-    formId: obj.formId,
-    name: obj.name,
-    description: obj.description || null,
-    constraints: obj.constraints || {},
-  });
-
+export const createFn = (obj: any): TConstraintProfile => ({
+  _id: obj._id || null,
+  formId: obj.formId,
+  name: obj.name,
+  description: obj.description || null,
+  constraints: obj.constraints || {},
+});

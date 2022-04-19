@@ -59,11 +59,15 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Selectors
-export const constraintProfilesSelector = (state: IState): TConstraintProfile[] =>
-  state.constraintProfiles.results;
-export const constraintProfileSelector = (id: string | null | undefined) => (state: IState): TConstraintProfile | undefined =>
+export const constraintProfilesSelector = (
+  state: IState,
+): TConstraintProfile[] => state.constraintProfiles.results;
+export const constraintProfileSelector =
+  (id: string | null | undefined) =>
+  (state: IState): TConstraintProfile | undefined =>
     id ? state.constraintProfiles.map[id] || undefined : undefined;
-export const constraintProfilesLoading = (state: IState): boolean => state.constraintProfiles.loading;
+export const constraintProfilesLoading = (state: IState): boolean =>
+  state.constraintProfiles.loading;
 
 // Actions
 
@@ -132,4 +136,3 @@ export const deleteConstraintProfileForForm =
       dispatch(defaultFailureHandler());
     }
   };
-

@@ -18,7 +18,11 @@ import { useAppDispatch } from 'Hooks/useAppHooks';
 import { getElementsForMapping } from '../../../../Redux/ActivityDesigner/activityDesigner.helpers';
 import { selectActivityDesignForForm } from '../../../../Redux/ActivityDesigner/activityDesigner.selectors';
 import { formSelector } from 'Redux/Forms';
-import { constraintProfilesSelector, deleteConstraintProfileForForm, updateConstraintProfile } from 'Redux/ConstraintProfiles';
+import {
+  constraintProfilesSelector,
+  deleteConstraintProfileForForm,
+  updateConstraintProfile,
+} from 'Redux/ConstraintProfiles';
 import { constraintsSelector } from 'Redux/Constraints';
 
 // STYLES
@@ -26,7 +30,10 @@ import './index.scss';
 
 // TYPES
 import { TConstraint } from '../../../../Types/Constraint.type';
-import { TConstraintInstance, TConstraintProfile } from 'Types/ConstraintProfile.type';
+import {
+  TConstraintInstance,
+  TConstraintProfile,
+} from 'Types/ConstraintProfile.type';
 import { getFieldIdsReturn } from '../../../../Types/TECoreAPI';
 
 const getConstraintsOfType = (
@@ -36,7 +43,12 @@ const getConstraintsOfType = (
 ): TConstraintInstance[] => {
   if (!constraintProfile?.constraints || isEmpty(allConstraints)) return [];
   return constraintProfile.constraints.filter(
-    (el) => el.weight && !!allConstraints.find((c) => el.constraintId === c.constraintId && c.type === type));
+    (el) =>
+      el.weight &&
+      !!allConstraints.find(
+        (c) => el.constraintId === c.constraintId && c.type === type,
+      ),
+  );
 };
 
 const ConstraintProfilesPage = () => {
@@ -50,13 +62,18 @@ const ConstraintProfilesPage = () => {
   const form = useSelector(formSelector(formId));
   const activityDesign = useSelector(selectActivityDesignForForm(formId));
   const allConstraints: TConstraint[] = useSelector(constraintsSelector);
-  const constraintProfiles: TConstraintProfile[] = useSelector(constraintProfilesSelector);
+  const constraintProfiles: TConstraintProfile[] = useSelector(
+    constraintProfilesSelector,
+  );
 
   /**
    * STATE
    */
-  const [selectedConstraintProfileId, setSelectedConstraintProfileId] = useState<string | undefined>(undefined);
-  const [selectedConstraintProfile, setSelectedConstraintProfile] = useState<TConstraintProfile | undefined>(undefined);
+  const [selectedConstraintProfileId, setSelectedConstraintProfileId] =
+    useState<string | undefined>(undefined);
+  const [selectedConstraintProfile, setSelectedConstraintProfile] = useState<
+    TConstraintProfile | undefined
+  >(undefined);
   const [fields, setFields] = useState<getFieldIdsReturn>({});
 
   /**
@@ -64,7 +81,9 @@ const ConstraintProfilesPage = () => {
    */
   // Update the local state copy whenever selectedConstraintProfileId updates
   useEffect(() => {
-    const constraintProfile = constraintProfiles.find((c) => c._id === selectedConstraintProfileId);
+    const constraintProfile = constraintProfiles.find(
+      (c) => c._id === selectedConstraintProfileId,
+    );
     setSelectedConstraintProfile(constraintProfile);
   }, [selectedConstraintProfileId, constraintProfiles]);
 
@@ -84,7 +103,7 @@ const ConstraintProfilesPage = () => {
         setFields(result);
       },
     });
-  }, [ activityDesign, tecoreAPI]);
+  }, [activityDesign, tecoreAPI]);
 
   /**
    * EVENT HANDLERS
@@ -92,37 +111,60 @@ const ConstraintProfilesPage = () => {
   const onSave = () => {
     if (!selectedConstraintProfile) return;
     dispatch(updateConstraintProfile(formId, selectedConstraintProfile));
-  }
+  };
 
   const onDelete = () => {
     if (!selectedConstraintProfileId) return;
-    dispatch(deleteConstraintProfileForForm(formId, selectedConstraintProfileId));
+    dispatch(
+      deleteConstraintProfileForForm(formId, selectedConstraintProfileId),
+    );
     setSelectedConstraintProfileId(undefined);
   };
 
   const onUpdate = (prop: keyof TConstraintProfile, value: any) => {
     if (!selectedConstraintProfile) return;
-    setSelectedConstraintProfile({ ...selectedConstraintProfile, [prop]: value });
+    setSelectedConstraintProfile({
+      ...selectedConstraintProfile,
+      [prop]: value,
+    });
   };
 
-  const onUpdateConstraintInstance = (constraintId: string, updateBody: TConstraintInstance) => {
+  const onUpdateConstraintInstance = (
+    constraintId: string,
+    updateBody: TConstraintInstance,
+  ) => {
     if (!selectedConstraintProfile) return;
-    const updatedConstraints = selectedConstraintProfile.constraints.map((instance) => {
-      if (instance.constraintId !== constraintId) return instance;
-      return updateBody; 
-    })
-    setSelectedConstraintProfile({ ...selectedConstraintProfile, constraints: updatedConstraints });
+    const updatedConstraints = selectedConstraintProfile.constraints.map(
+      (instance) => {
+        if (instance.constraintId !== constraintId) return instance;
+        return updateBody;
+      },
+    );
+    setSelectedConstraintProfile({
+      ...selectedConstraintProfile,
+      constraints: updatedConstraints,
+    });
   };
 
   /**
    * MEMOIZED PROPS
    */
   const hasChanges = useMemo(() => {
-    const reduxStateCopy = constraintProfiles.find((el) => el._id === selectedConstraintProfileId);
+    const reduxStateCopy = constraintProfiles.find(
+      (el) => el._id === selectedConstraintProfileId,
+    );
     return !isEqual(reduxStateCopy, selectedConstraintProfile);
-  }, [constraintProfiles, selectedConstraintProfile, selectedConstraintProfileId]);
+  }, [
+    constraintProfiles,
+    selectedConstraintProfile,
+    selectedConstraintProfileId,
+  ]);
 
-  const defaultConstraintInstances = getConstraintsOfType('DEFAULT', selectedConstraintProfile, allConstraints);
+  const defaultConstraintInstances = getConstraintsOfType(
+    'DEFAULT',
+    selectedConstraintProfile,
+    allConstraints,
+  );
   return (
     <div className='constraint-profiles--page'>
       <ConstraintProfileSelectorToolbar
@@ -147,7 +189,9 @@ const ConstraintProfilesPage = () => {
                 renderItem={(item: TConstraintInstance) => (
                   <ConstraintInstanceListItem
                     instance={item}
-                    onChange={(updateBody) => onUpdateConstraintInstance(item.constraintId, updateBody)}
+                    onChange={(updateBody) =>
+                      onUpdateConstraintInstance(item.constraintId, updateBody)
+                    }
                     fields={fields}
                     elements={elements}
                     activityDesign={activityDesign}
@@ -157,12 +201,18 @@ const ConstraintProfilesPage = () => {
             </Collapse.Panel>
             <Collapse.Panel key='CUSTOM' header='Custom constraints'>
               <List
-                dataSource={getConstraintsOfType('OTHER', selectedConstraintProfile, allConstraints)}
+                dataSource={getConstraintsOfType(
+                  'OTHER',
+                  selectedConstraintProfile,
+                  allConstraints,
+                )}
                 pagination={false}
                 renderItem={(item: TConstraintInstance) => (
                   <ConstraintInstanceListItem
                     instance={item}
-                    onChange={(updateBody) => onUpdateConstraintInstance(item.constraintId, updateBody)}
+                    onChange={(updateBody) =>
+                      onUpdateConstraintInstance(item.constraintId, updateBody)
+                    }
                     fields={fields}
                     elements={elements}
                     activityDesign={activityDesign}
@@ -173,7 +223,7 @@ const ConstraintProfilesPage = () => {
           </Collapse>
         </>
       ) : (
-        <Empty description="Select a constraint profile to get started" />
+        <Empty description='Select a constraint profile to get started' />
       )}
     </div>
   );

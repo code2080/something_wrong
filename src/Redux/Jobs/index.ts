@@ -118,10 +118,7 @@ export const fetchJobsForForm =
   (formId: string, queryObject?: Partial<ISSPQueryObject>) =>
   async (dispatch: any, getState: () => IState) => {
     try {
-      const serializedQuery = serializeSSPQuery(
-        queryObject,
-        getState().jobs,
-      );
+      const serializedQuery = serializeSSPQuery(queryObject, getState().jobs);
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({
         endpoint: `forms/${formId}/jobs?${serializedQuery}`,

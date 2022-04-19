@@ -11,6 +11,8 @@ const ActivityTrack = ({ trackNumber }: Props) =>
       <ShareAltOutlined />
       {trackNumber}
     </Space>
-  ) : <div style={{ textAlign: 'center' }}>--</div>;
+  ) : (
+    <div style={{ textAlign: 'center' }}>--</div>
+  );
 
 export default ActivityTrack;

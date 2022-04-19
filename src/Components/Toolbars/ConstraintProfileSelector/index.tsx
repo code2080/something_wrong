@@ -2,10 +2,14 @@ import { Modal, Select, Button } from 'antd';
 import { useSelector } from 'react-redux';
 
 // HOOKS
-import { useAppDispatch, } from 'Hooks/useAppHooks';
+import { useAppDispatch } from 'Hooks/useAppHooks';
 
 // REDUX
-import { constraintProfilesLoading, constraintProfilesSelector, createConstraintProfile } from 'Redux/ConstraintProfiles';
+import {
+  constraintProfilesLoading,
+  constraintProfilesSelector,
+  createConstraintProfile,
+} from 'Redux/ConstraintProfiles';
 
 // STYLES
 import './index.scss';
@@ -22,18 +26,23 @@ type Props = {
   hasChanges: boolean;
 };
 
-const unsavedChangesConfirmation = (hasChanges: boolean, onOkFn: () => void) => {
+const unsavedChangesConfirmation = (
+  hasChanges: boolean,
+  onOkFn: () => void,
+) => {
   if (!hasChanges) {
     onOkFn();
   } else {
     Modal.confirm({
-      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      getContainer: () =>
+        document.getElementById('te-prefs-lib') as HTMLElement,
       title: 'Unsaved changes',
-      content: 'You have unsaved changes on your constraint profile, are you sure you want to discard them?',
+      content:
+        'You have unsaved changes on your constraint profile, are you sure you want to discard them?',
       onOk: () => onOkFn(),
     });
   }
-}
+};
 
 const ConstraintManagerTopBar = ({
   selectedConstraintProfileId,
@@ -64,34 +73,48 @@ const ConstraintManagerTopBar = ({
      * we should select the last one in the list, since this is a new one from the BE
      */
     if (
-      isCreating
-      && constraintProfiles
-      && constraintProfiles.length 
-      && constraintProfiles[constraintProfiles.length - 1]._id !== selectedConstraintProfileId
+      isCreating &&
+      constraintProfiles &&
+      constraintProfiles.length &&
+      constraintProfiles[constraintProfiles.length - 1]._id !==
+        selectedConstraintProfileId
     ) {
       setIsCreating(false);
-      onSelectConstraintProfile(constraintProfiles[constraintProfiles.length - 1]._id)
+      onSelectConstraintProfile(
+        constraintProfiles[constraintProfiles.length - 1]._id,
+      );
     }
-  }, [isCreating, constraintProfiles, setIsCreating, selectedConstraintProfileId, onSelectConstraintProfile]);
+  }, [
+    isCreating,
+    constraintProfiles,
+    setIsCreating,
+    selectedConstraintProfileId,
+    onSelectConstraintProfile,
+  ]);
 
   /**
    * EVENT HANDLERS
    */
-  const onChange = (id: string) => unsavedChangesConfirmation(hasChanges, () => onSelectConstraintProfile(id));
+  const onChange = (id: string) =>
+    unsavedChangesConfirmation(hasChanges, () => onSelectConstraintProfile(id));
 
   const onCreateConstraintProfile = () =>
     unsavedChangesConfirmation(hasChanges, () => {
       setIsCreating(true);
-      dispatch(createConstraintProfile(formId, { name: 'New constraint profile' }));
+      dispatch(
+        createConstraintProfile(formId, { name: 'New constraint profile' }),
+      );
     });
 
   return (
-    <div className="constraint-profile-selector--wrapper detail-toolbar--wrapper">
+    <div className='constraint-profile-selector--wrapper detail-toolbar--wrapper'>
       Select constraint profile:&nbsp;
       <Select
         onChange={onChange}
         value={selectedConstraintProfileId}
-        getPopupContainer={() => document.getElementById('te-prefs-lib') as HTMLElement}
+        getPopupContainer={() =>
+          document.getElementById('te-prefs-lib') as HTMLElement
+        }
         size='small'
         placeholder='No constraint profile selected'
         style={{ width: '280px' }}
@@ -104,8 +127,8 @@ const ConstraintManagerTopBar = ({
         ))}
       </Select>
       <Button
-        size="small"
-        type='primary' 
+        size='small'
+        type='primary'
         icon={<PlusOutlined />}
         onClick={onCreateConstraintProfile}
         loading={isLoading}

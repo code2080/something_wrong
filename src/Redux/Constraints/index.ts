@@ -46,9 +46,12 @@ export default slice.reducer;
 // Selectors
 export const constraintsSelector = (state: IState): TConstraint[] =>
   state.constraints.results;
-export const constraintSelector = (id: string | null | undefined) => (state: IState): TConstraint | undefined =>
+export const constraintSelector =
+  (id: string | null | undefined) =>
+  (state: IState): TConstraint | undefined =>
     id ? state.constraints.map[id] || undefined : undefined;
-export const constraintsLoading = (state: IState): boolean => state.constraints.loading;
+export const constraintsLoading = (state: IState): boolean =>
+  state.constraints.loading;
 
 // Actions
 
@@ -59,13 +62,13 @@ export const {
 } = slice.actions;
 
 export const fetchConstraints = () => async (dispatch: AppDispatch) => {
-    try {
-      dispatch(defaultRequestHandler());
-      const result: ISimpleAPIResult = await api.get({
-        endpoint: `constraints`,
-      });
-      dispatch(fetchConstraintsSuccess(result));
-    } catch (e) {
-      dispatch(defaultFailureHandler());
-    }
-  };
+  try {
+    dispatch(defaultRequestHandler());
+    const result: ISimpleAPIResult = await api.get({
+      endpoint: `constraints`,
+    });
+    dispatch(fetchConstraintsSuccess(result));
+  } catch (e) {
+    dispatch(defaultFailureHandler());
+  }
+};

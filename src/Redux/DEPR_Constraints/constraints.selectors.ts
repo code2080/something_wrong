@@ -9,6 +9,8 @@ export const selectConstraints = createSelector(
 );
 
 export const constraintSelector = (id: string) => (state: any) => {
-  const constraint = state.constraints.find((el: any) => el.constraintId === id);
+  const constraint = state.constraints.find(
+    (el: any) => el.constraintId === id,
+  );
   return constraint || undefined;
 };

@@ -1,18 +1,18 @@
-import { Radio } from "antd";
+import { Radio } from 'antd';
 
 // TYPES
-import { TConstraintInstance } from "Types/ConstraintProfile.type"
+import { TConstraintInstance } from 'Types/ConstraintProfile.type';
 
 // TYPES
 enum EMode {
   OFF = 'OFF',
   SOFT = 'SOFT',
   HARD = 'HARD',
-};
+}
 
 type Props = {
   instance: TConstraintInstance;
-  onChange: (patch: Partial<TConstraintInstance>) => void; 
+  onChange: (patch: Partial<TConstraintInstance>) => void;
 };
 
 const ConstraintInstanceMode = ({ instance, onChange }: Props) => {
@@ -25,17 +25,25 @@ const ConstraintInstanceMode = ({ instance, onChange }: Props) => {
         onChange({ isHardConstraint: true, isActive: true });
         break;
       case EMode.SOFT:
-        onChange({ isHardConstraint: false, isActive: true, weight: instance.weight || 5 });
+        onChange({
+          isHardConstraint: false,
+          isActive: true,
+          weight: instance.weight || 5,
+        });
         break;
       default:
         break;
     }
   };
 
-  const mode: EMode = !instance.isActive ? EMode.OFF : instance.isHardConstraint ? EMode.HARD : EMode.SOFT;
+  const mode: EMode = !instance.isActive
+    ? EMode.OFF
+    : instance.isHardConstraint
+    ? EMode.HARD
+    : EMode.SOFT;
 
   return (
-    <div className="constraint-instance-mode--wrapper">
+    <div className='constraint-instance-mode--wrapper'>
       <Radio.Group
         options={[
           { value: EMode.OFF, label: 'Off' },
@@ -44,9 +52,9 @@ const ConstraintInstanceMode = ({ instance, onChange }: Props) => {
         ]}
         onChange={(e) => onUpdateMode(e.target.value)}
         value={mode}
-        optionType="button"
-        buttonStyle="solid"
-        size="small"
+        optionType='button'
+        buttonStyle='solid'
+        size='small'
       />
     </div>
   );

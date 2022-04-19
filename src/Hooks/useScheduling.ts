@@ -3,7 +3,10 @@ import { useParams } from 'react-router-dom';
 
 // REDUX
 import { selectSSPState } from 'Components/SSP/Utils/selectors';
-import { batchOperationSchedule, batchOperationUnschedule } from 'Redux/Activities';
+import {
+  batchOperationSchedule,
+  batchOperationUnschedule,
+} from 'Redux/Activities';
 import { selectCoreUserId } from 'Redux/Auth/auth.selectors';
 import { stopJob as reduxStopJob } from 'Redux/Jobs';
 
@@ -55,7 +58,12 @@ export const useScheduling = () => {
     scheduleQuality: number,
   ) => {
     const activityIds = getActivityIds(selectedIds, groupBy);
-    if (activityIds && activityIds.length && constraintProfileId && scheduleQuality) {
+    if (
+      activityIds &&
+      activityIds.length &&
+      constraintProfileId &&
+      scheduleQuality
+    ) {
       const batchOperation: TActivityBatchOperation = {
         type: EActivityBatchOperation.SCHEDULE,
         data: activityIds,

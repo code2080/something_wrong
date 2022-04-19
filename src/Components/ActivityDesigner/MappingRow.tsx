@@ -15,7 +15,6 @@ const MappingRow = ({
   onRemoveTEProp,
   disabled,
 }) => {
-
   // Memos
   const _mappedValues = useMemo(
     () => ensureBackwardsCompatibleValueRow(formMapping),
