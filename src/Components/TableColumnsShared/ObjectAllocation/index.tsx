@@ -25,12 +25,14 @@ type Props = {
   activityIdsPerTrack: string[][];
   connectedObjects: Record<string, string[]>;
   typeExtId: string;
+  rowIndex: number;
 };
 
 const ObjectAllocation = ({
   activityIdsPerTrack,
   connectedObjects,
   typeExtId,
+  rowIndex,
 }: Props) => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
@@ -100,6 +102,7 @@ const ObjectAllocation = ({
               label={`Track ${track}`}
               objects={connectedObjects[track]}
               onMoveItem={onMoveObject}
+              rowIndex={rowIndex}
             />
           ))}
         <TrackItem
@@ -107,6 +110,7 @@ const ObjectAllocation = ({
           label='Unallocated'
           objects={connectedObjects.unallocated || []}
           onMoveItem={onMoveObject}
+          rowIndex={rowIndex}
         />
       </div>
     </DndProvider>

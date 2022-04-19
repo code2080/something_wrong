@@ -7,12 +7,17 @@ import AllocationObject from '../AllocationObject';
 import './index.scss';
 
 // TYPES
-import { EDraggableTypes, TDraggedItemProps } from '../../Constants/dnd.type';
+import {
+  createEDraggableTypesForRow,
+  EDraggableTypes,
+  TDraggedItemProps,
+} from '../../Constants/dnd.type';
 
 type Props = {
   track: string | number;
   label: string;
   objects: string[];
+  rowIndex: number;
   onMoveItem: (
     fromTrack: number | string,
     toTrack: number | string,
@@ -20,14 +25,19 @@ type Props = {
   ) => void;
 };
 
-const TrackItem = ({ track, label, objects, onMoveItem }: Props) => {
+const TrackItem = ({ track, label, objects, rowIndex, onMoveItem }: Props) => {
+  const acceptType = createEDraggableTypesForRow(
+    EDraggableTypes.OBJECT,
+    rowIndex,
+  );
+
   const onDrop = (track: number | string, item: TDraggedItemProps) => {
     onMoveItem(item.fromTrack, track, item.extId);
   };
 
   const [dropProps, dropRef] = useDrop<TDraggedItemProps, void, any>(
     {
-      accept: EDraggableTypes.OBJECT,
+      accept: acceptType,
       drop: (item) => onDrop(track, item),
       collect: (monitor) => ({
         isOver: monitor.isOver(),
@@ -42,7 +52,12 @@ const TrackItem = ({ track, label, objects, onMoveItem }: Props) => {
       <div className='object-allocation--item--label'>{label}</div>
       <div className='object-allocation--item--objects'>
         {objects.map((el) => (
-          <AllocationObject extId={el} key={el} track={track} />
+          <AllocationObject
+            extId={el}
+            key={el}
+            track={track}
+            acceptType={acceptType}
+          />
         ))}
       </div>
     </div>

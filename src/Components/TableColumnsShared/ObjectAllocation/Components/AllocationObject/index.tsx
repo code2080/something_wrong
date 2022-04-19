@@ -11,13 +11,18 @@ import { EDraggableTypes, TDraggedItemProps } from '../../Constants/dnd.type';
 type Props = {
   extId: string;
   track: string | number;
+  acceptType: string;
 };
 
-const AllocationObject = ({ extId, track }: Props) => {
+const AllocationObject = ({ extId, track, acceptType }: Props) => {
   /** Todo: Complains about types a lot, come back to this */
   const [dragProps, dragRef] = useDrag({
     // type: EDraggableTypes.OBJECT,
-    item: { extId, fromTrack: track, type: EDraggableTypes.OBJECT },
+    item: {
+      extId,
+      fromTrack: track,
+      type: acceptType,
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
