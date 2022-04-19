@@ -1,5 +1,3 @@
-import { ActivityValueMode } from "Constants/activityValueModes.constants";
-import { ActivityValueType } from "Constants/activityValueTypes.constants";
 import { TValuesBatchOperation } from "Types/Activity/ActivityBatchOperations.type";
 
 export const createUnsetOperation = (activityIds: string[], typeExtId: string): TValuesBatchOperation[] =>
@@ -18,14 +16,7 @@ export const createSetOperation = (
     _id,
     extId: typeExtId,
     opsType: 'SET',
-    payload: {
-      type: ActivityValueType.OBJECT,
-      extId: typeExtId,
-      submissionValue: undefined,
-      submissionValueType: ActivityValueType.OBJECT,
-      valueMode: ActivityValueMode.MANUAL,
-      value: [objectExtId],
-    },
+    payload: [objectExtId],
   }));
   return setData;
 };

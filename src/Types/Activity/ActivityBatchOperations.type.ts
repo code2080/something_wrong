@@ -1,5 +1,4 @@
 import { EActivityStatus } from './ActivityStatus.enum';
-import { ActivityValue } from './ActivityValue.type';
 
 export enum EActivityBatchOperation {
   TAGS = 'TAGS',
@@ -49,5 +48,5 @@ export type TValuesBatchOperation = {
   _id: string;
   extId: string;
   opsType: 'SET' | 'UNSET';
-  payload?: Partial<ActivityValue>;
+  payload?: string[];
 };
