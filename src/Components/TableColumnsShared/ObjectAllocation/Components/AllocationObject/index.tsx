@@ -6,18 +6,19 @@ import { ObjectLabel } from 'Components/Label';
 import './index.scss';
 
 // TYPES
-import { EDraggableTypes, TDraggedItemProps } from '../../Constants/dnd.type';
+import { EDraggableTypes } from '../../Constants/dnd.type';
 
 type Props = {
+  rowId: string;
   extId: string;
   track: string | number;
 };
 
-const AllocationObject = ({ extId, track }: Props) => {
-  /** Todo: Complains about types a lot, come back to this */
+const AllocationObject = ({ extId, track, rowId }: Props) => {
+  
   const [dragProps, dragRef] = useDrag({
-    // type: EDraggableTypes.OBJECT,
-    item: { extId, fromTrack: track, type: EDraggableTypes.OBJECT },
+    type: EDraggableTypes.OBJECT,
+    item: { extId, fromTrack: track, rowId },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -26,7 +27,7 @@ const AllocationObject = ({ extId, track }: Props) => {
   return (
     <div
       ref={dragRef}
-      className='object-allocation--item--object'
+      className={`object-allocation--item--object ${track === 'unallocated' ? 'unallocated' : 'allocated'}`}
       style={{
         opacity: dragProps.isDragging ? 0.5 : 1,
       }}

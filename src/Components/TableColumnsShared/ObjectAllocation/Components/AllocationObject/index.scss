@@ -1,7 +1,19 @@
+@import '../../../../../Styles/globals.scss';
+
 .object-allocation--item--object {
   padding: 0 2px;
   border: 1px solid rgba(0,0,0,0.3);
   border-radius: 4px;
   margin-right: 4px;
   cursor: pointer;
+
+  &.allocated {
+    border: 1px solid $jungleGreen;
+    background: rgba($jungleGreen, 0.2);
+  }
+
+  &.unallocated {
+    border: 1px solid darken(#f0f0f0, 20%);
+    background: #f0f0f0;
+  }
 }

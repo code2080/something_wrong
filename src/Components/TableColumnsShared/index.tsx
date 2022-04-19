@@ -255,6 +255,7 @@ export const ObjectAllocationColumn = (
   dataIndex: undefined,
   render: (activityTypeGroup: TActivityTypeTrackGroup) => (
     <ObjectAllocation
+      rowId={activityTypeGroup._id}
       activityIdsPerTrack={activityTypeGroup.activityIds}
       connectedObjects={activityTypeGroup.connectedObjects}
       typeExtId={typeExtId}

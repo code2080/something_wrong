@@ -1,15 +1,35 @@
+@import '../../../../../Styles/globals.scss';
+
 .object-allocation--item {
   display: flex;
   padding: 2px 0;
+
+  &.hover-unallocated {
+    background: rgba($candlelight, 0.2);
+  }
+
+  &.hover-forbidden {
+    background: rgba($bittersweet, 0.2);
+  }
+
+  &.hover-own {
+    background: rgba(#f0f0f0,0.5);
+  }
+
+  &.hover {
+    background: rgba($jungleGreen, 0.1);
+  }
   
   &:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
   }
   
   .object-allocation--item--label {
-    width: 80px;
+    width: 70px;
+    margin-right: 5px;
     overflow-x: hidden;
     text-overflow: ellipsis;
+    border-right: 1px solid #f0f0f0;
   }
 
   .object-allocation--item--objects {

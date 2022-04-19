@@ -9,25 +9,27 @@ import { batchOperationValues } from 'Redux/Activities';
 // COMPONENTS
 import TrackItem from './Components/TrackItem';
 
+// UTILS
+import { createSetOperation, createUnsetOperation } from './utils';
+
 // STYLES
 import './index.scss';
 
 // TYPES
-import { ActivityValueMode } from 'Constants/activityValueModes.constants';
-import { ActivityValueType } from 'Constants/activityValueTypes.constants';
 import {
   EActivityBatchOperation,
   TActivityBatchOperation,
-  TValuesBatchOperation,
 } from 'Types/Activity/ActivityBatchOperations.type';
 
 type Props = {
+  rowId: string;
   activityIdsPerTrack: string[][];
   connectedObjects: Record<string, string[]>;
   typeExtId: string;
 };
 
 const ObjectAllocation = ({
+  rowId,
   activityIdsPerTrack,
   connectedObjects,
   typeExtId,
@@ -35,57 +37,33 @@ const ObjectAllocation = ({
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch();
 
-  const createRemovalData = (fromTrack: number, typeExtId: string) => {
-    const activityIds = activityIdsPerTrack[fromTrack - 1];
-    const unsetData: TValuesBatchOperation[] = activityIds.map((_id) => ({
-      _id,
-      extId: typeExtId,
-      opsType: 'UNSET',
-    }));
-    return unsetData;
-  };
-
-  const createAllocationData = (
-    toTrack: number,
-    typeExtId: string,
-    objectExtId: string,
-  ) => {
-    const activityIds = activityIdsPerTrack[toTrack - 1];
-    const setData: TValuesBatchOperation[] = activityIds.map((_id) => ({
-      _id,
-      extId: typeExtId,
-      opsType: 'SET',
-      payload: {
-        type: ActivityValueType.OBJECT,
-        extId: typeExtId,
-        submissionValue: undefined,
-        submissionValueType: ActivityValueType.OBJECT,
-        valueMode: ActivityValueMode.ALLOCATED,
-        value: [objectExtId], // @todo need to support maybe not patch but multiple objects...
-      },
-    }));
-    return setData;
-  };
-
   const onMoveObject = (
     fromTrack: number | string,
     toTrack: number | string,
     extId: string,
+    fromRowId: string,
   ) => {
+    
+    if (
+      fromTrack === toTrack // Can't move to same track
+      || fromRowId !== rowId // Can't move to another row
+      || (connectedObjects[toTrack] || []).includes(extId) // Can't move an object that already exists on the track it's being moved to 
+    ) return;
+    
     const removalData =
       fromTrack === 'unallocated'
         ? []
-        : createRemovalData(fromTrack as number, typeExtId);
+        : createUnsetOperation(activityIdsPerTrack[(fromTrack as number) - 1], typeExtId);
     const allocationData =
       toTrack === 'unallocated'
         ? []
-        : createAllocationData(toTrack as number, typeExtId, extId);
+        : createSetOperation(activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
     const batchOp: TActivityBatchOperation = {
       type: EActivityBatchOperation.VALUES,
       data: [...removalData, ...allocationData],
     };
-    console.log(batchOp);
-    dispatch(batchOperationValues(formId, batchOp));
+    
+    dispatch(batchOperationValues(formId as string, batchOp));
   };
 
   return (
@@ -100,9 +78,11 @@ const ObjectAllocation = ({
               label={`Track ${track}`}
               objects={connectedObjects[track]}
               onMoveItem={onMoveObject}
+              rowId={rowId}
             />
           ))}
         <TrackItem
+          rowId={rowId}
           track='unallocated'
           label='Unallocated'
           objects={connectedObjects.unallocated || []}

@@ -1,11 +1,10 @@
-import { DragObjectWithType } from 'react-dnd';
-
 export enum EDraggableTypes {
   OBJECT = 'OBJECT',
 }
 
-export interface TDraggedItemProps extends DragObjectWithType {
+export interface TDraggedItemProps {
   extId: string;
   fromTrack: string | number;
   type: EDraggableTypes.OBJECT;
+  rowId: string;
 }
