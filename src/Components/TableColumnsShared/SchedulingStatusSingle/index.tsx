@@ -68,9 +68,7 @@ const PopoverContent = ({ activity, activityStatus, onUpdate }: Props) => {
         <Form.Item label='Time'>
           <div className='ant-form-text'>
             {activity.schedulingTimestamp
-              ? moment
-                  .utc(activity.schedulingTimestamp)
-                  .format(DATE_TIME_FORMAT)
+              ? moment(activity.schedulingTimestamp).format(DATE_TIME_FORMAT)
               : 'N/A'}
           </div>
         </Form.Item>
