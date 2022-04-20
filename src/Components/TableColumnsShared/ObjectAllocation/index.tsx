@@ -43,26 +43,36 @@ const ObjectAllocation = ({
     extId: string,
     fromRowId: string,
   ) => {
-    
     if (
-      fromTrack === toTrack // Can't move to same track
-      || fromRowId !== rowId // Can't move to another row
-      || (connectedObjects[toTrack] || []).includes(extId) // Can't move an object that already exists on the track it's being moved to 
-    ) return;
-    
+      fromTrack === toTrack || // Can't move to same track
+      fromRowId !== rowId || // Can't move to another row
+      (connectedObjects[toTrack] || []).includes(extId) // Can't move an object that already exists on the track it's being moved to
+    )
+      return;
+
     const removalData =
       fromTrack === 'unallocated'
         ? []
-        : createValuesOperationData('UNSET', activityIdsPerTrack[(fromTrack as number) - 1], typeExtId, extId);
+        : createValuesOperationData(
+            'UNSET',
+            activityIdsPerTrack[(fromTrack as number) - 1],
+            typeExtId,
+            extId,
+          );
     const allocationData =
       toTrack === 'unallocated'
         ? []
-        : createValuesOperationData('SET', activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
+        : createValuesOperationData(
+            'SET',
+            activityIdsPerTrack[(toTrack as number) - 1],
+            typeExtId,
+            extId,
+          );
     const batchOp: TActivityBatchOperation = {
       type: EActivityBatchOperation.VALUES,
       data: [...removalData, ...allocationData],
     };
-    console.log({batchOp});
+    console.log({ batchOp });
     dispatch(batchOperationValues(formId as string, batchOp));
   };
 

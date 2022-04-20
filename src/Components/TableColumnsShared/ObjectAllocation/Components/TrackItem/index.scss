@@ -13,13 +13,13 @@
   }
 
   &.hover-own {
-    background: rgba(#f0f0f0,0.5);
+    background: rgba(#f0f0f0, 0.5);
   }
 
   &.hover {
     background: rgba($jungleGreen, 0.1);
   }
-  
+
   &:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
   }

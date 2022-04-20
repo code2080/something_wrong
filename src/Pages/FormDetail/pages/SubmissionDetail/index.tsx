@@ -38,10 +38,10 @@ const SubmissionDetailPage = ({ formInstanceId }) => {
     selectFormInstance(state, { formId, formInstanceId }),
   );
   const activities = useSelector(selectActivitiesForFormInstanceId)(
-    formId,
+    formId as string,
     formInstanceId,
   );
-  const objectRequests = useSelector(selectFormObjectRequest(formId));
+  const objectRequests = useSelector(selectFormObjectRequest(formId as string));
 
   // Effect to update breadcrumbs
   useEffect(() => {

@@ -28,16 +28,14 @@ const TrackItem = ({ rowId, track, label, objects, onMoveItem }: Props) => {
     onMoveItem(item.fromTrack, track, item.extId, item.rowId);
   };
 
-  const [dropProps, dropRef] = useDrop<TDraggedItemProps, void, any>(
-    {
-      accept: EDraggableTypes.OBJECT,
-      drop: (item) => onDrop(track, item),
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        item: monitor.getItem(),
-      }),
-    },
-  );
+  const [dropProps, dropRef] = useDrop<TDraggedItemProps, void, any>({
+    accept: EDraggableTypes.OBJECT,
+    drop: (item) => onDrop(track, item),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      item: monitor.getItem(),
+    }),
+  });
 
   const classNames = useMemo(() => {
     if (!dropProps.isOver) return '';

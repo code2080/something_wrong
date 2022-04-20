@@ -1,4 +1,4 @@
-// TODO: Disabled prop types for this file to fix linter issues. Enable again? 
+// TODO: Disabled prop types for this file to fix linter issues. Enable again?
 /* eslint-disable react/prop-types */
 import { useMemo, useEffect, useContext, useRef } from 'react';
 import { connect } from 'react-redux';
@@ -150,7 +150,6 @@ Toolbar.propTypes = {
   history: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-  
 };
 
 Toolbar.defaultProps = {
