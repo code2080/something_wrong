@@ -1,8 +1,9 @@
 import { Button } from 'antd';
 import { useDispatch } from 'react-redux';
 
-//todo: not sure if i want to keep this
+// todo: not sure if i want to keep this
 const JointTeachingGenerateButton = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dispatch = useDispatch();
 
   /*   const onGenerate = async () => {

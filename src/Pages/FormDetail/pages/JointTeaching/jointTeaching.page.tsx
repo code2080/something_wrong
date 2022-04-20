@@ -1,5 +1,4 @@
-import { Button, Radio, Row } from 'antd';
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import JointTeachingTabs, {
   ActiveJointTeachingTab,
 } from 'Components/JointTeaching/JointTeachingTabs';
@@ -7,9 +6,7 @@ import JointTeachingTabs, {
 // SELETORS
 import { createLoadingSelector } from 'Redux/APIStatus/apiStatus.selectors';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import {
   MatchedActivities,
@@ -18,11 +15,7 @@ import {
 // import './jointTeaching.page.scss';
 
 // ACTIONS
-
-import { generateJointTeachingGroup } from 'Redux/JointTeaching/jointTeaching.actions';
 import { GENERATE_JOINT_TEACHING_GROUP } from 'Redux/JointTeaching/jointTeaching.actionTypes';
-
-import { generateJointTeachingMatchNotifications } from 'Utils/notifications.helper';
 
 const JointTeachingPage = () => {
   const [activeTab, setActiveTab] =

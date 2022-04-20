@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-empty-pattern */
 import { useState } from 'react';
 import JointTeachingToolbar from 'Components/JointTeachingToolbar';
 

@@ -1,4 +1,4 @@
-import { TValuesBatchOperation } from "Types/Activity/ActivityBatchOperations.type";
+import { TValuesBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
 export const createValuesOperationData =
   (type: 'ADD' | 'REMOVE', activityIds: string[], typeExtId: string, objectExtId: string): TValuesBatchOperation[] => 

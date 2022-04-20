@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
 // COMPONENTS
 // import { selectActivitySchedulingById } from 'Redux/DEPR_ActivityScheduling/activityScheduling.selectors';
 import SelectActivityButton from './SelectActivityButton';
 import SchedulingCheckbox from './SchedulingCheckbox';
-import ActionsDropdown from './ActionsDropdown';
 import JointTeachingIcon from './JointTeachingIcon';
 
 // STYLES
@@ -14,7 +12,7 @@ import './SchedulingActions.scss';
 // TYPES
 import { EActivityStatus } from '../../../../Types/Activity/ActivityStatus.enum';
 
-const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
+const SchedulingActions = ({ activity, selectedRowKeys }) => {
   // const isScheduling = useSelector(selectActivitySchedulingById(activity._id));
 
   return (
@@ -28,12 +26,6 @@ const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
         activity={activity}
         selectedRowKeys={selectedRowKeys}
       />
-      <ActionsDropdown
-        buttonType='ellipsis'
-        activity={activity}
-        isScheduling={false}
-        actions={actions}
-      />
     </div>
   );
 };
@@ -41,7 +33,6 @@ const SchedulingActions = ({ activity, selectedRowKeys, actions }) => {
 SchedulingActions.propTypes = {
   activity: PropTypes.object.isRequired,
   selectedRowKeys: PropTypes.array,
-  actions: PropTypes.array,
 };
 
 export default SchedulingActions;

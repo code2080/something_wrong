@@ -46,8 +46,8 @@ const SummaryTable = ({ requestSummary, mode }: Props) => {
           dataIndex: undefined,
           render: (_, requestSummary) => (
             <>
-              {requestSummary.numberOfObjects} of type '
-              <TypeLabel extId={requestSummary.typeExtId} />'
+              {requestSummary.numberOfObjects} of type
+              <TypeLabel extId={requestSummary.typeExtId} />
             </>
           ),
         },

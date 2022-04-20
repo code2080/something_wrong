@@ -1,4 +1,4 @@
-import { difference, uniq } from "lodash";
+import { difference, uniq } from 'lodash';
 
 export enum ECreateObjectsMode {
   SINGLE_GROUP = 'SINGLE_GROUP',
@@ -79,10 +79,13 @@ export const createFn = (
   }
 
   // Create connected objects by iterating over all existing objects and add to the right track of initial value
-  const connectedObjects = (obj.existingGroupObjects || []).reduce((tot, acc) => ({
-    ...tot,
-    [acc.track]: [ ...(tot[acc.track] || []), ...(acc.objects || []) ],
-  }), initialVal);
+  const connectedObjects = (obj.existingGroupObjects || []).reduce(
+    (tot, acc) => ({
+      ...tot,
+      [acc.track]: [...(tot[acc.track] || []), ...(acc.objects || [])],
+    }),
+    initialVal,
+  );
 
   return {
     _id: obj._id,

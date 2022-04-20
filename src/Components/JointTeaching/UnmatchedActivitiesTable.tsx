@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,7 +50,7 @@ import {
 } from 'Components/TableColumnsShared';
 
 interface Props {}
-//todo: maybe remove this component and put everything in its parrent
+// todo: maybe remove this component and put everything in its parrent
 const UnmatchedActivitiesTable = ({}: Props) => {
   const columns = [
     jointTeachingObjectColumn,

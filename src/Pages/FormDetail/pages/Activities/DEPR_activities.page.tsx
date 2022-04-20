@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -75,7 +76,7 @@ const ActivitiesPage = () => {
   );
 
   const selectedSortingParams = useSelector((state) =>
-    selectActivityParamSorting(state, formId),
+    selectActivityParamSorting(state, formId as string),
   );
 
   const activities = useSelector(
@@ -101,7 +102,7 @@ const ActivitiesPage = () => {
     [],
   );
   const sortOrder = useSelector((state) =>
-    selectActivitySortingOrder(state, formId),
+    selectActivitySortingOrder(state, formId as string),
   );
 
   const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(
