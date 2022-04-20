@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 // REDUX
 import { selectFormById } from 'Redux/DEPR_Forms/forms.selectors';
+import { allocateGroups } from 'Redux/Groups';
 
 // HOOKS
 import { useTECoreAPI } from './TECoreApiHooks';
@@ -16,7 +17,6 @@ import {
   TRequestSummary,
 } from 'Types/GroupManagement.type';
 import { useAppDispatch } from './useAppHooks';
-import { allocateGroups } from 'Redux/Groups';
 
 export const useGroupManagement = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -26,7 +26,7 @@ export const useGroupManagement = () => {
   /**
    * SELECTORS
    */
-  const form = useSelector(selectFormById(formId));
+  const form = useSelector(selectFormById(formId as string));
 
   const requestCreateObjects = (requestSummary: TRequestSummary[]) => {
     const finalPayload: TCreateObjectsRequestPayload[] = requestSummary.map(
@@ -91,8 +91,15 @@ export const useGroupManagement = () => {
     return Object.values(payload);
   };
 
-  const requestAllocateObjectsByIds = (groupIds: string[]) => {
-    dispatch(allocateGroups(formId, groupIds));
+  const requestAllocateObjectsByIds = (
+    activityTypeGroupIds: string[]
+    ) => {
+    const state: IState = store.getState();
+    const activityTypeGroups: TActivityTypeTrackGroup[] = activityTypeGroupIds
+      .filter((el) => state.groups.data[state.groups.groupBy].map[el])
+      .map((el) => state.groups.data[state.groups.groupBy].map[el]);
+    const activityIds = activityTypeGroups.flatMap((a) => a.activityIds.flatMap((ai) => ai));
+    dispatch(allocateGroups(formId as string, activityIds));
   };
 
   return {

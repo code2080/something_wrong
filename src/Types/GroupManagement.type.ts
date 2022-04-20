@@ -43,6 +43,12 @@ type TActivityTypeTrackAPIPayload = {
 export const createFn = (
   obj: TActivityTypeTrackAPIPayload,
 ): TActivityTypeTrackGroup => {
+  /**
+   * Allocate each activity to an element equivalent to the activity's track - 1 (b/c zero based arrays)
+   * Will look as follows:   
+   *    TRACK 1     TRACK 2
+   * [ [id1, id2],  [id3, id4] ]
+   */
   const activityIds = obj.activityIdsAndTracks.reduce(
     (tot: string[][], acc: any) => {
       // Zero base the track
@@ -54,21 +60,22 @@ export const createFn = (
     Array.from({ length: obj.totalTracksForActivityType }, () => []),
   );
 
-
   /**
-   * Create the initial object for the reduction below
+   * Create the "initial" connect object for the reduction below
+   * {
+   *   [track#]: string[],
+   *   unallocated: string[]
+   * }
    */
   const initialVal: Record<string | number, string[]> = {};
   // Create the unallocated objects
   const allExistingObjects = uniq((obj.existingGroupObjects || []).flatMap((val) => val.objects || []));
   const unallocatedObjects = difference(obj.relatedGroupObjects || [], allExistingObjects);
-  console.log({allExistingObjects});
-  console.log({unallocatedObjects});
   initialVal.unallocated = unallocatedObjects || [];
 
   // Create empty arrays for all tracks
-  for (let i = 0; i < obj.totalTracksForActivityType; i += 1) {
-    initialVal[i+1] = [];
+  for (let i = 1; i < obj.totalTracksForActivityType; i += 1) {
+    initialVal[i] = [];
   }
 
   // Create connected objects by iterating over all existing objects and add to the right track of initial value

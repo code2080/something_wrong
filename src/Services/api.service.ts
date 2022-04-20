@@ -106,6 +106,7 @@ const apiRequest = async ({
             ? successMessage(response.data)
             : successMessage;
         notification.success({
+          getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
           message: 'Success',
           description: msg,
         });

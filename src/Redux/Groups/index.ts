@@ -10,7 +10,6 @@ import {
   commitSSPQueryToState,
   resetSSPState,
   updateResourceWorkerStatus,
-  updateEntity,
 } from '../../Components/SSP/Utils/sliceHelpers';
 
 // UTILS
@@ -49,7 +48,7 @@ export const initialState: ISSPReducerState = {
   filters: {},
   filterLookupMap: {},
   workerStatus: undefined,
-  metadata: undefined,
+  metadata: {},
 };
 
 // Slice
@@ -70,10 +69,10 @@ const slice = createSlice({
     fetchGroupsForFormSuccess: (state, { payload }) => {
       commitAPIPayloadToState(payload, state, createFn);
       updateResourceWorkerStatus(payload, state);
+      (state.metadata as Record<string, any>).queryHash = payload.queryHash;
       finishedLoadingSuccess(state);
     },
-    updateGroupsForFormSuccess: (state, { payload }) => {
-      updateEntity(state, payload, createFn, '_id');
+    updateGroupsForFormSuccess: (state) => {
       finishedLoadingSuccess(state);
     },
     resetState: (state) => {
@@ -122,21 +121,20 @@ export const fetchGroupsForForm =
     }
   };
 
-/** Create base backend path for everything group / group management */
-const createBaseApiPath = (formId: string) => `forms/${formId}/groups`;
-
 // todo: a good name
 export const allocateGroups =
-  (formId: string, groupIds: string[]) => async (dispatch: AppDispatch) => {
+  (formId: string, activityIds: string[]) => async (dispatch: AppDispatch, getState: () => IState) => {
     try {
       dispatch(defaultRequestHandler(null));
-
-      const result = await api.post({
-        endpoint: `${createBaseApiPath(formId)}/allocate`,
-        data: { groupIds },
+      const state = getState().groups;
+      const { metadata } = state;
+      await api.post({
+        endpoint: `forms/${formId}/groups/allocate`,
+        data: { activityIds, groupTypeExtId: metadata?.groupTypeExtId || undefined, queryHash: metadata?.queryHash || undefined },
+        successMessage: "Allocation successfully completed",
       });
 
-      dispatch(updateGroupsForFormSuccess(result));
+      dispatch(updateGroupsForFormSuccess());
     } catch (e) {
       dispatch(defaultFailureHandler(null));
     }

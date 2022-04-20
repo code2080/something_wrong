@@ -53,11 +53,11 @@ const ObjectAllocation = ({
     const removalData =
       fromTrack === 'unallocated'
         ? []
-        : createValuesOperationData('UNSET', activityIdsPerTrack[(fromTrack as number) - 1], typeExtId, extId);
+        : createValuesOperationData('REMOVE', activityIdsPerTrack[(fromTrack as number) - 1], typeExtId, extId);
     const allocationData =
       toTrack === 'unallocated'
         ? []
-        : createValuesOperationData('SET', activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
+        : createValuesOperationData('ADD', activityIdsPerTrack[(toTrack as number) - 1], typeExtId, extId);
     const batchOp: TActivityBatchOperation = {
       type: EActivityBatchOperation.VALUES,
       data: [...removalData, ...allocationData],

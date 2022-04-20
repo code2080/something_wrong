@@ -142,7 +142,7 @@ export interface ISSPResourceContext
   direction: ESortDirection | undefined;
   // MISC
   applyMultipleSSPChanges: (args: Partial<ISSPQueryObject>) => void;
-  metadata: Record<string, any>;
+  metadata?: Record<string, any>;
   setMetadata: (newMetadata: Record<string, any>) => void;
   patchMetadata: (prop: string, value: any) => void;
 }

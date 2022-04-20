@@ -3,6 +3,7 @@
 .object-allocation--item {
   display: flex;
   padding: 2px 0;
+  height: 23px;
 
   &.hover-unallocated {
     background: rgba($candlelight, 0.2);

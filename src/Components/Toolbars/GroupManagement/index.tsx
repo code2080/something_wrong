@@ -1,12 +1,12 @@
 import { PlusCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { Select } from 'antd';
+import { Modal, Select } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
 
 // HOOKS
 import useSSP from 'Components/SSP/Utils/hooks';
+import { useGroupManagement } from 'Hooks/useGroupManagement';
 
 // REDUX
 import { selectMappedTypesForForm } from 'Redux/ActivityDesigner/activityDesigner.selectors';
@@ -19,21 +19,20 @@ import CreateObjectsModal from 'Components/CreateObjectsModal';
 
 // STYLES
 import '../index.scss';
-import { useGroupManagement } from 'Hooks/useGroupManagement';
 
 const GroupManagementToolbar = () => {
   /**
    * HOOKS
    */
   const { formId } = useParams<{ formId: string }>();
-  const { selectedKeys, patchMetadata, metadata } = useSSP();
+  const { selectedKeys, patchMetadata, metadata, setSelectedKeys } = useSSP();
   const { requestAllocateObjectsByIds: requestAllocateObjects } =
     useGroupManagement();
 
   /**
    * SELECTORS
    */
-  const mappedObjects = useSelector(selectMappedTypesForForm(formId));
+  const mappedObjects = useSelector(selectMappedTypesForForm(formId as string));
   const objectLabels = useSelector(selectLabelsForTypes(mappedObjects));
 
   /**
@@ -41,10 +40,17 @@ const GroupManagementToolbar = () => {
    */
   const [showCreateObjectsModal, setShowCreateObjectsModal] = useState(false);
 
-  const canAllocateObjects = !isEmpty(selectedKeys);
-
   const onAllocateObjects = () => {
-    requestAllocateObjects(selectedKeys);
+    Modal.confirm({
+      getContainer: () => document.getElementById('te-prefs-lib') as HTMLElement,
+      title: 'Automatically allocate objects',
+      content: 'This action will remove all existing objects of the same type from the activities. Do you want to proceed?',
+      onOk: () => {
+        requestAllocateObjects(selectedKeys);
+        setSelectedKeys([]);
+      },
+    });
+
   };
 
   return (
@@ -56,7 +62,7 @@ const GroupManagementToolbar = () => {
               value,
               label: objectLabels[idx],
             }))}
-            value={metadata.groupTypeExtId}
+            value={metadata?.groupTypeExtId}
             onSelect={(val: string) => patchMetadata('groupTypeExtId', val)}
             style={{ width: '100%', fontSize: '0.75rem' }}
             placeholder='Select an object type'
@@ -67,14 +73,14 @@ const GroupManagementToolbar = () => {
         </ToolbarGroup>
         <ToolbarGroup label='Actions'>
           <ToolbarButton
-            disabled={!selectedKeys.length || !metadata.groupTypeExtId}
+            disabled={!selectedKeys.length || !metadata?.groupTypeExtId}
             onClick={() => setShowCreateObjectsModal(true)}
           >
             <PlusCircleOutlined />
             Create objects
           </ToolbarButton>
           <ToolbarButton
-            disabled={!canAllocateObjects}
+            disabled={!selectedKeys.length || !metadata?.groupTypeExtId}
             onClick={onAllocateObjects}
           >
             <AppstoreAddOutlined />

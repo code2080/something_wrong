@@ -87,7 +87,7 @@ const ActivityDesignPage = () => {
     [],
   );
   const activities = useSelector((state) =>
-    selectActivitiesForForm(state, formId),
+    selectActivitiesForForm(state, formId as string),
   );
 
   const validTypes = useSelector(selectValidTypesOnReservationMode)(
@@ -96,13 +96,13 @@ const ActivityDesignPage = () => {
   const validFields = useSelector(selectValidFieldsOnReservationMode)(
     form?.reservationMode,
   );
-  const storeDesign = useSelector(selectDesignForForm)(formId);
+  const storeDesign = useSelector(selectDesignForForm)(formId as string);
   const isSaving = useSelector(
     createLoadingSelector(['UPDATE_MAPPING_FOR_FORM']),
   );
   const elementsMapping = useSelector(selectElementTypesMap());
   const hasActivitiesInProgress = useSelector(activityInWorkerProgressSelector)(
-    formId,
+    formId as string,
   );
   /**
    * STATE VARS

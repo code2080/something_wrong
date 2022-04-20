@@ -1,0 +1,10 @@
+.group-management-table--wrapper {
+  .ant-table-cell {
+    vertical-align: top !important;
+    line-height: 23px !important;
+
+    & * {
+      line-height: 16px;
+    }
+  }
+}

@@ -47,6 +47,6 @@ export type TStatusBatchOperation = {
 export type TValuesBatchOperation = {
   _id: string;
   extId: string;
-  opsType: 'SET' | 'UNSET';
-  payload?: string[];
+  opsType: 'ADD' | 'REMOVE' | 'SET';
+  payload: string[];
 };

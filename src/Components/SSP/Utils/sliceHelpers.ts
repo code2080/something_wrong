@@ -134,6 +134,7 @@ export const resetSSPState = (state: ISSPReducerState) => {
   state.inclusion = { jointTeaching: EFilterInclusions.INCLUDE };
   state.filters = {};
   state.filterLookupMap = {};
+  state.metadata = {};
 };
 
 export const updateStateWithResultFromBatchOperation = (
