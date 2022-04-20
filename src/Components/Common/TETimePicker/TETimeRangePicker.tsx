@@ -16,6 +16,7 @@ const getValues = (container: HTMLElement) => {
 export default (props: Props) => {
   const ref = useRef(null);
   const onBlur = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const values = getValues(e.target.closest('.ant-picker-range'));
   };
 
