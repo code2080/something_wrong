@@ -10,7 +10,12 @@ import { getEnvParams } from 'configs';
 
 // TYPES
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { IDefaultSocketPayload, ISocketContext, TSocketEventMap, WEBSOCKET_UPDATE } from 'Types/WebSocket.type';
+import {
+  IDefaultSocketPayload,
+  ISocketContext,
+  TSocketEventMap,
+  WEBSOCKET_UPDATE,
+} from 'Types/WebSocket.type';
 
 /**
  * Returns true if a disconnect reason should lead to a reconnect
@@ -35,7 +40,10 @@ export const initializeSocketConnection = (organizationId: string) => {
   const socketUrl = url.slice(0, url.length - 3);
 
   // Initialize connection
-  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(socketUrl, { query: { organizationId } });
+  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(
+    socketUrl,
+    { query: { organizationId } },
+  );
 
   // Set up default event handlers
   socket.on('connect', () => {
@@ -58,7 +66,11 @@ export const initializeSocketConnection = (organizationId: string) => {
   return socket;
 };
 
-export const SocketContext = React.createContext<ISocketContext>({ socket: undefined, setEventMap: () => {}, setFormId: () => {}, });
+export const SocketContext = React.createContext<ISocketContext>({
+  socket: undefined,
+  setEventMap: () => {},
+  setFormId: () => {},
+});
 
 export const WebsocketProvider: React.FC = ({ children }) => {
   // Holds the socket ref
@@ -70,18 +82,16 @@ export const WebsocketProvider: React.FC = ({ children }) => {
 
   // Holds the current organizationId
   const orgId = useSelector(selectOrgId);
-  
 
   /**
    * Function to parse events
    */
   const parseSocketEvent = (event: IDefaultSocketPayload) => {
     // Need to be on the same formId
-    if (!formIdRef || !formIdRef.current || formIdRef.current !== event.formId) return;
-    // Need to have a registered handler
-    if (!eventMapRef || !eventMapRef.current || !eventMapRef.current[event.type]) return;
+    if (formIdRef?.current !== event.formId) return;
+
     // Execute the handler
-    eventMapRef.current[event.type](event);
+    eventMapRef?.current?.[event.type]?.(event);
   };
 
   /**
@@ -96,7 +106,7 @@ export const WebsocketProvider: React.FC = ({ children }) => {
    */
   const setFormId = (formId: string | undefined) => {
     formIdRef.current = formId;
-  }
+  };
 
   /**
    * Effect to connect to BE every time we get an updated organization id
@@ -105,7 +115,11 @@ export const WebsocketProvider: React.FC = ({ children }) => {
     if (orgId) {
       // Initialize the socket connection
       socketRef.current = initializeSocketConnection(orgId);
-      socketRef.current.off(WEBSOCKET_UPDATE).on(WEBSOCKET_UPDATE, (event: IDefaultSocketPayload) => parseSocketEvent(event));
+      socketRef.current
+        .off(WEBSOCKET_UPDATE)
+        .on(WEBSOCKET_UPDATE, (event: IDefaultSocketPayload) =>
+          parseSocketEvent(event),
+        );
     }
 
     // Unmount
@@ -116,7 +130,9 @@ export const WebsocketProvider: React.FC = ({ children }) => {
   }, [orgId]);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, setEventMap, setFormId }}>
+    <SocketContext.Provider
+      value={{ socket: socketRef.current, setEventMap, setFormId }}
+    >
       {children}
     </SocketContext.Provider>
   );
