@@ -153,7 +153,9 @@
     "ts-node": "^10.2.1",
     "tslib": "^2.1.0",
     "typescript": "4.5.2",
-    "webpack": "<=4.44.2"
+    "webpack": "<=4.44.2",
+    "react-dnd": "^16.0.0",
+    "react-dnd-html5-backend": "^16.0.0"
   },
   "files": [
     "dist"
@@ -170,8 +172,6 @@
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "rc-resize-observer": "^1.0.0",
-    "react-dnd": "^16.0.0",
-    "react-dnd-html5-backend": "^16.0.0",
     "react-icons": "^4.2.0",
     "react-redux": "^7.2.2",
     "react-resizable": "^1.11.0",
