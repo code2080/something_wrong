@@ -20,7 +20,7 @@ const GroupManagementTable = () => {
   );
 
   return (
-    <div className="group-management-table--wrapper">
+    <div className='group-management-table--wrapper'>
       <SSPTable
         columns={[
           {
