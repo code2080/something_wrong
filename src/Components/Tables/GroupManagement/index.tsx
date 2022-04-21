@@ -16,7 +16,7 @@ const GroupManagementTable = () => {
    * SELECTORS
    */
   const groupTypeLabel = useSelector(
-    selectLabelForType(metadata.groupTypeExtId),
+    selectLabelForType(metadata?.groupTypeExtId),
   );
 
   return (
@@ -40,7 +40,7 @@ const GroupManagementTable = () => {
             key: 'totalTracksForActivityType',
             dataIndex: 'totalTracksForActivityType',
           },
-          ...(metadata.groupTypeExtId
+          ...(metadata?.groupTypeExtId
             ? [ObjectAllocationColumn(groupTypeLabel, metadata.groupTypeExtId)]
             : []),
         ]}

@@ -14,7 +14,7 @@ import { selectDesignForForm } from '../../../Redux/ActivityDesigner/activityDes
 
 const BaseActivityColValue = ({ activityValue, activity }) => {
   const { formId } = useParams<{ formId: string }>();
-  const activityDesign = useSelector(selectDesignForForm)(formId);
+  const activityDesign = useSelector(selectDesignForForm)(formId as string);
   const component = useMemo(
     () => renderComponent(activityValue, activity, activityDesign),
     [activityValue, activity, activityDesign],

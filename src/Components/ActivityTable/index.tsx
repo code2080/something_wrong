@@ -27,7 +27,7 @@ const ActivityTable = ({
   /**
    * SELECTORS
    */
-  const design = useSelector(selectActivityDesignForForm(formId));
+  const design = useSelector(selectActivityDesignForForm(formId as string));
 
   /**
    * COLUMNS
