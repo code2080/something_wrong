@@ -8,23 +8,27 @@ import { useDispatch } from 'react-redux';
 import ToolbarButton from '../ToolbarButton';
 import TagSelectorComponent from 'Components/TagSelector';
 
+// HOOKS
+import useSSP from 'Components/SSP/Utils/hooks';
+
 // REDUX
 import { batchOperationTags } from 'Redux/Activities';
 
 // TYPES
 import { EActivityBatchOperation } from 'Types/Activity/ActivityBatchOperations.type';
 
-const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
-  selectedActivityIds,
-}) => {
+const TagSelectionButton: React.FC = () => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
+
+  const { getSelectedActivityIds, setSelectedKeys } = useSSP();
 
   /**
    * EVENT HANDLERS
    */
   const onBatchAssign = (tagId: string | undefined) => {
-    const data = selectedActivityIds.map((id) => ({
+    const activityIds = getSelectedActivityIds();
+    const data = activityIds.map((id) => ({
       _id: id,
       tagId: tagId || null,
     }));
@@ -34,16 +38,17 @@ const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
         data,
       }),
     );
+    setSelectedKeys([]);
   };
 
   const button = (
-    <ToolbarButton disabled={!selectedActivityIds.length}>
+    <ToolbarButton disabled={!getSelectedActivityIds().length}>
       <TagOutlined />
       Tag selection
     </ToolbarButton>
   );
 
-  if (!selectedActivityIds.length) return button;
+  if (!getSelectedActivityIds().length) return button;
   return (
     <Popover
       title='Tag activity'
