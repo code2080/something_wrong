@@ -261,4 +261,5 @@ export const ObjectAllocationColumn = (
       typeExtId={typeExtId}
     />
   ),
+  width: 500,
 });
