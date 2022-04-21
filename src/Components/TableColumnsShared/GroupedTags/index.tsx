@@ -39,7 +39,10 @@ const GroupedTags = ({ tagIds, activityIds }: Props) => {
   const onAssignTag = (tagId: string | undefined) => {
     const data = activityIds.map((_id) => ({ _id, tagId: tagId || null }));
     dispatch(
-      batchOperationTags(formId, { type: EActivityBatchOperation.TAGS, data }),
+      batchOperationTags(formId as string, {
+        type: EActivityBatchOperation.TAGS,
+        data,
+      }),
     );
   };
 
@@ -50,6 +53,7 @@ const GroupedTags = ({ tagIds, activityIds }: Props) => {
         <TagSelectorComponent
           value={tagId || undefined}
           onChange={onAssignTag}
+          onClick={onAssignTag}
         />
       }
       getPopupContainer={() =>

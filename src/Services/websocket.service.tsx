@@ -1,12 +1,21 @@
-import React, { useContext, useEffect } from 'react';
-import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { getEnvParams } from 'configs';
+import React, { useEffect, useRef } from 'react';
 import socketIOClient, { Socket } from 'socket.io-client';
-import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
+import { useSelector } from 'react-redux';
+
+// REDUX
+import { selectOrgId } from 'Redux/Auth/auth.selectors';
+
+// CONFIGS
+import { getEnvParams } from 'configs';
+
+// TYPES
+import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { IDefaultSocketPayload, ISocketContext, TSocketEventMap, WEBSOCKET_UPDATE } from 'Types/WebSocket.type';
 
 /**
  * Returns true if a disconnect reason should lead to a reconnect
  * @param disconnectReason
+ * @returns {Bool}
  */
 const shouldTryReconnect = (
   disconnectReason: Socket.DisconnectReason,
@@ -18,19 +27,13 @@ const shouldTryReconnect = (
   return VALID_RECONNECT_REASONS.includes(disconnectReason);
 };
 
-export const initializeSocketConnection = () => {
+export const initializeSocketConnection = (organizationId: string) => {
   // Get the URL
   const url = `${getEnvParams().AM_BE_URL}`;
   const socketUrl = url.slice(0, url.length - 3);
 
   // Initialize connection
-  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(
-    socketUrl,
-    {
-      transports: ['websocket', 'polling'],
-      forceNew: false,
-    },
-  );
+  const socket: Socket<DefaultEventsMap, DefaultEventsMap> = socketIOClient(socketUrl, { query: { organizationId } });
 
   // Set up default event handlers
   socket.on('connect', () => {
@@ -39,84 +42,80 @@ export const initializeSocketConnection = () => {
 
   socket.on('connect_error', (error) => {
     console.error(`Websocket connection failed to connect: `, error.toString());
+    setTimeout(() => {
+      if (!socket.connected) socket.io.connect();
+    }, 1000);
   });
 
   socket.on('disconnect', (reason) => {
     console.info(`WS connection closed with reason: ${reason}`);
 
-    if (shouldTryReconnect(reason)) {
-      console.log('Socket reconnecting');
-      socket.connect();
-    }
+    if (shouldTryReconnect(reason)) socket.io.connect();
   });
 
   return socket;
 };
 
-const SocketContext = React.createContext<{
-  socket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
-}>({ socket: undefined });
+export const SocketContext = React.createContext<ISocketContext>({ socket: undefined, setEventMap: () => {}, setFormId: () => {}, });
 
 export const WebsocketProvider: React.FC = ({ children }) => {
-  const socket = initializeSocketConnection();
+  // Holds the socket ref
+  const socketRef = useRef<Socket<DefaultEventsMap, DefaultEventsMap>>();
+  // Holds the event maps
+  const eventMapRef = useRef<TSocketEventMap>();
+  // Holds the current formId
+  const formIdRef = useRef<string | undefined>();
 
+  // Holds the current organizationId
+  const orgId = useSelector(selectOrgId);
+  
+
+  /**
+   * Function to parse events
+   */
+  const parseSocketEvent = (event: IDefaultSocketPayload) => {
+    // Need to be on the same formId
+    if (!formIdRef || !formIdRef.current || formIdRef.current !== event.formId) return;
+    // Need to have a registered handler
+    if (!eventMapRef || !eventMapRef.current || !eventMapRef.current[event.type]) return;
+    // Execute the handler
+    eventMapRef.current[event.type](event);
+  };
+
+  /**
+   * Function to set the event map
+   */
+  const setEventMap = (eventMap: TSocketEventMap) => {
+    eventMapRef.current = eventMap;
+  };
+
+  /**
+   * Function to set the form id
+   */
+  const setFormId = (formId: string | undefined) => {
+    formIdRef.current = formId;
+  }
+
+  /**
+   * Effect to connect to BE every time we get an updated organization id
+   */
   useEffect(() => {
+    if (orgId) {
+      // Initialize the socket connection
+      socketRef.current = initializeSocketConnection(orgId);
+      socketRef.current.off(WEBSOCKET_UPDATE).on(WEBSOCKET_UPDATE, (event: IDefaultSocketPayload) => parseSocketEvent(event));
+    }
+
+    // Unmount
     return () => {
-      socket.disconnect();
+      socketRef?.current?.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [orgId]);
 
   return (
-    <SocketContext.Provider value={{ socket }}>
+    <SocketContext.Provider value={{ socket: socketRef.current, setEventMap, setFormId }}>
       {children}
     </SocketContext.Provider>
   );
-};
-
-const defaultSubscriptionNotifier = (
-  eventType: ESocketEvents,
-  formId: string,
-) =>
-  console.info(
-    `Established subscription to ${eventType} for formId: ${formId}`,
-  );
-
-/** Determines if an event is a known socket event that we should handle */
-const isKnownSocketEvent = (event: any): event is ESocketEvents => {
-  return Object.values(ESocketEvents).includes(event);
-};
-
-type Props = {
-  formId: string | undefined;
-  eventMap: Record<ESocketEvents, (payload: IDefaultSocketPayload) => void>;
-};
-
-export const useSubscribeToFormEvents = ({ formId, eventMap }: Props) => {
-  const { socket } = useContext(SocketContext);
-
-  useEffect(() => {
-    if (!socket || !formId) return;
-
-    Object.entries(eventMap).forEach(([socketEvent, callback]) => {
-      if (!isKnownSocketEvent(socketEvent)) return;
-
-      // Subscribe
-      socket.emit(socketEvent, { formId }, (resp: any) =>
-        defaultSubscriptionNotifier(socketEvent, resp.formId),
-      );
-
-      // Set up handler
-      socket
-        .off(socketEvent)
-        .on(socketEvent, (payload: IDefaultSocketPayload) => {
-          console.info(
-            `Received ${socketEvent} event, executing associated handler`,
-          );
-          callback(payload);
-        });
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, eventMap, formId]);
 };

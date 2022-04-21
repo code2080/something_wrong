@@ -81,7 +81,7 @@ const ActivitiesToolbar = () => {
         >
           Unschedule selection
         </Button>
-        <TagSelectionButton selectedActivityIds={selectedKeys || []} />
+        <TagSelectionButton />
         <JointTeachingGroupMerger
           activityIds={selectedKeys}
           formId={formId as string}

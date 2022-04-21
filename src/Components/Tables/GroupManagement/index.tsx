@@ -16,11 +16,11 @@ const GroupManagementTable = () => {
    * SELECTORS
    */
   const groupTypeLabel = useSelector(
-    selectLabelForType(metadata.groupTypeExtId),
+    selectLabelForType(metadata?.groupTypeExtId),
   );
 
   return (
-    <div className="group-management-table--wrapper">
+    <div className='group-management-table--wrapper'>
       <SSPTable
         columns={[
           {
@@ -40,7 +40,7 @@ const GroupManagementTable = () => {
             key: 'totalTracksForActivityType',
             dataIndex: 'totalTracksForActivityType',
           },
-          ...(metadata.groupTypeExtId
+          ...(metadata?.groupTypeExtId
             ? [ObjectAllocationColumn(groupTypeLabel, metadata.groupTypeExtId)]
             : []),
         ]}
