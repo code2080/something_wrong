@@ -329,7 +329,6 @@ export const fetchActivitiesForForm =
         queryObject,
         getState().activities,
       );
-      console.log(serializedQuery);
       dispatch(defaultRequestHandler(queryObject));
       const result = await api.get({
         endpoint: `forms/${formId}/activities?${serializedQuery}`,
