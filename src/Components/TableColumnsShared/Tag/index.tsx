@@ -45,10 +45,8 @@ const TagColumn = ({ activity }: Props) => {
           <TagSelectorComponent
             value={activity.tagId || undefined}
             onChange={onAssignTag}
+            onClick={onAssignTag}
           />
-          <Button type='link' danger onClick={() => onAssignTag(undefined)}>
-            Clear
-          </Button>
         </>
       }
       getPopupContainer={() =>

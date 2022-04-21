@@ -11,12 +11,13 @@ import { createTagForForm, tagsLoading, tagsSelector } from 'Redux/Tags';
 type Props = {
   value: string | undefined;
   onChange: (tagId: string | undefined) => void;
+  onClick: (tagId: string | undefined) => void;
 };
 
-const TagSelectorComponent = ({ value, onChange }: Props) => {
+const TagSelectorComponent = ({ value, onChange, onClick }: Props) => {
   const dispatch = useDispatch();
   const { formId } = useParams<{ formId: string }>();
-
+  
   /**
    * SELECTORS
    */
@@ -41,6 +42,7 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
   };
 
   return (
+    <>
     <Select
       options={tags.map((el) => ({ value: el._id, label: el.name }))}
       showSearch
@@ -65,6 +67,10 @@ const TagSelectorComponent = ({ value, onChange }: Props) => {
       searchValue={tagName}
       optionFilterProp='label'
     />
+    <Button type='link' danger onClick={() => onClick(undefined)}>
+            Clear
+    </Button>
+    </>
   );
 };
 

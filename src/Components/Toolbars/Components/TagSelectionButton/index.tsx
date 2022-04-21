@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Button, Popover } from 'antd';
+import {Popover } from 'antd';
 import { TagOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -48,12 +48,7 @@ const TagSelectionButton: React.FC<{ selectedActivityIds: string[] }> = ({
     <Popover
       title='Tag activity'
       content={
-        <>
-          <TagSelectorComponent value={undefined} onChange={onBatchAssign} />
-          <Button type='link' danger onClick={() => onBatchAssign(undefined)}>
-            Clear
-          </Button>
-        </>
+          <TagSelectorComponent value={undefined} onChange={onBatchAssign} onClick={onBatchAssign} />
       }
       getPopupContainer={() =>
         document.getElementById('te-prefs-lib') as HTMLElement
