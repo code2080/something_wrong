@@ -11,13 +11,11 @@ import { ESocketEvents, IDefaultSocketPayload } from 'Types/WebSocket.type';
 const shouldTryReconnect = (
   disconnectReason: Socket.DisconnectReason,
 ): boolean => {
-  switch (disconnectReason) {
-    case 'io server disconnect':
-    case 'transport close':
-      return true;
-    default:
-      return false;
-  }
+  const VALID_RECONNECT_REASONS = [
+    'io server disconnect',
+    'transport close',
+  ] as Socket.DisconnectReason[];
+  return VALID_RECONNECT_REASONS.includes(disconnectReason);
 };
 
 export const initializeSocketConnection = () => {
