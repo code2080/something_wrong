@@ -179,7 +179,7 @@ const slice = createSlice({
     resetState: (state) => {
       resetSSPState(state);
     },
-    updateWorkerStatus: (state, { payload }) => {
+    updateWorkerStatus: (state, { payload }: PayloadAction<string>) => {
       updateResourceWorkerStatus({ workerStatus: payload }, state);
     },
     defaultBatchOperationSuccessHandler: (
