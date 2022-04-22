@@ -145,17 +145,10 @@ const FormPage = () => {
     },
     ACTIVITY_BATCH_OPERATION_UPDATE: (payload: IDefaultSocketPayload) => {
       if (payload.data.status !== 'OK' || !formId) return;
+      dispatch(fetchActivitiesForForm(formId, {}));
 
-      switch (selectedFormDetailTab) {
-        case EFormDetailTabs.ACTIVITIES:
-          dispatch(fetchActivitiesForForm(formId, {}));
-          break;
-        case EFormDetailTabs.GROUP_MANAGEMENT:
-          dispatch(fetchGroupsForForm(formId, {}));
-          break;
-        default:
-          break;
-      }
+      if (selectedFormDetailTab === EFormDetailTabs.GROUP_MANAGEMENT)
+        dispatch(fetchGroupsForForm(formId, {}));
     },
     FILTER_LOOKUP_MAP_UPDATE: (payload: IDefaultSocketPayload) => {
       if (payload.data.status !== 'OK' || !formId) return;
