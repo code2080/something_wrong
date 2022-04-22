@@ -1,9 +1,6 @@
 /**
- * TODO: This file is in a deprecated folder and SHOULD be moved (or extracted), since it is very much in use. 
+ * TODO: This file is in a deprecated folder and SHOULD be moved (or extracted), since it is very much in use.
  */
-
-
-
 
 import _, { Dictionary } from 'lodash';
 import PropTypes from 'prop-types';
@@ -79,8 +76,7 @@ const ObjectObjectValue = ({
     values: string[],
     labels: Dictionary<string>,
   ): string => {
-
-    if(_.isEmpty(values)) return '--'
+    if (_.isEmpty(values)) return '--';
     return values.map((val) => labels[val]).join(', ');
   };
 

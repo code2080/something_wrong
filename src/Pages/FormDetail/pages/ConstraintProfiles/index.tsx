@@ -96,6 +96,7 @@ const ConstraintProfilesPage = () => {
   });
 
   useEffect(() => {
+    if(!activityDesign) return;
     tecoreAPI.getFieldIds({
       typeExtIds: Object.keys(activityDesign.objects),
       integerFieldsOnly: true,
