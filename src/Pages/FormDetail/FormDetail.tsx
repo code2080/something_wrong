@@ -130,11 +130,13 @@ const FormPage = () => {
    */
   const socketEventMap = {
     ACTIVITY_GENERATION_UPDATE: (payload: IDefaultSocketPayload) => {
-      if (payload.data.status !== 'OK' || !formId) return;
+      if (!formId) return;
+
       if (payload.data.workerStatus === 'IN_PROGRESS') {
         // Set the redux state to in progress
         dispatch(updateWorkerStatus('IN_PROGRESS'));
       }
+
       // Only fetch new activities if the REDUX state's workerStatus value is IN_PROGRESS
       if (
         payload.data.workerStatus === 'DONE' &&
