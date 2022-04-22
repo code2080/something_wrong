@@ -40,7 +40,8 @@ export const validateMandatoryFieldValue = (
   activityDesign,
 ) => {
   if (!activityDesign) return true;
-  const mandatoryFields = Object.keys(activityDesign.propSettings).filter(
+
+  const mandatoryFields = Object.keys(activityDesign?.propSettings ?? {}).filter(
     (key) => activityDesign.propSettings[key]?.mandatory,
   );
   const isMandatoryField = mandatoryFields.includes(activityValue.extId);
